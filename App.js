@@ -7,6 +7,11 @@
  */
 
 import React from 'react';
+import YelpApi from './api.js';
+import Swiper from 'react-native-deck-swiper';
+import { Transitioning, Transition } from 'react-native-reanimated';
+import data from './data';
+
 import {
   Image,
   SafeAreaView,
@@ -18,10 +23,6 @@ import {
   Dimensions
 } from 'react-native';
 
-import Swiper from 'react-native-deck-swiper';
-import { Transitioning, Transition } from 'react-native-reanimated';
-import data from './data';
-
 const Card = ({ card }) => {
   return (
     <View style={styles.card}>
@@ -29,6 +30,11 @@ const Card = ({ card }) => {
     </View>
   );
 };
+
+//sample test of Yelp API
+YelpApi.getRestaurants('coffee', 'fremont california').then((businesses) => {
+  console.log(businesses.total);
+})
 
 export default function App()
 {
@@ -137,7 +143,7 @@ export default function App()
     </SafeAreaView>
   );
 }
-
+ 
 const styles = StyleSheet.create({
 
   //Fullscreen
