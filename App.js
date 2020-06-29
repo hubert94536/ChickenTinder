@@ -7,6 +7,8 @@
  */
 
 import React from 'react';
+import YelpApi from './api.js';
+
 import {
   SafeAreaView,
   StyleSheet,
@@ -16,8 +18,14 @@ import {
   StatusBar,
 } from 'react-native';
 
-const Box = () => <View style={styles.boxSimple} elevation={5} />;
 
+const Box = () => <View style={styles.boxSimple} elevation={5} />;
+//test
+
+    YelpApi.getRestaurants('coffee', 'fremont california').then((businesses) => {
+      console.log(businesses.total);
+    })
+ 
 const styles = StyleSheet.create({
   boxSimple: {
     backgroundColor: '#fff',
@@ -31,4 +39,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Box;
+export default Box; 
