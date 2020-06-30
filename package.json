@@ -1,5 +1,5 @@
 {
-  "name": "ChickenTinder",
+  "name": "chicken_tinder",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -10,28 +10,12 @@
     "lint": "eslint ."
   },
   "dependencies": {
-<<<<<<< HEAD
-    "axios": "^0.19.2",
-    "dotenv": "^8.2.0",
-    "react": "16.11.0",
-    "react-native": "0.62.2",
-    "react-native-fs": "^2.16.6",
-    "yelp-fusion": "^3.0.0"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.10.3",
-    "@babel/runtime": "^7.10.3",
-    "@react-native-community/eslint-config": "^2.0.0",
-    "babel-jest": "^26.1.0",
-    "eslint": "^7.3.1",
-    "jest": "^26.1.0",
-    "metro-react-native-babel-preset": "^0.59.0",
-    "react-native-dotenv": "^0.2.0",
-=======
     "@expo/vector-icons": "^10.2.0",
+    "axios": "^0.19.2",
     "react": "16.11.0",
     "react-native": "0.62.2",
     "react-native-deck-swiper": "^1.6.7",
+    "react-native-dotenv": "^0.2.0",
     "react-native-reanimated": "^1.9.0",
     "react-native-view-overflow": "0.0.5"
   },
@@ -43,7 +27,6 @@
     "eslint": "6.8.0",
     "jest": "24.9.0",
     "metro-react-native-babel-preset": "0.58.0",
->>>>>>> 4c4b07a1bd13723f126429f1a3845d877d381743
     "react-test-renderer": "16.11.0"
   },
   "jest": {
