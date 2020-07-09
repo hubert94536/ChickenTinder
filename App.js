@@ -58,7 +58,7 @@ export default function App()
 
         animateOverlayLabelsOpacity
 
-        //Overlay offsets must be readjusted when we change to flex sizing
+        //Overlay offsets adjusted to flex sizing. May need to be retested on different device
         overlayLabels={{
           left: {
             title: 'NOPE',
@@ -74,8 +74,8 @@ export default function App()
                 flexDirection: 'column',
                 alignItems: 'flex-end',
                 justifyContent: 'flex-start',
-                marginTop: -50,
-                marginLeft: -150
+                marginTop: 20,
+                marginLeft: -50
               }
             }
           },
@@ -93,8 +93,8 @@ export default function App()
                 flexDirection: 'column',
                 alignItems: 'flex-start',
                 justifyContent: 'flex-start',
-                marginTop: -50,
-                marginLeft: -10
+                marginTop: 20,
+                marginLeft: 20
               }
             }
           },
@@ -112,8 +112,8 @@ export default function App()
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'flex-start',
-                marginTop: -50,
-                marginLeft: -80
+                marginTop: 20,
+                marginLeft: -20
               }
             }
           },
@@ -130,9 +130,9 @@ export default function App()
               wrapper: {
                 flexDirection: 'column',
                 alignItems: 'center',
-                justifyContent: 'center',
-                marginTop: 10,
-                marginLeft: -80
+                justifyContent: 'flex-end',
+                marginTop: -50,
+                marginLeft: -20
               }
             }
           }
@@ -152,35 +152,32 @@ const styles = StyleSheet.create({
     backgroundColor: '#000'
   },
 
-  //card area need to  change to flex sizing; based off of Hanna's box
+  //Card area is now flexsized and takes 90% of the width of screen
   cardContainer: {
     borderRadius: 17,
     borderWidth: 0,
     borderColor: '#000',
     alignSelf: 'center',
-    marginTop: 40,
-    height: 400,
-    width: 250,
+    marginTop: 5,
+    width: "90%",
+    aspectRatio: 5/8,
   },
 
-  //Actual card need to change to flex sizing
-  //Current margins and alignment are to fix the offset need to change
+  //Sizing is now based on aspect ratio
   card: {
     backgroundColor: '#fff',
     borderRadius: 17,
     borderWidth: 0,
     borderColor: '#000',
     alignSelf: 'flex-start',
-    marginLeft: -20,
-    marginTop: -60,
-    height: 400,
-    width: 250,
+    width: "90%",
+    aspectRatio: 5/8,
   },
 
-  //Default settings need  to fix alignment
+  //Card image is now centered
   cardImage: {
-    width: 160,
-    flex: 1,
-    resizeMode: 'contain'
+    marginTop: 60,
+    flex: 0.5,
+    resizeMode: 'contain',
   },
 });
