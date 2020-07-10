@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {Component, useState, useEffect} from 'react';
 import YelpApi from './api.js';
 import Swiper from 'react-native-deck-swiper';
 import { Transitioning, Transition } from 'react-native-reanimated';
@@ -23,26 +23,48 @@ import {
   Dimensions
 } from 'react-native';
 
+export default function App() {
+  const [index, setIndex] = useState(0);
+  const [results, setResults] = useState([]);
 
-const Card = ({ card }) => {
-  return (
-    <View style={styles.card}>
-      <Image source={{ uri: card.image }} style={styles.cardImage} />
-    </View>
-  );
-};
+  useEffect(() => {
+    YelpApi.getRestaurants('boba', 'arcadia california').then(response => {
+      console.log(response.businessList),
+        console.log(response.total),
+        setResults(response.businessList);
+    });
+  });
 
-
-facebookService.makeLoginButton();
-export default function App()
-{
-  
-  const[index, setIndex] = React.useState(0);
+  const Card = ({card}) => {
+    while (results.length == 0)
+      return <Text style={styles.card}>Fetching Restaurants!</Text>;
+    return (
+      <View style={styles.card}>
+        {/* <Image source={{uri: card.image}} style={styles.cardImage} /> */}
+        <Text>
+          {card.price} {card.name}
+        </Text>
+        <Text>{card.reviewCount} Reviews</Text>
+        <Text>Average Rating: {card.rating} Stars</Text>
+        <Text style={{fontWeight: 'bold'}}>
+          Contact Information:{' '}
+          <Text style={{fontWeight: 'normal'}}>{card.phone}</Text>
+        </Text>
+        <Text style={{fontWeight: 'bold'}}>
+          Address:{' '}
+          <Text style={{fontWeight: 'normal'}}>
+            {card.location.display_address[0]},{' '}
+            {card.location.display_address[1]}
+          </Text>
+        </Text>
+      </View>
+    );
+  };
 
   const onSwiped = () => {
     // transitionRef.current.animateNextTransition();
-    setIndex((index + 1));
-  }
+    setIndex(index + 1);
+  };
   return (
     <SafeAreaView style={styles.mainContainer}>
     <View style={styles.cardContainer}>
@@ -148,7 +170,7 @@ const styles = StyleSheet.create({
   //Fullscreen
   mainContainer: {
     flex: 1,
-    backgroundColor: '#000'
+    backgroundColor: '#6495ed',
   },
 
   //Card area is now flexsized and takes 90% of the width of screen
@@ -180,3 +202,4 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
 });
+
