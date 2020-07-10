@@ -11,7 +11,7 @@ import YelpApi from './api.js';
 import Swiper from 'react-native-deck-swiper';
 import { Transitioning, Transition } from 'react-native-reanimated';
 import data from './data';
-
+import{facebookService} from './facebookService.js';
 import {
   Image,
   SafeAreaView,
@@ -23,6 +23,7 @@ import {
   Dimensions
 } from 'react-native';
 
+
 const Card = ({ card }) => {
   return (
     <View style={styles.card}>
@@ -31,13 +32,11 @@ const Card = ({ card }) => {
   );
 };
 
-//sample test of Yelp API
-YelpApi.getRestaurants('coffee', 'fremont california').then((businesses) => {
-  console.log(businesses.total);
-})
 
+facebookService.makeLoginButton();
 export default function App()
 {
+  
   const[index, setIndex] = React.useState(0);
 
   const onSwiped = () => {
