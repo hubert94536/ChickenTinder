@@ -12,10 +12,13 @@
   "dependencies": {
     "@expo/vector-icons": "^10.2.0",
     "axios": "^0.19.2",
+    "pg": "^8.2.2",
+    "pgtools": "^0.3.0",
     "react": "16.11.0",
     "react-native": "0.62.2",
     "react-native-deck-swiper": "^1.6.7",
     "react-native-dotenv": "^0.2.0",
+    "react-native-fbsdk": "^2.0.0",
     "react-native-reanimated": "^1.9.0",
     "react-native-view-overflow": "0.0.5"
   },
