@@ -42,4 +42,4 @@ const getRestaurants = (name, place)  => {
 
 export default {
   getRestaurants,
-}
+};
