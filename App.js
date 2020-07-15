@@ -29,7 +29,7 @@ export default function App() {
   const round = 1;
 
   useEffect(() => {
-    YelpApi.getRestaurants('boba', 'arcadia california').then(response => {
+    YelpApi.getRestaurants('acai', 'upland california').then(response => {
       console.log(response.businessList),
         console.log(response.total),
         setResults(response.businessList);
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   //Fullscreen
   mainContainer: {
     flex: 1,
-    backgroundColor: '#6495ed',
+    backgroundColor: '#FB6767',
   },
 
   //Card area is now flexsized and takes 90% of the width of screen
