@@ -53,8 +53,8 @@ export default function App() {
         <Text style={{fontWeight: 'bold'}}>
           Address:{' '}
           <Text style={{fontWeight: 'normal'}}>
-            {card.location.display_address[0]},{' '}
-            {card.location.display_address[1]}
+            {/* {card.location.display_address[0]},{' '}
+            {card.location.display_address[1]} */}
           </Text>
         </Text>
       </View>

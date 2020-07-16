@@ -3,7 +3,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
 const db = require('./queries.js')
-const port = process.env.USERS_PORT || 3000
+const port = process.env.PORT || 3000
 
 app.use(bodyParser.json())
 app.use(
