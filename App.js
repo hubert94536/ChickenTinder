@@ -33,7 +33,7 @@ export default function App() {
         console.log(response.total),
         setResults(response.businessList);
     });
-  });
+  }, []);
 
   const Card = ({card}) => {
     while (results.length == 0)
