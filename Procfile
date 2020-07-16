@@ -1,1 +1,1 @@
-web: node ./backend/accountsServer.js
+web: node --experimental-modules app.js

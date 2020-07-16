@@ -2,6 +2,7 @@
   "name": "chicken_tinder",
   "version": "0.0.1",
   "private": true,
+  "type" : "module",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
@@ -38,4 +39,5 @@
   "jest": {
     "preset": "react-native"
   }
+
 }
