@@ -2,7 +2,7 @@
   "name": "chicken_tinder",
   "version": "0.0.1",
   "private": true,
-  "heroku-postbuild": "npm install --production",
+  "heroku-postbuild": "npm install && cd client && npm install --only-dev && npm install && npm run build",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
