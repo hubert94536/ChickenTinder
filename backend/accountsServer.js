@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const app = express()
 const db = require('./accountsQueries.js')
 //const { Client } = require('pg');
-
+var port = process.env.PORT || 3000;
 // const client = new Client({
 //   connectionString: process.env.USERS_URL,
 //   ssl: {
@@ -37,6 +37,6 @@ console.log(app.get('/users', db.getUsers))
 // app.put('/users/:id', db.updateUser)
 // app.delete('/users/:id', db.deleteUser)
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log(`App running on port ${3000}.`)
+app.listen(port, () => {
+  console.log(`App running on port ${port}.`)
 })
