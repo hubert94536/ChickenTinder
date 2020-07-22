@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "560813271961",
+    "firebase_url": "https://wechews-83255.firebaseio.com",
+    "project_id": "wechews-83255",
+    "storage_bucket": "wechews-83255.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:560813271961:android:6294a317a481f658dc8108",
+        "android_client_info": {
+          "package_name": "com.chickentinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "560813271961-5n4uo8kmdhrr03v9nqgtso8s74uv1rbu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chickentinder",
+            "certificate_hash": "4fc403bbe7273a0d93924a9115d9a7ba8bb8a34a"
+          }
+        },
+        {
+          "client_id": "560813271961-d1iathmvgolvl9in51bia46jr0pu0e33.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZfnrcMeYR2Gam7R4M0jnfxubKBqxYfkk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "560813271961-d1iathmvgolvl9in51bia46jr0pu0e33.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
