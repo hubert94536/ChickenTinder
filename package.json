@@ -1,6 +1,9 @@
 {
   "name": "chicken_tinder",
   "version": "0.0.1",
+  "engines": {
+    "node": "14.5.0"
+  },
   "private": true,
   "heroku-postbuild": "npm install && cd client && npm install --only-dev && npm install && npm run build",
   "scripts": {
@@ -14,6 +17,7 @@
     "@expo/vector-icons": "^10.2.0",
     "axios": "^0.19.2",
     "express": "^4.17.1",
+    "firebase": "^7.16.1",
     "passport-facebook": "^3.0.0",
     "pg": "^8.3.0",
     "pg-tools": "^0.1.0",
@@ -23,6 +27,7 @@
     "react-native-deck-swiper": "^1.6.7",
     "react-native-dotenv": "^0.2.0",
     "react-native-fbsdk": "^2.0.0",
+    "react-native-permissions": "^2.1.5",
     "react-native-reanimated": "^1.9.0",
     "react-native-view-overflow": "0.0.5",
     "save": "^2.4.0",

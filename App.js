@@ -6,12 +6,12 @@
  * @flow strict-local
  */
 
-import React, {Component, useState, useEffect} from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import YelpApi from './api.js';
 import Swiper from 'react-native-deck-swiper';
 import { Transitioning, Transition } from 'react-native-reanimated';
 import data from './data';
-import{facebookService} from './facebookService.js';
+import { facebookService } from './backend/facebookService.js';
 import {
   Image,
   SafeAreaView,
@@ -20,7 +20,7 @@ import {
   View,
   Text,
   StatusBar,
-  Dimensions
+  Dimensions,
 } from 'react-native';
 
 export default function App() {
@@ -32,6 +32,7 @@ export default function App() {
       console.log(response.businessList),
         console.log(response.total),
         setResults(response.businessList);
+        facebookService.loginWithFacebook();
     });
   }, []);
 
@@ -164,7 +165,7 @@ export default function App() {
     </SafeAreaView>
   );
 }
- 
+
 const styles = StyleSheet.create({
 
   //Fullscreen
