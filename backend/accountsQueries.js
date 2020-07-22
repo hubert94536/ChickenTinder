@@ -20,7 +20,7 @@ const getUsers = (request, response) => {
             throw error
         }
         //response.status(200).json(results.rows)
-        console.log(results.rows)
+        console.log(results.rows[0].name)
     })
 }
 
