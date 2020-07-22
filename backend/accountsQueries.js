@@ -1,25 +1,28 @@
-// const Pool = require('pg').Pool
-// const pool = new Pool({
-//     user: process.env.USERS_USER,
-//     host: process.env.USERS_HOST,
-//     database: process.env.USERS_DATABASE,
-//     password: process.env.USERS_PASSWORD,
-//     port: process.env.USERS_PORT,
+const Pool = require('pg').Pool
+const pool = new Pool({
+    user: process.env.USERS_USER,
+    host: process.env.USERS_HOST,
+    database: process.env.USERS_DATABASE,
+    password: process.env.USERS_PASSWORD,
+})
+// const connectionString = process.env.USERS_URL;
+// const pool = new Pool ({
+//     connectionString: connectionString,
 // })
 
-// const getUsers = (request, response) => {
-//     pool.query('SELECT * FROM users ORDER BY user_id ASC', (error, results) => {
-//         if (error) {
-//             throw error
-//         }
-//         response.status(200).json(results.rows)
-//     })
-// }
+const getUsers = (request, response) => {
+    pool.query('SELECT * FROM accounts ORDER BY id ASC', (error, results) => {
+        if (error) {
+            throw error
+        }
+        response.status(200).json(results.rows)
+    })
+}
 
 // const getUserById = (request, response) => {
 //     const id = parseInt(request.params.id)
 
-//     pool.query('SELECT * FROM users WHERE user_id = $1', [id], (error, results) => {
+//     pool.query('SELECT * FROM accounts WHERE id = $1', [id], (error, results) => {
 //         if (error) {
 //             throw error
 //         }
@@ -65,10 +68,10 @@
 //     })
 // }
 
-// module.exports = {
-//     getUsers,
-//     getUserById,
-//     createUser,
-//     updateUser,
-//     deleteUser,
-// }
+module.exports = {
+    getUsers,
+    // getUserById,
+    // createUser,
+    // updateUser,
+    // deleteUser,
+}
