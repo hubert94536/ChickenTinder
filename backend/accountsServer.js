@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const app = express()
 const db = require('./accountsQueries.js')
 
-var port = process.env.PORT || 5432;
+var port = process.env.PORT || 3000;
 
 app.use(bodyParser.json())
 app.use(
@@ -12,9 +12,9 @@ app.use(
   })
 )
 
-app.get('/', (request, response) => {
-  response.json({ info: 'Node.js, Express, and Postgres API' })
-})
+// app.get('/', (request, response) => {
+//   response.json({ info: 'Node.js, Express, and Postgres API' })
+// })
 
 console.log(app.get('/accounts', db.getUsers))
 //app.get('/accounts/:id', db.getUserById)
