@@ -1,21 +1,15 @@
 import React from 'react'
 import FBSDK from 'react-native-fbsdk'
 import firebase from 'firebase';
-import {
-  FIREBASE_API_KEY, 
-  FIREBASE_APPLICATION_ID, 
-  FIREBASE_PROJECT_ID, 
-  FIREBASE_AUTH_DOMAIN, 
-  FIREBASE_STORAGE_BUCKET} from 'react-native-dotenv'
 const { LoginManager, AccessToken, GraphRequest, GraphRequestManager } = FBSDK
 
 firebase.initializeApp({
-  apiKey: FIREBASE_API_KEY,                             // Auth / General Use
-  applicationId: FIREBASE_APPLICATION_ID,      // General Use
-  projectId: FIREBASE_PROJECT_ID,               // General Use
-  authDomain: FIREBASE_AUTH_DOMAIN,         // Auth with popup/redirect
-  //databaseURL: "https://YOUR_APP.firebaseio.com", // Realtime Database
-  storageBucket: FIREBASE_STORAGE_BUCKET       //Storage
+  apiKey: process.env.FIREBASE_API_KEY,                             // Auth / General Use
+  applicationId: process.env.FIREBASE_APPLICATION_ID,      // General Use
+  projectId: process.env.FIREBASE_PROJECT_ID,               // General Use
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,         // Auth with popup/redirect
+  databaseURL: process.env.USERS_URL, // Realtime Database
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET       //Storage
 });
 
 class FacebookService {
