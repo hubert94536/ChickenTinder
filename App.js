@@ -21,216 +21,186 @@ import {
   Text,
   StatusBar,
   Dimensions,
-  PermissionsAndroid
 } from 'react-native';
-export async function requestLocationPermission() {
-  try {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      {
-        title: 'Example App',
-        message: 'Example App access to your location ',
-      },
+
+export default function App() {
+  const [index, setIndex] = useState(0);
+  const [results, setResults] = useState([]);
+
+  useEffect(() => {
+    YelpApi.getRestaurants('boba', 'arcadia california').then(response => {
+      console.log(response.businessList),
+        console.log(response.total),
+        setResults(response.businessList);
+        facebookService.loginWithFacebook();
+    });
+  }, []);
+
+  const Card = ({card}) => {
+    while (results.length == 0)
+      return <Text style={styles.card}>Fetching Restaurants!</Text>;
+    return (
+      <View style={styles.card}>
+        {/* <Image source={{uri: card.image}} style={styles.cardImage} /> */}
+        <Text>
+          {card.price} {card.name}
+        </Text>
+        <Text>{card.reviewCount} Reviews</Text>
+        <Text>Average Rating: {card.rating} Stars</Text>
+        <Text style={{fontWeight: 'bold'}}>
+          Contact Information:{' '}
+          <Text style={{fontWeight: 'normal'}}>{card.phone}</Text>
+        </Text>
+        <Text style={{fontWeight: 'bold'}}>
+          Address:{' '}
+          <Text style={{fontWeight: 'normal'}}>
+            {/* {card.location.display_address[0]},{' '}
+            {card.location.display_address[1]} */}
+          </Text>
+        </Text>
+      </View>
     );
-    console.log(granted);
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      console.log('You can use the location');
-      alert('You can use the location');
-    } else {
-      console.log('location permission denied');
-      alert('Location permission denied');
-    }
-  } catch (err) {
-    console.warn(err);
-  }
+  };
+
+  const onSwiped = () => {
+    // transitionRef.current.animateNextTransition();
+    setIndex(index + 1);
+  };
+  return (
+    <SafeAreaView style={styles.mainContainer}>
+    <View style={styles.cardContainer}>
+      <Swiper
+        cards = {data}
+        cardIndex= {index}
+        renderCard= {(card) => <Card card= {card}/>}
+        onSwiper = {onSwiped}
+        stackSize = {10}
+        stackSeparation = {0}
+        backgroundColor= {'transparent'}
+
+        animateOverlayLabelsOpacity
+
+        //Overlay offsets adjusted to flex sizing. May need to be retested on different device
+        overlayLabels={{
+          left: {
+            title: 'NOPE',
+            style: {
+              label: {
+                backgroundColor: 'red',
+                borderColor: 'red',
+                color: 'white',
+                borderWidth: 1,
+                fontSize: 24
+              },
+              wrapper: {
+                flexDirection: 'column',
+                alignItems: 'flex-end',
+                justifyContent: 'flex-start',
+                marginTop: 20,
+                marginLeft: -50
+              }
+            }
+          },
+          right: {
+            title: 'LIKE',
+            style: {
+              label: {
+                backgroundColor: 'green',
+                borderColor: 'green',
+                color: 'white',
+                borderWidth: 1,
+                fontSize: 24
+              },
+              wrapper: {
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                justifyContent: 'flex-start',
+                marginTop: 20,
+                marginLeft: 20
+              }
+            }
+          },
+          bottom: {
+            title: 'HATE',
+            style: {
+              label: {
+                backgroundColor: 'black',
+                borderColor: 'black',
+                color: 'white',
+                borderWidth: 1,
+                fontSize: 24
+              },
+              wrapper: {
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                marginTop: 20,
+                marginLeft: -20
+              }
+            }
+          },
+          top: {
+            title: 'LOVE',
+            style: {
+              label: {
+                backgroundColor: 'pink',
+                borderColor: 'pink',
+                color: 'white',
+                borderWidth: 1,
+                fontSize: 24
+              },
+              wrapper: {
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                marginTop: -50,
+                marginLeft: -20
+              }
+            }
+          }
+
+        }}
+      />
+    </View>
+    </SafeAreaView>
+  );
 }
 
-export default class App extends React.Component {
-  componentDidMount() {
-    requestLocationPermission();
-  }
-  render() {
-    return <Text>hello</Text>;
-  }
-}
-// export default function App() {
-//   const [index, setIndex] = useState(0);
-//   const [results, setResults] = useState([]);
+const styles = StyleSheet.create({
 
-//   useEffect(() => {
-//     YelpApi.getRestaurants('boba', 'arcadia california').then(response => {
-//       console.log(response.businessList),
-//         console.log(response.total),
-//         setResults(response.businessList);
-//         facebookService.loginWithFacebook();
-//     });
-//   }, []);
+  //Fullscreen
+  mainContainer: {
+    flex: 1,
+    backgroundColor: '#6495ed',
+  },
 
-//   const Card = ({card}) => {
-//     while (results.length == 0)
-//       return <Text style={styles.card}>Fetching Restaurants!</Text>;
-//     return (
-//       <View style={styles.card}>
-//         {/* <Image source={{uri: card.image}} style={styles.cardImage} /> */}
-//         <Text>
-//           {card.price} {card.name}
-//         </Text>
-//         <Text>{card.reviewCount} Reviews</Text>
-//         <Text>Average Rating: {card.rating} Stars</Text>
-//         <Text style={{fontWeight: 'bold'}}>
-//           Contact Information:{' '}
-//           <Text style={{fontWeight: 'normal'}}>{card.phone}</Text>
-//         </Text>
-//         <Text style={{fontWeight: 'bold'}}>
-//           Address:{' '}
-//           <Text style={{fontWeight: 'normal'}}>
-//             {/* {card.location.display_address[0]},{' '}
-//             {card.location.display_address[1]} */}
-//           </Text>
-//         </Text>
-//       </View>
-//     );
-//   };
+  //Card area is now flexsized and takes 90% of the width of screen
+  cardContainer: {
+    borderRadius: 17,
+    borderWidth: 0,
+    borderColor: '#000',
+    alignSelf: 'center',
+    marginTop: 5,
+    width: "90%",
+    aspectRatio: 5/8,
+  },
 
-//   const onSwiped = () => {
-//     // transitionRef.current.animateNextTransition();
-//     setIndex(index + 1);
-//   };
-//   return (
-//     <SafeAreaView style={styles.mainContainer}>
-//     <View style={styles.cardContainer}>
-//       <Swiper
-//         cards = {data}
-//         cardIndex= {index}
-//         renderCard= {(card) => <Card card= {card}/>}
-//         onSwiper = {onSwiped}
-//         stackSize = {10}
-//         stackSeparation = {0}
-//         backgroundColor= {'transparent'}
+  //Sizing is now based on aspect ratio
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 17,
+    borderWidth: 0,
+    borderColor: '#000',
+    alignSelf: 'flex-start',
+    width: "90%",
+    aspectRatio: 5/8,
+  },
 
-//         animateOverlayLabelsOpacity
-
-//         //Overlay offsets adjusted to flex sizing. May need to be retested on different device
-//         overlayLabels={{
-//           left: {
-//             title: 'NOPE',
-//             style: {
-//               label: {
-//                 backgroundColor: 'red',
-//                 borderColor: 'red',
-//                 color: 'white',
-//                 borderWidth: 1,
-//                 fontSize: 24
-//               },
-//               wrapper: {
-//                 flexDirection: 'column',
-//                 alignItems: 'flex-end',
-//                 justifyContent: 'flex-start',
-//                 marginTop: 20,
-//                 marginLeft: -50
-//               }
-//             }
-//           },
-//           right: {
-//             title: 'LIKE',
-//             style: {
-//               label: {
-//                 backgroundColor: 'green',
-//                 borderColor: 'green',
-//                 color: 'white',
-//                 borderWidth: 1,
-//                 fontSize: 24
-//               },
-//               wrapper: {
-//                 flexDirection: 'column',
-//                 alignItems: 'flex-start',
-//                 justifyContent: 'flex-start',
-//                 marginTop: 20,
-//                 marginLeft: 20
-//               }
-//             }
-//           },
-//           bottom: {
-//             title: 'HATE',
-//             style: {
-//               label: {
-//                 backgroundColor: 'black',
-//                 borderColor: 'black',
-//                 color: 'white',
-//                 borderWidth: 1,
-//                 fontSize: 24
-//               },
-//               wrapper: {
-//                 flexDirection: 'column',
-//                 alignItems: 'center',
-//                 justifyContent: 'flex-start',
-//                 marginTop: 20,
-//                 marginLeft: -20
-//               }
-//             }
-//           },
-//           top: {
-//             title: 'LOVE',
-//             style: {
-//               label: {
-//                 backgroundColor: 'pink',
-//                 borderColor: 'pink',
-//                 color: 'white',
-//                 borderWidth: 1,
-//                 fontSize: 24
-//               },
-//               wrapper: {
-//                 flexDirection: 'column',
-//                 alignItems: 'center',
-//                 justifyContent: 'flex-end',
-//                 marginTop: -50,
-//                 marginLeft: -20
-//               }
-//             }
-//           }
-
-//         }}
-//       />
-//     </View>
-//     </SafeAreaView>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-
-//   //Fullscreen
-//   mainContainer: {
-//     flex: 1,
-//     backgroundColor: '#6495ed',
-//   },
-
-//   //Card area is now flexsized and takes 90% of the width of screen
-//   cardContainer: {
-//     borderRadius: 17,
-//     borderWidth: 0,
-//     borderColor: '#000',
-//     alignSelf: 'center',
-//     marginTop: 5,
-//     width: "90%",
-//     aspectRatio: 5/8,
-//   },
-
-//   //Sizing is now based on aspect ratio
-//   card: {
-//     backgroundColor: '#fff',
-//     borderRadius: 17,
-//     borderWidth: 0,
-//     borderColor: '#000',
-//     alignSelf: 'flex-start',
-//     width: "90%",
-//     aspectRatio: 5/8,
-//   },
-
-//   //Card image is now centered
-//   cardImage: {
-//     marginTop: 60,
-//     flex: 0.5,
-//     resizeMode: 'contain',
-//   },
-// });
+  //Card image is now centered
+  cardImage: {
+    marginTop: 60,
+    flex: 0.5,
+    resizeMode: 'contain',
+  },
+});
 
