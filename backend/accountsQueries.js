@@ -1,24 +1,24 @@
-const Pool = require('pg').Pool
-const pool = new Pool({
-    user: process.env.USERS_USER,
-    host: process.env.USERS_HOST,
-    password: process.env.USERS_PASSWORD,
-    port: process.env.USERS_PORT,
-    database: process.env.USERS_DATABASE,
-    ssl: true
-})
+// const Pool = require('pg').Pool
+// const pool = new Pool({
+//     user: process.env.USERS_USER,
+//     host: process.env.USERS_HOST,
+//     password: process.env.USERS_PASSWORD,
+//     port: process.env.USERS_PORT,
+//     database: process.env.USERS_DATABASE,
+//     ssl: true
+// })
 
 
-const getUsers = (request, response) => {
-    console.log('hi');
-    pool.query('SELECT * FROM accounts ORDER BY id ASC', (error, results) => {
-        if (error) {
-            throw error
-        }
-        //response.status(200).json(results.rows)
-        console.log(results.rows[0].name)
-    })
-}
+// const getUsers = (request, response) => {
+//     console.log('hi');
+//     pool.query('SELECT * FROM accounts ORDER BY id ASC', (error, results) => {
+//         if (error) {
+//             throw error
+//         }
+//         //response.status(200).json(results.rows)
+//         console.log(results.rows[0].name)
+//     })
+// }
 
 // const getUserById = (request, response) => {
 //     const id = parseInt(request.params.id)
