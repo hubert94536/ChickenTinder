@@ -3,7 +3,7 @@ const pool = new Pool({
     user: process.env.USERS_USER,
     host: process.env.USERS_HOST,
     password: process.env.USERS_PASSWORD,
-    port:  process.env.PORT || process.env.USERS_PORT,
+    port: process.env.USERS_PORT,
     database: process.env.USERS_DATABASE,
     ssl: true
 })
