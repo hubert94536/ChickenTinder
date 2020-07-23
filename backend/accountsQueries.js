@@ -1,18 +1,13 @@
 const Pool = require('pg').Pool
-const params = url.parse(process.env.USERS_URL);
-const auth = params.auth.split(':');
 const pool = new Pool({
-    user: auth[0],
-    host: params.hostname,
-    password: auth[1],
-    port: params.port,
-    database: params.pathname.split('/')[1],
+    user: process.env.USERS_USER,
+    host: process.env.USERS_HOST,
+    password: process.env.USERS_PASSWORD,
+    port:  process.env.PORT || process.env.USERS_PORT,
+    database: process.env.USERS_DATABASE,
     ssl: true
 })
-// const connectionString = process.env.USERS_URL;
-// const pool = new Pool ({
-//     connectionString: connectionString,
-// })
+
 
 const getUsers = (request, response) => {
     console.log('hi');
