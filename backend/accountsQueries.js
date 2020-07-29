@@ -1,78 +1,77 @@
-// const Pool = require('pg').Pool
-// const pool = new Pool({
-//     user: process.env.USERS_USER,
-//     host: process.env.USERS_HOST,
-//     password: process.env.USERS_PASSWORD,
-//     port: process.env.USERS_PORT,
-//     database: process.env.USERS_DATABASE,
-//     ssl: true
-// })
+const Accounts = require('./accountsModel.js');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 
-// const getUsers = (request, response) => {
-//     console.log('hi');
-//     pool.query('SELECT * FROM accounts ORDER BY id ASC', (error, results) => {
-//         if (error) {
-//             throw error
-//         }
-//         //response.status(200).json(results.rows)
-//         console.log(results.rows[0].name)
-//     })
-// }
+const getAllAccounts = async (req, res) => {
+    try {
+        const users = await Accounts.findAll();
+        return res.status(200).json({ users });
+    } catch (error) {
+        return res.status(500).send(error.message);
+    }
+}
 
-// const getUserById = (request, response) => {
-//     const id = parseInt(request.params.id)
+const createAccount= async (req, res) => {
+    try {
+        const user = await Accounts.create(req.body);
+        return res.status(201).json({
+            user,
+        });
+    } catch (error) {
+        return res.status(500).json({ error: error.message })
+    }
+}
 
-//     pool.query('SELECT * FROM accounts WHERE id = $1', [id], (error, results) => {
-//         if (error) {
-//             throw error
-//         }
-//         response.status(200).json(results.rows)
-//     })
-// }
+const getAccountById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await Accounts.findOne({
+            where: { id: id },
+        });
+        if (user) {
+            return res.status(200).json({ user });
+        }
+        return res.status(404).send('User with the specified ID does not exists');
+    } catch (error) {
+        return res.status(500).send(error.message);
+    }
+}
 
-// const createUser = (request, response) => {
-//     const { name, email } = request.body
-
-//     pool.query('INSERT INTO users (name, password) VALUES ($1, $2)', [name, email], (error, results) => {
-//         if (error) {
-//             throw error
-//         }
-//         response.status(201).send(`User added with ID: ${result.insertId}`)
-//     })
-// }
-
-// const updateUser = (request, response) => {
-//     const id = parseInt(request.params.id)
-//     const { name, email } = request.body
-
-//     pool.query(
-//         'UPDATE users SET name = $1, email = $2 WHERE user_id = $3',
-//         [name, email, id],
-//         (error, results) => {
-//             if (error) {
-//                 throw error
-//             }
-//             response.status(200).send(`User modified with user_id: ${id}`)
-//         }
-//     )
-// }
-
-// const deleteUser = (request, response) => {
-//     const id = parseInt(request.params.id)
-
-//     pool.query('DELETE FROM users WHERE id = $1', [id], (error, results) => {
-//         if (error) {
-//             throw error
-//         }
-//         response.status(200).send(`User deleted with ID: ${id}`)
-//     })
-// }
+const updateAccounts = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const [updated] = await Accounts.update(req.body, {
+            where: { id: id }
+        });
+        if (updated) {
+            const updatedAccount = await Accounts.findOne({ where: { id: id } });
+            return res.status(200).json({ user: updatedAccount });
+        }
+        throw new Error('User not found');
+    } catch (error) {
+        return res.status(500).send(error.message);
+    }
+};
+const deleteAccount = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deleted = await Accounts.destroy({
+            where: { id: id }
+        });
+        if (deleted) {
+            return res.status(204).send("User deleted");
+        }
+        throw new Error("User not found");
+    } catch (error) {
+        return res.status(500).send(error.message);
+    }
+};
 
 module.exports = {
-    getUsers,
-    // getUserById,
-    // createUser,
-    // updateUser,
-    // deleteUser,
+    createAccount,
+    getAllAccounts,
+    getAccountById,
+    updateAccounts,
+    deleteAccount
 }

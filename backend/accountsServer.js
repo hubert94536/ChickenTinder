@@ -1,6 +1,7 @@
 const express = require('express')
-const bodyParser = require('body-parser')
+const router = express.Router()
 const app = express()
+const bodyParser = require('body-parser')
 const db = require('./accountsQueries.js')
 
 var port = process.env.PORT || 3000;
@@ -12,14 +13,18 @@ app.use(
   })
 )
 
-// app.get('/', (request, response) => {
-//   response.json({ info: 'Node.js, Express, and Postgres API' })
-// })
-//app.get('/accounts', db.getUsers)
-//app.get('/accounts/:id', db.getUserById)
-// app.post('/users', db.createUser)
-// app.put('/users/:id', db.updateUser)
-// app.delete('/users/:id', db.deleteUser)
+//if development mode, allow self-signed ssl
+if ("development" == app.get("env")) {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+}
+app.get('/', (request, response) => {
+  response.json({ info: 'Node.js, Express, and Postgres API' })
+})
+app.get('/accounts', db.getAllAccounts)
+app.get('/accounts/:id', db.getAccountById)
+app.post('/accounts', db.createAccount)
+app.put('/accounts/:id', db.updateAccounts)
+app.delete('/accounts/:id', db.deleteAccount)
 
 app.listen(port, () => {
   console.log(`App running on port ${port}.`)
