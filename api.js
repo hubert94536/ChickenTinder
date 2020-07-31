@@ -10,8 +10,8 @@ const yelpApi = axios.create({
 })
 
 const accountsApi = axios.create({
-  //baseURL: 'https://wechews.herokuapp.com/',
-  baseURL: 'http://localhost:3000',
+  baseURL: 'https://wechews.herokuapp.com/',
+ // baseURL: 'http://localhost:3000',
   headers: {
     'Access-Control-Allow-Origin': true,
     'Content-Type': 'application/json',
