@@ -3,7 +3,7 @@ const app = express()
 const bodyParser = require('body-parser')
 const db = require('./accountsQueries.js')
 const cors = require('cors')
-var port = process.env.PORT || 3000;
+var PORT = process.env.PORT || 3000;
 
 // app.use(cors({
 //   origin: process.env.baseURL || 'http://localhost:3000',
@@ -12,14 +12,14 @@ var port = process.env.PORT || 3000;
 //   credentials: true
 // }));
 
-// app.use(function(req, res, next) {
-//   req.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-//   res.header(
-//     'Access-Control-Allow-Headers',
-//     'Origin, X-Requested-With, Content-Type, Accept'
-//   );
-//   next();
-// });
+app.use(function(req, res, next) {
+  req.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
+  next();
+});
 app.use(bodyParser.json())
 app.use(
   bodyParser.urlencoded({
@@ -42,6 +42,6 @@ app.route("/accounts/:id")
 .put(db.updateAccounts)
 .delete(db.deleteAccount);
 
-app.listen(port, () => {
+app.listen(PORT, () => {
   console.log(`App running on port ${port}.`)
 })
