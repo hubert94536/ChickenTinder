@@ -24,7 +24,7 @@
     "firebase": "^7.16.1",
     "http": "0.0.1-security",
     "passport-facebook": "^3.0.0",
-    "pg": "^7.12.1",
+    "pg": "^8.3.0",
     "pg-tools": "^0.1.0",
     "pgtools": "^0.3.0",
     "react": "16.11.0",
