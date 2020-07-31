@@ -3,6 +3,7 @@ require('dotenv').config();
 //configuration for accounts database
 const config = {
     user: process.env.USERS_USER,
+    username: process.env.USERS_USER,
     host: process.env.USERS_HOST,
     password: process.env.USERS_PASSWORD,
     port: 5432,
