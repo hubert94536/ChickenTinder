@@ -8,19 +8,20 @@ const getAllAccounts = async (req, res) => {
         const users = await Accounts.findAll();
         return res.status(200).json({ users });
     } catch (error) {
+        console.log(error.message)
         return res.status(500).send(error.message);
     }
 }
 
 const createAccount= async (req, res) => {
     try {
-        const user = await Accounts.create(req.params);
+        const user = await Accounts.create(req.body.params);
         return res.status(201).json({
             user,
         });
     } catch (error) {
         console.log(error.message)
-        return res.status(400).json({ error: error.message})
+        return res.status(500).json({ error: error.message})
     }
 }
 
@@ -35,6 +36,7 @@ const getAccountById = async (req, res) => {
         }
         return res.status(404).send('User with the specified ID does not exists');
     } catch (error) {
+        console.log(error.message)
         return res.status(500).send(error.message);
     }
 }
@@ -51,6 +53,7 @@ const updateAccounts = async (req, res) => {
         }
         throw new Error('User not found');
     } catch (error) {
+        console.log(error.message)
         return res.status(500).send(error.message);
     }
 };
@@ -65,6 +68,7 @@ const deleteAccount = async (req, res) => {
         }
         throw new Error("User not found");
     } catch (error) {
+        console.log(error.message)
         return res.status(500).send(error.message);
     }
 };
