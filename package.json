@@ -19,6 +19,7 @@
     "@react-native-community/geolocation": "^2.0.2",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "firebase": "^7.16.1",
     "passport-facebook": "^3.0.0",

@@ -2,16 +2,26 @@ import axios from 'axios'
 import {API_KEY} from 'react-native-dotenv'
 
 //setting up Yelp API base caller
-const api = axios.create({
+const yelpApi = axios.create({
   baseURL: 'https://api.yelp.com/v3',
   headers: {
     Authorization: `Bearer ${API_KEY}`,
   },
 })
 
+const accountsApi = axios.create({
+  baseURL: 'https://wechews.herokuapp.com/',
+  headers: {
+    'Access-Control-Allow-Origin': true,
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE'
+  },
+
+})
+
 //getting list of resturants
 const getRestaurants = (name, place)  => {
-  return api
+  return yelpApi
     .get('/businesses/search', {
       params: {
         term: name,
@@ -39,7 +49,24 @@ const getRestaurants = (name, place)  => {
     })
     .catch(error => console.error(error))
 }
+const createUser = (name, username, email, phone_number) => {
+  return accountsApi
+  .post('/accounts', {
+    params: {
+      name: name,
+      username: username,
+      email: email,
+      phone_number,
+    },
+  })
+  .then (res => {
+    console.log(res.data);
+    return res.data.id;
+  })
+  .catch(error => console.log(error.message))
+}
 
 export default {
   getRestaurants,
+  createUser
 };
