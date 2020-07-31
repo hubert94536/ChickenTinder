@@ -14,12 +14,13 @@ const getAllAccounts = async (req, res) => {
 
 const createAccount= async (req, res) => {
     try {
-        const user = await Accounts.create(req.body);
+        const user = await Accounts.create(req.params);
         return res.status(201).json({
             user,
         });
     } catch (error) {
-        return res.status(500).json({ error: error.stack })
+        console.log(error.message)
+        return res.status(400).json({ error: error.message})
     }
 }
 
