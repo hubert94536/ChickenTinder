@@ -19,7 +19,7 @@ const createAccount= async (req, res) => {
             user,
         });
     } catch (error) {
-        return res.status(500).json({ error: error.message })
+        return res.status(500).json({ error: error.stack })
     }
 }
 

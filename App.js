@@ -7,7 +7,7 @@
  */
 
 import React, { Component, useState, useEffect } from 'react';
-import YelpApi from './api.js';
+import api from './api.js';
 import Swiper from 'react-native-deck-swiper';
 import { Transitioning, Transition } from 'react-native-reanimated';
 import data from './data';
@@ -28,11 +28,11 @@ export default function App() {
   const [results, setResults] = useState([]);
 
   useEffect(() => {
-    YelpApi.getRestaurants('boba', 'arcadia california').then(response => {
+    api.getRestaurants('boba', 'arcadia california').then(response => {
       console.log(response.businessList),
         console.log(response.total),
         setResults(response.businessList);
-        facebookService.loginWithFacebook();
+        api.createUser("hub", "hub123", "hub@example.com", "888888888");
     });
   }, []);
 
