@@ -10,7 +10,8 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "start": "react-native start",
+    "postinstall": "npm run build",
+"start": "node server.js",
     "test": "jest",
     "lint": "eslint ."
   },
