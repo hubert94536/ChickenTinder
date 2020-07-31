@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
-require('dotenv').config();
+//require('dotenv').config();
 //configuration for accounts database
 const config = {
     user: process.env.USERS_USER,
@@ -11,7 +11,8 @@ const config = {
     ssl: true,
     dialect: 'postgresql',
     dialectOptions: {
-        "ssl": true
+        "ssl": true,
+        rejectUnauthorized: false 
     }
 }
 
