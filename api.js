@@ -10,14 +10,7 @@ const yelpApi = axios.create({
 })
 
 const accountsApi = axios.create({
-  baseURL: 'https://wechews.herokuapp.com/',
- // baseURL: 'http://localhost:3000',
-  headers: {
-    'Access-Control-Allow-Origin': true,
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE'
-  },
-
+  baseURL: 'https://wechews.herokuapp.com',
 })
 
 //getting list of resturants
@@ -67,7 +60,18 @@ const createUser = (name, username, email, phone_number) => {
   .catch(error => console.log(error.message))
 }
 
+const getAllUsers = () => {
+  return accountsApi
+  .get('/accounts')
+  .then (res => {
+    console.log(res.data);
+    return res;
+  })
+  .catch(error => console.log(error.message))
+}
+
 export default {
   getRestaurants,
-  createUser
+  createUser,
+  getAllUsers
 };

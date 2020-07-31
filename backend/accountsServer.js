@@ -12,14 +12,6 @@ var PORT = process.env.PORT || 3000;
 //   credentials: true
 // }));
 
-app.use(function(req, res, next) {
-  req.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
-  );
-  next();
-});
 app.use(bodyParser.json())
 app.use(
   bodyParser.urlencoded({
