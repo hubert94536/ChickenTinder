@@ -43,5 +43,5 @@ app.route("/accounts/:id")
 .delete(db.deleteAccount);
 
 app.listen(PORT, () => {
-  console.log(`App running on port ${port}.`)
+  console.log(`App running on port ${PORT}.`)
 })
