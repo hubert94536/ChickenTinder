@@ -44,7 +44,7 @@ const getAccountById = async (req, res) => {
 const updateAccounts = async (req, res) => {
     try {
         const { id } = req.params;
-        const [updated] = await Accounts.update(req.body, {
+        const [updated] = await Accounts.update(req.body.params, {
             where: { id: id }
         });
         if (updated) {
