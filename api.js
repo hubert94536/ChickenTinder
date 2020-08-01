@@ -57,7 +57,10 @@ const createUser = (name, username, email, phone_number) => {
   })
   .then (res => {
     console.log(res.data.users.id);
-    return res.data.users.id;
+    return {
+      id: res.data.users.id,
+      status: res.status
+    }
   })
   .catch(error => console.log(error.message))
 }
@@ -69,6 +72,7 @@ const getAllUsers = () => {
   .then (res => {
     console.log(res.data);
     return {
+      status: res.status,
       userList: res.data.users.map(function (users) { 
         //returns individual user info
         return {
@@ -99,6 +103,7 @@ const getUser = (id) => {
   .then (res => {
     console.log(res.data);
     return {
+      status: res.status,
       user: res.data.user.map(function (user) { 
         return {
             name: user.name,
@@ -112,21 +117,57 @@ const getUser = (id) => {
   .catch(error => console.log(error.message))
 }
 
+//update email and returns status
+const updateEmail = (id, info) => {
+  let req = {
+    email: info
+  }
+  return updateUser(id,req)
+}
+
+//update username and returns status
+const updateUsername = (id, info) => {
+  let req = {
+    username: info
+  }
+  return updateUser(id,req)
+}
+
+//update username and returns status
+const updateName = (id, info) => {
+  let req = {
+    name: info
+  }
+  return updateUser(id,req)
+}
+
+//update username and returns status
+const updatePhoneNumber = (id, info) => {
+  let req = {
+    phone_number: info
+  }
+  return updateUser(id,req)
+}
+
 //updates user and returns status
-const updateUser = (id, params) => {
+const updateUser = (id, req) => {
   return accountsApi
   .put(`/accounts/${id}`, {
-    params
-    // params: {
-    //   name: name,
-    //   username: username,
-    //   email: email,
-    //   phone_number,
-    // },
+    params: req
   })
   .then (res => {
     console.log(res.status);
-    return res.status;
+    return {
+      status: res.status,
+      user: res.data.user.map(function (user) { 
+        return {
+            name: user.name,
+            username: user.username,
+            email: user.email,
+            phone_number: user.phone_number 
+        }
+      })
+    }
   })
   .catch(error => console.log(error.message))
 }
@@ -137,5 +178,8 @@ export default {
   getAllUsers,
   deleteUser,
   getUser,
-  updateUser,
+  updateEmail,
+  updateUsername,
+  updateName,
+  updatePhoneNumber
 };
