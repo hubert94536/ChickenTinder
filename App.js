@@ -32,7 +32,11 @@ export default function App() {
       console.log(response.businessList),
         console.log(response.total),
         setResults(response.businessList);
-        api.createUser("hub", "hub123", "hub@example.com", "888888888");
+        //api.createUser("hub", "hub123", "hub@example.com", "888888888");
+        api.updateUser(2, 'name=carl&email=carl@example.com')
+        //api.getAllUsers();
+        //api.deleteUser(1);
+        //api.getUser(2);
     });
   }, []);
 
