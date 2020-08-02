@@ -76,7 +76,7 @@ const deleteAccount = async (req, res) => {
 const checkUsername = async (req, res) => {
     try {
         const user = await Accounts.findOne({
-            where: { username: req.body.username}
+            where: { username: req.body.params.username}
         });
         if (user) {
             return res.status(200).send("Username found")            
@@ -91,7 +91,7 @@ const checkUsername = async (req, res) => {
 const checkPhoneNumber = async (req, res) => {
     try {
         const user = await Accounts.findOne({
-            where: { phone_number: req.body.phone_number}
+            where: { phone_number: req.body.params.phone_number}
         });
         if (user) {
             return res.status(200).send("Phone number found")            
