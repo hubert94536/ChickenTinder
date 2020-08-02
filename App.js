@@ -11,7 +11,7 @@ import api from './api.js';
 import Swiper from 'react-native-deck-swiper';
 import { Transitioning, Transition } from 'react-native-reanimated';
 import data from './data';
-import { facebookService } from './backend/facebookService.js';
+import { facebookService } from './facebookService.js';
 import {
   Image,
   SafeAreaView,
