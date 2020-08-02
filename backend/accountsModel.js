@@ -56,12 +56,13 @@ const Accounts = sequelize.define('accounts', {
             notEmpty: true,
         },
     },
+    photo: DataTypes.TEXT,
     friends: DataTypes.ARRAY(DataTypes.TEXT),
 });
 
 
-// Accounts.sync({ force: true }).then(()=> {
-//     console.log("All models were synchronized successfully.");
-// })
+Accounts.sync({ force: true }).then(()=> {
+    console.log("All models were synchronized successfully.");
+})
 
 module.exports = Accounts;

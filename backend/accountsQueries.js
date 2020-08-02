@@ -73,10 +73,44 @@ const deleteAccount = async (req, res) => {
     }
 };
 
+const checkUsername = async (req, res) => {
+    try {
+        const { username } = req.params;
+        const user = await Accounts.findOne({
+            where: { username: username}
+        });
+        if (user) {
+            return res.status(200).send("Username found")            
+        }
+        return res.status(404).send("Username not found");
+    } catch (error) {
+        console.log(error.message)
+        return res.status(500).send(error.message);
+    }
+};
+
+const checkPhoneNumber = async (req, res) => {
+    try {
+        const { phoneNumber } = req.params;
+        const user = await Accounts.findOne({
+            where: { phone_number: phoneNumber}
+        });
+        if (user) {
+            return res.status(200).send("Phone number found")            
+        }
+        return res.status(404).send("Phone number not found");
+    } catch (error) {
+        console.log(error.message)
+        return res.status(500).send(error.message);
+    }
+};
+
 module.exports = {
     createAccount,
     getAllAccounts,
     getAccountById,
     updateAccounts,
-    deleteAccount
+    deleteAccount,
+    checkUsername,
+    checkPhoneNumber
 }

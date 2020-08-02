@@ -45,14 +45,16 @@ const getRestaurants = (name, place)  => {
 }
 
 //creates user and returns id
-const createUser = (name, username, email, phone_number) => {
+const createFBUser = (name, id, username, email, phone_number, photo) => {
   return accountsApi
   .post('/accounts', {
     params: {
+      id: id,
       name: name,
       username: username,
       email: email,
       phone_number: phone_number,
+      photo: photo,
     },
   })
   .then (res => {
@@ -172,14 +174,38 @@ const updateUser = (id, req) => {
   .catch(error => console.log(error.message))
 }
 
+//checks username and returns status
+const checkUsername = (username) => {
+  return accountsApi
+  .get('/username')
+  .then (res => {
+    console.log(res.data);
+    return res.status;
+  })
+  .catch(error => console.log(error.message))
+}
+
+//checks phone number and returns status
+const checkPhoneNumber = (phoneNumber) => {
+  return accountsApi
+  .get('/phoneNumber')
+  .then (res => {
+    console.log(res.data);
+    return res.status;
+  })
+  .catch(error => console.log(error.message))
+}
+
 export default {
   getRestaurants,
-  createUser,
+  createFBUser,
   getAllUsers,
   deleteUser,
   getUser,
   updateEmail,
   updateUsername,
   updateName,
-  updatePhoneNumber
+  updatePhoneNumber,
+  checkUsername,
+  checkPhoneNumber
 };

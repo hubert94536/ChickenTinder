@@ -5,13 +5,6 @@ const db = require('./accountsQueries.js')
 const cors = require('cors')
 var PORT = process.env.PORT || 3000;
 
-// app.use(cors({
-//   origin: process.env.baseURL || 'http://localhost:3000',
-//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//   allowedHeaders: ['Content-Type', 'Authorization'],
-//   credentials: true
-// }));
-
 app.use(bodyParser.json())
 app.use(
   bodyParser.urlencoded({
@@ -33,6 +26,12 @@ app.route("/accounts/:id")
 .get(db.getAccountById)
 .put(db.updateAccounts)
 .delete(db.deleteAccount);
+
+app.route("/username")
+.get(db.checkUsername);
+
+app.route("/phoneNumber")
+.get(db.checkPhoneNumber);
 
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}.`)
