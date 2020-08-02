@@ -27,10 +27,10 @@ app.route("/accounts/:id")
 .put(db.updateAccounts)
 .delete(db.deleteAccount);
 
-app.route("/username")
+app.route("/username/:username")
 .get(db.checkUsername);
 
-app.route("/phoneNumber")
+app.route("/phoneNumber/:phone_number")
 .get(db.checkPhoneNumber);
 
 app.listen(PORT, () => {
