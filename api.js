@@ -178,9 +178,7 @@ const updateUser = (id, req) => {
 const checkUsername = (username) => {
   return accountsApi
   .get('/username', {
-    params: {
       username: username,
-    }
   })
   .then (res => {
     console.log(res.status);
@@ -193,9 +191,7 @@ const checkUsername = (username) => {
 const checkPhoneNumber = (phoneNumber) => {
   return accountsApi
   .get('/phoneNumber', {
-    params: {
       phone_number: phoneNumber,
-    }
   })
   .then (res => {
     console.log(res.status);
