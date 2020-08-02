@@ -32,6 +32,7 @@ export default function App() {
       console.log(response.businessList),
         console.log(response.total),
         setResults(response.businessList);
+        api.checkUsername(hub);
     });
   }, []);
 
