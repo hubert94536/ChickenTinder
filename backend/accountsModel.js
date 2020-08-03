@@ -59,7 +59,6 @@ const Accounts = sequelize.define('accounts', {
     photo: DataTypes.STRING,
 });
 
-
 Accounts.sync({ force: true }).then(()=> {
     console.log("All models were synchronized successfully.");
 })
