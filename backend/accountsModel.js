@@ -60,8 +60,8 @@ const Accounts = sequelize.define('accounts', {
 });
 
 
-// Accounts.sync({ force: true }).then(()=> {
-//     console.log("All models were synchronized successfully.");
-// })
+Accounts.sync({ force: true }).then(()=> {
+    console.log("All models were synchronized successfully.");
+})
 
 module.exports = Accounts;
