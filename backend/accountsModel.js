@@ -26,7 +26,7 @@ const Accounts = sequelize.define('accounts', {
         primaryKey: true,
     },
     name: {
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
             notEmpty: true,
@@ -41,7 +41,7 @@ const Accounts = sequelize.define('accounts', {
         },
     },
     email: {
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING,
         unique: true,
         allowNull: false,
         validate: {
@@ -49,15 +49,14 @@ const Accounts = sequelize.define('accounts', {
         },
     },
     phone_number: {
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING,
         unique: true,
         allowNull: false,
         validate: {
             notEmpty: true,
         },
     },
-    photo: DataTypes.TEXT,
-    friends: DataTypes.ARRAY(DataTypes.TEXT),
+    photo: DataTypes.STRING,
 });
 
 
