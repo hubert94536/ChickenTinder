@@ -7,11 +7,12 @@
  */
 
 import React, {Component, useState, useEffect} from 'react';
-import YelpApi from './api.js';
+import api from './api.js';
 import Swiper from 'react-native-deck-swiper';
 import {Transitioning, Transition} from 'react-native-reanimated';
 import data from './data';
 import {facebookService} from './facebookService.js';
+
 import {
   Image,
   SafeAreaView,
@@ -29,10 +30,11 @@ export default function App() {
   const round = 1;
 
   useEffect(() => {
-    YelpApi.getRestaurants('boba', 'arcadia california').then(response => {
+    api.getRestaurants('boba', 'arcadia california').then(response => {
       console.log(response.businessList),
         console.log(response.total),
         setResults(response.businessList);
+      api.checkUsername('hub');
     });
   }, []);
 
@@ -54,8 +56,8 @@ export default function App() {
         <Text style={{fontWeight: 'bold'}}>
           Address:{' '}
           <Text style={{fontWeight: 'normal'}}>
-            {card.location.display_address[0]},{' '}
-            {card.location.display_address[1]}
+            {/* {card.location.display_address[0]},{' '}
+            {card.location.display_address[1]} */}
           </Text>
         </Text>
       </View>
