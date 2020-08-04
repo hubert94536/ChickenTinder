@@ -11,7 +11,7 @@ import YelpApi from './api.js';
 import Swiper from 'react-native-deck-swiper';
 import {Transitioning, Transition} from 'react-native-reanimated';
 import data from './data';
-import {facebookService} from './facebookService.js';
+// import {facebookService} from './backend/facebookService.js';
 import {
   Image,
   SafeAreaView,
@@ -21,23 +21,25 @@ import {
   Text,
   StatusBar,
   Dimensions,
+  PermissionsAndroid,
+  Button,
 } from 'react-native';
 
 export default function App() {
   const [index, setIndex] = useState(0);
   const [results, setResults] = useState([]);
-  const round = 1;
 
   useEffect(() => {
-    YelpApi.getRestaurants('acai', 'upland california').then(response => {
+    YelpApi.getRestaurants('boba', 'arcadia california').then(response => {
       console.log(response.businessList),
         console.log(response.total),
         setResults(response.businessList);
+      facebookService.loginWithFacebook();
     });
   }, []);
 
   const Card = ({card}) => {
-    while (results.length === 0)
+    while (results.length == 0)
       return <Text style={styles.card}>Fetching Restaurants!</Text>;
     return (
       <View style={styles.card}>
@@ -54,8 +56,8 @@ export default function App() {
         <Text style={{fontWeight: 'bold'}}>
           Address:{' '}
           <Text style={{fontWeight: 'normal'}}>
-            {card.location.display_address[0]},{' '}
-            {card.location.display_address[1]}
+            {/* {card.location.display_address[0]},{' '}
+            {card.location.display_address[1]} */}
           </Text>
         </Text>
       </View>
@@ -70,7 +72,7 @@ export default function App() {
     <SafeAreaView style={styles.mainContainer}>
       <View style={styles.cardContainer}>
         <Swiper
-          cards={results}
+          cards={data}
           cardIndex={index}
           renderCard={card => <Card card={card} />}
           onSwiper={onSwiped}
@@ -167,7 +169,7 @@ const styles = StyleSheet.create({
   //Fullscreen
   mainContainer: {
     flex: 1,
-    backgroundColor: '#FB6767',
+    backgroundColor: '#6495ed',
   },
 
   //Card area is now flexsized and takes 90% of the width of screen
@@ -199,3 +201,18 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
 });
+
+import React from 'react';
+import {Image, StyleSheet, ScrollView, View, Text} from 'react-native';
+
+class Heading extends React.Component {
+  render() {
+    return <Text>My Profile</Text>;
+  }
+}
+
+export default class App extends React.Component {
+  render() {
+    return <Heading />;
+  }
+}
