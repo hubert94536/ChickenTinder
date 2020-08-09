@@ -6,12 +6,12 @@
  * @flow strict-local
  */
 
-import React, {Component, useState, useEffect} from 'react';
-import YelpApi from './api.js';
+import React, { Component, useState, useEffect } from 'react';
+import api from './api.js';
 import Swiper from 'react-native-deck-swiper';
 import { Transitioning, Transition } from 'react-native-reanimated';
 import data from './data';
-import{facebookService} from './facebookService.js';
+import { facebookService } from './facebookService.js';
 import {
   Image,
   SafeAreaView,
@@ -20,7 +20,7 @@ import {
   View,
   Text,
   StatusBar,
-  Dimensions
+  Dimensions,
 } from 'react-native';
 
 export default function App() {
@@ -28,12 +28,13 @@ export default function App() {
   const [results, setResults] = useState([]);
 
   useEffect(() => {
-    YelpApi.getRestaurants('boba', 'arcadia california').then(response => {
+    api.getRestaurants('boba', 'arcadia california').then(response => {
       console.log(response.businessList),
         console.log(response.total),
         setResults(response.businessList);
+        api.checkUsername('hub');
     });
-  });
+  }, []);
 
   const Card = ({card}) => {
     while (results.length == 0)
@@ -53,8 +54,8 @@ export default function App() {
         <Text style={{fontWeight: 'bold'}}>
           Address:{' '}
           <Text style={{fontWeight: 'normal'}}>
-            {card.location.display_address[0]},{' '}
-            {card.location.display_address[1]}
+            {/* {card.location.display_address[0]},{' '}
+            {card.location.display_address[1]} */}
           </Text>
         </Text>
       </View>
@@ -164,7 +165,7 @@ export default function App() {
     </SafeAreaView>
   );
 }
- 
+
 const styles = StyleSheet.create({
 
   //Fullscreen
