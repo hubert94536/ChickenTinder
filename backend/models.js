@@ -51,7 +51,6 @@ const Accounts = sequelize.define('accounts', {
     phone_number: {
         type: DataTypes.STRING,
         unique: true,
-        allowNull: false,
     },
     photo: DataTypes.STRING,
     inSession: DataTypes.BOOLEAN,

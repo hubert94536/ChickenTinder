@@ -25,15 +25,12 @@ var sessions = new Object();
 var clients = new Object();
 
 io.on('connection', socket => {
-  console.log('yay')
-  socket.on('connect', data => {
-    clients[data.username] = socket.id;
-  })
+  clients[socket.handshake.query.username] = socket.id;
 
   //creates session and return session info to host
-  socket.on('createRoom', data => {
+  socket.on('createRoom', async data => {
     try {
-      Accounts.update({
+      await Accounts.update({
         inSession: true,
       }, {
         where: { username: data.host }
@@ -49,20 +46,20 @@ io.on('connection', socket => {
       socket.emit('update', JSON.stringify(sessions[data.host].members));
       console.log(sessions);
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
       socket.emit('exception', error);
     }
 
   });
 
   //send invite to join a room
-  socket.on('invite', data => {
+  socket.on('invite', async data => {
     try {
-      let user = Accounts.findOne({
+      let user = await Accounts.findOne({
         where: { username: data.username }
       });
       //check if friend is in another group
-      if (user.inSession) {
+      if (user) {
         socket.emit('unreachable', data.username);
       } else {
         io.to(clients[data.username]).emit('invite', {
@@ -71,23 +68,23 @@ io.on('connection', socket => {
           name: sessions[data.host].members[data.host].name
         });
       }
-    } catch {
-      console.log(error.message);
+    } catch (error) {
+      console.log(error);
       socket.emit('exception', error);
     }
   });
 
   //alerts everyone in room updated status
-  socket.on('joinRoom', data => {
+  socket.on('joinRoom', async data => {
     //include to check if room exists
     if (data.room in sessions) {
       try {
-        socket.join(data.room)
-        Accounts.update({
+        await Accounts.update({
           inSession: true,
         }, {
           where: { username: data.username }
         });
+        socket.join(data.room)
         sessions[data.room].members[data.username] = new Object();
         sessions[data.room].members[data.username].filters = false;
         sessions[data.room].members[data.username].pic = data.pic;
@@ -154,9 +151,9 @@ io.on('connection', socket => {
   })
 
   //leaving a session
-  socket.on('leave', data => {
+  socket.on('leave', async data => {
     try {
-      Accounts.update({
+      await Accounts.update({
         inSession: false,
       }, {
         where: { username: data.username }

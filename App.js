@@ -12,7 +12,7 @@ import Swiper from 'react-native-deck-swiper';
 import { Transitioning, Transition } from 'react-native-reanimated';
 import data from './data';
 import { facebookService } from './facebookService.js';
-import {Sockets} from './socket.js';
+import sockets from './socket.js';
 
 import {
   Image,
@@ -35,8 +35,15 @@ export default function App() {
     //     console.log(response.total),
     //     setResults(response.businessList);
     // });
-    Sockets.createRoom("PICC", "hub")
-    //Sockets.joinRoom("subs", "a c", "i am host")
+    //sockets.createRoom()
+    sockets.sendInvite("hubs")
+    sockets.getSocket().on('invite', data => {
+      console.log('success');
+    })
+    sockets.getSocket().on('unreachable', data => {
+      console.log('yay');
+    })
+    //Sockets.joinRoom("hubs")
     //Sockets.leaveRoom("cubs", "i am host")
     //Sockets.endSession("i am host")
     //Sockets.kickUser("hubs", "i am host");
