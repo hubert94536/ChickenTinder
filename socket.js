@@ -25,6 +25,14 @@ const sendInvite = (username) => {
     }
 }
 
+const declineInvite = (room) => {
+    try {
+        socket.emit('decline', {username: global.username, room: room})
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const joinRoom = (room) => {
     try {
         socket.emit('joinRoom', { username: global.username, pic: global.pic, room: room, name: global.name });
@@ -89,6 +97,7 @@ module.exports = {
     createRoom,
     joinRoom,
     sendInvite,
+    declineInvite,
     leaveRoom,
     kickUser,
     startSession,

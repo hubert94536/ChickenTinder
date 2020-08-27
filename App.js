@@ -36,13 +36,13 @@ export default function App() {
     //     setResults(response.businessList);
     // });
     //sockets.createRoom()
-    sockets.sendInvite("hubs")
+    //sockets.sendInvite("hubs")
     sockets.getSocket().on('invite', data => {
-      console.log('success');
+      console.log(data);
     })
-    sockets.getSocket().on('unreachable', data => {
-      console.log('yay');
-    })
+    // sockets.getSocket().on('unreachable', data => {
+    //   console.log('yay');
+    // })
     //Sockets.joinRoom("hubs")
     //Sockets.leaveRoom("cubs", "i am host")
     //Sockets.endSession("i am host")
