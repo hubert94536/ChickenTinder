@@ -1,5 +1,5 @@
-import React from 'react'
-import FBSDK from 'react-native-fbsdk'
+import React from 'react';
+import FBSDK from 'react-native-fbsdk';
 import firebase from 'firebase';
 import api from './api.js';
 import {
@@ -8,18 +8,18 @@ import {
   FIREBASE_AUTH_DOMAIN,
   FIREBASE_DATABASE,
   FIREBASE_STORAGE_BUCKET,
-  FIREBASE_PROJECT_ID
+  FIREBASE_PROJECT_ID,
 } from 'react-native-dotenv';
 
-const { LoginManager, AccessToken, GraphRequest, GraphRequestManager } = FBSDK
+const {LoginManager, AccessToken, GraphRequest, GraphRequestManager} = FBSDK;
 
 const config = {
-  apiKey: FIREBASE_API_KEY,                             // Auth / General Use
-  applicationId: FIREBASE_APPLICATION_ID,      // General Use
-  projectId: FIREBASE_PROJECT_ID,               // General Use
-  authDomain: FIREBASE_AUTH_DOMAIN,         // Auth with popup/redirect
+  apiKey: FIREBASE_API_KEY, // Auth / General Use
+  applicationId: FIREBASE_APPLICATION_ID, // General Use
+  projectId: FIREBASE_PROJECT_ID, // General Use
+  authDomain: FIREBASE_AUTH_DOMAIN, // Auth with popup/redirect
   databaseURL: FIREBASE_DATABASE, // Realtime Database
-  storageBucket: FIREBASE_STORAGE_BUCKET       //Storage
+  storageBucket: FIREBASE_STORAGE_BUCKET, //Storage
 };
 
 firebase.initializeApp(config);
@@ -35,24 +35,32 @@ class FacebookService {
         return AccessToken.getCurrentAccessToken();
       })
       .then(data => {
-        const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);
+        const credential = firebase.auth.FacebookAuthProvider.credential(
+          data.accessToken,
+        );
         return firebase.auth().signInWithCredential(credential);
       })
       .then(currentUser => {
-        if(currentUser.additionalUserInfo.isNewUser) {
-          //code phone number authentication below
-          
-          //create username and check database
+        if (currentUser.additionalUserInfo.isNewUser) {
+          global.uid = firebase.auth().currentUser.uid;
+          global.name = currentUser.additionalUserInfo.profile.name;
+          global.id = currentUser.additionalUserInfo.profile.id;
+          global.email = currentUser.additionalUserInfo.profile.email;
+          global.photo = currentUser.user.photoURL;
+          console.log(global.uid);
+          console.log(global.name);
+          console.log(global.id);
+          console.log(global.email);
+          console.log(global.photo);
 
           //uncomment below code after finishing phone authentication
-          
-          // api.createFBUser(currentUser.additionalUserInfo.profile.name,
-          //    currentUser.additionalUserInfo.profile.id,
-          //    username,
-          //    currentUser.additionalUserInfo.profile.email,
-          //    phoneNumber,
-          //    currentUser.user.photoURL,
-          //    );
+          // api.createFBUser(
+          //   currentUser.additionalUserInfo.profile.name,
+          //   currentUser.additionalUserInfo.profile.id,
+          //   username,
+          //   currentUser.additionalUserInfo.profile.email,
+          //   currentUser.user.photoURL,
+          // );
         }
         //navigate to homepage here
       })
@@ -62,15 +70,15 @@ class FacebookService {
         //   alert('Email already associated with another account.');
         //   // Handle account linking here, if using.
         console.log(`Facebook login fail with error: ${error.message}`);
-      })
+      });
   };
 
   //test logout
   logoutWithFacebook = () => {
     LoginManager.logOut();
     firebase.logOut();
-  }
-//getUser if needed
+  };
+  //getUser if needed
   // getUser = (token) => {
   //   const PROFILE_REQUEST_PARAMS = {
   //     fields: {
