@@ -70,7 +70,6 @@ class Username extends Component {
                 global.id,
                 global.username,
                 global.email,
-                '9095324384',
                 global.photo,
               ),
               this.props.navigation.navigate('Home')
