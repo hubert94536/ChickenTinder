@@ -19,7 +19,7 @@ const sequelize = new Sequelize(config);
 
 const Accounts = sequelize.define('accounts', {
   id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.BIGINT,
     allowNull: true,
     unique: true,
     autoIncrement: true,
@@ -48,11 +48,11 @@ const Accounts = sequelize.define('accounts', {
       notEmpty: true,
     },
   },
-  phone_number: {
-    type: DataTypes.STRING,
-    unique: true,
-    allowNull: true,
-  },
+  // phone_number: {
+  //   type: DataTypes.STRING,
+  //   unique: true,
+  //   // allowNull: true,
+  // },
   photo: DataTypes.STRING,
 });
 
