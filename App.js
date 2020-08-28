@@ -30,28 +30,12 @@ export default function App() {
   const [results, setResults] = useState([]);
 
   useEffect(() => {
-    // api.getRestaurants('boba', 'arcadia california').then(response => {
-    //   console.log(response.businessList),
-    //     console.log(response.total),
-    //     setResults(response.businessList);
-    // });
-    //sockets.createRoom()
-    //sockets.sendInvite("hubs")
-    sockets.getSocket().on('invite', data => {
-      console.log(data);
-    })
-    // sockets.getSocket().on('unreachable', data => {
-    //   console.log('yay');
-    // })
-    //Sockets.joinRoom("hubs")
-    //Sockets.leaveRoom("cubs", "i am host")
-    //Sockets.endSession("i am host")
-    //Sockets.kickUser("hubs", "i am host");
-    // let filters = new Object();
-    // filters.cuisine = "chinese";
-    // filters.hours = "5"
-    // Socket.submitFilters("pubs", filters, "i am host")
-    //Sockets.likeRestaurant("i am host", "bcd")
+    api.getRestaurants('boba', 'arcadia california').then(response => {
+      console.log(response.businessList),
+        console.log(response.total),
+        setResults(response.businessList);
+    });
+    
   }, []);
 
   const Card = ({ card }) => {
