@@ -85,7 +85,7 @@ const getRestaurants = (name, place) => {
 };
 
 //creates user and returns id
-const createFBUser = (name, id, username, email, photo) => {
+const createFBUser = (name, id, username, email, phone_number, photo) => {
   return accountsApi
     .post('/accounts', {
       params: {
@@ -93,7 +93,7 @@ const createFBUser = (name, id, username, email, photo) => {
         name: name,
         username: username,
         email: email,
-        // phone_number: phone_number,
+        phone_number: phone_number,
         photo: photo,
       },
     })
