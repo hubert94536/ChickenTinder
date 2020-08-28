@@ -7,13 +7,21 @@ import {
   Alert,
   TouchableHighlight,
 } from 'react-native';
+import {facebookService} from './facebookService.js';
 
-export default class Login extends React.Component {
+class Login extends React.Component {
   constructor() {
     super();
     this.state = {
       pressed: false,
+      showButton: false,
+      goto: '',
     };
+  }
+
+  componentDidMount() {
+    if (global.username === undefined) this.setState({goto: 'Username'});
+    else this.setState({goto: 'Home'});
   }
 
   underlayShow() {
@@ -40,12 +48,27 @@ export default class Login extends React.Component {
           onHideUnderlay={this.underlayHide.bind(this)}
           activeOpacity={1}
           underlayColor="#3b5998"
-          onPress={this.login}
+          onPress={() => (this.login(), this.setState({showButton: true}))}
           style={styles.button}>
           <Text style={this.state.pressed ? styles.yesPress : styles.noPress}>
             Log in with Facebook
           </Text>
         </TouchableHighlight>
+        {this.state.showButton && (
+          <TouchableHighlight
+            onShowUnderlay={this.underlayShow.bind(this)}
+            onHideUnderlay={this.underlayHide.bind(this)}
+            activeOpacity={1}
+            underlayColor="#3b5998"
+            onPress={() => {
+              this.props.navigation.navigate(this.state.goto);
+            }}
+            style={styles.button}>
+            <Text style={this.state.pressed ? styles.yesPress : styles.noPress}>
+              Continue
+            </Text>
+          </TouchableHighlight>
+        )}
       </View>
     );
   }
@@ -53,14 +76,19 @@ export default class Login extends React.Component {
   login() {
     Alert.alert(
       //title
-      'Open "Facebook""',
+      'Open "Facebook"?',
       //body
       'You will be directed to the Facebook app for account verification.',
       [
-        {text: 'Open', onPress: () => console.log('Yes Pressed')},
+        {
+          text: 'Open',
+          onPress: () => (
+            facebookService.loginWithFacebook(), console.log('open')
+          ),
+        },
         {
           text: 'Cancel',
-          onPress: () => console.log('No Pressed'),
+          onPress: () => console.log('cancel'),
           style: 'cancel',
         },
       ],
@@ -70,7 +98,7 @@ export default class Login extends React.Component {
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 20,
+    borderRadius: 25,
     borderWidth: 2.5,
     borderColor: '#3b5998',
     paddingVertical: 10,
@@ -88,3 +116,5 @@ const styles = StyleSheet.create({
     color: '#3b5998',
   },
 });
+
+export default Login;
