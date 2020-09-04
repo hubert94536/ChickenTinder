@@ -30,8 +30,11 @@ class FacebookService {
     LoginManager.logInWithPermissions(['public_profile', 'email'])
       .then(login => {
         if (login.isCancelled) {
+          global.success = false;
           return Promise.reject(new Error('Cancelled request'));
         }
+        global.success = true;
+        console.log(global.success);
         return AccessToken.getCurrentAccessToken();
       })
       .then(data => {
@@ -52,7 +55,6 @@ class FacebookService {
           console.log(global.id);
           console.log(global.email);
           console.log(global.photo);
-
           //uncomment below code after finishing phone authentication
           // api.createFBUser(
           //   currentUser.additionalUserInfo.profile.name,
