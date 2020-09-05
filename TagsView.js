@@ -32,9 +32,9 @@ this.setState({
 makeButtons() {
     return this.props.all.map((tag, i) => {
       const on = this.state.selected.includes(tag)
-      const backgroundColor = on ? "#FB6767": 'white'
-      const textColor = on ? 'white' : "#FB6767"
-      const borderColor = on ? 'white' : "#FB6767"
+      const backgroundColor = on ? "#DE4A4A": 'white'
+      const textColor = on ? 'white' : "#DE4A4A"
+      const borderColor = on ? 'white' : "#DE4A4A"
 return (
         <BackgroundButton
           backgroundColor={backgroundColor}
