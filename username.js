@@ -26,13 +26,15 @@ class Username extends Component {
   }
 
   handleClick = () => {
-    const status = api.checkUsername(this.state.username);
-    if (status === 200) Alert.alert('Username taken!');
-    else {
+    api.checkUsername(this.state.username);
+    console.log(global.taken_user);
+    if (global.taken_user === false) {
       console.log('approved');
       this.setState({showButton: true});
       global.username = this.state.username;
       console.log(global.username);
+    } else {
+      Alert.alert('Username taken!');
     }
   };
 
