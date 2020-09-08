@@ -98,9 +98,9 @@ const createFBUser = (name, id, username, email, photo) => {
       },
     })
     .then(res => {
-      console.log(res.data.users.id);
+      console.log(res.data.user);
       return {
-        id: res.data.users.id,
+        id: res.data.user.id,
         status: res.status,
       };
     })
@@ -128,9 +128,9 @@ const getAllUsers = () => {
 };
 
 //deletes user and returns status
-const deleteUser = id => {
+const deleteUser = () => {
   return accountsApi
-    .delete(`/accounts/${id}`)
+    .delete(`/accounts/${global.id}`)
     .then(res => {
       console.log(res.status);
       return res.status;
@@ -139,9 +139,9 @@ const deleteUser = id => {
 };
 
 //gets user by id and returns user info
-const getUser = id => {
+const getUser = () => {
   return accountsApi
-    .get(`/accounts/${id}`)
+    .get(`/accounts/${global.id}`)
     .then(res => {
       console.log(res.data);
       return {
@@ -160,41 +160,41 @@ const getUser = id => {
 };
 
 //update email and returns status
-const updateEmail = (id, info) => {
+const updateEmail = (info) => {
   let req = {
     email: info,
   };
-  return updateUser(id, req);
+  return updateUser(global.id, req);
 };
 
 //update username and returns status
-const updateUsername = (id, info) => {
+const updateUsername = (info) => {
   let req = {
     username: info,
   };
-  return updateUser(id, req);
+  return updateUser(global.id, req);
 };
 
 //update username and returns status
-const updateName = (id, info) => {
+const updateName = (info) => {
   let req = {
     name: info,
   };
-  return updateUser(id, req);
+  return updateUser(global.id, req);
 };
 
 //update username and returns status
-const updatePhoneNumber = (id, info) => {
+const updatePhoneNumber = (info) => {
   let req = {
     phone_number: info,
   };
-  return updateUser(id, req);
+  return updateUser(global.id, req);
 };
 
 //updates user and returns status
-const updateUser = (id, req) => {
+const updateUser = (req) => {
   return accountsApi
-    .put(`/accounts/${id}`, {
+    .put(`/accounts/${global.id}`, {
       params: req,
     })
     .then(res => {
@@ -222,7 +222,8 @@ const checkUsername = username => {
       return res.status
     })
     .catch(error => {
-      console.log(error);
+      console.log(error.response.status);
+      return error.response.status;
     });
 };
 
