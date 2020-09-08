@@ -219,12 +219,10 @@ const checkUsername = username => {
   return accountsApi
     .get(`/username/${username}`)
     .then(res => {
-      return {
-        status: res.status
-      }
+      return res.status
     })
     .catch(error => {
-      console.log(error.message);
+      console.log(error);
     });
 };
 

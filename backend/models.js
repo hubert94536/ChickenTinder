@@ -25,7 +25,7 @@ const sequelize = new Sequelize(config);
 
 const Accounts = sequelize.define('accounts', {
     id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         allowNull: false,
         unique: true,
         autoIncrement: true,

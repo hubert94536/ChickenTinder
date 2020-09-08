@@ -28,8 +28,7 @@ class Username extends Component {
   handleClick = () => {
     api.checkUsername(this.state.username)
     .then(res => {
-      console.log(res);
-      if (res == 404) {
+      if (res == 200) {
         this.setState({showButton: true});
         global.username = this.state.username;
         console.log(global.username);
