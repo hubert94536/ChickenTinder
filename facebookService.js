@@ -82,8 +82,10 @@ class FacebookService {
   };
 
   deleteUser = () => {
-    api.deleteUser();
-    AccessToken.refreshCurrentAccessTokenAsync()
+    api.deleteUser()
+      .then(() => {
+        AccessToken.refreshCurrentAccessTokenAsync()
+      })
       .then(() => {
         return AccessToken.getCurrentAccessToken()
       })
