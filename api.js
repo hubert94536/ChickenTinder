@@ -3,6 +3,7 @@ import {API_KEY} from 'react-native-dotenv';
 import PermissionsAndroid from 'react-native';
 import React from 'react';
 import {View, Text} from 'react-native';
+// import {globalAgent} from 'http';
 // import Geolocation from '@react-native-community/geolocation';
 
 // const App = () => {
@@ -219,9 +220,13 @@ const checkUsername = username => {
     .get(`/username/${username}`)
     .then(res => {
       console.log(res.status);
+      global.taken_user = false;
       return res.status;
     })
-    .catch(error => console.log(error.message));
+    .catch(error => {
+      global.taken_user = false;
+      console.log(error.message);
+    });
 };
 
 //checks phone number and returns status
