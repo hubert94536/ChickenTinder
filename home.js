@@ -10,9 +10,6 @@ import {
 import {facebookService} from './facebookService.js';
 
 class Home extends React.Component {
-  componentDidMount() {
-    facebookService.deleteUser();
-  }
   render() {
     return (
       <View>
