@@ -219,12 +219,11 @@ const checkUsername = username => {
   return accountsApi
     .get(`/username/${username}`)
     .then(res => {
-      console.log(res.status);
-      global.taken_user = false;
-      return res.status;
+      return {
+        status: res.status
+      }
     })
     .catch(error => {
-      global.taken_user = false;
       console.log(error.message);
     });
 };

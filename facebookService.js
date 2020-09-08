@@ -80,6 +80,22 @@ class FacebookService {
     LoginManager.logOut();
     firebase.logOut();
   };
+
+  deleteUser = async () => {
+    api.deleteUser();
+    await AccessToken.refreshCurrentAccessTokenAsync();
+    return AccessToken.getCurrentAccessToken()
+      .then(data => {
+        const credential = firebase.auth.FacebookAuthProvider.credential(
+          data.accessToken,
+        );
+        firebase.auth().currentUser.reauthenticateWithCredential(credential);
+        firebase.auth().currentUser.delete();
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }
   //getUser if needed
   // getUser = (token) => {
   //   const PROFILE_REQUEST_PARAMS = {
