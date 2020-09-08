@@ -8,6 +8,9 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import {facebookService} from './facebookService.js';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+const hex = '#F25763';
 
 class Login extends React.Component {
   constructor() {
@@ -39,14 +42,26 @@ class Login extends React.Component {
 
   render() {
     return (
-      <View style={{marginTop: '50%'}}>
+      <View>
         <Text
           style={{
             fontSize: 50,
-            color: '#DE4A4A',
+            color: hex,
             alignSelf: 'center',
+            fontFamily: 'CircularStd-Medium',
+            fontWeight: 'bold',
+            marginTop: '40%',
           }}>
-          Log in
+          Welcome!
+        </Text>
+        <Text
+          style={{
+            fontFamily: 'CircularStd-Medium',
+            alignSelf: 'center',
+            color: hex,
+            fontSize: 30,
+          }}>
+          Let's get goin'.
         </Text>
         <TouchableHighlight
           onShowUnderlay={this.underlayShow.bind(this)}
@@ -56,6 +71,7 @@ class Login extends React.Component {
           onPress={() => this.login()}
           style={styles.button}>
           <Text style={this.state.pressed ? styles.yesPress : styles.noPress}>
+            {/* <Icon name="facebook" style={{fontSize: 20}} /> */}
             Log in with Facebook
           </Text>
         </TouchableHighlight>
@@ -111,16 +127,22 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     width: '70%',
-    // marginTop: '50%',
     alignSelf: 'center',
+    marginTop: '10%',
   },
   yesPress: {
     alignSelf: 'center',
     color: '#fff',
+    fontFamily: 'CircularStd-Medium',
+    fontSize: 17,
+    fontWeight: 'bold',
   },
   noPress: {
     alignSelf: 'center',
     color: '#3b5998',
+    fontFamily: 'CircularStd-Medium',
+    fontSize: 17,
+    fontWeight: 'bold',
   },
 });
 
