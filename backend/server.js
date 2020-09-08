@@ -1,38 +1,44 @@
+
 const express = require('express')
-const app = express()
+const io = require('socket.io')()
 const bodyParser = require('body-parser')
-const db = require('./accountsQueries.js')
-const cors = require('cors')
+const accounts = require('./accountsQueries.js')
+const http = require('http')
+
+const app = express()
+const server = http.createServer(app)
+io.attach(server)
+require('./socketEvents.js')(io)
+
 var PORT = process.env.PORT || 3000;
 
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
     extended: true,
   })
-)
+);
 //if development mode, allow self-signed ssl
 if ("development" == app.get("env")) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 }
-app.get('/', (request, response) => {
-  response.json({ info: 'Node.js, Express, and Postgres API' })
-})
+
+//accounts accounts
 app.route("/accounts")
-.get(db.getAllAccounts)
-.post(db.createAccount);
+  .get(accounts.getAllAccounts)
+  .post(accounts.createAccount);
 
 app.route("/accounts/:id")
-.get(db.getAccountById)
-.put(db.updateAccounts)
-.delete(db.deleteAccount);
+  .get(accounts.getAccountById)
+  .put(accounts.updateAccounts)
+  .delete(accounts.deleteAccount);
 
 app.route("/username/:username")
-.get(db.checkUsername);
+  .get(accounts.checkUsername);
 
 app.route("/phoneNumber/:phone_number")
-.get(db.checkPhoneNumber);
+  .get(accounts.checkPhoneNumber);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`App running on port ${PORT}.`)
 })

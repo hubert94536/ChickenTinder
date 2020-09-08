@@ -1,4 +1,4 @@
-const Accounts = require('./model.js');
+const {Accounts} = require('./models.js');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
