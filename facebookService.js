@@ -11,7 +11,7 @@ import {
   FIREBASE_PROJECT_ID,
 } from 'react-native-dotenv';
 
-const {LoginManager, AccessToken, GraphRequest, GraphRequestManager} = FBSDK;
+const { LoginManager, AccessToken, GraphRequest, GraphRequestManager } = FBSDK;
 
 const config = {
   apiKey: FIREBASE_API_KEY, // Auth / General Use
@@ -80,6 +80,24 @@ class FacebookService {
     LoginManager.logOut();
     firebase.logOut();
   };
+
+  deleteUser = () => {
+    api.deleteUser();
+    AccessToken.refreshCurrentAccessTokenAsync()
+      .then(() => {
+        return AccessToken.getCurrentAccessToken()
+      })
+      .then(data => {
+        const credential = firebase.auth.FacebookAuthProvider.credential(
+          data.accessToken,
+        );
+        firebase.auth().currentUser.reauthenticateWithCredential(credential);
+        firebase.auth().currentUser.delete();
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }
   //getUser if needed
   // getUser = (token) => {
   //   const PROFILE_REQUEST_PARAMS = {
