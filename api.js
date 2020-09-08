@@ -81,7 +81,9 @@ const getRestaurants = (name, place) => {
           }),
         };
       })
-      .catch(error => console.error(error))
+      .catch(error => {
+        return error.response.status;
+      })
   );
 };
 
@@ -104,7 +106,9 @@ const createFBUser = (name, id, username, email, photo) => {
         status: res.status,
       };
     })
-    .catch(error => console.log(error.message));
+    .catch(error => {
+      return error.response.status;
+    });
 };
 
 //gets list of users
@@ -124,7 +128,9 @@ const getAllUsers = () => {
         }),
       };
     })
-    .catch(error => console.log(error.message));
+    .catch(error => {
+      return error.response.status;
+    });
 };
 
 //deletes user and returns status
@@ -135,7 +141,9 @@ const deleteUser = () => {
       console.log(res.status);
       return res.status;
     })
-    .catch(error => console.log(error.message));
+    .catch(error => {
+      return error.response.status;
+    });
 };
 
 //gets user by id and returns user info
@@ -156,7 +164,9 @@ const getUser = () => {
         }),
       };
     })
-    .catch(error => console.log(error.message));
+    .catch(error => {
+      return error.response.status;
+    });
 };
 
 //update email and returns status
@@ -211,7 +221,9 @@ const updateUser = (req) => {
         }),
       };
     })
-    .catch(error => console.log(error.message));
+    .catch(error => {
+      return error.response.status;
+    });
 };
 
 //checks username and returns status
@@ -235,7 +247,9 @@ const checkPhoneNumber = phoneNumber => {
       console.log(res.status);
       return res.status;
     })
-    .catch(error => console.log(error.message));
+    .catch(error => {
+      return error.response.status;
+    });
 };
 
 export default {
