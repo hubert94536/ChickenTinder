@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, Image, ScrollView} from 'react-native';
 
+const hex = '#F25763';
+
 export default class UserProfileView extends Component {
   render() {
     return (
@@ -24,93 +26,6 @@ export default class UserProfileView extends Component {
         <View style={styles.toggle}>
           <Text style={styles.togglecontent}>Saved Spots</Text>
         </View>
-        <View style={styles.gallery}>
-          <View style={styles.col}>
-            <Image
-              style={styles.image}
-              source={{
-                uri:
-                  'https://s3-media0.fl.yelpcdn.com/bphoto/PmHnLjz3uQgHTTt9Q0Sbzw/348s.jpg',
-              }}
-            />
-            <Image
-              style={styles.image}
-              source={{
-                uri: 'https://www.dintaifungusa.com/image/1509',
-              }}
-            />
-            <Image
-              style={styles.image}
-              source={{
-                uri:
-                  'https://s3-media0.fl.yelpcdn.com/bphoto/PmHnLjz3uQgHTTt9Q0Sbzw/348s.jpg',
-              }}
-            />
-            <Image
-              style={styles.image}
-              source={{
-                uri: 'https://www.dintaifungusa.com/image/1509',
-              }}
-            />
-            <Image
-              style={styles.image}
-              source={{
-                uri:
-                  'https://s3-media0.fl.yelpcdn.com/bphoto/PmHnLjz3uQgHTTt9Q0Sbzw/348s.jpg',
-              }}
-            />
-            <Image
-              style={styles.image}
-              source={{
-                uri: 'https://www.dintaifungusa.com/image/1509',
-              }}
-            />
-          </View>
-          <View style={styles.col}>
-            <Image
-              style={styles.image}
-              source={{
-                uri:
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRhNe-iOs_2oUugk1VW6XHpHsCnF945ALpduA&usqp=CAU',
-              }}
-            />
-            <Image
-              style={styles.image}
-              source={{
-                uri:
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRoL37OFGcf4LafBUErghoxr-GoVqr4ElCfkg&usqp=CAU',
-              }}
-            />
-            <Image
-              style={styles.image}
-              source={{
-                uri:
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRhNe-iOs_2oUugk1VW6XHpHsCnF945ALpduA&usqp=CAU',
-              }}
-            />
-            <Image
-              style={styles.image}
-              source={{
-                uri:
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRoL37OFGcf4LafBUErghoxr-GoVqr4ElCfkg&usqp=CAU',
-              }}
-            />
-            <Image
-              style={styles.image}
-              source={{
-                uri:
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRhNe-iOs_2oUugk1VW6XHpHsCnF945ALpduA&usqp=CAU',
-              }}
-            />
-            <Image
-              style={styles.image}
-              source={{
-                uri:
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRoL37OFGcf4LafBUErghoxr-GoVqr4ElCfkg&usqp=CAU',
-              }}
-            />
-          </View>
-        </View>
       </ScrollView>
     );
   }
@@ -118,7 +33,7 @@ export default class UserProfileView extends Component {
 
 const styles = StyleSheet.create({
   topBar: {
-    color: '#DE4A4A',
+    color: hex,
     fontWeight: 'bold',
     fontSize: 20,
     paddingTop: '5%',
@@ -152,7 +67,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   togglecontent: {
-    color: '#DE4A4A',
+    color: hex,
     fontWeight: 'bold',
     fontSize: 16,
   },
