@@ -3,8 +3,8 @@ const Friends = require("./friendsModel");
 
 const createFriends = async (req, res) => {
     try {
-        const main = req.body.main_user;
-        const friend = req.body.friend_user;
+        const main = req.params.main_user;
+        const friend = req.params.friend_user;
         const friends1 = await Friends.create(
             {
                 main_user: main,
@@ -34,7 +34,7 @@ const createFriends = async (req, res) => {
             }
         );
         return res.status(201).json({
-            friends1, friends2
+            friends1
         });
     } catch (error) {
         console.log(error.message)
@@ -42,9 +42,9 @@ const createFriends = async (req, res) => {
     }
 }
 
-const getAllFriends = async (req, res) => {
+const getUserFriends = async (req, res) => {
     try {
-        const main = req.main_user;
+        const main = req.params.main_user;
         const friends = await Friends.findAll({
             where: { main_user: main, status: "accepted" },
         });
@@ -55,10 +55,23 @@ const getAllFriends = async (req, res) => {
     }
 }
 
-const acceptAccounts = async (req, res) => {
+const getUserRequests = async (req, res) => {
     try {
-        const main = req.main_user;
-        const friend = req.friend_user;
+        const main = req.params.main_user;
+        const requests = await Friends.findAll({
+            where: { main_user: main, status: "pending request" },
+        });
+        return res.status(200).json({ requests });
+    } catch (error) {
+        console.log(error.message)
+        return res.status(500).send(error.message);
+    }
+}
+
+const acceptRequest = async (req, res) => {
+    try {
+        const main = req.params.main_user;
+        const friend = req.params.friend_user;
         const account_1 = await Friends.update({status: "accepted"}, {
             where: { main_user: main, friend_user: friend }
         });
@@ -75,3 +88,24 @@ const acceptAccounts = async (req, res) => {
         return res.status(500).send(error.message);
     }
 };
+
+const deleteFriendship = async (req, res) => {
+    try {
+        const main = req.params.main_user;
+        const friend = req.params.friend_user;
+        const deleted_1 = await Friends.destroy( {
+            where: { main_user: main, friend_user: friend }
+        });
+        const deleted_2 = await Friends.destroy( {
+            where: { main_user: friend, friend_user: main }
+        });
+        if (deleted_1 && deleted_2) {
+            return res.status(204).send("Friendship deleted");
+        }
+        throw new Error('Friendship not found');
+    } catch (error) {
+        console.log(error.message)
+        return res.status(500).send(error.message);
+    }
+};
+
