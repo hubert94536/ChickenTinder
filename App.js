@@ -6,41 +6,42 @@
 //  * @flow strict-local
 //  */
 
-import React from 'react';
-import {Button, View, Text} from 'react-native';
-import Login from './login.js';
-import Home from './home.js';
-import Username from './username.js';
-import {createStackNavigator} from 'react-navigation-stack'; // 1.0.0-beta.27
-import {createAppContainer} from 'react-navigation';
+import React from 'react'
+import { Button, View, Text } from 'react-native'
+import Login from './login.js'
+import Home from './home.js'
+import Username from './username.js'
+import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
+import { createAppContainer } from 'react-navigation'
+import sockets from './socket.js'
 
-start = '';
-if (global.uid === undefined) start = 'Login';
-else start = 'Home';
+start = ''
+if (global.uid === undefined) start = 'Login'
+else start = 'Home'
 
 const RootStack = createStackNavigator(
   {
     Home: {
-      screen: Home,
+      screen: Home
     },
     Login: {
-      screen: Login,
+      screen: Login
     },
     Username: {
-      screen: Username,
-    },
+      screen: Username
+    }
   },
   {
     initialRouteName: start,
-    headerMode: 'none',
-  },
-);
+    headerMode: 'none'
+  }
+)
 
-const AppContainer = createAppContainer(RootStack);
+const AppContainer = createAppContainer(RootStack)
 
 export default class App extends React.Component {
-  render() {
-    return <AppContainer />;
+  render () {
+    return <AppContainer />
   }
 }
 

@@ -1,26 +1,26 @@
-import React from 'react';
+import React from 'react'
 import {
   StyleSheet,
   View,
   Text,
   Button,
   Alert,
-  TouchableHighlight,
-} from 'react-native';
-import {facebookService} from './facebookService.js';
+  TouchableHighlight
+} from 'react-native'
+import { facebookService } from './facebookService.js'
 
 class Home extends React.Component {
-  render() {
+  render () {
     return (
       <View>
         <Text style={styles.welcome}>Welcome Back!</Text>
-        <View style={{marginTop: '20%'}}>
+        <View style={{ marginTop: '20%' }}>
           <TouchableHighlight style={styles.button}>
             <Text style={styles.buttonText}>Create Group</Text>
           </TouchableHighlight>
         </View>
       </View>
-    );
+    )
   }
 }
 
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     marginTop: '40%',
     fontSize: 40,
     color: '#DE4A4A',
-    alignSelf: 'center',
+    alignSelf: 'center'
   },
   button: {
     borderRadius: 20,
@@ -37,15 +37,15 @@ const styles = StyleSheet.create({
     height: 40,
     marginTop: '10%',
     backgroundColor: '#DE4A4A',
-    alignSelf: 'center',
+    alignSelf: 'center'
   },
   buttonText: {
     flexDirection: 'row',
     flex: 1,
     alignSelf: 'center',
     justifyContent: 'center',
-    color: '#fff',
-  },
-});
+    color: '#fff'
+  }
+})
 
-export default Home;
+export default Home
