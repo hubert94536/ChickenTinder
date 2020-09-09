@@ -1,9 +1,9 @@
 // url: https://www.ikea.com/us/en/cat/chairs-fu002/
 // script
 /*
-let data = []; 
+let data = [];
 let elms = document.getElementsByClassName('product-compact')
-for(var i=0; i < elms.length; i++) { 
+for(var i=0; i < elms.length; i++) {
     const curr = elms[i];
     const price = curr.getElementsByClassName('product-compact__price__value')[0].innerText;
     const name = curr.getElementsByClassName('product-compact__name')[0].innerText;
@@ -354,4 +354,4 @@ export default [
     image:
       'https://www.ikea.com/us/en/images/products/ektorp-armchair__0619699_PE689263_S5.JPG?f=xs'
   }
-];
+]

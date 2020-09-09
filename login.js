@@ -1,60 +1,66 @@
-import React from 'react';
+import React from 'react'
 import {
   StyleSheet,
   View,
   Text,
   Button,
   Alert,
-  TouchableHighlight,
-} from 'react-native';
-import {facebookService} from './facebookService.js';
+  TouchableHighlight
+} from 'react-native'
+import { facebookService } from './facebookService.js'
+import sockets from './socket.js'
 
 class Login extends React.Component {
-  constructor() {
-    super();
+  constructor () {
+    super()
     this.state = {
       pressed: false,
       showButton: false,
-      goto: '',
-    };
+      goto: ''
+    }
   }
 
-  componentDidMount() {
-    if (global.username === undefined) this.setState({goto: 'Username'});
-    else this.setState({goto: 'Home'});
+  componentDidMount () {
+    //sockets.createRoom()
+    sockets.getSocket().on('invite', data => {
+      console.log('good')
+    })
+    if (global.username === undefined) this.setState({ goto: 'Username' })
+    else this.setState({ goto: 'Home' })
   }
 
-  componentDidUpdate() {
-    if (global.success === true)
-      this.props.navigation.navigate(this.state.goto);
+  componentDidUpdate () {
+    if (global.success === true) { this.props.navigation.navigate(this.state.goto) }
   }
 
-  underlayShow() {
-    this.setState({pressed: true});
+  underlayShow () {
+    this.setState({ pressed: true })
   }
 
-  underlayHide() {
-    this.setState({pressed: false});
+  underlayHide () {
+    this.setState({ pressed: false })
   }
 
-  render() {
+  render () {
     return (
-      <View style={{marginTop: '50%'}}>
+      <View style={{ marginTop: '50%' }}>
         <Text
           style={{
             fontSize: 50,
             color: '#DE4A4A',
-            alignSelf: 'center',
-          }}>
+            alignSelf: 'center'
+          }}
+        >
           Log in
         </Text>
         <TouchableHighlight
           onShowUnderlay={this.underlayShow.bind(this)}
           onHideUnderlay={this.underlayHide.bind(this)}
           activeOpacity={1}
-          underlayColor="#3b5998"
+          underlayColor='#3b5998'
           onPress={() => this.login()}
-          style={styles.button}>
+          style={styles.button}
+        >
           <Text style={this.state.pressed ? styles.yesPress : styles.noPress}>
             Log in with Facebook
           </Text>
@@ -75,14 +81,14 @@ class Login extends React.Component {
           </TouchableHighlight>
         )} */}
       </View>
-    );
+    )
   }
 
-  login() {
+  login () {
     Alert.alert(
-      //title
+      // title
       'Open "Facebook"?',
-      //body
+      // body
       'You will be directed to the Facebook app for account verification.',
       [
         {
@@ -90,16 +96,16 @@ class Login extends React.Component {
           onPress: () => (
             facebookService.loginWithFacebook(),
             console.log('open'),
-            this.setState({showButton: true})
-          ),
+            this.setState({ showButton: true })
+          )
         },
         {
           text: 'Cancel',
           onPress: () => console.log('cancel'),
-          style: 'cancel',
-        },
-      ],
-    );
+          style: 'cancel'
+        }
+      ]
+    )
   }
 }
 
@@ -112,16 +118,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     width: '70%',
     // marginTop: '50%',
-    alignSelf: 'center',
+    alignSelf: 'center'
   },
   yesPress: {
     alignSelf: 'center',
-    color: '#fff',
+    color: '#fff'
   },
   noPress: {
     alignSelf: 'center',
-    color: '#3b5998',
-  },
-});
+    color: '#3b5998'
+  }
+})
 
-export default Login;
+export default Login
