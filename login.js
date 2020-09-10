@@ -9,12 +9,6 @@ import {
 } from 'react-native';
 import {facebookService} from './facebookService.js';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import AsyncStorage from '@react-native-community/async-storage';
-import FBSDK from 'react-native-fbsdk';
-import firebase from 'firebase';
-import api from './api.js';
-import {USERNAME, NAME, ID, UID, EMAIL, PHOTO} from 'react-native-dotenv';
-const {LoginManager, AccessToken, GraphRequest, GraphRequestManager} = FBSDK;
 
 const hex = '#F25763';
 
@@ -73,52 +67,14 @@ export default class Login extends React.Component {
     );
   }
 
-  handleClick = async () => {
-    // const result = await facebookService.loginWithFacebook();
-    // console.log(result);
-    // this.props.navigation.navigate(result);
-
-    LoginManager.logInWithPermissions(['public_profile', 'email'])
-      .then(login => {
-        if (login.isCancelled) {
-          console.log('cancelled');
-          return Promise.reject(new Error('Cancelled request'));
-        }
-        console.log('access token');
-        return AccessToken.getCurrentAccessToken();
-      })
-      .then(data => {
-        const credential = firebase.auth.FacebookAuthProvider.credential(
-          data.accessToken,
-        );
-        console.log('credential');
-        return firebase.auth().signInWithCredential(credential);
-      })
-      .then(currentUser => {
-        let p;
-        console.log('new user');
-        if (currentUser.additionalUserInfo.isNewUser) {
-          AsyncStorage.setItem(UID, firebase.auth().currentUser.uid);
-          AsyncStorage.setItem(
-            NAME,
-            currentUser.additionalUserInfo.profile.name,
-          );
-          AsyncStorage.setItem(ID, currentUser.additionalUserInfo.profile.id);
-          AsyncStorage.setItem(
-            EMAIL,
-            currentUser.additionalUserInfo.profile.email,
-          );
-          AsyncStorage.setItem(PHOTO, currentUser.user.photoURL);
-
-          this.props.navigation.navigate('Username');
-        } else {
-          console.log('returning user');
-          this.props.navigation.navigate('Home');
-        }
-      })
-      .catch(error => {
-        console.log(`Facebook login fail with error: ${error.message}`);
-      });
+  handleClick = () => {
+    facebookService.loginWithFacebook()
+    .then(result => {
+      this.props.navigation.navigate(result)
+    })
+    .catch(error => {
+      console.log(error)
+    })
   };
 
   login() {

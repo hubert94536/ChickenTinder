@@ -6,48 +6,48 @@
 // // //  * @flow strict-local
 // // //  */
 
-import React from 'react';
-import Login from './login.js';
-import Home from './home.js';
-import Username from './username.js';
-import {createStackNavigator} from 'react-navigation-stack'; // 1.0.0-beta.27
-import {createAppContainer} from 'react-navigation';
-import UserProfileView from './profile.js';
-import AsyncStorage from '@react-native-community/async-storage';
-import {UID} from 'react-native-dotenv';
+import React from 'react'
+import Login from './login.js'
+import Home from './home.js'
+import Username from './username.js'
+import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
+import { createAppContainer } from 'react-navigation'
+import UserProfileView from './profile.js'
+import AsyncStorage from '@react-native-community/async-storage'
+import { UID } from 'react-native-dotenv'
 
 AsyncStorage.getItem(UID).then(value => {
-  if (value === null) start = 'Login';
-  else start = 'Home';
-});
-var start = '';
+  if (value === null) start = 'Login'
+  else start = 'Home'
+})
+var start = ''
 
 const RootStack = createStackNavigator(
   {
     Home: {
-      screen: Home,
+      screen: Home
     },
     Login: {
-      screen: Login,
+      screen: Login
     },
     Username: {
-      screen: Username,
+      screen: Username
     },
     Profile: {
-      screen: UserProfileView,
-    },
+      screen: UserProfileView
+    }
   },
   {
     initialRouteName: 'Login',
-    headerMode: 'none',
-  },
-);
+    headerMode: 'none'
+  }
+)
 
-const AppContainer = createAppContainer(RootStack);
+const AppContainer = createAppContainer(RootStack)
 
 export default class App extends React.Component {
-  render() {
-    return <AppContainer />;
+  render () {
+    return <AppContainer />
   }
 }
 
