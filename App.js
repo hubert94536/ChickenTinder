@@ -1,23 +1,26 @@
-// /**
-//  * Sample React Native App
-//  * https://github.com/facebook/react-native
-//  *
-//  * @format
-//  * @flow strict-local
-//  */
+// // // /**
+// // //  * Sample React Native App
+// // //  * https://github.com/facebook/react-native
+// // //  *
+// // //  * @format
+// // //  * @flow strict-local
+// // //  */
 
 import React from 'react';
-import {Button, View, Text} from 'react-native';
 import Login from './login.js';
 import Home from './home.js';
 import Username from './username.js';
 import {createStackNavigator} from 'react-navigation-stack'; // 1.0.0-beta.27
 import {createAppContainer} from 'react-navigation';
 import UserProfileView from './profile.js';
+import AsyncStorage from '@react-native-community/async-storage';
+import {UID} from 'react-native-dotenv';
 
-start = '';
-if (global.uid === undefined) start = 'Login';
-else start = 'Home';
+AsyncStorage.getItem(UID).then(value => {
+  if (value === null) start = 'Login';
+  else start = 'Home';
+});
+var start = '';
 
 const RootStack = createStackNavigator(
   {
@@ -35,7 +38,7 @@ const RootStack = createStackNavigator(
     },
   },
   {
-    initialRouteName: start,
+    initialRouteName: 'Login',
     headerMode: 'none',
   },
 );
@@ -47,3 +50,18 @@ export default class App extends React.Component {
     return <AppContainer />;
   }
 }
+
+// import React from 'react';
+// import {Button, View, Text} from 'react-native';
+// import {facebookService} from './facebookService.js';
+
+// export default class App extends React.Component {
+//   render() {
+//     return (
+//       <Button
+//         title="delete"
+//         onPress={() => facebookService.loginWithFacebook()}
+//       />
+//     );
+//   }
+// }
