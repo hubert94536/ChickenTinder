@@ -10,12 +10,28 @@ import {
   Alert,
 } from 'react-native';
 import api from './api.js';
+import AsyncStorage from '@react-native-community/async-storage';
+import {NAME, USERNAME, ID, UID, EMAIL, PHOTO} from 'react-native-dotenv';
 
 class Username extends Component {
   state = {
     username: null,
-    showButton: false,
+    name: '',
+    uid: '',
+    id: '',
+    email: '',
+    photo: '',
   };
+
+  async componentDidMount() {
+    this.setState({
+      name: await AsyncStorage.getItem(NAME),
+      uid: await AsyncStorage.getItem(UID),
+      id: await AsyncStorage.getItem(ID),
+      email: await AsyncStorage.getItem(EMAIL),
+      photo: await AsyncStorage.getItem(PHOTO),
+    });
+  }
 
   underlayShow() {
     this.setState({pressed: true});
@@ -26,16 +42,29 @@ class Username extends Component {
   }
 
   handleClick = () => {
-    api.checkUsername(this.state.username);
-    console.log(global.taken_user);
-    if (global.taken_user === false) {
-      console.log('approved');
-      this.setState({showButton: true});
-      global.username = this.state.username;
-      console.log(global.username);
-    } else {
-      Alert.alert('Username taken!');
-    }
+    api
+      .checkUsername(this.state.username)
+      .then(res => {
+        if (res === 200) {
+          console.log(this.state.username);
+          AsyncStorage.setItem(USERNAME, this.state.username);
+          api.createFBUser(
+            this.state.name,
+            this.state.id,
+            this.state.username,
+            this.state.email,
+            this.state.photo,
+          ),
+            this.props.navigation.navigate('Home');
+        } else if (res === 404) {
+          Alert.alert('Username taken!');
+        } else {
+          Alert.alert('Error!');
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   render() {
@@ -60,28 +89,6 @@ class Username extends Component {
             Enter
           </Text>
         </TouchableHighlight>
-        {this.state.showButton && (
-          <TouchableHighlight
-            onShowUnderlay={this.underlayShow.bind(this)}
-            onHideUnderlay={this.underlayHide.bind(this)}
-            activeOpacity={1}
-            underlayColor="#3b5998"
-            onPress={() => (
-              api.createFBUser(
-                global.name,
-                global.id,
-                global.username,
-                global.email,
-                global.photo,
-              ),
-              this.props.navigation.navigate('Home')
-            )}
-            style={styles.button}>
-            <Text style={this.state.pressed ? styles.yesPress : styles.noPress}>
-              Continue
-            </Text>
-          </TouchableHighlight>
-        )}
       </View>
     );
   }

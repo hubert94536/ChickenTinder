@@ -3,6 +3,9 @@ import {API_KEY} from 'react-native-dotenv';
 import PermissionsAndroid from 'react-native';
 import React from 'react';
 import {View, Text} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+import {ID} from 'react-native-dotenv';
+
 // import {globalAgent} from 'http';
 // import Geolocation from '@react-native-community/geolocation';
 
@@ -39,6 +42,12 @@ import {View, Text} from 'react-native';
 //     console.warn(err);
 //   }
 // };
+
+var saved_id = '';
+
+AsyncStorage.getItem(ID).then(res => {
+  saved_id = res;
+});
 
 //setting up Yelp API base caller
 const yelpApi = axios.create({
@@ -81,7 +90,9 @@ const getRestaurants = (name, place) => {
           }),
         };
       })
-      .catch(error => console.error(error))
+      .catch(error => {
+        return error.response.status;
+      })
   );
 };
 
@@ -98,13 +109,15 @@ const createFBUser = (name, id, username, email, photo) => {
       },
     })
     .then(res => {
-      console.log(res.data.users.id);
+      console.log(res.data.user);
       return {
-        id: res.data.users.id,
+        id: res.data.user.id,
         status: res.status,
       };
     })
-    .catch(error => console.log(error.message));
+    .catch(error => {
+      return error.response.status;
+    });
 };
 
 //gets list of users
@@ -124,24 +137,28 @@ const getAllUsers = () => {
         }),
       };
     })
-    .catch(error => console.log(error.message));
+    .catch(error => {
+      return error.response.status;
+    });
 };
 
 //deletes user and returns status
-const deleteUser = id => {
+const deleteUser = () => {
   return accountsApi
-    .delete(`/accounts/${id}`)
+    .delete(`/accounts/${saved_id}`)
     .then(res => {
       console.log(res.status);
       return res.status;
     })
-    .catch(error => console.log(error.message));
+    .catch(error => {
+      return error.response.status;
+    });
 };
 
 //gets user by id and returns user info
-const getUser = id => {
+const getUser = () => {
   return accountsApi
-    .get(`/accounts/${id}`)
+    .get(`/accounts/${saved_id}`)
     .then(res => {
       console.log(res.data);
       return {
@@ -156,45 +173,47 @@ const getUser = id => {
         }),
       };
     })
-    .catch(error => console.log(error.message));
+    .catch(error => {
+      return error.response.status;
+    });
 };
 
 //update email and returns status
-const updateEmail = (id, info) => {
+const updateEmail = info => {
   let req = {
     email: info,
   };
-  return updateUser(id, req);
+  return updateUser(saved_id, req);
 };
 
 //update username and returns status
-const updateUsername = (id, info) => {
+const updateUsername = info => {
   let req = {
     username: info,
   };
-  return updateUser(id, req);
+  return updateUser(saved_id, req);
 };
 
 //update username and returns status
-const updateName = (id, info) => {
+const updateName = info => {
   let req = {
     name: info,
   };
-  return updateUser(id, req);
+  return updateUser(saved_id, req);
 };
 
 //update username and returns status
-const updatePhoneNumber = (id, info) => {
+const updatePhoneNumber = info => {
   let req = {
     phone_number: info,
   };
-  return updateUser(id, req);
+  return updateUser(saved_id, req);
 };
 
 //updates user and returns status
-const updateUser = (id, req) => {
+const updateUser = req => {
   return accountsApi
-    .put(`/accounts/${id}`, {
+    .put(`/accounts/${saved_id}`, {
       params: req,
     })
     .then(res => {
@@ -211,7 +230,9 @@ const updateUser = (id, req) => {
         }),
       };
     })
-    .catch(error => console.log(error.message));
+    .catch(error => {
+      return error.response.status;
+    });
 };
 
 //checks username and returns status
@@ -219,13 +240,11 @@ const checkUsername = username => {
   return accountsApi
     .get(`/username/${username}`)
     .then(res => {
-      console.log(res.status);
-      global.taken_user = false;
       return res.status;
     })
     .catch(error => {
-      global.taken_user = false;
-      console.log(error.message);
+      console.log(error.response.status);
+      return error.response.status;
     });
 };
 
@@ -237,7 +256,9 @@ const checkPhoneNumber = phoneNumber => {
       console.log(res.status);
       return res.status;
     })
-    .catch(error => console.log(error.message));
+    .catch(error => {
+      return error.response.status;
+    });
 };
 
 export default {

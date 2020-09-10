@@ -1,9 +1,23 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, Image, ScrollView} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+import {NAME, USERNAME, PHOTO} from 'react-native-dotenv';
 
 const hex = '#F25763';
 
 export default class UserProfileView extends Component {
+  state = {
+    name: '',
+    username: '',
+    photo: '',
+  };
+
+  componentDidMount() {
+    AsyncStorage.getItem(NAME).then(res => this.setState({name: res}));
+    AsyncStorage.getItem(USERNAME).then(res => this.setState({username: res}));
+    AsyncStorage.getItem(PHOTO).then(res => this.setState({photo: res}));
+  }
+
   render() {
     return (
       <ScrollView>
@@ -14,13 +28,12 @@ export default class UserProfileView extends Component {
           <Image
             style={styles.avatar}
             source={{
-              uri:
-                'https://i0.wp.com/www.usmagazine.com/wp-content/uploads/2020/07/Mark-Zuckerberg-Spooks-the-Internet-With-Too-Much-Sunscreen-on-His-Face-in-Hawaii-01.jpg?crop=557px%2C82px%2C896px%2C471px&resize=1200%2C630&ssl=1',
+              uri: this.state.photo,
             }}
           />
           <View style={{flexDirection: 'column', alignItems: 'flex-start'}}>
-            <Text style={styles.name}>Hubert Chen</Text>
-            <Text style={styles.info}>@hubesc</Text>
+            <Text style={styles.name}>{this.state.name}</Text>
+            <Text style={styles.info}>@{this.state.username}</Text>
           </View>
         </View>
         <View style={styles.toggle}>
