@@ -1,9 +1,18 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, Image, ScrollView} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
+  TouchableHighlight,
+} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NAME, USERNAME, PHOTO} from 'react-native-dotenv';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const hex = '#F25763';
+const font = 'CircularStd-Medium';
 
 export default class UserProfileView extends Component {
   state = {
@@ -20,85 +29,76 @@ export default class UserProfileView extends Component {
 
   render() {
     return (
-      <ScrollView>
-        <View>
-          <Text style={styles.topBar}>My Profile</Text>
-        </View>
-        <View style={styles.headerContent}>
-          <Image
-            style={styles.avatar}
-            source={{
-              uri: this.state.photo,
-            }}
+      <View>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <Icon
+            name="chevron-left"
+            style={styles.topIcons}
+            onPress={() => this.props.navigation.navigate('Home')}
           />
-          <View style={{flexDirection: 'column', alignItems: 'flex-start'}}>
-            <Text style={styles.name}>{this.state.name}</Text>
-            <Text style={styles.info}>@{this.state.username}</Text>
+          <Icon name="cog" style={styles.topIcons} />
+        </View>
+        <Text style={styles.myProfile}>My Profile</Text>
+        <View style={styles.userInfo}>
+          <Image
+            source={{
+              uri:
+                'https://d1kdq4z3qhht46.cloudfront.net/uploads/2019/08/Adventures_from_Moominvalley_1990_Moomintroll_TV.jpg',
+            }}
+            style={styles.avatar}
+          />
+          <View style={{fontFamily: font}}>
+            <Text style={{fontSize: 28, fontWeight: 'bold'}}>Hanna Co</Text>
+            <Text style={{fontSize: 17}}>@hannaco</Text>
           </View>
         </View>
-        <View style={styles.toggle}>
-          <Text style={styles.togglecontent}>Saved Spots</Text>
+        <View style={{flexDirection: 'row'}}>
+          <TouchableHighlight style={styles.buttons}>
+            <Text style={({marginLeft: '5%'}, styles.buttonText)}>Friends</Text>
+          </TouchableHighlight>
+          <TouchableHighlight style={styles.buttons}>
+            <Text style={styles.buttonText}>Requests</Text>
+          </TouchableHighlight>
         </View>
-      </ScrollView>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  topBar: {
+  topIcons: {
+    color: hex,
+    fontSize: 27,
+    margin: '5%',
+  },
+  myProfile: {
     color: hex,
     fontWeight: 'bold',
-    fontSize: 20,
-    paddingTop: '5%',
-    paddingLeft: '3%',
-  },
-  headerContent: {
-    padding: 30,
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    fontSize: 17,
+    paddingLeft: '5%',
+    fontFamily: font,
   },
   avatar: {
-    width: 130,
-    height: 130,
+    width: 100,
+    height: 100,
     borderRadius: 63,
     borderWidth: 4,
-    borderColor: 'white',
-    marginBottom: 10,
+    margin: '5%',
   },
-  name: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    alignSelf: 'center',
+  userInfo: {flexDirection: 'row', alignItems: 'center'},
+  buttons: {
+    borderRadius: 40,
+    borderColor: hex,
+    borderWidth: 2,
+    marginLeft: '5%',
   },
-  info: {
-    fontSize: 18,
-    marginTop: 20,
-  },
-  toggle: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  togglecontent: {
+  buttonText: {
+    fontFamily: font,
     color: hex,
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  image: {
-    width: 140,
-    height: 140,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: 'white',
-    margin: '3%',
-  },
-  gallery: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  col: {
-    flexDirection: 'column',
-    flex: 2,
-    alignItems: 'center',
+    fontSize: 17,
+    paddingLeft: '3%',
+    paddingRight: '3%',
+    paddingTop: '0.5%',
+    paddingBottom: '0.5%',
   },
 });

@@ -1,59 +1,57 @@
-import React from 'react'
+import React from 'react';
 import {
   StyleSheet,
   View,
   Text,
   Button,
   Alert,
-  TouchableHighlight
-} from 'react-native'
-import UserProfileView from './profile.js'
-import { facebookService } from './facebookService.js'
+  TouchableHighlight,
+} from 'react-native';
+import UserProfileView from './profile.js';
+import {facebookService} from './facebookService.js';
 
 class Home extends React.Component {
-  constructor () {
-    super()
+  constructor() {
+    super();
     this.state = {
       createPressed: false,
-      profilePressed: false
-    }
+      profilePressed: false,
+    };
   }
 
-  underlayShowCreate () {
-    this.setState({ createPressed: true })
+  underlayShowCreate() {
+    this.setState({createPressed: true});
   }
 
-  underlayHideCreate () {
-    this.setState({ createPressed: false })
+  underlayHideCreate() {
+    this.setState({createPressed: false});
   }
 
-  underlayShowProfile () {
-    this.setState({ profilePressed: true })
+  underlayShowProfile() {
+    this.setState({profilePressed: true});
   }
 
-  underlayHideProfile () {
-    this.setState({ profilePressed: false })
+  underlayHideProfile() {
+    this.setState({profilePressed: false});
   }
 
-  render () {
+  render() {
     return (
       <View
         style={{
           flex: 1,
           backgroundColor: '#F25763',
-          justifyContent: 'center'
-        }}
-      >
+          justifyContent: 'center',
+        }}>
         <TouchableHighlight
           onShowUnderlay={this.underlayShowCreate.bind(this)}
           onHideUnderlay={this.underlayHideCreate.bind(this)}
           activeOpacity={1}
-          underlayColor='#fff'
+          underlayColor="#fff"
           style={styles.button}
-        >
+          onPress={() => this.props.navigation.navigate('Group')}>
           <Text
-            style={this.state.createPressed ? styles.yesPress : styles.noPress}
-          >
+            style={this.state.createPressed ? styles.yesPress : styles.noPress}>
             Create Group
           </Text>
         </TouchableHighlight>
@@ -61,20 +59,18 @@ class Home extends React.Component {
           onShowUnderlay={this.underlayShowProfile.bind(this)}
           onHideUnderlay={this.underlayHideProfile.bind(this)}
           activeOpacity={1}
-          underlayColor='#fff'
+          underlayColor="#fff"
           style={styles.button}
-          onPress={() => this.props.navigation.navigate('Profile')}
-        >
+          onPress={() => this.props.navigation.navigate('Profile')}>
           <Text
             style={
               this.state.profilePressed ? styles.yesPress : styles.noPress
-            }
-          >
+            }>
             My Profile
           </Text>
         </TouchableHighlight>
       </View>
-    )
+    );
   }
 }
 
@@ -88,22 +84,22 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     margin: '3%',
     flexDirection: 'column',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   yesPress: {
     textAlign: 'center',
     color: '#F25763',
     fontFamily: 'CircularStd-Medium',
     fontSize: 27,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   noPress: {
     textAlign: 'center',
     color: '#fff',
     fontFamily: 'CircularStd-Medium',
     fontSize: 27,
-    fontWeight: 'bold'
-  }
-})
+    fontWeight: 'bold',
+  },
+});
 
-export default Home
+export default Home;
