@@ -1,9 +1,17 @@
 const { Accounts } = require('./models.js')
+<<<<<<< HEAD
 var sessions = {} // store temporary sessions
 var clients = {} // associates username with client id
 var clientsIds = {} // associates client id with username
 var invites = {} // store invites
 var lastRoom = {} // store last room if user disconnected
+=======
+var sessions = new Object() // store temporary sessions
+var clients = new Object() // associates username with client id
+var clientsIds = new Object() // associates client id with username
+var invites = new Object() // store invites
+var lastRoom = new Object() // store last room if user disconnected
+>>>>>>> d683c0d0e5e358ce448a34862fbb554019c201c4
 module.exports = (io) => {
   io.on('connection', socket => {
     // replace old socket id with new one in both objects
@@ -67,6 +75,7 @@ module.exports = (io) => {
           where: { username: data.host }
         })
         socket.join(data.host)
+<<<<<<< HEAD
         sessions[data.host] = {}
         sessions[data.host].members = {}
         sessions[data.host].members[data.host] = {}
@@ -74,6 +83,15 @@ module.exports = (io) => {
         sessions[data.host].members[data.host].filters = false
         sessions[data.host].members[data.host].name = data.name
         sessions[data.host].restaurants = {}
+=======
+        sessions[data.host] = new Object()
+        sessions[data.host].members = new Object()
+        sessions[data.host].members[data.host] = new Object()
+        sessions[data.host].members[data.host].pic = data.pic
+        sessions[data.host].members[data.host].filters = false
+        sessions[data.host].members[data.host].name = data.name
+        sessions[data.host].restaurants = new Object()
+>>>>>>> d683c0d0e5e358ce448a34862fbb554019c201c4
         lastRoom[data.host] = data.host
         socket.emit('update', JSON.stringify(sessions[data.host].members))
         console.log(sessions)
@@ -129,7 +147,11 @@ module.exports = (io) => {
           })
           socket.join(data.room)
           delete invites[data.username]
+<<<<<<< HEAD
           sessions[data.room].members[data.username] = {}
+=======
+          sessions[data.room].members[data.username] = new Object()
+>>>>>>> d683c0d0e5e358ce448a34862fbb554019c201c4
           sessions[data.room].members[data.username].filters = false
           sessions[data.room].members[data.username].pic = data.pic
           sessions[data.room].members[data.username].name = data.name

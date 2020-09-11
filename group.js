@@ -6,10 +6,9 @@ import {
   StyleSheet,
   ScrollView,
   TouchableHighlight,
-  Image
-} from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import UserProfileView from './profile.js'
+  Image,
+} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const hex = '#F25763'
 
@@ -162,8 +161,8 @@ const styles = StyleSheet.create({
   main: {
     flexDirection: 'column',
     flex: 1,
-    backgroundColor: '#FF465E',
-    color: '#fff'
+    backgroundColor: hex,
+    color: '#fff',
   },
   groupTitle: {
     color: '#fff',
@@ -233,7 +232,7 @@ const styles = StyleSheet.create({
     height: 60,
     width: 60,
     borderWidth: 3,
-    borderColor: '#FF465E',
+    borderColor: hex,
     alignSelf: 'flex-start',
     marginTop: '2.5%',
     marginLeft: '2.5%'
