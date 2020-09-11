@@ -1,18 +1,63 @@
 const { Accounts } = require('./models.js')
 var sessions = new Object(); //store temporary sessions
 var clients = new Object(); //associates username with client id
+var clientsIds = new Object(); //associates client id with username
 var invites = new Object(); //store invites 
+var lastRoom = new Object(); //store last room if user disconnected
 module.exports = (io) => {
     io.on('connection', socket => {
-        clients[socket.handshake.query.username] = socket.id;
-        if (socket.handshake.query.username in invites) {
-            let sender = invites[socket.handshake.query.username]
-            io.to(clients[socket.handshake.query.username]).emit('invite', {
+        //replace old socket id with new one in both objects
+        var socketUser = socket.handshake.query.username;
+        delete clientsIds[clients[socketUser]];
+        clients[socketUser] = socket.id;
+        clientsIds[socket.id] = socketUser;
+        
+        //send invite if previously sent before connection
+        if (socketUser in invites) {
+            var sender = invites[socketUser];
+            io.to(clients[socketUser]).emit('invite', {
                 username: sender,
                 pic: sessions[sender].members[sender].pic,
                 name: sessions[sender].members[sender].name
-            })
+            });
         }
+        //send reconnection if user was in a room and room still exists
+        if (socketUser in lastRoom && lastRoom[socketUser] in sessions) {
+            var sender = lastRoom[socketUser];
+            io.to(clients[socketUser]).emit('reconnectRoom', {
+                username: sender,
+                pic: sessions[sender].members[sender].pic,
+                name: sessions[sender].members[sender].name
+            });
+        }
+
+        //check for disconnection
+        socket.on('disconnect', async data => {
+            try {
+                var username = clientsIds[socket.id];
+                if (username in lastRoom) {
+                    await Accounts.update({
+                        inSession: false,
+                    }, {
+                        where: { username: username }
+                    });
+                    var room = lastRoom[username];
+                    socket.leave(room);
+                    delete sessions[room].members[username];
+                    //delete room if this is last member in room
+                    if (Object.keys(sessions[room].members).length == 0) {
+                        delete sessions[room];
+                        delete lastRoom[username];
+                    } else {
+                        io.in(room).emit('update', JSON.stringify(sessions[room].members));
+                        console.log(sessions[room]);
+                    }
+                }
+            } catch (error) {
+                console.log(error.message);
+                socket.emit('exception', error);
+            }
+        })
 
         //creates session and return session info to host
         socket.on('createRoom', async data => {
@@ -30,6 +75,7 @@ module.exports = (io) => {
                 sessions[data.host].members[data.host].filters = false;
                 sessions[data.host].members[data.host].name = data.name;
                 sessions[data.host].restaurants = new Object();
+                lastRoom[data.host] = data.host;
                 socket.emit('update', JSON.stringify(sessions[data.host].members));
                 console.log(sessions);
             } catch (error) {
@@ -42,14 +88,14 @@ module.exports = (io) => {
         //send invite with host info to join a room
         socket.on('invite', async data => {
             try {
-                let user = await Accounts.findOne({
+                var user = await Accounts.findOne({
                     where: { username: data.username }
                 });
                 //check if friend is in another group
-                if (user) {
+                if (user.inSession) {
                     socket.emit('unreachable', data.username);
                 } else {
-                    invites[data.username].sender = data.host;
+                    invites[data.username] = data.host;
                     io.to(clients[data.username]).emit('invite', {
                         username: data.host,
                         pic: sessions[data.host].members[data.host].pic,
@@ -88,7 +134,8 @@ module.exports = (io) => {
                     sessions[data.room].members[data.username] = new Object();
                     sessions[data.room].members[data.username].filters = false;
                     sessions[data.room].members[data.username].pic = data.pic;
-                    sessions[data.host].members[data.username].name = data.name;
+                    sessions[data.room].members[data.username].name = data.name;
+                    lastRoom[data.username] = data.room;
                     io.in(data.room).emit('update', JSON.stringify(sessions[data.room].members));
                     console.log(sessions[data.room]);
                 } catch (error) {
@@ -160,14 +207,21 @@ module.exports = (io) => {
                 });
                 socket.leave(data.room);
                 delete sessions[data.room].members[data.username];
-                io.in(data.room).emit('update', JSON.stringify(sessions[data.room].members));
-                console.log(sessions[data.room]);
+                delete lastRoom[data.username];
+                //delete room if this is last member in room
+                if (Object.keys(sessions[data.room].members).length == 0) {
+                    delete sessions[data.room];
+                } else {
+                    io.in(data.room).emit('update', JSON.stringify(sessions[data.room].members));
+                    console.log(sessions[data.room]);
+                }
             } catch (error) {
                 console.log(error.message);
                 socket.emit('exception', error);
             }
         });
 
+        //host can kick a user from room
         socket.on('kick', data => {
             try {
                 io.to(clients[data.username]).emit('kick', { room: data.room });
@@ -179,10 +233,9 @@ module.exports = (io) => {
             }
         })
 
+        //alert all users to leave room
         socket.on('end', data => {
-            //remove all users in room to delete
             try {
-                delete sessions[data.room];
                 io.in(data.room).emit('leave', data.room);
                 console.log(sessions);
             } catch (error) {

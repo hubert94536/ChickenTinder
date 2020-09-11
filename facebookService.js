@@ -11,7 +11,7 @@ import {
   FIREBASE_PROJECT_ID,
 } from 'react-native-dotenv';
 
-const {LoginManager, AccessToken, GraphRequest, GraphRequestManager} = FBSDK;
+const { LoginManager, AccessToken, GraphRequest, GraphRequestManager } = FBSDK;
 
 const config = {
   apiKey: FIREBASE_API_KEY, // Auth / General Use
@@ -30,8 +30,11 @@ class FacebookService {
     LoginManager.logInWithPermissions(['public_profile', 'email'])
       .then(login => {
         if (login.isCancelled) {
+          global.success = false;
           return Promise.reject(new Error('Cancelled request'));
         }
+        global.success = true;
+        console.log(global.success);
         return AccessToken.getCurrentAccessToken();
       })
       .then(data => {
@@ -52,7 +55,6 @@ class FacebookService {
           console.log(global.id);
           console.log(global.email);
           console.log(global.photo);
-
           //uncomment below code after finishing phone authentication
           // api.createFBUser(
           //   currentUser.additionalUserInfo.profile.name,
@@ -78,6 +80,26 @@ class FacebookService {
     LoginManager.logOut();
     firebase.logOut();
   };
+
+  deleteUser = () => {
+    api.deleteUser()
+      .then(() => {
+        AccessToken.refreshCurrentAccessTokenAsync()
+      })
+      .then(() => {
+        return AccessToken.getCurrentAccessToken()
+      })
+      .then(data => {
+        const credential = firebase.auth.FacebookAuthProvider.credential(
+          data.accessToken,
+        );
+        firebase.auth().currentUser.reauthenticateWithCredential(credential);
+        firebase.auth().currentUser.delete();
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }
   //getUser if needed
   // getUser = (token) => {
   //   const PROFILE_REQUEST_PARAMS = {

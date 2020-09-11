@@ -43,3 +43,13 @@ export default class App extends React.Component {
     return <AppContainer />;
   }
 }
+
+// import React from 'react';
+// import {Button, View, Text} from 'react-native';
+// import Group from './group.js';
+
+// export default class App extends React.Component {
+//   render() {
+//     return <Group />;
+//   }
+// }

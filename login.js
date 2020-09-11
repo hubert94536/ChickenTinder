@@ -24,6 +24,11 @@ class Login extends React.Component {
     else this.setState({goto: 'Home'});
   }
 
+  componentDidUpdate() {
+    if (global.success === true)
+      this.props.navigation.navigate(this.state.goto);
+  }
+
   underlayShow() {
     this.setState({pressed: true});
   }
@@ -48,13 +53,13 @@ class Login extends React.Component {
           onHideUnderlay={this.underlayHide.bind(this)}
           activeOpacity={1}
           underlayColor="#3b5998"
-          onPress={() => (this.login(), this.setState({showButton: true}))}
+          onPress={() => this.login()}
           style={styles.button}>
           <Text style={this.state.pressed ? styles.yesPress : styles.noPress}>
             Log in with Facebook
           </Text>
         </TouchableHighlight>
-        {this.state.showButton && (
+        {/* {global.success === true && (
           <TouchableHighlight
             onShowUnderlay={this.underlayShow.bind(this)}
             onHideUnderlay={this.underlayHide.bind(this)}
@@ -68,7 +73,7 @@ class Login extends React.Component {
               Continue
             </Text>
           </TouchableHighlight>
-        )}
+        )} */}
       </View>
     );
   }
@@ -83,7 +88,9 @@ class Login extends React.Component {
         {
           text: 'Open',
           onPress: () => (
-            facebookService.loginWithFacebook(), console.log('open')
+            facebookService.loginWithFacebook(),
+            console.log('open'),
+            this.setState({showButton: true})
           ),
         },
         {

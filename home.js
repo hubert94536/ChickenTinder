@@ -7,7 +7,7 @@ import {
   Alert,
   TouchableHighlight,
 } from 'react-native';
-import facebookService from './facebookService.js';
+import {facebookService} from './facebookService.js';
 
 class Home extends React.Component {
   render() {
