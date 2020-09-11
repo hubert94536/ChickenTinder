@@ -30,17 +30,6 @@ export default class Login extends React.Component {
 
   render () {
     return (
-<<<<<<< HEAD
-      <View style={{ marginTop: '50%' }}>
-        <Text
-          style={{
-            fontSize: 50,
-            color: '#DE4A4A',
-            alignSelf: 'center'
-          }}
-        >
-          Log in
-=======
       <View>
         <Text
           style={{
@@ -61,7 +50,6 @@ export default class Login extends React.Component {
             fontSize: 30,
           }}>
           Let's get goin'.
->>>>>>> d683c0d0e5e358ce448a34862fbb554019c201c4
         </Text>
         <TouchableHighlight
           onShowUnderlay={this.underlayShow.bind(this)}
@@ -80,9 +68,6 @@ export default class Login extends React.Component {
     )
   }
 
-<<<<<<< HEAD
-  login () {
-=======
   handleClick = () => {
     facebookService.loginWithFacebook()
     .then(result => {
@@ -94,7 +79,6 @@ export default class Login extends React.Component {
   };
 
   login() {
->>>>>>> d683c0d0e5e358ce448a34862fbb554019c201c4
     Alert.alert(
       // title
       'Open "Facebook"?',
@@ -103,21 +87,6 @@ export default class Login extends React.Component {
       [
         {
           text: 'Open',
-<<<<<<< HEAD
-          onPress: () => (
-            facebookService.loginWithFacebook(),
-            console.log('open'),
-            this.setState({ showButton: true })
-          )
-        },
-        {
-          text: 'Cancel',
-          onPress: () => console.log('cancel'),
-          style: 'cancel'
-        }
-      ]
-    )
-=======
           onPress: () => this.handleClick(),
         },
         {
@@ -126,7 +95,6 @@ export default class Login extends React.Component {
         },
       ],
     );
->>>>>>> d683c0d0e5e358ce448a34862fbb554019c201c4
   }
 }
 
@@ -138,22 +106,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     width: '70%',
-<<<<<<< HEAD
-    // marginTop: '50%',
-    alignSelf: 'center'
-  },
-  yesPress: {
-    alignSelf: 'center',
-    color: '#fff'
-  },
-  noPress: {
-    alignSelf: 'center',
-    color: '#3b5998'
-  }
-})
-
-export default Login
-=======
     alignSelf: 'center',
     marginTop: '10%',
   },
@@ -172,4 +124,3 @@ export default Login
     fontWeight: 'bold',
   },
 });
->>>>>>> d683c0d0e5e358ce448a34862fbb554019c201c4
