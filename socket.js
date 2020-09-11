@@ -9,7 +9,7 @@ var myName = ''
 AsyncStorage.multiGet([USERNAME, NAME, PHOTO]).then(res => {
   myUsername = res[0][1]
   myName = res[1][1]
-  myPic = res[2][2]
+  myPic = res[2][1]
 })
 
 const socket = io('https://wechews.herokuapp.com', {
@@ -19,6 +19,7 @@ const socket = io('https://wechews.herokuapp.com', {
 const createRoom = () => {
   try {
     socket.emit('createRoom', { host: myUsername, pic: myPic, name: myName })
+    return 200
   } catch (error) {
     return Promise.reject(new Error(error))
   }
@@ -27,6 +28,7 @@ const createRoom = () => {
 const sendInvite = (username) => {
   try {
     socket.emit('invite', { username: username, host: myUsername })
+    return 200
   } catch (error) {
     return Promise.reject(new Error(error))
   }
@@ -35,6 +37,7 @@ const sendInvite = (username) => {
 const declineInvite = (room) => {
   try {
     socket.emit('decline', { username: myUsername, room: room })
+    return 200
   } catch (error) {
     return Promise.reject(new Error(error))
   }
@@ -43,6 +46,7 @@ const declineInvite = (room) => {
 const joinRoom = (room) => {
   try {
     socket.emit('joinRoom', { username: myUsername, pic: myPic, room: room, name: myName })
+    return 200
   } catch (error) {
     return Promise.reject(new Error(error))
   }
@@ -51,14 +55,16 @@ const joinRoom = (room) => {
 const leaveRoom = (room) => {
   try {
     socket.emit('leave', { username: myUsername, room: room })
+    return 200
   } catch (error) {
     return Promise.reject(new Error(error))
   }
 }
 
-const kickUser = (user) => {
+const kickUser = (username) => {
   try {
     socket.emit('kick', { username: username, room: myUsername })
+    return 200
   } catch (error) {
     return Promise.reject(new Error(error))
   }
@@ -67,6 +73,7 @@ const kickUser = (user) => {
 const endSession = () => {
   try {
     socket.emit('end', { room: myUsername })
+    return 200
   } catch (error) {
     return Promise.reject(new Error(error))
   }
@@ -75,6 +82,7 @@ const endSession = () => {
 const startSession = () => {
   try {
     socket.emit('start', { room: myUsername })
+    return 200
   } catch (error) {
     return Promise.reject(new Error(error))
   }
@@ -83,6 +91,7 @@ const startSession = () => {
 const submitFilters = (filters, room) => {
   try {
     socket.emit('submitFilters', { username: myUsername, filters: filters, room: room })
+    return 200
   } catch (error) {
     return Promise.reject(new Error(error))
   }
@@ -91,6 +100,7 @@ const submitFilters = (filters, room) => {
 const likeRestaurant = (room, restaurant) => {
   try {
     socket.emit('like', { room: room, restaurant: restaurant })
+    return 200
   } catch (error) {
     return Promise.reject(new Error(error))
   }

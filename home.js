@@ -13,7 +13,7 @@ import { facebookService } from './facebookService.js'
 import socket from './socket.js'
 
 class Home extends React.Component {
-  constructor () {
+  constructor() {
     super()
     this.state = {
       createPressed: false,
@@ -21,39 +21,50 @@ class Home extends React.Component {
     }
   }
 
-  underlayShowCreate () {
+  underlayShowCreate() {
     this.setState({ createPressed: true })
   }
 
-  underlayHideCreate () {
+  underlayHideCreate() {
     this.setState({ createPressed: false })
   }
 
-  underlayShowProfile () {
+  underlayShowProfile() {
     this.setState({ profilePressed: true })
   }
 
-  underlayHideProfile () {
+  underlayHideProfile() {
     this.setState({ profilePressed: false })
   }
 
-  createGroup () {
-    socket.createRoom()
-    .then(() => {
-      socket.getSocket().on('update', res => {
-        console.log(res)
-        return res
+  async createGroup() {
+    try {
+      socket.createRoom()
+      await socket.getSocket().on('update', res => {
+        this.props.navigation.navigate('Group', res)
       })
-    })
-    .then(res => {
-      this.props.navigation.navigate('Group', res)
-    })
-    .catch(error => {
+    } catch (error) {
       console.log(error)
-    })
+    }
   }
+  // createGroup() {
+  //   return socket.createRoom()
+  //     .then(() => {
+  //       console.log('hi')
+  //       socket.getSocket().on('update', res => {
+  //         console.log(res)
+  //         return res
+  //       })
+  //     })
+  //     .then(res => {
+  //       this.props.navigation.navigate('Group', res)
+  //     })
+  //     .catch(error => {
+  //       console.log(error)
+  //     })
+  // }
 
-  render () {
+  render() {
     return (
       <View
         style={{

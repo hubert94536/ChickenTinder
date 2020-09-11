@@ -39,16 +39,22 @@ var participants = [
 ]
 
 export default class Group extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      members: this.props.navigation.state.params
+    }
+  }
   render () {
-    console.log(this.props.navigation.state)
+    console.log(this.props.navigation.state.params[0].length)
     var members = []
     var i = 0
-    for (i = 0; i < participants.length; i++) {
+    for (i = 0; i < this.state.members.length; i++) {
       members.push(
         <Card
-          name={participants[i].name}
-          username={participants[i].username}
-          image={participants[i].image}
+          name={this.state.members[i].name}
+          username={this.state.members[i]}
+          image={this.state.members[i].pic}
         />
       )
     }
@@ -69,7 +75,7 @@ export default class Group extends React.Component {
               {members.length}
             </Text>
             <Text style={styles.divider}>|</Text>
-            <Text style={styles.waiting}>waiting for 1 member's filters</Text>
+            <Text style={styles.waiting}>waiting for {this.props.navigation.state.params.length} member's filters</Text>
           </View>
           <TouchableHighlight style={styles.button}>
             <Text style={styles.buttonText}>Set your filters</Text>
