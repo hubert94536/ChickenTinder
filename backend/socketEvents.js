@@ -75,7 +75,7 @@ module.exports = (io) => {
         sessions[data.host].members[data.host].name = data.name
         sessions[data.host].restaurants = {}
         lastRoom[data.host] = data.host
-        socket.emit('update', sessions[data.host].members)
+        socket.emit('update', sessions[data.host])
         console.log(sessions)
       } catch (error) {
         console.log(error)

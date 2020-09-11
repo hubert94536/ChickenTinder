@@ -46,7 +46,6 @@ class Username extends Component {
       .checkUsername(this.state.username)
       .then(res => {
         if (res === 200) {
-          console.log(this.state.username);
           AsyncStorage.setItem(USERNAME, this.state.username);
           api.createFBUser(
             this.state.name,
