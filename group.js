@@ -11,50 +11,27 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 const hex = '#F25763'
-
-var participants = [
-  {
-    name: 'Hanna',
-    username: '@hannaco',
-    image:
-      'https://d1kdq4z3qhht46.cloudfront.net/uploads/2019/08/Adventures_from_Moominvalley_1990_Moomintroll_TV.jpg'
-  },
-  {
-    name: 'Isha',
-    username: '@ishagonu',
-    image:
-      'https://www.abramsandchronicle.co.uk/wp-content/uploads/books/9781452182674.jpg'
-  },
-  {
-    name: 'Hubert',
-    username: '@hubesc',
-    image: 'https://media0.giphy.com/media/ayMW3eqvuP00o/giphy_s.gif'
-  },
-  {
-    name: 'Ruth',
-    username: '@ruthlee',
-    image:
-      'https://wi-images.condecdn.net/image/baeWXm8eqMl/crop/405/f/ponyo.jpg'
-  }
-]
-
+// this.props.navigation.state.params.members[
+//   Object.keys(this.props.navigation.state.params.members)[0]].name
 export default class Group extends React.Component {
   constructor(props) {
     super(props)
+    const members = this.props.navigation.state.params.members
     this.state = {
-      members: this.props.navigation.state.params
+      members: members,
+      host: members[Object.keys(members)[0]].name.split(" ")[0],
+      needFilters: Object.keys(members).filter(user=>!user.filters).length
     }
   }
-  render () {
-    console.log(this.props.navigation.state.params[0].length)
+  render() {
     var members = []
-    var i = 0
-    for (i = 0; i < this.state.members.length; i++) {
+    for (var user in this.state.members) {
       members.push(
         <Card
-          name={this.state.members[i].name}
-          username={this.state.members[i]}
-          image={this.state.members[i].pic}
+          name={this.state.members[user].name}
+          username={'@'+user}
+          image={this.state.members[user].pic}
+          filters={this.state.members[user].filters}
         />
       )
     }
@@ -62,7 +39,7 @@ export default class Group extends React.Component {
     return (
       <View style={styles.main}>
         <View style={styles.top}>
-          <Text style={styles.groupTitle}>Hubert's Group</Text>
+          <Text style={styles.groupTitle}>{this.state.host}'s group</Text>
           <View style={{ flexDirection: 'row' }}>
             <Icon name='user' style={styles.icon} />
             <Text
@@ -75,7 +52,7 @@ export default class Group extends React.Component {
               {members.length}
             </Text>
             <Text style={styles.divider}>|</Text>
-            <Text style={styles.waiting}>waiting for {this.props.navigation.state.params.length} member's filters</Text>
+            <Text style={styles.waiting}>waiting for {this.state.needFilters} member filters</Text>
           </View>
           <TouchableHighlight style={styles.button}>
             <Text style={styles.buttonText}>Set your filters</Text>
@@ -96,12 +73,12 @@ export default class Group extends React.Component {
 }
 
 class Card extends React.Component {
-  render () {
+  render() {
     return (
       <View>
         <View style={styles.card}>
-          <Image source={{ uri: this.props.image }} style={styles.image} />
-          <Icon
+          <Image source={{ uri: this.props.image }} style={this.props.filters ? styles.image : styles.imageFalse} />
+          {this.props.filters ? <Icon   
             name='check-circle'
             style={{
               color: hex,
@@ -110,7 +87,7 @@ class Card extends React.Component {
               marginLeft: '14%',
               marginTop: '1%'
             }}
-          />
+          /> : null}
           <View
             style={{
               alignSelf: 'center',
@@ -240,6 +217,15 @@ const styles = StyleSheet.create({
     width: 60,
     borderWidth: 3,
     borderColor: hex,
+    alignSelf: 'flex-start',
+    marginTop: '2.5%',
+    marginLeft: '2.5%'
+  },
+  imageFalse: {
+    borderRadius: 63,
+    height: 60,
+    width: 60,
+    borderWidth: 3,
     alignSelf: 'flex-start',
     marginTop: '2.5%',
     marginLeft: '2.5%'
