@@ -1,9 +1,9 @@
 const { Accounts } = require('./models.js')
-var sessions = new Object() // store temporary sessions
-var clients = new Object() // associates username with client id
-var clientsIds = new Object() // associates client id with username
-var invites = new Object() // store invites
-var lastRoom = new Object() // store last room if user disconnected
+var sessions = {} // store temporary sessions
+var clients = {} // associates username with client id
+var clientsIds = {} // associates client id with username
+var invites = {} // store invites
+var lastRoom = {} // store last room if user disconnected
 module.exports = (io) => {
   io.on('connection', socket => {
     // replace old socket id with new one in both objects
@@ -42,14 +42,13 @@ module.exports = (io) => {
             where: { username: username }
           })
           var room = lastRoom[username]
-          socket.leave(room)
           delete sessions[room].members[username]
           // delete room if this is last member in room
-          if (Object.keys(sessions[room].members).length == 0) {
+          if (Object.keys(sessions[room].members).length === 0) {
             delete sessions[room]
             delete lastRoom[username]
           } else {
-            io.in(room).emit('update', JSON.stringify(sessions[room].members))
+            io.in(room).emit('update', sessions[room].members)
             console.log(sessions[room])
           }
         }
@@ -68,15 +67,15 @@ module.exports = (io) => {
           where: { username: data.host }
         })
         socket.join(data.host)
-        sessions[data.host] = new Object()
-        sessions[data.host].members = new Object()
-        sessions[data.host].members[data.host] = new Object()
+        sessions[data.host] = {}
+        sessions[data.host].members = {}
+        sessions[data.host].members[data.host] = {}
         sessions[data.host].members[data.host].pic = data.pic
         sessions[data.host].members[data.host].filters = false
         sessions[data.host].members[data.host].name = data.name
-        sessions[data.host].restaurants = new Object()
+        sessions[data.host].restaurants = {}
         lastRoom[data.host] = data.host
-        socket.emit('update', JSON.stringify(sessions[data.host].members))
+        socket.emit('update', sessions[data.host])
         console.log(sessions)
       } catch (error) {
         console.log(error)
@@ -130,12 +129,12 @@ module.exports = (io) => {
           })
           socket.join(data.room)
           delete invites[data.username]
-          sessions[data.room].members[data.username] = new Object()
+          sessions[data.room].members[data.username] = {}
           sessions[data.room].members[data.username].filters = false
           sessions[data.room].members[data.username].pic = data.pic
           sessions[data.room].members[data.username].name = data.name
           lastRoom[data.username] = data.room
-          io.in(data.room).emit('update', JSON.stringify(sessions[data.room].members))
+          io.in(data.room).emit('update', sessions[data.room].members)
           console.log(sessions[data.room])
         } catch (error) {
           console.log(error.message)
@@ -151,9 +150,9 @@ module.exports = (io) => {
       // merge to master list, send response back
       try {
         sessions[data.room].members[data.username].filters = true
-        io.in(data.room).emit('update', JSON.stringify(sessions[data.room].members))
+        io.in(data.room).emit('update', sessions[data.room].members)
         io.to(clients[data.room]).emit('filters', { filters: data.filters })
-        console.log(JSON.stringify(sessions[data.room]))
+        console.log(sessions[data.room])
       } catch (error) {
         console.log(error.message)
         socket.emit('exception', error)
@@ -207,7 +206,7 @@ module.exports = (io) => {
         if (Object.keys(sessions[data.room].members).length == 0) {
           delete sessions[data.room]
         } else {
-          io.in(data.room).emit('update', JSON.stringify(sessions[data.room].members))
+          io.in(data.room).emit('update', sessions[data.room].members)
           console.log(sessions[data.room])
         }
       } catch (error) {
