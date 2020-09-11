@@ -1,7 +1,13 @@
 import axios from 'axios'
+<<<<<<< HEAD
 import { API_KEY } from 'react-native-dotenv'
 // import { View, Text } from PermissionsAndroid from 'react-native'
 import React from 'react'
+=======
+import { API_KEY, ID } from 'react-native-dotenv'
+//import { View, Text } from PermissionsAndroid from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
+>>>>>>> d683c0d0e5e358ce448a34862fbb554019c201c4
 
 // import {globalAgent} from 'http';
 // import Geolocation from '@react-native-community/geolocation';
@@ -40,6 +46,15 @@ import React from 'react'
 //   }
 // };
 
+<<<<<<< HEAD
+=======
+var saved_id = ''
+
+AsyncStorage.getItem(ID).then(res => {
+  saved_id = res
+})
+
+>>>>>>> d683c0d0e5e358ce448a34862fbb554019c201c4
 // setting up Yelp API base caller
 const yelpApi = axios.create({
   baseURL: 'https://api.yelp.com/v3',
@@ -96,8 +111,12 @@ const createFBUser = (name, id, username, email, photo) => {
         name: name,
         username: username,
         email: email,
+<<<<<<< HEAD
         photo: photo,
         inSession: false
+=======
+        photo: photo
+>>>>>>> d683c0d0e5e358ce448a34862fbb554019c201c4
       }
     })
     .then(res => {
@@ -137,7 +156,7 @@ const getAllUsers = () => {
 // deletes user and returns status
 const deleteUser = () => {
   return accountsApi
-    .delete(`/accounts/${global.id}`)
+    .delete(`/accounts/${saved_id}`)
     .then(res => {
       console.log(res.status)
       return res.status
@@ -150,7 +169,7 @@ const deleteUser = () => {
 // gets user by id and returns user info
 const getUser = () => {
   return accountsApi
-    .get(`/accounts/${global.id}`)
+    .get(`/accounts/${saved_id}`)
     .then(res => {
       console.log(res.data)
       return {
@@ -171,6 +190,7 @@ const getUser = () => {
 }
 
 // update email and returns status
+<<<<<<< HEAD
 const updateEmail = (info) => {
   const req = {
     email: info
@@ -206,6 +226,43 @@ const updatePhoneNumber = (info) => {
 const updateUser = (req) => {
   return accountsApi
     .put(`/accounts/${global.id}`, {
+=======
+const updateEmail = info => {
+  const req = {
+    email: info
+  }
+  return updateUser(saved_id, req)
+}
+
+// update username and returns status
+const updateUsername = info => {
+  const req = {
+    username: info
+  }
+  return updateUser(saved_id, req)
+}
+
+// update username and returns status
+const updateName = info => {
+  const req = {
+    name: info
+  }
+  return updateUser(saved_id, req)
+}
+
+// update username and returns status
+const updatePhoneNumber = info => {
+  const req = {
+    phone_number: info
+  }
+  return updateUser(saved_id, req)
+}
+
+// updates user and returns status
+const updateUser = req => {
+  return accountsApi
+    .put(`/accounts/${saved_id}`, {
+>>>>>>> d683c0d0e5e358ce448a34862fbb554019c201c4
       params: req
     })
     .then(res => {

@@ -1,9 +1,5 @@
 import io from 'socket.io-client'
 
-global.username = 'hube'
-global.pic = 'https://graph.facebook.com/2722136378068432/picture'
-global.name = 'Hubert Chen'
-
 const socket = io('https://wechews.herokuapp.com', {
   query: `username=${global.username}`
 })
@@ -92,7 +88,11 @@ const getSocket = () => {
   return socket
 }
 
+<<<<<<< HEAD
 export default {
+=======
+module.exports = {
+>>>>>>> d683c0d0e5e358ce448a34862fbb554019c201c4
   createRoom,
   joinRoom,
   sendInvite,
