@@ -6,37 +6,23 @@
 // // //  * @flow strict-local
 // // //  */
 
-<<<<<<< HEAD
 import React from 'react'
-import { Button, View, Text } from 'react-native'
 import Login from './login.js'
 import Home from './home.js'
 import Username from './username.js'
+import UserProfileView from './profile.js'
+import Group from './group.js'
 import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
 import { createAppContainer } from 'react-navigation'
-import sockets from './socket.js'
-
-start = ''
-if (global.uid === undefined) start = 'Login'
-else start = 'Home'
-=======
-import React from 'react';
-import Login from './login.js';
-import Home from './home.js';
-import Username from './username.js';
-import UserProfileView from './profile.js';
-import Group from './group.js';
-import {createStackNavigator} from 'react-navigation-stack'; // 1.0.0-beta.27
-import {createAppContainer} from 'react-navigation';
-import AsyncStorage from '@react-native-community/async-storage';
-import {UID} from 'react-native-dotenv';
+import AsyncStorage from '@react-native-community/async-storage'
+import { UID } from 'react-native-dotenv'
+import socket from './socket.js'
 
 AsyncStorage.getItem(UID).then(value => {
-  if (value === null) start = 'Login';
-  else start = 'Home';
-});
-var start = '';
->>>>>>> d683c0d0e5e358ce448a34862fbb554019c201c4
+  if (value === null) start = 'Login'
+  else start = 'Home'
+})
+var start = ''
 
 const RootStack = createStackNavigator(
   {
@@ -47,25 +33,26 @@ const RootStack = createStackNavigator(
       screen: Login
     },
     Username: {
-      screen: Username,
+      screen: Username
     },
     Profile: {
-      screen: UserProfileView,
+      screen: UserProfileView
     },
     Group: {
-      screen: Group,
-    },
+      screen: Group
+    }
   },
   {
     initialRouteName: 'Login',
-    headerMode: 'none',
-  },
-);
+    headerMode: 'none'
+  }
+)
 
 const AppContainer = createAppContainer(RootStack)
 
 export default class App extends React.Component {
   render () {
+    socket.getSocket()
     return <AppContainer />
   }
 }

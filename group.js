@@ -6,9 +6,9 @@ import {
   StyleSheet,
   ScrollView,
   TouchableHighlight,
-  Image,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+  Image
+} from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 const hex = '#F25763'
 
@@ -40,6 +40,7 @@ var participants = [
 
 export default class Group extends React.Component {
   render () {
+    console.log(this.props.navigation.state)
     var members = []
     var i = 0
     for (i = 0; i < participants.length; i++) {
@@ -162,7 +163,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     flex: 1,
     backgroundColor: hex,
-    color: '#fff',
+    color: '#fff'
   },
   groupTitle: {
     color: '#fff',
