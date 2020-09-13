@@ -1,14 +1,13 @@
-const Accounts = require("./accountsModel");
-const Friends = require("./friendsModel");
+const { Accounts, Friends } = require("./models");
 
 const createFriends = async (req, res) => {
     try {
         const main = req.params.main_user;
         const friend = req.params.friend_user;
-        const friends1 = await Friends.create(
+        const user = await Friends.create(
             {
                 main_user: main,
-                status: "requested",
+                f_status: "requested",
                 friend_user: {
                     username: friend
                 }
@@ -19,10 +18,10 @@ const createFriends = async (req, res) => {
                 include: [Accounts]
             }
         );
-        const friends2 = await Friends.create(
+        const friendUser = await Friends.create(
             {
                 main_user: friend,
-                status: "pending request",
+                f_status: "pending request",
                 friend_user: {
                     username: main
                 }
@@ -34,10 +33,9 @@ const createFriends = async (req, res) => {
             }
         );
         return res.status(201).json({
-            friends1
+            user
         });
     } catch (error) {
-        console.log(error.message)
         return res.status(500).json({ error: error.message})
     }
 }
@@ -46,11 +44,10 @@ const getUserFriends = async (req, res) => {
     try {
         const main = req.params.main_user;
         const friends = await Friends.findAll({
-            where: { main_user: main, status: "accepted" },
+            where: { main_user: main, f_status: "accepted" },
         });
         return res.status(200).json({ friends });
     } catch (error) {
-        console.log(error.message)
         return res.status(500).send(error.message);
     }
 }
@@ -59,11 +56,10 @@ const getUserRequests = async (req, res) => {
     try {
         const main = req.params.main_user;
         const requests = await Friends.findAll({
-            where: { main_user: main, status: "pending request" },
+            where: { main_user: main, f_status: "pending request" },
         });
         return res.status(200).json({ requests });
     } catch (error) {
-        console.log(error.message)
         return res.status(500).send(error.message);
     }
 }
@@ -72,19 +68,18 @@ const acceptRequest = async (req, res) => {
     try {
         const main = req.params.main_user;
         const friend = req.params.friend_user;
-        const account_1 = await Friends.update({status: "accepted"}, {
+        const account_1 = await Friends.update({f_status: "accepted"}, {
             where: { main_user: main, friend_user: friend }
         });
-        const account_2 = await Friends.update({status: "accepted"}, {
+        const account_2 = await Friends.update({f_status: "accepted"}, {
             where: { main_user: friend, friend_user: main }
         });
         if (account_1 && account_2) {
             const updatedAccount_1 = await Friends.findOne({ where: { main_user: main, friend_user: friend} });
             return res.status(200).json({ user: updatedAccount_1 });
         }
-        throw new Error('Friendship not found');
+        return res.status(404).send("Friendship not found");
     } catch (error) {
-        console.log(error.message)
         return res.status(500).send(error.message);
     }
 };
@@ -102,10 +97,17 @@ const deleteFriendship = async (req, res) => {
         if (deleted_1 && deleted_2) {
             return res.status(204).send("Friendship deleted");
         }
-        throw new Error('Friendship not found');
+        return res.status(404).send("Friendship not found");
     } catch (error) {
-        console.log(error.message)
         return res.status(500).send(error.message);
     }
 };
 
+module.exports =
+{
+    createFriends,
+    getUserFriends,
+    getUserRequests,
+    acceptRequest,
+    deleteFriendship
+}

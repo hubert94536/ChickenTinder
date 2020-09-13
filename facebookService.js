@@ -1,4 +1,3 @@
-import React from 'react';
 import FBSDK from 'react-native-fbsdk';
 import firebase from 'firebase';
 import api from './api.js';
@@ -9,8 +8,14 @@ import {
   FIREBASE_DATABASE,
   FIREBASE_STORAGE_BUCKET,
   FIREBASE_PROJECT_ID,
+  USERNAME,
+  NAME,
+  ID,
+  UID,
+  EMAIL,
+  PHOTO,
 } from 'react-native-dotenv';
-
+import AsyncStorage from '@react-native-community/async-storage';
 const { LoginManager, AccessToken, GraphRequest, GraphRequestManager } = FBSDK;
 
 const config = {
@@ -27,14 +32,14 @@ firebase.initializeApp(config);
 class FacebookService {
   loginWithFacebook = () => {
     // Attempt a login using the Facebook login dialog asking for default permissions.
-    LoginManager.logInWithPermissions(['public_profile', 'email'])
+     return LoginManager.logInWithPermissions([
+      'public_profile',
+      'email',
+    ])
       .then(login => {
         if (login.isCancelled) {
-          global.success = false;
           return Promise.reject(new Error('Cancelled request'));
         }
-        global.success = true;
-        console.log(global.success);
         return AccessToken.getCurrentAccessToken();
       })
       .then(data => {
@@ -45,33 +50,27 @@ class FacebookService {
       })
       .then(currentUser => {
         if (currentUser.additionalUserInfo.isNewUser) {
-          global.uid = firebase.auth().currentUser.uid;
-          global.name = currentUser.additionalUserInfo.profile.name;
-          global.id = currentUser.additionalUserInfo.profile.id;
-          global.email = currentUser.additionalUserInfo.profile.email;
-          global.photo = currentUser.user.photoURL;
-          console.log(global.uid);
-          console.log(global.name);
-          console.log(global.id);
-          console.log(global.email);
-          console.log(global.photo);
-          //uncomment below code after finishing phone authentication
-          // api.createFBUser(
-          //   currentUser.additionalUserInfo.profile.name,
-          //   currentUser.additionalUserInfo.profile.id,
-          //   username,
-          //   currentUser.additionalUserInfo.profile.email,
-          //   currentUser.user.photoURL,
-          // );
+          AsyncStorage.setItem(UID, firebase.auth().currentUser.uid);
+          AsyncStorage.setItem(NAME,
+            currentUser.additionalUserInfo.profile.name,
+          );
+          AsyncStorage.setItem(ID, currentUser.additionalUserInfo.profile.id);
+          AsyncStorage.setItem(EMAIL,
+            currentUser.additionalUserInfo.profile.email,
+          );
+          AsyncStorage.setItem(PHOTO, currentUser.user.photoURL);
+          return 'Username';
+        } else {
+          return 'Home';
         }
-        //navigate to homepage here
       })
       .catch(error => {
         //Account linking will be needed with email/phone_number login
         // if (errorCode === 'auth/account-exists-with-different-credential') {
         //   alert('Email already associated with another account.');
         //   // Handle account linking here, if using.
-        console.log(`Facebook login fail with error: ${error.message}`);
+        console.log(error)
+        return Promise.reject(new Error(error))
       });
   };
 
@@ -84,22 +83,21 @@ class FacebookService {
   deleteUser = () => {
     api.deleteUser()
       .then(() => {
-        AccessToken.refreshCurrentAccessTokenAsync()
+        AccessToken.refreshCurrentAccessTokenAsync();
       })
       .then(() => {
-        return AccessToken.getCurrentAccessToken()
-      })
-      .then(data => {
+        const accessToken = AccessToken.getCurrentAccessToken();
         const credential = firebase.auth.FacebookAuthProvider.credential(
-          data.accessToken,
+          accessToken,
         );
         firebase.auth().currentUser.reauthenticateWithCredential(credential);
         firebase.auth().currentUser.delete();
+        AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO])
       })
       .catch(error => {
         console.log(error);
-      })
-  }
+      });
+  };
   //getUser if needed
   // getUser = (token) => {
   //   const PROFILE_REQUEST_PARAMS = {
