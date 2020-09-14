@@ -7,10 +7,13 @@ import {
   ScrollView,
   TouchableHighlight,
   Image,
+  Alert,
 } from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const hex = '#F25763';
+const font = 'CircularStd-Medium';
 
 var participants = [
   {
@@ -39,41 +42,89 @@ var participants = [
 ];
 
 export default class Group extends React.Component {
-  render() {
-    var members = [];
-    var i = 0;
-    for (i = 0; i < participants.length; i++) {
-      members.push(
+  state = {
+    members: [],
+  };
+
+  componentDidMount() {
+    var temp = [];
+    var temp2 = [];
+    for (var i = 0; i < participants.length; i++) {
+      temp.push(
         <Card
+          key={i}
+          id={i}
           name={participants[i].name}
           username={participants[i].username}
           image={participants[i].image}
+          removeItem={this.removeItem}
         />,
       );
     }
+    this.setState({members: temp});
+  }
 
+  removeItem = num => {
+    console.log('remove ' + num);
+  };
+
+  leaveGroup() {
+    Alert.alert(
+      //title
+      'Are you sure you want to leave?',
+      //body
+      'You will will not be able to return without invitation',
+      [
+        {
+          text: 'Yes',
+          onPress: () => this.props.navigation.navigate('Home'),
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ],
+    );
+  }
+
+  render() {
     return (
       <View style={styles.main}>
         <View style={styles.top}>
-          <Text style={styles.groupTitle}>Hubert's Group</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={styles.groupTitle}>
+              {participants[0].name}'s Group
+            </Text>
+            <TouchableOpacity
+              style={styles.leave}
+              onPress={() => this.leaveGroup()}>
+              <Text style={styles.leaveText}>Leave</Text>
+            </TouchableOpacity>
+          </View>
           <View style={{flexDirection: 'row'}}>
             <Icon name="user" style={styles.icon} />
             <Text
               style={{
                 color: '#fff',
                 fontWeight: 'bold',
-                fontFamily: 'CircularStd-Medium',
+                fontFamily: font,
               }}>
-              {members.length}
+              {this.state.members.length}
             </Text>
             <Text style={styles.divider}>|</Text>
             <Text style={styles.waiting}>waiting for 1 member's filters</Text>
           </View>
-          <TouchableHighlight style={styles.button}>
-            <Text style={styles.buttonText}>Set your filters</Text>
-          </TouchableHighlight>
+          <View style={{flexDirection: 'row', margin: '4%'}}>
+            <Icon
+              name="chevron-left"
+              style={{color: 'white', fontFamily: font, fontSize: 16}}
+            />
+            <Text style={{color: 'white', fontFamily: font, marginLeft: '3%'}}>
+              Swipe for filters
+            </Text>
+          </View>
         </View>
-        <ScrollView style={styles.center}>{members}</ScrollView>
+        <ScrollView style={styles.center}>{this.state.members}</ScrollView>
         <View style={styles.bottom}>
           <Text style={styles.bottomText}>
             When everyone has submitted filters, the round will begin!
@@ -88,6 +139,14 @@ export default class Group extends React.Component {
 }
 
 class Card extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  removeItem = num => {
+    this.props.removeItem(num);
+  };
+
   render() {
     return (
       <View>
@@ -113,14 +172,14 @@ class Card extends React.Component {
               style={{
                 color: hex,
                 fontWeight: 'bold',
-                fontFamily: 'CircularStd-Medium',
+                fontFamily: font,
               }}>
               {this.props.name}
             </Text>
             <Text
               style={{
                 color: hex,
-                fontFamily: 'CircularStd-Medium',
+                fontFamily: font,
               }}>
               {this.props.username}
             </Text>
@@ -130,7 +189,7 @@ class Card extends React.Component {
               style={{
                 color: hex,
                 alignSelf: 'center',
-                fontFamily: 'CircularStd-Medium',
+                fontFamily: font,
                 marginLeft: '30%',
               }}>
               Remove
@@ -143,10 +202,10 @@ class Card extends React.Component {
                 alignSelf: 'center',
                 marginLeft: '5%',
               }}
+              onPress={() => this.removeItem(this.props.id)}
             />
           </View>
         </View>
-        <Text style={styles.join}>Joined 3 hours ago</Text>
       </View>
     );
   }
@@ -165,7 +224,23 @@ const styles = StyleSheet.create({
     marginLeft: '5%',
     marginTop: '5%',
     fontWeight: 'bold',
-    fontFamily: 'CircularStd-Medium',
+    fontFamily: font,
+  },
+  leave: {
+    marginLeft: '45%',
+    marginTop: '11%',
+    borderRadius: 25,
+    borderWidth: 2.5,
+    borderColor: '#fff',
+    width: '40%',
+  },
+  leaveText: {
+    fontFamily: font,
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 20,
+    paddingTop: '2%',
+    paddingBottom: '2%',
   },
   icon: {
     color: '#fff',
@@ -178,13 +253,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginLeft: '3%',
     fontSize: 25,
-    fontFamily: 'CircularStd-Medium',
+    fontFamily: font,
   },
   waiting: {
     color: '#fff',
     marginLeft: '3%',
     alignSelf: 'center',
-    fontFamily: 'CircularStd-Medium',
+    fontFamily: font,
   },
   button: {
     borderRadius: 25,
@@ -199,9 +274,9 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     alignSelf: 'center',
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: 'bold',
-    fontFamily: 'CircularStd-Medium',
+    fontFamily: font,
   },
   bottomText: {
     color: '#fff',
@@ -210,15 +285,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: '3%',
     textAlign: 'center',
-    fontFamily: 'CircularStd-Medium',
+    fontFamily: font,
   },
   bottomButton: {
-    borderRadius: 30,
+    borderRadius: 40,
     borderWidth: 2.5,
+    opacity: 0.5,
     borderColor: '#fff',
     paddingVertical: 13,
     paddingHorizontal: 12,
-    width: '50%',
+    width: '60%',
     alignSelf: 'center',
     marginTop: '3%',
   },
@@ -233,7 +309,7 @@ const styles = StyleSheet.create({
     marginLeft: '2.5%',
   },
   top: {
-    flex: 0.5,
+    flex: 0.38,
   },
   center: {
     flex: 0.6,
@@ -259,6 +335,6 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginLeft: '3%',
     color: '#fff',
-    fontFamily: 'CircularStd-Medium',
+    fontFamily: font,
   },
 });
