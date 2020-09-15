@@ -40,10 +40,10 @@ import AsyncStorage from '@react-native-community/async-storage'
 //   }
 // };
 
-var saved_id = ''
+var myId = ''
 
 AsyncStorage.getItem(ID).then(res => {
-  saved_id = res
+  myId = res
 })
 
 // setting up Yelp API base caller
@@ -88,7 +88,7 @@ const getRestaurants = (name, place) => {
         }
       })
       .catch(error => {
-        return error.response.status
+        return Promise.reject(new Error(error))
       })
   )
 }
@@ -102,7 +102,8 @@ const createFBUser = (name, id, username, email, photo) => {
         name: name,
         username: username,
         email: email,
-        photo: photo
+        photo: photo,
+        inSession: false
       }
     })
     .then(res => {
@@ -113,7 +114,7 @@ const createFBUser = (name, id, username, email, photo) => {
       }
     })
     .catch(error => {
-      return error.response.status
+      return Promise.reject(new Error(error))
     })
 }
 
@@ -135,27 +136,27 @@ const getAllUsers = () => {
       }
     })
     .catch(error => {
-      return error.response.status
+      return Promise.reject(new Error(error))
     })
 }
 
 // deletes user and returns status
 const deleteUser = () => {
   return accountsApi
-    .delete(`/accounts/${saved_id}`)
+    .delete(`/accounts/${myId}`)
     .then(res => {
       console.log(res.status)
       return res.status
     })
     .catch(error => {
-      return error.response.status
+      return Promise.reject(new Error(error))
     })
 }
 
 // gets user by id and returns user info
 const getUser = () => {
   return accountsApi
-    .get(`/accounts/${saved_id}`)
+    .get(`/accounts/${myId}`)
     .then(res => {
       console.log(res.data)
       return {
@@ -171,7 +172,7 @@ const getUser = () => {
       }
     })
     .catch(error => {
-      return error.response.status
+      return Promise.reject(new Error(error))
     })
 }
 
@@ -180,7 +181,7 @@ const updateEmail = info => {
   const req = {
     email: info
   }
-  return updateUser(saved_id, req)
+  return updateUser(myId, req)
 }
 
 // update username and returns status
@@ -188,7 +189,7 @@ const updateUsername = info => {
   const req = {
     username: info
   }
-  return updateUser(saved_id, req)
+  return updateUser(myId, req)
 }
 
 // update username and returns status
@@ -196,7 +197,7 @@ const updateName = info => {
   const req = {
     name: info
   }
-  return updateUser(saved_id, req)
+  return updateUser(myId, req)
 }
 
 // update username and returns status
@@ -204,13 +205,13 @@ const updatePhoneNumber = info => {
   const req = {
     phone_number: info
   }
-  return updateUser(saved_id, req)
+  return updateUser(myId, req)
 }
 
 // updates user and returns status
 const updateUser = req => {
   return accountsApi
-    .put(`/accounts/${saved_id}`, {
+    .put(`/accounts/${myId}`, {
       params: req
     })
     .then(res => {
@@ -228,7 +229,7 @@ const updateUser = req => {
       }
     })
     .catch(error => {
-      return error.response.status
+      return Promise.reject(new Error(error))
     })
 }
 
@@ -241,7 +242,7 @@ const checkUsername = username => {
     })
     .catch(error => {
       console.log(error.response.status)
-      return error.response.status
+      return Promise.reject(new Error(error))
     })
 }
 
@@ -254,7 +255,7 @@ const checkPhoneNumber = phoneNumber => {
       return res.status
     })
     .catch(error => {
-      return error.response.status
+      return Promise.reject(new Error(error))
     })
 }
 

@@ -19,7 +19,7 @@ app.use(
   })
 )
 // if development mode, allow self-signed ssl
-if (app.get('env') == 'development') {
+if (app.get('env') === 'development') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 }
 
