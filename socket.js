@@ -1,91 +1,108 @@
 import io from 'socket.io-client'
-import React from 'react'
+import AsyncStorage from '@react-native-community/async-storage'
+import { USERNAME, NAME, PHOTO } from 'react-native-dotenv'
 
-// delete bottom 2 lines, be careful of hoisting
-global.username = 'hubs'
-global.name = 'hubert'
+var myUsername = ''
+var myPic = ''
+var myName = ''
 
-const socket = io('http://192.168.0.23:5000', {
-  query: `username=${global.username}`
+AsyncStorage.multiGet([USERNAME, NAME, PHOTO]).then(res => {
+  myUsername = res[0][1]
+  myName = res[1][1]
+  myPic = res[2][1]
+})
+
+const socket = io('https://wechews.herokuapp.com', {
+  query: `username=${myUsername}`
 })
 
 const createRoom = () => {
   try {
-    socket.emit('createRoom', { host: global.username, pic: global.pic, name: global.name })
+    socket.emit('createRoom', { host: myUsername, pic: myPic, name: myName })
+    return 200
   } catch (error) {
-    console.log(error)
+    return Promise.reject(new Error(error))
   }
 }
 
 const sendInvite = (username) => {
   try {
-    socket.emit('invite', { username: username, host: global.username })
+    socket.emit('invite', { username: username, host: myUsername })
+    return 200
   } catch (error) {
-    console.log(error)
+    return Promise.reject(new Error(error))
   }
 }
 
 const declineInvite = (room) => {
   try {
-    socket.emit('decline', { username: global.username, room: room })
+    socket.emit('decline', { username: myUsername, room: room })
+    return 200
   } catch (error) {
-    console.log(error)
+    return Promise.reject(new Error(error))
   }
 }
 
 const joinRoom = (room) => {
   try {
-    socket.emit('joinRoom', { username: global.username, pic: global.pic, room: room, name: global.name })
+    socket.emit('joinRoom', { username: myUsername, pic: myPic, room: room, name: myName })
+    return 200
   } catch (error) {
-    console.log(error)
+    return Promise.reject(new Error(error))
   }
 }
 
 const leaveRoom = (room) => {
   try {
-    socket.emit('leave', { username: global.username, room: room })
+    socket.emit('leave', { username: myUsername, room: room })
+    return 200
   } catch (error) {
-    console.log(error)
+    return Promise.reject(new Error(error))
   }
 }
 
 const kickUser = (username) => {
   try {
-    socket.emit('kick', { username: username, room: global.username })
+    socket.emit('kick', { username: username, room: myUsername })
+    return 200
   } catch (error) {
-    console.log(error)
+    return Promise.reject(new Error(error))
   }
 }
 
 const endSession = () => {
   try {
-    socket.emit('end', { room: global.username })
+    socket.emit('end', { room: myUsername })
+    return 200
   } catch (error) {
-    console.log(error)
+    return Promise.reject(new Error(error))
   }
 }
 
 const startSession = () => {
   try {
-    socket.emit('start', { room: global.username })
+    socket.emit('start', { room: myUsername })
+    return 200
   } catch (error) {
-    console.log(error)
+    return Promise.reject(new Error(error))
   }
 }
 
 const submitFilters = (filters, room) => {
   try {
-    socket.emit('submitFilters', { username: global.username, filters: filters, room: room })
+    socket.emit('submitFilters', { username: myUsername, filters: filters, room: room })
+    return 200
   } catch (error) {
-    console.log(error)
+    return Promise.reject(new Error(error))
   }
 }
 
 const likeRestaurant = (room, restaurant) => {
   try {
     socket.emit('like', { room: room, restaurant: restaurant })
+    return 200
   } catch (error) {
-    console.log(error)
+    return Promise.reject(new Error(error))
   }
 }
 
@@ -93,7 +110,7 @@ const getSocket = () => {
   return socket
 }
 
-module.exports = {
+export default {
   createRoom,
   joinRoom,
   sendInvite,

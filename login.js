@@ -68,20 +68,21 @@ export default class Login extends React.Component {
   }
 
   handleClick = () => {
-    facebookService.loginWithFacebook()
-    .then(result => {
-      this.props.navigation.navigate(result)
-    })
-    .catch(error => {
-      console.log(error)
-    })
+    facebookService
+      .loginWithFacebook()
+      .then(result => {
+        this.props.navigation.navigate(result);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   login() {
     Alert.alert(
-      //title
+      // title
       'Open "Facebook"?',
-      //body
+      // body
       'You will be directed to the Facebook app for account verification.',
       [
         {

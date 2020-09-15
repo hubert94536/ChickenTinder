@@ -10,54 +10,55 @@ import {
   Alert,
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {USERNAME} from 'react-native-dotenv';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const hex = '#F25763';
 const font = 'CircularStd-Medium';
-
-var participants = [
-  {
-    name: 'Hanna',
-    username: '@hannaco',
-    image:
-      'https://d1kdq4z3qhht46.cloudfront.net/uploads/2019/08/Adventures_from_Moominvalley_1990_Moomintroll_TV.jpg',
-  },
-  {
-    name: 'Isha',
-    username: '@ishagonu',
-    image:
-      'https://www.abramsandchronicle.co.uk/wp-content/uploads/books/9781452182674.jpg',
-  },
-  {
-    name: 'Hubert',
-    username: '@hubesc',
-    image: 'https://media0.giphy.com/media/ayMW3eqvuP00o/giphy_s.gif',
-  },
-  {
-    name: 'Ruth',
-    username: '@ruthlee',
-    image:
-      'https://wi-images.condecdn.net/image/baeWXm8eqMl/crop/405/f/ponyo.jpg',
-  },
-];
-
+// this.props.navigation.state.params.members[
+//   Object.keys(this.props.navigation.state.params.members)[0]].name
 export default class Group extends React.Component {
-  state = {
-    members: [],
-  };
+  constructor(props) {
+    super(props);
+    const members = this.props.navigation.state.params.members;
+    this.state = {
+      members: members,
+      host: members[Object.keys(members)[0]].name.split(' ')[0],
+      needFilters: Object.keys(members).filter(user => !user.filters).length,
+      name:
+        members[Object.keys(members)[0]].username.split(' ')[0] === username,
+      isHost: false,
+      leaveGroup: false,
+      start: false,
+    };
+  }
+
+  underlayShow() {
+    this.setState({start: true});
+  }
+
+  underlayHide() {
+    this.setState({start: false});
+  }
 
   componentDidMount() {
-    var temp = [];
-    var temp2 = [];
-    for (var i = 0; i < participants.length; i++) {
-      temp.push(
+    AsyncStorage.getItem(USERNAME).then(res => {
+      if (res === members[Object.keys(members)[0]].username.split(' ')[0]) {
+        this.setState({isHost: true});
+      }
+    });
+  }
+
+  render() {
+    var members = [];
+    for (var user in this.state.members) {
+      members.push(
         <Card
-          key={i}
-          id={i}
-          name={participants[i].name}
-          username={participants[i].username}
-          image={participants[i].image}
-          removeItem={this.removeItem}
+          name={this.state.members[user].name}
+          username={'@' + user}
+          image={this.state.members[user].pic}
+          filters={this.state.members[user].filters}
         />,
       );
     }
@@ -92,14 +93,22 @@ export default class Group extends React.Component {
       <View style={styles.main}>
         <View style={styles.top}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text style={styles.groupTitle}>
-              {participants[0].name}'s Group
-            </Text>
-            <TouchableOpacity
-              style={styles.leave}
-              onPress={() => this.leaveGroup()}>
-              <Text style={styles.leaveText}>Leave</Text>
-            </TouchableOpacity>
+            {this.state.isHost && (
+              <Text style={styles.groupTitle}>Your Group</Text>
+            )}
+            {!this.state.isHost && (
+              <Text style={styles.groupTitle}>{this.state.host}'s Group</Text>
+            )}
+            {!this.state.isHost && (
+              <TouchableHighlight
+                onShowUnderlay={() => this.setState({leaveGroup: true})}
+                onHideUnderlay={() => this.setState({leaveGroup: false})}
+                style={styles.leave}
+                onPress={() => this.leaveGroup()}
+                underlayColor="white">
+                <Text style={styles.leaveText}>Leave</Text>
+              </TouchableHighlight>
+            )}
           </View>
           <View style={{flexDirection: 'row'}}>
             <Icon name="user" style={styles.icon} />
@@ -109,19 +118,30 @@ export default class Group extends React.Component {
                 fontWeight: 'bold',
                 fontFamily: font,
               }}>
-              {this.state.members.length}
+              {members.length}
             </Text>
             <Text style={styles.divider}>|</Text>
-            <Text style={styles.waiting}>waiting for 1 member's filters</Text>
+            <Text style={styles.waiting}>
+              waiting for {this.state.needFilters} member filters
+            </Text>
           </View>
           <View style={{flexDirection: 'row', margin: '4%'}}>
             <Icon
               name="chevron-left"
               style={{color: 'white', fontFamily: font, fontSize: 16}}
             />
-            <Text style={{color: 'white', fontFamily: font, marginLeft: '3%'}}>
-              Swipe for filters
-            </Text>
+            {!this.state.isHost && (
+              <Text
+                style={{color: 'white', fontFamily: font, marginLeft: '3%'}}>
+                Swipe for filters
+              </Text>
+            )}
+            {this.state.isHost && (
+              <Text
+                style={{color: 'white', fontFamily: font, marginLeft: '3%'}}>
+                Swipe for host menu
+              </Text>
+            )}
           </View>
         </View>
         <ScrollView style={styles.center}>{this.state.members}</ScrollView>
@@ -129,9 +149,37 @@ export default class Group extends React.Component {
           <Text style={styles.bottomText}>
             When everyone has submitted filters, the round will begin!
           </Text>
-          <TouchableHighlight style={styles.bottomButton}>
-            <Text style={styles.buttonText}>Waiting...</Text>
-          </TouchableHighlight>
+          {this.state.needFilters === 0 && this.state.isHost && (
+            <TouchableHighlight
+              underlayColor="#fff"
+              activeOpacity={1}
+              onHideUnderlay={this.underlayHide.bind(this)}
+              onShowUnderlay={this.underlayShow.bind(this)}
+              onPress={() => console.log('start round')}
+              style={styles.bottomButton}>
+              <Text
+                style={
+                  this.state.start ? styles.pressedText : styles.buttonText
+                }>
+                Start Round
+              </Text>
+            </TouchableHighlight>
+          )}
+          {this.state.needFilters !== 0 && this.state.isHost && (
+            <TouchableHighlight style={styles.bottomButtonClear}>
+              <Text style={styles.buttonText}>Start Round</Text>
+            </TouchableHighlight>
+          )}
+          {this.state.needFilters === 0 && !this.state.isHost && (
+            <TouchableHighlight style={styles.pressed}>
+              <Text style={styles.pressedText}>Ready!</Text>
+            </TouchableHighlight>
+          )}
+          {this.state.needFilters !== 0 && !this.state.isHost && (
+            <TouchableHighlight style={styles.bottomButtonClear}>
+              <Text style={styles.buttonText}>Waiting...</Text>
+            </TouchableHighlight>
+          )}
         </View>
       </View>
     );
@@ -151,17 +199,22 @@ class Card extends React.Component {
     return (
       <View>
         <View style={styles.card}>
-          <Image source={{uri: this.props.image}} style={styles.image} />
-          <Icon
-            name="check-circle"
-            style={{
-              color: hex,
-              fontSize: 20,
-              position: 'absolute',
-              marginLeft: '14%',
-              marginTop: '1%',
-            }}
+          <Image
+            source={{uri: this.props.image}}
+            style={this.props.filters ? styles.image : styles.imageFalse}
           />
+          {this.props.filters ? (
+            <Icon
+              name="check-circle"
+              style={{
+                color: hex,
+                fontSize: 20,
+                position: 'absolute',
+                marginLeft: '14%',
+                marginTop: '1%',
+              }}
+            />
+          ) : null}
           <View
             style={{
               alignSelf: 'center',
@@ -298,12 +351,51 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: '3%',
   },
+  bottomButtonClear: {
+    borderRadius: 40,
+    borderWidth: 2.5,
+    opacity: 0.5,
+    borderColor: '#fff',
+    paddingVertical: 13,
+    paddingHorizontal: 12,
+    width: '60%',
+    alignSelf: 'center',
+    marginTop: '3%',
+  },
+  pressed: {
+    borderRadius: 40,
+    borderWidth: 2.5,
+    opacity: 1,
+    borderColor: '#fff',
+    paddingVertical: 13,
+    paddingHorizontal: 12,
+    width: '60%',
+    alignSelf: 'center',
+    marginTop: '3%',
+    backgroundColor: 'white',
+  },
+  pressedText: {
+    color: hex,
+    alignSelf: 'center',
+    fontSize: 30,
+    fontWeight: 'bold',
+    fontFamily: font,
+  },
   image: {
     borderRadius: 63,
     height: 60,
     width: 60,
     borderWidth: 3,
     borderColor: hex,
+    alignSelf: 'flex-start',
+    marginTop: '2.5%',
+    marginLeft: '2.5%',
+  },
+  imageFalse: {
+    borderRadius: 63,
+    height: 60,
+    width: 60,
+    borderWidth: 3,
     alignSelf: 'flex-start',
     marginTop: '2.5%',
     marginLeft: '2.5%',
