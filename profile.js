@@ -5,7 +5,10 @@ import {
   View,
   Image,
   TouchableHighlight,
+  TextInput,
   Modal,
+  Dimensions,
+  Alert,
 } from 'react-native';
 import {BlurView} from '@react-native-community/blur';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -14,6 +17,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Swiper from 'react-native-swiper';
 import Friends from './friends.js';
 import Requests from './requests.js';
+import api from './api.js';
 
 const hex = '#F25763';
 const font = 'CircularStd-Medium';
@@ -22,22 +26,97 @@ export default class UserProfileView extends Component {
   state = {
     name: '',
     username: '',
+    usernameValue: '',
     image: '',
     friends: true,
     visible: false,
     changeName: false,
+    changeNameText: false,
     changeUser: false,
-    public: false,
+    changeUserText: false,
+    // public: false,
   };
 
   //getting current user's info
 
   componentDidMount() {
-    AsyncStorage.getItem(NAME).then(res => this.setState({name: res}));
+    AsyncStorage.getItem(NAME).then(res =>
+      this.setState({name: res, nameValue: res}),
+    );
     AsyncStorage.getItem(USERNAME).then(res =>
-      this.setState({username: '@' + res}),
+      this.setState({username: '@' + res, usernameValue: '@' + res}),
     );
     AsyncStorage.getItem(PHOTO).then(res => this.setState({image: res}));
+  }
+
+  changeName() {
+    if (this.state.changeName) {
+      api
+        .updateName(this.state.nameValue)
+        .then(res => {
+          if (res === 201) {
+            AsyncStorage.setItem(NAME, this.state.name);
+            this.setState({
+              name: this.state.nameValue,
+            });
+          } else {
+            Alert.alert('Error changing name. Please try again.');
+            this.setState({
+              nameValue: this.state.name,
+            });
+          }
+        })
+        .catch(err => {
+          Alert.alert('Error changing name. Please try again.');
+          this.setState({
+            nameValue: this.state.name,
+          });
+          console.log(err);
+        });
+    }
+    this.setState({
+      changeName: !this.state.changeName,
+    });
+  }
+
+  changeUsername() {
+    if (this.state.changeUser) {
+      const user = this.state.usernameValue.substring(1);
+      api
+        .checkUsername(user)
+        .then(res => {
+          if (res === 200) {
+            api
+              .updateUsername(user)
+              .then(res => {
+                if (res === 201) {
+                  AsyncStorage.setItem(USERNAME, user);
+                  this.setState({username: this.state.usernameValue});
+                } else {
+                  this.setState({usernameValue: this.state.username});
+                  Alert.alert('Error changing username. Please try again.');
+                }
+              })
+              .catch(err => {
+                console.log(err);
+                this.setState({usernameValue: this.state.username});
+                Alert.alert('Error changing username. Please try again.');
+              });
+          } else if (res === 404) {
+            this.setState({usernameValue: this.state.username});
+            Alert.alert('Username taken!');
+          } else {
+            this.setState({usernameValue: this.state.username});
+            Alert.alert('Error!');
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+    this.setState({
+      changeUser: !this.state.changeUser,
+    });
   }
 
   render() {
@@ -140,7 +219,13 @@ export default class UserProfileView extends Component {
                 <Icon
                   name="times-circle"
                   style={{color: hex, fontFamily: font, fontSize: 30}}
-                  onPress={() => this.setState({visible: false})}
+                  onPress={() =>
+                    this.setState({
+                      visible: false,
+                      changeName: false,
+                      changeUser: false,
+                    })
+                  }
                 />
               </View>
               <View
@@ -151,23 +236,32 @@ export default class UserProfileView extends Component {
                 }}>
                 <View>
                   <Text style={{fontFamily: font, fontSize: 18}}>Name:</Text>
-                  <Text style={{fontFamily: font, color: hex, fontSize: 20}}>
-                    {this.state.name}
-                  </Text>
+                  {!this.state.changeName && (
+                    <Text style={{fontFamily: font, color: hex, fontSize: 20}}>
+                      {this.state.name}
+                    </Text>
+                  )}
+                  {this.state.changeName && (
+                    <TextInput
+                      style={{fontFamily: font, color: hex, fontSize: 20}}
+                      value={this.state.nameValue}
+                      onChangeText={text => this.setState({nameValue: text})}
+                    />
+                  )}
                 </View>
                 <TouchableHighlight
+                  style={styles.changeButtons}
                   underlayColor={hex}
-                  onShowUnderlay={() => this.setState({changeName: true})}
-                  onHideUnderlay={() => this.setState({changeName: false})}
-                  onPress={() => console.log('change name')}
-                  style={styles.changeButtons}>
+                  onShowUnderlay={() => this.setState({changeNameText: true})}
+                  onHideUnderlay={() => this.setState({changeNameText: false})}
+                  onPress={() => this.changeName()}>
                   <Text
                     style={
-                      this.state.changeName
+                      this.state.changeNameText
                         ? styles.changeTextSelected
                         : styles.changeText
                     }>
-                    Change
+                    {this.state.changeName ? 'Submit' : 'Change'}
                   </Text>
                 </TouchableHighlight>
               </View>
@@ -181,27 +275,38 @@ export default class UserProfileView extends Component {
                   <Text style={{fontFamily: font, fontSize: 18}}>
                     Username:
                   </Text>
-                  <Text style={{fontFamily: font, color: hex, fontSize: 20}}>
-                    {this.state.username}
-                  </Text>
+                  {!this.state.changeUser && (
+                    <Text style={{fontFamily: font, color: hex, fontSize: 20}}>
+                      {this.state.username}
+                    </Text>
+                  )}
+                  {this.state.changeUser && (
+                    <TextInput
+                      style={{fontFamily: font, color: hex, fontSize: 20}}
+                      value={this.state.usernameValue}
+                      onChangeText={text =>
+                        this.setState({usernameValue: text})
+                      }
+                    />
+                  )}
                 </View>
                 <TouchableHighlight
                   style={styles.changeButtons}
                   underlayColor={hex}
-                  onShowUnderlay={() => this.setState({changeUser: true})}
-                  onHideUnderlay={() => this.setState({changeUser: false})}
-                  onPress={() => console.log('change user')}>
+                  onShowUnderlay={() => this.setState({changeUserText: true})}
+                  onHideUnderlay={() => this.setState({changeUserText: false})}
+                  onPress={() => this.changeUsername()}>
                   <Text
                     style={
-                      this.state.changeUser
+                      this.state.changeUserText
                         ? styles.changeTextSelected
                         : styles.changeText
                     }>
-                    Change
+                    {this.state.changeUser ? 'Submit' : 'Change'}
                   </Text>
                 </TouchableHighlight>
               </View>
-              <View
+              {/* <View
                 style={{
                   margin: '5%',
                 }}>
@@ -258,7 +363,7 @@ export default class UserProfileView extends Component {
                     </Text>
                   </TouchableHighlight>
                 </View>
-              </View>
+              </View> */}
             </View>
           </Modal>
         )}
@@ -321,7 +426,7 @@ const styles = StyleSheet.create({
     paddingBottom: '0.5%',
   },
   modal: {
-    height: '50%',
+    height: Dimensions.get('window').height * 0.4, //height with friends view was 50%
     width: '75%',
     margin: '3%',
     backgroundColor: 'white',
