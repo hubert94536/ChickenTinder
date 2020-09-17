@@ -4,224 +4,25 @@ import {
   Text,
   View,
   Image,
-  ScrollView,
   TouchableHighlight,
   Modal,
 } from 'react-native';
-import {SearchBar} from 'react-native-elements';
 import {BlurView} from '@react-native-community/blur';
 import AsyncStorage from '@react-native-community/async-storage';
 import {NAME, USERNAME, PHOTO} from 'react-native-dotenv';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Swiper from 'react-native-swiper';
+import Friends from './friends.js';
+import Requests from './requests.js';
 
 const hex = '#F25763';
 const font = 'CircularStd-Medium';
-
-const people = [
-  {
-    name: 'Hanna Co',
-    username: '@hannaco',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-  },
-  {
-    name: 'Hubert Chen',
-    username: '@hubesc',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-  },
-  {
-    name: 'Isha Gonu',
-    username: '@ishagonu',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-  },
-  {
-    name: 'Ruth Lee',
-    username: '@ruthlee',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-  },
-  {
-    name: 'Hanna Co',
-    username: '@hannaco',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-  },
-  {
-    name: 'Michelle Chan',
-    username: '@mishigan',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-  },
-  {
-    name: 'Janice Tsai',
-    username: '@jopanice',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-  },
-];
-
-class Card extends React.Component {
-  state = {
-    friends: this.props.friends,
-    pressed: false,
-  };
-  render() {
-    return (
-      <View style={{flexDirection: 'row', flex: 1}}>
-        <Image
-          source={{
-            uri: this.props.image,
-          }}
-          style={{borderRadius: 63, height: 60, width: 60, margin: '3%'}}
-        />
-        <View
-          style={{
-            alignSelf: 'center',
-            marginLeft: '1%',
-            flex: 1,
-          }}>
-          <Text style={{fontFamily: font, fontWeight: 'bold', fontSize: 15}}>
-            {this.props.name}
-          </Text>
-          <Text style={{fontFamily: font}}>{this.props.username}</Text>
-        </View>
-        {this.state.friends && (
-          <View style={{flexDirection: 'row', flex: 1}}>
-            <Text
-              style={{
-                fontFamily: font,
-                color: hex,
-                fontSize: 15,
-                alignSelf: 'center',
-                marginLeft: '25%',
-              }}>
-              Friends
-            </Text>
-            <Icon
-              style={{
-                fontFamily: font,
-                color: hex,
-                fontSize: 35,
-                alignSelf: 'center',
-                marginLeft: '5%',
-              }}
-              name="check-circle"
-            />
-          </View>
-        )}
-        {!this.state.friends && (
-          <View style={{flex: 1, flexDirection: 'row'}}>
-            <TouchableHighlight
-              underlayColor="black"
-              onHideUnderlay={() => this.setState({pressed: false})}
-              onShowUnderlay={() => this.setState({pressed: true})}
-              onPress={() => this.setState({friends: true})}
-              style={{
-                borderColor: 'black',
-                borderRadius: 30,
-                borderWidth: 2,
-                height: '30%',
-                width: '50%',
-                marginLeft: '25%',
-                alignSelf: 'center',
-              }}>
-              <Text
-                style={{
-                  fontFamily: font,
-                  fontSize: 15,
-                  textAlign: 'center',
-                  color: this.state.pressed ? 'white' : 'black',
-                }}>
-                Accept
-              </Text>
-            </TouchableHighlight>
-          </View>
-        )}
-      </View>
-    );
-  }
-}
-
-class Friends extends React.Component {
-  state = {
-    search: '',
-  };
-
-  updateSearch = search => {
-    this.setState({search});
-  };
-
-  render() {
-    const search = this.state.search;
-    const friends = [];
-    for (var i = 0; i < people.length; i++) {
-      friends.push(
-        <Card
-          key={i}
-          name={people[i].name}
-          username={people[i].username}
-          image={people[i].image}
-          friends={true}
-        />,
-      );
-    }
-    return (
-      <View>
-        <View>
-          <SearchBar
-            containerStyle={{
-              backgroundColor: 'white',
-              height: 45,
-              alignSelf: 'center',
-            }}
-            inputContainerStyle={{
-              height: 7,
-              width: '90%',
-              alignSelf: 'center',
-            }}
-            placeholder="Search by username"
-            onChangeText={this.updateSearch}
-            value={search}
-            lightTheme={true}
-            round={true}
-          />
-        </View>
-        <ScrollView style={{flexDirection: 'column'}}>{friends}</ScrollView>
-      </View>
-    );
-  }
-}
-
-class Requests extends React.Component {
-  render() {
-    const friends = [];
-    for (var i = 0; i < people.length; i++) {
-      friends.push(
-        <Card
-          key={i}
-          name={people[i].name}
-          username={people[i].username}
-          image={people[i].image}
-          friends={false}
-        />,
-      );
-    }
-    return (
-      <View>
-        <ScrollView style={{flexDirection: 'column'}}>{friends}</ScrollView>
-      </View>
-    );
-  }
-}
 
 export default class UserProfileView extends Component {
   state = {
     name: '',
     username: '',
-    photo: '',
+    image: '',
     friends: true,
     visible: false,
     changeName: false,
@@ -229,10 +30,14 @@ export default class UserProfileView extends Component {
     public: false,
   };
 
+  //getting current user's info
+
   componentDidMount() {
     AsyncStorage.getItem(NAME).then(res => this.setState({name: res}));
-    AsyncStorage.getItem(USERNAME).then(res => this.setState({username: res}));
-    AsyncStorage.getItem(PHOTO).then(res => this.setState({photo: res}));
+    AsyncStorage.getItem(USERNAME).then(res =>
+      this.setState({username: '@' + res}),
+    );
+    AsyncStorage.getItem(PHOTO).then(res => this.setState({image: res}));
   }
 
   render() {
@@ -255,14 +60,15 @@ export default class UserProfileView extends Component {
           <View style={styles.userInfo}>
             <Image
               source={{
-                uri:
-                  'https://d1kdq4z3qhht46.cloudfront.net/uploads/2019/08/Adventures_from_Moominvalley_1990_Moomintroll_TV.jpg',
+                uri: this.state.image,
               }}
               style={styles.avatar}
             />
             <View style={{fontFamily: font}}>
-              <Text style={{fontSize: 28, fontWeight: 'bold'}}>Hanna Co</Text>
-              <Text style={{fontSize: 17}}>@hannaco</Text>
+              <Text style={{fontSize: 28, fontWeight: 'bold'}}>
+                {this.state.name}
+              </Text>
+              <Text style={{fontSize: 17}}>{this.state.username}</Text>
             </View>
           </View>
           <View style={{flexDirection: 'row'}}>
@@ -346,7 +152,7 @@ export default class UserProfileView extends Component {
                 <View>
                   <Text style={{fontFamily: font, fontSize: 18}}>Name:</Text>
                   <Text style={{fontFamily: font, color: hex, fontSize: 20}}>
-                    Hubert Chen
+                    {this.state.name}
                   </Text>
                 </View>
                 <TouchableHighlight
@@ -376,7 +182,7 @@ export default class UserProfileView extends Component {
                     Username:
                   </Text>
                   <Text style={{fontFamily: font, color: hex, fontSize: 20}}>
-                    @hubesc
+                    {this.state.username}
                   </Text>
                 </View>
                 <TouchableHighlight
