@@ -74,6 +74,10 @@ class FacebookService {
       });
   };
 
+  // isSignedIn = () => {
+  //   return firebase.auth().currentUser;
+  // }
+
   //test logout
   logoutWithFacebook = () => {
     LoginManager.logOut();
