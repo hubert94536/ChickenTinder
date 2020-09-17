@@ -41,7 +41,7 @@ export default class Group extends React.Component {
 
   componentDidMount() {
     AsyncStorage.getItem(USERNAME).then(res => {
-      if (res === this.state.members[0]) {
+      if (res === this.state.host) {
         this.setState({isHost: true});
       }
     });
