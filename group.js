@@ -24,7 +24,8 @@ export default class Group extends React.Component {
     const members = this.props.navigation.state.params.members;
     this.state = {
       members: members,
-      host:  members[Object.keys(members)[0]].name.split(' ')[0],
+      host: this.props.navigation.state.params.host,
+      groupName:  members[Object.keys(members)[0]].name.split(' ')[0],
       needFilters: Object.keys(members).filter(user => !user.filters).length,
       isHost: false,
       start: false,
@@ -41,7 +42,7 @@ export default class Group extends React.Component {
 
   componentDidMount() {
     AsyncStorage.getItem(USERNAME).then(res => {
-      if (res === this.state.host) {
+      if (res == this.state.host) {
         this.setState({isHost: true});
       }
     });
@@ -50,9 +51,10 @@ export default class Group extends React.Component {
       memberList.push(
         <Card
           name={this.state.members[user].name}
-          username={'@' + user}
+          username={user}
           image={this.state.members[user].pic}
           filters={this.state.members[user].filters}
+          host = {this.state.host}
         />,
       );
     }
@@ -72,13 +74,21 @@ export default class Group extends React.Component {
     }
   }
 
-  removeItem = username => {
-    console.log('remove ' + username);
-  };
-
   leaveGroup() {
     socket.leaveRoom()
     this.props.navigation.navigate('Home')
+    socket.getSocket().on('kick', res => {
+      console.log(res)
+      socket.leaveRoom(data.room);
+      this.props.navigation.navigate('Home')
+    })
+  }
+
+  endGroup() {
+    socket.endSession()
+    socket.getSocket().on('leave', res => {
+      this.props.navigation.navigate('Home')
+    })
   }
 
   leaveAlert() {
@@ -98,6 +108,23 @@ export default class Group extends React.Component {
     );
   }
 
+  endSession() {
+    Alert.alert(
+      //title
+      'Are you sure you want to end the session?',
+      //body
+      'You will not be able to return', [
+        {
+          text: 'Yes',
+          onPress: () => this.endGroup(),
+        }, {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ],
+    );
+  }
+
   render() {
     return (
       <View style={styles.main}>
@@ -107,7 +134,7 @@ export default class Group extends React.Component {
               <Text style={styles.groupTitle}>Your Group</Text>
             )}
             {!this.state.isHost && (
-              <Text style={styles.groupTitle}>{this.state.host}'s Group</Text>
+              <Text style={styles.groupTitle}>{this.state.groupName}'s Group</Text>
             )}
             {!this.state.isHost && (
               <TouchableHighlight
@@ -117,6 +144,16 @@ export default class Group extends React.Component {
                 onPress={() => this.leaveAlert()}
                 underlayColor="white">
                 <Text style={styles.leaveText}>Leave</Text>
+              </TouchableHighlight>
+            )}
+            {this.state.isHost && (
+              <TouchableHighlight
+                onShowUnderlay={() => this.setState({leaveGroup: true})}
+                onHideUnderlay={() => this.setState({leaveGroup: false})}
+                style={styles.end}
+                onPress={() => this.endSession()}
+                underlayColor="white">
+                <Text style={styles.leaveText}>End</Text>
               </TouchableHighlight>
             )}
           </View>
@@ -201,6 +238,10 @@ class Card extends React.Component {
     super(props);
   }
 
+  removeUser = (username) => {
+    socket.kickUser(username)
+  }
+
   render() {
     return (
       <View>
@@ -240,10 +281,11 @@ class Card extends React.Component {
                 color: hex,
                 fontFamily: font,
               }}>
-              {this.props.username}
+              {'@' + this.props.username}
             </Text>
           </View>
           <View style={{flex: 1, flexDirection: 'row'}}>
+          {this.props.username != this.props.host ? (
             <Text
               style={{
                 color: hex,
@@ -252,7 +294,8 @@ class Card extends React.Component {
                 marginLeft: '30%',
               }}>
               Remove
-            </Text>
+            </Text>) : null}
+            {this.props.username != this.props.host ? (
             <Icon
               name="times-circle"
               style={{
@@ -261,8 +304,8 @@ class Card extends React.Component {
                 alignSelf: 'center',
                 marginLeft: '5%',
               }}
-              onPress={() => Group.removeItem(this.props.username)}
-            />
+              onPress={() => this.removeUser(this.props.username)}
+            />) : null}
           </View>
         </View>
       </View>
@@ -287,7 +330,15 @@ const styles = StyleSheet.create({
   },
   leave: {
     marginLeft: '18%',
-    marginTop: '7%',
+    marginTop: '6%',
+    borderRadius: 25,
+    borderWidth: 2.5,
+    borderColor: '#fff',
+    width: '25%',
+  },
+  end: {
+    marginLeft: '30%',
+    marginTop: '6%',
     borderRadius: 25,
     borderWidth: 2.5,
     borderColor: '#fff',
@@ -394,7 +445,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: hex,
     alignSelf: 'flex-start',
-    marginTop: '2.5%',
+    marginTop: '3.5%',
     marginLeft: '2.5%',
   },
   imageFalse: {
@@ -403,7 +454,7 @@ const styles = StyleSheet.create({
     width: 60,
     borderWidth: 3,
     alignSelf: 'flex-start',
-    marginTop: '2.5%',
+    marginTop: '3.5%',
     marginLeft: '2.5%',
   },
   top: {
@@ -425,7 +476,7 @@ const styles = StyleSheet.create({
     borderColor: '#000',
     alignSelf: 'center',
     width: '96%',
-    height: 80,
+    height: 90,
     marginTop: '3%',
     flexDirection: 'row',
   },
