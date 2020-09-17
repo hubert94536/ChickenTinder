@@ -1,5 +1,5 @@
 const { Accounts } = require('./models.js')
-const { Sequelize } = require('sequelize/types')
+const { Sequelize } = require('sequelize')
 const Op = Sequelize().Op
 
 const getAllAccounts = async (req, res) => {
