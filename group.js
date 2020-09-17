@@ -25,7 +25,8 @@ export default class Group extends React.Component {
     console.log(this.props.navigation.state.params)
     this.state = {
       members: members,
-      host:  members[Object.keys(members)[0]].name.split(' ')[0],
+      host: this.props.navigation.state.params.host,
+      groupName:  members[Object.keys(members)[0]].name.split(' ')[0],
       needFilters: Object.keys(members).filter(user => !user.filters).length,
       isHost: false,
       start: false,
@@ -42,11 +43,10 @@ export default class Group extends React.Component {
 
   componentDidMount() {
     AsyncStorage.getItem(USERNAME).then(res => {
-      if (res == Object.keys(this.state.members)) {
+      if (res == this.state.host) {
         this.setState({isHost: true});
       }
     });
-    console.log(this.state.members)
     memberList = [];
     for (var user in this.state.members) {
       memberList.push(
@@ -83,6 +83,11 @@ export default class Group extends React.Component {
     this.props.navigation.navigate('Home')
   }
 
+  endGroup() {
+    socket.endSession()
+    this.props.navigation.navigate('Home')
+  }
+
   leaveAlert() {
     Alert.alert(
       //title
@@ -100,6 +105,21 @@ export default class Group extends React.Component {
     );
   }
 
+  endSession() {
+    Alert.alert(
+      //body
+      'Are you sure you want to end the session?', [
+        {
+          text: 'Yes',
+          onPress: () => this.endGroup(),
+        }, {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ],
+    );
+  }
+
   render() {
     return (
       <View style={styles.main}>
@@ -109,7 +129,7 @@ export default class Group extends React.Component {
               <Text style={styles.groupTitle}>Your Group</Text>
             )}
             {!this.state.isHost && (
-              <Text style={styles.groupTitle}>{this.state.host}'s Group</Text>
+              <Text style={styles.groupTitle}>{this.state.groupName}'s Group</Text>
             )}
             {!this.state.isHost && (
               <TouchableHighlight
@@ -119,6 +139,16 @@ export default class Group extends React.Component {
                 onPress={() => this.leaveAlert()}
                 underlayColor="white">
                 <Text style={styles.leaveText}>Leave</Text>
+              </TouchableHighlight>
+            )}
+            {this.state.isHost && (
+              <TouchableHighlight
+                onShowUnderlay={() => this.setState({leaveGroup: true})}
+                onHideUnderlay={() => this.setState({leaveGroup: false})}
+                style={styles.leave}
+                onPress={() => this.endSession()}
+                underlayColor="white">
+                <Text style={styles.leaveText}>End</Text>
               </TouchableHighlight>
             )}
           </View>
