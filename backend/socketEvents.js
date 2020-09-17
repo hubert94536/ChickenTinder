@@ -69,6 +69,7 @@ module.exports = (io) => {
         socket.join(data.host)
         sessions[data.host] = {}
         sessions[data.host].members = {}
+        sessions[data.host].host = data.host
         sessions[data.host].members[data.host] = {}
         sessions[data.host].members[data.host].pic = data.pic
         sessions[data.host].members[data.host].filters = false

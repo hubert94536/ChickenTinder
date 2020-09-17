@@ -22,6 +22,7 @@ export default class Group extends React.Component {
   constructor(props) {
     super(props);
     const members = this.props.navigation.state.params.members;
+    console.log(this.props.navigation.state.params)
     this.state = {
       members: members,
       host:  members[Object.keys(members)[0]].name.split(' ')[0],
@@ -41,10 +42,11 @@ export default class Group extends React.Component {
 
   componentDidMount() {
     AsyncStorage.getItem(USERNAME).then(res => {
-      if (res === this.state.host) {
+      if (res == Object.keys(this.state.members)) {
         this.setState({isHost: true});
       }
     });
+    console.log(this.state.members)
     memberList = [];
     for (var user in this.state.members) {
       memberList.push(
