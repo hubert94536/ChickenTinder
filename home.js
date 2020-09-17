@@ -9,7 +9,6 @@ import {
 } from 'react-native'
 
 import UserProfileView from './profile.js'
-import { facebookService } from './facebookService.js'
 import socket from './socket.js'
 
 class Home extends React.Component {
@@ -37,32 +36,12 @@ class Home extends React.Component {
     this.setState({ profilePressed: false })
   }
 
-  async createGroup() {
-    try {
-      socket.createRoom()
-      await socket.getSocket().on('update', res => {
-        this.props.navigation.navigate('Group', res)
-      })
-    } catch (error) {
-      console.log(error)
-    }
+  createGroup() {
+    socket.createRoom()
+    socket.getSocket().on('update', res => {
+      this.props.navigation.navigate('Group', res)
+    })
   }
-  // createGroup() {
-  //   return socket.createRoom()
-  //     .then(() => {
-  //       console.log('hi')
-  //       socket.getSocket().on('update', res => {
-  //         console.log(res)
-  //         return res
-  //       })
-  //     })
-  //     .then(res => {
-  //       this.props.navigation.navigate('Group', res)
-  //     })
-  //     .catch(error => {
-  //       console.log(error)
-  //     })
-  // }
 
   render() {
     return (
