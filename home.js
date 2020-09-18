@@ -10,6 +10,8 @@ import {
 
 import UserProfileView from './profile.js'
 import socket from './socket.js'
+import api from './api.js';
+import friendsapi from './friendsapi.js';
 
 class Home extends React.Component {
   constructor() {
@@ -41,6 +43,13 @@ class Home extends React.Component {
     socket.getSocket().on('update', res => {
       this.props.navigation.navigate('Group', res)
     })
+  }
+
+  componentDidMount() {
+    api.createFBUser("isha", 0, "ishaaa", "ishag@gmail.com", "dffdsds"),
+    api.createFBUser("hanna", 0, "hco", "hannc@gmail.com", "kfdkfjs"),
+    api.createFBUser("hubert", 0, "hubes", "hubes@gmail.com", "jskfhskl"),
+    friendsapi.createFriendship("hubes", "hco")
   }
 
   render() {
