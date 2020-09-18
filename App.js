@@ -16,11 +16,12 @@ import {createStackNavigator} from 'react-navigation-stack'; // 1.0.0-beta.27
 import {createAppContainer} from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
 import {UID} from 'react-native-dotenv';
-var start = '';
+
 AsyncStorage.getItem(UID).then(value => {
   if (value === null) start = 'Login';
   else start = 'Home';
 });
+var start = '';
 
 const RootStack = createStackNavigator(
   {
@@ -53,3 +54,13 @@ export default class App extends React.Component {
     return <AppContainer />;
   }
 }
+
+// import React from 'react';
+// import {Button} from 'react-native';
+// import Group from './group.js';
+
+// export default class App extends React.Component {
+//   render() {
+//     return <Group />;
+//   }
+// }
