@@ -53,7 +53,6 @@ module.exports = (io) => {
           }
         }
       } catch (error) {
-        console.log(error.message)
         socket.emit('exception', error)
       }
     })
@@ -77,9 +76,7 @@ module.exports = (io) => {
         sessions[data.host].restaurants = {}
         lastRoom[data.host] = data.host
         socket.emit('update', sessions[data.host])
-        console.log(sessions)
       } catch (error) {
-        console.log(error)
         socket.emit('exception', error)
       }
     })
@@ -102,7 +99,6 @@ module.exports = (io) => {
           })
         }
       } catch (error) {
-        console.log(error)
         socket.emit('exception', error)
       }
     })
@@ -113,7 +109,6 @@ module.exports = (io) => {
         delete invites[data.username]
         io.to(clients[data.room]).emit('decline', data.username)
       } catch (error) {
-        console.log(error)
         socket.emit('exception', error)
       }
     })
@@ -136,9 +131,7 @@ module.exports = (io) => {
           sessions[data.room].members[data.username].name = data.name
           lastRoom[data.username] = data.room
           io.in(data.room).emit('update', sessions[data.room].members)
-          console.log(sessions[data.room])
         } catch (error) {
-          console.log(error.message)
           socket.emit('exception', error)
         }
       } else {
@@ -153,9 +146,7 @@ module.exports = (io) => {
         sessions[data.room].members[data.username].filters = true
         io.in(data.room).emit('update', sessions[data.room].members)
         io.to(clients[data.room]).emit('filters', { filters: data.filters })
-        console.log(sessions[data.room])
       } catch (error) {
-        console.log(error.message)
         socket.emit('exception', error)
       }
     })
@@ -164,7 +155,6 @@ module.exports = (io) => {
     socket.on('start', data => {
       // proceed to restaurant matching after EVERYONE submits filters
       io.in(data.room).emit('start')
-      console.log(data.room)
     })
 
     socket.on('like', data => {
@@ -178,7 +168,6 @@ module.exports = (io) => {
           console.log(sessions[data.room])
         }
       } catch (error) {
-        console.log(error.message)
         socket.emit('exception', error)
       }
     })
@@ -187,7 +176,6 @@ module.exports = (io) => {
       try {
         io.in(data.room).emit('match', data.restaurant)
       } catch (error) {
-        console.log(error.message)
         socket.emit('exception', error)
       }
     })
@@ -210,8 +198,8 @@ module.exports = (io) => {
           io.in(data.room).emit('update', sessions[data.room].members)
           console.log(sessions[data.room])
         }
+        console.log(sessions)
       } catch (error) {
-        console.log(error.message)
         socket.emit('exception', error)
       }
     })
@@ -222,7 +210,6 @@ module.exports = (io) => {
         io.to(clients[data.username]).emit('kick', { room: data.room })
         console.log(data.username)
       } catch (error) {
-        console.log(error.message)
         socket.emit('exception', error)
       }
     })
@@ -231,9 +218,7 @@ module.exports = (io) => {
     socket.on('end', data => {
       try {
         io.in(data.room).emit('leave', data.room)
-        console.log(sessions)
       } catch (error) {
-        console.log(error.message)
         socket.emit('exception', error)
       }
     })
