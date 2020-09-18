@@ -88,7 +88,7 @@ const getRestaurants = (name, place) => {
         }
       })
       .catch(error => {
-        return Promise.reject(new Error(error))
+        return Promise.reject(new Error(error.response.status))
       })
   )
 }
@@ -114,7 +114,7 @@ const createFBUser = (name, id, username, email, photo) => {
       }
     })
     .catch(error => {
-      return Promise.reject(new Error(error))
+      return Promise.reject(new Error(error.response.status))
     })
 }
 
@@ -136,7 +136,7 @@ const getAllUsers = () => {
       }
     })
     .catch(error => {
-      return Promise.reject(new Error(error))
+      return Promise.reject(new Error(error.response.status))
     })
 }
 
@@ -149,7 +149,7 @@ const deleteUser = () => {
       return res.status
     })
     .catch(error => {
-      return Promise.reject(new Error(error))
+      return Promise.reject(new Error(error.response.status))
     })
 }
 
@@ -161,7 +161,7 @@ const getUser = () => {
       console.log(res.data)
       return {
         status: res.status,
-        user: res.data.user.map(function (user) {
+        user: res.data.user.map(user => {
           return {
             name: user.name,
             username: user.username,
@@ -172,7 +172,7 @@ const getUser = () => {
       }
     })
     .catch(error => {
-      return Promise.reject(new Error(error))
+      return Promise.reject(new Error(error.response.status))
     })
 }
 
@@ -181,7 +181,7 @@ const updateEmail = info => {
   const req = {
     email: info
   }
-  return updateUser(myId, req)
+  return updateUser(req)
 }
 
 // update username and returns status
@@ -189,7 +189,7 @@ const updateUsername = info => {
   const req = {
     username: info
   }
-  return updateUser(myId, req)
+  return updateUser(req)
 }
 
 // update username and returns status
@@ -197,7 +197,7 @@ const updateName = info => {
   const req = {
     name: info
   }
-  return updateUser(myId, req)
+  return updateUser(req)
 }
 
 // update username and returns status
@@ -205,7 +205,7 @@ const updatePhoneNumber = info => {
   const req = {
     phone_number: info
   }
-  return updateUser(myId, req)
+  return updateUser(req)
 }
 
 // updates user and returns status
@@ -215,21 +215,17 @@ const updateUser = req => {
       params: req
     })
     .then(res => {
-      console.log(res.status)
+      console.log(res.data)
       return {
         status: res.status,
-        user: res.data.user.map(function (user) {
-          return {
-            name: user.name,
-            username: user.username,
-            email: user.email,
-            phone_number: user.phone_number
-          }
-        })
+        name: res.data.name,
+        username: res.data.username,
+        email: res.data.email,
+        phone_number: res.data.phone_number
       }
     })
     .catch(error => {
-      return Promise.reject(new Error(error))
+      return Promise.reject(new Error(error.response.status))
     })
 }
 
@@ -242,7 +238,7 @@ const checkUsername = username => {
     })
     .catch(error => {
       console.log(error.response.status)
-      return Promise.reject(new Error(error))
+      return Promise.reject(new Error(error.response.status))
     })
 }
 
@@ -255,7 +251,7 @@ const checkPhoneNumber = phoneNumber => {
       return res.status
     })
     .catch(error => {
-      return Promise.reject(new Error(error))
+      return Promise.reject(new Error(error.response.status))
     })
 }
 
