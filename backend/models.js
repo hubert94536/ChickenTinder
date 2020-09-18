@@ -76,7 +76,7 @@ const Friends = sequelize.define('friends', {
         allowNull: false,
         unique: false,
 
-    },
+    }
 
 });
 
@@ -84,7 +84,7 @@ Friends.belongsTo(Accounts, {foreignKey: 'friend_user', targetKey: 'username'})
 
 
 Friends.sync({ force: true}).then(()=> {
-    console.log("All models were synchronized successfully.");
+    console.log("Friend model was synchronized successfully.");
 })
 
 module.exports = { Accounts, Friends }
