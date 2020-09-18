@@ -1,23 +1,22 @@
 import React from 'react';
 import {
-  Button,
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableHighlight,
-  Image,
   Alert,
 } from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import Card from './groupCard.js';
 import {USERNAME} from 'react-native-dotenv';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
-import socket from './socket.js'
+import socket from './socket.js';
 
 const hex = '#F25763';
 const font = 'CircularStd-Medium';
 var memberList = [];
+
 export default class Group extends React.Component {
   constructor(props) {
     super(props);
@@ -25,7 +24,7 @@ export default class Group extends React.Component {
     this.state = {
       members: members,
       host: this.props.navigation.state.params.host,
-      groupName:  members[Object.keys(members)[0]].name.split(' ')[0],
+      groupName: members[Object.keys(members)[0]].name.split(' ')[0],
       needFilters: Object.keys(members).filter(user => !user.filters).length,
       isHost: false,
       start: false,
@@ -40,12 +39,13 @@ export default class Group extends React.Component {
     this.setState({start: false});
   }
 
-  componentDidMount() {
+  componentWillMount() {
     AsyncStorage.getItem(USERNAME).then(res => {
       if (res == this.state.host) {
         this.setState({isHost: true});
       }
     });
+
     memberList = [];
     for (var user in this.state.members) {
       memberList.push(
@@ -54,7 +54,7 @@ export default class Group extends React.Component {
           username={user}
           image={this.state.members[user].pic}
           filters={this.state.members[user].filters}
-          host = {this.state.host}
+          host={this.state.host}
         />,
       );
     }
@@ -69,26 +69,27 @@ export default class Group extends React.Component {
           username={'@' + user}
           image={this.state.members[user].pic}
           filters={this.state.members[user].filters}
+          host={this.state.host}
         />,
       );
     }
   }
 
   leaveGroup() {
-    socket.leaveRoom()
-    this.props.navigation.navigate('Home')
+    socket.leaveRoom();
+    this.props.navigation.navigate('Home');
     socket.getSocket().on('kick', res => {
-      console.log(res)
+      console.log(res);
       socket.leaveRoom(data.room);
-      this.props.navigation.navigate('Home')
-    })
+      this.props.navigation.navigate('Home');
+    });
   }
 
   endGroup() {
-    socket.endSession()
+    socket.endSession();
     socket.getSocket().on('leave', res => {
-      this.props.navigation.navigate('Home')
-    })
+      this.props.navigation.navigate('Home');
+    });
   }
 
   leaveAlert() {
@@ -96,11 +97,13 @@ export default class Group extends React.Component {
       //title
       'Are you sure you want to leave?',
       //body
-      'You will will not be able to return without invitation', [
+      'You will will not be able to return without invitation',
+      [
         {
           text: 'Yes',
           onPress: () => this.leaveGroup(),
-        }, {
+        },
+        {
           text: 'Cancel',
           style: 'cancel',
         },
@@ -113,11 +116,13 @@ export default class Group extends React.Component {
       //title
       'Are you sure you want to end the session?',
       //body
-      'You will not be able to return', [
+      'You will not be able to return',
+      [
         {
           text: 'Yes',
           onPress: () => this.endGroup(),
-        }, {
+        },
+        {
           text: 'Cancel',
           style: 'cancel',
         },
@@ -134,7 +139,9 @@ export default class Group extends React.Component {
               <Text style={styles.groupTitle}>Your Group</Text>
             )}
             {!this.state.isHost && (
-              <Text style={styles.groupTitle}>{this.state.groupName}'s Group</Text>
+              <Text style={styles.groupTitle}>
+                {this.state.groupName}'s Group
+              </Text>
             )}
             {!this.state.isHost && (
               <TouchableHighlight
@@ -143,7 +150,14 @@ export default class Group extends React.Component {
                 style={styles.leave}
                 onPress={() => this.leaveAlert()}
                 underlayColor="white">
-                <Text style={styles.leaveText}>Leave</Text>
+                <Text
+                  style={
+                    this.state.leaveGroup
+                      ? styles.leaveTextPressed
+                      : styles.leaveText
+                  }>
+                  Leave
+                </Text>
               </TouchableHighlight>
             )}
             {this.state.isHost && (
@@ -153,7 +167,14 @@ export default class Group extends React.Component {
                 style={styles.end}
                 onPress={() => this.endSession()}
                 underlayColor="white">
-                <Text style={styles.leaveText}>End</Text>
+                <Text
+                  style={
+                    this.state.leaveGroup
+                      ? styles.leaveTextPressed
+                      : styles.leaveText
+                  }>
+                  End
+                </Text>
               </TouchableHighlight>
             )}
           </View>
@@ -233,86 +254,6 @@ export default class Group extends React.Component {
   }
 }
 
-class Card extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  removeUser = (username) => {
-    socket.kickUser(username)
-  }
-
-  render() {
-    return (
-      <View>
-        <View style={styles.card}>
-          <Image
-            source={{uri: this.props.image}}
-            style={this.props.filters ? styles.image : styles.imageFalse}
-          />
-          {this.props.filters ? (
-            <Icon
-              name="check-circle"
-              style={{
-                color: hex,
-                fontSize: 20,
-                position: 'absolute',
-                marginLeft: '14%',
-                marginTop: '1%',
-              }}
-            />
-          ) : null}
-          <View
-            style={{
-              alignSelf: 'center',
-              marginLeft: '3%',
-              flex: 1,
-            }}>
-            <Text
-              style={{
-                color: hex,
-                fontWeight: 'bold',
-                fontFamily: font,
-              }}>
-              {this.props.name}
-            </Text>
-            <Text
-              style={{
-                color: hex,
-                fontFamily: font,
-              }}>
-              {'@' + this.props.username}
-            </Text>
-          </View>
-          <View style={{flex: 1, flexDirection: 'row'}}>
-          {this.props.username != this.props.host ? (
-            <Text
-              style={{
-                color: hex,
-                alignSelf: 'center',
-                fontFamily: font,
-                marginLeft: '30%',
-              }}>
-              Remove
-            </Text>) : null}
-            {this.props.username != this.props.host ? (
-            <Icon
-              name="times-circle"
-              style={{
-                color: hex,
-                fontSize: 35,
-                alignSelf: 'center',
-                marginLeft: '5%',
-              }}
-              onPress={() => this.removeUser(this.props.username)}
-            />) : null}
-          </View>
-        </View>
-      </View>
-    );
-  }
-}
-
 const styles = StyleSheet.create({
   main: {
     flexDirection: 'column',
@@ -347,6 +288,14 @@ const styles = StyleSheet.create({
   leaveText: {
     fontFamily: font,
     color: 'white',
+    textAlign: 'center',
+    fontSize: 20,
+    paddingTop: '2%',
+    paddingBottom: '2%',
+  },
+  leaveTextPressed: {
+    fontFamily: font,
+    color: hex,
     textAlign: 'center',
     fontSize: 20,
     paddingTop: '2%',
@@ -438,25 +387,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: font,
   },
-  image: {
-    borderRadius: 63,
-    height: 60,
-    width: 60,
-    borderWidth: 3,
-    borderColor: hex,
-    alignSelf: 'flex-start',
-    marginTop: '3.5%',
-    marginLeft: '2.5%',
-  },
-  imageFalse: {
-    borderRadius: 63,
-    height: 60,
-    width: 60,
-    borderWidth: 3,
-    alignSelf: 'flex-start',
-    marginTop: '3.5%',
-    marginLeft: '2.5%',
-  },
   top: {
     flex: 0.38,
   },
@@ -468,22 +398,5 @@ const styles = StyleSheet.create({
   bottom: {
     flex: 0.45,
     color: '#fff',
-  },
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    borderWidth: 0,
-    borderColor: '#000',
-    alignSelf: 'center',
-    width: '96%',
-    height: 90,
-    marginTop: '3%',
-    flexDirection: 'row',
-  },
-  join: {
-    marginTop: 0,
-    marginLeft: '3%',
-    color: '#fff',
-    fontFamily: font,
   },
 });
