@@ -44,27 +44,16 @@ export default class UserProfileView extends Component {
       this.setState({name: res, nameValue: res}),
     );
     AsyncStorage.getItem(USERNAME).then(res =>
-      this.setState({username: '@' + res, usernameValue: '@' + res}),
+      this.setState({username: res, usernameValue: res}),
     );
     AsyncStorage.getItem(PHOTO).then(res => this.setState({image: res}));
   }
 
   changeName() {
-    if (this.state.changeName) {
-      api
-        .updateName(this.state.nameValue)
+    if (this.state.changeName && this.state.nameValue != this.state.name) {
+      api.updateName(this.state.nameValue)
         .then(res => {
-          if (res === 201) {
-            AsyncStorage.setItem(NAME, this.state.name);
-            this.setState({
-              name: this.state.nameValue,
-            });
-          } else {
-            Alert.alert('Error changing name. Please try again.');
-            this.setState({
-              nameValue: this.state.name,
-            });
-          }
+          AsyncStorage.setItem(NAME, this.state.name);
         })
         .catch(err => {
           Alert.alert('Error changing name. Please try again.');
@@ -80,38 +69,24 @@ export default class UserProfileView extends Component {
   }
 
   changeUsername() {
-    if (this.state.changeUser) {
-      const user = this.state.usernameValue.substring(1);
-      api
-        .checkUsername(user)
-        .then(res => {
-          if (res === 200) {
-            api
-              .updateUsername(user)
-              .then(res => {
-                if (res === 201) {
-                  AsyncStorage.setItem(USERNAME, user);
-                  this.setState({username: this.state.usernameValue});
-                } else {
-                  this.setState({usernameValue: this.state.username});
-                  Alert.alert('Error changing username. Please try again.');
-                }
-              })
-              .catch(err => {
-                console.log(err);
-                this.setState({usernameValue: this.state.username});
-                Alert.alert('Error changing username. Please try again.');
-              });
-          } else if (res === 404) {
-            this.setState({usernameValue: this.state.username});
-            Alert.alert('Username taken!');
-          } else {
-            this.setState({usernameValue: this.state.username});
-            Alert.alert('Error!');
-          }
+    if (this.state.changeUser && this.state.username != this.state.usernameValue) {
+      const user = this.state.usernameValue
+      api.checkUsername(user)
+        .then(() => {
+          api.updateUsername(user)
+            .then(() => {
+                AsyncStorage.setItem(USERNAME, user);
+            })
         })
         .catch(error => {
-          console.log(error);
+          console.log(error)
+          if (error === 404) {
+            Alert.alert('Username taken!');
+          }
+          else {
+            Alert.alert('Error changing username. Please try again.');
+          }
+          this.setState({usernameValue: this.state.username});
         });
     }
     this.setState({
@@ -147,7 +122,7 @@ export default class UserProfileView extends Component {
               <Text style={{fontSize: 28, fontWeight: 'bold'}}>
                 {this.state.name}
               </Text>
-              <Text style={{fontSize: 17}}>{this.state.username}</Text>
+              <Text style={{fontSize: 17}}>{'@' + this.state.usernameValue}</Text>
             </View>
           </View>
           <View style={{flexDirection: 'row'}}>
@@ -238,7 +213,7 @@ export default class UserProfileView extends Component {
                   <Text style={{fontFamily: font, fontSize: 18}}>Name:</Text>
                   {!this.state.changeName && (
                     <Text style={{fontFamily: font, color: hex, fontSize: 20}}>
-                      {this.state.name}
+                      {this.state.nameValue}
                     </Text>
                   )}
                   {this.state.changeName && (
@@ -257,9 +232,7 @@ export default class UserProfileView extends Component {
                   onPress={() => this.changeName()}>
                   <Text
                     style={
-                      this.state.changeNameText
-                        ? styles.changeTextSelected
-                        : styles.changeText
+                      this.state.changeNameText ? styles.changeTextSelected : styles.changeText
                     }>
                     {this.state.changeName ? 'Submit' : 'Change'}
                   </Text>
@@ -277,7 +250,7 @@ export default class UserProfileView extends Component {
                   </Text>
                   {!this.state.changeUser && (
                     <Text style={{fontFamily: font, color: hex, fontSize: 20}}>
-                      {this.state.username}
+                      {this.state.usernameValue}
                     </Text>
                   )}
                   {this.state.changeUser && (
