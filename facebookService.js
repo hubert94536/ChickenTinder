@@ -16,7 +16,7 @@ import {
   PHOTO,
 } from 'react-native-dotenv';
 import AsyncStorage from '@react-native-community/async-storage';
-const { LoginManager, AccessToken, GraphRequest, GraphRequestManager } = FBSDK;
+const {LoginManager, AccessToken, GraphRequest, GraphRequestManager} = FBSDK;
 
 const config = {
   apiKey: FIREBASE_API_KEY, // Auth / General Use
@@ -32,10 +32,7 @@ firebase.initializeApp(config);
 class FacebookService {
   loginWithFacebook = () => {
     // Attempt a login using the Facebook login dialog asking for default permissions.
-     return LoginManager.logInWithPermissions([
-      'public_profile',
-      'email',
-    ])
+    return LoginManager.logInWithPermissions(['public_profile', 'email'])
       .then(login => {
         if (login.isCancelled) {
           return Promise.reject(new Error('Cancelled request'));
@@ -51,11 +48,13 @@ class FacebookService {
       .then(currentUser => {
         if (currentUser.additionalUserInfo.isNewUser) {
           AsyncStorage.setItem(UID, firebase.auth().currentUser.uid);
-          AsyncStorage.setItem(NAME,
+          AsyncStorage.setItem(
+            NAME,
             currentUser.additionalUserInfo.profile.name,
           );
           AsyncStorage.setItem(ID, currentUser.additionalUserInfo.profile.id);
-          AsyncStorage.setItem(EMAIL,
+          AsyncStorage.setItem(
+            EMAIL,
             currentUser.additionalUserInfo.profile.email,
           );
           AsyncStorage.setItem(PHOTO, currentUser.user.photoURL);
@@ -69,7 +68,7 @@ class FacebookService {
         // if (errorCode === 'auth/account-exists-with-different-credential') {
         //   alert('Email already associated with another account.');
         //   // Handle account linking here, if using.
-        return Promise.reject(new Error(error.response.message))
+        return Promise.reject(new Error(error.response.message));
       });
   };
 
@@ -84,7 +83,8 @@ class FacebookService {
   };
 
   deleteUser = () => {
-    api.deleteUser()
+    api
+      .deleteUser()
       .then(() => {
         AccessToken.refreshCurrentAccessTokenAsync();
       })
@@ -95,10 +95,10 @@ class FacebookService {
         );
         firebase.auth().currentUser.reauthenticateWithCredential(credential);
         firebase.auth().currentUser.delete();
-        AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO])
+        AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO]);
       })
       .catch(error => {
-        return Promise.reject(new Error(error.response.message))
+        return Promise.reject(new Error(error.response.message));
       });
   };
   //getUser if needed
