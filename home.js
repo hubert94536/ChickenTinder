@@ -46,15 +46,24 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    api.createFBUser("isha", 0, "ishaaa", "ishag@gmail.com", "dffdsds"),
-    api.createFBUser("hanna", 0, "hco", "hannc@gmail.com", "kfdkfjs"),
-    api.createFBUser("hubert", 0, "hubes", "hubes@gmail.com", "jskfhskl"),
-    friendsapi.createFriendship("hubes", "hco"),
-    friendsapi.createFriendship("ishaaa", "hubes"),
-    friendsapi.createFriendship("hco", "ishaaa")
+    // api.createFBUser("isha", 0, "ishaaa", "ishag@gmail.com", "dffdsds"),
+    // api.createFBUser("hanna", 0, "hco", "hannc@gmail.com", "kfdkfjs"),
+    // api.createFBUser("hubert", 0, "hubes", "hubes@gmail.com", "jskfhskl"),
+    // friendsapi.createFriendship("hubes", "hco"),
+    // friendsapi.createFriendship("ishaaa", "hubes"),
+    // friendsapi.createFriendship("hco", "ishaaa")
     // friendsapi.denyFriendRequest("ishaaa", "hco")
     
     // friendsapi.getFriends("hco")
+
+    api.createFBUser("isha", 0, "ishaaa", "ishag@gmail.com", "dffdsds"),
+    api.createFBUser("hanna", 0, "hco", "hannc@gmail.com", "kfdkfjs"),
+    api.createFBUser("hubert", 0, "hubes", "hubes@gmail.com", "jskfhskl"),
+    console.log(api.getAllUsers()),
+    friendsapi.createFriendship("hubes", "hco"),
+    friendsapi.createFriendship("ishaaa", "hubes"),
+    friendsapi.createFriendship("hco", "ishaaa"),
+    friendsapi.denyFriendRequest("hco", "hubes")
   }
 
   render() {

@@ -1,18 +1,24 @@
 import axios from 'axios'
-import {API_KEY} from 'react-native-dotenv'
+import {USERNAME} from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
+
+var main = ''
+
+AsyncStorage.getItem(USERNAME).then(res => {
+  main = res
+})
 
 const friendsApi = axios.create({
   baseURL: 'https://wechews.herokuapp.com',
 })
 
 //creates friendship
-const createFriendship = (mainUser, friendUser) => {
+const createFriendship = (main, friend) => {
     return friendsApi
     .post(`/friendships`, {
       params: {
-        main_user: mainUser,
-        friend_user: friendUser
+        main: main,
+        friend: friend
       },
     })
     .then (res => {
@@ -28,9 +34,9 @@ const createFriendship = (mainUser, friendUser) => {
   }
   
 //gets a users friends
-const getFriends = (main_user) => {
+const getFriends = () => {
     return friendsApi
-    .get(`/friendships/${main_user}/friends`)
+    .get(`/friendships/friends/${main}`)
     .then(res => {
       console.log(res.data.friends)
       return {
@@ -49,9 +55,9 @@ const getFriends = (main_user) => {
   }
 
 //gets a users friend requests
-const getRequests = (main_user) => {
+const getRequests = () => {
     return friendsApi
-    .get(`/friendships/${main_user}/requests`)
+    .get(`/friendships/requests/${main}`)
     .then(res => {
       console.log(res.data.requests)
       return {
@@ -70,12 +76,11 @@ const getRequests = (main_user) => {
   }
 
 //accept a friend request
-const acceptFriendRequest = (main_user, friend_user) => {
+const acceptFriendRequest = (friend) => {
     return friendsApi
-    .put(`/friendships/${main_user}/requests`, {
+    .put(`/friendships/requests/${main}/${friend}`, {
       params: {
-        main_user: main_user,
-        friend_user: friend_user
+        accepted: 'accepted'
       },
     })
     .then (res => {
@@ -92,9 +97,9 @@ const acceptFriendRequest = (main_user, friend_user) => {
   }
 
 //deny a friend request
-  const denyFriendRequest = (main_user, friend_user) => {
+  const denyFriendRequest = (friend) => {
     return friendsApi
-    .delete(`/friendships/${main_user}/requests`)
+    .delete(`/friendships/requests/${main}/${friend}`)
     .then(res => {
       console.log(res.status)
       return res.status
@@ -105,9 +110,9 @@ const acceptFriendRequest = (main_user, friend_user) => {
   }
 
 //remove a friendship
-  const removeFriend = (main_user,friend_user) => {
+  const removeFriend = (friend) => {
     return friendsApi
-    .delete(`/friendships/${main_user}/friends`)
+    .delete(`/friendships/friends/${main}/${friend}`)
     .then(res => {
       console.log(res.status)
       return res.status
