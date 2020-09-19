@@ -73,7 +73,7 @@ const getUserFriends = async (req, res) => {
         const friends = await Friends.findAll({
             where: {
                 [Op.and]: [
-                    { main_user: req.params},
+                    { main_user: req.params.user},
                     { f_status: "accepted"}
                   ] }
         });
@@ -88,7 +88,7 @@ const getUserRequests = async (req, res) => {
         const requests = await Friends.findAll({
             where: {
             [Op.and]: [
-                { main_user: req.params},
+                { main_user: req.params.user},
                 { f_status: "pending request"}
               ] }
 
