@@ -30,11 +30,7 @@ const createFriendship = (mainUser, friendUser) => {
 //gets a users friends
 const getFriends = (main_user) => {
     return friendsApi
-    .get(`/friendships/${main_user}/friends`, {
-      params: {
-        main_user: main_user,
-      },
-    })
+    .get(`/friendships/${main_user}/friends`)
     .then(res => {
       console.log(res.data.friends)
       return {
@@ -55,11 +51,7 @@ const getFriends = (main_user) => {
 //gets a users friend requests
 const getRequests = (main_user) => {
     return friendsApi
-    .get(`/friendships/${main_user}/requests`, {
-      params: {
-        main_user: main_user,
-      },
-    })
+    .get(`/friendships/${main_user}/requests`)
     .then(res => {
       console.log(res.data.requests)
       return {
@@ -102,12 +94,7 @@ const acceptFriendRequest = (main_user, friend_user) => {
 //deny a friend request
   const denyFriendRequest = (main_user, friend_user) => {
     return friendsApi
-    .delete(`/friendships/${main_user}/requests`, {
-      params: {
-        main_user: main_user,
-        friend_user: friend_user
-      },
-    })
+    .delete(`/friendships/${main_user}/requests`)
     .then(res => {
       console.log(res.status)
       return res.status
@@ -120,12 +107,7 @@ const acceptFriendRequest = (main_user, friend_user) => {
 //remove a friendship
   const removeFriend = (main_user,friend_user) => {
     return friendsApi
-    .delete(`/friendships/${main_user}/friends`, {
-      params: {
-        main_user: main_user,
-        friend_user: friend_user
-      },
-    })
+    .delete(`/friendships/${main_user}/friends`)
     .then(res => {
       console.log(res.status)
       return res.status
