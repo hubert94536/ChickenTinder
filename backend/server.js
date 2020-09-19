@@ -51,9 +51,9 @@ app.route("/friendships/friends/:user")
 app.route("/friendships/friends/:user/:friend")
   .delete(friends.deleteFriendship);
 
-app.route("/friendships/requests/:main_user/:friend")
+app.route("/friendships/requests/:user/:friend")
   .get(friends.getUserRequests)
-app.route("/friendships/requests/:main_user/:friend")
+app.route("/friendships/requests/:user/:friend")
   .put(friends.acceptRequest)
   .delete(friends.deleteFriendship);
 

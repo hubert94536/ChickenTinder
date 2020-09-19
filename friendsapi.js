@@ -34,7 +34,7 @@ const createFriendship = (main, friend) => {
   }
   
 //gets a users friends
-const getFriends = () => {
+const getFriends = (main) => {
     return friendsApi
     .get(`/friendships/friends/${main}`)
     .then(res => {
@@ -55,7 +55,7 @@ const getFriends = () => {
   }
 
 //gets a users friend requests
-const getRequests = () => {
+const getRequests = (main) => {
     return friendsApi
     .get(`/friendships/requests/${main}`)
     .then(res => {
@@ -76,7 +76,7 @@ const getRequests = () => {
   }
 
 //accept a friend request
-const acceptFriendRequest = (friend) => {
+const acceptFriendRequest = (main, friend) => {
     return friendsApi
     .put(`/friendships/requests/${main}/${friend}`, {
       params: {
@@ -97,7 +97,7 @@ const acceptFriendRequest = (friend) => {
   }
 
 //deny a friend request
-  const denyFriendRequest = (friend) => {
+  const denyFriendRequest = (main, friend) => {
     return friendsApi
     .delete(`/friendships/requests/${main}/${friend}`)
     .then(res => {
@@ -110,7 +110,7 @@ const acceptFriendRequest = (friend) => {
   }
 
 //remove a friendship
-  const removeFriend = (friend) => {
+  const removeFriend = (main, friend) => {
     return friendsApi
     .delete(`/friendships/friends/${main}/${friend}`)
     .then(res => {
