@@ -1,4 +1,5 @@
 const { Accounts } = require('./models.js')
+const {Yelp} = require('./yelpQuery.js')
 var sessions = {} // store temporary sessions
 var clients = {} // associates username with client id
 var clientsIds = {} // associates client id with username
@@ -152,9 +153,15 @@ module.exports = (io) => {
     })
 
     // alert to all clients in room to start
-    socket.on('start', data => {
+    socket.on('start', async data => {
       // proceed to restaurant matching after EVERYONE submits filters
-      io.in(data.room).emit('start')
+      try {
+        const restaurantList = await Yelp.getRestaurants(data.req);
+        io.in(data.room).emit('start', {restaurantList: restaurantList})
+      } catch (error) {
+        socket.emit('exception', error)
+      }
+      
     })
 
     socket.on('like', data => {
@@ -207,7 +214,7 @@ module.exports = (io) => {
     // host can kick a user from room
     socket.on('kick', data => {
       try {
-        io.to(clients[data.username]).emit('kick', { room: data.room })
+        io.in(clients[data.username]).emit('kick', { username: data.username, room: data.room })
         console.log(data.username)
       } catch (error) {
         socket.emit('exception', error)
