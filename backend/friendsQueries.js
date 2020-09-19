@@ -1,4 +1,5 @@
 const { Accounts, Friends } = require("./models");
+const { Op } = require("sequelize");
 
 // const createFriends = async (req, res) => {
 //     try {
@@ -70,7 +71,11 @@ const createFriends = async (req, res) => {
 const getUserFriends = async (req, res) => {
     try {
         const friends = await Friends.findAll({
-            where: { main_user: req.params, f_status: "accepted" },
+            where: {
+                [Op.and]: [
+                    { main_user: req.params},
+                    { f_status: "accepted"}
+                  ] }
         });
         return res.status(200).json({ friends });
     } catch (error) {
@@ -81,7 +86,13 @@ const getUserFriends = async (req, res) => {
 const getUserRequests = async (req, res) => {
     try {
         const requests = await Friends.findAll({
-            where: { main_user: req.params, f_status: "pending request" },
+            where: {
+            [Op.and]: [
+                { main_user: req.params},
+                { f_status: "pending request"}
+              ] }
+
+            
         });
         return res.status(200).json({ requests });
     } catch (error) {
