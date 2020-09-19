@@ -42,8 +42,8 @@ const { Accounts, Friends } = require("./models");
 
 const createFriends = async (req, res) => {
     try {
-        const main = req.body.params.main_user;
-        const friend = req.body.params.friend_user;
+        const main = req.body.params.main;
+        const friend = req.body.params.friend;
         const user = await Friends.create(
             {
                 main_user: main,
@@ -57,8 +57,6 @@ const createFriends = async (req, res) => {
                 main_user: friend,
                 f_status: "pending request",
                 friend_user: main
-                
-
             }
         );
         return res.status(201).json({
@@ -71,9 +69,8 @@ const createFriends = async (req, res) => {
 
 const getUserFriends = async (req, res) => {
     try {
-        const main = req.body.params.main_user;
         const friends = await Friends.findAll({
-            where: { main_user: main, f_status: "accepted" },
+            where: { main_user: req.params, f_status: "accepted" },
         });
         return res.status(200).json({ friends });
     } catch (error) {
@@ -83,9 +80,8 @@ const getUserFriends = async (req, res) => {
 
 const getUserRequests = async (req, res) => {
     try {
-        const main = req.body.params.main_user;
         const requests = await Friends.findAll({
-            where: { main_user: main, f_status: "pending request" },
+            where: { main_user: req.params, f_status: "pending request" },
         });
         return res.status(200).json({ requests });
     } catch (error) {
@@ -95,12 +91,13 @@ const getUserRequests = async (req, res) => {
 
 const acceptRequest = async (req, res) => {
     try {
-        const main = req.body.params.main_user;
-        const friend = req.body.params.friend_user;
-        const account_1 = await Friends.update({f_status: "accepted"}, {
+        const main = req.params.user;
+        const friend = req.params.friend;
+        const accepted = req.body.params.accepted
+        const account_1 = await Friends.update({f_status: accepted}, {
             where: { main_user: main, friend_user: friend }
         });
-        const account_2 = await Friends.update({f_status: "accepted"}, {
+        const account_2 = await Friends.update({f_status: accepted}, {
             where: { main_user: friend, friend_user: main }
         });
         if (account_1 && account_2) {
@@ -115,8 +112,8 @@ const acceptRequest = async (req, res) => {
 
 const deleteFriendship = async (req, res) => {
     try {
-        const main = req.body.params.main_user;
-        const friend = req.body.params.friend_user;
+        const main = req.params.user;
+        const friend = req.params.friend;
         const deleted_1 = await Friends.destroy( {
             where: { main_user: main, friend_user: friend }
         });
