@@ -29,17 +29,6 @@ export default class Group extends React.Component {
       isHost: false,
       start: false,
     };
-  }
-
-  underlayShow() {
-    this.setState({start: true});
-  }
-
-  underlayHide() {
-    this.setState({start: false});
-  }
-
-  componentWillMount() {
     AsyncStorage.getItem(USERNAME).then(res => {
       if (res == this.state.host) {
         this.setState({isHost: true});
@@ -58,6 +47,20 @@ export default class Group extends React.Component {
         />,
       );
     }
+
+    socket.getSocket().on('kick', res => {
+      console.log(res);
+      socket.leaveRoom(data.room);
+      this.props.navigation.navigate('Home');
+    });
+  }
+
+  underlayShow() {
+    this.setState({start: true});
+  }
+
+  underlayHide() {
+    this.setState({start: false});
   }
 
   render() {
@@ -78,11 +81,6 @@ export default class Group extends React.Component {
   leaveGroup() {
     socket.leaveRoom();
     this.props.navigation.navigate('Home');
-    socket.getSocket().on('kick', res => {
-      console.log(res);
-      socket.leaveRoom(data.room);
-      this.props.navigation.navigate('Home');
-    });
   }
 
   endGroup() {

@@ -69,8 +69,7 @@ class FacebookService {
         // if (errorCode === 'auth/account-exists-with-different-credential') {
         //   alert('Email already associated with another account.');
         //   // Handle account linking here, if using.
-        console.log(error)
-        return Promise.reject(new Error(error))
+        return Promise.reject(new Error(error.response.message))
       });
   };
 
@@ -99,7 +98,7 @@ class FacebookService {
         AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO])
       })
       .catch(error => {
-        console.log(error);
+        return Promise.reject(new Error(error.response.message))
       });
   };
   //getUser if needed
