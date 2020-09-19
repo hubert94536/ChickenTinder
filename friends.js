@@ -80,6 +80,9 @@ export default class Friends extends React.Component {
           <SearchBar
             containerStyle={{
               backgroundColor: 'white',
+              borderBottomColor: 'transparent',
+              borderTopColor: 'transparent',
+              width: '100%',
               height: 45,
               alignSelf: 'center',
             }}
@@ -87,6 +90,11 @@ export default class Friends extends React.Component {
               height: 7,
               width: '90%',
               alignSelf: 'center',
+              backgroundColor: '#ebecf0',
+            }}
+            inputStyle={{
+              fontFamily: font,
+              fontSize: 15,
             }}
             placeholder="Search by username"
             onChangeText={this.updateSearch}

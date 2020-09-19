@@ -96,7 +96,7 @@ export default class UserProfileView extends Component {
 
   render() {
     return (
-      <View>
+      <View style={{backgroundColor: 'white'}}>
         <View>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Icon
@@ -128,7 +128,8 @@ export default class UserProfileView extends Component {
           <View style={{flexDirection: 'row'}}>
             <TouchableHighlight
               underlayColor="#fff"
-              style={this.state.friends ? styles.selected : styles.unselected}>
+              style={this.state.friends ? styles.selected : styles.unselected}
+              onPress={() => this.refs.swiper.scrollBy(-1)}>
               <Text
                 style={
                   this.state.friends
@@ -140,7 +141,8 @@ export default class UserProfileView extends Component {
             </TouchableHighlight>
             <TouchableHighlight
               underlayColor="#fff"
-              style={!this.state.friends ? styles.selected : styles.unselected}>
+              style={!this.state.friends ? styles.selected : styles.unselected}
+              onPress={() => this.refs.swiper.scrollBy(1)}>
               <Text
                 style={
                   !this.state.friends
@@ -154,6 +156,7 @@ export default class UserProfileView extends Component {
         </View>
         <View style={{height: '100%', marginTop: '5%'}}>
           <Swiper
+            ref="swiper"
             loop={false}
             onMomentumScrollEnd={() =>
               this.setState({friends: !this.state.friends})
@@ -199,6 +202,8 @@ export default class UserProfileView extends Component {
                       visible: false,
                       changeName: false,
                       changeUser: false,
+                      usernameValue: this.state.username,
+                      nameValue: this.state.name,
                     })
                   }
                 />
@@ -218,7 +223,15 @@ export default class UserProfileView extends Component {
                   )}
                   {this.state.changeName && (
                     <TextInput
-                      style={{fontFamily: font, color: hex, fontSize: 20}}
+                      style={{
+                        fontFamily: font,
+                        color: hex,
+                        fontSize: 20,
+                        borderBottomWidth: 2,
+                        borderBottomColor: hex,
+                        margin: 0,
+                        padding: 0,
+                      }}
                       value={this.state.nameValue}
                       onChangeText={text => this.setState({nameValue: text})}
                     />
@@ -255,7 +268,15 @@ export default class UserProfileView extends Component {
                   )}
                   {this.state.changeUser && (
                     <TextInput
-                      style={{fontFamily: font, color: hex, fontSize: 20}}
+                      style={{
+                        fontFamily: font,
+                        color: hex,
+                        fontSize: 20,
+                        borderBottomWidth: 2,
+                        borderBottomColor: hex,
+                        margin: 0,
+                        padding: 0,
+                      }}
                       value={this.state.usernameValue}
                       onChangeText={text =>
                         this.setState({usernameValue: text})
