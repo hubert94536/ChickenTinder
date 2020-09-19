@@ -74,7 +74,7 @@ export default class Login extends React.Component {
         this.props.navigation.navigate(result);
       })
       .catch(error => {
-        console.log(error);
+        //Alert
       });
   };
 
