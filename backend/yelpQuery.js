@@ -1,3 +1,5 @@
+const axios = require('axios')
+
 // setting up Yelp API base caller
 const yelpApi = axios.create({
   baseURL: 'https://api.yelp.com/v3',
