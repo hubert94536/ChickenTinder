@@ -30,7 +30,7 @@ const config = {
 firebase.initializeApp(config)
 
 class FacebookService {
-  loginWithFacebook = () => {
+  loginWithFacebook = async () => {
     // Attempt a login using the Facebook login dialog asking for default permissions.
     return LoginManager.logInWithPermissions(['public_profile', 'email'])
       .then(login => {
@@ -43,7 +43,7 @@ class FacebookService {
         const credential = firebase.auth.FacebookAuthProvider.credential(
           data.accessToken,
         )
-        // Sign in with Firebase oauth
+        // Sign in with Firebase oauth using credential and authentication token
         return firebase.auth().signInWithCredential(credential)
       })
       .then(currentUser => {
@@ -57,11 +57,11 @@ class FacebookService {
           EMAIL,
           currentUser.additionalUserInfo.profile.email)
         AsyncStorage.setItem(PHOTO, currentUser.user.photoURL)
+        // Get username from database if not new user
         if (!currentUser.additionalUserInfo.isNewUser) {
           api.getUser()
           .then(res => {
-            AsyncStorage.setItem(
-              USERNAME, res.username)
+            AsyncStorage.setItem(USERNAME, res.username)
           })
           return 'Home'
         }
@@ -104,7 +104,6 @@ class FacebookService {
         // Retrieve accesstoken to delete use from Firebase
         AccessToken.getCurrentAccessToken()
           .then((accessToken) => {
-            console.log(accessToken)
             const credential = firebase.auth.FacebookAuthProvider.credential(
               accessToken)
             firebase.auth().currentUser.reauthenticateWithCredential(credential)

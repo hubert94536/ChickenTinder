@@ -1,20 +1,39 @@
 const { Accounts } = require('./models.js')
-// const { Sequelize } = require('sequelize')
-// const Op = Sequelize().Op
+const { Sequelize, Op } = require('sequelize')
 
+// Get all accounts
 const getAllAccounts = async (req, res) => {
   try {
-    const users = await Accounts.findAndCountAll({
-      where: {
-
-      }
-    })
+    const users = await Accounts.findAll()
     return res.status(200).json({ users })
   } catch (error) {
     return res.status(500).send(error.message)
   }
 }
 
+// Get first 100 account usernames or names starting with input letters
+const searchAccounts = async (req, res) => {
+  try {
+    const { text } = req.params
+    const users = await Accounts.findAndCountAll({
+      limit: 100, 
+      where: {
+        // [Op.iLike]: {
+        //   // [Op.or] : [{username: text + '%', name: text + '%'}]
+        //   username: text + '%'
+        // }
+        username: Sequelize.where(
+                    Sequelize.fn('LOWER', Sequelize.col('username')), 'LIKE', text + '%')
+      }
+    })
+    return res.status(200).json({ users })
+  } catch (error) {
+    console.log(error)
+    return res.status(500).send(error.message)
+  }
+}
+
+// Creates account
 const createAccount = async (req, res) => {
   try {
     const user = await Accounts.create(req.body.params)
@@ -26,6 +45,7 @@ const createAccount = async (req, res) => {
   }
 }
 
+// Get the account by id
 const getAccountById = async (req, res) => {
   try {
     const { id } = req.params
@@ -41,7 +61,8 @@ const getAccountById = async (req, res) => {
   }
 }
 
-const updateAccounts = async (req, res) => {
+// Update account by id
+const updateAccount = async (req, res) => {
   try {
     const { id } = req.params
     const [updated] = await Accounts.update(req.body.params, {
@@ -56,6 +77,8 @@ const updateAccounts = async (req, res) => {
     return res.status(500).send(error.message)
   }
 }
+
+// Delete account by id
 const deleteAccount = async (req, res) => {
   try {
     const { id } = req.params
@@ -71,6 +94,7 @@ const deleteAccount = async (req, res) => {
   }
 }
 
+// Check if username exists
 const checkUsername = async (req, res) => {
   try {
     const { username } = req.params
@@ -86,6 +110,8 @@ const checkUsername = async (req, res) => {
   }
 }
 
+
+// Check if phone number exists
 const checkPhoneNumber = async (req, res) => {
   try {
     const { phone_number } = req.params
@@ -105,8 +131,9 @@ module.exports = {
   createAccount,
   getAllAccounts,
   getAccountById,
-  updateAccounts,
+  updateAccount,
   deleteAccount,
   checkUsername,
-  checkPhoneNumber
+  checkPhoneNumber,
+  searchAccounts
 }
