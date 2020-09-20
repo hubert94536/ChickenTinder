@@ -105,7 +105,6 @@ class FacebookService {
         // Retrieve accesstoken to delete use from Firebase
         AccessToken.getCurrentAccessToken()
           .then((accessToken) => {
-            console.log(accessToken)
             const credential = firebase.auth.FacebookAuthProvider.credential(
               accessToken)
             firebase.auth().currentUser.reauthenticateWithCredential(credential)

@@ -1,5 +1,5 @@
 const { Accounts } = require('./models.js')
-const {Yelp} = require('./yelpQuery.js')
+const Yelp = require('./yelpQuery.js')
 var sessions = {} // store temporary sessions
 var clients = {} // associates username with client id
 var clientsIds = {} // associates client id with username
