@@ -18,7 +18,7 @@ class Home extends React.Component {
       createPressed: false,
       profilePressed: false
     }
-    api.searchUsers("h").then(res=>console.log(res))
+    api.searchUsers("j").then(res=>console.log(res.userList))
     .catch(error=>console.log(error))
   }
 

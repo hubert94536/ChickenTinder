@@ -85,7 +85,8 @@ const getAllUsers = async () => {
           // returns individual user info
           return {
             name: users.name,
-            username: users.username
+            username: users.username,
+            photo: users.photo
           }
         })
       }
@@ -100,14 +101,15 @@ const searchUsers = async (text) => {
   return accountsApi
     .get(`/accounts/search/${text}`)
     .then(res => {
-      console.log(res)
       return {
         status: res.status,
-        userList: res.data.users.map(function (users) {
+        count: res.data.users.count,
+        userList: res.data.users.rows.map(function (users) {
           // returns individual user info
           return {
             name: users.name,
-            username: users.username
+            username: users.username,
+            photo: users.photo
           }
         })
       }
@@ -139,7 +141,8 @@ const getUser = async () => {
         username: res.data.user.username,
         email: res.data.user.email,
         phone_number: res.data.user.phone_number,
-        name: res.name
+        name: res.name,
+        photo: user.photo
       }
     })
     .catch(error => {
