@@ -1,14 +1,8 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Button,
-  Alert,
-  TouchableHighlight,
-} from 'react-native';
+import {StyleSheet, View, Text, Button, TouchableHighlight} from 'react-native';
 import {facebookService} from './facebookService.js';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Alert from './alert.js';
 
 const hex = '#F25763';
 
@@ -17,6 +11,7 @@ export default class Login extends React.Component {
     super();
     this.state = {
       pressed: false,
+      alert: false,
     };
   }
 
@@ -63,11 +58,21 @@ export default class Login extends React.Component {
             Log in with Facebook
           </Text>
         </TouchableHighlight>
+        {this.state.alert && (
+          <Alert
+            title='Open "Facebook?"'
+            body="You will be directed to the Facebook app for account verification"
+            button={true}
+            buttonText="Open"
+            press={() => this.handleClick()}
+            cancel={() => this.cancelClick()}
+          />
+        )}
       </View>
     );
   }
 
-  handleClick = () => {
+  handleClick() {
     facebookService
       .loginWithFacebook()
       .then(result => {
@@ -76,25 +81,14 @@ export default class Login extends React.Component {
       .catch(error => {
         //Alert
       });
-  };
+  }
+
+  cancelClick() {
+    this.setState({alert: false});
+  }
 
   login() {
-    Alert.alert(
-      // title
-      'Open "Facebook"?',
-      // body
-      'You will be directed to the Facebook app for account verification.',
-      [
-        {
-          text: 'Open',
-          onPress: () => this.handleClick(),
-        },
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-      ],
-    );
+    this.setState({alert: true});
   }
 }
 

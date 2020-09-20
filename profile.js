@@ -8,7 +8,6 @@ import {
   TextInput,
   Modal,
   Dimensions,
-  Alert,
   Keyboard,
 } from 'react-native';
 import {BlurView} from '@react-native-community/blur';
@@ -20,6 +19,7 @@ import Friends from './friends.js';
 import Requests from './requests.js';
 import api from './api.js';
 import {facebookService} from './facebookService.js';
+import Alert from './alert.js';
 
 const hex = '#F25763';
 const font = 'CircularStd-Medium';
@@ -34,8 +34,12 @@ export default class UserProfileView extends Component {
     visible: false,
     changeName: false,
     changeUser: false,
+    //these are these are the button appearance
     logout: false,
     delete: false,
+    //these are for showing the alert
+    logoutAlert: false,
+    deleteAlert: false,
     // public: false,
   };
 
@@ -90,6 +94,22 @@ export default class UserProfileView extends Component {
         this.setState({usernameValue: this.state.username});
         Keyboard.dismiss();
       });
+  }
+
+  handleDelete() {
+    facebookService.deleteUser();
+  }
+
+  cancelDelete() {
+    this.setState({deleteAlert: false});
+  }
+
+  handleLogout() {
+    facebookService.logoutWithFacebook();
+  }
+
+  cancelLogout() {
+    this.setState({logoutAlert: false});
   }
 
   render() {
@@ -289,7 +309,7 @@ export default class UserProfileView extends Component {
                   underlayColor={hex}
                   onShowUnderlay={() => this.setState({delete: true})}
                   onHideUnderlay={() => this.setState({delete: false})}
-                  onPress={() => facebookService.deleteUser()}
+                  onPress={() => this.setState({deleteAlert: true})}
                   style={{
                     alignSelf: 'center',
                     borderWidth: 2,
@@ -313,7 +333,7 @@ export default class UserProfileView extends Component {
                   underlayColor={hex}
                   onShowUnderlay={() => this.setState({logout: true})}
                   onHideUnderlay={() => this.setState({logout: false})}
-                  onPress={() => facebookService.logoutWithFacebook()}
+                  onPress={() => this.setState({logoutAlert: true})}
                   style={{
                     alignSelf: 'center',
                     borderWidth: 2,
@@ -332,6 +352,26 @@ export default class UserProfileView extends Component {
                     Logout
                   </Text>
                 </TouchableHighlight>
+                {this.state.deleteAlert && (
+                  <Alert
+                    title="Are you sure you want to delete your account?"
+                    body="You will not be able to recover your information"
+                    button={true}
+                    buttonText="Yes"
+                    press={() => this.handleDelete()}
+                    cancel={() => this.cancelDelete()}
+                  />
+                )}
+                {this.state.logoutAlert && (
+                  <Alert
+                    title="Are you sure you want to log out?"
+                    body="You will have to log back in"
+                    button={true}
+                    buttonText="Yes"
+                    press={() => this.handleLogout()}
+                    cancel={() => this.cancelLogout()}
+                  />
+                )}
               </View>
               {/* <View
                 style={{
