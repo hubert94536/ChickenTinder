@@ -70,7 +70,7 @@ const createFBUser = (name, id, username, email, photo) => {
       }
     })
     .catch(error => {
-      throw error
+      throw error.response.status 
     })
 }
 
@@ -91,7 +91,7 @@ const getAllUsers = () => {
       }
     })
     .catch(error => {
-      throw error
+      throw error.response.status
     })
 }
 
@@ -103,7 +103,7 @@ const deleteUser = () => {
       return res.status
     })
     .catch(error => {
-      throw error
+      throw error.response.status
     })
 }
 
@@ -121,7 +121,7 @@ const getUser = () => {
       }
     })
     .catch(error => {
-      throw error
+      throw error.response.status
     })
 }
 
@@ -173,7 +173,7 @@ const updateUser = req => {
       }
     })
     .catch(error => {
-      throw error
+      throw error.response.status
     })
 }
 
@@ -185,7 +185,7 @@ const checkUsername = username => {
       return res.status
     })
     .catch(error => {
-      throw error
+      throw error.response.status
     })
 }
 
@@ -197,7 +197,7 @@ const checkPhoneNumber = phoneNumber => {
       return res.status
     })
     .catch(error => {
-      throw error
+      throw error.response.status
     })
 }
 
