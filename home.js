@@ -18,8 +18,8 @@ class Home extends React.Component {
       createPressed: false,
       profilePressed: false
     }
-    const user = api.searchUsers("h")
-    console.log(user)
+    api.searchUsers("h").then(res=>console.log(res))
+    .catch(error=>console.log(error))
   }
 
   underlayShowCreate() {
