@@ -30,7 +30,7 @@ const config = {
 firebase.initializeApp(config)
 
 class FacebookService {
-  loginWithFacebook = () => {
+  loginWithFacebook = async () => {
     // Attempt a login using the Facebook login dialog asking for default permissions.
     return LoginManager.logInWithPermissions(['public_profile', 'email'])
       .then(login => {

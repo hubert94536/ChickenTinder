@@ -1,5 +1,5 @@
 const { Accounts } = require('./models.js')
-const { Op } = require('sequelize')
+const { Sequelize, Op } = require('sequelize')
 
 // Get all accounts
 const getAllAccounts = async (req, res) => {
@@ -18,14 +18,17 @@ const searchAccounts = async (req, res) => {
     const users = await Accounts.findAndCountAll({
       limit: 100, 
       where: {
-        [Op.iLike]: {
-          // [Op.or] : [{username: text + '%', name: text + '%'}]
-          username: text + '%'
-        }
+        // [Op.iLike]: {
+        //   // [Op.or] : [{username: text + '%', name: text + '%'}]
+        //   username: text + '%'
+        // }
+        username: Sequelize.where(
+                    Sequelize.fn('LOWER', Sequelize.col('username')), 'LIKE', text + '%')
       }
     })
     return res.status(200).json({ users })
   } catch (error) {
+    console.log(error)
     return res.status(500).send(error.message)
   }
 }

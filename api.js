@@ -51,7 +51,7 @@ const accountsApi = axios.create({
 })
 
 // creates user and returns id
-const createFBUser = (name, id, username, email, photo) => {
+const createFBUser = async (name, id, username, email, photo) => {
   return accountsApi
     .post('/accounts', {
       params: {
@@ -75,7 +75,7 @@ const createFBUser = (name, id, username, email, photo) => {
 }
 
 // gets list of users
-const getAllUsers = () => {
+const getAllUsers = async () => {
   return accountsApi
     .get('/accounts')
     .then(res => {
@@ -96,7 +96,7 @@ const getAllUsers = () => {
 }
 
 // gets first 100 account usernames/names starting with text input
-const searchUsers = (text) => {
+const searchUsers = async (text) => {
   return accountsApi
     .get(`/accounts/search/${text}`)
     .then(res => {
@@ -118,7 +118,7 @@ const searchUsers = (text) => {
 }
 
 // deletes user and returns status
-const deleteUser = () => {
+const deleteUser = async () => {
   return accountsApi
     .delete(`/accounts/${myId}`)
     .then(res => {
@@ -130,7 +130,7 @@ const deleteUser = () => {
 }
 
 // gets user by id and returns user info
-const getUser = () => {
+const getUser = async () => {
   return accountsApi
     .get(`/accounts/${myId}`)
     .then(res => {
@@ -148,7 +148,7 @@ const getUser = () => {
 }
 
 // update email and returns status
-const updateEmail = info => {
+const updateEmail = async (info) => {
   const req = {
     email: info
   }
@@ -156,7 +156,7 @@ const updateEmail = info => {
 }
 
 // update username and returns status
-const updateUsername = info => {
+const updateUsername = async (info) => {
   const req = {
     username: info
   }
@@ -164,7 +164,7 @@ const updateUsername = info => {
 }
 
 // update username and returns status
-const updateName = info => {
+const updateName = async (info) => {
   const req = {
     name: info
   }
@@ -172,7 +172,7 @@ const updateName = info => {
 }
 
 // update username and returns status
-const updatePhoneNumber = info => {
+const updatePhoneNumber = async (info) => {
   const req = {
     phone_number: info
   }
@@ -180,7 +180,7 @@ const updatePhoneNumber = info => {
 }
 
 // updates user and returns status
-const updateUser = req => {
+const updateUser = async (req) => {
   return accountsApi
     .put(`/accounts/${myId}`, {
       params: req
@@ -200,7 +200,7 @@ const updateUser = req => {
 }
 
 // checks username and returns status
-const checkUsername = username => {
+const checkUsername = async (username) => {
   return accountsApi
     .get(`/username/${username}`)
     .then(res => {
@@ -212,7 +212,7 @@ const checkUsername = username => {
 }
 
 // checks phone number and returns status
-const checkPhoneNumber = phoneNumber => {
+const checkPhoneNumber = async (phoneNumber) => {
   return accountsApi
     .get(`/phoneNumber/${phoneNumber}`)
     .then(res => {
