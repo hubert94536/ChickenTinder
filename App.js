@@ -57,12 +57,10 @@
 
 import React from 'react';
 import {View, Text} from 'react-native';
-import Login from './login.js';
-
-const hex = '#F25763';
+import Match from './match.js';
 
 export default class App extends React.Component {
   render() {
-    return <Login />;
+    return <Match />;
   }
 }

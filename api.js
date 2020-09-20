@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { API_KEY, ID } from 'react-native-dotenv'
+import { ID } from 'react-native-dotenv'
 //import { View, Text } from PermissionsAndroid from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 
@@ -46,52 +46,9 @@ AsyncStorage.getItem(ID).then(res => {
   myId = res
 })
 
-// setting up Yelp API base caller
-const yelpApi = axios.create({
-  baseURL: 'https://api.yelp.com/v3',
-  headers: {
-    Authorization: `Bearer ${API_KEY}`
-  }
-})
-
 const accountsApi = axios.create({
   baseURL: 'https://wechews.herokuapp.com'
 })
-
-// getting list of resturants
-const getRestaurants = (name, place) => {
-  return (
-    yelpApi
-      .get('/businesses/search', {
-        params: {
-          term: name,
-          location: place
-        }
-      })
-      // returns business info from Yelp
-      .then(res => {
-        return {
-          total: res.data.total,
-          businessList: res.data.businesses.map(function (business) {
-            return {
-              name: business.name,
-              distance: business.distance,
-              categories: business.categories,
-              reviewCount: business.review_count,
-              rating: business.rating,
-              price: business.price,
-              phone: business.display_phone,
-              location: business.location,
-              isClosed: business.is_closed
-            }
-          })
-        }
-      })
-      .catch(error => {
-        return Promise.reject(new Error(error.response.status))
-      })
-  )
-}
 
 // creates user and returns id
 const createFBUser = (name, id, username, email, photo) => {
@@ -256,7 +213,6 @@ const checkPhoneNumber = phoneNumber => {
 }
 
 export default {
-  getRestaurants,
   createFBUser,
   getAllUsers,
   deleteUser,
