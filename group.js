@@ -5,13 +5,13 @@ import {
   StyleSheet,
   ScrollView,
   TouchableHighlight,
-  Alert,
 } from 'react-native';
 import Card from './groupCard.js';
-import { USERNAME } from 'react-native-dotenv';
+import {USERNAME} from 'react-native-dotenv';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 import socket from './socket.js';
+import Alert from './alert.js';
 
 const hex = '#F25763';
 const font = 'CircularStd-Medium';
@@ -31,9 +31,11 @@ export default class Group extends React.Component {
       groupName: members[Object.keys(members)[0]].name.split(' ')[0],
       needFilters: Object.keys(members).filter(user => !user.filters).length,
       start: false,
-      username: myUsername
+      username: myUsername,
+      //show/hide the alerts
+      leaveAlert: false,
+      endAlert: false,
     };
-
 
     memberList = [];
     for (var user in this.state.members) {
@@ -58,11 +60,11 @@ export default class Group extends React.Component {
   }
 
   underlayShow() {
-    this.setState({ start: true });
+    this.setState({start: true});
   }
 
   underlayHide() {
-    this.setState({ start: false });
+    this.setState({start: false});
   }
 
   render() {
@@ -92,54 +94,40 @@ export default class Group extends React.Component {
     });
   }
 
-  leaveAlert() {
-    Alert.alert(
-      //title
-      'Are you sure you want to leave?',
-      //body
-      'You will will not be able to return without invitation',
-      [{
-        text: 'Yes',
-        onPress: () => this.leaveGroup(),
-      }, {
-        text: 'Cancel',
-        style: 'cancel',
-      }]
-    );
-  }
-
-  endSession() {
-    Alert.alert(
-      //title
-      'Are you sure you want to end the session?',
-      //body
-      'You will not be able to return',
-      [{
-        text: 'Yes',
-        onPress: () => this.endGroup(),
-      }, {
-        text: 'Cancel',
-        style: 'cancel',
-      }]
-    );
+  cancelAlert() {
+    this.state.host == this.state.username
+      ? this.setState({endAlert: false})
+      : this.setState({leaveAlert: false});
   }
 
   render() {
     return (
       <View style={styles.main}>
         <View style={styles.top}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
             <Text style={styles.groupTitle}>
-              {this.state.host == this.state.username ?
-                'Your Group' : `${this.state.groupName}'s Group`}
+              {this.state.host == this.state.username
+                ? 'Your Group'
+                : `${this.state.groupName}'s Group`}
             </Text>
             <TouchableHighlight
-              onShowUnderlay={() => this.setState({ leaveGroup: true })}
-              onHideUnderlay={() => this.setState({ leaveGroup: false })}
-              style={this.state.host == this.state.username ?
-                styles.end : styles.leave}
-              onPress={() => this.state.host == this.state.username ?
-                this.endSession() : this.leaveAlert()}
+              onShowUnderlay={() => this.setState({leaveGroup: true})}
+              onHideUnderlay={() => this.setState({leaveGroup: false})}
+              style={
+                this.state.host == this.state.username
+                  ? styles.end
+                  : styles.leave
+              }
+              onPress={() =>
+                this.state.host == this.state.username
+                  ? this.setState({endAlert: true})
+                  : this.setState({leaveAlert: true})
+              }
               underlayColor="white">
               <Text
                 style={
@@ -147,12 +135,11 @@ export default class Group extends React.Component {
                     ? styles.leaveTextPressed
                     : styles.leaveText
                 }>
-                {this.state.host == this.state.username ?
-                  'End' : 'Leave'}
+                {this.state.host == this.state.username ? 'End' : 'Leave'}
               </Text>
             </TouchableHighlight>
           </View>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={{flexDirection: 'row'}}>
             <Icon name="user" style={styles.icon} />
             <Text
               style={{
@@ -167,15 +154,15 @@ export default class Group extends React.Component {
               waiting for {this.state.needFilters} member filters
             </Text>
           </View>
-          <View style={{ flexDirection: 'row', margin: '4%' }}>
+          <View style={{flexDirection: 'row', margin: '4%'}}>
             <Icon
               name="chevron-left"
-              style={{ color: 'white', fontFamily: font, fontSize: 16 }}
+              style={{color: 'white', fontFamily: font, fontSize: 16}}
             />
-            <Text
-              style={{ color: 'white', fontFamily: font, marginLeft: '3%' }}>
-              {this.state.username === this.state.host ? 'Swipe for host menu' : 'Swipe for filters'}
-
+            <Text style={{color: 'white', fontFamily: font, marginLeft: '3%'}}>
+              {this.state.username === this.state.host
+                ? 'Swipe for host menu'
+                : 'Swipe for filters'}
             </Text>
           </View>
         </View>
@@ -191,25 +178,48 @@ export default class Group extends React.Component {
               onHideUnderlay={this.underlayHide.bind(this)}
               onShowUnderlay={this.underlayShow.bind(this)}
               onPress={() => console.log('start round')}
-              style={this.state.start ?
-                styles.bottomButton : styles.bottomButtonClear}>
-              <Text
-                style={
-                  styles.buttonText
-                }>
-                Start Round
-              </Text>
+              style={
+                this.state.start
+                  ? styles.bottomButton
+                  : styles.bottomButtonClear
+              }>
+              <Text style={styles.buttonText}>Start Round</Text>
             </TouchableHighlight>
           )}
           {this.state.host !== this.state.username && (
-            <TouchableHighlight style={this.state.start ?
-              styles.pressed : styles.bottomButtonClear}>
-              <Text style={this.state.start ? styles.pressedText : styles.buttonText}>
+            <TouchableHighlight
+              style={
+                this.state.start ? styles.pressed : styles.bottomButtonClear
+              }>
+              <Text
+                style={
+                  this.state.start ? styles.pressedText : styles.buttonText
+                }>
                 {this.state.start ? 'Ready!' : 'Waiting...'}
               </Text>
             </TouchableHighlight>
           )}
         </View>
+        {this.state.leaveAlert && (
+          <Alert
+            title="Are you sure you want to leave?"
+            body="You will will not be able to return without invitation"
+            button={true}
+            buttonText="Yes"
+            press={() => this.leaveGroup()}
+            cancel={() => this.cancelAlert()}
+          />
+        )}
+        {this.state.endAlert && (
+          <Alert
+            title="Are you sure you want to end the session?"
+            body="You will not be able to return"
+            button={true}
+            buttonText="Yes"
+            press={() => this.endGroup()}
+            cancel={() => this.cancelAlert()}
+          />
+        )}
       </View>
     );
   }
@@ -231,7 +241,7 @@ const styles = StyleSheet.create({
     fontFamily: font,
   },
   leave: {
-    marginLeft: '18%',
+    marginRight: '2%',
     marginTop: '6%',
     borderRadius: 25,
     borderWidth: 2.5,
