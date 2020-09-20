@@ -64,14 +64,13 @@ const createFBUser = (name, id, username, email, photo) => {
       }
     })
     .then(res => {
-      console.log(res.data.user)
       return {
         id: res.data.user.id,
         status: res.status
       }
     })
     .catch(error => {
-      return Promise.reject(new Error(error.response.status))
+      throw error
     })
 }
 
@@ -80,7 +79,6 @@ const getAllUsers = () => {
   return accountsApi
     .get('/accounts')
     .then(res => {
-      console.log(res.data)
       return {
         status: res.status,
         userList: res.data.users.map(function (users) {
@@ -93,7 +91,7 @@ const getAllUsers = () => {
       }
     })
     .catch(error => {
-      return Promise.reject(new Error(error.response.status))
+      throw error
     })
 }
 
@@ -102,11 +100,10 @@ const deleteUser = () => {
   return accountsApi
     .delete(`/accounts/${myId}`)
     .then(res => {
-      console.log(res.status)
       return res.status
     })
     .catch(error => {
-      return Promise.reject(new Error(error.response.status))
+      throw error
     })
 }
 
@@ -115,21 +112,16 @@ const getUser = () => {
   return accountsApi
     .get(`/accounts/${myId}`)
     .then(res => {
-      console.log(res.data)
       return {
         status: res.status,
-        user: res.data.user.map(user => {
-          return {
-            name: user.name,
-            username: user.username,
-            email: user.email,
-            phone_number: user.phone_number
-          }
-        })
+        username: res.data.user.username,
+        email: res.data.user.email,
+        phone_number: res.data.user.phone_number,
+        name: res.name
       }
     })
     .catch(error => {
-      return Promise.reject(new Error(error.response.status))
+      throw error
     })
 }
 
@@ -172,7 +164,6 @@ const updateUser = req => {
       params: req
     })
     .then(res => {
-      console.log(res.data)
       return {
         status: res.status,
         name: res.data.name,
@@ -182,7 +173,7 @@ const updateUser = req => {
       }
     })
     .catch(error => {
-      return Promise.reject(new Error(error.response.status))
+      throw error
     })
 }
 
@@ -194,8 +185,7 @@ const checkUsername = username => {
       return res.status
     })
     .catch(error => {
-      console.log(error.response.status)
-      return Promise.reject(new Error(error.response.status))
+      throw error
     })
 }
 
@@ -204,11 +194,10 @@ const checkPhoneNumber = phoneNumber => {
   return accountsApi
     .get(`/phoneNumber/${phoneNumber}`)
     .then(res => {
-      console.log(res.status)
       return res.status
     })
     .catch(error => {
-      return Promise.reject(new Error(error.response.status))
+      throw error
     })
 }
 
