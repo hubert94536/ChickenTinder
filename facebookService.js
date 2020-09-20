@@ -65,7 +65,6 @@ class FacebookService {
           })
           return 'Home'
         }
-        AsyncStorage.setItem(USERNAME, res.username)
         return 'Username'
       })
       .catch(error => {

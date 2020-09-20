@@ -19,7 +19,7 @@ const searchAccounts = async (req, res) => {
       limit: 100, 
       where: {
         [Op.iLike]: {
-          [Op.or] : [{username: text, name: text}]
+          [Op.or] : [{username: text + '%', name: text + '%'}]
         }
       }
     })

@@ -100,6 +100,7 @@ const searchUsers = (text) => {
   return accountsApi
     .get(`/accounts/search/${text}`)
     .then(res => {
+      console.log(res)
       return {
         status: res.status,
         userList: res.data.users.map(function (users) {

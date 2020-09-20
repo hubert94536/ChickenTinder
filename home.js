@@ -7,7 +7,7 @@ import {
   Alert,
   TouchableHighlight
 } from 'react-native'
-
+import api from './api.js'
 import UserProfileView from './profile.js'
 import socket from './socket.js'
 
@@ -18,6 +18,8 @@ class Home extends React.Component {
       createPressed: false,
       profilePressed: false
     }
+    const user = api.searchUsers("h")
+    console.log(user)
   }
 
   underlayShowCreate() {
