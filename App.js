@@ -57,10 +57,10 @@
 
 import React from 'react';
 import {View, Text} from 'react-native';
-import Match from './match.js';
+import Username from './username.js';
 
 export default class App extends React.Component {
   render() {
-    return <Match />;
+    return <Username />;
   }
 }

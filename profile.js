@@ -40,6 +40,9 @@ export default class UserProfileView extends Component {
     //these are for showing the alert
     logoutAlert: false,
     deleteAlert: false,
+    //error alerts
+    errorAlert: false,
+    takenAlert: false,
     // public: false,
   };
 
@@ -64,7 +67,7 @@ export default class UserProfileView extends Component {
         Keyboard.dismiss();
       })
       .catch(err => {
-        Alert.alert('Error changing name. Please try again.');
+        this.setState({errorAlert: true});
         this.setState({
           nameValue: this.state.name,
         });
@@ -87,13 +90,21 @@ export default class UserProfileView extends Component {
       .catch(error => {
         console.log(error);
         if (error === 404) {
-          Alert.alert('Username taken!');
+          this.setState({takenAlert: true});
         } else {
-          Alert.alert('Error changing username. Please try again.');
+          this.setState({errorAlert: true});
         }
         this.setState({usernameValue: this.state.username});
         Keyboard.dismiss();
       });
+  }
+
+  closeTaken() {
+    this.setState({takenAlert: false});
+  }
+
+  closeError() {
+    this.setState({errorAlert: false});
   }
 
   handleDelete() {
@@ -254,7 +265,7 @@ export default class UserProfileView extends Component {
                   onPress={() => this.changeName()}>
                   <Text
                     style={
-                      this.state.changeUser
+                      this.state.changeName
                         ? styles.changeTextSelected
                         : styles.changeText
                     }>
@@ -370,6 +381,24 @@ export default class UserProfileView extends Component {
                     buttonText="Yes"
                     press={() => this.handleLogout()}
                     cancel={() => this.cancelLogout()}
+                  />
+                )}
+                {this.state.errorAlert && (
+                  <Alert
+                    title="Error, please try again"
+                    button={true}
+                    buttonText="Close"
+                    press={() => this.closeError()}
+                    cancel={() => this.closeError()}
+                  />
+                )}
+                {this.state.takenAlert && (
+                  <Alert
+                    title="Username taken!"
+                    button={true}
+                    buttonText="Close"
+                    press={() => this.closeTaken()}
+                    cancel={() => this.closeTaken()}
                   />
                 )}
               </View>
