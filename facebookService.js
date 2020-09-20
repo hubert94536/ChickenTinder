@@ -43,7 +43,7 @@ class FacebookService {
         const credential = firebase.auth.FacebookAuthProvider.credential(
           data.accessToken,
         )
-        // Sign in with Firebase oauth
+        // Sign in with Firebase oauth using credential and authentication token
         return firebase.auth().signInWithCredential(credential)
       })
       .then(currentUser => {
@@ -57,14 +57,15 @@ class FacebookService {
           EMAIL,
           currentUser.additionalUserInfo.profile.email)
         AsyncStorage.setItem(PHOTO, currentUser.user.photoURL)
+        // Get username from database if not new user
         if (!currentUser.additionalUserInfo.isNewUser) {
           api.getUser()
           .then(res => {
-            AsyncStorage.setItem(
-              USERNAME, res.username)
+            AsyncStorage.setItem(USERNAME, res.username)
           })
           return 'Home'
         }
+        AsyncStorage.setItem(USERNAME, res.username)
         return 'Username'
       })
       .catch(error => {

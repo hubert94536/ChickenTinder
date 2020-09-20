@@ -95,6 +95,27 @@ const getAllUsers = () => {
     })
 }
 
+// gets first 100 account usernames/names starting with text input
+const searchUsers = (text) => {
+  return accountsApi
+    .get(`/accounts/search/${text}`)
+    .then(res => {
+      return {
+        status: res.status,
+        userList: res.data.users.map(function (users) {
+          // returns individual user info
+          return {
+            name: users.name,
+            username: users.username
+          }
+        })
+      }
+    })
+    .catch(error => {
+      throw error.response.status
+    })
+}
+
 // deletes user and returns status
 const deleteUser = () => {
   return accountsApi
@@ -211,5 +232,6 @@ export default {
   updateName,
   updatePhoneNumber,
   checkUsername,
-  checkPhoneNumber
+  checkPhoneNumber,
+  searchUsers
 }
