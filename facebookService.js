@@ -72,7 +72,6 @@ class FacebookService {
         // if (errorCode === 'auth/account-exists-with-different-credential') {
         //   alert('Email already associated with another account.');
         //   // Handle account linking here, if using.
-        console.log(error)
         throw error
       });
   };

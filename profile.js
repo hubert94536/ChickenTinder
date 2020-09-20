@@ -59,7 +59,7 @@ export default class UserProfileView extends Component {
 
   //getting current user's info
 
-  changeName() {
+  async changeName() {
     if (this.state.nameValue !== this.state.name) {
       api.updateName(this.state.nameValue)
         .then(res => {
@@ -78,7 +78,7 @@ export default class UserProfileView extends Component {
     }
   }
 
-  changeUsername() {
+  async changeUsername() {
     if (this.state.username !== this.state.usernameValue) {
       const user = this.state.usernameValue;
       api.checkUsername(user)
@@ -104,7 +104,7 @@ export default class UserProfileView extends Component {
     }
   }
 
-  handleDelete() {
+  async handleDelete() {
     facebookService.deleteUser()
       .then(() => {
         // close settings and navigate to Login
@@ -121,7 +121,7 @@ export default class UserProfileView extends Component {
     this.setState({ deleteAlert: false });
   }
 
-  handleLogout() {
+  async handleLogout() {
     facebookService.logoutWithFacebook()
       .then(() => {
         // close settings and navigate to Login
