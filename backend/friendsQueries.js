@@ -1,63 +1,36 @@
 const { Accounts, Friends } = require("./models");
 const { Op } = require("sequelize");
 
-// const createFriends = async (req, res) => {
-//     try {
-//         const main = req.body.params.main_user;
-//         const friend = req.body.params.friend_user;
-//         const user = await Friends.create(
-//             {
-//                 main_user: main,
-//                 f_status: "requested",
-//                 friend_user: {
-//                     username: friend
-//                 }
-                
-
-//             },
-//             {
-//                 include: [Accounts]
-//             }
-//         );
-//         const friendUser = await Friends.create(
-//             {
-//                 main_user: friend,
-//                 f_status: "pending request",
-//                 friend_user: {
-//                     username: main
-//                 }
-                
-
-//             },
-//             {
-//                 include: [Accounts]
-//             }
-//         );
-//         return res.status(201).json({
-//             user
-//         });
-//     } catch (error) {
-//         return res.status(500).json({ error: error.message})
-//     }
-// }
-
 const createFriends = async (req, res) => {
     try {
-        const main = req.body.params.main;
-        const friend = req.body.params.friend;
+        const main = req.body.params.main_user;
+        const friend = req.body.params.friend_user;
         const user = await Friends.create(
             {
                 main_user: main,
                 f_status: "requested",
-                friend_user: friend
+                friend_user: {
+                    username: friend
+                }
+                
 
+            },
+            {
+                include: [Accounts]
             }
         );
         const friendUser = await Friends.create(
             {
                 main_user: friend,
                 f_status: "pending request",
-                friend_user: main
+                friend_user: {
+                    username: main
+                }
+                
+
+            },
+            {
+                include: [Accounts]
             }
         );
         return res.status(201).json({
@@ -67,6 +40,33 @@ const createFriends = async (req, res) => {
         return res.status(500).json({ error: error.message})
     }
 }
+
+// const createFriends = async (req, res) => {
+//     try {
+//         const main = req.body.params.main;
+//         const friend = req.body.params.friend;
+//         const user = await Friends.create(
+//             {
+//                 main_user: main,
+//                 f_status: "requested",
+//                 friend_user: friend
+
+//             }
+//         );
+//         const friendUser = await Friends.create(
+//             {
+//                 main_user: friend,
+//                 f_status: "pending request",
+//                 friend_user: main
+//             }
+//         );
+//         return res.status(201).json({
+//             user
+//         });
+//     } catch (error) {
+//         return res.status(500).json({ error: error.message})
+//     }
+// }
 
 const getUserFriends = async (req, res) => {
     try {

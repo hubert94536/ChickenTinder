@@ -63,9 +63,12 @@ class Home extends React.Component {
     friendsapi.createFriendship("hco", "hubes"),
     friendsapi.createFriendship("ishaaa", "hubes"),
     friendsapi.createFriendship("hco", "ishaaa"),
-    // friendsapi.acceptFriendRequest("hubes", "ishaaa"),
+    friendsapi.acceptFriendRequest("hubes", "ishaaa"),
+    friendsapi.denyFriendRequest("hubes", "hco")
     // console.log(friendsapi.getFriends("ishaaa"))
-    console.log(friendsapi.getRequests("hubes"))
+    // console.log(friendsapi.getFriends("hubes")),
+    // friendsapi.removeFriend("hco", "hubes"),
+    // console.log(friendsapi.getFriends("hubes"))
   }
 
   render() {
