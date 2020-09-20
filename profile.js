@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,18 +8,18 @@ import {
   TextInput,
   Modal,
   Dimensions,
-  Alert,
   Keyboard,
 } from 'react-native';
-import { BlurView } from '@react-native-community/blur';
+import {BlurView} from '@react-native-community/blur';
 import AsyncStorage from '@react-native-community/async-storage';
-import { NAME, USERNAME, PHOTO } from 'react-native-dotenv';
+import {NAME, USERNAME, PHOTO} from 'react-native-dotenv';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Swiper from 'react-native-swiper';
 import Friends from './friends.js';
 import Requests from './requests.js';
 import api from './api.js';
-import { facebookService } from './facebookService.js';
+import {facebookService} from './facebookService.js';
+import Alert from './alert.js';
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -33,6 +33,7 @@ AsyncStorage.getItem(NAME).then(res =>
 AsyncStorage.getItem(USERNAME).then(res =>
   username = res)
 export default class UserProfileView extends Component {
+
   constructor (props) {
     super(props)
     this.state = {
@@ -45,8 +46,12 @@ export default class UserProfileView extends Component {
       visible: false,
       changeName: false,
       changeUser: false,
+      // show button appearance
       logout: false,
       delete: false,
+      // show alert
+      logoutAlert: false,
+      deleteAlert: false,
       // public: false,
     }
 
@@ -59,7 +64,7 @@ export default class UserProfileView extends Component {
       .then(res => {
         // update name locally
         AsyncStorage.setItem(NAME, this.state.name);
-        this.setState({ name: this.state.nameValue });
+        this.setState({name: this.state.nameValue});
         Keyboard.dismiss();
       })
       .catch(err => {
@@ -79,7 +84,7 @@ export default class UserProfileView extends Component {
         // update username locally
         api.updateUsername(user).then(() => {
           AsyncStorage.setItem(USERNAME, user);
-          this.setState({ username: this.state.usernameValue });
+          this.setState({username: this.state.usernameValue});
           Keyboard.dismiss();
         });
       })
@@ -90,25 +95,12 @@ export default class UserProfileView extends Component {
         } else {
           Alert.alert('Error changing username. Please try again.');
         }
-        this.setState({ usernameValue: this.state.username });
+        this.setState({usernameValue: this.state.username});
         Keyboard.dismiss();
       });
   }
 
-  logOut() {
-    facebookService.logoutWithFacebook()
-    .then(() => {
-      // close settings and navigate to Login
-      this.setState({visible: false})
-      this.props.navigation.navigate('Login')
-    })
-    .catch ((error) => {
-      console.log(error)
-      //alert
-    })
-  }
-
-  deleteUser() {
+  handleDelete() {
     facebookService.deleteUser()
     .then(()=> {
       // close settings and navigate to Login
@@ -121,11 +113,30 @@ export default class UserProfileView extends Component {
     })
   }
 
+  cancelDelete() {
+    this.setState({deleteAlert: false});
+  }
+
+  handleLogout() {
+    facebookService.logoutWithFacebook()
+    .then(() => {
+      // close settings and navigate to Login
+      this.setState({visible: false})
+      this.props.navigation.navigate('Login')
+    })
+    .catch ((error) => {
+      console.log(error)
+      //alert
+    })
+  }
+
+  }
+
   render() {
     return (
-      <View style={{ backgroundColor: 'white' }}>
+      <View style={{backgroundColor: 'white'}}>
         <View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Icon
               name="chevron-left"
               style={styles.topIcons}
@@ -134,7 +145,7 @@ export default class UserProfileView extends Component {
             <Icon
               name="cog"
               style={styles.topIcons}
-              onPress={() => this.setState({ visible: true })}
+              onPress={() => this.setState({visible: true})}
             />
           </View>
           <Text style={styles.myProfile}>My Profile</Text>
@@ -145,16 +156,16 @@ export default class UserProfileView extends Component {
               }}
               style={styles.avatar}
             />
-            <View style={{ fontFamily: font }}>
-              <Text style={{ fontSize: 28, fontWeight: 'bold' }}>
+            <View style={{fontFamily: font}}>
+              <Text style={{fontSize: 28, fontWeight: 'bold'}}>
                 {this.state.name}
               </Text>
-              <Text style={{ fontSize: 17 }}>
+              <Text style={{fontSize: 17}}>
                 {'@' + this.state.usernameValue}
               </Text>
             </View>
           </View>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={{flexDirection: 'row'}}>
             <TouchableHighlight
               underlayColor="#fff"
               style={this.state.friends ? styles.selected : styles.unselected}
@@ -183,12 +194,12 @@ export default class UserProfileView extends Component {
             </TouchableHighlight>
           </View>
         </View>
-        <View style={{ height: '100%', marginTop: '5%' }}>
+        <View style={{height: '100%', marginTop: '5%'}}>
           <Swiper
             ref="swiper"
             loop={false}
             onMomentumScrollEnd={() =>
-              this.setState({ friends: !this.state.friends })
+              this.setState({friends: !this.state.friends})
             }>
             <Friends />
             <Requests />
@@ -199,7 +210,7 @@ export default class UserProfileView extends Component {
             blurType="light"
             blurAmount={20}
             reducedTransparencyFallbackColor="white"
-            style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}
+            style={{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
           />
         )}
         {this.state.visible && (
@@ -225,7 +236,7 @@ export default class UserProfileView extends Component {
                 </Text>
                 <Icon
                   name="times-circle"
-                  style={{ color: hex, fontFamily: font, fontSize: 30 }}
+                  style={{color: hex, fontFamily: font, fontSize: 30}}
                   onPress={() =>
                     this.setState({
                       visible: false,
@@ -242,7 +253,7 @@ export default class UserProfileView extends Component {
                   margin: '5%',
                 }}>
                 <View>
-                  <Text style={{ fontFamily: font, fontSize: 18 }}>Name:</Text>
+                  <Text style={{fontFamily: font, fontSize: 18}}>Name:</Text>
                   <TextInput
                     style={{
                       fontFamily: font,
@@ -252,14 +263,14 @@ export default class UserProfileView extends Component {
                       padding: 0,
                     }}
                     value={this.state.nameValue}
-                    onChangeText={text => this.setState({ nameValue: text })}
+                    onChangeText={text => this.setState({nameValue: text})}
                   />
                 </View>
                 <TouchableHighlight
                   style={styles.changeButtons}
                   underlayColor={hex}
-                  onShowUnderlay={() => this.setState({ changeName: true })}
-                  onHideUnderlay={() => this.setState({ changeName: false })}
+                  onShowUnderlay={() => this.setState({changeName: true})}
+                  onHideUnderlay={() => this.setState({changeName: false})}
                   onPress={() => this.changeName()}>
                   <Text
                     style={
@@ -278,7 +289,7 @@ export default class UserProfileView extends Component {
                   margin: '5%',
                 }}>
                 <View>
-                  <Text style={{ fontFamily: font, fontSize: 18 }}>
+                  <Text style={{fontFamily: font, fontSize: 18}}>
                     Username:
                   </Text>
                   <TextInput
@@ -290,14 +301,14 @@ export default class UserProfileView extends Component {
                       padding: 0,
                     }}
                     value={this.state.usernameValue}
-                    onChangeText={text => this.setState({ usernameValue: text })}
+                    onChangeText={text => this.setState({usernameValue: text})}
                   />
                 </View>
                 <TouchableHighlight
                   style={styles.changeButtons}
                   underlayColor={hex}
-                  onShowUnderlay={() => this.setState({ changeUser: true })}
-                  onHideUnderlay={() => this.setState({ changeUser: false })}
+                  onShowUnderlay={() => this.setState({changeUser: true})}
+                  onHideUnderlay={() => this.setState({changeUser: false})}
                   onPress={() => this.changeUsername()}>
                   <Text
                     style={
@@ -316,9 +327,10 @@ export default class UserProfileView extends Component {
                 }}>
                 <TouchableHighlight
                   underlayColor={hex}
-                  onShowUnderlay={() => this.setState({ delete: true })}
-                  onHideUnderlay={() => this.setState({ delete: false })}
-                  onPress={() => this.deleteUser()}
+                  onShowUnderlay={() => this.setState({delete: true})}
+                  onHideUnderlay={() => this.setState({delete: false})}
+                  onPress={() => this.setState({deleteAlert: true})}
+
                   style={{
                     alignSelf: 'center',
                     borderWidth: 2,
@@ -340,9 +352,10 @@ export default class UserProfileView extends Component {
                 </TouchableHighlight>
                 <TouchableHighlight
                   underlayColor={hex}
-                  onShowUnderlay={() => this.setState({ logout: true })}
-                  onHideUnderlay={() => this.setState({ logout: false })}
-                  onPress={() => this.logOut()}
+                  onShowUnderlay={() => this.setState({logout: true})}
+                  onHideUnderlay={() => this.setState({logout: false})}
+                  onPress={() => this.setState({logoutAlert: true})}
+
                   style={{
                     alignSelf: 'center',
                     borderWidth: 2,
@@ -361,6 +374,26 @@ export default class UserProfileView extends Component {
                     Logout
                   </Text>
                 </TouchableHighlight>
+                {this.state.deleteAlert && (
+                  <Alert
+                    title="Are you sure you want to delete your account?"
+                    body="You will not be able to recover your information"
+                    button={true}
+                    buttonText="Yes"
+                    press={() => this.handleDelete()}
+                    cancel={() => this.cancelDelete()}
+                  />
+                )}
+                {this.state.logoutAlert && (
+                  <Alert
+                    title="Are you sure you want to log out?"
+                    body="You will have to log back in"
+                    button={true}
+                    buttonText="Yes"
+                    press={() => this.handleLogout()}
+                    cancel={() => this.cancelLogout()}
+                  />
+                )}
               </View>
               {/* <View
                 style={{
@@ -448,7 +481,7 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     margin: '5%',
   },
-  userInfo: { flexDirection: 'row', alignItems: 'center' },
+  userInfo: {flexDirection: 'row', alignItems: 'center'},
   selected: {
     borderRadius: 40,
     borderColor: hex,
