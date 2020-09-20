@@ -32,7 +32,7 @@ export default class Alert extends Component {
           reducedTransparencyFallbackColor="white"
           style={{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
         />
-        <Modal transparent={true} animationType={'fade'}>
+        <Modal transparent={true} animationType={'none'}>
           <View style={styles.modal}>
             <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
               {this.props.button && (
@@ -100,6 +100,8 @@ const styles = StyleSheet.create({
     fontSize: 30,
     marginBottom: '3%',
     textAlign: 'center',
+    marginRight: '2%',
+    marginLeft: '2%',
   },
   body: {
     fontFamily: font,
@@ -114,6 +116,7 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     width: '50%',
     alignSelf: 'center',
+    marginBottom: '3%',
   },
   text: {
     fontFamily: font,
