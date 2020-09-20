@@ -21,44 +21,48 @@ import api from './api.js';
 import {facebookService} from './facebookService.js';
 import Alert from './alert.js';
 
-const hex = '#F25763';
-const font = 'CircularStd-Medium';
+const hex = '#F25763'
+const font = 'CircularStd-Medium'
+var img = ''
+var name = ''
+var username = ''
 
+AsyncStorage.getItem(PHOTO).then(res => img = res)
+AsyncStorage.getItem(NAME).then(res =>
+  name = res)
+AsyncStorage.getItem(USERNAME).then(res =>
+  username = res)
 export default class UserProfileView extends Component {
-  state = {
-    name: '',
-    username: '',
-    usernameValue: '',
-    image: '',
-    friends: true,
-    visible: false,
-    changeName: false,
-    changeUser: false,
-    //these are these are the button appearance
-    logout: false,
-    delete: false,
-    //these are for showing the alert
-    logoutAlert: false,
-    deleteAlert: false,
-    // public: false,
-  };
+
+  constructor (props) {
+    super(props)
+    this.state = {
+      name: name,
+      nameValue: name,
+      username: username,
+      usernameValue: username,
+      image: img,
+      friends: true,
+      visible: false,
+      changeName: false,
+      changeUser: false,
+      // show button appearance
+      logout: false,
+      delete: false,
+      // show alert
+      logoutAlert: false,
+      deleteAlert: false,
+      // public: false,
+    }
+
+  }
 
   //getting current user's info
 
-  componentDidMount() {
-    AsyncStorage.getItem(NAME).then(res =>
-      this.setState({name: res, nameValue: res}),
-    );
-    AsyncStorage.getItem(USERNAME).then(res =>
-      this.setState({username: res, usernameValue: res}),
-    );
-    AsyncStorage.getItem(PHOTO).then(res => this.setState({image: res}));
-  }
-
   changeName() {
-    api
-      .updateName(this.state.nameValue)
+    api.updateName(this.state.nameValue)
       .then(res => {
+        // update name locally
         AsyncStorage.setItem(NAME, this.state.name);
         this.setState({name: this.state.nameValue});
         Keyboard.dismiss();
@@ -75,9 +79,9 @@ export default class UserProfileView extends Component {
 
   changeUsername() {
     const user = this.state.usernameValue;
-    api
-      .checkUsername(user)
+    api.checkUsername(user)
       .then(() => {
+        // update username locally
         api.updateUsername(user).then(() => {
           AsyncStorage.setItem(USERNAME, user);
           this.setState({username: this.state.usernameValue});
@@ -97,7 +101,16 @@ export default class UserProfileView extends Component {
   }
 
   handleDelete() {
-    facebookService.deleteUser();
+    facebookService.deleteUser()
+    .then(()=> {
+      // close settings and navigate to Login
+      this.setState({visible: false})
+      this.props.navigation.navigate('Login')
+    })
+    .catch ((error) => {
+      console.log(error)
+      //alert
+    })
   }
 
   cancelDelete() {
@@ -105,11 +118,18 @@ export default class UserProfileView extends Component {
   }
 
   handleLogout() {
-    facebookService.logoutWithFacebook();
+    facebookService.logoutWithFacebook()
+    .then(() => {
+      // close settings and navigate to Login
+      this.setState({visible: false})
+      this.props.navigation.navigate('Login')
+    })
+    .catch ((error) => {
+      console.log(error)
+      //alert
+    })
   }
 
-  cancelLogout() {
-    this.setState({logoutAlert: false});
   }
 
   render() {
@@ -310,6 +330,7 @@ export default class UserProfileView extends Component {
                   onShowUnderlay={() => this.setState({delete: true})}
                   onHideUnderlay={() => this.setState({delete: false})}
                   onPress={() => this.setState({deleteAlert: true})}
+
                   style={{
                     alignSelf: 'center',
                     borderWidth: 2,
@@ -334,6 +355,7 @@ export default class UserProfileView extends Component {
                   onShowUnderlay={() => this.setState({logout: true})}
                   onHideUnderlay={() => this.setState({logout: false})}
                   onPress={() => this.setState({logoutAlert: true})}
+
                   style={{
                     alignSelf: 'center',
                     borderWidth: 2,

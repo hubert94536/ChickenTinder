@@ -43,32 +43,37 @@ class FacebookService {
         const credential = firebase.auth.FacebookAuthProvider.credential(
           data.accessToken,
         )
+        // Sign in with Firebase oauth
         return firebase.auth().signInWithCredential(credential)
       })
       .then(currentUser => {
-        if (currentUser.additionalUserInfo.isNewUser) {
-          AsyncStorage.setItem(UID, firebase.auth().currentUser.uid)
-          AsyncStorage.setItem(
-            NAME,
-            currentUser.additionalUserInfo.profile.name,
-          )
-          AsyncStorage.setItem(ID, currentUser.additionalUserInfo.profile.id)
-          AsyncStorage.setItem(
-            EMAIL,
-            currentUser.additionalUserInfo.profile.email,
-          )
-          AsyncStorage.setItem(PHOTO, currentUser.user.photoURL)
-          return 'Username';
-        } else {
-          return 'Home';
+        // Set user's info locally
+        AsyncStorage.setItem(UID, firebase.auth().currentUser.uid)
+        AsyncStorage.setItem(
+          NAME,
+          currentUser.additionalUserInfo.profile.name)
+        AsyncStorage.setItem(ID, currentUser.additionalUserInfo.profile.id)
+        AsyncStorage.setItem(
+          EMAIL,
+          currentUser.additionalUserInfo.profile.email)
+        AsyncStorage.setItem(PHOTO, currentUser.user.photoURL)
+        if (!currentUser.additionalUserInfo.isNewUser) {
+          api.getUser()
+          .then(res => {
+            AsyncStorage.setItem(
+              USERNAME, res.username)
+          })
+          return 'Home'
         }
+        return 'Username'
       })
       .catch(error => {
         //Account linking will be needed with email/phone_number login
         // if (errorCode === 'auth/account-exists-with-different-credential') {
         //   alert('Email already associated with another account.');
         //   // Handle account linking here, if using.
-        return Promise.reject(new Error(error.response.message))
+        console.log(error)
+        throw error
       });
   };
 
@@ -76,29 +81,39 @@ class FacebookService {
   //   return firebase.auth().currentUser;
   // }
 
-  //test logout
-  logoutWithFacebook = () => {
-    LoginManager.logOut()
-    firebase.logOut()
+  // Log out of Firebase and Facebook
+  logoutWithFacebook = async () => {
+    firebase.auth().signOut()
+      .then(() => {
+        LoginManager.logOut()
+        AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO])
+      })
+      .catch((error) => {
+        throw error
+      })
+
   };
 
-  deleteUser = () => {
-    api
-      .deleteUser()
+  deleteUser = async () => {
+    api.deleteUser()
       .then(() => {
+        // Need to refresh access token since old one expired
         AccessToken.refreshCurrentAccessTokenAsync()
       })
       .then(() => {
-        const accessToken = AccessToken.getCurrentAccessToken();
-        const credential = firebase.auth.FacebookAuthProvider.credential(
-          accessToken,
-        )
-        firebase.auth().currentUser.reauthenticateWithCredential(credential)
-        firebase.auth().currentUser.delete();
-        AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO])
+        // Retrieve accesstoken to delete use from Firebase
+        AccessToken.getCurrentAccessToken()
+          .then((accessToken) => {
+            console.log(accessToken)
+            const credential = firebase.auth.FacebookAuthProvider.credential(
+              accessToken)
+            firebase.auth().currentUser.reauthenticateWithCredential(credential)
+            firebase.auth().currentUser.delete();
+            AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO])
+          })
       })
       .catch(error => {
-        return Promise.reject(new Error(error.response.message))
+        throw error
       })
   };
   //getUser if needed
