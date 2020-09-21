@@ -66,9 +66,12 @@ const people = [
 ];
 
 export default class Search extends React.Component {
-  state = {
-    search: '',
-  };
+  constructor(props) {
+    super(props)
+    this.state = {
+      search: '',
+    }
+  }
 
   updateSearch = search => {
     this.setState({search});
