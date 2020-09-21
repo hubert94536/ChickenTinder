@@ -52,9 +52,12 @@ const people = [
 ];
 
 export default class Friends extends React.Component {
-  state = {
-    search: '',
-  };
+  constructor (props) {
+    super(props)
+    this.state = {
+      search: ''
+    }
+  }
 
   updateSearch = search => {
     this.setState({search});
@@ -62,18 +65,18 @@ export default class Friends extends React.Component {
 
   render() {
     const search = this.state.search;
-    const friends = [];
-    for (var i = 0; i < people.length; i++) {
-      friends.push(
-        <Card
-          key={i}
-          name={people[i].name}
-          username={people[i].username}
-          image={people[i].image}
-          friends={true}
-        />,
-      );
-    }
+    var friends = [];
+    // for (var i = 0; i < people.length; i++) {
+    //   friends.push(
+    //     <Card
+    //       key={i}
+    //       name={people[i].name}
+    //       username={people[i].username}
+    //       image={people[i].image}
+    //       friends={true}
+    //     />,
+    //   );
+    // }
     return (
       <View>
         <View>
