@@ -12,40 +12,40 @@ import UserProfileView from './profile.js'
 import socket from './socket.js'
 
 class Home extends React.Component {
-  constructor() {
+  constructor () {
     super()
     this.state = {
       createPressed: false,
       profilePressed: false
     }
-    api.searchUsers("j").then(res=>console.log(res.userList))
-    .catch(error=>console.log(error))
+    api.searchUsers('j').then(res => console.log(res.userList))
+      .catch(error => console.log(error))
   }
 
-  underlayShowCreate() {
+  underlayShowCreate () {
     this.setState({ createPressed: true })
   }
 
-  underlayHideCreate() {
+  underlayHideCreate () {
     this.setState({ createPressed: false })
   }
 
-  underlayShowProfile() {
+  underlayShowProfile () {
     this.setState({ profilePressed: true })
   }
 
-  underlayHideProfile() {
+  underlayHideProfile () {
     this.setState({ profilePressed: false })
   }
 
-  createGroup() {
+  createGroup () {
     socket.createRoom()
     socket.getSocket().on('update', res => {
       this.props.navigation.navigate('Group', res)
     })
   }
 
-  render() {
+  render () {
     return (
       <View
         style={{
