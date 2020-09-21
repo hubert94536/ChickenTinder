@@ -24,12 +24,21 @@ AsyncStorage.getItem(USERNAME).then(res => {
 export default class Group extends React.Component {
   constructor(props) {
     super(props);
-    const members = this.props.navigation.state.params.members;
+    const members = [
+      {
+        name: 'Hanna Co',
+        username: '@hannaco',
+      },
+    ];
+    // const members = this.props.navigation.state.params.members;
     this.state = {
       members: members,
-      host: this.props.navigation.state.params.host,
-      groupName: members[Object.keys(members)[0]].name.split(' ')[0],
-      needFilters: Object.keys(members).filter(user => !user.filters).length,
+      host: members[0],
+      groupName: 'Hanna',
+      needFilters: 0,
+      // host: this.props.navigation.state.params.host,
+      // groupName: members[Object.keys(members)[0]].name.split(' ')[0],
+      // needFilters: Object.keys(members).filter(user => !user.filters).length,
       start: false,
       username: myUsername,
       //show/hide the alerts
@@ -249,7 +258,7 @@ const styles = StyleSheet.create({
     width: '25%',
   },
   end: {
-    marginLeft: '30%',
+    marginRight: '2%',
     marginTop: '6%',
     borderRadius: 25,
     borderWidth: 2.5,
