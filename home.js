@@ -8,6 +8,7 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import api from './api.js';
+import friendsapi from './friendsapi.js';
 import UserProfileView from './profile.js';
 import socket from './socket.js';
 
@@ -56,13 +57,13 @@ class Home extends React.Component {
 
     api.createFBUser("isha", 0, "ishaaa", "ishag@gmail.com", "dffdsds"),
     api.createFBUser("hanna", 0, "hco", "hannc@gmail.com", "kfdkfjs"),
-    api.createFBUser("hubert", 0, "hubes", "hubes@gmail.com", "jskfhskl")
-    console.log(api.getAllUsers()),
-    friendsapi.createFriendship("hco", "hubes"),
-    friendsapi.createFriendship("ishaaa", "hubes"),
-    friendsapi.createFriendship("hco", "ishaaa"),
-    friendsapi.acceptFriendRequest("hubes", "ishaaa"),
-    friendsapi.denyFriendRequest("hubes", "hco")
+    api.createFBUser("hubert", 0, "hubes", "hubes@gmail.com", "jskfhskl"),
+    // console.log(api.getAllUsers()),
+    friendsapi.createFriendship(1, 2)
+    // friendsapi.createFriendship("ishaaa", "hubes"),
+    // friendsapi.createFriendship("hco", "ishaaa"),
+    // friendsapi.acceptFriendRequest("hubes", "ishaaa"),
+    // friendsapi.denyFriendRequest("hubes", "hco")
     // console.log(friendsapi.getFriends("ishaaa"))
     // console.log(friendsapi.getFriends("hubes")),
     // friendsapi.removeFriend("hco", "hubes"),
