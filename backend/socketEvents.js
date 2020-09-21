@@ -167,7 +167,7 @@ module.exports = (io) => {
       // add restaurant id to list + check for matches
       try {
         sessions[data.room].restaurants[data.restaurant] = (sessions[data.room].restaurants[data.restaurant] || 0) + 1
-        if (sessions[data.room].restaurants[data.restaurant] == Object.keys(sessions[data.room].members).length) {
+        if (sessions[data.room].restaurants[data.restaurant] === Object.keys(sessions[data.room].members).length) {
           socket.emit('like', { restaurant: data.restaurant, room: data.room })
           console.log(data.restaurant)
         } else {
@@ -198,7 +198,7 @@ module.exports = (io) => {
         delete sessions[data.room].members[data.username]
         delete lastRoom[data.username]
         // delete room if this is last member in room
-        if (Object.keys(sessions[data.room].members).length == 0) {
+        if (Object.keys(sessions[data.room].members).length === 0) {
           delete sessions[data.room]
         } else {
           io.in(data.room).emit('update', sessions[data.room].members)

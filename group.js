@@ -1,52 +1,43 @@
-import React from 'react'
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
-  TouchableHighlight
-} from 'react-native'
-import Card from './groupCard.js'
-import { USERNAME } from 'react-native-dotenv'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import AsyncStorage from '@react-native-community/async-storage'
-import socket from './socket.js'
-import Alert from './alert.js'
+  TouchableHighlight,
+} from 'react-native';
+import Card from './groupCard.js';
+import {USERNAME} from 'react-native-dotenv';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-community/async-storage';
+import socket from './socket.js';
+import Alert from './alert.js';
 
-const hex = '#F25763'
-const font = 'CircularStd-Medium'
-var memberList = []
-var myUsername = ''
+const hex = '#F25763';
+const font = 'CircularStd-Medium';
+var memberList = [];
+var myUsername = '';
 AsyncStorage.getItem(USERNAME).then(res => {
-  myUsername = res
-})
+  myUsername = res;
+});
 
 export default class Group extends React.Component {
-  constructor (props) {
-    super(props)
-    const members = [
-      {
-        name: 'Hanna Co',
-        username: '@hannaco'
-      }
-    ]
-    // const members = this.props.navigation.state.params.members;
+  constructor(props) {
+    super(props);
+    const members = this.props.navigation.state.params.members;
     this.state = {
       members: members,
-      host: members[0],
-      groupName: 'Hanna',
-      needFilters: 0,
-      // host: this.props.navigation.state.params.host,
-      // groupName: members[Object.keys(members)[0]].name.split(' ')[0],
-      // needFilters: Object.keys(members).filter(user => !user.filters).length,
+      host: this.props.navigation.state.params.host,
+      groupName: members[Object.keys(members)[0]].name.split(' ')[0],
+      needFilters: Object.keys(members).filter(user => !user.filters).length,
       start: false,
       username: myUsername,
       // show/hide the alerts
       leaveAlert: false,
-      endAlert: false
-    }
+      endAlert: false,
+    };
 
-    memberList = []
+    memberList = [];
     for (var user in this.state.members) {
       memberList.push(
         <Card
@@ -55,61 +46,46 @@ export default class Group extends React.Component {
           image={this.state.members[user].pic}
           filters={this.state.members[user].filters}
           host={this.state.host}
-        />
-      )
+        />,
+      );
     }
 
     socket.getSocket().on('kick', res => {
-      console.log(res)
-      if (res.username == this.state.username) {
-        socket.leaveRoom(res.room)
-        this.props.navigation.navigate('Home')
+      console.log(res);
+      if (res.username === this.state.username) {
+        socket.leaveRoom(res.room);
+        this.props.navigation.navigate('Home');
       }
-    })
+    });
   }
 
-  underlayShow () {
-    this.setState({ start: true })
+  underlayShow() {
+    this.setState({start: true});
   }
 
-  underlayHide () {
-    this.setState({ start: false })
+  underlayHide() {
+    this.setState({start: false});
   }
 
-  render () {
-    memberList = []
-    for (var user in this.state.members) {
-      memberList.push(
-        <Card
-          name={this.state.members[user].name}
-          username={'@' + user}
-          image={this.state.members[user].pic}
-          filters={this.state.members[user].filters}
-          host={this.state.host}
-        />
-      )
-    }
+  leaveGroup() {
+    socket.leaveRoom();
+    this.props.navigation.navigate('Home');
   }
 
-  leaveGroup () {
-    socket.leaveRoom()
-    this.props.navigation.navigate('Home')
-  }
-
-  endGroup () {
-    socket.endSession()
+  endGroup() {
+    socket.endSession();
     socket.getSocket().on('leave', res => {
-      this.props.navigation.navigate('Home')
-    })
+      this.props.navigation.navigate('Home');
+    });
   }
 
-  cancelAlert () {
-    this.state.host == this.state.username
-      ? this.setState({ endAlert: false })
-      : this.setState({ leaveAlert: false })
+  cancelAlert() {
+    this.state.host === this.state.username
+      ? this.setState({endAlert: false})
+      : this.setState({leaveAlert: false});
   }
 
-  render () {
+  render() {
     return (
       <View style={styles.main}>
         <View style={styles.top}>
@@ -117,48 +93,45 @@ export default class Group extends React.Component {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              justifyContent: 'space-between'
-            }}
-          >
+              justifyContent: 'space-between',
+            }}>
             <Text style={styles.groupTitle}>
-              {this.state.host == this.state.username
+              {this.state.host === this.state.username
                 ? 'Your Group'
                 : `${this.state.groupName}'s Group`}
             </Text>
             <TouchableHighlight
-              onShowUnderlay={() => this.setState({ leaveGroup: true })}
-              onHideUnderlay={() => this.setState({ leaveGroup: false })}
+              onShowUnderlay={() => this.setState({leaveGroup: true})}
+              onHideUnderlay={() => this.setState({leaveGroup: false})}
               style={
-                this.state.host == this.state.username
+                this.state.host === this.state.username
                   ? styles.end
                   : styles.leave
               }
               onPress={() =>
-                this.state.host == this.state.username
-                  ? this.setState({ endAlert: true })
-                  : this.setState({ leaveAlert: true })}
-              underlayColor='white'
-            >
+                this.state.host === this.state.username
+                  ? this.setState({endAlert: true})
+                  : this.setState({leaveAlert: true})
+              }
+              underlayColor="white">
               <Text
                 style={
                   this.state.leaveGroup
                     ? styles.leaveTextPressed
                     : styles.leaveText
-                }
-              >
-                {this.state.host == this.state.username ? 'End' : 'Leave'}
+                }>
+                {this.state.host === this.state.username ? 'End' : 'Leave'}
               </Text>
             </TouchableHighlight>
           </View>
-          <View style={{ flexDirection: 'row' }}>
-            <Icon name='user' style={styles.icon} />
+          <View style={{flexDirection: 'row'}}>
+            <Icon name="user" style={styles.icon} />
             <Text
               style={{
                 color: '#fff',
                 fontWeight: 'bold',
-                fontFamily: font
-              }}
-            >
+                fontFamily: font,
+              }}>
               {memberList.length}
             </Text>
             <Text style={styles.divider}>|</Text>
@@ -166,12 +139,12 @@ export default class Group extends React.Component {
               waiting for {this.state.needFilters} member filters
             </Text>
           </View>
-          <View style={{ flexDirection: 'row', margin: '4%' }}>
+          <View style={{flexDirection: 'row', margin: '4%'}}>
             <Icon
-              name='chevron-left'
-              style={{ color: 'white', fontFamily: font, fontSize: 16 }}
+              name="chevron-left"
+              style={{color: 'white', fontFamily: font, fontSize: 16}}
             />
-            <Text style={{ color: 'white', fontFamily: font, marginLeft: '3%' }}>
+            <Text style={{color: 'white', fontFamily: font, marginLeft: '3%'}}>
               {this.state.username === this.state.host
                 ? 'Swipe for host menu'
                 : 'Swipe for filters'}
@@ -183,9 +156,9 @@ export default class Group extends React.Component {
           <Text style={styles.bottomText}>
             When everyone has submitted filters, the round will begin!
           </Text>
-          {this.state.host == this.state.username && (
+          {this.state.host === this.state.username && (
             <TouchableHighlight
-              underlayColor='#fff'
+              underlayColor="#fff"
               activeOpacity={1}
               onHideUnderlay={this.underlayHide.bind(this)}
               onShowUnderlay={this.underlayShow.bind(this)}
@@ -194,8 +167,7 @@ export default class Group extends React.Component {
                 this.state.start
                   ? styles.bottomButton
                   : styles.bottomButtonClear
-              }
-            >
+              }>
               <Text style={styles.buttonText}>Start Round</Text>
             </TouchableHighlight>
           )}
@@ -203,13 +175,11 @@ export default class Group extends React.Component {
             <TouchableHighlight
               style={
                 this.state.start ? styles.pressed : styles.bottomButtonClear
-              }
-            >
+              }>
               <Text
                 style={
                   this.state.start ? styles.pressedText : styles.buttonText
-                }
-              >
+                }>
                 {this.state.start ? 'Ready!' : 'Waiting...'}
               </Text>
             </TouchableHighlight>
@@ -217,26 +187,26 @@ export default class Group extends React.Component {
         </View>
         {this.state.leaveAlert && (
           <Alert
-            title='Are you sure you want to leave?'
-            body='You will will not be able to return without invitation'
+            title="Leave?"
+            body="You will will not be able to return without invite"
             button
-            buttonText='Yes'
+            buttonText="Yes"
             press={() => this.leaveGroup()}
             cancel={() => this.cancelAlert()}
           />
         )}
         {this.state.endAlert && (
           <Alert
-            title='Are you sure you want to end the session?'
-            body='You will not be able to return'
+            title="End the session?"
+            body="You will not be able to return"
             button
-            buttonText='Yes'
+            buttonText="Yes"
             press={() => this.endGroup()}
             cancel={() => this.cancelAlert()}
           />
         )}
       </View>
-    )
+    );
   }
 }
 
@@ -245,7 +215,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     flex: 1,
     backgroundColor: hex,
-    color: '#fff'
+    color: '#fff',
   },
   groupTitle: {
     color: '#fff',
@@ -253,7 +223,7 @@ const styles = StyleSheet.create({
     marginLeft: '5%',
     marginTop: '5%',
     fontWeight: 'bold',
-    fontFamily: font
+    fontFamily: font,
   },
   leave: {
     marginRight: '2%',
@@ -261,7 +231,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     borderWidth: 2.5,
     borderColor: '#fff',
-    width: '25%'
+    width: '25%',
   },
   end: {
     marginRight: '2%',
@@ -269,7 +239,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     borderWidth: 2.5,
     borderColor: '#fff',
-    width: '25%'
+    width: '25%',
   },
   leaveText: {
     fontFamily: font,
@@ -277,7 +247,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
     paddingTop: '2%',
-    paddingBottom: '2%'
+    paddingBottom: '2%',
   },
   leaveTextPressed: {
     fontFamily: font,
@@ -285,26 +255,26 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
     paddingTop: '2%',
-    paddingBottom: '2%'
+    paddingBottom: '2%',
   },
   icon: {
     color: '#fff',
     marginLeft: '5%',
     marginTop: '2%',
-    fontSize: 30
+    fontSize: 30,
   },
   divider: {
     color: '#fff',
     alignSelf: 'center',
     marginLeft: '3%',
     fontSize: 25,
-    fontFamily: font
+    fontFamily: font,
   },
   waiting: {
     color: '#fff',
     marginLeft: '3%',
     alignSelf: 'center',
-    fontFamily: font
+    fontFamily: font,
   },
   button: {
     borderRadius: 25,
@@ -314,14 +284,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     width: '50%',
     alignSelf: 'center',
-    marginTop: '3%'
+    marginTop: '3%',
   },
   buttonText: {
     color: '#fff',
     alignSelf: 'center',
     fontSize: 30,
     fontWeight: 'bold',
-    fontFamily: font
+    fontFamily: font,
   },
   bottomText: {
     color: '#fff',
@@ -330,7 +300,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: '3%',
     textAlign: 'center',
-    fontFamily: font
+    fontFamily: font,
   },
   bottomButton: {
     borderRadius: 40,
@@ -341,7 +311,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     width: '60%',
     alignSelf: 'center',
-    marginTop: '3%'
+    marginTop: '3%',
   },
   bottomButtonClear: {
     borderRadius: 40,
@@ -352,7 +322,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     width: '60%',
     alignSelf: 'center',
-    marginTop: '3%'
+    marginTop: '3%',
   },
   pressed: {
     borderRadius: 40,
@@ -364,25 +334,25 @@ const styles = StyleSheet.create({
     width: '60%',
     alignSelf: 'center',
     marginTop: '3%',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   pressedText: {
     color: hex,
     alignSelf: 'center',
     fontSize: 30,
     fontWeight: 'bold',
-    fontFamily: font
+    fontFamily: font,
   },
   top: {
-    flex: 0.38
+    flex: 0.38,
   },
   center: {
     flex: 0.6,
-    color: '#fff'
+    color: '#fff',
     // backgroundColor: '#add8e6',
   },
   bottom: {
     flex: 0.45,
-    color: '#fff'
-  }
-})
+    color: '#fff',
+  },
+});
