@@ -23,7 +23,13 @@ import Alert from './alert.js';
 
 const hex = '#F25763';
 const font = 'CircularStd-Medium';
+var img = '';
+var name = '';
+var username = '';
 
+AsyncStorage.getItem(PHOTO).then(res => (img = res));
+AsyncStorage.getItem(NAME).then(res => (name = res));
+AsyncStorage.getItem(USERNAME).then(res => (username = res));
 export default class UserProfileView extends Component {
   state = {
     name: '',
@@ -46,56 +52,90 @@ export default class UserProfileView extends Component {
     // public: false,
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: name,
+      nameValue: name,
+      username: username,
+      usernameValue: username,
+      image: img,
+      friends: true,
+      visible: false,
+      changeName: false,
+      changeUser: false,
+      // show button appearance
+      logout: false,
+      delete: false,
+      // show alert
+      logoutAlert: false,
+      deleteAlert: false,
+      // public: false,
+    };
+  }
+
   //getting current user's info
 
-  componentDidMount() {
-    AsyncStorage.getItem(NAME).then(res =>
-      this.setState({name: res, nameValue: res}),
-    );
-    AsyncStorage.getItem(USERNAME).then(res =>
-      this.setState({username: res, usernameValue: res}),
-    );
-    AsyncStorage.getItem(PHOTO).then(res => this.setState({image: res}));
-  }
-
-  changeName() {
-    api
-      .updateName(this.state.nameValue)
-      .then(res => {
-        AsyncStorage.setItem(NAME, this.state.name);
-        this.setState({name: this.state.nameValue});
-        Keyboard.dismiss();
-      })
-      .catch(err => {
-        this.setState({errorAlert: true});
-        this.setState({
-          nameValue: this.state.name,
-        });
-        Keyboard.dismiss();
-        console.log(err);
-      });
-  }
-
-  changeUsername() {
-    const user = this.state.usernameValue;
-    api
-      .checkUsername(user)
-      .then(() => {
-        api.updateUsername(user).then(() => {
-          AsyncStorage.setItem(USERNAME, user);
-          this.setState({username: this.state.usernameValue});
+  async changeName() {
+    if (this.state.nameValue !== this.state.name) {
+      api
+        .updateName(this.state.nameValue)
+        .then(res => {
+          // update name locally
+          AsyncStorage.setItem(NAME, this.state.name);
+          this.setState({name: this.state.nameValue});
+          Keyboard.dismiss();
+        })
+        .catch(error => {
+          this.setState({errorAlert: true});
+          // Alert.alert('Error changing name. Please try again.');
+          this.setState({
+            nameValue: this.state.name,
+          });
           Keyboard.dismiss();
         });
+    }
+  }
+
+  async changeUsername() {
+    if (this.state.username !== this.state.usernameValue) {
+      const user = this.state.usernameValue;
+      api
+        .checkUsername(user)
+        .then(() => {
+          // update username locally
+          api.updateUsername(user).then(() => {
+            AsyncStorage.setItem(USERNAME, user);
+            this.setState({username: this.state.usernameValue});
+            Keyboard.dismiss();
+          });
+        })
+        .catch(error => {
+          console.log(errpr);
+          if (error === 404) {
+            this.setState({takenAlert: true});
+            // Alert.alert('Username taken!');
+          } else {
+            this.setState({errorAlert: true});
+            // Alert.alert('Error changing username. Please try again.');
+          }
+          this.setState({usernameValue: this.state.username});
+          Keyboard.dismiss();
+        });
+    }
+  }
+
+  async handleDelete() {
+    facebookService
+      .deleteUser()
+      .then(() => {
+        // close settings and navigate to Login
+        this.setState({visible: false});
+        this.props.navigation.navigate('Login');
       })
       .catch(error => {
         console.log(error);
-        if (error === 404) {
-          this.setState({takenAlert: true});
-        } else {
-          this.setState({errorAlert: true});
-        }
-        this.setState({usernameValue: this.state.username});
-        Keyboard.dismiss();
+        //alert
       });
   }
 
@@ -107,16 +147,22 @@ export default class UserProfileView extends Component {
     this.setState({errorAlert: false});
   }
 
-  handleDelete() {
-    facebookService.deleteUser();
-  }
-
   cancelDelete() {
     this.setState({deleteAlert: false});
   }
 
-  handleLogout() {
-    facebookService.logoutWithFacebook();
+  async handleLogout() {
+    facebookService
+      .logoutWithFacebook()
+      .then(() => {
+        // close settings and navigate to Login
+        this.setState({visible: false});
+        this.props.navigation.navigate('Login');
+      })
+      .catch(error => {
+        console.log(error);
+        //alert
+      });
   }
 
   cancelLogout() {

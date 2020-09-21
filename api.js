@@ -51,7 +51,7 @@ const accountsApi = axios.create({
 })
 
 // creates user and returns id
-const createFBUser = (name, id, username, email, photo) => {
+const createFBUser = async (name, id, username, email, photo) => {
   return accountsApi
     .post('/accounts', {
       params: {
@@ -64,77 +64,94 @@ const createFBUser = (name, id, username, email, photo) => {
       }
     })
     .then(res => {
-      console.log(res.data.user)
       return {
         id: res.data.user.id,
         status: res.status
       }
     })
     .catch(error => {
-      return Promise.reject(new Error(error.response.status))
+      throw error.response.status 
     })
 }
 
 // gets list of users
-const getAllUsers = () => {
+const getAllUsers = async () => {
   return accountsApi
     .get('/accounts')
     .then(res => {
-      console.log(res.data)
       return {
         status: res.status,
         userList: res.data.users.map(function (users) {
           // returns individual user info
           return {
             name: users.name,
-            username: users.username
+            username: users.username,
+            photo: users.photo
           }
         })
       }
     })
     .catch(error => {
-      return Promise.reject(new Error(error.response.status))
+      throw error.response.status
+    })
+}
+
+// gets first 100 account usernames/names starting with text input
+const searchUsers = async (text) => {
+  return accountsApi
+    .get(`/accounts/search/${text}`)
+    .then(res => {
+      return {
+        status: res.status,
+        count: res.data.users.count,
+        userList: res.data.users.rows.map(function (users) {
+          // returns individual user info
+          return {
+            name: users.name,
+            username: users.username,
+            photo: users.photo
+          }
+        })
+      }
+    })
+    .catch(error => {
+      throw error.response.status
     })
 }
 
 // deletes user and returns status
-const deleteUser = () => {
+const deleteUser = async () => {
   return accountsApi
     .delete(`/accounts/${myId}`)
     .then(res => {
-      console.log(res.status)
       return res.status
     })
     .catch(error => {
-      return Promise.reject(new Error(error.response.status))
+      throw error.response.status
     })
 }
 
 // gets user by id and returns user info
-const getUser = () => {
+const getUser = async () => {
   return accountsApi
     .get(`/accounts/${myId}`)
     .then(res => {
-      console.log(res.data)
       return {
         status: res.status,
-        user: res.data.user.map(user => {
-          return {
-            name: user.name,
-            username: user.username,
-            email: user.email,
-            phone_number: user.phone_number
-          }
-        })
+        username: res.data.user.username,
+        email: res.data.user.email,
+        phone_number: res.data.user.phone_number,
+        name: res.name,
+        photo: user.photo
       }
     })
     .catch(error => {
-      return Promise.reject(new Error(error.response.status))
+      throw error.response.status
     })
 }
 
 // update email and returns status
-const updateEmail = info => {
+const updateEmail = async (info) => {
   const req = {
     email: info
   }
@@ -142,7 +159,7 @@ const updateEmail = info => {
 }
 
 // update username and returns status
-const updateUsername = info => {
+const updateUsername = async (info) => {
   const req = {
     username: info
   }
@@ -150,7 +167,7 @@ const updateUsername = info => {
 }
 
 // update username and returns status
-const updateName = info => {
+const updateName = async (info) => {
   const req = {
     name: info
   }
@@ -158,7 +175,7 @@ const updateName = info => {
 }
 
 // update username and returns status
-const updatePhoneNumber = info => {
+const updatePhoneNumber = async (info) => {
   const req = {
     phone_number: info
   }
@@ -166,13 +183,12 @@ const updatePhoneNumber = info => {
 }
 
 // updates user and returns status
-const updateUser = req => {
+const updateUser = async (req) => {
   return accountsApi
     .put(`/accounts/${myId}`, {
       params: req
     })
     .then(res => {
-      console.log(res.data)
       return {
         status: res.status,
         name: res.data.name,
@@ -182,33 +198,31 @@ const updateUser = req => {
       }
     })
     .catch(error => {
-      return Promise.reject(new Error(error.response.status))
+      throw error.response.status
     })
 }
 
 // checks username and returns status
-const checkUsername = username => {
+const checkUsername = async (username) => {
   return accountsApi
     .get(`/username/${username}`)
     .then(res => {
       return res.status
     })
     .catch(error => {
-      console.log(error.response.status)
-      return Promise.reject(new Error(error.response.status))
+      throw error.response.status
     })
 }
 
 // checks phone number and returns status
-const checkPhoneNumber = phoneNumber => {
+const checkPhoneNumber = async (phoneNumber) => {
   return accountsApi
     .get(`/phoneNumber/${phoneNumber}`)
     .then(res => {
-      console.log(res.status)
       return res.status
     })
     .catch(error => {
-      return Promise.reject(new Error(error.response.status))
+      throw error.response.status
     })
 }
 
@@ -222,5 +236,6 @@ export default {
   updateName,
   updatePhoneNumber,
   checkUsername,
-  checkPhoneNumber
+  checkPhoneNumber,
+  searchUsers
 }
