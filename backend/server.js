@@ -23,14 +23,17 @@ if (app.get('env') === 'development') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 }
 
-// accounts accounts
+// accounts table
 app.route('/accounts')
   .get(accounts.getAllAccounts)
   .post(accounts.createAccount)
 
+app.route('/accounts/search/:text')
+  .get(accounts.searchAccounts)
+
 app.route('/accounts/:id')
   .get(accounts.getAccountById)
-  .put(accounts.updateAccounts)
+  .put(accounts.updateAccount)
   .delete(accounts.deleteAccount)
 
 app.route('/username/:username')
