@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { ID } from 'react-native-dotenv'
-//import { View, Text } from PermissionsAndroid from 'react-native'
+// import { View, Text } from PermissionsAndroid from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 
 // import {globalAgent} from 'http';
@@ -70,7 +70,7 @@ const createFBUser = async (name, id, username, email, photo) => {
       }
     })
     .catch(error => {
-      throw error.response.status 
+      throw error.response.status
     })
 }
 

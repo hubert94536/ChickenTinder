@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {
   StyleSheet,
   TouchableHighlight,
@@ -15,19 +15,22 @@ import Alert from './alert.js';
 const hex = '#F25763';
 const font = 'CircularStd-Medium';
 
-class Username extends Component {
-  state = {
-    username: null,
-    name: '',
-    uid: '',
-    id: '',
-    email: '',
-    photo: '',
-    //showing alerts
-    errorAlert: false,
-    takenAlert: false,
-  };
-
+class Username extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      username: null,
+      name: '',
+      uid: '',
+      id: '',
+      email: '',
+      photo: '',
+      //showing alerts
+      errorAlert: false,
+      takenAlert: false,
+    }  
+  }
+  
   closeTaken() {
     this.setState({takenAlert: false});
   }
