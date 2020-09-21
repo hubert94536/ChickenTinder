@@ -18,10 +18,6 @@ const searchAccounts = async (req, res) => {
     const users = await Accounts.findAndCountAll({
       limit: 100,
       where: {
-        // [Op.iLike]: {
-        //   // [Op.or] : [{username: text + '%', name: text + '%'}]
-        //   username: text + '%'
-        // }
         username: Sequelize.where(
           Sequelize.fn('LOWER', Sequelize.col('username')), 'LIKE', text + '%')
       }
@@ -37,9 +33,7 @@ const searchAccounts = async (req, res) => {
 const createAccount = async (req, res) => {
   try {
     const user = await Accounts.create(req.body.params)
-    return res.status(201).json({
-      user
-    })
+    return res.status(201).json({ user })
   } catch (error) {
     return res.status(500).json({ error: error.message })
   }
