@@ -24,7 +24,7 @@ const createFriendship = (main, friend) => {
     .then (res => {
       console.log(res.data.user)
       return {
-        friend_user: res.data.user.friend_user,
+        f_id: res.data.user.friend_user,
         status: res.status
       }
     })
@@ -44,7 +44,7 @@ const getFriends = (main) => {
         friendList: res.data.friends.map(function (friends) {
           // returns individual user info
           return {
-            username: friends.friend_user
+            id: friends.f_id
           }
         })
       }
@@ -65,7 +65,7 @@ const getRequests = (main) => {
         userList: res.data.requests.map(function (friends) {
           // returns individual user info
           return {
-            username: friends.friend_user
+            id: friends.f_id
           }
         })
       }
@@ -86,8 +86,8 @@ const acceptFriendRequest = (main, friend) => {
     .then (res => {
       console.log(res.data.user)
       return {
-        friend_user: res.data.user.friend_user,
-        f_status: res.data.user.friend_user.f_status,
+        f_id: res.data.user.f_id,
+        f_status: res.data.user.f_id.f_status,
         status: res.status
       }
     })

@@ -64,28 +64,20 @@ Accounts.sync({ force: true }).then(() => {
 
 const Friends = sequelize.define('friends', {
 
-    main_user: {
-        type: DataTypes.STRING(20),
-        allowNull: false,
-        // primaryKey: true
+    m_id: {
+        type: DataTypes.BIGINT,
+        allowNull: false
     },
-
-    // friend_user: {
-    //   type: DataTypes.STRING(20),
-    //   allowNull: false,
-    //   // primaryKey: true
-    // },
-
     f_status: {
         type: DataTypes.STRING(20),
         allowNull: false,
-        unique: false,
+        unique: false
 
     }
 
 });
 
-Friends.belongsTo(Accounts, {foreignKey: 'friend_user', targetKey: 'username'})
+Friends.belongsTo(Accounts, {foreignKey: 'f_id', targetKey: 'id'});
 
 
 Friends.sync({ force: true}).then(()=> {

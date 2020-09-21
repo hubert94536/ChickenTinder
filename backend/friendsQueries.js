@@ -3,14 +3,14 @@ const { Op } = require("sequelize");
 
 const createFriends = async (req, res) => {
     try {
-        const main = req.body.params.main_user;
-        const friend = req.body.params.friend_user;
+        const main = req.body.params.main;
+        const friend = req.body.params.friend;
         const user = await Friends.create(
             {
-                main_user: main,
+                m_id: main,
                 f_status: "requested",
-                friend_user: {
-                    username: friend
+                f_id: {
+                    id: friend
                 }
                 
 
@@ -21,10 +21,10 @@ const createFriends = async (req, res) => {
         );
         const friendUser = await Friends.create(
             {
-                main_user: friend,
+                m_id: friend,
                 f_status: "pending request",
-                friend_user: {
-                    username: main
+                f_id: {
+                    id: main
                 }
                 
 
@@ -73,7 +73,7 @@ const getUserFriends = async (req, res) => {
         const friends = await Friends.findAll({
             where: {
                 [Op.and]: [
-                    { main_user: req.params.user},
+                    { m_id: req.params.user},
                     { f_status: "accepted"}
                   ] }
         });
