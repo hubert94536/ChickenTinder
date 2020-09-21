@@ -8,7 +8,7 @@ var myName = ''
 
 const socket = io('https://wechews.herokuapp.com', {
   query: `username=${myUsername}`
-});
+})
 
 AsyncStorage.multiGet([USERNAME, NAME, PHOTO]).then(res => {
   myUsername = res[0][1]

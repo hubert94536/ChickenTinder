@@ -16,14 +16,14 @@ const searchAccounts = async (req, res) => {
   try {
     const { text } = req.params
     const users = await Accounts.findAndCountAll({
-      limit: 100, 
+      limit: 100,
       where: {
         // [Op.iLike]: {
         //   // [Op.or] : [{username: text + '%', name: text + '%'}]
         //   username: text + '%'
         // }
         username: Sequelize.where(
-                    Sequelize.fn('LOWER', Sequelize.col('username')), 'LIKE', text + '%')
+          Sequelize.fn('LOWER', Sequelize.col('username')), 'LIKE', text + '%')
       }
     })
     return res.status(200).json({ users })
@@ -109,7 +109,6 @@ const checkUsername = async (req, res) => {
     return res.status(500).send(error.message)
   }
 }
-
 
 // Check if phone number exists
 const checkPhoneNumber = async (req, res) => {

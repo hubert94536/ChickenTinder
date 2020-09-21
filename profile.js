@@ -31,27 +31,6 @@ AsyncStorage.getItem(PHOTO).then(res => (img = res));
 AsyncStorage.getItem(NAME).then(res => (name = res));
 AsyncStorage.getItem(USERNAME).then(res => (username = res));
 export default class UserProfileView extends Component {
-  state = {
-    name: '',
-    username: '',
-    usernameValue: '',
-    image: '',
-    friends: true,
-    visible: false,
-    changeName: false,
-    changeUser: false,
-    //these are these are the button appearance
-    logout: false,
-    delete: false,
-    //these are for showing the alert
-    logoutAlert: false,
-    deleteAlert: false,
-    //error alerts
-    errorAlert: false,
-    takenAlert: false,
-    // public: false,
-  };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -111,7 +90,6 @@ export default class UserProfileView extends Component {
           });
         })
         .catch(error => {
-          console.log(errpr);
           if (error === 404) {
             this.setState({takenAlert: true});
             // Alert.alert('Username taken!');
