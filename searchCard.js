@@ -31,14 +31,14 @@ export default class Card extends React.Component {
           <Text style={{fontFamily: font}}>{this.props.username}</Text>
         </View>
         {this.state.friends && (
-          <View style={{flexDirection: 'row', flex: 1}}>
+          <View
+            style={{flexDirection: 'row', flex: 1, justifyContent: 'flex-end'}}>
             <Text
               style={{
                 fontFamily: font,
                 color: hex,
                 fontSize: 15,
                 alignSelf: 'center',
-                marginLeft: '25%',
               }}>
               Friends
             </Text>
@@ -48,46 +48,34 @@ export default class Card extends React.Component {
                 color: hex,
                 fontSize: 35,
                 alignSelf: 'center',
-                marginLeft: '5%',
+                margin: '8%',
               }}
               name="check-circle"
             />
           </View>
         )}
         {!this.state.friends && (
-          <View style={{flex: 1, flexDirection: 'row'}}>
-            <TouchableHighlight
-              underlayColor="black"
-              onHideUnderlay={() => this.setState({pressed: false})}
-              onShowUnderlay={() => this.setState({pressed: true})}
-              onPress={() => this.setState({friends: true})}
+          <View
+            style={{flexDirection: 'row', flex: 1, justifyContent: 'flex-end'}}>
+            <Text
               style={{
-                borderColor: 'black',
-                borderRadius: 30,
-                borderWidth: 2,
-                height: '30%',
-                width: '50%',
-                marginLeft: '25%',
+                fontFamily: font,
+                color: hex,
+                fontSize: 15,
                 alignSelf: 'center',
               }}>
-              <Text
-                style={{
-                  fontFamily: font,
-                  fontSize: 15,
-                  textAlign: 'center',
-                  color: this.state.pressed ? 'white' : 'black',
-                }}>
-                Accept
-              </Text>
-            </TouchableHighlight>
+              Add
+            </Text>
             <Icon
               style={{
                 fontFamily: font,
-                fontSize: 30,
+                color: hex,
+                fontSize: 35,
                 alignSelf: 'center',
-                margin: '5%',
+                margin: '8%',
               }}
-              name="times-circle"
+              onPress={() => this.setState({friends: true})}
+              name="plus-circle"
             />
           </View>
         )}
