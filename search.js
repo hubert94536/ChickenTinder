@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, ScrollView} from 'react-native';
+import {View, ScrollView, Text, Dimensions} from 'react-native';
 import {SearchBar} from 'react-native-elements';
 import Card from './searchCard.js';
 
@@ -67,10 +67,10 @@ const people = [
 
 export default class Search extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       search: '',
-    }
+    };
   }
 
   updateSearch = search => {
@@ -87,12 +87,22 @@ export default class Search extends React.Component {
           name={people[i].name}
           username={people[i].username}
           image={people[i].image}
-          friends={people[i].friends}
+          requested={people[i].friends}
         />,
       );
     }
     return (
-      <View style={{flex: 1}}>
+      <View style={{flex: 1, backgroundColor: 'white'}}>
+        <Text
+          style={{
+            fontFamily: font,
+            fontSize: 40,
+            color: hex,
+            textAlign: 'center',
+            margin: '4%',
+          }}>
+          Find New Friends!
+        </Text>
         <View>
           <SearchBar
             containerStyle={{
@@ -100,18 +110,19 @@ export default class Search extends React.Component {
               borderBottomColor: 'transparent',
               borderTopColor: 'transparent',
               width: '100%',
-              height: 45,
+              height: Dimensions.get('window').height * 0.08,
               alignSelf: 'center',
             }}
             inputContainerStyle={{
-              height: 7,
+              height: Dimensions.get('window').height * 0.05,
               width: '90%',
               alignSelf: 'center',
               backgroundColor: '#ebecf0',
             }}
             inputStyle={{
+              textAlignVertical: 'center',
               fontFamily: font,
-              fontSize: 15,
+              fontSize: 18,
             }}
             placeholder="Search by username"
             onChangeText={this.updateSearch}
