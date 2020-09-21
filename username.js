@@ -17,7 +17,7 @@ const font = 'CircularStd-Medium';
 
 class Username extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       username: null,
       name: '',
@@ -28,9 +28,9 @@ class Username extends React.Component {
       //showing alerts
       errorAlert: false,
       takenAlert: false,
-    }  
+    };
   }
-  
+
   closeTaken() {
     this.setState({takenAlert: false});
   }
@@ -83,35 +83,53 @@ class Username extends React.Component {
 
   render() {
     return (
-      <View style={{flex: 1, justifyContent: 'center'}}>
-        <TextInput
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'column',
+          backgroundColor: 'white',
+        }}>
+        <Text
           style={{
             fontFamily: font,
-            fontSize: 15,
-            alignSelf: 'center',
-            borderBottomColor: hex,
-            borderBottomWidth: 2.5,
-            margin: '3%',
-            width: '70%',
-          }}
-          textAlign="center"
-          placeholder={'Enter a username'}
-          onChangeText={username => {
-            this.setState({username});
-          }}
-          value={this.state.username}
-        />
-        <TouchableHighlight
-          onShowUnderlay={this.underlayShow.bind(this)}
-          onHideUnderlay={this.underlayHide.bind(this)}
-          activeOpacity={1}
-          underlayColor={hex}
-          onPress={() => this.handleClick()}
-          style={styles.button}>
-          <Text style={this.state.pressed ? styles.yesPress : styles.noPress}>
-            Enter
-          </Text>
-        </TouchableHighlight>
+            color: hex,
+            fontSize: 40,
+            marginTop: '8%',
+            marginLeft: '3%',
+            textAlign: 'left',
+          }}>
+          My username is
+        </Text>
+        <View style={{marginTop: '50%'}}>
+          <TextInput
+            style={{
+              fontFamily: font,
+              fontSize: 15,
+              alignSelf: 'center',
+              borderBottomColor: hex,
+              borderBottomWidth: 2.5,
+              margin: '3%',
+              width: '70%',
+            }}
+            textAlign="left"
+            placeholder={'Enter a username'}
+            onChangeText={username => {
+              this.setState({username});
+            }}
+            value={this.state.username}
+          />
+          <TouchableHighlight
+            onShowUnderlay={this.underlayShow.bind(this)}
+            onHideUnderlay={this.underlayHide.bind(this)}
+            activeOpacity={1}
+            underlayColor={hex}
+            onPress={() => this.handleClick()}
+            style={styles.button}>
+            <Text style={this.state.pressed ? styles.yesPress : styles.noPress}>
+              Enter
+            </Text>
+          </TouchableHighlight>
+        </View>
         {this.state.errorAlert && (
           <Alert
             title="Error, please try again"
