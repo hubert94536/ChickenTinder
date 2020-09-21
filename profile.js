@@ -8,7 +8,7 @@ import {
   TextInput,
   Modal,
   Dimensions,
-  Alert,
+  Keyboard,
 } from 'react-native';
 import {BlurView} from '@react-native-community/blur';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -18,85 +18,138 @@ import Swiper from 'react-native-swiper';
 import Friends from './friends.js';
 import Requests from './requests.js';
 import api from './api.js';
+import {facebookService} from './facebookService.js';
+import Alert from './alert.js';
 
 const hex = '#F25763';
 const font = 'CircularStd-Medium';
+var img = '';
+var name = '';
+var username = '';
 
+AsyncStorage.getItem(PHOTO).then(res => (img = res));
+AsyncStorage.getItem(NAME).then(res => (name = res));
+AsyncStorage.getItem(USERNAME).then(res => (username = res));
 export default class UserProfileView extends Component {
-  state = {
-    name: '',
-    username: '',
-    usernameValue: '',
-    image: '',
-    friends: true,
-    visible: false,
-    changeName: false,
-    changeNameText: false,
-    changeUser: false,
-    changeUserText: false,
-    // public: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: name,
+      nameValue: name,
+      username: username,
+      usernameValue: username,
+      image: img,
+      friends: true,
+      visible: false,
+      changeName: false,
+      changeUser: false,
+      // show button appearance
+      logout: false,
+      delete: false,
+      // show alert
+      logoutAlert: false,
+      deleteAlert: false,
+      // public: false,
+    };
+  }
 
   //getting current user's info
 
-  componentDidMount() {
-    AsyncStorage.getItem(NAME).then(res =>
-      this.setState({name: res, nameValue: res}),
-    );
-    AsyncStorage.getItem(USERNAME).then(res =>
-      this.setState({username: res, usernameValue: res}),
-    );
-    AsyncStorage.getItem(PHOTO).then(res => this.setState({image: res}));
-  }
-
-  changeName() {
-    if (this.state.changeName && this.state.nameValue != this.state.name) {
-      api.updateName(this.state.nameValue)
+  async changeName() {
+    if (this.state.nameValue !== this.state.name) {
+      api
+        .updateName(this.state.nameValue)
         .then(res => {
+          // update name locally
           AsyncStorage.setItem(NAME, this.state.name);
+          this.setState({name: this.state.nameValue});
+          Keyboard.dismiss();
         })
-        .catch(err => {
-          Alert.alert('Error changing name. Please try again.');
+        .catch(error => {
+          this.setState({errorAlert: true});
+          // Alert.alert('Error changing name. Please try again.');
           this.setState({
             nameValue: this.state.name,
           });
-          console.log(err);
+          Keyboard.dismiss();
         });
     }
-    this.setState({
-      changeName: !this.state.changeName,
-    });
   }
 
-  changeUsername() {
-    if (this.state.changeUser && this.state.username != this.state.usernameValue) {
-      const user = this.state.usernameValue
-      api.checkUsername(user)
+  async changeUsername() {
+    if (this.state.username !== this.state.usernameValue) {
+      const user = this.state.usernameValue;
+      api
+        .checkUsername(user)
         .then(() => {
-          api.updateUsername(user)
-            .then(() => {
-                AsyncStorage.setItem(USERNAME, user);
-            })
+          // update username locally
+          api.updateUsername(user).then(() => {
+            AsyncStorage.setItem(USERNAME, user);
+            this.setState({username: this.state.usernameValue});
+            Keyboard.dismiss();
+          });
         })
         .catch(error => {
-          console.log(error)
           if (error === 404) {
-            Alert.alert('Username taken!');
-          }
-          else {
-            Alert.alert('Error changing username. Please try again.');
+            this.setState({takenAlert: true});
+            // Alert.alert('Username taken!');
+          } else {
+            this.setState({errorAlert: true});
+            // Alert.alert('Error changing username. Please try again.');
           }
           this.setState({usernameValue: this.state.username});
+          Keyboard.dismiss();
         });
     }
-    this.setState({
-      changeUser: !this.state.changeUser,
-    });
+  }
+
+  async handleDelete() {
+    facebookService
+      .deleteUser()
+      .then(() => {
+        // close settings and navigate to Login
+        this.setState({visible: false});
+        this.props.navigation.navigate('Login');
+      })
+      .catch(error => {
+        console.log(error);
+        //alert
+      });
+  }
+
+  closeTaken() {
+    this.setState({takenAlert: false});
+  }
+
+  closeError() {
+    this.setState({errorAlert: false});
+  }
+
+  cancelDelete() {
+    this.setState({deleteAlert: false});
+  }
+
+  async handleLogout() {
+    facebookService
+      .logoutWithFacebook()
+      .then(() => {
+        // close settings and navigate to Login
+        this.setState({visible: false});
+        this.props.navigation.navigate('Login');
+      })
+      .catch(error => {
+        console.log(error);
+        //alert
+      });
+  }
+
+  cancelLogout() {
+    this.setState({logoutAlert: false});
   }
 
   render() {
     return (
-      <View>
+      <View style={{backgroundColor: 'white'}}>
         <View>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Icon
@@ -122,13 +175,16 @@ export default class UserProfileView extends Component {
               <Text style={{fontSize: 28, fontWeight: 'bold'}}>
                 {this.state.name}
               </Text>
-              <Text style={{fontSize: 17}}>{'@' + this.state.usernameValue}</Text>
+              <Text style={{fontSize: 17}}>
+                {'@' + this.state.usernameValue}
+              </Text>
             </View>
           </View>
           <View style={{flexDirection: 'row'}}>
             <TouchableHighlight
               underlayColor="#fff"
-              style={this.state.friends ? styles.selected : styles.unselected}>
+              style={this.state.friends ? styles.selected : styles.unselected}
+              onPress={() => this.refs.swiper.scrollBy(-1)}>
               <Text
                 style={
                   this.state.friends
@@ -140,7 +196,8 @@ export default class UserProfileView extends Component {
             </TouchableHighlight>
             <TouchableHighlight
               underlayColor="#fff"
-              style={!this.state.friends ? styles.selected : styles.unselected}>
+              style={!this.state.friends ? styles.selected : styles.unselected}
+              onPress={() => this.refs.swiper.scrollBy(1)}>
               <Text
                 style={
                   !this.state.friends
@@ -154,6 +211,7 @@ export default class UserProfileView extends Component {
         </View>
         <View style={{height: '100%', marginTop: '5%'}}>
           <Swiper
+            ref="swiper"
             loop={false}
             onMomentumScrollEnd={() =>
               this.setState({friends: !this.state.friends})
@@ -197,8 +255,8 @@ export default class UserProfileView extends Component {
                   onPress={() =>
                     this.setState({
                       visible: false,
-                      changeName: false,
-                      changeUser: false,
+                      usernameValue: this.state.username,
+                      nameValue: this.state.name,
                     })
                   }
                 />
@@ -211,30 +269,31 @@ export default class UserProfileView extends Component {
                 }}>
                 <View>
                   <Text style={{fontFamily: font, fontSize: 18}}>Name:</Text>
-                  {!this.state.changeName && (
-                    <Text style={{fontFamily: font, color: hex, fontSize: 20}}>
-                      {this.state.nameValue}
-                    </Text>
-                  )}
-                  {this.state.changeName && (
-                    <TextInput
-                      style={{fontFamily: font, color: hex, fontSize: 20}}
-                      value={this.state.nameValue}
-                      onChangeText={text => this.setState({nameValue: text})}
-                    />
-                  )}
+                  <TextInput
+                    style={{
+                      fontFamily: font,
+                      color: hex,
+                      fontSize: 20,
+                      margin: 0,
+                      padding: 0,
+                    }}
+                    value={this.state.nameValue}
+                    onChangeText={text => this.setState({nameValue: text})}
+                  />
                 </View>
                 <TouchableHighlight
                   style={styles.changeButtons}
                   underlayColor={hex}
-                  onShowUnderlay={() => this.setState({changeNameText: true})}
-                  onHideUnderlay={() => this.setState({changeNameText: false})}
+                  onShowUnderlay={() => this.setState({changeName: true})}
+                  onHideUnderlay={() => this.setState({changeName: false})}
                   onPress={() => this.changeName()}>
                   <Text
                     style={
-                      this.state.changeNameText ? styles.changeTextSelected : styles.changeText
+                      this.state.changeName
+                        ? styles.changeTextSelected
+                        : styles.changeText
                     }>
-                    {this.state.changeName ? 'Submit' : 'Change'}
+                    Change
                   </Text>
                 </TouchableHighlight>
               </View>
@@ -248,36 +307,124 @@ export default class UserProfileView extends Component {
                   <Text style={{fontFamily: font, fontSize: 18}}>
                     Username:
                   </Text>
-                  {!this.state.changeUser && (
-                    <Text style={{fontFamily: font, color: hex, fontSize: 20}}>
-                      {this.state.usernameValue}
-                    </Text>
-                  )}
-                  {this.state.changeUser && (
-                    <TextInput
-                      style={{fontFamily: font, color: hex, fontSize: 20}}
-                      value={this.state.usernameValue}
-                      onChangeText={text =>
-                        this.setState({usernameValue: text})
-                      }
-                    />
-                  )}
+                  <TextInput
+                    style={{
+                      fontFamily: font,
+                      color: hex,
+                      fontSize: 20,
+                      margin: 0,
+                      padding: 0,
+                    }}
+                    value={this.state.usernameValue}
+                    onChangeText={text => this.setState({usernameValue: text})}
+                  />
                 </View>
                 <TouchableHighlight
                   style={styles.changeButtons}
                   underlayColor={hex}
-                  onShowUnderlay={() => this.setState({changeUserText: true})}
-                  onHideUnderlay={() => this.setState({changeUserText: false})}
+                  onShowUnderlay={() => this.setState({changeUser: true})}
+                  onHideUnderlay={() => this.setState({changeUser: false})}
                   onPress={() => this.changeUsername()}>
                   <Text
                     style={
-                      this.state.changeUserText
+                      this.state.changeUser
                         ? styles.changeTextSelected
                         : styles.changeText
                     }>
-                    {this.state.changeUser ? 'Submit' : 'Change'}
+                    Change
                   </Text>
                 </TouchableHighlight>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                }}>
+                <TouchableHighlight
+                  underlayColor={hex}
+                  onShowUnderlay={() => this.setState({delete: true})}
+                  onHideUnderlay={() => this.setState({delete: false})}
+                  onPress={() => this.setState({deleteAlert: true})}
+                  style={{
+                    alignSelf: 'center',
+                    borderWidth: 2,
+                    borderColor: hex,
+                    borderRadius: 50,
+                    width: '35%',
+                    marginRight: '5%',
+                    backgroundColor: this.state.delete ? hex : 'white',
+                    marginTop: '5%',
+                  }}>
+                  <Text
+                    style={
+                      this.state.delete
+                        ? styles.changeTextSelected
+                        : styles.changeText
+                    }>
+                    Delete
+                  </Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                  underlayColor={hex}
+                  onShowUnderlay={() => this.setState({logout: true})}
+                  onHideUnderlay={() => this.setState({logout: false})}
+                  onPress={() => this.setState({logoutAlert: true})}
+                  style={{
+                    alignSelf: 'center',
+                    borderWidth: 2,
+                    borderColor: hex,
+                    borderRadius: 50,
+                    width: '35%',
+                    backgroundColor: this.state.logout ? hex : 'white',
+                    marginTop: '5%',
+                  }}>
+                  <Text
+                    style={
+                      this.state.logout
+                        ? styles.changeTextSelected
+                        : styles.changeText
+                    }>
+                    Logout
+                  </Text>
+                </TouchableHighlight>
+                {this.state.deleteAlert && (
+                  <Alert
+                    title="Delete your account?"
+                    body="You will not be able to recover your information"
+                    button={true}
+                    buttonText="Yes"
+                    press={() => this.handleDelete()}
+                    cancel={() => this.cancelDelete()}
+                  />
+                )}
+                {this.state.logoutAlert && (
+                  <Alert
+                    title="Log Out?"
+                    body="You will have to log back in"
+                    button={true}
+                    buttonText="Yes"
+                    press={() => this.handleLogout()}
+                    cancel={() => this.cancelLogout()}
+                  />
+                )}
+                {this.state.errorAlert && (
+                  <Alert
+                    title="Error, please try again"
+                    button={true}
+                    buttonText="Close"
+                    press={() => this.closeError()}
+                    cancel={() => this.closeError()}
+                  />
+                )}
+                {this.state.takenAlert && (
+                  <Alert
+                    title="Username taken!"
+                    button={true}
+                    buttonText="Close"
+                    press={() => this.closeTaken()}
+                    cancel={() => this.closeTaken()}
+                  />
+                )}
               </View>
               {/* <View
                 style={{
@@ -399,7 +546,7 @@ const styles = StyleSheet.create({
     paddingBottom: '0.5%',
   },
   modal: {
-    height: Dimensions.get('window').height * 0.4, //height with friends view was 50%
+    height: Dimensions.get('window').height * 0.45,
     width: '75%',
     margin: '3%',
     backgroundColor: 'white',

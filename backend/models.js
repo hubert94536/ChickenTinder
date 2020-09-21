@@ -57,9 +57,9 @@ const Accounts = sequelize.define('accounts', {
   // password: DataTypes.STRING(20)
 })
 
-Accounts.sync({ force: true }).then(() => {
-  console.log('All models were synchronized successfully.')
-})
+// Accounts.sync({ force: true }).then(() => {
+//   console.log('All models were synchronized successfully.')
+// })
 
 
 const Friends = sequelize.define('friends', {

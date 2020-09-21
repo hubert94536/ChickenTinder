@@ -1,33 +1,26 @@
-import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Button,
-  Alert,
-  TouchableHighlight,
-} from 'react-native';
-import {facebookService} from './facebookService.js';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import api from './api.js';
-import friendsapi from './friendsapi.js';
+import React from 'react'
+import { StyleSheet, View, Text, Button, TouchableHighlight } from 'react-native'
+import { facebookService } from './facebookService.js'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import Alert from './alert.js'
 
-const hex = '#F25763';
+const hex = '#F25763'
 
 export default class Login extends React.Component {
-  constructor() {
-    super();
+  constructor () {
+    super()
     this.state = {
       pressed: false,
-    };
+      alert: false
+    }
   }
 
-  underlayShow() {
-    this.setState({pressed: true});
+  underlayShow () {
+    this.setState({ pressed: true })
   }
 
-  underlayHide() {
-    this.setState({pressed: false});
+  underlayHide () {
+    this.setState({ pressed: false })
   }
 
   render () {
@@ -40,8 +33,9 @@ export default class Login extends React.Component {
             alignSelf: 'center',
             fontFamily: 'CircularStd-Medium',
             fontWeight: 'bold',
-            marginTop: '40%',
-          }}>
+            marginTop: '40%'
+          }}
+        >
           Welcome!
         </Text>
         <Text
@@ -49,54 +43,55 @@ export default class Login extends React.Component {
             fontFamily: 'CircularStd-Medium',
             alignSelf: 'center',
             color: hex,
-            fontSize: 30,
-          }}>
+            fontSize: 30
+          }}
+        >
           Let's get goin'.
         </Text>
         <TouchableHighlight
           onShowUnderlay={this.underlayShow.bind(this)}
           onHideUnderlay={this.underlayHide.bind(this)}
           activeOpacity={1}
-          underlayColor="#3b5998"
+          underlayColor='#3b5998'
           onPress={() => this.login()}
-          style={styles.button}>
+          style={styles.button}
+        >
           <Text style={this.state.pressed ? styles.yesPress : styles.noPress}>
             {/* <Icon name="facebook" style={{fontSize: 20}} /> */}
             Log in with Facebook
           </Text>
         </TouchableHighlight>
+        {this.state.alert && (
+          <Alert
+            title='Open "Facebook?"'
+            body='You will be directed to the Facebook app for account verification'
+            button
+            buttonText='Open'
+            press={() => this.handleClick()}
+            cancel={() => this.cancelClick()}
+          />
+        )}
       </View>
-    );
+    )
   }
 
-  handleClick = () => {
+  handleClick () {
     facebookService
       .loginWithFacebook()
       .then(result => {
-        this.props.navigation.navigate(result);
+        this.props.navigation.navigate(result)
       })
       .catch(error => {
-        console.log(error);
-      });
-  };
+        // Alert
+      })
+  }
 
-  login() {
-    Alert.alert(
-      // title
-      'Open "Facebook"?',
-      // body
-      'You will be directed to the Facebook app for account verification.',
-      [
-        {
-          text: 'Open',
-          onPress: () => this.handleClick(),
-        },
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-      ],
-    );
+  cancelClick () {
+    this.setState({ alert: false })
+  }
+
+  login () {
+    this.setState({ alert: true })
   }
 }
 
@@ -109,20 +104,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     width: '70%',
     alignSelf: 'center',
-    marginTop: '10%',
+    marginTop: '10%'
   },
   yesPress: {
     alignSelf: 'center',
     color: '#fff',
     fontFamily: 'CircularStd-Medium',
     fontSize: 17,
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   noPress: {
     alignSelf: 'center',
     color: '#3b5998',
     fontFamily: 'CircularStd-Medium',
     fontSize: 17,
-    fontWeight: 'bold',
-  },
-});
+    fontWeight: 'bold'
+  }
+})

@@ -52,18 +52,18 @@ const people = [
 
 export default class Requests extends React.Component {
   render() {
-    const friends = [];
-    for (var i = 0; i < people.length; i++) {
-      friends.push(
-        <Card
-          key={i}
-          name={people[i].name}
-          username={people[i].username}
-          image={people[i].image}
-          friends={false}
-        />,
-      );
-    }
+    var friends = [];
+    // for (var i = 0; i < people.length; i++) {
+    //   friends.push(
+    //     <Card
+    //       key={i}
+    //       name={people[i].name}
+    //       username={people[i].username}
+    //       image={people[i].image}
+    //       friends={false}
+    //     />
+    //   )
+    // }
     return (
       <View>
         <ScrollView style={{flexDirection: 'column'}}>{friends}</ScrollView>
