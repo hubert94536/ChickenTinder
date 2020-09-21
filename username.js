@@ -68,9 +68,8 @@ class Username extends React.Component {
             this.state.id,
             this.state.username,
             this.state.email,
-            this.state.photo,
-          ),
-            this.props.navigation.navigate('Home');
+            this.state.photo)
+          this.props.navigation.navigate('Home');
         } else if (res === 404) {
           this.setState({takenAlert: true});
         } else {
