@@ -156,12 +156,11 @@ module.exports = (io) => {
     socket.on('start', async data => {
       // proceed to restaurant matching after EVERYONE submits filters
       try {
-        const restaurantList = await Yelp.getRestaurants(data.req);
-        io.in(data.room).emit('start', {restaurantList: restaurantList})
+        const restaurantList = await Yelp.getRestaurants(data.req)
+        io.in(data.room).emit('start', { restaurantList: restaurantList })
       } catch (error) {
         socket.emit('exception', error)
       }
-      
     })
 
     socket.on('like', data => {
