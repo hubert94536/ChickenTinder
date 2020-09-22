@@ -389,7 +389,7 @@ export default class UserProfileView extends Component {
                 </TouchableHighlight>
                 {this.state.deleteAlert && (
                   <Alert
-                    title="Are you sure you want to delete your account?"
+                    title="Delete your account?"
                     body="You will not be able to recover your information"
                     button={true}
                     buttonText="Yes"
@@ -399,7 +399,7 @@ export default class UserProfileView extends Component {
                 )}
                 {this.state.logoutAlert && (
                   <Alert
-                    title="Are you sure you want to log out?"
+                    title="Log Out?"
                     body="You will have to log back in"
                     button={true}
                     buttonText="Yes"
