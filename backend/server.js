@@ -45,18 +45,18 @@ app.route('/phoneNumber/:phone_number')
 
 
 //friendships
-app.route("/friendships")
+app.route('/friendships')
   .post(friends.createFriends);
 
-app.route("/friendships/friends/:user")
+app.route('/friendships/friends/:user')
   .get(friends.getUserFriends)
 
-app.route("/friendships/friends/:user/:friend")
+app.route('/friendships/friends/:user/:friend')
   .delete(friends.deleteFriendship);
 
-app.route("/friendships/requests/:user")
+app.route('/friendships/requests/:user')
   .get(friends.getUserRequests)
-app.route("/friendships/requests/:user/:friend")
+app.route('/friendships/requests/:user/:friend')
   .put(friends.acceptRequest)
   .delete(friends.deleteFriendship);
 
