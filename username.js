@@ -99,13 +99,14 @@ class Username extends React.Component {
             marginLeft: '3%',
             textAlign: 'left',
           }}>
-          My username is
+          'Chews' a username!
         </Text>
-        <View style={{marginTop: '50%'}}>
+        <View style={{marginTop: '35%'}}>
           <TextInput
             style={{
               fontFamily: font,
-              fontSize: 15,
+              color: hex,
+              fontSize: 25,
               alignSelf: 'center',
               borderBottomColor: hex,
               borderBottomWidth: 2.5,
