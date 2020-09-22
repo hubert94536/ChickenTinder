@@ -24,7 +24,7 @@ const createFriendship = (main, friend) => {
     .then (res => {
       console.log(res.data.user)
       return {
-        f_id: res.data.user.friend_user,
+        f_id: res.data.user.f_id,
         status: res.status
       }
     })

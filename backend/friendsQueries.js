@@ -1,6 +1,47 @@
 const { Accounts, Friends } = require("./models");
 const { Op } = require("sequelize");
 
+// const createFriends = async (req, res) => {
+//     try {
+//         const main = req.body.params.main;
+//         const friend = req.body.params.friend;
+//         const user = await Friends.create(
+//             {
+//                 m_id: main,
+//                 f_status: "requested",
+//                 f_id: {
+//                     id: friend
+//                 }
+                
+
+//             },
+//             {
+//                 include: [Accounts]
+//             }
+//         );
+//         const friendUser = await Friends.create(
+//             {
+//                 m_id: friend,
+//                 f_status: "pending request",
+//                 f_id: {
+//                     id: main
+//                 }
+                
+
+//             },
+//             {
+//                 include: [Accounts]
+//             }
+//         );
+//         return res.status(201).json({
+//             user
+//         });
+//     } catch (error) {
+//         return res.status(500).json({ error: error.message})
+//     }
+// }
+
+
 const createFriends = async (req, res) => {
     try {
         const main = req.body.params.main;
@@ -9,28 +50,15 @@ const createFriends = async (req, res) => {
             {
                 m_id: main,
                 f_status: "requested",
-                f_id: {
-                    id: friend
-                }
-                
+                f_id: friend
 
-            },
-            {
-                include: [Accounts]
             }
         );
         const friendUser = await Friends.create(
             {
                 m_id: friend,
                 f_status: "pending request",
-                f_id: {
-                    id: main
-                }
-                
-
-            },
-            {
-                include: [Accounts]
+                f_id: main
             }
         );
         return res.status(201).json({
@@ -41,32 +69,6 @@ const createFriends = async (req, res) => {
     }
 }
 
-// const createFriends = async (req, res) => {
-//     try {
-//         const main = req.body.params.main;
-//         const friend = req.body.params.friend;
-//         const user = await Friends.create(
-//             {
-//                 main_user: main,
-//                 f_status: "requested",
-//                 friend_user: friend
-
-//             }
-//         );
-//         const friendUser = await Friends.create(
-//             {
-//                 main_user: friend,
-//                 f_status: "pending request",
-//                 friend_user: main
-//             }
-//         );
-//         return res.status(201).json({
-//             user
-//         });
-//     } catch (error) {
-//         return res.status(500).json({ error: error.message})
-//     }
-// }
 
 const getUserFriends = async (req, res) => {
     try {
@@ -88,7 +90,7 @@ const getUserRequests = async (req, res) => {
         const requests = await Friends.findAll({
             where: {
             [Op.and]: [
-                { main_user: req.params.user},
+                { m_id: req.params.user},
                 { f_status: "pending request"}
               ] }
 
@@ -106,13 +108,13 @@ const acceptRequest = async (req, res) => {
         const friend = req.params.friend;
         const accepted = req.body.params.accepted
         const account_1 = await Friends.update({f_status: accepted}, {
-            where: { main_user: main, friend_user: friend }
+            where: { m_id: main, f_id: friend }
         });
         const account_2 = await Friends.update({f_status: accepted}, {
-            where: { main_user: friend, friend_user: main }
+            where: { m_id: friend, f_id: main }
         });
         if (account_1 && account_2) {
-            const updatedAccount_1 = await Friends.findOne({ where: { main_user: main, friend_user: friend} });
+            const updatedAccount_1 = await Friends.findOne({ where: { m_id: main, f_id: friend} });
             return res.status(200).json({ user: updatedAccount_1 });
         }
         return res.status(404).send("Friendship not found");
@@ -126,10 +128,10 @@ const deleteFriendship = async (req, res) => {
         const main = req.params.user;
         const friend = req.params.friend;
         const deleted_1 = await Friends.destroy( {
-            where: { main_user: main, friend_user: friend }
+            where: { m_id: main, f_id: friend }
         });
         const deleted_2 = await Friends.destroy( {
-            where: { main_user: friend, friend_user: main }
+            where: { m_id: friend, f_id: main }
         });
         if (deleted_1 && deleted_2) {
             return res.status(204).send("Friendship deleted");

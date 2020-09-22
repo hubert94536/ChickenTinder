@@ -3,6 +3,8 @@ import { StyleSheet, View, Text, Button, TouchableHighlight } from 'react-native
 import { facebookService } from './facebookService.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Alert from './alert.js'
+import api from './api.js';
+import friendsapi from './friendsapi.js';
 
 const hex = '#F25763'
 
@@ -22,6 +24,32 @@ export default class Login extends React.Component {
   underlayHide () {
     this.setState({ pressed: false })
   }
+
+  // componentDidMount() {
+  //   // api.createFBUser("isha", 0, "ishaaa", "ishag@gmail.com", "dffdsds"),
+  //   // api.createFBUser("hanna", 0, "hco", "hannc@gmail.com", "kfdkfjs"),
+  //   // api.createFBUser("hubert", 0, "hubes", "hubes@gmail.com", "jskfhskl"),
+  //   // friendsapi.createFriendship("hubes", "hco"),
+  //   // friendsapi.createFriendship("ishaaa", "hubes"),
+  //   // friendsapi.createFriendship("hco", "ishaaa")
+  //   // friendsapi.denyFriendRequest("ishaaa", "hco")
+    
+  //   // friendsapi.getFriends("hco")
+
+  //   api.createFBUser("isha", 1, "ishaaa", "ishag@gmail.com", "dffdsds"),
+  //   api.createFBUser("hanna", 2, "hco", "hannc@gmail.com", "kfdkfjs"),
+  //   api.createFBUser("hubert", 3, "hubes", "hubes@gmail.com", "jskfhskl")
+  //   // console.log(api.getAllUsers()),
+  //   // friendsapi.createFriendship(1, 2)
+  //   // friendsapi.createFriendship("ishaaa", "hubes"),
+  //   // friendsapi.createFriendship("hco", "ishaaa"),
+  //   // friendsapi.acceptFriendRequest("hubes", "ishaaa"),
+  //   // friendsapi.denyFriendRequest("hubes", "hco")
+  //   // console.log(friendsapi.getFriends("ishaaa"))
+  //   // console.log(friendsapi.getFriends("hubes")),
+  //   // friendsapi.removeFriend("hco", "hubes"),
+  //   // console.log(friendsapi.getFriends("hubes"))
+  // }
 
   render () {
     return (

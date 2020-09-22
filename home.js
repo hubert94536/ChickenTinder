@@ -55,9 +55,9 @@ class Home extends React.Component {
     
     // friendsapi.getFriends("hco")
 
-    api.createFBUser("isha", 0, "ishaaa", "ishag@gmail.com", "dffdsds"),
-    api.createFBUser("hanna", 0, "hco", "hannc@gmail.com", "kfdkfjs"),
-    api.createFBUser("hubert", 0, "hubes", "hubes@gmail.com", "jskfhskl"),
+    api.createFBUser("isha", 1, "ishaaa", "ishag@gmail.com", "dffdsds"),
+    api.createFBUser("hanna", 2, "hco", "hannc@gmail.com", "kfdkfjs"),
+    api.createFBUser("hubert", 3, "hubes", "hubes@gmail.com", "jskfhskl"),
     // console.log(api.getAllUsers()),
     friendsapi.createFriendship(1, 2)
     // friendsapi.createFriendship("ishaaa", "hubes"),
