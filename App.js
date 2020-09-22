@@ -47,11 +47,11 @@ export default class App extends React.Component {
   }
 }
 
-// import React from 'react';
-// import Search from './search.js';
+// import React from 'react'
+// import Search from './search.js'
 
 // export default class App extends React.Component {
-//   render() {
-//     return <Search />;
+//   render () {
+//     return <Search />
 //   }
 // }
