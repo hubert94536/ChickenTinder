@@ -77,7 +77,7 @@ Friends.belongsTo(Accounts, {foreignKey: 'f_id'});
 Accounts.hasMany(Friends, {foreignKey: 'f_id'});
 
 
-Sequelize.sync({ force: true}).then(()=> {
+sequelize.sync({ force: true}).then(()=> {
     console.log("Friend model was synchronized successfully.");
 })
 
