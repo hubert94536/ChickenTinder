@@ -65,7 +65,6 @@ const createFBUser = async (name, id, username, email, photo) => {
     })
     .then(res => {
       return {
-        id: res.data.user.id,
         status: res.status,
       };
     })
@@ -87,6 +86,7 @@ const getAllUsers = async () => {
             name: users.name,
             username: users.username,
             photo: users.photo,
+            id: users.id,
           };
         }),
       };
@@ -110,6 +110,7 @@ const searchUsers = async text => {
             name: users.name,
             username: users.username,
             photo: users.photo,
+            id: users.id,
           };
         }),
       };
@@ -141,8 +142,9 @@ const getUser = async () => {
         username: res.data.user.username,
         email: res.data.user.email,
         phone_number: res.data.user.phone_number,
-        name: res.name,
-        photo: user.photo,
+        name: res.data.user.name,
+        photo: res.data.user.photo,
+        id: res.data.user.id,
       };
     })
     .catch(error => {
@@ -191,10 +193,12 @@ const updateUser = async req => {
     .then(res => {
       return {
         status: res.status,
-        name: res.data.name,
-        username: res.data.username,
-        email: res.data.email,
-        phone_number: res.data.phone_number,
+        username: res.data.user.username,
+        email: res.data.user.email,
+        phone_number: res.data.user.phone_number,
+        name: res.data.user.name,
+        photo: res.data.user.photo,
+        id: res.data.user.id,
       };
     })
     .catch(error => {
