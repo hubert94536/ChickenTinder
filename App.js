@@ -46,12 +46,3 @@ export default class App extends React.Component {
     return <AppContainer />
   }
 }
-
-// import React from 'react'
-// import Search from './search.js'
-
-// export default class App extends React.Component {
-//   render () {
-//     return <Search />
-//   }
-// }
