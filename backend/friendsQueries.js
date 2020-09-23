@@ -8,7 +8,7 @@ const createFriends = async (req, res) => {
         const user = await Friends.create(
             {
                 m_id: main,
-                f_status: "requested",
+                status: "requested",
                 f_id: friend
                 
 
@@ -20,7 +20,7 @@ const createFriends = async (req, res) => {
         const friendUser = await Friends.create(
             {
                 m_id: friend,
-                f_status: "pending request",
+                status: "pending request",
                 f_id: main
                 
 
@@ -45,7 +45,7 @@ const createFriends = async (req, res) => {
 //         const user = await Friends.create(
 //             {
 //                 m_id: main,
-//                 f_status: "requested",
+//                 status: "requested",
 //                 f_id: friend
 
 //             }
@@ -53,7 +53,7 @@ const createFriends = async (req, res) => {
 //         const friendUser = await Friends.create(
 //             {
 //                 m_id: friend,
-//                 f_status: "pending request",
+//                 status: "pending request",
 //                 f_id: main
 //             }
 //         );
@@ -72,7 +72,7 @@ const getUserFriends = async (req, res) => {
             where: {
                 [Op.and]: [
                     { m_id: req.params.user},
-                    { f_status: "accepted"}
+                    { status: "accepted"}
                   ] },
             include: [Accounts]
         });
@@ -88,11 +88,9 @@ const getUserRequests = async (req, res) => {
             where: {
             [Op.and]: [
                 { m_id: req.params.user},
-                { f_status: "pending request"}
+                { status: "pending request"}
               ] },
-              include: [Accounts]
-
-            
+              include: [Accounts]    
         });
         return res.status(200).json({ requests });
     } catch (error) {
@@ -105,10 +103,10 @@ const acceptRequest = async (req, res) => {
         const main = req.params.user;
         const friend = req.params.friend;
         const accepted = req.body.params.accepted
-        const account_1 = await Friends.update({f_status: accepted}, {
+        const account_1 = await Friends.update({status: accepted}, {
             where: { m_id: main, f_id: friend }
         });
-        const account_2 = await Friends.update({f_status: accepted}, {
+        const account_2 = await Friends.update({status: accepted}, {
             where: { m_id: friend, f_id: main }
         });
         if (account_1 && account_2) {

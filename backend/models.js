@@ -64,7 +64,7 @@ const Friends = sequelize.define('friends', {
         type: DataTypes.BIGINT,
         allowNull: false
     },
-    f_status: {
+    status: {
         type: DataTypes.STRING(20),
         allowNull: false,
         unique: false
