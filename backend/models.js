@@ -77,7 +77,7 @@ const Friends = sequelize.define('friends', {
 
 });
 
-Friends.belongsTo(Accounts, {foreignKey: 'f_id', targetKey: 'id'});
+Friends.belongsTo(Accounts, {foreignKey: 'f_id'});
 
 
 Friends.sync({ force: true}).then(()=> {
