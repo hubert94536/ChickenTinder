@@ -80,20 +80,7 @@ export default class Search extends Component {
     this.state = {
       data: [],
     };
-
-    this.arrayholder = [];
   }
-
-  componentDidMount() {
-    this.makeRemoteRequest();
-  }
-
-  makeRemoteRequest = () => {
-    api.getAllUsers().then(res => {
-      this.setState({data: res.userList});
-      this.arrayholder = res.userList;
-    });
-  };
 
   renderSeparator = () => {
     return (
@@ -113,15 +100,14 @@ export default class Search extends Component {
       value: text,
     });
 
-    const newData = this.arrayholder.filter(item => {
-      const itemData = item.username.toUpperCase();
-      const textData = text.toUpperCase();
-
-      return itemData.indexOf(textData) > -1;
-    });
-    this.setState({
-      data: newData,
-    });
+    clearTimeout(this.timeout); // clears the old timer
+    this.timeout = setTimeout(
+      () =>
+        api.searchUsers(text).then(res => {
+          this.setState({data: res.userList});
+        }),
+      100,
+    );
   };
 
   renderHeader = () => {
@@ -130,7 +116,7 @@ export default class Search extends Component {
         containerStyle={styles.container}
         inputContainerStyle={styles.inputContainer}
         inputStyle={styles.input}
-        placeholder="Type Here..."
+        placeholder="Seach by username"
         lightTheme={true}
         round={true}
         onChangeText={text => this.searchFilterFunction(text)}
