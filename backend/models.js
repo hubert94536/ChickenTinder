@@ -57,10 +57,6 @@ const Accounts = sequelize.define('accounts', {
   // password: DataTypes.STRING(20)
 })
 
-// Accounts.sync({ force: true }).then(() => {
-//   console.log('All models were synchronized successfully.')
-// })
-
 
 const Friends = sequelize.define('friends', {
 
@@ -78,9 +74,10 @@ const Friends = sequelize.define('friends', {
 });
 
 Friends.belongsTo(Accounts, {foreignKey: 'f_id'});
+Accounts.hasMany(Friends, {foreignKey: 'f_id'});
 
 
-Friends.sync({ force: true}).then(()=> {
+Sequelize.sync({ force: true}).then(()=> {
     console.log("Friend model was synchronized successfully.");
 })
 

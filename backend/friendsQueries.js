@@ -73,7 +73,8 @@ const getUserFriends = async (req, res) => {
                 [Op.and]: [
                     { m_id: req.params.user},
                     { f_status: "accepted"}
-                  ] }
+                  ] },
+            include: [Accounts]
         });
         return res.status(200).json({ friends });
     } catch (error) {
@@ -88,7 +89,8 @@ const getUserRequests = async (req, res) => {
             [Op.and]: [
                 { m_id: req.params.user},
                 { f_status: "pending request"}
-              ] }
+              ] },
+              include: [Accounts]
 
             
         });
