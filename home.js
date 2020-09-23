@@ -10,7 +10,7 @@ import {
 import api from './api.js'
 import UserProfileView from './profile.js'
 import socket from './socket.js'
-
+import friendsapi from './friendsapi.js'
 class Home extends React.Component {
   constructor () {
     super()
@@ -18,6 +18,23 @@ class Home extends React.Component {
       createPressed: false,
       profilePressed: false
     }
+  }
+
+  componentDidMount() {
+    // api.createFBUser("isha", 1, "ishaaa", "ishag@gmail.com", "dffdsds"),
+    // api.createFBUser("hanna", 2, "hco", "hannc@gmail.com", "kfdkfjs"),
+    // api.createFBUser("hubert", 3, "hubes", "hubes@gmail.com", "jskfhskl"),
+    // console.log(api.getAllUsers()),
+    //friendsapi.createFriendship(1, 2),
+    // friendsapi.createFriendship("ishaaa", "hubes"),
+    // friendsapi.createFriendship("hco", "ishaaa"),
+    //friendsapi.acceptFriendRequest(2, 1)
+    // friendsapi.denyFriendRequest("hubes", "hco")
+    friendsapi.getFriends(2).then(res => console.log(res))
+    // console.log(friendsapi.getFriends("ishaaa"))
+    // console.log(friendsapi.getFriends("hubes")),
+    // friendsapi.removeFriend("hco", "hubes"),
+    // console.log(friendsapi.getFriends("hubes"))
   }
 
   underlayShowCreate () {
