@@ -82,6 +82,7 @@ export default class Login extends React.Component {
       .catch(error => {
         // Alert
       });
+    this.setState({alert: false});
   }
 
   cancelClick() {

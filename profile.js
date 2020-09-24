@@ -592,6 +592,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 17,
     paddingTop: '2.5%',
-    paddingBottom: '2.5%'
-  }
-})
+    paddingBottom: '2.5%',
+  },
+});
