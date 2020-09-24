@@ -1,21 +1,9 @@
-import React, {Component, useState, useEffect} from 'react';
-import api from './api.js';
+import React from 'react';
 import Swiper from 'react-native-deck-swiper';
 import {Transitioning, Transition} from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Text,
-  Dimensions,
-  Linking,
-} from 'react-native';
-import {TouchableHighlight} from 'react-native-gesture-handler';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faUtensils, faMapMarkerAlt} from '@fortawesome/free-solid-svg-icons';
-import {faStar} from '@fortawesome/free-regular-svg-icons';
+import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import Card from './roundCard.js';
 
 const hex = '#F25763';
 const font = 'CircularStd-Medium';
@@ -25,8 +13,6 @@ const restuarants = [
     name: 'Chinchikurin',
     url:
       'https://www.yelp.com/biz/chinchikurin-little-tokyo-los-angeles-2?osq=chinchikurin',
-    image: require('./assets/images/japanese.png'),
-    stars: require('./assets/stars/4.5.png'),
     price: '$$',
     rating: 4.5,
     review_count: 177,
@@ -42,8 +28,6 @@ const restuarants = [
     name: 'Padua Pasta Makers',
     url:
       'https://www.yelp.com/biz/chinchikurin-little-tokyo-los-angeles-2?osq=chinchikurin',
-    image: require('./assets/images/italian.png'),
-    stars: require('./assets/stars/4.png'),
     price: '$$',
     rating: 4,
     review_count: 177,
@@ -59,8 +43,6 @@ const restuarants = [
     name: 'Din Tai Fung',
     url:
       'https://www.yelp.com/biz/chinchikurin-little-tokyo-los-angeles-2?osq=chinchikurin',
-    image: require('./assets/images/chinese.png'),
-    stars: require('./assets/stars/4.5.png'),
     price: '$$',
     rating: 4.5,
     review_count: 177,
@@ -76,8 +58,6 @@ const restuarants = [
     name: 'BCD Tofu House',
     url:
       'https://www.yelp.com/biz/chinchikurin-little-tokyo-los-angeles-2?osq=chinchikurin',
-    image: require('./assets/images/korean.png'),
-    stars: require('./assets/stars/3.5.png'),
     price: '$',
     rating: 3.6,
     review_count: 177,
@@ -93,8 +73,6 @@ const restuarants = [
     name: 'Zaky Mediterranean Grill',
     url:
       'https://www.yelp.com/biz/chinchikurin-little-tokyo-los-angeles-2?osq=chinchikurin',
-    image: require('./assets/images/mediterranean.png'),
-    stars: require('./assets/stars/3.5.png'),
     price: '$',
     rating: 3.5,
     review_count: 177,
@@ -110,8 +88,6 @@ const restuarants = [
     name: 'Riceberry Thai Kitchen',
     url:
       'https://www.yelp.com/biz/chinchikurin-little-tokyo-los-angeles-2?osq=chinchikurin',
-    image: require('./assets/images/thai.png'),
-    stars: require('./assets/stars/4.5.png'),
     price: '$$$',
     rating: 4.7,
     review_count: 177,
@@ -127,8 +103,6 @@ const restuarants = [
     name: "Alina's Lebanese Cuisine",
     url:
       'https://www.yelp.com/biz/chinchikurin-little-tokyo-los-angeles-2?osq=chinchikurin',
-    image: require('./assets/images/middle-eastern.png'),
-    stars: require('./assets/stars/4.5.png'),
     price: '$$',
     rating: 4.4,
     review_count: 177,
@@ -144,8 +118,6 @@ const restuarants = [
     name: "Leo's Taco Truck",
     url:
       'https://www.yelp.com/biz/chinchikurin-little-tokyo-los-angeles-2?osq=chinchikurin',
-    image: require('./assets/images/mexican.png'),
-    stars: require('./assets/stars/5.png'),
     price: '$',
     rating: 4.9,
     review_count: 177,
@@ -161,8 +133,6 @@ const restuarants = [
     name: 'Aroma Grill',
     url:
       'https://www.yelp.com/biz/chinchikurin-little-tokyo-los-angeles-2?osq=chinchikurin',
-    image: require('./assets/images/indian.png'),
-    stars: require('./assets/stars/2.5.png'),
     price: '$$',
     rating: 2.6,
     review_count: 177,
@@ -178,8 +148,6 @@ const restuarants = [
     name: 'UPLAND GERMAN DELI',
     url:
       'https://www.yelp.com/biz/chinchikurin-little-tokyo-los-angeles-2?osq=chinchikurin',
-    image: require('./assets/images/european.png'),
-    stars: require('./assets/stars/4.5.png'),
     price: '$',
     rating: 4.5,
     review_count: 177,
@@ -195,8 +163,6 @@ const restuarants = [
     name: 'Lotus Garden',
     url:
       'https://www.yelp.com/biz/chinchikurin-little-tokyo-los-angeles-2?osq=chinchikurin',
-    image: require('./assets/images/asian-fusion.png'),
-    stars: require('./assets/stars/4.5.png'),
     price: '$$$',
     rating: 4.5,
     review_count: 177,
@@ -212,8 +178,6 @@ const restuarants = [
     name: 'In-N-Out Burger',
     url:
       'https://www.yelp.com/biz/chinchikurin-little-tokyo-los-angeles-2?osq=chinchikurin',
-    image: require('./assets/images/american.png'),
-    stars: require('./assets/stars/4.png'),
     price: '$',
     rating: 4.2,
     review_count: 177,
@@ -227,107 +191,51 @@ const restuarants = [
   },
 ];
 
-export default function RestaurantCard() {
-  const [index, setIndex] = useState(0);
-  const [results, setResults] = useState(restuarants);
-  const [press, setPress] = useState(false);
+export default class RestaurantCard extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      index: 0,
+      results: restuarants,
+      isHost: true,
+    };
+  }
 
-  const Card = ({card}) => {
-    while (results.length == 0) {
-      return (
-        <View style={styles.card}>
+  onSwiped = () => {
+    // transitionRef.current.animateNextTransition();
+    this.setState({index: this.state.index + 1});
+  };
+
+  render() {
+    return (
+      <SafeAreaView style={styles.mainContainer}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Icon
+            name="angle-left"
+            style={{
+              color: hex,
+              fontFamily: font,
+              fontSize: 25,
+              margin: '3%',
+              fontWeight: 'bold',
+            }}
+            onPress={() => this.props.navigation.navigate('Home')}
+          />
           <Text
             style={{
-              fontFamily: font,
               color: hex,
-              textAlign: 'center',
-              fontSize: 40,
-              marginTop: '30%',
+              fontFamily: font,
+              fontSize: 20,
+              textAlign: 'left',
             }}>
-            Fetching Restaurants!
+            {this.state.isHost ? 'End' : 'Leave'}
           </Text>
         </View>
-      );
-    }
-    return (
-      <View style={styles.card}>
-        <Image source={card.image} style={styles.image} />
-        <Text style={styles.title}>{card.name}</Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginLeft: '10%',
-            marginRight: '3%',
-          }}>
-          <Image
-            source={card.stars}
-            style={{marginRight: '2%', justifyContent: 'center'}}
-          />
-          <Text style={{alignSelf: 'center', fontFamily: font, fontSize: 20}}>
-            {card.price}
-          </Text>
-        </View>
-        <Text style={{marginLeft: '10%', fontFamily: font, color: '#bebebe'}}>
-          Based on {card.review_count} reviews
-        </Text>
-        <View style={styles.info}>
-          <FontAwesomeIcon icon={faStar} style={styles.icon} />
-          <Text style={styles.infoText}>{card.categories[0].title}</Text>
-        </View>
-        <View style={styles.info}>
-          <FontAwesomeIcon icon={faMapMarkerAlt} style={styles.icon} />
-          <Text style={styles.infoText}>
-            {card.distance} miles — {card.location.city}
-          </Text>
-        </View>
-        <View style={styles.info}>
-          <FontAwesomeIcon icon={faUtensils} style={styles.icon} />
-          <Text style={styles.infoText}>{card.transactions} available</Text>
-        </View>
-        <TouchableHighlight
-          underlayColor={'black'}
-          onShowUnderlay={() => setPress(true)}
-          onHideUnderlay={() => setPress(false)}
-          style={styles.button}
-          onPress={() => Linking.openURL(card.url)}>
-          <View
-            style={{
-              flexDirection: 'row',
-              padding: '1%',
-              paddingLeft: '3%',
-              paddingRight: '3%',
-            }}>
-            <Icon
-              name="yelp"
-              style={{color: 'red', fontSize: 18, marginRight: '2%'}}
-            />
-            <Text
-              style={{
-                fontFamily: font,
-                fontSize: 15,
-                fontWeight: 'bold',
-                color: press ? 'white' : 'black',
-              }}>
-              See more on Yelp
-            </Text>
-          </View>
-        </TouchableHighlight>
-      </View>
-    );
-  };
-
-  const onSwiped = () => {
-    // transitionRef.current.animateNextTransition();
-    setIndex(index + 1);
-  };
-  return (
-    <SafeAreaView style={styles.mainContainer}>
-      <View style={styles.cardContainer}>
         <Swiper
-          cards={results}
-          cardIndex={index}
+          cards={this.state.results}
+          cardIndex={this.state.index}
           renderCard={card => <Card card={card} />}
-          onSwiper={onSwiped}
+          onSwiper={this.onSwiped}
           stackSize={10}
           stackSeparation={0}
           backgroundColor="transparent"
@@ -412,69 +320,37 @@ export default function RestaurantCard() {
             },
           }}
         />
-      </View>
-    </SafeAreaView>
-  );
+        <Text
+          style={{
+            color: hex,
+            fontFamily: font,
+            fontSize: 20,
+            textAlign: 'center',
+            marginBottom: '5%',
+          }}>
+          Swipe!
+        </Text>
+      </SafeAreaView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
   // Fullscreen
   mainContainer: {
     flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
     backgroundColor: 'white',
   },
 
   // Card area is now flexsized and takes 90% of the width of screen
-  cardContainer: {
-    borderRadius: 17,
-    borderWidth: 0,
-    borderColor: '#000',
-    width: '90%',
-    height: '80%',
-    alignItems: 'center',
-  },
-
-  // Sizing is now based on aspect ratio
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 40,
-    borderWidth: 0,
-    borderColor: '#000',
-    width: '100%',
-    height: '100%',
-    elevation: 10,
-  },
-  image: {
-    marginTop: '10%',
-    alignSelf: 'center',
-    height: Dimensions.get('window').width * 0.6,
-    width: Dimensions.get('window').width * 0.6,
-    borderRadius: 20,
-  },
-  title: {
-    fontFamily: font,
-    fontSize: 30,
-    textAlign: 'left',
-    fontWeight: 'bold',
-    margin: '3%',
-    marginLeft: '10%',
-  },
-  info: {flexDirection: 'row', marginTop: '2%', marginLeft: '10%'},
-  infoText: {
-    fontFamily: font,
-    fontSize: 16,
-    alignSelf: 'center',
-  },
-  icon: {
-    alignSelf: 'center',
-    fontFamily: font,
-    fontSize: 18,
-    marginRight: '2%',
-  },
-  button: {
-    borderRadius: 17,
-    borderWidth: 2.5,
-    alignSelf: 'center',
-    margin: '5%',
-  },
+  // cardContainer: {
+  //   backgroundColor: hex,
+  //   borderRadius: 17,
+  //   height: '75%',
+  //   alignSelf: 'center',
+  //   width: '90%',
+  //   height: '80%',
+  // },
 });
