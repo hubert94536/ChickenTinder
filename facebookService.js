@@ -1,6 +1,6 @@
-import FBSDK from 'react-native-fbsdk'
-import firebase from 'firebase'
-import api from './api.js'
+import FBSDK from 'react-native-fbsdk';
+import firebase from 'firebase';
+import api from './api.js';
 import {
   FIREBASE_API_KEY,
   FIREBASE_APPLICATION_ID,
@@ -16,7 +16,7 @@ import {
   PHOTO,
 } from 'react-native-dotenv';
 import AsyncStorage from '@react-native-community/async-storage';
-const { LoginManager, AccessToken, GraphRequest, GraphRequestManager } = FBSDK
+const {LoginManager, AccessToken, GraphRequest, GraphRequestManager} = FBSDK;
 
 const config = {
   apiKey: FIREBASE_API_KEY, // Auth / General Use
@@ -27,7 +27,7 @@ const config = {
   storageBucket: FIREBASE_STORAGE_BUCKET, //Storage
 };
 
-firebase.initializeApp(config)
+firebase.initializeApp(config);
 
 class FacebookService {
   loginWithFacebook = async () => {
@@ -35,44 +35,42 @@ class FacebookService {
     return LoginManager.logInWithPermissions(['public_profile', 'email'])
       .then(login => {
         if (login.isCancelled) {
-          return Promise.reject(new Error('Cancelled request'))
+          return Promise.reject(new Error('Cancelled request'));
         }
-        return AccessToken.getCurrentAccessToken()
+        return AccessToken.getCurrentAccessToken();
       })
       .then(data => {
         const credential = firebase.auth.FacebookAuthProvider.credential(
           data.accessToken,
-        )
+        );
         // Sign in with Firebase oauth using credential and authentication token
-        return firebase.auth().signInWithCredential(credential)
+        return firebase.auth().signInWithCredential(credential);
       })
       .then(currentUser => {
         // Set user's info locally
-        AsyncStorage.setItem(UID, firebase.auth().currentUser.uid)
-        AsyncStorage.setItem(
-          NAME,
-          currentUser.additionalUserInfo.profile.name)
-        AsyncStorage.setItem(ID, currentUser.additionalUserInfo.profile.id)
+        AsyncStorage.setItem(UID, firebase.auth().currentUser.uid);
+        AsyncStorage.setItem(NAME, currentUser.additionalUserInfo.profile.name);
+        AsyncStorage.setItem(ID, currentUser.additionalUserInfo.profile.id);
         AsyncStorage.setItem(
           EMAIL,
-          currentUser.additionalUserInfo.profile.email)
-        AsyncStorage.setItem(PHOTO, currentUser.user.photoURL)
+          currentUser.additionalUserInfo.profile.email,
+        );
+        AsyncStorage.setItem(PHOTO, currentUser.user.photoURL);
         // Get username from database if not new user
         if (!currentUser.additionalUserInfo.isNewUser) {
-          api.getUser()
-          .then(res => {
-            AsyncStorage.setItem(USERNAME, res.username)
-          })
-          return 'Home'
+          api.getUser().then(res => {
+            AsyncStorage.setItem(USERNAME, res.username);
+          });
+          return 'Home';
         }
-        return 'Username'
+        return 'Username';
       })
       .catch(error => {
         //Account linking will be needed with email/phone_number login
         // if (errorCode === 'auth/account-exists-with-different-credential') {
         //   alert('Email already associated with another account.');
         //   // Handle account linking here, if using.
-        throw error
+        throw error;
       });
   };
 
@@ -82,37 +80,39 @@ class FacebookService {
 
   // Log out of Firebase and Facebook
   logoutWithFacebook = async () => {
-    firebase.auth().signOut()
+    firebase
+      .auth()
+      .signOut()
       .then(() => {
-        LoginManager.logOut()
-        AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO])
+        LoginManager.logOut();
+        AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO]);
       })
-      .catch((error) => {
-        throw error
-      })
-
+      .catch(error => {
+        throw error;
+      });
   };
 
   deleteUser = async () => {
-    api.deleteUser()
+    api
+      .deleteUser()
       .then(() => {
         // Need to refresh access token since old one expired
-        AccessToken.refreshCurrentAccessTokenAsync()
+        AccessToken.refreshCurrentAccessTokenAsync();
       })
       .then(() => {
         // Retrieve accesstoken to delete use from Firebase
-        AccessToken.getCurrentAccessToken()
-          .then((accessToken) => {
-            const credential = firebase.auth.FacebookAuthProvider.credential(
-              accessToken)
-            firebase.auth().currentUser.reauthenticateWithCredential(credential)
-            firebase.auth().currentUser.delete();
-            AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO])
-          })
+        AccessToken.getCurrentAccessToken().then(accessToken => {
+          const credential = firebase.auth.FacebookAuthProvider.credential(
+            accessToken,
+          );
+          firebase.auth().currentUser.reauthenticateWithCredential(credential);
+          firebase.auth().currentUser.delete();
+          AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO]);
+        });
       })
       .catch(error => {
-        throw error
-      })
+        throw error;
+      });
   };
   //getUser if needed
   // getUser = (token) => {
@@ -141,4 +141,4 @@ class FacebookService {
   // };
 }
 
-export const facebookService = new FacebookService()
+export const facebookService = new FacebookService();
