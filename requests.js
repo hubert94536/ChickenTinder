@@ -1,58 +1,58 @@
-import React from 'react';
-import {View, ScrollView} from 'react-native';
-import Card from './profileCard.js';
+import React from 'react'
+import { View, ScrollView } from 'react-native'
+import Card from './profileCard.js'
 
-const hex = '#F25763';
-const font = 'CircularStd-Medium';
+const hex = '#F25763'
+const font = 'CircularStd-Medium'
 
 const people = [
   {
     name: 'Hanna Co',
     username: '@hannaco',
     image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
+      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg'
   },
   {
     name: 'Hubert Chen',
     username: '@hubesc',
     image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
+      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg'
   },
   {
     name: 'Isha Gonu',
     username: '@ishagonu',
     image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
+      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg'
   },
   {
     name: 'Ruth Lee',
     username: '@ruthlee',
     image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
+      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg'
   },
   {
     name: 'Hanna Co',
     username: '@hannaco',
     image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
+      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg'
   },
   {
     name: 'Michelle Chan',
     username: '@mishigan',
     image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
+      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg'
   },
   {
     name: 'Janice Tsai',
     username: '@jopanice',
     image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-  },
-];
+      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg'
+  }
+]
 
 export default class Requests extends React.Component {
-  render() {
-    var friends = [];
+  render () {
+    var friends = []
     // for (var i = 0; i < people.length; i++) {
     //   friends.push(
     //     <Card
@@ -66,8 +66,8 @@ export default class Requests extends React.Component {
     // }
     return (
       <View>
-        <ScrollView style={{flexDirection: 'column'}}>{friends}</ScrollView>
+        <ScrollView style={{ flexDirection: 'column' }}>{friends}</ScrollView>
       </View>
-    );
+    )
   }
 }
