@@ -148,6 +148,5 @@ module.exports =
     getUserFriends,
     getUserRequests,
     acceptRequest,
-    deleteFriendship,
-    searchFriends
+    deleteFriendship
 }
