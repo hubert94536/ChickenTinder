@@ -3,6 +3,7 @@ const express = require('express')
 const io = require('socket.io')()
 const bodyParser = require('body-parser')
 const accounts = require('./accountsQueries.js')
+const friends = require('./friendsQueries.js')
 const http = require('http')
 
 const app = express()
@@ -41,6 +42,23 @@ app.route('/username/:username')
 
 app.route('/phoneNumber/:phone_number')
   .get(accounts.checkPhoneNumber)
+
+//friendships
+app.route('/friendships')
+  .post(friends.createFriends)
+  .get(friends.getAllFriends)
+
+app.route('/friendships/friends/:user')
+  .get(friends.getUserFriends)
+
+app.route('/friendships/friends/:user/:friend')
+  .delete(friends.deleteFriendship);
+
+app.route('/friendships/requests/:user')
+  .get(friends.getUserRequests)
+app.route('/friendships/requests/:user/:friend')
+  .put(friends.acceptRequest)
+  .delete(friends.deleteFriendship);
 
 server.listen(PORT, () => {
   console.log(`App running on port ${PORT}.`)

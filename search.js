@@ -80,6 +80,7 @@ export default class Search extends Component {
     this.state = {
       data: [],
     };
+    api.createFBUser("boo", 1, "booo", "boo@gmail.com", "pic")
   }
 
   renderSeparator = () => {
@@ -103,8 +104,11 @@ export default class Search extends Component {
     clearTimeout(this.timeout); // clears the old timer
     this.timeout = setTimeout(
       () =>
-        api.searchUsers(text).then(res => {
+        api.searchUsers(text)
+        .then(res => {
           this.setState({data: res.userList});
+        })
+        .catch(error => {
         }),
       100,
     );
