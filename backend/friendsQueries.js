@@ -75,7 +75,7 @@ const getUserFriends = async (req, res) => {
                     { status: "accepted"}
                   ] },
             include: [Accounts],
-            attributes: ['f_id', 'f_status', 'username', 'photo', 'name']
+            attributes: ['f_id', 'status', 'username', 'photo', 'name']
         });
         return res.status(200).json({ friends });
     } catch (error) {
@@ -92,7 +92,7 @@ const getUserRequests = async (req, res) => {
                 { status: "pending request"}
               ] },
               include: [Accounts],
-              attributes: ['f_id', 'f_status', 'username', 'photo', 'name']
+              attributes: ['f_id', 'status', 'username', 'photo', 'name']
 
         });
         return res.status(200).json({ requests });
