@@ -65,6 +65,8 @@ const createFriends = async (req, res) => {
 //     }
 // }
 
+var attributes = ['f_id', 'status', 'Accounts.username', 'Accounts.photo', 'Accounts.name']
+
 const getUserFriends = async (req, res) => {
     try {
         const friends = await Friends.findAll({
@@ -73,8 +75,9 @@ const getUserFriends = async (req, res) => {
                     { m_id: req.params.user},
                     { status: "accepted"}
                   ] },
+            attributes: attributes,
             include: [Accounts],
-            attributes: ['f_id', 'status', 'Accounts.username', 'Accounts.photo', 'Accounts.name']
+            
         });
         return res.status(200).json({ friends });
     } catch (error) {
@@ -90,8 +93,8 @@ const getUserRequests = async (req, res) => {
                 { m_id: req.params.user},
                 { status: "pending request"}
               ] },
-              include: [Accounts],
-              attributes: ['f_id', 'status', 'Accounts.username', 'Accounts.photo', 'Accounts.name']
+              attributes: attributes,
+              include: [Accounts]
 
         });
         return res.status(200).json({ requests });
