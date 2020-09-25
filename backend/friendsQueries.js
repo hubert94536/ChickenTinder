@@ -74,7 +74,8 @@ const getUserFriends = async (req, res) => {
                     { m_id: req.params.user},
                     { status: "accepted"}
                   ] },
-            include: [Accounts]
+            include: [Accounts],
+            attributes: ['f_id', 'f_status', 'username', 'photo', 'name']
         });
         return res.status(200).json({ friends });
     } catch (error) {
@@ -90,7 +91,9 @@ const getUserRequests = async (req, res) => {
                 { m_id: req.params.user},
                 { status: "pending request"}
               ] },
-              include: [Accounts]    
+              include: [Accounts],
+              attributes: ['f_id', 'f_status', 'username', 'photo', 'name']
+
         });
         return res.status(200).json({ requests });
     } catch (error) {
@@ -138,11 +141,13 @@ const deleteFriendship = async (req, res) => {
     }
 };
 
+
 module.exports =
 {
     createFriends,
     getUserFriends,
     getUserRequests,
     acceptRequest,
-    deleteFriendship
+    deleteFriendship,
+    searchFriends
 }
