@@ -7,9 +7,9 @@ import {
   TextInput,
   Dimensions,
 } from 'react-native';
-import api from './api.js';
+import api from './accountsApi.js';
 import AsyncStorage from '@react-native-community/async-storage';
-import {NAME, USERNAME, ID, UID, EMAIL, PHOTO} from 'react-native-dotenv';
+import { NAME, USERNAME, ID, UID, EMAIL, PHOTO } from 'react-native-dotenv';
 import Alert from './alert.js';
 
 const hex = '#F25763';
@@ -32,11 +32,11 @@ class Username extends React.Component {
   }
 
   closeTaken() {
-    this.setState({takenAlert: false});
+    this.setState({ takenAlert: false });
   }
 
   closeError() {
-    this.setState({errorAlert: false});
+    this.setState({ errorAlert: false });
   }
 
   async componentDidMount() {
@@ -50,35 +50,34 @@ class Username extends React.Component {
   }
 
   underlayShow() {
-    this.setState({pressed: true});
+    this.setState({ pressed: true });
   }
 
   underlayHide() {
-    this.setState({pressed: false});
+    this.setState({ pressed: false });
   }
 
   handleClick = () => {
     api
       .checkUsername(this.state.username)
-      .then(res => {
-        if (res === 200) {
-          AsyncStorage.setItem(USERNAME, this.state.username);
-          api.createFBUser(
-            this.state.name,
-            this.state.id,
-            this.state.username,
-            this.state.email,
-            this.state.photo)
-          .then(() => {
-            this.props.navigation.navigate('Home');
-          })
-        }
+      .then(() => {
+        AsyncStorage.setItem(USERNAME, this.state.username);
+        return api.createFBUser(
+          this.state.name,
+          this.state.id,
+          this.state.username,
+          this.state.email,
+          this.state.photo
+        )
+        .then(() => {
+          this.props.navigation.navigate('Home');
+        })
       })
       .catch(error => {
         if (error === 404) {
-          this.setState({takenAlert: true});
+          this.setState({ takenAlert: true });
         } else {
-          this.setState({errorAlert: true});
+          this.setState({ errorAlert: true });
         }
       });
   };
@@ -102,7 +101,7 @@ class Username extends React.Component {
           }}>
           'Chews' a username!
         </Text>
-        <View style={{marginTop: '35%'}}>
+        <View style={{ marginTop: '35%' }}>
           <TextInput
             style={{
               fontFamily: font,
@@ -117,7 +116,7 @@ class Username extends React.Component {
             textAlign="left"
             placeholder={'Enter a username'}
             onChangeText={username => {
-              this.setState({username});
+              this.setState({ username });
             }}
             value={this.state.username}
           />
