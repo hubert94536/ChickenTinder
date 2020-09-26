@@ -3,8 +3,8 @@ import { StyleSheet, View, Text, Button, TouchableHighlight } from 'react-native
 import { facebookService } from './facebookService.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Alert from './alert.js'
-import api from './api.js';
-import friendsapi from './friendsapi.js';
+import api from './accountsApi.js';
+import friendsapi from './friendsApi.js';
 
 const hex = '#F25763';
 const font = 'CircularStd-Medium';
@@ -24,32 +24,6 @@ export default class Login extends React.Component {
 
   underlayHide() {
     this.setState({pressed: false});
-  }
-
-  componentDidMount() {
-    // api.createFBUser("isha", 0, "ishaaa", "ishag@gmail.com", "dffdsds"),
-    // api.createFBUser("hanna", 0, "hco", "hannc@gmail.com", "kfdkfjs"),
-    // api.createFBUser("hubert", 0, "hubes", "hubes@gmail.com", "jskfhskl"),
-    // friendsapi.createFriendship("hubes", "hco"),
-    // friendsapi.createFriendship("ishaaa", "hubes"),
-    // friendsapi.createFriendship("hco", "ishaaa")
-    // friendsapi.denyFriendRequest("ishaaa", "hco")
-    
-    // friendsapi.getFriends("hco")
-
-    // api.createFBUser("isaha", 3, "isaha", "isha@gmail.com", "dffdsds")
-    // api.createFBUser("hanna", 4, "hco", "hannc@gmail.com", "kfdkfjs"),
-    // api.createFBUser("hubert", 5, "hubes", "hubes@gmail.com", "jskfhskl")
-    // console.log(api.getAllUsers()),
-    friendsapi.createFriendship(5, 3)
-    // friendsapi.createFriendship("ishaaa", "hubes"),
-    // friendsapi.createFriendship("hco", "ishaaa"),
-    // friendsapi.acceptFriendRequest(3, 4)
-    //friendsapi.denyFriendRequest(3, 4)
-    // console.log(friendsapi.getFriends("ishaaa"))
-    // console.log(friendsapi.getFriends("hubes")),
-    //friendsapi.removeFriend(3, 4)
-    // console.log(friendsapi.getFriends("hubes"))
   }
 
   render () {

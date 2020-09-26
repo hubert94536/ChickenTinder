@@ -7,7 +7,7 @@ import {
   TextInput,
   Dimensions,
 } from 'react-native';
-import api from './api.js';
+import api from './accountsApi.js';
 import AsyncStorage from '@react-native-community/async-storage';
 import { NAME, USERNAME, ID, UID, EMAIL, PHOTO } from 'react-native-dotenv';
 import Alert from './alert.js';
