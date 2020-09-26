@@ -13,6 +13,7 @@ const createFriends = async (req, res) => {
         [Op.and]: [{ m_id: main }, { f_id: friend }]
       }
     })
+    console.log(exists)
     if (exists) {
       return res.status(400).send("Friendship between accounts already exists");
     }
