@@ -55,13 +55,13 @@ class Home extends React.Component {
     
     // friendsapi.getFriends("hco")
 
-    api.createFBUser("isha", 1, "ishaaa", "ishag@gmail.com", "dffdsds"),
-    api.createFBUser("hanna", 2, "hco", "hannc@gmail.com", "kfdkfjs"),
-    api.createFBUser("hubert", 3, "hubes", "hubes@gmail.com", "jskfhskl"),
-    // console.log(api.getAllUsers()),
-    friendsapi.createFriendship(1, 2),
-    friendsapi.createFriendship(2, 3),
-    friendsapi.createFriendship(3, 1)
+    // api.createFBUser("isha", 1, "ishaaa", "ishag@gmail.com", "dffdsds"),
+    // api.createFBUser("hanna", 2, "hco", "hannc@gmail.com", "kfdkfjs"),
+    // api.createFBUser("hubert", 3, "hubes", "hubes@gmail.com", "jskfhskl"),
+    // // console.log(api.getAllUsers()),
+    // friendsapi.createFriendship(1, 2),
+    // friendsapi.createFriendship(2, 3),
+    // friendsapi.createFriendship(3, 1)
     // friendsapi.denyFriendRequest(1, 3),
     // friendsapi.acceptFriendRequest(2, 1)
     // friendsapi.createFriendship("ishaaa", "hubes"),

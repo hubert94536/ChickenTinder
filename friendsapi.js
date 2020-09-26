@@ -23,10 +23,7 @@ const createFriendship = (main, friend) => {
     })
     .then (res => {
       console.log(res.data.user)
-      return {
-        f_id: res.data.user.f_id,
-        status: res.status
-      }
+      return res.status;
     })
     .catch(error => {
       return Promise.reject(new Error(error))
@@ -44,7 +41,7 @@ const getFriends = (main) => {
         friendList: res.data.friends.map(function (friends) {
           // returns individual user info
           return {
-            id: friends.f_id
+            id: friends.f_id,
           }
         })
       }
@@ -57,18 +54,9 @@ const getFriends = (main) => {
 //accept a friend request
 const acceptFriendRequest = (main, friend) => {
     return friendsApi
-    .put(`/friendships/requests/${main}/${friend}`, {
-      params: {
-        accepted: 'accepted'
-      },
-    })
+    .put(`/friendships/requests/${main}/${friend}`)
     .then (res => {
-      console.log(res.data.user)
-      return {
-        f_id: res.data.user.f_id,
-        status: res.data.user.f_id.status,
-        status: res.status
-      }
+      return res.status
     })
     .catch(error => {
       return Promise.reject(new Error(error))

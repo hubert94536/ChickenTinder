@@ -1,6 +1,6 @@
 const { Accounts, Friends } = require("./models");
-const { Op } = require("sequelize");
-
+const { Sequelize } = require("sequelize");
+const Op = Sequelize.Op
 var attributes = ['username', 'photo', 'name']
 
 // Creates friendship requests between both accounts
@@ -10,13 +10,10 @@ const createFriends = async (req, res) => {
     const friend = req.body.params.friend;
     const exists = Friends.findOne({ 
       where: {
-        [Op.and]: [
-          { m_id: main },
-          { f_id: friend }
-        ]
+        [Op.and]: [{ m_id: main }, { f_id: friend }]
       }
     })
-    if (exists != null) {
+    if (exists) {
       return res.status(400).send("Friendship between accounts already exists");
     }
     await Friends.create({
@@ -59,18 +56,12 @@ const acceptRequest = async (req, res) => {
     const friend = req.params.friend;
     const mainAccount = await Friends.update({ status: "Accepted" }, {
       where: {
-        [Op.and]: [
-          { m_id: main },
-          { f_id: friend }
-        ]
+        [Op.and]: [{ m_id: main },{ f_id: friend }]
       }
     });
     const friendAccount = await Friends.update({ status: "Accepted" }, {
       where: {
-        [Op.and]: [
-          { m_id: friend },
-          { f_id: main }
-        ]
+        [Op.and]: [{ m_id: friend }, { f_id: main }]
       }
     });
     if (mainAccount && friendAccount) {
@@ -89,18 +80,12 @@ const deleteFriendship = async (req, res) => {
     const friend = req.params.friend;
     const mainAccount = await Friends.destroy({
       where: {
-        [Op.and]: [
-          { m_id: main },
-          { f_id: friend }
-        ]
+        [Op.and]: [{ m_id: main }, { f_id: friend }]
       }
     });
     const friendAccount = await Friends.destroy({
       where: {
-        [Op.and]: [
-          { m_id: friend },
-          { f_id: main }
-        ]
+        [Op.and]: [{ m_id: friend }, { f_id: main }]
       }
     });
     if (mainAccount && friendAccount) {
