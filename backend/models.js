@@ -76,7 +76,12 @@ const Friends = sequelize.define('friends', {
         type: DataTypes.STRING(20),
         allowNull: false,
 
+    },
+    f_id: {
+        type: DataTypes.BIGINT,
+        allowNull: false
     }
+
 });
 
 Friends.belongsTo(Accounts, {foreignKey: 'f_info', foreignKeyConstraint: true});
