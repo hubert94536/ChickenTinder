@@ -61,4 +61,24 @@ const Accounts = sequelize.define('accounts', {
 //   console.log('All models were synchronized successfully.')
 // })
 
-module.exports = { Accounts }
+const Friends = sequelize.define('friends', {
+
+    m_id: {
+        type: DataTypes.BIGINT,
+        allowNull: false
+    },
+    f_status: {
+        type: DataTypes.STRING(20),
+        allowNull: false,
+        unique: false
+
+    }
+
+});
+
+Friends.belongsTo(Accounts, {foreignKey: 'f_id', targetKey: 'id'});
+
+
+sequelize.sync({force: true})
+
+module.exports = { Accounts, Friends }

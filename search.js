@@ -80,6 +80,7 @@ export default class Search extends Component {
     this.state = {
       data: [],
     };
+    api.createFBUser('boo', 1, 'booo', 'boo@gmail.com', 'pic');
   }
 
   renderSeparator = () => {
