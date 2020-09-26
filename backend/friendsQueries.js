@@ -17,8 +17,8 @@ const createFriends = async (req, res) => {
       return res.status(400).send("Friendship between accounts already exists");
     }
     await Friends.bulkCreate([
-      {m_id: main, status: "Requested", f_id: friend, include: [Accounts]},
-      {m_id: friend, status: "Pending Request", f_id: main, include: [Accounts]}
+      {m_id: main, status: "Requested", f_id: friend, f_info: friend, include: [Accounts]},
+      {m_id: friend, status: "Pending Request", f_id: main, f_info: friend, include: [Accounts]}
     ])
     // await Friends.create({
     //   m_id: main,
