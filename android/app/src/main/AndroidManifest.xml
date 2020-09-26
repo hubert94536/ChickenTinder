@@ -28,6 +28,7 @@
           android:name="com.facebook.FacebookContentProvider"
           android:exported="true" />
       <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+      <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyAXzzcpcTgKbPJz2V6rf7HL2rL-jtwA2MI" />
     </application>
 
 </manifest>
