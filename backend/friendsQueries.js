@@ -76,7 +76,7 @@ const getUserFriends = async (req, res) => {
                     { status: "accepted"}
                   ] },
             attributes: attributes,
-            include: [Accounts],
+            include: [Accounts]
             
         });
         return res.status(200).json({ friends });
