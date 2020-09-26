@@ -26,11 +26,11 @@ const createFriendship = (main, friend) => {
       return res.status;
     })
     .catch(error => {
-      return Promise.reject(new Error(error))
+      throw error.response.status
     })
   }
   
-//gets a users friends/requests
+// gets a users friends/requests
 const getFriends = (main) => {
     return friendsApi
     .get(`/friendships/friends/${main}`)
@@ -47,45 +47,31 @@ const getFriends = (main) => {
       }
     })
     .catch(error => {
-      return Promise.reject(new Error(error))
+      throw error.response.status
     })
   }
 
 //accept a friend request
 const acceptFriendRequest = (main, friend) => {
     return friendsApi
-    .put(`/friendships/requests/${main}/${friend}`)
+    .put(`/friendships/friends/${main}/${friend}`)
     .then (res => {
       return res.status
     })
     .catch(error => {
-      return Promise.reject(new Error(error))
+      throw error.response.status
     })
   }
 
-//deny a friend request
-  const denyFriendRequest = (main, friend) => {
-    return friendsApi
-    .delete(`/friendships/requests/${main}/${friend}`)
-    .then(res => {
-      console.log(res.status)
-      return res.status
-    })
-    .catch(error => {
-      return Promise.reject(new Error(error))
-    })
-  }
-
-//remove a friendship
-  const removeFriend = (main, friend) => {
+// remove a friendship
+  const removeFriendship = (main, friend) => {
     return friendsApi
     .delete(`/friendships/friends/${main}/${friend}`)
     .then(res => {
-      console.log(res.status)
       return res.status
     })
     .catch(error => {
-      return Promise.reject(new Error(error))
+      throw error.response.status
     })
   }
 
@@ -93,6 +79,5 @@ const acceptFriendRequest = (main, friend) => {
     createFriendship,
     getFriends,
     acceptFriendRequest,
-    denyFriendRequest,
-    removeFriend
+    removeFriendship
   }

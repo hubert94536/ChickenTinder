@@ -70,7 +70,8 @@ const Friends = sequelize.define('friends', {
     m_id: {
         type: DataTypes.BIGINT,
         allowNull: false,
-        primaryKey: true
+        primaryKey: true,
+        unique: 'compositeKey'
     },
     status: {
         type: DataTypes.STRING(20),
@@ -79,7 +80,8 @@ const Friends = sequelize.define('friends', {
     },
     f_id: {
         type: DataTypes.BIGINT,
-        allowNull: false
+        allowNull: false,
+        unique: 'compositeKey'
     }
 
 });
