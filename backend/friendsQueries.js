@@ -37,35 +37,7 @@ const createFriends = async (req, res) => {
     }
 }
 
-
-// const createFriends = async (req, res) => {
-//     try {
-//         const main = req.body.params.main;
-//         const friend = req.body.params.friend;
-//         const user = await Friends.create(
-//             {
-//                 m_id: main,
-//                 status: "requested",
-//                 f_id: friend
-
-//             }
-//         );
-//         const friendUser = await Friends.create(
-//             {
-//                 m_id: friend,
-//                 status: "pending request",
-//                 f_id: main
-//             }
-//         );
-//         return res.status(201).json({
-//             user
-//         });
-//     } catch (error) {
-//         return res.status(500).json({ error: error.message})
-//     }
-// }
-
-var attributes = ['f_id', 'status', 'Accounts.username', 'Accounts.photo', 'Accounts.name']
+var attributes = ['username', 'photo', 'name']
 
 const getUserFriends = async (req, res) => {
     try {
@@ -75,8 +47,7 @@ const getUserFriends = async (req, res) => {
                     { m_id: req.params.user},
                     { status: "accepted"}
                   ] },
-            attributes: attributes,
-            include: [Accounts]
+            include: [{model: Accounts, attributes: attributes}]
             
         });
         return res.status(200).json({ friends });
@@ -93,8 +64,7 @@ const getUserRequests = async (req, res) => {
                 { m_id: req.params.user},
                 { status: "pending request"}
               ] },
-              attributes: attributes,
-              include: [Accounts]
+              include: [{model: Accounts, attributes: attributes}]
 
         });
         return res.status(200).json({ requests });
