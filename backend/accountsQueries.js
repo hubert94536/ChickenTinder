@@ -21,7 +21,7 @@ const searchAccounts = async (req, res) => {
         username: Sequelize.where(
           Sequelize.fn('LOWER', Sequelize.col('username')), 'LIKE', text + '%')
       },
-      attributes : ['id', 'name', 'username', 'phone_number']
+      attributes: ['id', 'name', 'username', 'phone_number']
     })
     return res.status(200).json({ users })
   } catch (error) {
@@ -33,26 +33,20 @@ const searchAccounts = async (req, res) => {
 // Creates account
 const createAccount = async (req, res) => {
   try {
-    var created = await Accounts.findOrCreate({ 
-        where: { id: req.body.params.id}, 
-        defaults: { 
-          id: req.body.params.id,
-          name: req.body.params.name,
-          username: req.body.params.username,
-          email: req.body.params.email,
-          photo: req.body.params.photo,
-          inSession: false,
-          phone_number: req.body.params.phone_number
-        }
-      })
-      .spread((user, created) => {
-        return created
-      })
-      if (created) {
-        return res.status(201).send("Account created")
-      } else {
-        return res.status(400).send("Account id already exists")
-      }
+    const created = await Accounts.findOne({ where: { id: req.body.params.id } })
+    if (created) {
+      return res.status(400).send("Account id already exists")
+    }
+    await Accounts.create({
+      id: req.body.params.id,
+      name: req.body.params.name,
+      username: req.body.params.username,
+      email: req.body.params.email,
+      photo: req.body.params.photo,
+      inSession: false,
+      phone_number: req.body.params.phone_number
+    })
+    return res.status(201).send("Account created")
   } catch (error) {
     console.log(error.message)
     return res.status(500).json({ error: error.message })
