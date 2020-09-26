@@ -13,7 +13,7 @@ const friendsApi = axios.create({
 })
 
 //creates friendship
-const createFriendship = (friend) => {
+const createFriendship = async (friend) => {
   return friendsApi
     .post(`/friendships`, {
       params: {
@@ -30,7 +30,7 @@ const createFriendship = (friend) => {
 }
 
 // gets a users friends/requests
-const getFriends = () => {
+const getFriends = async () => {
   return friendsApi
     .get(`/friendships/friends/${myId}`)
     .then(res => {
@@ -54,7 +54,7 @@ const getFriends = () => {
 }
 
 //accept a friend request
-const acceptFriendRequest = (friend) => {
+const acceptFriendRequest = async (friend) => {
   return friendsApi
     .put(`/friendships/friends/${myId}/${friend}`)
     .then(res => {
@@ -66,7 +66,7 @@ const acceptFriendRequest = (friend) => {
 }
 
 // remove a friendship
-const removeFriendship = (friend) => {
+const removeFriendship = async (friend) => {
   return friendsApi
     .delete(`/friendships/friends/${myId}/${friend}`)
     .then(res => {
