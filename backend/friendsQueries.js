@@ -18,7 +18,7 @@ const createFriends = async (req, res) => {
     // }
     await Friends.bulkCreate([
       { m_id: main, status: "Requested", f_id: friend, f_info: friend, include: [Accounts] },
-      { m_id: friend, status: "Pending Request", f_id: main, f_info: friend, include: [Accounts] }
+      { m_id: friend, status: "Pending Request", f_id: main, f_info: main, include: [Accounts] }
     ])
     return res.status(201).send("Friend requested")
   } catch (error) {
