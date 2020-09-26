@@ -143,7 +143,6 @@ const deleteFriendship = async (req, res) => {
     }
 };
 
-
 module.exports =
 {
     createFriends,

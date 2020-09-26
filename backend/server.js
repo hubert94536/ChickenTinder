@@ -60,7 +60,6 @@ app.route('/friendships/requests/:user/:friend')
   .put(friends.acceptRequest)
   .delete(friends.deleteFriendship);
 
-
 server.listen(PORT, () => {
     console.log(`App running on port ${PORT}.`)
   })

@@ -69,15 +69,17 @@ class Username extends React.Component {
             this.state.username,
             this.state.email,
             this.state.photo)
-          this.props.navigation.navigate('Home');
-        } else if (res === 404) {
+          .then(() => {
+            this.props.navigation.navigate('Home');
+          })
+        }
+      })
+      .catch(error => {
+        if (error === 404) {
           this.setState({takenAlert: true});
         } else {
           this.setState({errorAlert: true});
         }
-      })
-      .catch(error => {
-        console.log(error);
       });
   };
 
@@ -98,13 +100,14 @@ class Username extends React.Component {
             marginLeft: '3%',
             textAlign: 'left',
           }}>
-          My username is
+          'Chews' a username!
         </Text>
-        <View style={{marginTop: '50%'}}>
+        <View style={{marginTop: '35%'}}>
           <TextInput
             style={{
               fontFamily: font,
-              fontSize: 15,
+              color: hex,
+              fontSize: 25,
               alignSelf: 'center',
               borderBottomColor: hex,
               borderBottomWidth: 2.5,

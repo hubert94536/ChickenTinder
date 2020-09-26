@@ -6,23 +6,24 @@ import Alert from './alert.js'
 import api from './api.js';
 import friendsapi from './friendsapi.js';
 
-const hex = '#F25763'
+const hex = '#F25763';
+const font = 'CircularStd-Medium';
 
 export default class Login extends React.Component {
-  constructor () {
-    super()
+  constructor() {
+    super();
     this.state = {
       pressed: false,
-      alert: false
-    }
+      alert: false,
+    };
   }
 
-  underlayShow () {
-    this.setState({ pressed: true })
+  underlayShow() {
+    this.setState({pressed: true});
   }
 
-  underlayHide () {
-    this.setState({ pressed: false })
+  underlayHide() {
+    this.setState({pressed: false});
   }
 
   // componentDidMount() {
@@ -59,31 +60,28 @@ export default class Login extends React.Component {
             fontSize: 50,
             color: hex,
             alignSelf: 'center',
-            fontFamily: 'CircularStd-Medium',
+            fontFamily: font,
             fontWeight: 'bold',
-            marginTop: '40%'
-          }}
-        >
+            marginTop: '40%',
+          }}>
           Welcome!
         </Text>
         <Text
           style={{
-            fontFamily: 'CircularStd-Medium',
+            fontFamily: font,
             alignSelf: 'center',
             color: hex,
-            fontSize: 30
-          }}
-        >
+            fontSize: 30,
+          }}>
           Let's get goin'.
         </Text>
         <TouchableHighlight
           onShowUnderlay={this.underlayShow.bind(this)}
           onHideUnderlay={this.underlayHide.bind(this)}
           activeOpacity={1}
-          underlayColor='#3b5998'
+          underlayColor="#3b5998"
           onPress={() => this.login()}
-          style={styles.button}
-        >
+          style={styles.button}>
           <Text style={this.state.pressed ? styles.yesPress : styles.noPress}>
             {/* <Icon name="facebook" style={{fontSize: 20}} /> */}
             Log in with Facebook
@@ -92,34 +90,35 @@ export default class Login extends React.Component {
         {this.state.alert && (
           <Alert
             title='Open "Facebook?"'
-            body='You will be directed to the Facebook app for account verification'
+            body="You will be directed to the Facebook app for account verification"
             button
-            buttonText='Open'
+            buttonText="Open"
             press={() => this.handleClick()}
             cancel={() => this.cancelClick()}
           />
         )}
       </View>
-    )
+    );
   }
 
-  handleClick () {
+  handleClick() {
     facebookService
       .loginWithFacebook()
       .then(result => {
-        this.props.navigation.navigate(result)
+        this.props.navigation.navigate(result);
       })
       .catch(error => {
         // Alert
-      })
+      });
+    this.setState({alert: false});
   }
 
-  cancelClick () {
-    this.setState({ alert: false })
+  cancelClick() {
+    this.setState({alert: false});
   }
 
-  login () {
-    this.setState({ alert: true })
+  login() {
+    this.setState({alert: true});
   }
 }
 
@@ -132,20 +131,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     width: '70%',
     alignSelf: 'center',
-    marginTop: '10%'
+    marginTop: '10%',
   },
   yesPress: {
     alignSelf: 'center',
     color: '#fff',
-    fontFamily: 'CircularStd-Medium',
+    fontFamily: font,
     fontSize: 17,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   noPress: {
     alignSelf: 'center',
     color: '#3b5998',
-    fontFamily: 'CircularStd-Medium',
+    fontFamily: font,
     fontSize: 17,
-    fontWeight: 'bold'
-  }
-})
+    fontWeight: 'bold',
+  },
+});
