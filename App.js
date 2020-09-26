@@ -55,10 +55,12 @@
 // }
 
 import React from 'react';
-import Search from './search.js';
+import Match from './match.js';
 
 export default class App extends React.Component {
   render() {
-    return <Search />;
+    return (
+      <Match restaurant="Chinchikurin" lat={34.039057} long={-118.442409} />
+    );
   }
 }

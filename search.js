@@ -103,9 +103,12 @@ export default class Search extends Component {
     clearTimeout(this.timeout); // clears the old timer
     this.timeout = setTimeout(
       () =>
-        api.searchUsers(text).then(res => {
-          this.setState({data: res.userList});
-        }),
+        api
+          .searchUsers(text)
+          .then(res => {
+            this.setState({data: res.userList});
+          })
+          .catch(err => console.log(err)),
       100,
     );
   };
