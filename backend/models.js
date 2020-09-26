@@ -55,26 +55,37 @@ const Accounts = sequelize.define('accounts', {
   photo: DataTypes.STRING,
   inSession: DataTypes.BOOLEAN
   // password: DataTypes.STRING(20)
+},
+{
+  indexes: [
+    {
+      unique: true,
+      fields:['id', 'username', 'email']
+    }
+  ]
 })
-
 
 const Friends = sequelize.define('friends', {
 
     m_id: {
         type: DataTypes.BIGINT,
-        allowNull: false
+        allowNull: false,
+        primaryKey: true,
+
     },
     status: {
         type: DataTypes.STRING(20),
         allowNull: false,
-        unique: false
 
+    },
+    f_id: {
+        type: DataTypes.BIGINT,
+        allowNull: false,
+        primaryKey: true,
     }
-
 });
 
-Friends.belongsTo(Accounts, {foreignKey: 'f_id', foreignKeyConstraint: true});
-// Accounts.hasMany(Friends, {foreignKey: 'f_id'});
+Friends.belongsTo(Accounts, {foreignKey: 'f_info', foreignKeyConstraint: true});
 
 
 sequelize.sync({ force: true}).then(()=> {

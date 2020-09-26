@@ -17,7 +17,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Swiper from 'react-native-swiper'
 import Friends from './friends.js'
 import Requests from './requests.js'
-import api from './api.js'
+import api from './accountsApi.js'
 import { facebookService } from './facebookService.js'
 import Alert from './alert.js'
 
@@ -57,7 +57,7 @@ export default class UserProfileView extends Component {
 
   async changeName () {
     if (this.state.nameValue !== this.state.name) {
-      api
+      return api
         .updateName(this.state.nameValue)
         .then(res => {
           // update name locally
@@ -79,11 +79,12 @@ export default class UserProfileView extends Component {
   async changeUsername () {
     if (this.state.username !== this.state.usernameValue) {
       const user = this.state.usernameValue
-      api
+      return api
         .checkUsername(user)
         .then(() => {
           // update username locally
-          api.updateUsername(user).then(() => {
+          return api.updateUsername(user)
+          .then(() => {
             AsyncStorage.setItem(USERNAME, user)
             this.setState({ username: this.state.usernameValue })
             Keyboard.dismiss()

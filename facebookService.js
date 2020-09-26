@@ -1,6 +1,6 @@
 import FBSDK from 'react-native-fbsdk';
 import firebase from 'firebase';
-import api from './api.js';
+import api from './accountsApi.js';
 import {
   FIREBASE_API_KEY,
   FIREBASE_APPLICATION_ID,

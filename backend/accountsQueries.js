@@ -1,5 +1,5 @@
 const { Accounts } = require('./models.js')
-const { Sequelize, Op } = require('sequelize')
+const { Sequelize } = require('sequelize')
 
 // Get all accounts
 const getAllAccounts = async (req, res) => {
@@ -20,11 +20,11 @@ const searchAccounts = async (req, res) => {
       where: {
         username: Sequelize.where(
           Sequelize.fn('LOWER', Sequelize.col('username')), 'LIKE', text + '%')
-      }
+      },
+      attributes: ['id', 'name', 'username', 'phone_number']
     })
     return res.status(200).json({ users })
   } catch (error) {
-    console.log(error)
     return res.status(500).send(error.message)
   }
 }
@@ -32,8 +32,16 @@ const searchAccounts = async (req, res) => {
 // Creates account
 const createAccount = async (req, res) => {
   try {
-    const user = await Accounts.create(req.body.params)
-    return res.status(201).json({ user })
+    await Accounts.create({
+      id: req.body.params.id,
+      name: req.body.params.name,
+      username: req.body.params.username,
+      email: req.body.params.email,
+      photo: req.body.params.photo,
+      inSession: false,
+      phone_number: req.body.params.phone_number
+    })
+    return res.status(201).send("Account created")
   } catch (error) {
     return res.status(500).json({ error: error.message })
   }
@@ -43,9 +51,7 @@ const createAccount = async (req, res) => {
 const getAccountById = async (req, res) => {
   try {
     const { id } = req.params
-    const user = await Accounts.findOne({
-      where: { id: id }
-    })
+    const user = await Accounts.findOne({ where: { id: id } })
     if (user) {
       return res.status(200).json({ user })
     }
@@ -59,14 +65,13 @@ const getAccountById = async (req, res) => {
 const updateAccount = async (req, res) => {
   try {
     const { id } = req.params
-    const [updated] = await Accounts.update(req.body.params, {
+    const updated = await Accounts.update(req.body.params, {
       where: { id: id }
     })
     if (updated) {
-      const updatedAccount = await Accounts.findOne({ where: { id: id } })
-      return res.status(200).json({ user: updatedAccount })
+      return res.status(200).send('Updated account info')
     }
-    throw new Error('User not found')
+    return res.status(404).send('User with the specified ID does not exists')
   } catch (error) {
     return res.status(500).send(error.message)
   }
@@ -82,7 +87,7 @@ const deleteAccount = async (req, res) => {
     if (deleted) {
       return res.status(204).send('User deleted')
     }
-    throw new Error('User not found')
+    return res.status(404).send('User with the specified ID does not exists')
   } catch (error) {
     return res.status(500).send(error.message)
   }
@@ -92,13 +97,11 @@ const deleteAccount = async (req, res) => {
 const checkUsername = async (req, res) => {
   try {
     const { username } = req.params
-    const user = await Accounts.findOne({
-      where: { username: username }
-    })
+    const user = await Accounts.findOne({ where: { username: username } })
     if (user) {
-      return res.status(404).send('Username found')
+      return res.status(404).send('Username unavailable')
     }
-    return res.status(200).send('Username not found')
+    return res.status(200).send('Username available')
   } catch (error) {
     return res.status(500).send(error.message)
   }
@@ -112,9 +115,9 @@ const checkPhoneNumber = async (req, res) => {
       where: { phone_number: phone_number }
     })
     if (user) {
-      return res.status(404).send('Phone number found')
+      return res.status(404).send('Phone number unavailable')
     }
-    return res.status(200).send('Phone number not found')
+    return res.status(200).send('Phone number available')
   } catch (error) {
     return res.status(500).send(error.message)
   }

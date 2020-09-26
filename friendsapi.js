@@ -1,11 +1,11 @@
 import axios from 'axios'
-import {USERNAME} from 'react-native-dotenv'
+import { USERNAME } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 
-var main = ''
+var myId = ''
 
 AsyncStorage.getItem(USERNAME).then(res => {
-  main = res
+  myId = res
 })
 
 const friendsApi = axios.create({
@@ -13,120 +13,73 @@ const friendsApi = axios.create({
 })
 
 //creates friendship
-const createFriendship = (main, friend) => {
-    return friendsApi
+const createFriendship = (friend) => {
+  return friendsApi
     .post(`/friendships`, {
       params: {
-        main: main,
+        main: myId,
         friend: friend
       },
     })
-    .then (res => {
-      console.log(res.data.user)
-      return {
-        f_id: res.data.user.f_id,
-        status: res.status
-      }
+    .then(res => {
+      return res.status;
     })
     .catch(error => {
-      return Promise.reject(new Error(error))
+      throw error.response.status
     })
-  }
-  
-//gets a users friends
-const getFriends = (main) => {
-    return friendsApi
-    .get(`/friendships/friends/${main}`)
+}
+
+// gets a users friends/requests
+const getFriends = () => {
+  return friendsApi
+    .get(`/friendships/friends/${myId}`)
     .then(res => {
-      console.log(res.data.friends)
       return {
         status: res.status,
         friendList: res.data.friends.map(function (friends) {
           // returns individual user info
           return {
-            id: friends.f_id
+            id: friends.f_id,
+            name: friends.account.name,
+            photo: friends.account.photo,
+            username: friends.account.username,
+            status: friends.status
           }
         })
       }
     })
     .catch(error => {
-      return Promise.reject(new Error(error))
+      throw error.response.status
     })
-  }
-
-//gets a users friend requests
-const getRequests = (main) => {
-    return friendsApi
-    .get(`/friendships/requests/${main}`)
-    .then(res => {
-      console.log(res.data.requests)
-      return {
-        status: res.status,
-        userList: res.data.requests.map(function (friends) {
-          // returns individual user info
-          return {
-            id: friends.f_id
-          }
-        })
-      }
-    })
-    .catch(error => {
-      return Promise.reject(new Error(error))
-    })
-  }
+}
 
 //accept a friend request
-const acceptFriendRequest = (main, friend) => {
-    return friendsApi
-    .put(`/friendships/requests/${main}/${friend}`, {
-      params: {
-        accepted: 'accepted'
-      },
-    })
-    .then (res => {
-      console.log(res.data.user)
-      return {
-        f_id: res.data.user.f_id,
-        status: res.data.user.f_id.status,
-        status: res.status
-      }
-    })
-    .catch(error => {
-      return Promise.reject(new Error(error))
-    })
-  }
-
-//deny a friend request
-  const denyFriendRequest = (main, friend) => {
-    return friendsApi
-    .delete(`/friendships/requests/${main}/${friend}`)
+const acceptFriendRequest = (friend) => {
+  return friendsApi
+    .put(`/friendships/friends/${myId}/${friend}`)
     .then(res => {
-      console.log(res.status)
       return res.status
     })
     .catch(error => {
-      return Promise.reject(new Error(error))
+      throw error.response.status
     })
-  }
+}
 
-//remove a friendship
-  const removeFriend = (main, friend) => {
-    return friendsApi
-    .delete(`/friendships/friends/${main}/${friend}`)
+// remove a friendship
+const removeFriendship = (friend) => {
+  return friendsApi
+    .delete(`/friendships/friends/${myId}/${friend}`)
     .then(res => {
-      console.log(res.status)
       return res.status
     })
     .catch(error => {
-      return Promise.reject(new Error(error))
+      throw error.response.status
     })
-  }
+}
 
-  export default {
-    createFriendship,
-    getFriends,
-    getRequests,
-    acceptFriendRequest,
-    denyFriendRequest,
-    removeFriend
-  }
+export default {
+  createFriendship,
+  getFriends,
+  acceptFriendRequest,
+  removeFriendship
+}
