@@ -33,8 +33,7 @@ const searchAccounts = async (req, res) => {
 // Creates account
 const createAccount = async (req, res) => {
   try {
-    await Accounts
-      .findOrCreate({ 
+    var created = await Accounts.findOrCreate({ 
         where: { id: req.body.params.id}, 
         defaults: { 
           id: req.body.params.id,
@@ -47,12 +46,13 @@ const createAccount = async (req, res) => {
         }
       })
       .spread((user, created) => {
-        if (created) {
-          return res.status(201).send("Account created")
-        } else {
-          return res.status(400).send("Account id already exists")
-        }
+        return created
       })
+      if (created) {
+        return res.status(201).send("Account created")
+      } else {
+        return res.status(400).send("Account id already exists")
+      }
   } catch (error) {
     console.log(error.message)
     return res.status(500).json({ error: error.message })

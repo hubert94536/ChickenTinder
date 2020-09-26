@@ -8,7 +8,8 @@ const createFriends = async (req, res) => {
   try {
     const main = req.body.params.main;
     const friend = req.body.params.friend;
-    const exists = findOne({ 
+    const exists = findAll({
+      limit: 1,
       where: {
         [Op.and]: [
           { m_id: main },
