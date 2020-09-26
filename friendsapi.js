@@ -1,4 +1,3 @@
-
 import axios from 'axios'
 import {USERNAME} from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
@@ -88,7 +87,7 @@ const acceptFriendRequest = (main, friend) => {
       console.log(res.data.user)
       return {
         f_id: res.data.user.f_id,
-        f_status: res.data.user.f_id.f_status,
+        status: res.data.user.f_id.status,
         status: res.status
       }
     })
