@@ -31,6 +31,7 @@ const createFriends = async (req, res) => {
     }, { include: [Accounts] });
     return res.status(201).send("Friend requested")
   } catch (error) {
+    console.log(error.message)
     return res.status(500).json({ error: error.message })
   }
 }

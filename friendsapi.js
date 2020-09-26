@@ -33,7 +33,7 @@ const createFriendship = (main, friend) => {
     })
   }
   
-//gets a users friends
+//gets a users friends/requests
 const getFriends = (main) => {
     return friendsApi
     .get(`/friendships/friends/${main}`)
@@ -42,27 +42,6 @@ const getFriends = (main) => {
       return {
         status: res.status,
         friendList: res.data.friends.map(function (friends) {
-          // returns individual user info
-          return {
-            id: friends.f_id
-          }
-        })
-      }
-    })
-    .catch(error => {
-      return Promise.reject(new Error(error))
-    })
-  }
-
-//gets a users friend requests
-const getRequests = (main) => {
-    return friendsApi
-    .get(`/friendships/requests/${main}`)
-    .then(res => {
-      console.log(res.data.requests)
-      return {
-        status: res.status,
-        userList: res.data.requests.map(function (friends) {
           // returns individual user info
           return {
             id: friends.f_id
@@ -125,7 +104,6 @@ const acceptFriendRequest = (main, friend) => {
   export default {
     createFriendship,
     getFriends,
-    getRequests,
     acceptFriendRequest,
     denyFriendRequest,
     removeFriend
