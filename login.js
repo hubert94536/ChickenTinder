@@ -41,10 +41,10 @@ export default class Login extends React.Component {
     // api.createFBUser("hanna", 2, "hco", "hannc@gmail.com", "kfdkfjs"),
     // api.createFBUser("hubert", 3, "hubes", "hubes@gmail.com", "jskfhskl")
     // console.log(api.getAllUsers()),
-    //friendsapi.createFriendship(1, 2)
+    // friendsapi.createFriendship(1, 2)
     // friendsapi.createFriendship("ishaaa", "hubes"),
     // friendsapi.createFriendship("hco", "ishaaa"),
-    friendsapi.acceptFriendRequest(1, 2)
+    // friendsapi.acceptFriendRequest(1, 2)
     // friendsapi.denyFriendRequest("hubes", "hco")
     // console.log(friendsapi.getFriends("ishaaa"))
     // console.log(friendsapi.getFriends("hubes")),
