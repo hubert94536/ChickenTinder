@@ -34,7 +34,7 @@ const searchAccounts = async (req, res) => {
 const createAccount = async (req, res) => {
   try {
     const created = await Accounts.findOne({ where: { id: req.body.params.id } })
-    if (created) {
+    if (created != null) {
       return res.status(400).send("Account id already exists")
     }
     await Accounts.create({
@@ -75,7 +75,6 @@ const updateAccount = async (req, res) => {
       where: { id: id }
     })
     if (updated) {
-      await Accounts.findOne({ where: { id: id } })
       return res.status(200).send('Updated account info')
     }
     return res.status(404).send('User with the specified ID does not exists')

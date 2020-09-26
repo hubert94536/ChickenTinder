@@ -16,7 +16,7 @@ const createFriends = async (req, res) => {
         ]
       }
     })
-    if (exists) {
+    if (exists != null) {
       return res.status(400).send("Friendship between accounts already exists");
     }
     await Friends.create({
