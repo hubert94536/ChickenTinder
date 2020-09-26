@@ -8,25 +8,28 @@ const createFriends = async (req, res) => {
   try {
     const main = req.body.params.main;
     const friend = req.body.params.friend;
-    const exists = Friends.findOne({ 
+    const exists = await Friends.findOne({ 
       where: {
         [Op.and]: [{ m_id: main }, { f_id: friend }]
       }
     })
-    console.log(exists)
     if (exists) {
       return res.status(400).send("Friendship between accounts already exists");
     }
-    await Friends.create({
-      m_id: main,
-      status: "Requested",
-      f_id: friend
-    }, { include: [Accounts] });
-    await Friends.create({
-      m_id: friend,
-      status: "Pending Request",
-      f_id: main
-    }, { include: [Accounts] });
+    await Friends.bulkCreate([
+      {m_id: main, status: "Requested", f_id: friend, include: [Accounts]},
+      {m_id: friend, status: "Pending Request", f_id: main, include: [Accounts]}
+    ])
+    // await Friends.create({
+    //   m_id: main,
+    //   status: "Requested",
+    //   f_id: friend
+    // }, { include: [Accounts] });
+    // await Friends.create({
+    //   m_id: friend,
+    //   status: "Pending Request",
+    //   f_id: main
+    // }, { include: [Accounts] });
     return res.status(201).send("Friend requested")
   } catch (error) {
     console.log(error.message)
@@ -79,17 +82,20 @@ const deleteFriendship = async (req, res) => {
   try {
     const main = req.params.user;
     const friend = req.params.friend;
-    const mainAccount = await Friends.destroy({
-      where: {
-        [Op.and]: [{ m_id: main }, { f_id: friend }]
-      }
-    });
+    // const mainAccount = await Friends.destroy({
+    //   where: {
+    //     [Op.and]: [{ m_id: main }, { f_id: friend }]
+    //   }
+    // });
     const friendAccount = await Friends.destroy({
       where: {
-        [Op.and]: [{ m_id: friend }, { f_id: main }]
+        [Op.or]: [
+         {[Op.and]: [{ m_id: friend }, { f_id: main }]},
+         {[Op.and]: [{ m_id: main }, { f_id: friend }]},
+        ]
       }
     });
-    if (mainAccount && friendAccount) {
+    if ( friendAccount) {
       return res.status(204).send("Friendship deleted");
     }
     return res.status(404).send("Friendship not found");

@@ -33,10 +33,6 @@ const searchAccounts = async (req, res) => {
 // Creates account
 const createAccount = async (req, res) => {
   try {
-    // const created = await Accounts.findOne({ where: { id: req.body.params.id } })
-    // if (created) {
-    //   return res.status(400).send("Account id already exists")
-    // }
     await Accounts.create({
       id: req.body.params.id,
       name: req.body.params.name,
