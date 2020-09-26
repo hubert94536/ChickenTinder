@@ -10,18 +10,14 @@ import firebase from 'firebase';
 import {createStackNavigator} from 'react-navigation-stack'; // 1.0.0-beta.27
 import {createAppContainer} from 'react-navigation';
 
+var user = firebase.auth().currentUser;
 var start = '';
-// doesnt work
-firebase.auth().onAuthStateChanged(function(user) {
-  if (user) {
-    // User is signed in.
-    start = 'Home'
-    console.log('logged')
-  } else {
-    // No user is signed in.
-    start = 'Login'
-  }
-});
+
+if (user === null) {
+  start = 'Login';
+} else {
+  start = 'Home';
+}
 
 const RootStack = createStackNavigator(
   {
@@ -57,12 +53,3 @@ export default class App extends React.Component {
     return <AppContainer />;
   }
 }
-
-// import React from 'react';
-// import Search from './search.js';
-
-// export default class App extends React.Component {
-//   render() {
-//     return <Search />;
-//   }
-// }
