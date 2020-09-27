@@ -5,13 +5,21 @@ import Username from './username.js';
 import UserProfileView from './profile.js';
 import Group from './group.js';
 import RestaurantCard from './round.js';
-import {UID} from 'react-native-dotenv';
+import {UID, USERNAME} from 'react-native-dotenv';
 import firebase from 'firebase';
 import {createStackNavigator} from 'react-navigation-stack'; // 1.0.0-beta.27
 import {createAppContainer} from 'react-navigation';
+import SocketContext from './socketContext'
+import io from 'socket.io-client'
+import AsyncStorage from '@react-native-community/async-storage'
 
 var user = firebase.auth().currentUser;
 var start = '';
+// var myUsername = ''
+// AsyncStorage.get(USERNAME).then(res => myUsername = res)
+// const socket = io('https://wechews.herokuapp.com', {
+//   query: `username=${myUsername}`
+// })
 
 if (user === null) {
   start = 'Login';
