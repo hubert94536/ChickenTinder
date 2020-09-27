@@ -49,16 +49,11 @@ app.route('/friendships')
   .post(friends.createFriends);
 
 app.route('/friendships/friends/:user')
-  .get(friends.getUserFriends)
+  .get(friends.getFriends)
 
 app.route('/friendships/friends/:user/:friend')
-  .delete(friends.deleteFriendship);
-
-app.route('/friendships/requests/:user')
-  .get(friends.getUserRequests)
-app.route('/friendships/requests/:user/:friend')
+  .delete(friends.deleteFriendship)
   .put(friends.acceptRequest)
-  .delete(friends.deleteFriendship);
 
 server.listen(PORT, () => {
     console.log(`App running on port ${PORT}.`)

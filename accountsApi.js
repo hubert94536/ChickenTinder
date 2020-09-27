@@ -60,14 +60,11 @@ const createFBUser = async (name, id, username, email, photo) => {
         username: username,
         email: email,
         photo: photo,
-        inSession: false,
       },
     })
     //returns business info from Yelp
     .then(res => {
-      return {
-        status: res.status,
-      };
+      return res.status;
     })
     .catch(error => {
       throw error.response.status;
@@ -193,13 +190,7 @@ const updateUser = async req => {
     })
     .then(res => {
       return {
-        status: res.status,
-        username: res.data.user.username,
-        email: res.data.user.email,
-        phone_number: res.data.user.phone_number,
-        name: res.data.user.name,
-        photo: res.data.user.photo,
-        id: res.data.user.id,
+        status: res.status
       };
     })
     .catch(error => {
