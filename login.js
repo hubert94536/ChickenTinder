@@ -1,8 +1,8 @@
-import React from 'react'
-import { StyleSheet, View, Text, Button, TouchableHighlight } from 'react-native'
-import { facebookService } from './facebookService.js'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import Alert from './alert.js'
+import React from 'react';
+import {StyleSheet, View, Text, Button, TouchableHighlight} from 'react-native';
+import {facebookService} from './facebookService.js';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Alert from './alert.js';
 import api from './accountsApi.js';
 import friendsapi from './friendsApi.js';
 
@@ -26,7 +26,7 @@ export default class Login extends React.Component {
     this.setState({pressed: false});
   }
 
-  render () {
+  render() {
     return (
       <View>
         <Text
