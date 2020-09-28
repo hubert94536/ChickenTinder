@@ -5,16 +5,19 @@ import { USERNAME, NAME, PHOTO } from 'react-native-dotenv'
 var myUsername = ''
 var myPic = ''
 var myName = ''
-
-const socket = io('https://wechews.herokuapp.com', {
-  query: `username=${myUsername}`
-})
+var socket = null
 
 AsyncStorage.multiGet([USERNAME, NAME, PHOTO]).then(res => {
   myUsername = res[0][1]
   myName = res[1][1]
   myPic = res[2][1]
 })
+
+const connect = () => {
+  socket = io('https://wechews.herokuapp.com', {
+  query: `username=${myUsername}`
+})
+}
 
 const createRoom = () => {
   socket.emit('createRoom', { host: myUsername, pic: myPic, name: myName })
@@ -62,6 +65,7 @@ const getSocket = () => {
 }
 
 export default {
+  connect,
   createRoom,
   joinRoom,
   sendInvite,

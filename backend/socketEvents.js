@@ -5,6 +5,8 @@ var clients = {} // associates username with client id
 var clientsIds = {} // associates client id with username
 var invites = {} // store invites
 var lastRoom = {} // store last room if user disconnected
+lastRoom["hubes"] = "hubes"
+invites["hubes"] = "invite"
 module.exports = (io) => {
   io.on('connection', socket => {
     console.log(socket.id)
@@ -203,9 +205,7 @@ module.exports = (io) => {
           delete sessions[data.room]
         } else {
           io.in(data.room).emit('update', sessions[data.room].members)
-          console.log(sessions[data.room])
         }
-        console.log(sessions)
       } catch (error) {
         socket.emit('exception', error)
       }
@@ -214,7 +214,7 @@ module.exports = (io) => {
     // host can kick a user from room
     socket.on('kick', data => {
       try {
-        io.in(clients[data.username]).emit('kick', { username: data.username, room: data.room })
+        io.to(clients[data.username]).emit('kick', { username: data.username, room: data.room })
         console.log(data.username)
       } catch (error) {
         socket.emit('exception', error)

@@ -3,13 +3,8 @@ import {
   StyleSheet,
   View,
   Text,
-  Button,
-  Alert,
   TouchableHighlight,
 } from 'react-native';
-import api from './accountsApi.js';
-import friendsapi from './friendsApi.js';
-import UserProfileView from './profile.js';
 import socket from './socket.js';
 
 class Home extends React.Component {
@@ -19,6 +14,7 @@ class Home extends React.Component {
       createPressed: false,
       profilePressed: false,
     };
+    socket.connect()
   }
 
   underlayShowCreate() {
