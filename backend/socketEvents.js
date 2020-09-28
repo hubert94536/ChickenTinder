@@ -7,6 +7,7 @@ var invites = {} // store invites
 var lastRoom = {} // store last room if user disconnected
 module.exports = (io) => {
   io.on('connection', socket => {
+    console.log(socket.id)
     // replace old socket id with new one in both objects
     var socketUser = socket.handshake.query.username
     delete clientsIds[clients[socketUser]]

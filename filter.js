@@ -18,7 +18,6 @@ import {
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import TagsView from './TagsView';
-// import Slider from '@react-native-community/slider';
 import Slider from 'react-native-slider';
 import BackgroundButton from './BackgroundButton';
 
