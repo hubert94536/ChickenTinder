@@ -21,8 +21,8 @@ module.exports = (io) => {
       var sender = invites[socketUser]
       io.to(clients[socketUser]).emit('invite', {
         username: sender,
-        pic: sessions[sender].members[sender].pic,
-        name: sessions[sender].members[sender].name
+        // pic: sessions[sender].members[sender].pic,
+        // name: sessions[sender].members[sender].name
       })
     }
     // send reconnection if user was in a room and room still exists
@@ -30,8 +30,8 @@ module.exports = (io) => {
       var sender = lastRoom[socketUser]
       io.to(clients[socketUser]).emit('reconnectRoom', {
         username: sender,
-        pic: sessions[sender].members[sender].pic,
-        name: sessions[sender].members[sender].name
+        // pic: sessions[sender].members[sender].pic,
+        // name: sessions[sender].members[sender].name
       })
     }
 
