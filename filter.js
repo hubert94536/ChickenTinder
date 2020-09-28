@@ -13,7 +13,7 @@ import {
   StatusBar,
   Dimensions,
   Button,
-  TouchableOpacity,
+  TouchableHighlight,
   PermissionsAndroid,
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
@@ -22,7 +22,7 @@ import Slider from 'react-native-slider';
 import BackgroundButton from './BackgroundButton';
 
 const hex = '#F25763';
-const font = 'CircularStd-Medium';
+const font = 'CircularStd-Bold';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -79,7 +79,7 @@ export default class FilterSelector extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isHost: false,
+      isHost: true,
       distance: 5,
       lat: 0,
       long: 0,
@@ -109,102 +109,103 @@ export default class FilterSelector extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.mainContainer}>
-        <View style={styles.cardContainer}>
-          <View style={{flexDirection: 'row'}}>
-            <Text
-              style={{
-                fontFamily: 'CircularStd-Bold',
-                fontSize: 28,
-                color: 'white',
-                // paddingBottom: 10,
-                paddingLeft: SCREEN_WIDTH * 0.045,
-              }}>
-              {this.state.isHost ? 'Group Settings' : 'Set Your Filters'}
-            </Text>
-            {this.state.isHost && (
+      <View style={styles.mainContainer}>
+        <View style={styles.titleStyle}>
+          <Text style={styles.titleText}>
+            {this.state.isHost ? 'Group Settings' : 'Set Your Filters'}
+          </Text>
+          {this.state.isHost && (
+            <Text style={styles.titleSub}>(only visible to host)</Text>
+          )}
+        </View>
+        {this.state.isHost && (
+          <View style={{flex: 0.5, margin: '2%'}}>
+            <Text style={styles.header}>Members</Text>
+            <TouchableHighlight
+              underlayColor={'white'}
+              style={styles.touchableFriends}>
+              <Text style={styles.touchableFriendsText}>
+                Select from Friends
+              </Text>
+            </TouchableHighlight>
+          </View>
+        )}
+        <View style={{flex: 1, margin: '2%'}}>
+          <Text style={this.state.isHost ? styles.header : styles.headerFalse}>
+            Cuisines
+          </Text>
+          <TagsView
+            all={tagsCuisine}
+            selected={this.state.selectedCuisine}
+            isExclusive={false}
+          />
+        </View>
+        {this.state.isHost && (
+          <View style={{flex: 0.5, margin: '2%'}}>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.header}>Distance</Text>
               <Text
                 style={{
-                  fontFamily: font,
                   color: 'white',
+                  fontFamily: font,
                   alignSelf: 'center',
+                  marginLeft: '1%',
                 }}>
-                (only visible to host)
+                ({this.state.distance} miles)
               </Text>
-            )}
+            </View>
+            <Slider
+              style={{
+                width: '85%',
+                height: 30,
+                alignSelf: 'center',
+              }}
+              minimumValue={5}
+              maximumValue={25}
+              value={5}
+              step={0.5}
+              minimumTrackTintColor="white"
+              thumbTintColor="white"
+              onValueChange={value => this.setState({distance: value})}
+            />
           </View>
-          <View style={styles.card}>
-            <View style={styles.section}>
-              <Text style={styles.header}>Cuisines</Text>
-              <TagsView
-                all={tagsCuisine}
-                selected={this.state.selectedCuisine}
-                isExclusive={false}
-              />
-            </View>
-            <View style={[styles.section, styles.section2]}>
-              <View style={{flexDirection: 'row'}}>
-                <Text style={styles.header}>Distance</Text>
-                <Text
-                  style={{
-                    color: hex,
-                    fontFamily: font,
-                    alignSelf: 'center',
-                    marginLeft: '1%',
-                  }}>
-                  ({this.state.distance} miles)
-                </Text>
-              </View>
-              <Slider
-                style={{
-                  width: SCREEN_WIDTH * 0.75,
-                  height: 30,
-                  alignSelf: 'center',
-                }}
-                minimumValue={5}
-                maximumValue={25}
-                value={5}
-                step={0.5}
-                minimumTrackTintColor={hex}
-                thumbTintColor={hex}
-                onValueChange={value => this.setState({distance: value})}
-              />
-            </View>
-            <View style={[styles.section, styles.section2]}>
-              <Text style={styles.header}>Dining Options</Text>
-              <TagsView
-                all={tagsDining}
-                selected={this.state.selectedDining}
-                isExclusive={false}
-              />
-            </View>
-            <View style={[styles.section, styles.section2]}>
-              <Text style={styles.header}>Price</Text>
-              <TagsView
-                all={tagsPrice}
-                selected={this.state.selectedPrice}
-                isExclusive={false}
-              />
-            </View>
-            <View style={[styles.section]}>
-              <Text style={styles.header}>Dietary Restrictions</Text>
-              <TagsView
-                all={tagsDiet}
-                selected={this.state.selectedDiet}
-                isExclusive={false}
-              />
-            </View>
+        )}
+        {this.state.isHost && (
+          <View style={{flex: 0.5, margin: '2%'}}>
+            <Text style={styles.header}>Dining Options</Text>
+            <TagsView
+              all={tagsDining}
+              selected={this.state.selectedDining}
+              isExclusive={false}
+            />
           </View>
+        )}
+        {this.state.isHost && (
+          <View style={{flex: 0.5, margin: '2%'}}>
+            <Text style={styles.header}>Price</Text>
+            <TagsView
+              all={tagsPrice}
+              selected={this.state.selectedPrice}
+              isExclusive={false}
+            />
+          </View>
+        )}
+        <View style={{flex: 1, margin: '2%'}}>
+          <Text style={this.state.isHost ? styles.header : styles.headerFalse}>
+            Dietary Restrictions
+          </Text>
+          <TagsView
+            all={tagsDiet}
+            selected={this.state.selectedDiet}
+            isExclusive={false}
+          />
         </View>
-        <View style={{paddingTop: 10, width: 150, alignSelf: 'center'}} />
-        <TouchableOpacity style={styles.touchable}>
-          <View style={styles.nextButton}>
-            <Text style={styles.nextTitle}>
-              {this.state.isHost ? "Let's Go" : 'Submit Filters'}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </SafeAreaView>
+        <TouchableHighlight underlayColor={'white'} style={styles.touchable}>
+          <Text style={styles.nextTitle}>
+            {this.state.isHost ? "Let's Go" : 'Submit Filters'}
+          </Text>
+        </TouchableHighlight>
+      </View>
     );
   }
 }
@@ -213,92 +214,69 @@ const styles = StyleSheet.create({
   //Fullscreen
   mainContainer: {
     flex: 1,
-    flexDirection: 'column',
     backgroundColor: hex,
+    justifyContent: 'space-between',
   },
-  //Card area is now flexsized and takes 90% of the width of screen
-  cardContainer: {
-    borderRadius: 17,
-    borderWidth: 0,
-    borderColor: '#000',
-    justifyContent: 'flex-end',
+  titleStyle: {
+    flexDirection: 'row',
+    flex: 0.5,
+    margin: '2%',
+    alignItems: 'center',
+  },
+  titleText: {
+    fontFamily: font,
+    fontSize: 28,
+    color: 'white',
+  },
+  titleSub: {
+    fontFamily: font,
+    color: 'white',
     alignSelf: 'center',
-    // marginTop: 5,
-    width: '90%',
-    // aspectRatio: 5 / 8,
+    margin: '1%',
   },
-  //Sizing is now based on aspect ratio
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 17,
-    borderWidth: 0,
-    borderColor: '#000',
+  touchableFriends: {
+    borderWidth: 2,
+    borderRadius: 25,
+    borderColor: 'white',
     alignSelf: 'center',
-    width: '90%',
-    height: '85%',
-    // aspectRatio: 5 / 8,
-    // justifyContent: 'center'
+    width: '60%',
+    margin: '1%',
   },
-  section: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: 'transparent',
+  touchableFriendsText: {
+    color: 'white',
+    fontFamily: font,
+    fontSize: 18,
     alignSelf: 'center',
-    width: '100%',
-    height: '27.5%',
-    paddingHorizontal: 10,
-    paddingVertical: 7.5,
-    borderBottomColor: hex,
+    paddingTop: '2%',
+    paddingBottom: '2%',
   },
-
-  section2: {
-    height: '15%',
-  },
-
-  section3: {
-    borderBottomColor: 'white',
-  },
-
   header: {
     textAlign: 'left',
-    color: hex,
-    fontSize: 18,
-    fontFamily: 'CircularStd-Bold',
-    // paddingTop: 10,
-  },
-
-  touchable: {
-    width: '40%',
-    alignSelf: 'center',
-    // marginLeft: 4,
-    // marginLeft: 3,
-    // marginRight: 3,
-    // marginBottom: 6
-  },
-
-  nextTitle: {
-    // fontSize: 5,
-    textAlign: 'center',
     color: 'white',
-    // fontSize: 16
     fontSize: 18,
-    fontFamily: 'CircularStd-Bold',
+    fontFamily: font,
   },
-
-  nextButton: {
-    // flexDirection: 'row',
-    // borderRadius: 23,
+  headerFalse: {
+    textAlign: 'left',
+    color: 'white',
+    fontSize: 25,
+    fontFamily: font,
+  },
+  touchable: {
+    width: '50%',
+    alignSelf: 'center',
     borderColor: 'white',
     borderWidth: 2,
-    borderRadius: 18,
-    backgroundColor: hex,
-    // height: 46,
-    height: 36,
-    alignItems: 'center',
+    borderRadius: 25,
     justifyContent: 'center',
-    // paddingLeft: 16,
-    // paddingRight: 16
-
-    paddingHorizontal: 8,
+    margin: '4%',
+  },
+  nextTitle: {
+    textAlign: 'center',
+    color: 'white',
+    fontSize: 25,
+    fontFamily: font,
+    paddingTop: '2%',
+    paddingBottom: '2%',
   },
 });

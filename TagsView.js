@@ -1,53 +1,53 @@
-import React from 'react'
-import { View, StyleSheet, Button } from 'react-native'
+import React from 'react';
+import {View, StyleSheet, Button} from 'react-native';
 // import R from 'res/R'
-import BackgroundButton from './BackgroundButton'
-import {addOrRemove} from './addOrRemove'
+import BackgroundButton from './BackgroundButton';
+import {addOrRemove} from './addOrRemove';
+
+const hex = '#F25763';
+
 export default class TagsView extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      selected: props.selected
-    }
+      selected: props.selected,
+    };
   }
 
-render() {
-    return (
-      <View style={styles.container}>
-        {this.makeButtons()}
-      </View>
-    )
+  render() {
+    return <View style={styles.container}>{this.makeButtons()}</View>;
   }
-onPress = (tag) => {
-    let selected
+  onPress = tag => {
+    let selected;
     if (this.props.isExclusive) {
-      selected = [tag]
+      selected = [tag];
     } else {
-      selected = addOrRemove(this.state.selected, tag)
+      selected = addOrRemove(this.state.selected, tag);
     }
-this.setState({
-      selected
-    })
-  }
-makeButtons() {
+    this.setState({
+      selected,
+    });
+  };
+  makeButtons() {
     return this.props.all.map((tag, i) => {
-      const on = this.state.selected.includes(tag)
-      const backgroundColor = on ? "#DE4A4A": 'white'
-      const textColor = on ? 'white' : "#DE4A4A"
-      const borderColor = on ? 'white' : "#DE4A4A"
-return (
+      const on = this.state.selected.includes(tag);
+      const backgroundColor = on ? 'white' : hex;
+      const textColor = on ? hex : 'white';
+      const borderColor = on ? hex : 'white';
+      return (
         <BackgroundButton
           backgroundColor={backgroundColor}
           textColor={textColor}
           borderColor={borderColor}
           onPress={() => {
-            this.onPress(tag)
+            this.onPress(tag);
           }}
           key={i}
           showImage={on}
-          title={tag} />
-      )
-    })
+          title={tag}
+        />
+      );
+    });
   }
 }
 const styles = StyleSheet.create({
@@ -56,5 +56,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingVertical: 5,
-  }
-})
+  },
+});
