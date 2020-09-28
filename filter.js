@@ -18,7 +18,6 @@ import {
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import TagsView from './TagsView';
-// import Slider from '@react-native-community/slider';
 import Slider from 'react-native-slider';
 import BackgroundButton from './BackgroundButton';
 
@@ -80,6 +79,7 @@ export default class FilterSelector extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isHost: false,
       distance: 5,
       lat: 0,
       long: 0,
@@ -111,16 +111,28 @@ export default class FilterSelector extends React.Component {
     return (
       <SafeAreaView style={styles.mainContainer}>
         <View style={styles.cardContainer}>
-          <Text
-            style={{
-              fontFamily: 'CircularStd-Bold',
-              fontSize: 28,
-              color: 'white',
-              // paddingBottom: 10,
-              paddingLeft: SCREEN_WIDTH * 0.045,
-            }}>
-            Set Your Filters
-          </Text>
+          <View style={{flexDirection: 'row'}}>
+            <Text
+              style={{
+                fontFamily: 'CircularStd-Bold',
+                fontSize: 28,
+                color: 'white',
+                // paddingBottom: 10,
+                paddingLeft: SCREEN_WIDTH * 0.045,
+              }}>
+              {this.state.isHost ? 'Group Settings' : 'Set Your Filters'}
+            </Text>
+            {this.state.isHost && (
+              <Text
+                style={{
+                  fontFamily: font,
+                  color: 'white',
+                  alignSelf: 'center',
+                }}>
+                (only visible to host)
+              </Text>
+            )}
+          </View>
           <View style={styles.card}>
             <View style={styles.section}>
               <Text style={styles.header}>Cuisines</Text>
@@ -182,27 +194,14 @@ export default class FilterSelector extends React.Component {
                 isExclusive={false}
               />
             </View>
-            {/* <Button title = "Let's Go" style={{color = 'white', fontSize = 20}}/> */}
-            {/* <TouchableOpacity style={styles.touchable}>
-            <View style={styles.view}>
-              <Text style={styles.text}>Let's Go</Text>
-            </View>
-          </TouchableOpacity> */}
           </View>
         </View>
-        <View style={{paddingTop: 10, width: 150, alignSelf: 'center'}}>
-          {/* <BackgroundButton
-        backgroundColor= 'white'
-        textColor= 'pink'
-        borderColor= 'transparent'
-        // onPress={() => {
-        //   this.onPress(tag)
-        // }}
-        title = "Let's Go" /> */}
-        </View>
+        <View style={{paddingTop: 10, width: 150, alignSelf: 'center'}} />
         <TouchableOpacity style={styles.touchable}>
           <View style={styles.nextButton}>
-            <Text style={styles.nextTitle}>Let's Go</Text>
+            <Text style={styles.nextTitle}>
+              {this.state.isHost ? "Let's Go" : 'Submit Filters'}
+            </Text>
           </View>
         </TouchableOpacity>
       </SafeAreaView>
@@ -216,11 +215,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: hex,
-    // justifyContent: 'space-evenly',
   },
   //Card area is now flexsized and takes 90% of the width of screen
   cardContainer: {
-    // backgroundColor: '#ff0',
     borderRadius: 17,
     borderWidth: 0,
     borderColor: '#000',
@@ -258,6 +255,10 @@ const styles = StyleSheet.create({
     height: '15%',
   },
 
+  section3: {
+    borderBottomColor: 'white',
+  },
+
   header: {
     textAlign: 'left',
     color: hex,
@@ -267,7 +268,7 @@ const styles = StyleSheet.create({
   },
 
   touchable: {
-    width: '30%',
+    width: '40%',
     alignSelf: 'center',
     // marginLeft: 4,
     // marginLeft: 3,
