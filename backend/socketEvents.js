@@ -5,8 +5,6 @@ var clients = {} // associates username with client id
 var clientsIds = {} // associates client id with username
 var invites = {} // store invites
 var lastRoom = {} // store last room if user disconnected
-lastRoom["hubes"] = "hubes"
-invites["hubes"] = "invite"
 module.exports = (io) => {
   io.on('connection', socket => {
     console.log(socket.id)
@@ -21,8 +19,8 @@ module.exports = (io) => {
       var sender = invites[socketUser]
       io.to(clients[socketUser]).emit('invite', {
         username: sender,
-        // pic: sessions[sender].members[sender].pic,
-        // name: sessions[sender].members[sender].name
+        pic: sessions[sender].members[sender].pic,
+        name: sessions[sender].members[sender].name
       })
     }
     // send reconnection if user was in a room and room still exists
@@ -30,8 +28,8 @@ module.exports = (io) => {
       var sender = lastRoom[socketUser]
       io.to(clients[socketUser]).emit('reconnectRoom', {
         username: sender,
-        // pic: sessions[sender].members[sender].pic,
-        // name: sessions[sender].members[sender].name
+        pic: sessions[sender].members[sender].pic,
+        name: sessions[sender].members[sender].name
       })
     }
 
@@ -51,6 +49,7 @@ module.exports = (io) => {
           if (Object.keys(sessions[room].members).length === 0) {
             delete sessions[room]
             delete lastRoom[username]
+            console.log(sessions)
           } else {
             io.in(room).emit('update', sessions[room].members)
             console.log(sessions[room])

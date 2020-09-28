@@ -15,7 +15,6 @@ class Home extends React.Component {
       profilePressed: false,
     };
     socket.connect()
-    socket.getSocket().on('invite', res=> console.log(res))
     socket.getSocket().on('reconnectRoom', res=> console.log(res))
   }
 
