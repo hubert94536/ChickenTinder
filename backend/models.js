@@ -11,11 +11,6 @@ const config = {
   database: process.env.USERS_DATABASE,
   ssl: true,
   dialect: 'postgresql',
-  // dialectOptions: {
-  //     ssl: {
-  //         require: true
-  //     }
-  // },
   ssl: {
     rejectUnauthorized: false
   }
