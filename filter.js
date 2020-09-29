@@ -66,7 +66,6 @@ const minutes = [
   {label: '50', value: '50'},
   {label: '55', value: '55'},
 ];
-
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const tagsCuisine = [
@@ -80,7 +79,7 @@ const tagsCuisine = [
   'Vietnamese',
 ];
 
-const tagsPrice = ['$', '$$', '$$$', '$$$$', 'Any'];
+const tagsDining = ['Dine-in', 'Delivery', 'Catering', 'Pickup'];
 
 const tagsDiet = [
   'Eggs',
@@ -136,7 +135,6 @@ export default class FilterSelector extends React.Component {
 
   componentDidMount() {
     this._isMounted = true;
-
     if (requestLocationPermission()) {
       Geolocation.getCurrentPosition(
         position => {
