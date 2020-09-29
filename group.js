@@ -88,8 +88,7 @@ export default class Group extends React.Component {
 
   render() {
     return (
-      <Swiper ref="swiper" loop={false} showsPagination={false} index={1}>
-        <FilterSelector />
+      <Swiper ref="swiper" loop={false} showsPagination={false}>
         <View style={styles.main}>
           <View style={styles.top}>
             <View
@@ -142,17 +141,31 @@ export default class Group extends React.Component {
                 waiting for {this.state.needFilters} member filters
               </Text>
             </View>
-            <View style={{flexDirection: 'row', margin: '4%'}}>
-              <Icon
-                name="chevron-left"
-                style={{color: 'white', fontFamily: font, fontSize: 16}}
-                onPress={() => this.refs.swiper.scrollBy(-1)}
-              />
+            <View
+              style={{
+                flexDirection: 'row',
+                margin: '4%',
+                justifyContent: 'flex-end',
+              }}>
               <Text
-                style={{color: 'white', fontFamily: font, marginLeft: '3%'}}>
+                style={{
+                  color: 'white',
+                  fontFamily: font,
+                  marginRight: '3%',
+                }}>
                 {this.state.username === this.state.host
                   ? 'Swipe for host menu'
                   : 'Swipe for filters'}
+                <Icon
+                  name="chevron-right"
+                  style={{
+                    color: 'white',
+                    fontFamily: font,
+                    fontSize: 16,
+                    alignSelf: 'center',
+                  }}
+                  onPress={() => this.refs.swiper.scrollBy(1)}
+                />
               </Text>
             </View>
           </View>
@@ -211,6 +224,7 @@ export default class Group extends React.Component {
             />
           )}
         </View>
+        <FilterSelector />
       </Swiper>
     );
   }
