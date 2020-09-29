@@ -50,7 +50,6 @@ module.exports = (io) => {
             delete lastRoom[username]
           } else {
             io.in(room).emit('update', sessions[room].members)
-            console.log(sessions[room])
           }
         }
       } catch (error) {
@@ -75,6 +74,8 @@ module.exports = (io) => {
         sessions[data.host].members[data.host].filters = false
         sessions[data.host].members[data.host].name = data.name
         sessions[data.host].restaurants = {}
+        sessions[data.host].filters = {}
+        sessions[data.host].filters.categories = new Set()
         lastRoom[data.host] = data.host
         socket.emit('update', sessions[data.host])
       } catch (error) {
@@ -146,7 +147,17 @@ module.exports = (io) => {
       try {
         sessions[data.room].members[data.username].filters = true
         io.in(data.room).emit('update', sessions[data.room].members)
-        io.to(clients[data.room]).emit('filters', { filters: data.filters })
+        // check if host
+        if (data.username === data.room) {
+          sessions[data.host].filters.price = data.price
+          sessions[data.host].filters.open_at = data.open_at
+          sessions[data.host].filters.radius = data.radius
+          sessions[data.host].filters.latitude = data.latitude
+          sessions[data.host].filters.longitude = data.longitude
+        }
+        for (var category in data.categories) {
+          sessions[data.host].filters.categories.add(category)
+        }
       } catch (error) {
         socket.emit('exception', error)
       }
@@ -202,9 +213,7 @@ module.exports = (io) => {
           delete sessions[data.room]
         } else {
           io.in(data.room).emit('update', sessions[data.room].members)
-          console.log(sessions[data.room])
         }
-        console.log(sessions)
       } catch (error) {
         socket.emit('exception', error)
       }
@@ -213,7 +222,7 @@ module.exports = (io) => {
     // host can kick a user from room
     socket.on('kick', data => {
       try {
-        io.in(clients[data.username]).emit('kick', { username: data.username, room: data.room })
+        io.to(clients[data.username]).emit('kick', { username: data.username, room: data.room })
         console.log(data.username)
       } catch (error) {
         socket.emit('exception', error)

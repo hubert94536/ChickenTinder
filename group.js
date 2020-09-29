@@ -28,14 +28,10 @@ export default class Group extends React.Component {
     super(props);
     const members = this.props.navigation.state.params.members;
     this.state = {
-      // members: members,
-      // host: this.props.navigation.state.params.host,
-      // groupName: members[Object.keys(members)[0]].name.split(' ')[0],
-      // needFilters: Object.keys(members).filter(user => !user.filters).length,
-      members: [],
-      host: 'Hanna',
-      groupName: 'Hanna',
-      needFilters: false,
+      members: members,
+      host: this.props.navigation.state.params.host,
+      groupName: members[Object.keys(members)[0]].name.split(' ')[0],
+      needFilters: Object.keys(members).filter(user => !user.filters).length,
       start: false,
       username: myUsername,
       // show/hide the alerts
@@ -57,7 +53,6 @@ export default class Group extends React.Component {
     }
 
     socket.getSocket().on('kick', res => {
-      console.log(res);
       if (res.username === this.state.username) {
         socket.leaveRoom(res.room);
         this.props.navigation.navigate('Home');
