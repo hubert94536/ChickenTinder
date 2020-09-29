@@ -31,9 +31,9 @@ export default class TagsView extends React.Component {
   makeButtons() {
     return this.props.all.map((tag, i) => {
       const on = this.state.selected.includes(tag);
-      const backgroundColor = on ? 'white' : hex;
-      const textColor = on ? hex : 'white';
-      const borderColor = on ? hex : 'white';
+      const backgroundColor = on ? hex : 'white';
+      const textColor = on ? 'white' : hex;
+      const borderColor = on ? 'white' : hex;
       return (
         <BackgroundButton
           backgroundColor={backgroundColor}

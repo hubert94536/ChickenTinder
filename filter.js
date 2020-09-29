@@ -20,10 +20,52 @@ import Geolocation from 'react-native-geolocation-service';
 import TagsView from './TagsView';
 import Slider from 'react-native-slider';
 import BackgroundButton from './BackgroundButton';
-import TimePicker from 'react-native-simple-time-picker';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const hex = '#F25763';
 const font = 'CircularStd-Bold';
+
+const hours = [
+  {label: '0', value: '00'},
+  {label: '1', value: '01'},
+  {label: '2', value: '02'},
+  {label: '3', value: '03'},
+  {label: '4', value: '04'},
+  {label: '5', value: '05'},
+  {label: '6', value: '06'},
+  {label: '7', value: '07'},
+  {label: '8', value: '08'},
+  {label: '9', value: '09'},
+  {label: '10', value: '10'},
+  {label: '10', value: '11'},
+  {label: '12', value: '12'},
+  {label: '13', value: '13'},
+  {label: '14', value: '14'},
+  {label: '15', value: '15'},
+  {label: '16', value: '16'},
+  {label: '17', value: '17'},
+  {label: '18', value: '18'},
+  {label: '19', value: '19'},
+  {label: '20', value: '20'},
+  {label: '21', value: '21'},
+  {label: '22', value: '22'},
+  {label: '23', value: '23'},
+];
+
+const minutes = [
+  {label: '00', value: '00'},
+  {label: '05', value: '05'},
+  {label: '10', value: '10'},
+  {label: '15', value: '15'},
+  {label: '20', value: '20'},
+  {label: '25', value: '25'},
+  {label: '30', value: '30'},
+  {label: '35', value: '35'},
+  {label: '40', value: '40'},
+  {label: '45', value: '45'},
+  {label: '50', value: '50'},
+  {label: '55', value: '55'},
+];
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -80,9 +122,9 @@ export default class FilterSelector extends React.Component {
     this.state = {
       isHost: true,
       distance: 5,
-      hour: 23,
-      minute: 59,
-      time: 235900, //unix time
+      hour: '',
+      minute: '',
+      time: 0,
       lat: 0,
       long: 0,
       selectedCuisine: [], //array
@@ -93,6 +135,8 @@ export default class FilterSelector extends React.Component {
   }
 
   componentDidMount() {
+    this._isMounted = true;
+
     if (requestLocationPermission()) {
       Geolocation.getCurrentPosition(
         position => {
@@ -110,13 +154,8 @@ export default class FilterSelector extends React.Component {
   }
 
   evaluateFilters() {
-    this.setState({
-      time: parseInt(
-        JSON.stringify(this.state.hour) +
-          JSON.stringify(this.state.minute) +
-          '00',
-      ),
-    });
+    this.setState({time: parseInt(this.state.hour + this.state.minute + '00')});
+    console.log(this.state.time);
     var prices = '';
     for (var i = 0; i < this.state.selectedPrice.length; i++) {
       switch (this.state.selectedPrice[i]) {
@@ -150,7 +189,6 @@ export default class FilterSelector extends React.Component {
       }
     }
     this.setState({price: prices});
-    console.log(this.state.price);
   }
 
   render() {
@@ -166,10 +204,10 @@ export default class FilterSelector extends React.Component {
         </View>
         <ScrollView>
           {this.state.isHost && (
-            <View style={{margin: '2%'}}>
+            <View style={{margin: '5%'}}>
               <Text style={styles.header}>Members</Text>
               <TouchableHighlight
-                underlayColor={'white'}
+                underlayColor={hex}
                 style={styles.touchableFriends}>
                 <Text style={styles.touchableFriendsText}>
                   Select from Friends
@@ -177,7 +215,7 @@ export default class FilterSelector extends React.Component {
               </TouchableHighlight>
             </View>
           )}
-          <View style={{margin: '2%'}}>
+          <View style={{margin: '5%'}}>
             <Text style={styles.header}>Cuisines</Text>
             <TagsView
               all={tagsCuisine}
@@ -186,12 +224,12 @@ export default class FilterSelector extends React.Component {
             />
           </View>
           {this.state.isHost && (
-            <View style={{margin: '2%'}}>
+            <View style={{margin: '5%'}}>
               <View style={{flexDirection: 'row'}}>
                 <Text style={styles.header}>Distance</Text>
                 <Text
                   style={{
-                    color: 'white',
+                    color: hex,
                     fontFamily: font,
                     alignSelf: 'center',
                     marginLeft: '1%',
@@ -209,31 +247,79 @@ export default class FilterSelector extends React.Component {
                 maximumValue={25}
                 value={5}
                 step={0.5}
-                minimumTrackTintColor="white"
-                thumbTintColor="white"
+                minimumTrackTintColor={hex}
+                thumbTintColor={hex}
                 onValueChange={value => this.setState({distance: value})}
               />
             </View>
           )}
           {this.state.isHost && (
-            <View style={{margin: '2%'}}>
-              <Text style={styles.header}>
-                Open at: {this.state.hour}:{this.state.minute}
-              </Text>
-              <TimePicker
-                selectedHours={this.state.hour}
-                selectedMinutes={this.state.minute}
-                onChange={(hours, minutes) =>
-                  this.setState({
-                    hour: hours,
-                    minute: minutes,
-                  })
-                }
-              />
+            <View style={{margin: '5%'}}>
+              <Text style={styles.header}>Open at:</Text>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <DropDownPicker
+                  selectedLabelStyle={{
+                    color: hex,
+                    fontFamily: font,
+                    fontSize: 20,
+                    textAlign: 'right',
+                  }}
+                  arrowColor={hex}
+                  arrowSize={25}
+                  placeholder={' '}
+                  items={hours}
+                  containerStyle={{height: 40, width: '50%'}}
+                  style={{
+                    flexDirection: 'row-reverse',
+                    backgroundColor: 'white',
+                    borderWidth: 0,
+                  }}
+                  labelStyle={{
+                    color: hex,
+                    fontSize: 20,
+                    fontFamily: font,
+                  }}
+                  onChangeItem={selection =>
+                    this.setState({hour: selection.value})
+                  }
+                />
+                <Text
+                  style={{
+                    fontFamily: font,
+                    color: hex,
+                    fontSize: 25,
+                  }}>
+                  :
+                </Text>
+                <DropDownPicker
+                  selectedLabelStyle={{
+                    color: hex,
+                    fontFamily: font,
+                    fontSize: 20,
+                  }}
+                  arrowColor={hex}
+                  arrowSize={25}
+                  placeholder={' '}
+                  items={minutes}
+                  containerStyle={{height: 40, width: '50%'}}
+                  style={{
+                    backgroundColor: 'white',
+                    borderWidth: 0,
+                  }}
+                  labelStyle={{
+                    color: hex,
+                    fontSize: 20,
+                    fontFamily: font,
+                  }}
+                  onChangeItem={selection =>
+                    this.setState({minute: selection.value})
+                  }
+                />
+              </View>
             </View>
           )}
           {this.state.isHost && (
-            <View style={{margin: '2%'}}>
+            <View style={{margin: '5%'}}>
               <Text style={styles.header}>Price</Text>
               <TagsView
                 all={tagsPrice}
@@ -242,7 +328,7 @@ export default class FilterSelector extends React.Component {
               />
             </View>
           )}
-          <View style={{margin: '2%'}}>
+          <View style={{margin: '5%'}}>
             <Text style={styles.header}>Dietary Restrictions</Text>
             <TagsView
               all={tagsDiet}
@@ -252,7 +338,7 @@ export default class FilterSelector extends React.Component {
           </View>
         </ScrollView>
         <TouchableHighlight
-          underlayColor={'white'}
+          underlayColor={hex}
           style={styles.touchable}
           onPress={() => this.evaluateFilters()}>
           <Text style={styles.nextTitle}>
@@ -268,7 +354,7 @@ const styles = StyleSheet.create({
   //Fullscreen
   mainContainer: {
     flex: 1,
-    backgroundColor: hex,
+    backgroundColor: 'white',
     justifyContent: 'space-between',
   },
   titleStyle: {
@@ -279,33 +365,34 @@ const styles = StyleSheet.create({
   titleText: {
     fontFamily: font,
     fontSize: 28,
-    color: 'white',
+    color: hex,
   },
   titleSub: {
     fontFamily: font,
-    color: 'white',
+    color: hex,
     alignSelf: 'center',
     margin: '1%',
   },
   touchableFriends: {
     borderWidth: 2,
     borderRadius: 25,
-    borderColor: 'white',
+    borderColor: hex,
     alignSelf: 'center',
-    width: '60%',
     marginTop: '5%',
   },
   touchableFriendsText: {
-    color: 'white',
+    color: hex,
     fontFamily: font,
     fontSize: 18,
     alignSelf: 'center',
+    paddingLeft: '3%',
+    paddingRight: '3%',
     paddingTop: '2%',
     paddingBottom: '2%',
   },
   header: {
     textAlign: 'left',
-    color: 'white',
+    color: hex,
     fontSize: 25,
     margin: '1%',
     fontFamily: font,
@@ -313,7 +400,7 @@ const styles = StyleSheet.create({
   touchable: {
     width: '50%',
     alignSelf: 'center',
-    borderColor: 'white',
+    borderColor: hex,
     borderWidth: 2,
     borderRadius: 25,
     justifyContent: 'center',
@@ -321,7 +408,7 @@ const styles = StyleSheet.create({
   },
   nextTitle: {
     textAlign: 'center',
-    color: 'white',
+    color: hex,
     fontSize: 25,
     fontFamily: font,
     paddingTop: '2%',
