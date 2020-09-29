@@ -13,18 +13,59 @@ import {
   StatusBar,
   Dimensions,
   Button,
-  TouchableOpacity,
+  TouchableHighlight,
   PermissionsAndroid,
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import TagsView from './TagsView';
-// import Slider from '@react-native-community/slider';
 import Slider from 'react-native-slider';
 import BackgroundButton from './BackgroundButton';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const hex = '#F25763';
-const font = 'CircularStd-Medium';
+const font = 'CircularStd-Bold';
 
+const hours = [
+  {label: '0', value: '00'},
+  {label: '1', value: '01'},
+  {label: '2', value: '02'},
+  {label: '3', value: '03'},
+  {label: '4', value: '04'},
+  {label: '5', value: '05'},
+  {label: '6', value: '06'},
+  {label: '7', value: '07'},
+  {label: '8', value: '08'},
+  {label: '9', value: '09'},
+  {label: '10', value: '10'},
+  {label: '10', value: '11'},
+  {label: '12', value: '12'},
+  {label: '13', value: '13'},
+  {label: '14', value: '14'},
+  {label: '15', value: '15'},
+  {label: '16', value: '16'},
+  {label: '17', value: '17'},
+  {label: '18', value: '18'},
+  {label: '19', value: '19'},
+  {label: '20', value: '20'},
+  {label: '21', value: '21'},
+  {label: '22', value: '22'},
+  {label: '23', value: '23'},
+];
+
+const minutes = [
+  {label: '00', value: '00'},
+  {label: '05', value: '05'},
+  {label: '10', value: '10'},
+  {label: '15', value: '15'},
+  {label: '20', value: '20'},
+  {label: '25', value: '25'},
+  {label: '30', value: '30'},
+  {label: '35', value: '35'},
+  {label: '40', value: '40'},
+  {label: '45', value: '45'},
+  {label: '50', value: '50'},
+  {label: '55', value: '55'},
+];
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const tagsCuisine = [
@@ -39,8 +80,6 @@ const tagsCuisine = [
 ];
 
 const tagsDining = ['Dine-in', 'Delivery', 'Catering', 'Pickup'];
-
-const tagsPrice = ['$', '$$', '$$$', '$$$$', 'Any'];
 
 const tagsDiet = [
   'Eggs',
@@ -80,17 +119,22 @@ export default class FilterSelector extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isHost: true,
       distance: 5,
+      hour: '',
+      minute: '',
+      time: 0,
       lat: 0,
       long: 0,
-      selectedCuisine: [],
-      selectedDining: [],
-      selectedPrice: [],
+      selectedCuisine: [], //array
+      selectedPrice: [], //string "1,2,3"
+      price: null, //string of prices
       selectedDiet: [],
     };
   }
 
   componentDidMount() {
+    this._isMounted = true;
     if (requestLocationPermission()) {
       Geolocation.getCurrentPosition(
         position => {
@@ -107,30 +151,78 @@ export default class FilterSelector extends React.Component {
     }
   }
 
+  evaluateFilters() {
+    this.setState({time: parseInt(this.state.hour + this.state.minute + '00')});
+    console.log(this.state.time);
+    var prices = '';
+    for (var i = 0; i < this.state.selectedPrice.length; i++) {
+      switch (this.state.selectedPrice[i]) {
+        case '$':
+          prices += '1';
+          break;
+        case '$$':
+          if (prices === '') {
+            prices += '2';
+          } else {
+            prices += ',2';
+          }
+          break;
+        case '$$$':
+          if (prices === '') {
+            prices += '3';
+          } else {
+            prices += ',3';
+          }
+          break;
+        case '$$$$':
+          if (prices === '') {
+            prices += '4';
+          } else {
+            prices += ',4';
+          }
+          break;
+        case 'Any':
+          prices = '1,2,3,4';
+          break;
+      }
+    }
+    this.setState({price: prices});
+  }
+
   render() {
     return (
-      <SafeAreaView style={styles.mainContainer}>
-        <View style={styles.cardContainer}>
-          <Text
-            style={{
-              fontFamily: 'CircularStd-Bold',
-              fontSize: 28,
-              color: 'white',
-              // paddingBottom: 10,
-              paddingLeft: SCREEN_WIDTH * 0.045,
-            }}>
-            Set Your Filters
+      <View style={styles.mainContainer}>
+        <View style={styles.titleStyle}>
+          <Text style={styles.titleText}>
+            {this.state.isHost ? 'Group Settings' : 'Set Your Filters'}
           </Text>
-          <View style={styles.card}>
-            <View style={styles.section}>
-              <Text style={styles.header}>Cuisines</Text>
-              <TagsView
-                all={tagsCuisine}
-                selected={this.state.selectedCuisine}
-                isExclusive={false}
-              />
+          {this.state.isHost && (
+            <Text style={styles.titleSub}>(only visible to host)</Text>
+          )}
+        </View>
+        <ScrollView>
+          {this.state.isHost && (
+            <View style={{margin: '5%'}}>
+              <Text style={styles.header}>Members</Text>
+              <TouchableHighlight
+                underlayColor={hex}
+                style={styles.touchableFriends}>
+                <Text style={styles.touchableFriendsText}>
+                  Select from Friends
+                </Text>
+              </TouchableHighlight>
             </View>
-            <View style={[styles.section, styles.section2]}>
+          )}
+          <View style={{margin: '5%'}}>
+            <Text style={styles.header}>Cuisines</Text>
+            <TagsView
+              all={tagsCuisine}
+              selected={this.state.selectedCuisine}
+              isExclusive={false}
+            />
+          </View>
+          {this.state.isHost && (
+            <View style={{margin: '5%'}}>
               <View style={{flexDirection: 'row'}}>
                 <Text style={styles.header}>Distance</Text>
                 <Text
@@ -145,7 +237,7 @@ export default class FilterSelector extends React.Component {
               </View>
               <Slider
                 style={{
-                  width: SCREEN_WIDTH * 0.75,
+                  width: '85%',
                   height: 30,
                   alignSelf: 'center',
                 }}
@@ -158,15 +250,74 @@ export default class FilterSelector extends React.Component {
                 onValueChange={value => this.setState({distance: value})}
               />
             </View>
-            <View style={[styles.section, styles.section2]}>
-              <Text style={styles.header}>Dining Options</Text>
-              <TagsView
-                all={tagsDining}
-                selected={this.state.selectedDining}
-                isExclusive={false}
-              />
+          )}
+          {this.state.isHost && (
+            <View style={{margin: '5%'}}>
+              <Text style={styles.header}>Open at:</Text>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <DropDownPicker
+                  selectedLabelStyle={{
+                    color: hex,
+                    fontFamily: font,
+                    fontSize: 20,
+                    textAlign: 'right',
+                  }}
+                  arrowColor={hex}
+                  arrowSize={25}
+                  placeholder={' '}
+                  items={hours}
+                  containerStyle={{height: 40, width: '50%'}}
+                  style={{
+                    flexDirection: 'row-reverse',
+                    backgroundColor: 'white',
+                    borderWidth: 0,
+                  }}
+                  labelStyle={{
+                    color: hex,
+                    fontSize: 20,
+                    fontFamily: font,
+                  }}
+                  onChangeItem={selection =>
+                    this.setState({hour: selection.value})
+                  }
+                />
+                <Text
+                  style={{
+                    fontFamily: font,
+                    color: hex,
+                    fontSize: 25,
+                  }}>
+                  :
+                </Text>
+                <DropDownPicker
+                  selectedLabelStyle={{
+                    color: hex,
+                    fontFamily: font,
+                    fontSize: 20,
+                  }}
+                  arrowColor={hex}
+                  arrowSize={25}
+                  placeholder={' '}
+                  items={minutes}
+                  containerStyle={{height: 40, width: '50%'}}
+                  style={{
+                    backgroundColor: 'white',
+                    borderWidth: 0,
+                  }}
+                  labelStyle={{
+                    color: hex,
+                    fontSize: 20,
+                    fontFamily: font,
+                  }}
+                  onChangeItem={selection =>
+                    this.setState({minute: selection.value})
+                  }
+                />
+              </View>
             </View>
-            <View style={[styles.section, styles.section2]}>
+          )}
+          {this.state.isHost && (
+            <View style={{margin: '5%'}}>
               <Text style={styles.header}>Price</Text>
               <TagsView
                 all={tagsPrice}
@@ -174,38 +325,25 @@ export default class FilterSelector extends React.Component {
                 isExclusive={false}
               />
             </View>
-            <View style={[styles.section]}>
-              <Text style={styles.header}>Dietary Restrictions</Text>
-              <TagsView
-                all={tagsDiet}
-                selected={this.state.selectedDiet}
-                isExclusive={false}
-              />
-            </View>
-            {/* <Button title = "Let's Go" style={{color = 'white', fontSize = 20}}/> */}
-            {/* <TouchableOpacity style={styles.touchable}>
-            <View style={styles.view}>
-              <Text style={styles.text}>Let's Go</Text>
-            </View>
-          </TouchableOpacity> */}
+          )}
+          <View style={{margin: '5%'}}>
+            <Text style={styles.header}>Dietary Restrictions</Text>
+            <TagsView
+              all={tagsDiet}
+              selected={this.state.selectedDiet}
+              isExclusive={false}
+            />
           </View>
-        </View>
-        <View style={{paddingTop: 10, width: 150, alignSelf: 'center'}}>
-          {/* <BackgroundButton
-        backgroundColor= 'white'
-        textColor= 'pink'
-        borderColor= 'transparent'
-        // onPress={() => {
-        //   this.onPress(tag)
-        // }}
-        title = "Let's Go" /> */}
-        </View>
-        <TouchableOpacity style={styles.touchable}>
-          <View style={styles.nextButton}>
-            <Text style={styles.nextTitle}>Let's Go</Text>
-          </View>
-        </TouchableOpacity>
-      </SafeAreaView>
+        </ScrollView>
+        <TouchableHighlight
+          underlayColor={hex}
+          style={styles.touchable}
+          onPress={() => this.evaluateFilters()}>
+          <Text style={styles.nextTitle}>
+            {this.state.isHost ? "Let's Go" : 'Submit Filters'}
+          </Text>
+        </TouchableHighlight>
+      </View>
     );
   }
 }
@@ -214,90 +352,64 @@ const styles = StyleSheet.create({
   //Fullscreen
   mainContainer: {
     flex: 1,
-    flexDirection: 'column',
-    backgroundColor: hex,
-    // justifyContent: 'space-evenly',
+    backgroundColor: 'white',
+    justifyContent: 'space-between',
   },
-  //Card area is now flexsized and takes 90% of the width of screen
-  cardContainer: {
-    // backgroundColor: '#ff0',
-    borderRadius: 17,
-    borderWidth: 0,
-    borderColor: '#000',
-    justifyContent: 'flex-end',
+  titleStyle: {
+    flexDirection: 'row',
+    margin: '5%',
+    alignItems: 'center',
+  },
+  titleText: {
+    fontFamily: font,
+    fontSize: 28,
+    color: hex,
+  },
+  titleSub: {
+    fontFamily: font,
+    color: hex,
     alignSelf: 'center',
-    // marginTop: 5,
-    width: '90%',
-    // aspectRatio: 5 / 8,
+    margin: '1%',
   },
-  //Sizing is now based on aspect ratio
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 17,
-    borderWidth: 0,
-    borderColor: '#000',
+  touchableFriends: {
+    borderWidth: 2,
+    borderRadius: 25,
+    borderColor: hex,
     alignSelf: 'center',
-    width: '90%',
-    height: '85%',
-    // aspectRatio: 5 / 8,
-    // justifyContent: 'center'
+    marginTop: '5%',
   },
-  section: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: 'transparent',
+  touchableFriendsText: {
+    color: hex,
+    fontFamily: font,
+    fontSize: 18,
     alignSelf: 'center',
-    width: '100%',
-    height: '27.5%',
-    paddingHorizontal: 10,
-    paddingVertical: 7.5,
-    borderBottomColor: hex,
+    paddingLeft: '3%',
+    paddingRight: '3%',
+    paddingTop: '2%',
+    paddingBottom: '2%',
   },
-
-  section2: {
-    height: '15%',
-  },
-
   header: {
     textAlign: 'left',
     color: hex,
-    fontSize: 18,
-    fontFamily: 'CircularStd-Bold',
-    // paddingTop: 10,
+    fontSize: 25,
+    margin: '1%',
+    fontFamily: font,
   },
-
   touchable: {
-    width: '30%',
+    width: '50%',
     alignSelf: 'center',
-    // marginLeft: 4,
-    // marginLeft: 3,
-    // marginRight: 3,
-    // marginBottom: 6
-  },
-
-  nextTitle: {
-    // fontSize: 5,
-    textAlign: 'center',
-    color: 'white',
-    // fontSize: 16
-    fontSize: 18,
-    fontFamily: 'CircularStd-Bold',
-  },
-
-  nextButton: {
-    // flexDirection: 'row',
-    // borderRadius: 23,
-    borderColor: 'white',
+    borderColor: hex,
     borderWidth: 2,
-    borderRadius: 18,
-    backgroundColor: hex,
-    // height: 46,
-    height: 36,
-    alignItems: 'center',
+    borderRadius: 25,
     justifyContent: 'center',
-    // paddingLeft: 16,
-    // paddingRight: 16
-
-    paddingHorizontal: 8,
+    margin: '5%',
+  },
+  nextTitle: {
+    textAlign: 'center',
+    color: hex,
+    fontSize: 25,
+    fontFamily: font,
+    paddingTop: '2%',
+    paddingBottom: '2%',
   },
 });

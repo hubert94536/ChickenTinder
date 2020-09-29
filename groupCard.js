@@ -9,6 +9,9 @@ const font = 'CircularStd-Medium';
 export default class Card extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      id: this.props.id,
+    };
   }
 
   removeUser = username => {
