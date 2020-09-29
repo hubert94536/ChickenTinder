@@ -7,7 +7,6 @@ var invites = {} // store invites
 var lastRoom = {} // store last room if user disconnected
 module.exports = (io) => {
   io.on('connection', socket => {
-    console.log(socket.id)
     // replace old socket id with new one in both objects
     var socketUser = socket.handshake.query.username
     delete clientsIds[clients[socketUser]]
@@ -49,10 +48,8 @@ module.exports = (io) => {
           if (Object.keys(sessions[room].members).length === 0) {
             delete sessions[room]
             delete lastRoom[username]
-            console.log(sessions)
           } else {
             io.in(room).emit('update', sessions[room].members)
-            console.log(sessions[room])
           }
         }
       } catch (error) {
@@ -77,6 +74,8 @@ module.exports = (io) => {
         sessions[data.host].members[data.host].filters = false
         sessions[data.host].members[data.host].name = data.name
         sessions[data.host].restaurants = {}
+        sessions[data.host].filters = {}
+        sessions[data.host].filters.categories = new Set()
         lastRoom[data.host] = data.host
         socket.emit('update', sessions[data.host])
       } catch (error) {
@@ -148,7 +147,17 @@ module.exports = (io) => {
       try {
         sessions[data.room].members[data.username].filters = true
         io.in(data.room).emit('update', sessions[data.room].members)
-        io.to(clients[data.room]).emit('filters', { filters: data.filters })
+        // check if host
+        if (data.username === data.room) {
+          sessions[data.host].filters.price = data.price
+          sessions[data.host].filters.open_at = data.open_at
+          sessions[data.host].filters.radius = data.radius
+          sessions[data.host].filters.latitude = data.latitude
+          sessions[data.host].filters.longitude = data.longitude
+        }
+        for (var category in data.categories) {
+          sessions[data.host].filters.categories.add(category)
+        }
       } catch (error) {
         socket.emit('exception', error)
       }

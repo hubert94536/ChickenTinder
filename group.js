@@ -29,7 +29,7 @@ export default class Group extends React.Component {
     const members = this.props.navigation.state.params.members;
     this.state = {
       members: members,
-      host:' this.props.navigation.state.params.host',
+      host: this.props.navigation.state.params.host,
       groupName: members[Object.keys(members)[0]].name.split(' ')[0],
       needFilters: Object.keys(members).filter(user => !user.filters).length,
       start: false,

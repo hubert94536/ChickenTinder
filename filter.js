@@ -80,6 +80,7 @@ const tagsCuisine = [
 ];
 
 const tagsDining = ['Dine-in', 'Delivery', 'Catering', 'Pickup'];
+const tagsPrice = ['$', '$$', '$$$', '$$$$', 'Any'];
 
 const tagsDiet = [
   'Eggs',
