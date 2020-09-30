@@ -29,7 +29,7 @@ export default class Group extends React.Component {
     const members = this.props.navigation.state.params.members;
     this.state = {
       members: members,
-      host: this.props.navigation.state.params.host,
+      host: 'this.props.navigation.state.params.host',
       groupName: members[Object.keys(members)[0]].name.split(' ')[0],
       needFilters: Object.keys(members).filter(user => !user.filters).length,
       start: false,
@@ -156,16 +156,6 @@ export default class Group extends React.Component {
                 {this.state.username === this.state.host
                   ? 'Swipe for host menu'
                   : 'Swipe for filters'}
-                <Icon
-                  name="chevron-right"
-                  style={{
-                    color: 'white',
-                    fontFamily: font,
-                    fontSize: 16,
-                    alignSelf: 'center',
-                  }}
-                  onPress={() => this.refs.swiper.scrollBy(1)}
-                />
               </Text>
               <Icon
                 name="chevron-right"
