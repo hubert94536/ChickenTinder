@@ -53,7 +53,6 @@ export default class Group extends React.Component {
     }
 
     socket.getSocket().on('kick', res => {
-      console.log(res);
       if (res.username === this.state.username) {
         socket.leaveRoom(res.room);
         this.props.navigation.navigate('Home');
@@ -157,6 +156,16 @@ export default class Group extends React.Component {
                 {this.state.username === this.state.host
                   ? 'Swipe for host menu'
                   : 'Swipe for filters'}
+                <Icon
+                  name="chevron-right"
+                  style={{
+                    color: 'white',
+                    fontFamily: font,
+                    fontSize: 16,
+                    alignSelf: 'center',
+                  }}
+                  onPress={() => this.refs.swiper.scrollBy(1)}
+                />
               </Text>
               <Icon
                 name="chevron-right"
