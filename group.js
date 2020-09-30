@@ -167,6 +167,16 @@ export default class Group extends React.Component {
                   onPress={() => this.refs.swiper.scrollBy(1)}
                 />
               </Text>
+              <Icon
+                name="chevron-right"
+                style={{
+                  color: 'white',
+                  fontFamily: font,
+                  fontSize: 16,
+                  marginTop: '0.75%',
+                }}
+                onPress={() => this.refs.swiper.scrollBy(1)}
+              />
             </View>
           </View>
           <ScrollView style={styles.center}>{memberList}</ScrollView>
