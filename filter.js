@@ -4,22 +4,20 @@
 
 import React from 'react';
 import {
-  Image,
-  SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
   Text,
-  StatusBar,
+
   Dimensions,
-  Button,
+
   TouchableHighlight,
   PermissionsAndroid,
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import TagsView from './TagsView';
 import Slider from 'react-native-slider';
-import BackgroundButton from './BackgroundButton';
+import Socket from './socket.js'
 import DropDownPicker from 'react-native-dropdown-picker';
 
 const hex = '#F25763';
@@ -116,12 +114,10 @@ export default class FilterSelector extends React.Component {
       distance: 5,
       hour: '',
       minute: '',
-      time: 0,
       lat: 0,
       long: 0,
-      selectedCuisine: [], //array
-      selectedPrice: [], //string "1,2,3"
-      price: null, //string of prices
+      selectedCuisine: [],
+      selectedPrice: [],
       selectedDiet: [],
     };
   }
@@ -145,38 +141,19 @@ export default class FilterSelector extends React.Component {
   }
 
   evaluateFilters() {
-    this.setState({time: parseInt(this.state.hour + this.state.minute + '00')});
-    console.log(this.state.time);
-    var prices = '';
-    for (var i = 0; i < this.state.selectedPrice.length; i++) {
-      switch (this.state.selectedPrice[i]) {
-        case '$':
-          prices += '1';
-          break;
-        case '$$':
-          if (prices === '') {
-            prices += '2';
-          } else {
-            prices += ',2';
-          }
-          break;
-        case '$$$':
-          if (prices === '') {
-            prices += '3';
-          } else {
-            prices += ',3';
-          }
-          break;
-        case '$$$$':
-          if (prices === '') {
-            prices += '4';
-          } else {
-            prices += ',4';
-          }
-          break;
-      }
-    }
-    this.setState({price: prices});
+    var filters = {}
+    filters.price = this.state.selectedPrice.toString()
+    //convert to unix time
+    //filters.open_at = parseInt(this.state.hour + this.state.minute + '00')
+    filters.radius = this.state.distance
+    filters.latitude = this.state.lat
+    filters.longitude = this.state.long
+    // move entries from this.selectedDiet to this.selectedCuisine
+    // filters.categories = this.selectedCuisine + this.selectedDiet
+    console.log(filters)
+    // need to get username + host and pass in socket.submitFilters
+    // Socket.submitFilters(username, filters, host)
+    //after submit, slides backs to group.js and cant swipe to filters anymore
   }
 
   render() {
