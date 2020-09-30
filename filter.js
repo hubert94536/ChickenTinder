@@ -69,30 +69,23 @@ const minutes = [
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const tagsCuisine = [
-  'Japanese',
-  'Korean',
-  'Chinese',
-  'Thai',
-  'Mongolian',
-  'Taiwanese',
-  'Indian',
-  'Vietnamese',
+  'American',
+  'European',
+  'Latin American',
+  'South American',
+  'Mediterranean',
+  'South Asian',
+  'Pacific Islander',
+  'East Asian',
+  'Middle Eastern',
+  'African',
 ];
 
 const tagsDining = ['Dine-in', 'Delivery', 'Catering', 'Pickup'];
 
-const tagsDiet = [
-  'Eggs',
-  'Nuts',
-  'Fish',
-  'Pork',
-  'Dairy',
-  'Chicken',
-  'Beef',
-  'Sesame',
-  'Gluten',
-  'Soy',
-];
+const tagsDiet = ['Vegan', 'Vegetarian'];
+
+const tagsPrice = ['$', '$$', '$$$', '$$$$'];
 
 const requestLocationPermission = async () => {
   await PermissionsAndroid.request(
@@ -181,9 +174,6 @@ export default class FilterSelector extends React.Component {
             prices += ',4';
           }
           break;
-        case 'Any':
-          prices = '1,2,3,4';
-          break;
       }
     }
     this.setState({price: prices});
@@ -213,7 +203,7 @@ export default class FilterSelector extends React.Component {
               </TouchableHighlight>
             </View>
           )}
-          <View style={{margin: '5%'}}>
+          <View style={{marginLeft: '5%', marginRight: '5%', marginTop: '2%'}}>
             <Text style={styles.header}>Cuisines</Text>
             <TagsView
               all={tagsCuisine}
@@ -231,6 +221,7 @@ export default class FilterSelector extends React.Component {
                     fontFamily: font,
                     alignSelf: 'center',
                     marginLeft: '1%',
+                    marginTop: '1%',
                   }}>
                   ({this.state.distance} miles)
                 </Text>
@@ -252,7 +243,8 @@ export default class FilterSelector extends React.Component {
             </View>
           )}
           {this.state.isHost && (
-            <View style={{margin: '5%'}}>
+            <View
+              style={{marginLeft: '5%', marginRight: '5%', marginTop: '2%'}}>
               <Text style={styles.header}>Open at:</Text>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <DropDownPicker
@@ -326,7 +318,7 @@ export default class FilterSelector extends React.Component {
               />
             </View>
           )}
-          <View style={{margin: '5%'}}>
+          <View style={{marginLeft: '5%', marginRight: '5%', marginTop: '1%'}}>
             <Text style={styles.header}>Dietary Restrictions</Text>
             <TagsView
               all={tagsDiet}
@@ -358,7 +350,7 @@ const styles = StyleSheet.create({
   titleStyle: {
     flexDirection: 'row',
     margin: '5%',
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   titleText: {
     fontFamily: font,
@@ -370,6 +362,7 @@ const styles = StyleSheet.create({
     color: hex,
     alignSelf: 'center',
     margin: '1%',
+    marginTop: '2%',
   },
   touchableFriends: {
     borderWidth: 2,

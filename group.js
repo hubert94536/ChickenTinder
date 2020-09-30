@@ -26,7 +26,7 @@ AsyncStorage.getItem(USERNAME).then(res => {
 export default class Group extends React.Component {
   constructor(props) {
     super(props);
-    const members = this.props.navigation.state.params.members;
+    // const members = this.props.navigation.state.params.members;
     this.state = {
       // members: members,
       // host: this.props.navigation.state.params.host,
@@ -161,17 +161,17 @@ export default class Group extends React.Component {
                 {this.state.username === this.state.host
                   ? 'Swipe for host menu'
                   : 'Swipe for filters'}
-                <Icon
-                  name="chevron-right"
-                  style={{
-                    color: 'white',
-                    fontFamily: font,
-                    fontSize: 16,
-                    alignSelf: 'center',
-                  }}
-                  onPress={() => this.refs.swiper.scrollBy(1)}
-                />
               </Text>
+              <Icon
+                name="chevron-right"
+                style={{
+                  color: 'white',
+                  fontFamily: font,
+                  fontSize: 16,
+                  marginTop: '0.75%',
+                }}
+                onPress={() => this.refs.swiper.scrollBy(1)}
+              />
             </View>
           </View>
           <ScrollView style={styles.center}>{memberList}</ScrollView>
