@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {ID} from 'react-native-dotenv';
-// import { View, Text } from PermissionsAndroid from 'react-native'
+// import { View, Text, PermissionsAndroid } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage';
 
 // import {globalAgent} from 'http';
@@ -190,7 +190,7 @@ const updateUser = async req => {
     })
     .then(res => {
       return {
-        status: res.status
+        status: res.status,
       };
     })
     .catch(error => {
