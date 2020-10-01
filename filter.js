@@ -72,13 +72,11 @@ const tagsCuisine = [
   'Latin American', //Argentine, Brazilian, Cuban, Caribbean, Honduran, Mexican, Nicaraguan, Peruvian
   'Mediterranean',
   'South Asian', //Indian, Pakistani, Afghan, Bangladeshi, Himalayan, Nepalese, Sri Lankan
-  'Southeat Asian', //Cambodian, Indonesian, Laotian, Malaysian, Filipino, Singaporean, Thai, Vietnamese
-  'Pan Asia',
+  'Southeast Asian', //Cambodian, Indonesian, Laotian, Malaysian, Filipino, Singaporean, Thai, Vietnamese
   'Pacific Islander', //Polynesian, Filipino
   'East Asian', //Chinese, Japanese, Korean, Taiwanese
   'Middle Eastern',
   'African',
-  'Asian Fusion',
 ];
 
 const tagsDining = ['Dine-in', 'Delivery', 'Catering', 'Pickup'];
@@ -153,7 +151,15 @@ export default class FilterSelector extends React.Component {
           categories.push('American');
           break;
         case 'European':
-          categories.push('European');
+          categories.push('Eastern European');
+          categories.push('French');
+          categories.push('British');
+          categories.push('Spanish');
+          categories.push('Portuguese');
+          categories.push('German');
+          categories.push('Austrian');
+          categories.push('Danish');
+          categories.push('Swedish');
           break;
         case 'Latin American':
           categories.push('Argentine');
@@ -187,9 +193,6 @@ export default class FilterSelector extends React.Component {
           categories.push('Thai');
           categories.push('Vietnamese');
           break;
-        case 'Pan Asia':
-          categories.push('Pan Asia');
-          break;
         case 'Pacific Islander':
           categories.push('Polynesian');
           categories.push('Filipino');
@@ -199,15 +202,13 @@ export default class FilterSelector extends React.Component {
           categories.push('Korean');
           categories.push('Chinese');
           categories.push('Taiwanese');
+          categories.push('Mongolian');
           break;
         case 'Middle Eastern':
           categories.push('Middle Eastern');
           break;
         case 'African':
           categories.push('African');
-          break;
-        case 'Asian Fusion':
-          categories.push('Asian Fusion');
           break;
         case 'Vegetarian':
           categories.push('Vegetarian');
@@ -223,15 +224,11 @@ export default class FilterSelector extends React.Component {
   evaluateFilters() {
     //convert to unix time
     const date = new Date();
-    const dd = String(date.getDate());
-    const mm = String(date.getMonth());
-    const yyyy = date.getFullYear();
-    const offset = date.getTimezoneOffset();
     const unix = Date.UTC(
-      yyyy,
-      mm,
-      dd,
-      this.state.hour + offset,
+      date.getFullYear(),
+      String(date.getMonth()),
+      String(date.getDate()),
+      this.state.hour + date.getTimezoneOffset(),
       this.state.minute,
       0,
     );
@@ -245,6 +242,8 @@ export default class FilterSelector extends React.Component {
       filters.latitude = this.state.lat;
       filters.longitude = this.state.long;
     } else {
+      // if location is null and useLocation is false for HOST-> create alert location is required, 
+      // check body that it's in format (city, state) if not send alert too
       filters.location = this.state.location;
     }
     filters.categories = this.categorize(this.state.selectedCuisine);
@@ -300,6 +299,8 @@ export default class FilterSelector extends React.Component {
               <Text style={styles.header}>Use Current Location:</Text>
               <Switch
                 style={{marginTop: '1%'}}
+                trackColor={{true: hex}}
+                thumbColor={{true: hex}}
                 value={this.state.useLocation}
                 onValueChange={val =>
                   this.setState({
@@ -310,7 +311,7 @@ export default class FilterSelector extends React.Component {
             </View>
             <TextInput
               placeholder={
-                this.state.useLocation ? 'Input Disabled' : 'City and State'
+                this.state.useLocation ? null : 'Enter City, State'
               }
               onChangeText={text => this.setState({location: text})}
               style={
@@ -521,6 +522,6 @@ const styles = StyleSheet.create({
     borderColor: 'black',
   },
   inputDisabled: {
-    backgroundColor: '#d8d8d8',
+    backgroundColor: 'white',
   },
 });
