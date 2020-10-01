@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, ScrollView } from 'react-native'
 import Card from './profileCard.js'
+import friendsapi from './friendsApi.js';
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -53,6 +54,29 @@ const people = [
 export default class Requests extends React.Component {
   render () {
     var friends = []
+
+    friends = friendsapi
+    .getFriends()
+    .then(res => {
+      this.setState({friends: res.friends});
+    })
+    .catch(err => console.log(err))
+
+    var i = 0;
+    var requests = [];
+
+    for(i = 0; i < friends.length; i++)
+    {
+      if (friends[i].status == "Pending Request")
+      {
+        requests.push(friends[i])
+      }
+
+    }
+
+    friends = requests;
+
+
     // for (var i = 0; i < people.length; i++) {
     //   friends.push(
     //     <Card
