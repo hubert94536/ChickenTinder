@@ -8,75 +8,77 @@ import {
   ScrollView,
   View,
   Text,
-
   Dimensions,
-
   TouchableHighlight,
   PermissionsAndroid,
+  Switch,
+  TextInput,
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import TagsView from './TagsView';
 import Slider from 'react-native-slider';
-import Socket from './socket.js'
+import Socket from './socket.js';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 const hex = '#F25763';
 const font = 'CircularStd-Bold';
 
 const hours = [
-  {label: '0', value: '00'},
-  {label: '1', value: '01'},
-  {label: '2', value: '02'},
-  {label: '3', value: '03'},
-  {label: '4', value: '04'},
-  {label: '5', value: '05'},
-  {label: '6', value: '06'},
-  {label: '7', value: '07'},
-  {label: '8', value: '08'},
-  {label: '9', value: '09'},
-  {label: '10', value: '10'},
-  {label: '10', value: '11'},
-  {label: '12', value: '12'},
-  {label: '13', value: '13'},
-  {label: '14', value: '14'},
-  {label: '15', value: '15'},
-  {label: '16', value: '16'},
-  {label: '17', value: '17'},
-  {label: '18', value: '18'},
-  {label: '19', value: '19'},
-  {label: '20', value: '20'},
-  {label: '21', value: '21'},
-  {label: '22', value: '22'},
-  {label: '23', value: '23'},
+  {label: '0', value: 0},
+  {label: '1', value: 1},
+  {label: '2', value: 2},
+  {label: '3', value: 3},
+  {label: '4', value: 4},
+  {label: '5', value: 5},
+  {label: '6', value: 6},
+  {label: '7', value: 7},
+  {label: '8', value: 8},
+  {label: '9', value: 9},
+  {label: '10', value: 10},
+  {label: '11', value: 11},
+  {label: '12', value: 12},
+  {label: '13', value: 13},
+  {label: '14', value: 14},
+  {label: '15', value: 15},
+  {label: '16', value: 16},
+  {label: '17', value: 17},
+  {label: '18', value: 18},
+  {label: '19', value: 19},
+  {label: '20', value: 20},
+  {label: '21', value: 21},
+  {label: '22', value: 22},
+  {label: '23', value: 23},
 ];
 
 const minutes = [
-  {label: '00', value: '00'},
-  {label: '05', value: '05'},
-  {label: '10', value: '10'},
-  {label: '15', value: '15'},
-  {label: '20', value: '20'},
-  {label: '25', value: '25'},
-  {label: '30', value: '30'},
-  {label: '35', value: '35'},
-  {label: '40', value: '40'},
-  {label: '45', value: '45'},
-  {label: '50', value: '50'},
-  {label: '55', value: '55'},
+  {label: '00', value: 0},
+  {label: '05', value: 5},
+  {label: '10', value: 10},
+  {label: '15', value: 15},
+  {label: '20', value: 20},
+  {label: '25', value: 25},
+  {label: '30', value: 30},
+  {label: '35', value: 35},
+  {label: '40', value: 40},
+  {label: '45', value: 45},
+  {label: '50', value: 50},
+  {label: '55', value: 55},
 ];
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const tagsCuisine = [
   'American',
   'European',
-  'Latin American',
-  'South American',
+  'Latin American', //Argentine, Brazilian, Cuban, Caribbean, Honduran, Mexican, Nicaraguan, Peruvian
   'Mediterranean',
-  'South Asian',
-  'Pacific Islander',
-  'East Asian',
+  'South Asian', //Indian, Pakistani, Afghan, Bangladeshi, Himalayan, Nepalese, Sri Lankan
+  'Southeat Asian', //Cambodian, Indonesian, Laotian, Malaysian, Filipino, Singaporean, Thai, Vietnamese
+  'Pan Asia',
+  'Pacific Islander', //Polynesian, Filipino
+  'East Asian', //Chinese, Japanese, Korean, Taiwanese
   'Middle Eastern',
   'African',
+  'Asian Fusion',
 ];
 
 const tagsDining = ['Dine-in', 'Delivery', 'Catering', 'Pickup'];
@@ -110,15 +112,18 @@ export default class FilterSelector extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isHost: true,
+      host: this.props.host,
+      username: this.props.username,
+      isHost: this.props.isHost,
       distance: 5,
+      location: null,
+      useLocation: false,
       hour: '',
       minute: '',
       lat: 0,
       long: 0,
       selectedCuisine: [],
       selectedPrice: [],
-      selectedDiet: [],
     };
   }
 
@@ -140,17 +145,110 @@ export default class FilterSelector extends React.Component {
     }
   }
 
+  categorize(cat) {
+    var categories = [];
+    for (var i = 0; i < cat.length; i++) {
+      switch (cat[i]) {
+        case 'American':
+          categories.push('American');
+          break;
+        case 'European':
+          categories.push('European');
+          break;
+        case 'Latin American':
+          categories.push('Argentine');
+          categories.push('Brazilian');
+          categories.push('Cuban');
+          categories.push('Caribbean');
+          categories.push('Honduran');
+          categories.push('Mexican');
+          categories.push('Nicaraguan');
+          categories.push('Peruvian');
+          break;
+        case 'Mediterranean':
+          categories.push('Mediterranean');
+          break;
+        case 'South Asian':
+          categories.push('Indian');
+          categories.push('Pakistani');
+          categories.push('Afghan');
+          categories.push('Bangladeshi');
+          categories.push('Himalayan');
+          categories.push('Nepalese');
+          categories.push('Sri Lankan');
+          break;
+        case 'Southeast Asian':
+          categories.push('Cambodian');
+          categories.push('Indonesian');
+          categories.push('Laotian');
+          categories.push('Malaysian');
+          categories.push('Filipino');
+          categories.push('Singaporean');
+          categories.push('Thai');
+          categories.push('Vietnamese');
+          break;
+        case 'Pan Asia':
+          categories.push('Pan Asia');
+          break;
+        case 'Pacific Islander':
+          categories.push('Polynesian');
+          categories.push('Filipino');
+          break;
+        case 'East Asian':
+          categories.push('Japanese');
+          categories.push('Korean');
+          categories.push('Chinese');
+          categories.push('Taiwanese');
+          break;
+        case 'Middle Eastern':
+          categories.push('Middle Eastern');
+          break;
+        case 'African':
+          categories.push('African');
+          break;
+        case 'Asian Fusion':
+          categories.push('Asian Fusion');
+          break;
+        case 'Vegetarian':
+          categories.push('Vegetarian');
+          break;
+        case 'Vegan':
+          categories.push('Vegan');
+          break;
+      }
+    }
+    return categories;
+  }
+
   evaluateFilters() {
-    var filters = {}
-    filters.price = this.state.selectedPrice.toString()
     //convert to unix time
-    //filters.open_at = parseInt(this.state.hour + this.state.minute + '00')
-    filters.radius = this.state.distance
-    filters.latitude = this.state.lat
-    filters.longitude = this.state.long
-    // move entries from this.selectedDiet to this.selectedCuisine
-    // filters.categories = this.selectedCuisine + this.selectedDiet
-    console.log(filters)
+    const date = new Date();
+    const dd = String(date.getDate());
+    const mm = String(date.getMonth());
+    const yyyy = date.getFullYear();
+    const offset = date.getTimezoneOffset();
+    const unix = Date.UTC(
+      yyyy,
+      mm,
+      dd,
+      this.state.hour + offset,
+      this.state.minute,
+      0,
+    );
+    var filters = {};
+    filters.price = this.state.selectedPrice
+      .map(item => item.length)
+      .toString();
+    filters.open_at = unix;
+    filters.radius = this.state.distance;
+    if (this.state.useLocation) {
+      filters.latitude = this.state.lat;
+      filters.longitude = this.state.long;
+    } else {
+      filters.location = this.state.location;
+    }
+    filters.categories = this.categorize(this.state.selectedCuisine);
+    console.log(filters);
     // need to get username + host and pass in socket.submitFilters
     // Socket.submitFilters(username, filters, host)
     //after submit, slides backs to group.js and cant swipe to filters anymore
@@ -186,6 +284,42 @@ export default class FilterSelector extends React.Component {
               all={tagsCuisine}
               selected={this.state.selectedCuisine}
               isExclusive={false}
+            />
+          </View>
+          <View
+            style={{
+              marginLeft: '5%',
+              marginRight: '5%',
+              marginTop: '2%',
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Text style={styles.header}>Use Current Location:</Text>
+              <Switch
+                style={{marginTop: '1%'}}
+                value={this.state.useLocation}
+                onValueChange={val =>
+                  this.setState({
+                    useLocation: val,
+                  })
+                }
+              />
+            </View>
+            <TextInput
+              placeholder={
+                this.state.useLocation ? 'Input Disabled' : 'City and State'
+              }
+              onChangeText={text => this.setState({location: text})}
+              style={
+                this.state.useLocation
+                  ? styles.inputDisabled
+                  : styles.inputEnabled
+              }
+              //To make TextInput enable/disable
+              editable={!this.state.useLocation}
             />
           </View>
           {this.state.isHost && (
@@ -299,7 +433,7 @@ export default class FilterSelector extends React.Component {
             <Text style={styles.header}>Dietary Restrictions</Text>
             <TagsView
               all={tagsDiet}
-              selected={this.state.selectedDiet}
+              selected={this.state.selectedCuisine}
               isExclusive={false}
             />
           </View>
@@ -381,5 +515,12 @@ const styles = StyleSheet.create({
     fontFamily: font,
     paddingTop: '2%',
     paddingBottom: '2%',
+  },
+  inputEnabled: {
+    backgroundColor: 'white',
+    borderColor: 'black',
+  },
+  inputDisabled: {
+    backgroundColor: '#d8d8d8',
   },
 });
