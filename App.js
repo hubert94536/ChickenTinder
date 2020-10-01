@@ -60,6 +60,8 @@ import Group from './group.js';
 
 export default class App extends React.Component {
   render() {
-    return <Group />;
+    return (
+      <FilterSelector host={'hannaco'} username={'hannaco'} isHost={true} />
+    );
   }
 }
