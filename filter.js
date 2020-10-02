@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import TagsView from './TagsView';
-import Slider from 'react-native-slider';
+import Slider from '@react-native-community/slider';
 import Socket from './socket.js';
 import DropDownPicker from 'react-native-dropdown-picker';
 
@@ -220,6 +220,10 @@ export default class FilterSelector extends React.Component {
     return categories;
   }
 
+  handlePress() {
+    this.props.press();
+  }
+
   evaluateFilters() {
     //convert to unix time
     const date = new Date();
@@ -250,7 +254,8 @@ export default class FilterSelector extends React.Component {
     filters.categories = this.categorize(this.state.selectedCuisine);
     console.log(filters);
     // need to get username + host and pass in socket.submitFilters
-    // Socket.submitFilters(username, filters, host)
+    Socket.submitFilters(this.state.username, filters, this.state.host);
+    this.handlePress();
     //after submit, slides backs to group.js and cant swipe to filters anymore
   }
 
@@ -286,42 +291,48 @@ export default class FilterSelector extends React.Component {
               isExclusive={false}
             />
           </View>
-          <View
-            style={{
-              marginLeft: '5%',
-              marginRight: '5%',
-              marginTop: '2%',
-            }}>
+          {this.state.isHost && (
             <View
               style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
+                marginLeft: '5%',
+                marginRight: '5%',
+                marginTop: '2%',
               }}>
-              <Text style={styles.header}>Use Current Location:</Text>
-              <Switch
-                style={{marginTop: '1%'}}
-                value={this.state.useLocation}
-                onValueChange={val =>
-                  this.setState({
-                    useLocation: val,
-                  })
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.header}>Use Current Location:</Text>
+                <Switch
+                  thumbColor={hex}
+                  trackColor={{true: '#eba2a8', false: 'grey'}}
+                  style={{marginTop: '1%'}}
+                  value={this.state.useLocation}
+                  onValueChange={val =>
+                    this.setState({
+                      useLocation: val,
+                    })
+                  }
+                />
+              </View>
+              <TextInput
+                placeholder={
+                  this.state.useLocation
+                    ? 'Using Current Location'
+                    : 'City and State'
                 }
+                onChangeText={text => this.setState({location: text})}
+                style={
+                  this.state.useLocation
+                    ? styles.inputDisabled
+                    : styles.inputEnabled
+                }
+                //To make TextInput enable/disable
+                editable={!this.state.useLocation}
               />
             </View>
-            <TextInput
-              placeholder={
-                this.state.useLocation ? 'Input Disabled' : 'City and State'
-              }
-              onChangeText={text => this.setState({location: text})}
-              style={
-                this.state.useLocation
-                  ? styles.inputDisabled
-                  : styles.inputEnabled
-              }
-              //To make TextInput enable/disable
-              editable={!this.state.useLocation}
-            />
-          </View>
+          )}
           {this.state.isHost && (
             <View style={{margin: '5%'}}>
               <View style={{flexDirection: 'row'}}>

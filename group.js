@@ -37,6 +37,7 @@ export default class Group extends React.Component {
       // show/hide the alerts
       leaveAlert: false,
       endAlert: false,
+      swipe: true,
     };
 
     memberList = [];
@@ -86,9 +87,18 @@ export default class Group extends React.Component {
       : this.setState({leaveAlert: false});
   }
 
+  submitFilters() {
+    this.refs.swiper.scrollBy(-1);
+    this.setState({swipe: false});
+  }
+
   render() {
     return (
-      <Swiper ref="swiper" loop={false} showsPagination={false}>
+      <Swiper
+        ref="swiper"
+        loop={false}
+        showsPagination={false}
+        scrollEnabled={this.state.swipe}>
         <View style={styles.main}>
           <View style={styles.top}>
             <View
@@ -228,6 +238,7 @@ export default class Group extends React.Component {
           host={this.state.host}
           username={this.state.username}
           isHost={this.state.host === this.state.username}
+          press={() => this.submitFilters()}
         />
       </Swiper>
     );
