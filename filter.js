@@ -72,8 +72,7 @@ const tagsCuisine = [
   'Latin American', //Argentine, Brazilian, Cuban, Caribbean, Honduran, Mexican, Nicaraguan, Peruvian
   'Mediterranean',
   'South Asian', //Indian, Pakistani, Afghan, Bangladeshi, Himalayan, Nepalese, Sri Lankan
-  'Southeat Asian', //Cambodian, Indonesian, Laotian, Malaysian, Filipino, Singaporean, Thai, Vietnamese
-  'Pan Asia',
+  'Southeast Asian', //Cambodian, Indonesian, Laotian, Malaysian, Filipino, Singaporean, Thai, Vietnamese
   'Pacific Islander', //Polynesian, Filipino
   'East Asian', //Chinese, Japanese, Korean, Taiwanese
   'Middle Eastern',
@@ -153,7 +152,15 @@ export default class FilterSelector extends React.Component {
           categories.push('American');
           break;
         case 'European':
-          categories.push('European');
+          categories.push('Eastern European');
+          categories.push('French');
+          categories.push('British');
+          categories.push('Spanish');
+          categories.push('Portuguese');
+          categories.push('German');
+          categories.push('Austrian');
+          categories.push('Danish');
+          categories.push('Swedish');
           break;
         case 'Latin American':
           categories.push('Argentine');
@@ -187,9 +194,6 @@ export default class FilterSelector extends React.Component {
           categories.push('Thai');
           categories.push('Vietnamese');
           break;
-        case 'Pan Asia':
-          categories.push('Pan Asia');
-          break;
         case 'Pacific Islander':
           categories.push('Polynesian');
           categories.push('Filipino');
@@ -199,6 +203,7 @@ export default class FilterSelector extends React.Component {
           categories.push('Korean');
           categories.push('Chinese');
           categories.push('Taiwanese');
+          categories.push('Mongolian');
           break;
         case 'Middle Eastern':
           categories.push('Middle Eastern');
@@ -291,6 +296,86 @@ export default class FilterSelector extends React.Component {
               isExclusive={false}
             />
           </View>
+          <View
+            style={{
+              marginLeft: '5%',
+              marginRight: '5%',
+              marginTop: '2%',
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Text style={styles.header}>Use Current Location:</Text>
+              <Switch
+                style={{marginTop: '1%'}}
+                trackColor={{true: hex}}
+                thumbColor={{true: hex}}
+                value={this.state.useLocation}
+                onValueChange={val =>
+                  this.setState({
+                    useLocation: val,
+                  })
+                }
+              />
+            </View>
+            <TextInput
+              placeholder={
+                this.state.useLocation ? null : 'Enter City, State'
+              }
+              onChangeText={text => this.setState({location: text})}
+              style={
+                this.state.useLocation
+                  ? styles.inputDisabled
+                  : styles.inputEnabled
+              }
+              //To make TextInput enable/disable
+              editable={!this.state.useLocation}
+            />
+          </View>
+          {this.state.isHost && (
+            <View
+              style={{
+                marginLeft: '5%',
+                marginRight: '5%',
+                marginTop: '2%',
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.header}>Use Current Location:</Text>
+                <Switch
+                  thumbColor={hex}
+                  trackColor={{true: '#eba2a8', false: 'grey'}}
+                  style={{marginTop: '1%'}}
+                  value={this.state.useLocation}
+                  onValueChange={val =>
+                    this.setState({
+                      useLocation: val,
+                    })
+                  }
+                />
+              </View>
+              <TextInput
+                placeholder={
+                  this.state.useLocation
+                    ? 'Using Current Location'
+                    : 'City and State'
+                }
+                onChangeText={text => this.setState({location: text})}
+                style={
+                  this.state.useLocation
+                    ? styles.inputDisabled
+                    : styles.inputEnabled
+                }
+                //To make TextInput enable/disable
+                editable={!this.state.useLocation}
+              />
+            </View>
+          )}
           {this.state.isHost && (
             <View
               style={{
@@ -532,6 +617,6 @@ const styles = StyleSheet.create({
     borderColor: 'black',
   },
   inputDisabled: {
-    backgroundColor: '#d8d8d8',
+    backgroundColor: 'white',
   },
 });
