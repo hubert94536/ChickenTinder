@@ -1,10 +1,10 @@
 import axios from 'axios'
-import { USERNAME } from 'react-native-dotenv'
+import { ID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 
 var myId = ''
 
-AsyncStorage.getItem(USERNAME).then(res => {
+AsyncStorage.getItem(ID).then(res => {
   myId = res
 })
 

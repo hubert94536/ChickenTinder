@@ -60,15 +60,6 @@ export default class Friends extends React.Component {
       search: '',
       friends: [],
     }
-  }
-
-
-  updateSearch = search => {
-    this.setState({search});
-  };
-
-  render() {
-    const search = this.state.search;
 
     var result = []
 
@@ -78,6 +69,9 @@ export default class Friends extends React.Component {
       this.setState({result: res.friends});
     })
     .catch(err => console.log(err))
+
+    console.log("Result")
+    console.log( result.length)
 
     var i = 0;
     var accepted = [];
@@ -92,6 +86,17 @@ export default class Friends extends React.Component {
     }
 
     this.setState({friends: accepted})
+  }
+
+
+  updateSearch = search => {
+    this.setState({search});
+  };
+
+  render() {
+    const search = this.state.search;
+
+    
 
     
     // for (var i = 0; i < people.length; i++) {
@@ -134,7 +139,7 @@ export default class Friends extends React.Component {
             round={true}
           />
         </View>
-        <ScrollView style={{flexDirection: 'column'}}>{friends}</ScrollView>
+        <ScrollView style={{flexDirection: 'column'}}>{this.state.friends}</ScrollView>
       </View>
     );
   }

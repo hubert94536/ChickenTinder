@@ -8,14 +8,15 @@ import {
 import socket from './socket.js';
 import api from './accountsApi.js';
 import friendsapi from './friendsApi.js';
-import { USERNAME } from 'react-native-dotenv'
+import { ID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 
 var myId = ''
 
-AsyncStorage.getItem(USERNAME).then(res => {
+AsyncStorage.getItem(ID).then(res => {
   myId = res
 })
+
 
 
 class Home extends React.Component {
@@ -58,6 +59,7 @@ class Home extends React.Component {
     api.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
     api.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
     api.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
+    // console.log("My id:" + myId)
     friendsapi.createFriendship(2, myId),
     friendsapi.createFriendship(4, 2),
     friendsapi.createFriendship(3, myId),

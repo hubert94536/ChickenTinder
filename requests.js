@@ -59,9 +59,6 @@ export default class Requests extends React.Component {
       search: '',
       friends: [],
     }
-  }
-
-  render () {
 
     var result = []
     
@@ -86,6 +83,9 @@ export default class Requests extends React.Component {
     }
 
     this.setState({friends: requests})
+  }
+
+  render () {
 
 
     // for (var i = 0; i < people.length; i++) {
@@ -101,7 +101,7 @@ export default class Requests extends React.Component {
     // }
     return (
       <View>
-        <ScrollView style={{ flexDirection: 'column' }}>{friends}</ScrollView>
+        <ScrollView style={{ flexDirection: 'column' }}>{this.state.friends}</ScrollView>
       </View>
     )
   }
