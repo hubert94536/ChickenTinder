@@ -6,6 +6,17 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import socket from './socket.js';
+import api from './accountsApi.js';
+import friendsapi from './friendsApi.js';
+import { USERNAME } from 'react-native-dotenv'
+import AsyncStorage from '@react-native-community/async-storage'
+
+var myId = ''
+
+AsyncStorage.getItem(USERNAME).then(res => {
+  myId = res
+})
+
 
 class Home extends React.Component {
   constructor() {
@@ -39,6 +50,20 @@ class Home extends React.Component {
     socket.getSocket().on('update', res => {
       this.props.navigation.navigate('Group', res);
     });
+  }
+
+
+  
+  componentDidMount() {
+    api.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
+    api.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
+    api.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
+    friendsapi.createFriendship(2, myId),
+    friendsapi.createFriendship(4, 2),
+    friendsapi.createFriendship(3, myId),
+    friendsapi.createFriendship(4, myId),
+    friendsapi.acceptFriendRequest(2)
+
   }
 
   render() {

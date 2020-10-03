@@ -52,29 +52,40 @@ const people = [
 ]
 
 export default class Requests extends React.Component {
-  render () {
-    var friends = []
 
-    friends = friendsapi
+  constructor (props) {
+    super(props)
+    this.state = {
+      search: '',
+      friends: [],
+    }
+  }
+
+  render () {
+
+    var result = []
+    
+
+    result = friendsapi
     .getFriends()
     .then(res => {
-      this.setState({friends: res.friends});
+      this.setState({result: res.friends});
     })
     .catch(err => console.log(err))
 
     var i = 0;
     var requests = [];
 
-    for(i = 0; i < friends.length; i++)
+    for(i = 0; i < result.length; i++)
     {
-      if (friends[i].status == "Pending Request")
+      if (result[i].status == "Pending Request")
       {
-        requests.push(friends[i])
+        requests.push(result[i])
       }
 
     }
 
-    friends = requests;
+    this.setState({friends: requests})
 
 
     // for (var i = 0; i < people.length; i++) {

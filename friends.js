@@ -2,6 +2,7 @@ import React from 'react';
 import {View, ScrollView} from 'react-native';
 import {SearchBar} from 'react-native-elements';
 import Card from './profileCard.js';
+import friendsapi from './friendsApi.js';
 
 const hex = '#F25763';
 const font = 'CircularStd-Medium';
@@ -52,12 +53,15 @@ const people = [
 ];
 
 export default class Friends extends React.Component {
+
   constructor (props) {
     super(props)
     this.state = {
-      search: ''
+      search: '',
+      friends: [],
     }
   }
+
 
   updateSearch = search => {
     this.setState({search});
@@ -65,29 +69,29 @@ export default class Friends extends React.Component {
 
   render() {
     const search = this.state.search;
-    
-    var friends = []
 
-    friends = friendsapi
+    var result = []
+
+    result = friendsapi
     .getFriends()
     .then(res => {
-      this.setState({friends: res.friends});
+      this.setState({result: res.friends});
     })
     .catch(err => console.log(err))
 
     var i = 0;
     var accepted = [];
 
-    for(i = 0; i < friends.length; i++)
+    for(i = 0; i < result.length; i++)
     {
-      if (friends[i].status == "Accepted")
+      if (result[i].status == "Accepted")
       {
-        accepted.push(friends[i])
+        accepted.push(result[i])
       }
 
     }
 
-    friends = accepted;
+    this.setState({friends: accepted})
 
     
     // for (var i = 0; i < people.length; i++) {

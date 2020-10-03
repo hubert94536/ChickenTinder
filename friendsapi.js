@@ -13,11 +13,11 @@ const friendsApi = axios.create({
 })
 
 //creates friendship
-const createFriendship = async (friend) => {
+const createFriendship = async (main, friend) => {
   return friendsApi
     .post(`/friendships`, {
       params: {
-        main: myId,
+        main: main,
         friend: friend
       },
     })
