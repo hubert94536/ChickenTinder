@@ -61,31 +61,42 @@ export default class Friends extends React.Component {
       friends: [],
     }
 
-    var result = []
+    // var result = []
 
-    result = friendsapi
+
+    friendsapi
     .getFriends()
     .then(res => {
-      this.setState({result: res.friends});
+
+
+      console.log(res.friendList)
+
+      var i = 0;
+      var accepted = [];
+  
+      for(i = 0; i < res.friendList.length; i++)
+      {
+        if (res.friendList[i].status == "Accepted")
+        {
+          accepted.push(res.friendList[i])
+        }
+  
+      }
+  
+      this.setState({friends: res.friendList.map(function (friends) {
+        return {
+          id: friends.id,
+          name: friends.name,
+          photo: friends.photo,
+          username: friends.username,
+          status: friends.status
+        }
+      })})
     })
     .catch(err => console.log(err))
 
-    console.log("Result")
-    console.log( result.length)
-
-    var i = 0;
-    var accepted = [];
-
-    for(i = 0; i < result.length; i++)
-    {
-      if (result[i].status == "Accepted")
-      {
-        accepted.push(result[i])
-      }
-
-    }
-
-    this.setState({friends: accepted})
+    // console.log("Result")
+    // console.log( result)
   }
 
 

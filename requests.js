@@ -60,29 +60,35 @@ export default class Requests extends React.Component {
       friends: [],
     }
 
-    var result = []
+    // var result = []
     
 
-    result = friendsapi
+    friendsapi
     .getFriends()
     .then(res => {
-      this.setState({result: res.friends});
+      // result = res.friendList
+
+      console.log(res.friendList)
+
+      // var i = 0;
+      // var requests = [];
+  
+      // for(i = 0; i < res.friendList.length; i++)
+      // {
+      //   if (res.friendList[i].status == "Pending Request")
+      //   {
+      //     requests.push(res.friendList[i])
+      //   }
+  
+      // }
+  
+      // this.setState({friends: requests})
     })
     .catch(err => console.log(err))
 
-    var i = 0;
-    var requests = [];
+    // console.log("Requests Result")
+    // console.log( result)
 
-    for(i = 0; i < result.length; i++)
-    {
-      if (result[i].status == "Pending Request")
-      {
-        requests.push(result[i])
-      }
-
-    }
-
-    this.setState({friends: requests})
   }
 
   render () {
