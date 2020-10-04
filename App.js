@@ -41,7 +41,7 @@ const RootStack = createStackNavigator(
     },
   },
   {
-    initialRouteName: start,
+    initialRouteName: 'Home',
     headerMode: 'none',
   },
 );
@@ -52,3 +52,4 @@ export default class App extends React.Component {
   render() {
     return <AppContainer />;
   }
+}
