@@ -52,11 +52,12 @@ const people = [
 ];
 
 export default class Friends extends React.Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
     this.state = {
-      search: ''
-    }
+      search: '',
+      friends: [],
+    };
   }
 
   updateSearch = search => {
