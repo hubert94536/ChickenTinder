@@ -9,7 +9,6 @@ import Card from './profileCard.js';
 const font = 'CircularStd-Medium';
 
 export default class Friends extends React.Component {
-
   constructor(props) {
     super(props)
     this.state = {
