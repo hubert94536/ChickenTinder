@@ -1,20 +1,35 @@
 import React from 'react'
+
 import { Text, View, Image, TouchableHighlight } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+
+import alert from './alert.js';
+import friendsApi from './friendsApi.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
 export default class Card extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
-    state = {
-      friends: this.props.friends,
-      pressed: false
+    this.state = {
+      isFriend: this.props.friends,
+      id: this.props.id,
+      pressed: false,
+      errorAlert: false,
     }
   }
 
-  render () {
+  acceptFriend() {
+    friendsApi.acceptFriendRequest(this.state.id)
+    .then(()=> {
+      this.setState({ isFriend: true })
+    })
+    .catch(error => {
+    })
+  }
+
+  render() {
     return (
       <View style={{ flexDirection: 'row', flex: 1 }}>
         <Image
@@ -33,9 +48,9 @@ export default class Card extends React.Component {
           <Text style={{ fontFamily: font, fontWeight: 'bold', fontSize: 15 }}>
             {this.props.name}
           </Text>
-          <Text style={{ fontFamily: font }}>{this.props.username}</Text>
+          <Text style={{ fontFamily: font }}>@{this.props.username}</Text>
         </View>
-        {this.state.friends && (
+        {this.state.isFriend && (
           <View style={{ flexDirection: 'row', flex: 1 }}>
             <Text
               style={{
@@ -47,7 +62,7 @@ export default class Card extends React.Component {
               }}
             >
               Friends
-            </Text>
+              </Text>
             <Icon
               style={{
                 fontFamily: font,
@@ -60,13 +75,13 @@ export default class Card extends React.Component {
             />
           </View>
         )}
-        {!this.state.friends && (
+        {!this.state.isFriend && (
           <View style={{ flex: 1, flexDirection: 'row' }}>
             <TouchableHighlight
               underlayColor='black'
               onHideUnderlay={() => this.setState({ pressed: false })}
               onShowUnderlay={() => this.setState({ pressed: true })}
-              onPress={() => this.setState({ friends: true })}
+              onPress={() => this.acceptFriend()}
               style={{
                 borderColor: 'black',
                 borderRadius: 30,
@@ -86,7 +101,7 @@ export default class Card extends React.Component {
                 }}
               >
                 Accept
-              </Text>
+                </Text>
             </TouchableHighlight>
             <Icon
               style={{

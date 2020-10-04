@@ -17,8 +17,6 @@ AsyncStorage.getItem(ID).then(res => {
   myId = res
 })
 
-
-
 class Home extends React.Component {
   constructor() {
     super();
@@ -56,15 +54,16 @@ class Home extends React.Component {
 
   
   componentDidMount() {
-    api.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
-    api.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
-    api.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
-    // console.log("My id:" + myId)
-    friendsapi.createFriendship(2, myId),
-    friendsapi.createFriendship(4, 2),
-    friendsapi.createFriendship(3, myId),
-    friendsapi.createFriendship(4, myId),
-    friendsapi.acceptFriendRequest(2)
+    //uncomment if testing friends/requests
+    // api.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
+    // api.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
+    // api.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
+    // // console.log("My id:" + myId)
+    // friendsapi.createFriendship(2, myId),
+    // friendsapi.createFriendship(4, 2),
+    // friendsapi.createFriendship(3, myId),
+    // friendsapi.createFriendship(4, myId),
+    // friendsapi.acceptFriendRequest(2)
 
   }
 
