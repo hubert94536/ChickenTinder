@@ -18,7 +18,10 @@ import Geolocation from 'react-native-geolocation-service';
 import TagsView from './TagsView';
 import Slider from '@react-native-community/slider';
 import Socket from './socket.js';
+import Alert from './alert.js';
+import {BlurView} from '@react-native-community/blur';
 import DropDownPicker from 'react-native-dropdown-picker';
+import ChooseFriends from './chooseFriends.js';
 
 const hex = '#F25763';
 const font = 'CircularStd-Bold';
@@ -80,7 +83,7 @@ const tagsCuisine = [
   'Asian Fusion',
 ];
 
-const tagsDining = ['Dine-in', 'Delivery', 'Catering', 'Pickup'];
+// const tagsDining = ['Dine-in', 'Delivery', 'Catering', 'Pickup'];
 
 const tagsDiet = ['Vegan', 'Vegetarian'];
 
@@ -112,7 +115,6 @@ export default class FilterSelector extends React.Component {
     super(props);
     this.state = {
       host: this.props.host,
-      username: this.props.username,
       isHost: this.props.isHost,
       distance: 5,
       location: null,
@@ -123,11 +125,13 @@ export default class FilterSelector extends React.Component {
       long: 0,
       selectedCuisine: [],
       selectedPrice: [],
+      locationAlert: false,
+      formatAlert: false,
+      chooseFriends: false,
     };
   }
 
   componentDidMount() {
-    this._isMounted = true;
     if (requestLocationPermission()) {
       Geolocation.getCurrentPosition(
         position => {
@@ -211,6 +215,9 @@ export default class FilterSelector extends React.Component {
         case 'African':
           categories.push('African');
           break;
+        case 'Asian Fusion':
+          categories.push('Asian Fusion');
+          break;
         case 'Vegetarian':
           categories.push('Vegetarian');
           break;
@@ -227,6 +234,7 @@ export default class FilterSelector extends React.Component {
   }
 
   evaluateFilters() {
+    var filters = {};
     //convert to unix time
     const date = new Date();
     const dd = String(date.getDate());
@@ -241,24 +249,38 @@ export default class FilterSelector extends React.Component {
       this.state.minute,
       0,
     );
-    var filters = {};
+    filters.open_at = unix;
+
     filters.price = this.state.selectedPrice
       .map(item => item.length)
       .toString();
-    filters.open_at = unix;
+
+    filters.categories = this.categorize(this.state.selectedCuisine);
+
     filters.radius = this.state.distance;
     if (this.state.useLocation) {
       filters.latitude = this.state.lat;
       filters.longitude = this.state.long;
+      // Socket.submitFilters(this.state.username, filters, this.state.host);
+      this.handlePress();
     } else {
-      filters.location = this.state.location;
+      if (this.state.isHost &&
+          this.state.location === null &&
+          this.state.useLocation === false) {
+        this.setState({locationAlert: true});
+      } 
+      // else if (true) {
+        // this.setState({formatAlert: true});
+        // console.log('format problems');
+        // //if location is null and useLocation is false for HOST -> create alert location is required,
+        // //check body that it's in format (city, state) if not send alert too
+      // } 
+      else {
+        filters.location = this.state.location;
+        Socket.submitFilters(filters, this.state.host);
+        this.handlePress();
+      }
     }
-    filters.categories = this.categorize(this.state.selectedCuisine);
-    console.log(filters);
-    // need to get username + host and pass in socket.submitFilters
-    Socket.submitFilters(this.state.username, filters, this.state.host);
-    this.handlePress();
-    //after submit, slides backs to group.js and cant swipe to filters anymore
   }
 
   render() {
@@ -277,6 +299,7 @@ export default class FilterSelector extends React.Component {
             <View style={{margin: '5%'}}>
               <Text style={styles.header}>Members</Text>
               <TouchableHighlight
+                onPress={() => this.setState({chooseFriends: true})}
                 underlayColor={hex}
                 style={styles.touchableFriends}>
                 <Text style={styles.touchableFriendsText}>
@@ -291,44 +314,6 @@ export default class FilterSelector extends React.Component {
               all={tagsCuisine}
               selected={this.state.selectedCuisine}
               isExclusive={false}
-            />
-          </View>
-          <View
-            style={{
-              marginLeft: '5%',
-              marginRight: '5%',
-              marginTop: '2%',
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              <Text style={styles.header}>Use Current Location:</Text>
-              <Switch
-                style={{marginTop: '1%'}}
-                trackColor={{true: hex}}
-                thumbColor={{true: hex}}
-                value={this.state.useLocation}
-                onValueChange={val =>
-                  this.setState({
-                    useLocation: val,
-                  })
-                }
-              />
-            </View>
-            <TextInput
-              placeholder={
-                this.state.useLocation ? null : 'Enter City, State'
-              }
-              onChangeText={text => this.setState({location: text})}
-              style={
-                this.state.useLocation
-                  ? styles.inputDisabled
-                  : styles.inputEnabled
-              }
-              //To make TextInput enable/disable
-              editable={!this.state.useLocation}
             />
           </View>
           {this.state.isHost && (
@@ -349,18 +334,18 @@ export default class FilterSelector extends React.Component {
                   trackColor={{true: '#eba2a8', false: 'grey'}}
                   style={{marginTop: '1%'}}
                   value={this.state.useLocation}
-                  onValueChange={val =>
+                  onValueChange={val => {
                     this.setState({
                       useLocation: val,
-                    })
-                  }
+                    });
+                  }}
                 />
               </View>
               <TextInput
                 placeholder={
                   this.state.useLocation
                     ? 'Using Current Location'
-                    : 'City and State'
+                    : 'Enter City, State'
                 }
                 onChangeText={text => this.setState({location: text})}
                 style={
@@ -497,6 +482,45 @@ export default class FilterSelector extends React.Component {
             {this.state.isHost ? "Let's Go" : 'Submit Filters'}
           </Text>
         </TouchableHighlight>
+        {(this.state.locationAlert ||
+          this.state.formatAlert ||
+          this.state.chooseFriends) && (
+          <BlurView
+            blurType="light"
+            blurAmount={20}
+            reducedTransparencyFallbackColor="white"
+            style={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+            }}
+          />
+        )}
+        {this.state.locationAlert && (
+          <Alert
+            title="Location Required"
+            body="Your location is required to find nearby restuarants"
+            button
+            buttonText="Close"
+            press={() => this.setState({locationAlert: false})}
+            cancel={() => this.setState({locationAlert: false})}
+          />
+        )}
+        {this.state.formatAlert && (
+          <Alert
+            title="Error"
+            body="Make sure your location is in the correct format: City, State"
+            button
+            buttonText="Close"
+            press={() => this.setState({formatAlert: false})}
+            cancel={() => this.setState({formatAlert: false})}
+          />
+        )}
+        {this.state.chooseFriends && (
+          <ChooseFriends press={() => this.setState({chooseFriends: false})} />
+        )}
       </View>
     );
   }

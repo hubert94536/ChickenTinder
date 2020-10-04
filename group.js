@@ -60,6 +60,7 @@ export default class Group extends React.Component {
           image={this.state.members[user].pic}
           filters={this.state.members[user].filters}
           host={this.state.host}
+          key={user}
         />,
       );
     }
@@ -161,26 +162,30 @@ export default class Group extends React.Component {
                 margin: '4%',
                 justifyContent: 'flex-end',
               }}>
-              <Text
-                style={{
-                  color: 'white',
-                  fontFamily: font,
-                  marginRight: '3%',
-                }}>
-                {this.state.username === this.state.host
-                  ? 'Swipe for host menu'
-                  : 'Swipe for filters'}
-              </Text>
-              <Icon
-                name="chevron-right"
-                style={{
-                  color: 'white',
-                  fontFamily: font,
-                  fontSize: 16,
-                  marginTop: '0.75%',
-                }}
-                onPress={() => this.refs.swiper.scrollBy(1)}
-              />
+              {this.state.swipe && (
+                <Text
+                  style={{
+                    color: 'white',
+                    fontFamily: font,
+                    marginRight: '3%',
+                  }}>
+                  {this.state.username === this.state.host
+                    ? 'Swipe for host menu'
+                    : 'Swipe for filters'}
+                </Text>
+              )}
+              {this.state.swipe && (
+                <Icon
+                  name="chevron-right"
+                  style={{
+                    color: 'white',
+                    fontFamily: font,
+                    fontSize: 16,
+                    marginTop: '0.75%',
+                  }}
+                  onPress={() => this.refs.swiper.scrollBy(1)}
+                />
+              )}
             </View>
           </View>
           <ScrollView style={styles.center}>{memberList}</ScrollView>
@@ -194,7 +199,7 @@ export default class Group extends React.Component {
                 activeOpacity={1}
                 onHideUnderlay={this.underlayHide.bind(this)}
                 onShowUnderlay={this.underlayShow.bind(this)}
-                onPress={() => console.log('start round')}
+                onPress={() => this.props.navigation.navigate('Round')}
                 style={
                   this.state.start
                     ? styles.bottomButton
@@ -240,7 +245,6 @@ export default class Group extends React.Component {
         </View>
         <FilterSelector
           host={this.state.host}
-          username={this.state.username}
           isHost={this.state.host === this.state.username}
           press={() => this.submitFilters()}
         />

@@ -158,6 +158,7 @@ module.exports = (io) => {
         for (var category in data.categories) {
           sessions[data.host].filters.categories.add(category)
         }
+        console.log(sessions[data.host].filters)
       } catch (error) {
         socket.emit('exception', error)
       }
