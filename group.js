@@ -241,7 +241,6 @@ export default class Group extends React.Component {
         </View>
         <FilterSelector
           host={this.state.host}
-          username={this.state.username}
           isHost={this.state.host === this.state.username}
           press={() => this.submitFilters()}
         />
