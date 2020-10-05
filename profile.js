@@ -16,7 +16,6 @@ import { NAME, USERNAME, PHOTO } from 'react-native-dotenv'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Swiper from 'react-native-swiper'
 import Friends from './friends.js'
-import Requests from './requests.js'
 import api from './accountsApi.js'
 import { facebookService } from './facebookService.js'
 import Alert from './alert.js'
@@ -221,8 +220,12 @@ export default class UserProfileView extends Component {
             onMomentumScrollEnd={() =>
               this.setState({ friends: !this.state.friends })}
           >
-            <Friends />
-            <Requests />
+            <Friends 
+              isFriends = {true}
+            />
+            <Friends 
+              isFriends = {false}
+            />
           </Swiper>
         </View>
         {this.state.visible && (

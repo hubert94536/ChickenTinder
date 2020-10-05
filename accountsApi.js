@@ -62,6 +62,7 @@ const createFBUser = async (name, id, username, email, photo) => {
         photo: photo,
       },
     })
+    //returns business info from Yelp
     .then(res => {
       return res.status;
     })

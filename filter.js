@@ -83,7 +83,7 @@ const tagsCuisine = [
   'Asian Fusion',
 ];
 
-const tagsDining = ['Dine-in', 'Delivery', 'Catering', 'Pickup'];
+// const tagsDining = ['Dine-in', 'Delivery', 'Catering', 'Pickup'];
 
 const tagsDiet = ['Vegan', 'Vegetarian'];
 
@@ -115,7 +115,6 @@ export default class FilterSelector extends React.Component {
     super(props);
     this.state = {
       host: this.props.host,
-      username: this.props.username,
       isHost: this.props.isHost,
       distance: 5,
       location: null,
