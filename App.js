@@ -53,22 +53,3 @@ export default class App extends React.Component {
     return <AppContainer />;
   }
 }
-
-// import React from 'react';
-// import FilterSelector from './filter.js';
-// import Group from './group.js';
-// import UserProfileView from './profile.js';
-
-// export default class App extends React.Component {
-//   render() {
-//     return (
-//       // <FilterSelector
-//       //   username={'hannaco'}
-//       //   host={'hannaco'}
-//       //   isHost={true}
-//       //   press={() => console.log('press')}
-//       // />
-//       <UserProfileView />
-//     );
-//   }
-// }

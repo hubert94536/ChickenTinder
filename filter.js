@@ -264,25 +264,23 @@ export default class FilterSelector extends React.Component {
       // Socket.submitFilters(this.state.username, filters, this.state.host);
       this.handlePress();
     } else {
-      if (
-        this.state.isHost &&
-        this.state.location === null &&
-        this.state.useLocation === false
-      ) {
+      if (this.state.isHost &&
+          this.state.location === null &&
+          this.state.useLocation === false) {
         this.setState({locationAlert: true});
-      } else if (true) {
-        this.setState({formatAlert: true});
-        console.log('format problems');
-        //if location is null and useLocation is false for HOST -> create alert location is required,
-        //check body that it's in format (city, state) if not send alert too
-      } else {
+      } 
+      // else if (true) {
+        // this.setState({formatAlert: true});
+        // console.log('format problems');
+        // //if location is null and useLocation is false for HOST -> create alert location is required,
+        // //check body that it's in format (city, state) if not send alert too
+      // } 
+      else {
         filters.location = this.state.location;
-        // Socket.submitFilters(this.state.username, filters, this.state.host);
+        Socket.submitFilters(filters, this.state.host);
         this.handlePress();
       }
     }
-
-    console.log(filters);
   }
 
   render() {
