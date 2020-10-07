@@ -145,6 +145,7 @@ module.exports = (io) => {
     socket.on('submitFilters', data => {
       // merge to master list, send response back
       try {
+        console.log('hi')
         sessions[data.room].members[data.username].filters = true
         io.in(data.room).emit('update', sessions[data.room].members)
         // check if host

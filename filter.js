@@ -256,7 +256,7 @@ export default class FilterSelector extends React.Component {
     if (this.state.useLocation) {
       filters.latitude = this.state.lat;
       filters.longitude = this.state.long;
-      // Socket.submitFilters(this.state.username, filters, this.state.host);
+      Socket.submitFilters(filters, this.state.host);
       this.handlePress();
     } else {
       if (this.state.isHost &&
@@ -339,11 +339,7 @@ export default class FilterSelector extends React.Component {
               <TextInput
                 placeholder={
                   this.state.useLocation
-<<<<<<< HEAD
-                    ? null
-=======
                     ? 'Using Current Location'
->>>>>>> f456f4af73db05bb88c3050282360d299bb24d31
                     : 'Enter City, State'
                 }
                 onChangeText={text => this.setState({location: text})}
