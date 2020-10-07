@@ -37,7 +37,6 @@ export default class Friends extends React.Component {
     super(props);
     this.state = {
       search: '',
-      friends: [],
       errorAlert: false,
       data: [],
       friends: [], // array of Profile components

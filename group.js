@@ -7,7 +7,7 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import Card from './groupCard.js';
-import { USERNAME } from 'react-native-dotenv';
+import {USERNAME} from 'react-native-dotenv';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 import socket from './socket.js';
@@ -39,7 +39,7 @@ export default class Group extends React.Component {
       endAlert: false,
       swipe: true,
     };
-    this.updateMemberList()
+    this.updateMemberList();
     socket.getSocket().on('kick', res => {
       if (res.username === this.state.username) {
         socket.leaveRoom(res.room);
@@ -47,8 +47,8 @@ export default class Group extends React.Component {
       }
     });
     socket.getSocket().on('update', res => {
-      this.setState({ members: res })
-    })
+      this.setState({members: res});
+    });
   }
   updateMemberList() {
     memberList = [];
@@ -60,17 +60,17 @@ export default class Group extends React.Component {
           image={this.state.members[user].pic}
           filters={this.state.members[user].filters}
           host={this.state.host}
-          key={user}
+          key={this.state.members[user].username}
         />,
       );
     }
   }
   underlayShow() {
-    this.setState({ start: true });
+    this.setState({start: true});
   }
 
   underlayHide() {
-    this.setState({ start: false });
+    this.setState({start: false});
   }
 
   leaveGroup() {
@@ -87,17 +87,17 @@ export default class Group extends React.Component {
 
   cancelAlert() {
     this.state.host === this.state.username
-      ? this.setState({ endAlert: false })
-      : this.setState({ leaveAlert: false });
+      ? this.setState({endAlert: false})
+      : this.setState({leaveAlert: false});
   }
 
   submitFilters() {
     this.refs.swiper.scrollBy(-1);
-    this.setState({ swipe: false });
+    this.setState({swipe: false});
   }
 
   render() {
-    this.updateMemberList()
+    this.updateMemberList();
     return (
       <Swiper
         ref="swiper"
@@ -118,8 +118,8 @@ export default class Group extends React.Component {
                   : `${this.state.groupName}'s Group`}
               </Text>
               <TouchableHighlight
-                onShowUnderlay={() => this.setState({ leaveGroup: true })}
-                onHideUnderlay={() => this.setState({ leaveGroup: false })}
+                onShowUnderlay={() => this.setState({leaveGroup: true})}
+                onHideUnderlay={() => this.setState({leaveGroup: false})}
                 style={
                   this.state.host === this.state.username
                     ? styles.end
@@ -127,8 +127,8 @@ export default class Group extends React.Component {
                 }
                 onPress={() =>
                   this.state.host === this.state.username
-                    ? this.setState({ endAlert: true })
-                    : this.setState({ leaveAlert: true })
+                    ? this.setState({endAlert: true})
+                    : this.setState({leaveAlert: true})
                 }
                 underlayColor="white">
                 <Text
@@ -141,7 +141,7 @@ export default class Group extends React.Component {
                 </Text>
               </TouchableHighlight>
             </View>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{flexDirection: 'row'}}>
               <Icon name="user" style={styles.icon} />
               <Text
                 style={{
