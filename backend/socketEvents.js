@@ -145,18 +145,21 @@ module.exports = (io) => {
     socket.on('submitFilters', data => {
       // merge to master list, send response back
       try {
-        console.log('hi')
         sessions[data.room].members[data.username].filters = true
         io.in(data.room).emit('update', sessions[data.room].members)
         // check if host
+        console.log(data)
         if (data.username === data.room) {
+          console.log('hi')
           sessions[data.host].filters.price = data.price
           sessions[data.host].filters.open_at = data.open_at
           sessions[data.host].filters.radius = data.radius
           sessions[data.host].filters.latitude = data.latitude
           sessions[data.host].filters.longitude = data.longitude
+          console.log(sessions[data.host].filters)
         }
         for (var category in data.categories) {
+          console.log('check')
           sessions[data.host].filters.categories.add(category)
         }
         console.log(sessions[data.host].filters)
