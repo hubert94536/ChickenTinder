@@ -53,7 +53,6 @@ export default class UserProfileView extends Component {
   }
 
   // getting current user's info
-
   async changeName () {
     if (this.state.nameValue !== this.state.name) {
       return api
@@ -217,9 +216,9 @@ export default class UserProfileView extends Component {
           <Swiper
             ref='swiper'
             loop={false}
-            onMomentumScrollEnd={() =>
-              this.setState({ friends: !this.state.friends })}
-          >
+            onIndexChanged={() =>
+              this.setState({ friends: !this.state.friends })
+            }>
             <Friends 
               isFriends = {true}
             />
