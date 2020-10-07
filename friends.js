@@ -86,7 +86,6 @@ export default class Friends extends React.Component {
       friendsApi
         .removeFriendship(id)
         .then(res => {
-          //sucess code idk what is is
           this.setState({friends: newArr});
         })
         .catch(err => {
