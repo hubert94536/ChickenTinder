@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {View, ScrollView, StyleSheet, FlatList} from 'react-native';
-import {SearchBar} from 'react-native-elements';
+import { View, ScrollView, StyleSheet, FlatList } from 'react-native';
+import { SearchBar } from 'react-native-elements';
 
 import friendsApi from './friendsApi.js';
 import Card from './profileCard.js';
@@ -43,6 +43,10 @@ export default class Friends extends React.Component {
       friends: [], // array of Profile components
       isFriends: this.props.isFriends, // For rendering friends (true) or requests (false)
     };
+    this.getFriends()
+  }
+
+  getFriends() {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
       .getFriends()
@@ -56,7 +60,7 @@ export default class Friends extends React.Component {
             pushFriends.push(res.friendList[friend]);
           }
         }
-        this.setState({friends: pushFriends, data: pushFriends});
+        this.setState({ friends: pushFriends, data: pushFriends });
       })
       .catch(err => console.log(err));
   }
@@ -74,7 +78,7 @@ export default class Friends extends React.Component {
       return itemData.indexOf(textData) > -1;
     });
 
-    this.setState({friends: newData});
+    this.setState({ friends: newData });
   };
 
   removeRequest(id, newArr, status) {
@@ -82,22 +86,20 @@ export default class Friends extends React.Component {
       friendsApi
         .removeFriendship(id)
         .then(res => {
-          //sucess code idk what is is
-          this.setState({friends: newArr});
+          this.setState({ friends: newArr });
         })
         .catch(err => {
           console.log(err);
-          this.setState({errorAlert: true});
+          this.setState({ errorAlert: true });
         });
     } else if (status) {
-      this.setState({friends: newArr});
+      this.setState({ friends: newArr });
     }
   }
 
   render() {
     var friends = [];
     var friendList = this.state.friends;
-
     // Create all friend/request cards
     if (Array.isArray(friendList) && friendList.length) {
       for (var i = 0; i < friendList.length; i++) {
@@ -132,15 +134,15 @@ export default class Friends extends React.Component {
             round={true}
           />
         </View>
-        <ScrollView style={{flexDirection: 'column'}}>{friends}</ScrollView>
+        <ScrollView style={{ flexDirection: 'column' }}>{friends}</ScrollView>
         {this.state.errorAlert && (
           <Alert
             title="Error!"
             body="Please try again"
             button
             buttonText="Close"
-            press={() => this.setState({errorAlert: false})}
-            cancel={() => this.setState({errorAlert: false})}
+            press={() => this.setState({ errorAlert: false })}
+            cancel={() => this.setState({ errorAlert: false })}
           />
         )}
       </View>
