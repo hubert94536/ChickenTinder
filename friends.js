@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {View, ScrollView, StyleSheet, FlatList} from 'react-native';
+import {View, ScrollView, StyleSheet} from 'react-native';
 import {SearchBar} from 'react-native-elements';
 
 import friendsApi from './friendsApi.js';
@@ -43,6 +43,10 @@ export default class Friends extends React.Component {
       friends: [], // array of Profile components
       isFriends: this.props.isFriends, // For rendering friends (true) or requests (false)
     };
+    this.getFriends();
+  }
+
+  getFriends() {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
       .getFriends()
@@ -97,7 +101,6 @@ export default class Friends extends React.Component {
   render() {
     var friends = [];
     var friendList = this.state.friends;
-
     // Create all friend/request cards
     if (Array.isArray(friendList) && friendList.length) {
       for (var i = 0; i < friendList.length; i++) {

@@ -22,7 +22,7 @@ export default class Card extends React.Component {
     };
   }
 
-  acceptFriend() {
+  async acceptFriend() {
     friendsApi
       .acceptFriendRequest(this.state.id)
       .then(() => {
@@ -31,12 +31,17 @@ export default class Card extends React.Component {
       .catch(error => {});
   }
 
-  deleteFriend() {
-    this.setState({deleteFriend: false});
-    var filteredArray = this.props.total.filter(item => {
-      return item.username !== this.props.username;
-    });
-    this.props.press(this.props.id, filteredArray, true);
+  async deleteFriend() {
+    friendsApi
+      .removeFriendship(this.state.id)
+      .then(() => {
+        this.setState({deleteFriend: false});
+        var filteredArray = this.props.total.filter(item => {
+          return item.username !== this.props.username;
+        });
+        this.props.press(this.props.id, filteredArray, true);
+      })
+      .catch(error => {});
   }
 
   render() {
