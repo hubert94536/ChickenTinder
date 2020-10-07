@@ -40,16 +40,28 @@ export default class Group extends React.Component {
       swipe: true,
     };
     this.updateMemberList()
+
+    // listens if user is to be kicked
     socket.getSocket().on('kick', res => {
-      if (res.username === this.state.username) {
-        socket.leaveRoom(res.room);
-        this.props.navigation.navigate('Home');
-      }
+      socket.leaveRoom(res.room);
+      this.props.navigation.navigate('Home')
     });
+
+    // listens for group updates
     socket.getSocket().on('update', res => {
       this.setState({ members: res })
     })
   }
+
+  // pings server to fetch restaurants, start session
+  start() {
+    socket.startSession()
+    socket.getSocket().on('start', restaurants => {
+      this.props.navigation.navigate('Round', restaurants)
+    })
+  }
+
+  // update user cards in group
   updateMemberList() {
     memberList = [];
     for (var user in this.state.members) {
@@ -199,7 +211,7 @@ export default class Group extends React.Component {
                 activeOpacity={1}
                 onHideUnderlay={this.underlayHide.bind(this)}
                 onShowUnderlay={this.underlayShow.bind(this)}
-                onPress={() => this.props.navigation.navigate('Round')}
+                onPress={() => this.start()}
                 style={
                   this.state.start
                     ? styles.bottomButton

@@ -13,7 +13,7 @@ module.exports = (io) => {
     clients[socketUser] = socket.id
     clientsIds[socket.id] = socketUser
 
-    // send invite if previously sent before connection
+    // send invite if previously sent before user connected
     if (socketUser in invites) {
       var sender = invites[socketUser]
       io.to(clients[socketUser]).emit('invite', {
@@ -22,7 +22,7 @@ module.exports = (io) => {
         name: sessions[sender].members[sender].name
       })
     }
-    // send reconnection if user was in a room and room still exists
+    // send reconnect alert if user was in a room and room still exists
     if (socketUser in lastRoom && lastRoom[socketUser] in sessions) {
       var sender = lastRoom[socketUser]
       io.to(clients[socketUser]).emit('reconnectRoom', {
@@ -168,9 +168,10 @@ module.exports = (io) => {
     socket.on('start', async data => {
       // proceed to restaurant matching after EVERYONE submits filters
       try {
+        sessions[data.host].filters.categories = Array.from(sessions[data.host].filters.categories)
         const restaurantList = await Yelp.getRestaurants(sessions[data.host].filters)
         console.log(restaurantList)
-        io.in(data.room).emit('start', { restaurantList: restaurantList })
+        io.in(data.room).emit('start', restaurantList)
       } catch (error) {
         socket.emit('exception', error)
       }
@@ -181,19 +182,11 @@ module.exports = (io) => {
       try {
         sessions[data.room].restaurants[data.restaurant] = (sessions[data.room].restaurants[data.restaurant] || 0) + 1
         if (sessions[data.room].restaurants[data.restaurant] === Object.keys(sessions[data.room].members).length) {
-          socket.emit('like', { restaurant: data.restaurant, room: data.room })
+          io.in(data.room).emit('match', { restaurant: data.restaurant })
           console.log(data.restaurant)
         } else {
           console.log(sessions[data.room])
         }
-      } catch (error) {
-        socket.emit('exception', error)
-      }
-    })
-
-    socket.on('match', data => {
-      try {
-        io.in(data.room).emit('match', data.restaurant)
       } catch (error) {
         socket.emit('exception', error)
       }
