@@ -62,7 +62,7 @@ class Home extends React.Component {
     // friendsapi.createFriendship(2, myId),
     // friendsapi.createFriendship(4, 2),
     // friendsapi.createFriendship(3, myId),
-    // friendsapi.createFriendship(4, myId),
+    // friendsapi.createFriendship(4, myId)
     // friendsapi.acceptFriendRequest(2)
 
   }
