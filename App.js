@@ -59,6 +59,12 @@ import FilterSelector from './filter.js';
 
 export default class App extends React.Component {
   render() {
-    return <FilterSelector host={'Hanna'} isHost={true} />;
+    return (
+      <FilterSelector
+        host={'Hanna'}
+        isHost={true}
+        press={() => console.log('press')}
+      />
+    );
   }
 }
