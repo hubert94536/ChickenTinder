@@ -31,7 +31,8 @@ export default class Group extends React.Component {
       members: members,
       host: this.props.navigation.state.params.host,
       groupName: members[Object.keys(members)[0]].name.split(' ')[0],
-      needFilters: Object.keys(members).filter(user => !user.filters).length,
+      //needFilters: Object.keys(members).filter(user => !user.filters).length,
+      needFilters: this.countNeedFilters(members),
       start: false,
       username: myUsername,
       // show/hide the alerts
@@ -39,17 +40,50 @@ export default class Group extends React.Component {
       endAlert: false,
       swipe: true,
     };
-    this.updateMemberList()
+
+    // listens if user is to be kicked
     socket.getSocket().on('kick', res => {
-      if (res.username === this.state.username) {
-        socket.leaveRoom(res.room);
-        this.props.navigation.navigate('Home');
-      }
+      socket.leaveRoom(res.room);
+      this.props.navigation.navigate('Home')
     });
+
+    // listens for group updates
     socket.getSocket().on('update', res => {
       this.setState({ members: res })
+      let count = this.countNeedFilters(res)
+      this.setState({ needFilters: count })
+      if (!count) {
+        this.setState({ start: true })
+      }
+    })
+
+    socket.getSocket().on('start', restaurants => {
+      console.log(restaurants)
+      this.props.navigation.navigate('Round', restaurants)
+    })
+
+    socket.getSocket().on('exception', error => {
+      console.log(error)
     })
   }
+
+// counts number of users who haven't submitted filters
+  countNeedFilters(users) {
+    let count = 0
+    for (let user in users) {
+      if (!users[user].filters) {
+        count++
+      }
+    }
+    return count
+  }
+
+  // pings server to fetch restaurants, start session
+  start() {
+    socket.startSession()
+  }
+
+  // update user cards in group
   updateMemberList() {
     memberList = [];
     for (var user in this.state.members) {
@@ -199,7 +233,7 @@ export default class Group extends React.Component {
                 activeOpacity={1}
                 onHideUnderlay={this.underlayHide.bind(this)}
                 onShowUnderlay={this.underlayShow.bind(this)}
-                onPress={() => this.props.navigation.navigate('Round')}
+                onPress={() => this.start()}
                 style={
                   this.state.start
                     ? styles.bottomButton

@@ -80,7 +80,6 @@ const tagsCuisine = [
   'East Asian', //Chinese, Japanese, Korean, Taiwanese
   'Middle Eastern',
   'African',
-  'Asian Fusion',
 ];
 
 // const tagsDining = ['Dine-in', 'Delivery', 'Catering', 'Pickup'];
@@ -237,15 +236,11 @@ export default class FilterSelector extends React.Component {
     var filters = {};
     //convert to unix time
     const date = new Date();
-    const dd = String(date.getDate());
-    const mm = String(date.getMonth());
-    const yyyy = date.getFullYear();
-    const offset = date.getTimezoneOffset();
     const unix = Date.UTC(
-      yyyy,
-      mm,
-      dd,
-      this.state.hour + offset,
+      date.getFullYear(),
+      String(date.getMonth()),
+      String(date.getDate()),
+      this.state.hour + date.getTimezoneOffset(),
       this.state.minute,
       0,
     );
@@ -257,11 +252,11 @@ export default class FilterSelector extends React.Component {
 
     filters.categories = this.categorize(this.state.selectedCuisine);
 
-    filters.radius = this.state.distance;
+    filters.radius = this.state.distance * 1600;
     if (this.state.useLocation) {
       filters.latitude = this.state.lat;
       filters.longitude = this.state.long;
-      // Socket.submitFilters(this.state.username, filters, this.state.host);
+      Socket.submitFilters(filters, this.state.host);
       this.handlePress();
     } else {
       if (this.state.isHost &&
@@ -331,7 +326,7 @@ export default class FilterSelector extends React.Component {
                 <Text style={styles.header}>Use Current Location:</Text>
                 <Switch
                   thumbColor={hex}
-                  trackColor={{true: '#eba2a8', false: 'grey'}}
+                  trackColor={{true: '#eba2a8'}}
                   style={{marginTop: '1%'}}
                   value={this.state.useLocation}
                   onValueChange={val => {
