@@ -56,6 +56,11 @@ export default class Group extends React.Component {
         this.setState({ start: true })
       }
     })
+
+    socket.getSocket().on('start', restaurants => {
+      console.log('start')
+      this.props.navigation.navigate('Round')
+    })
   }
 
 // counts number of users who haven't submitted filters
@@ -72,9 +77,6 @@ export default class Group extends React.Component {
   // pings server to fetch restaurants, start session
   start() {
     socket.startSession()
-    socket.getSocket().on('start', restaurants => {
-      this.props.navigation.navigate('Round', restaurants)
-    })
   }
 
   // update user cards in group
