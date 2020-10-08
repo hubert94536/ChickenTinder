@@ -12,7 +12,7 @@ const yelpApi = axios.create({
 const getRestaurants = (req) => {
   return (
     yelpApi
-      .get('/businesses/search', JSON.stringify(req))
+      .get('/businesses/search', req)
       // returns business info from Yelp
       .then(res => {
         return {
@@ -33,7 +33,8 @@ const getRestaurants = (req) => {
         }
       })
       .catch(error => {
-        return Promise.reject(new Error(error.response.status))
+        console.log(error.response.message)
+        throw error.response.status
       })
   )
 }
