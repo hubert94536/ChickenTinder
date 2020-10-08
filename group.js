@@ -7,7 +7,7 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import Card from './groupCard.js';
-import {USERNAME} from 'react-native-dotenv';
+import { USERNAME } from 'react-native-dotenv';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 import socket from './socket.js';
@@ -37,8 +37,20 @@ export default class Group extends React.Component {
       // show/hide the alerts
       leaveAlert: false,
       endAlert: false,
+      swipe: true,
     };
-
+    this.updateMemberList()
+    socket.getSocket().on('kick', res => {
+      if (res.username === this.state.username) {
+        socket.leaveRoom(res.room);
+        this.props.navigation.navigate('Home');
+      }
+    });
+    socket.getSocket().on('update', res => {
+      this.setState({ members: res })
+    })
+  }
+  updateMemberList() {
     memberList = [];
     for (var user in this.state.members) {
       memberList.push(
@@ -48,24 +60,17 @@ export default class Group extends React.Component {
           image={this.state.members[user].pic}
           filters={this.state.members[user].filters}
           host={this.state.host}
+          key={user}
         />,
       );
     }
-
-    socket.getSocket().on('kick', res => {
-      if (res.username === this.state.username) {
-        socket.leaveRoom(res.room);
-        this.props.navigation.navigate('Home');
-      }
-    });
   }
-
   underlayShow() {
-    this.setState({start: true});
+    this.setState({ start: true });
   }
 
   underlayHide() {
-    this.setState({start: false});
+    this.setState({ start: false });
   }
 
   leaveGroup() {
@@ -82,13 +87,23 @@ export default class Group extends React.Component {
 
   cancelAlert() {
     this.state.host === this.state.username
-      ? this.setState({endAlert: false})
-      : this.setState({leaveAlert: false});
+      ? this.setState({ endAlert: false })
+      : this.setState({ leaveAlert: false });
+  }
+
+  submitFilters() {
+    this.refs.swiper.scrollBy(-1);
+    this.setState({ swipe: false });
   }
 
   render() {
+    this.updateMemberList()
     return (
-      <Swiper ref="swiper" loop={false} showsPagination={false}>
+      <Swiper
+        ref="swiper"
+        loop={false}
+        showsPagination={false}
+        scrollEnabled={this.state.swipe}>
         <View style={styles.main}>
           <View style={styles.top}>
             <View
@@ -103,8 +118,8 @@ export default class Group extends React.Component {
                   : `${this.state.groupName}'s Group`}
               </Text>
               <TouchableHighlight
-                onShowUnderlay={() => this.setState({leaveGroup: true})}
-                onHideUnderlay={() => this.setState({leaveGroup: false})}
+                onShowUnderlay={() => this.setState({ leaveGroup: true })}
+                onHideUnderlay={() => this.setState({ leaveGroup: false })}
                 style={
                   this.state.host === this.state.username
                     ? styles.end
@@ -112,8 +127,8 @@ export default class Group extends React.Component {
                 }
                 onPress={() =>
                   this.state.host === this.state.username
-                    ? this.setState({endAlert: true})
-                    : this.setState({leaveAlert: true})
+                    ? this.setState({ endAlert: true })
+                    : this.setState({ leaveAlert: true })
                 }
                 underlayColor="white">
                 <Text
@@ -126,7 +141,7 @@ export default class Group extends React.Component {
                 </Text>
               </TouchableHighlight>
             </View>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <Icon name="user" style={styles.icon} />
               <Text
                 style={{
@@ -147,26 +162,30 @@ export default class Group extends React.Component {
                 margin: '4%',
                 justifyContent: 'flex-end',
               }}>
-              <Text
-                style={{
-                  color: 'white',
-                  fontFamily: font,
-                  marginRight: '3%',
-                }}>
-                {this.state.username === this.state.host
-                  ? 'Swipe for host menu'
-                  : 'Swipe for filters'}
-              </Text>
-              <Icon
-                name="chevron-right"
-                style={{
-                  color: 'white',
-                  fontFamily: font,
-                  fontSize: 16,
-                  marginTop: '0.75%',
-                }}
-                onPress={() => this.refs.swiper.scrollBy(1)}
-              />
+              {this.state.swipe && (
+                <Text
+                  style={{
+                    color: 'white',
+                    fontFamily: font,
+                    marginRight: '3%',
+                  }}>
+                  {this.state.username === this.state.host
+                    ? 'Swipe for host menu'
+                    : 'Swipe for filters'}
+                </Text>
+              )}
+              {this.state.swipe && (
+                <Icon
+                  name="chevron-right"
+                  style={{
+                    color: 'white',
+                    fontFamily: font,
+                    fontSize: 16,
+                    marginTop: '0.75%',
+                  }}
+                  onPress={() => this.refs.swiper.scrollBy(1)}
+                />
+              )}
             </View>
           </View>
           <ScrollView style={styles.center}>{memberList}</ScrollView>
@@ -180,7 +199,7 @@ export default class Group extends React.Component {
                 activeOpacity={1}
                 onHideUnderlay={this.underlayHide.bind(this)}
                 onShowUnderlay={this.underlayShow.bind(this)}
-                onPress={() => console.log('start round')}
+                onPress={() => this.props.navigation.navigate('Round')}
                 style={
                   this.state.start
                     ? styles.bottomButton
@@ -226,8 +245,8 @@ export default class Group extends React.Component {
         </View>
         <FilterSelector
           host={this.state.host}
-          username={this.state.username}
           isHost={this.state.host === this.state.username}
+          press={() => this.submitFilters()}
         />
       </Swiper>
     );

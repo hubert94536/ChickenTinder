@@ -16,7 +16,6 @@ import { NAME, USERNAME, PHOTO } from 'react-native-dotenv'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Swiper from 'react-native-swiper'
 import Friends from './friends.js'
-import Requests from './requests.js'
 import api from './accountsApi.js'
 import { facebookService } from './facebookService.js'
 import Alert from './alert.js'
@@ -54,7 +53,6 @@ export default class UserProfileView extends Component {
   }
 
   // getting current user's info
-
   async changeName () {
     if (this.state.nameValue !== this.state.name) {
       return api
@@ -218,11 +216,15 @@ export default class UserProfileView extends Component {
           <Swiper
             ref='swiper'
             loop={false}
-            onMomentumScrollEnd={() =>
-              this.setState({ friends: !this.state.friends })}
-          >
-            <Friends />
-            <Requests />
+            onIndexChanged={() =>
+              this.setState({ friends: !this.state.friends })
+            }>
+            <Friends 
+              isFriends = {true}
+            />
+            <Friends 
+              isFriends = {false}
+            />
           </Swiper>
         </View>
         {this.state.visible && (
