@@ -148,19 +148,16 @@ module.exports = (io) => {
         sessions[data.room].members[data.username].filters = true
         io.in(data.room).emit('update', sessions[data.room].members)
         // check if host
-        console.log(data)
         if (data.username === data.room) {
-          console.log('hi')
-          sessions[data.host].filters.price = data.price
-          sessions[data.host].filters.open_at = data.open_at
-          sessions[data.host].filters.radius = data.radius
-          sessions[data.host].filters.latitude = data.latitude
-          sessions[data.host].filters.longitude = data.longitude
-          console.log(sessions[data.host].filters)
+          sessions[data.host].filters['price'] = data.price
+         // sessions[data.host].filters.open_at = data.open_at
+          sessions[data.host].filters['radius'] = data.radius
+          sessions[data.host].filters['latitude'] = data.latitude
+          sessions[data.host].filters['longitude'] = data.longitude
         }
         for (var category in data.categories) {
           console.log('check')
-          sessions[data.host].filters.categories.add(category)
+          sessions[data.host].filters['categories'].add(category)
         }
         console.log(sessions[data.host].filters)
       } catch (error) {
@@ -175,6 +172,7 @@ module.exports = (io) => {
         sessions[data.host].filters.categories = Array.from(sessions[data.host].filters.categories)
         const restaurantList = await Yelp.getRestaurants(sessions[data.host].filters)
         console.log(restaurantList)
+        io.in(data.room).emit('start', 'hi')
         io.in(data.room).emit('start', restaurantList)
       } catch (error) {
         socket.emit('exception', error)

@@ -31,7 +31,8 @@ export default class Group extends React.Component {
       members: members,
       host: this.props.navigation.state.params.host,
       groupName: members[Object.keys(members)[0]].name.split(' ')[0],
-      needFilters: Object.keys(members).filter(user => !user.filters).length,
+      //needFilters: Object.keys(members).filter(user => !user.filters).length,
+      needFilters: this.countNeedFilters(members),
       start: false,
       username: myUsername,
       // show/hide the alerts
@@ -39,7 +40,6 @@ export default class Group extends React.Component {
       endAlert: false,
       swipe: true,
     };
-    this.updateMemberList()
 
     // listens if user is to be kicked
     socket.getSocket().on('kick', res => {
@@ -50,7 +50,23 @@ export default class Group extends React.Component {
     // listens for group updates
     socket.getSocket().on('update', res => {
       this.setState({ members: res })
+      let count = this.countNeedFilters(res)
+      this.setState({ needFilters: count })
+      if (!count) {
+        this.setState({ start: true })
+      }
     })
+  }
+
+// counts number of users who haven't submitted filters
+  countNeedFilters(users) {
+    let count = 0
+    for (let user in users) {
+      if (!users[user].filters) {
+        count++
+      }
+    }
+    return count
   }
 
   // pings server to fetch restaurants, start session
