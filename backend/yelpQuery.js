@@ -33,7 +33,7 @@ const getRestaurants = (req) => {
         }
       })
       .catch(error => {
-        console.log(error.response.message)
+        console.log(error.response)
         throw error.response.status
       })
   )
