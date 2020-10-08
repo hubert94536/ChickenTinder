@@ -44,7 +44,7 @@ app.route('/phoneNumber/:phone_number')
   .get(accounts.checkPhoneNumber)
 
 
-//friendships
+// friendships table
 app.route('/friendships')
   .post(friends.createFriends);
 
