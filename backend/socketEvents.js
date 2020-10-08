@@ -149,18 +149,17 @@ module.exports = (io) => {
         io.in(data.room).emit('update', sessions[data.room].members)
         // check if host
         if (data.username === data.room) {
-          sessions[data.host].filters['price'] = data.price
-         // sessions[data.host].filters.open_at = data.open_at
-          sessions[data.host].filters['radius'] = data.radius
-          sessions[data.host].filters['latitude'] = data.latitude
-          sessions[data.host].filters['longitude'] = data.longitude
+          sessions[data.room].filters.price = data.filters.price
+         // sessions[data.room].filters.open_at = data.open_at
+          sessions[data.room].filters.radius = data.filters.radius
+          sessions[data.room].filters.latitude = data.filters.latitude
+          sessions[data.room].filters.longitude = data.filters.longitude
         }
-        console.log(data.categories)
         for (var category in data.categories) {
           console.log('check')
-          sessions[data.host].filters['categories'].add(category)
+          sessions[data.room].filters.categories.add(category)
         }
-        console.log(sessions[data.host].filters)
+        console.log(sessions[data.room].filters)
       } catch (error) {
         console.log(error)
         socket.emit('exception', error)
