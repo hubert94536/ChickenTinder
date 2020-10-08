@@ -252,7 +252,7 @@ export default class FilterSelector extends React.Component {
 
     filters.categories = this.categorize(this.state.selectedCuisine);
 
-    filters.radius = this.state.distance;
+    filters.radius = this.state.distance * 1600;
     if (this.state.useLocation) {
       filters.latitude = this.state.lat;
       filters.longitude = this.state.long;

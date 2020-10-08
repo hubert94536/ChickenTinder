@@ -158,9 +158,7 @@ module.exports = (io) => {
         for (var category in data.filters.categories) {
           sessions[data.room].filters.categories.add(data.filters.categories[category])
         }
-        console.log(sessions[data.room].filters)
       } catch (error) {
-        console.log(error)
         socket.emit('exception', error)
       }
     })
@@ -169,7 +167,7 @@ module.exports = (io) => {
     socket.on('start', async data => {
       // proceed to restaurant matching after EVERYONE submits filters
       try {
-        sessions[data.room].filters.categories = Array.from(sessions[data.room].filters.categories)
+        sessions[data.room].filters.categories = Array.from(sessions[data.room].filters.categories).toString()
         console.log(sessions[data.room].filters)
         const restaurantList = await Yelp.getRestaurants(sessions[data.room].filters)
         console.log(restaurantList)
