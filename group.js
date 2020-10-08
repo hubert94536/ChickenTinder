@@ -61,6 +61,10 @@ export default class Group extends React.Component {
       console.log('start')
       this.props.navigation.navigate('Round')
     })
+
+    socket.getSocket().on('exception', error => {
+      console.log(error)
+    })
   }
 
 // counts number of users who haven't submitted filters
