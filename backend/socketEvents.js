@@ -156,8 +156,7 @@ module.exports = (io) => {
           sessions[data.room].filters.longitude = data.filters.longitude
         }
         for (var category in data.filters.categories) {
-          console.log('check')
-          sessions[data.room].filters.categories.add(category)
+          sessions[data.room].filters.categories.add(data.filters.categories[category])
         }
         console.log(sessions[data.room].filters)
       } catch (error) {
@@ -171,6 +170,7 @@ module.exports = (io) => {
       // proceed to restaurant matching after EVERYONE submits filters
       try {
         sessions[data.room].filters.categories = Array.from(sessions[data.room].filters.categories)
+        console.log(sessions[data.room].filters)
         const restaurantList = await Yelp.getRestaurants(sessions[data.room].filters)
         console.log(restaurantList)
         io.in(data.room).emit('start', restaurantList)
