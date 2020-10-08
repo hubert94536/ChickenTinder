@@ -12,7 +12,7 @@ const yelpApi = axios.create({
 const getRestaurants = (req) => {
   return (
     yelpApi
-      .get('/businesses/search', {params: req})
+      .get('/businesses/search', { params: req })
       // returns business info from Yelp
       .then(res => {
         return {
