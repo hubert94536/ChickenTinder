@@ -149,8 +149,12 @@ module.exports = (io) => {
         io.in(data.room).emit('update', sessions[data.room].members)
         // check if host
         if (data.username === data.room) {
-          sessions[data.room].filters.price = data.filters.price
-          // sessions[data.room].filters.open_at = data.open_at
+          if (data.filters.price) {
+            sessions[data.room].filters.price = data.filters.price
+          }
+          if (data.filters.open_at) {
+            sessions[data.room].filters.open_at = data.open_at
+          }
           sessions[data.room].filters.radius = data.filters.radius
           sessions[data.room].filters.latitude = data.filters.latitude
           sessions[data.room].filters.longitude = data.filters.longitude
@@ -168,7 +172,6 @@ module.exports = (io) => {
       // proceed to restaurant matching after EVERYONE submits filters
       try {
         sessions[data.room].filters.categories = Array.from(sessions[data.room].filters.categories).toString()
-        console.log(sessions[data.room].filters.categories)
         const restaurantList = await Yelp.getRestaurants(sessions[data.room].filters)
         io.in(data.room).emit('start', restaurantList)
       } catch (error) {
