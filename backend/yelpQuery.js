@@ -17,7 +17,7 @@ const getRestaurants = (req) => {
       .then(res => {
         return {
           total: res.data.total,
-          businessList: res.data.businesses.map(function (business) {
+          businessList: res.data.businesses.map(business => {
             return {
               name: business.name,
               distance: business.distance,
