@@ -80,7 +80,6 @@ const tagsCuisine = [
   'East Asian', //Chinese, Japanese, Korean, Taiwanese
   'Middle Eastern',
   'African',
-  'Asian Fusion',
 ];
 
 // const tagsDining = ['Dine-in', 'Delivery', 'Catering', 'Pickup'];
@@ -258,11 +257,11 @@ export default class FilterSelector extends React.Component {
 
     filters.categories = this.categorize(this.state.selectedCuisine);
 
-    filters.radius = this.state.distance;
+    filters.radius = this.state.distance * 1600;
     if (this.state.useLocation) {
       filters.latitude = this.state.lat;
       filters.longitude = this.state.long;
-      // Socket.submitFilters(this.state.username, filters, this.state.host);
+      Socket.submitFilters(filters, this.state.host);
       this.handlePress();
     } else {
       if (
@@ -335,7 +334,7 @@ export default class FilterSelector extends React.Component {
                 <Text style={styles.header}>Use Current Location:</Text>
                 <Switch
                   thumbColor={hex}
-                  trackColor={{true: '#eba2a8', false: 'grey'}}
+                  trackColor={{true: '#eba2a8'}}
                   style={{marginTop: '1%'}}
                   value={this.state.useLocation}
                   onValueChange={val => {

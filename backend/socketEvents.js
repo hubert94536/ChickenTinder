@@ -13,7 +13,7 @@ module.exports = (io) => {
     clients[socketUser] = socket.id
     clientsIds[socket.id] = socketUser
 
-    // send invite if previously sent before connection
+    // send invite if previously sent before user connected
     if (socketUser in invites) {
       var sender = invites[socketUser]
       io.to(clients[socketUser]).emit('invite', {
@@ -22,7 +22,7 @@ module.exports = (io) => {
         name: sessions[sender].members[sender].name
       })
     }
-    // send reconnection if user was in a room and room still exists
+    // send reconnect alert if user was in a room and room still exists
     if (socketUser in lastRoom && lastRoom[socketUser] in sessions) {
       var sender = lastRoom[socketUser]
       io.to(clients[socketUser]).emit('reconnectRoom', {
@@ -149,16 +149,19 @@ module.exports = (io) => {
         io.in(data.room).emit('update', sessions[data.room].members)
         // check if host
         if (data.username === data.room) {
-          sessions[data.host].filters.price = data.price
-          sessions[data.host].filters.open_at = data.open_at
-          sessions[data.host].filters.radius = data.radius
-          sessions[data.host].filters.latitude = data.latitude
-          sessions[data.host].filters.longitude = data.longitude
+          if (data.filters.price) {
+            sessions[data.room].filters.price = data.filters.price
+          }
+          if (data.filters.open_at) {
+            sessions[data.room].filters.open_at = data.open_at
+          }
+          sessions[data.room].filters.radius = data.filters.radius
+          sessions[data.room].filters.latitude = data.filters.latitude
+          sessions[data.room].filters.longitude = data.filters.longitude
         }
-        for (var category in data.categories) {
-          sessions[data.host].filters.categories.add(category)
+        for (var category in data.filters.categories) {
+          sessions[data.room].filters.categories.add(data.filters.categories[category])
         }
-        console.log(sessions[data.host].filters)
       } catch (error) {
         socket.emit('exception', error)
       }
@@ -168,8 +171,9 @@ module.exports = (io) => {
     socket.on('start', async data => {
       // proceed to restaurant matching after EVERYONE submits filters
       try {
-        const restaurantList = await Yelp.getRestaurants(data.req)
-        io.in(data.room).emit('start', { restaurantList: restaurantList })
+        sessions[data.room].filters.categories = Array.from(sessions[data.room].filters.categories).toString()
+        const restaurantList = await Yelp.getRestaurants(sessions[data.room].filters)
+        io.in(data.room).emit('start', restaurantList)
       } catch (error) {
         socket.emit('exception', error)
       }
@@ -180,19 +184,11 @@ module.exports = (io) => {
       try {
         sessions[data.room].restaurants[data.restaurant] = (sessions[data.room].restaurants[data.restaurant] || 0) + 1
         if (sessions[data.room].restaurants[data.restaurant] === Object.keys(sessions[data.room].members).length) {
-          socket.emit('like', { restaurant: data.restaurant, room: data.room })
+          io.in(data.room).emit('match', { restaurant: data.restaurant })
           console.log(data.restaurant)
         } else {
           console.log(sessions[data.room])
         }
-      } catch (error) {
-        socket.emit('exception', error)
-      }
-    })
-
-    socket.on('match', data => {
-      try {
-        io.in(data.room).emit('match', data.restaurant)
       } catch (error) {
         socket.emit('exception', error)
       }

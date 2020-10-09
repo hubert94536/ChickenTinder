@@ -57,7 +57,6 @@ const submitFilters = (filters, room) => {
 
 const likeRestaurant = (room, restaurant) => {
   socket.emit('like', { room: room, restaurant: restaurant })
-  return 200
 }
 
 const getSocket = () => {
