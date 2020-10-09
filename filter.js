@@ -131,6 +131,11 @@ export default class FilterSelector extends React.Component {
     };
   }
 
+  handleUpdate = e => {
+    console.log(e);
+    this.setState({selectedCuisine: e});
+  };
+
   componentDidMount() {
     if (requestLocationPermission()) {
       Geolocation.getCurrentPosition(
@@ -226,6 +231,7 @@ export default class FilterSelector extends React.Component {
           break;
       }
     }
+    console.log(categories);
     return categories;
   }
 
@@ -234,6 +240,7 @@ export default class FilterSelector extends React.Component {
   }
 
   evaluateFilters() {
+    console.log(this.state.selectedCuisine);
     var filters = {};
     //convert to unix time
     const date = new Date();
@@ -310,6 +317,7 @@ export default class FilterSelector extends React.Component {
               all={tagsCuisine}
               selected={this.state.selectedCuisine}
               isExclusive={false}
+              onChange={e => this.handleUpdate(e)}
             />
           </View>
           {this.state.isHost && (

@@ -56,15 +56,10 @@
 
 import React from 'react';
 import FilterSelector from './filter.js';
+import Round from './round.js';
 
 export default class App extends React.Component {
   render() {
-    return (
-      <FilterSelector
-        host={'Hanna'}
-        isHost={true}
-        press={() => console.log('press')}
-      />
-    );
+    return <Round />;
   }
 }
