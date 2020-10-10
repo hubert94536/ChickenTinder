@@ -7,7 +7,7 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import Card from './groupCard.js';
-import { USERNAME } from 'react-native-dotenv';
+import {USERNAME} from 'react-native-dotenv';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 import socket from './socket.js';
@@ -40,47 +40,48 @@ export default class Group extends React.Component {
       endAlert: false,
       swipe: true,
     };
+    this.updateMemberList();
 
     // listens if user is to be kicked
     socket.getSocket().on('kick', res => {
       socket.leaveRoom(res.room);
-      this.props.navigation.navigate('Home')
+      this.props.navigation.navigate('Home');
     });
 
     // listens for group updates
     socket.getSocket().on('update', res => {
-      this.setState({ members: res })
-      let count = this.countNeedFilters(res)
-      this.setState({ needFilters: count })
+      this.setState({members: res});
+      let count = this.countNeedFilters(res);
+      this.setState({needFilters: count});
       if (!count) {
-        this.setState({ start: true })
+        this.setState({start: true});
       }
-    })
+    });
 
     socket.getSocket().on('start', restaurants => {
-      console.log(restaurants)
-      this.props.navigation.navigate('Round', restaurants)
-    })
+      console.log(restaurants);
+      this.props.navigation.navigate('Round', restaurants);
+    });
 
     socket.getSocket().on('exception', error => {
-      console.log(error)
-    })
+      console.log(error);
+    });
   }
 
-// counts number of users who haven't submitted filters
+  // counts number of users who haven't submitted filters
   countNeedFilters(users) {
-    let count = 0
+    let count = 0;
     for (let user in users) {
       if (!users[user].filters) {
-        count++
+        count++;
       }
     }
-    return count
+    return count;
   }
 
   // pings server to fetch restaurants, start session
   start() {
-    socket.startSession()
+    socket.startSession();
   }
 
   // update user cards in group
@@ -94,17 +95,17 @@ export default class Group extends React.Component {
           image={this.state.members[user].pic}
           filters={this.state.members[user].filters}
           host={this.state.host}
-          key={user}
+          key={this.state.members[user].username}
         />,
       );
     }
   }
   underlayShow() {
-    this.setState({ start: true });
+    this.setState({start: true});
   }
 
   underlayHide() {
-    this.setState({ start: false });
+    this.setState({start: false});
   }
 
   leaveGroup() {
@@ -121,17 +122,17 @@ export default class Group extends React.Component {
 
   cancelAlert() {
     this.state.host === this.state.username
-      ? this.setState({ endAlert: false })
-      : this.setState({ leaveAlert: false });
+      ? this.setState({endAlert: false})
+      : this.setState({leaveAlert: false});
   }
 
   submitFilters() {
     this.refs.swiper.scrollBy(-1);
-    this.setState({ swipe: false });
+    this.setState({swipe: false});
   }
 
   render() {
-    this.updateMemberList()
+    this.updateMemberList();
     return (
       <Swiper
         ref="swiper"
@@ -152,8 +153,8 @@ export default class Group extends React.Component {
                   : `${this.state.groupName}'s Group`}
               </Text>
               <TouchableHighlight
-                onShowUnderlay={() => this.setState({ leaveGroup: true })}
-                onHideUnderlay={() => this.setState({ leaveGroup: false })}
+                onShowUnderlay={() => this.setState({leaveGroup: true})}
+                onHideUnderlay={() => this.setState({leaveGroup: false})}
                 style={
                   this.state.host === this.state.username
                     ? styles.end
@@ -161,8 +162,8 @@ export default class Group extends React.Component {
                 }
                 onPress={() =>
                   this.state.host === this.state.username
-                    ? this.setState({ endAlert: true })
-                    : this.setState({ leaveAlert: true })
+                    ? this.setState({endAlert: true})
+                    : this.setState({leaveAlert: true})
                 }
                 underlayColor="white">
                 <Text
@@ -175,7 +176,7 @@ export default class Group extends React.Component {
                 </Text>
               </TouchableHighlight>
             </View>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{flexDirection: 'row'}}>
               <Icon name="user" style={styles.icon} />
               <Text
                 style={{
