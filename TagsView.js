@@ -10,23 +10,28 @@ export default class TagsView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected: props.selected,
+      selected: this.props.selected,
     };
+  }
+
+  handleUpdate() {
+    this.props.onChange(this.state.selected);
   }
 
   render() {
     return <View style={styles.container}>{this.makeButtons()}</View>;
   }
   onPress = tag => {
-    let selected;
+    let chosen;
     if (this.props.isExclusive) {
-      selected = [tag];
+      chosen = [tag];
     } else {
-      selected = addOrRemove(this.state.selected, tag);
+      chosen = addOrRemove(this.state.selected, tag);
     }
     this.setState({
-      selected,
+      selected: chosen,
     });
+    this.handleUpdate();
   };
   makeButtons() {
     return this.props.all.map((tag, i) => {

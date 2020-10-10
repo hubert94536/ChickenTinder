@@ -200,8 +200,8 @@ const styles = StyleSheet.create({
   image: {
     marginTop: '10%',
     alignSelf: 'center',
-    height: Dimensions.get('window').width * 0.6,
-    width: Dimensions.get('window').width * 0.6,
+    height: Dimensions.get('window').width * 0.5,
+    width: Dimensions.get('window').width * 0.5,
     borderRadius: 20,
   },
   title: {

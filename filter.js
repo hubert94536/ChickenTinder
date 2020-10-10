@@ -130,6 +130,11 @@ export default class FilterSelector extends React.Component {
     };
   }
 
+  handleUpdate = e => {
+    console.log(e);
+    this.setState({selectedCuisine: e});
+  };
+
   componentDidMount() {
     if (requestLocationPermission()) {
       Geolocation.getCurrentPosition(
@@ -225,6 +230,7 @@ export default class FilterSelector extends React.Component {
           break;
       }
     }
+    console.log(categories);
     return categories;
   }
 
@@ -233,17 +239,16 @@ export default class FilterSelector extends React.Component {
   }
 
   evaluateFilters() {
+    console.log(this.state.selectedCuisine);
     var filters = {};
     //convert to unix time
     const date = new Date();
-    const unix = Date.UTC(
-      date.getFullYear(),
-      String(date.getMonth()),
-      String(date.getDate()),
-      this.state.hour + date.getTimezoneOffset(),
-      this.state.minute,
-      0,
-    );
+    const dd = date.getDate();
+    const mm = date.getMonth();
+    const yyyy = date.getFullYear();
+    const offset = date.getTimezoneOffset();
+    const unix =
+      Date.UTC(yyyy, mm, dd, this.state.hour, this.state.minute) / 1000;
     filters.open_at = unix;
 
     filters.price = this.state.selectedPrice
@@ -259,17 +264,19 @@ export default class FilterSelector extends React.Component {
       Socket.submitFilters(filters, this.state.host);
       this.handlePress();
     } else {
-      if (this.state.isHost &&
-          this.state.location === null &&
-          this.state.useLocation === false) {
+      if (
+        this.state.isHost &&
+        this.state.location === null &&
+        this.state.useLocation === false
+      ) {
         this.setState({locationAlert: true});
-      } 
+      }
       // else if (true) {
-        // this.setState({formatAlert: true});
-        // console.log('format problems');
-        // //if location is null and useLocation is false for HOST -> create alert location is required,
-        // //check body that it's in format (city, state) if not send alert too
-      // } 
+      // this.setState({formatAlert: true});
+      // console.log('format problems');
+      // //if location is null and useLocation is false for HOST -> create alert location is required,
+      // //check body that it's in format (city, state) if not send alert too
+      // }
       else {
         filters.location = this.state.location;
         Socket.submitFilters(filters, this.state.host);
@@ -309,6 +316,7 @@ export default class FilterSelector extends React.Component {
               all={tagsCuisine}
               selected={this.state.selectedCuisine}
               isExclusive={false}
+              onChange={e => this.handleUpdate(e)}
             />
           </View>
           {this.state.isHost && (
