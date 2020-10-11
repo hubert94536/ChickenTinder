@@ -88,7 +88,6 @@ export default class Group extends React.Component {
   updateMemberList () {
     memberList = []
     for (var user in this.state.members) {
-      console.log(user)
       memberList.push(
         <Card
           name={this.state.members[user].name}

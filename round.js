@@ -1,8 +1,9 @@
 import React from 'react'
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View, TouchableHighlight } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Swiper from 'react-native-deck-swiper'
 import Card from './roundCard.js'
+import socket from './socket.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -191,21 +192,46 @@ const restuarants = [
 ]
 
 export default class RestaurantCard extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       index: 0,
       results: restuarants,
       isHost: true
     }
+    socket.getSocket().on('match', restaurant => {
+      console.log(restaurant)
+      // TODO: connect match here
+    })
+
+    socket.getSocket().on('exception', error => {
+      console.log(error)
+    })
   }
 
-  handleSwiped () {
+  handleSwiped() {
     // transitionRef.current.animateNextTransition();
     this.setState({ index: this.state.index + 1 })
   }
 
-  render () {
+  likeRestaurant(resId) {
+    // uncomment and pass in host + restaurant id
+    // socket.likeRestaurant(this.state.host, resId)
+  }
+
+  endGroup() {
+    socket.endSession();
+    socket.getSocket().on('leave', res => {
+      this.props.navigation.navigate('Home');
+    });
+  }
+
+  leaveGroup () {
+    socket.leaveRoom()
+    this.props.navigation.navigate('Home')
+  }
+
+  render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -218,18 +244,20 @@ export default class RestaurantCard extends React.Component {
               margin: '3%',
               fontWeight: 'bold'
             }}
-            onPress={() => this.props.navigation.navigate('Home')}
+            onPress={() => this.endGroup()}
           />
-          <Text
-            style={{
-              color: hex,
-              fontFamily: font,
-              fontSize: 20,
-              textAlign: 'left'
-            }}
-          >
-            {this.state.isHost ? 'End' : 'Leave'}
-          </Text>
+          <TouchableHighlight onPress={() => this.endGroup()}>
+            <Text
+              style={{
+                color: hex,
+                fontFamily: font,
+                fontSize: 20,
+                textAlign: 'left'
+              }}
+            >
+              {this.state.isHost ? 'End' : 'Leave'}
+            </Text>
+          </TouchableHighlight>
         </View>
         <Swiper
           cards={this.state.results}
@@ -329,7 +357,7 @@ export default class RestaurantCard extends React.Component {
               fontSize: 20
             }}
           >
-          Swipe!
+            Swipe!
           </Text>
           <Icon name='chevron-right' style={{ fontFamily: font, color: hex, fontSize: 18, marginLeft: '5%' }} />
         </View>

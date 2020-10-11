@@ -51,10 +51,12 @@ const startSession = () => {
   socket.emit('start', { room: myUsername })
 }
 
+// past filters object & room username
 const submitFilters = (filters, room) => {
   socket.emit('submitFilters', { username: myUsername, filters: filters, room: room })
 }
 
+// pass restaurant id
 const likeRestaurant = (room, restaurant) => {
   socket.emit('like', { room: room, restaurant: restaurant })
 }
