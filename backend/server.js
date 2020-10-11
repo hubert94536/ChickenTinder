@@ -43,10 +43,9 @@ app.route('/username/:username')
 app.route('/phoneNumber/:phone_number')
   .get(accounts.checkPhoneNumber)
 
-
 // friendships table
 app.route('/friendships')
-  .post(friends.createFriends);
+  .post(friends.createFriends)
 
 app.route('/friendships/friends/:user')
   .get(friends.getFriends)
@@ -56,6 +55,5 @@ app.route('/friendships/friends/:user/:friend')
   .put(friends.acceptRequest)
 
 server.listen(PORT, () => {
-    console.log(`App running on port ${PORT}.`)
-  })
-  
+  console.log(`App running on port ${PORT}.`)
+})

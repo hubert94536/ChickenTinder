@@ -10,15 +10,15 @@ import {
   Dimensions,
   Keyboard
 } from 'react-native'
-import { BlurView } from '@react-native-community/blur'
-import AsyncStorage from '@react-native-community/async-storage'
 import { NAME, USERNAME, PHOTO } from 'react-native-dotenv'
+import AsyncStorage from '@react-native-community/async-storage'
+import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Swiper from 'react-native-swiper'
-import Friends from './friends.js'
+import Alert from './alert.js'
 import api from './accountsApi.js'
 import { facebookService } from './facebookService.js'
-import Alert from './alert.js'
+import Friends from './friends.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -64,6 +64,7 @@ export default class UserProfileView extends Component {
           Keyboard.dismiss()
         })
         .catch(error => {
+          console.log(error)
           this.setState({ errorAlert: true })
           // Alert.alert('Error changing name. Please try again.');
           this.setState({
@@ -82,11 +83,11 @@ export default class UserProfileView extends Component {
         .then(() => {
           // update username locally
           return api.updateUsername(user)
-          .then(() => {
-            AsyncStorage.setItem(USERNAME, user)
-            this.setState({ username: this.state.usernameValue })
-            Keyboard.dismiss()
-          })
+            .then(() => {
+              AsyncStorage.setItem(USERNAME, user)
+              this.setState({ username: this.state.usernameValue })
+              Keyboard.dismiss()
+            })
         })
         .catch(error => {
           if (error === 404) {
@@ -217,13 +218,13 @@ export default class UserProfileView extends Component {
             ref='swiper'
             loop={false}
             onIndexChanged={() =>
-              this.setState({ friends: !this.state.friends })
-            }>
-            <Friends 
-              isFriends = {true}
+              this.setState({ friends: !this.state.friends })}
+          >
+            <Friends
+              isFriends
             />
-            <Friends 
-              isFriends = {false}
+            <Friends
+              isFriends={false}
             />
           </Swiper>
         </View>
@@ -595,6 +596,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 17,
     paddingTop: '2.5%',
-    paddingBottom: '2.5%',
-  },
-});
+    paddingBottom: '2.5%'
+  }
+})
