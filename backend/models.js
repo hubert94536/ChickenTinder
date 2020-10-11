@@ -9,7 +9,7 @@ const config = {
   password: process.env.USERS_PASSWORD,
   port: 5432,
   database: process.env.USERS_DATABASE,
-  ssl: true,
+  // ssl: true,
   dialect: 'postgresql',
   ssl: {
     rejectUnauthorized: false
@@ -55,36 +55,32 @@ const Accounts = sequelize.define('accounts', {
   indexes: [
     {
       unique: true,
-      fields:['id', 'username', 'email']
+      fields: ['id', 'username', 'email']
     }
   ]
 })
 
 const Friends = sequelize.define('friends', {
+  m_id: {
+    type: DataTypes.BIGINT,
+    allowNull: false,
+    primaryKey: true
+  },
+  status: {
+    type: DataTypes.STRING(20),
+    allowNull: false
+  },
+  f_id: {
+    type: DataTypes.BIGINT,
+    allowNull: false,
+    primaryKey: true
+  }
+})
 
-    m_id: {
-        type: DataTypes.BIGINT,
-        allowNull: false,
-        primaryKey: true,
+Friends.belongsTo(Accounts, { foreignKey: 'f_info', foreignKeyConstraint: true })
 
-    },
-    status: {
-        type: DataTypes.STRING(20),
-        allowNull: false,
-
-    },
-    f_id: {
-        type: DataTypes.BIGINT,
-        allowNull: false,
-        primaryKey: true,
-    }
-});
-
-Friends.belongsTo(Accounts, {foreignKey: 'f_info', foreignKeyConstraint: true});
-
-
-sequelize.sync({ force: true}).then(()=> {
-    console.log("Friend model was synchronized successfully.");
+sequelize.sync({ force: true }).then(() => {
+  console.log('Friend model was synchronized successfully.')
 })
 
 module.exports = { Accounts, Friends }
