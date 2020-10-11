@@ -1,38 +1,39 @@
-import React from 'react';
+import React from 'react'
 import {
   View,
   Text,
   StyleSheet,
-  Image,
   Dimensions,
-  TouchableHighlight,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
+  TouchableHighlight
+} from 'react-native'
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
-const hex = '#F25763';
-const font = 'CircularStd-Medium';
+const hex = '#F25763'
+const font = 'CircularStd-Medium'
 
 export default class Match extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       endRound: false,
-      goToYelp: false,
-    };
+      goToYelp: false
+    }
   }
-  render() {
+
+  render () {
     return (
       <View style={styles.container}>
         <Text style={styles.text}>It's A Match!</Text>
-        <Icon name="thumbs-up" style={styles.thumbIcon} />
+        <Icon name='thumbs-up' style={styles.thumbIcon} />
         <Text
           style={{
             fontFamily: font,
             color: 'white',
             textAlign: 'center',
-            fontSize: 20,
-          }}>
+            fontSize: 20
+          }}
+        >
           Your group has selected:
         </Text>
         <Text
@@ -41,8 +42,9 @@ export default class Match extends React.Component {
             color: 'white',
             textAlign: 'center',
             fontSize: 30,
-            fontWeight: 'bold',
-          }}>
+            fontWeight: 'bold'
+          }}
+        >
           {this.props.restaurant}
         </Text>
         <MapView
@@ -52,23 +54,25 @@ export default class Match extends React.Component {
             latitude: this.props.lat,
             longitude: this.props.long,
             latitudeDelta: 0.015,
-            longitudeDelta: 0.015,
-          }}>
+            longitudeDelta: 0.015
+          }}
+        >
           <Marker
-            coordinate={{latitude: this.props.lat, longitude: this.props.long}}
+            coordinate={{ latitude: this.props.lat, longitude: this.props.long }}
           />
         </MapView>
         <TouchableHighlight
-          underlayColor={'white'}
-          onShowUnderlay={() => this.setState({endRound: true})}
-          onHideUnderlay={() => this.setState({endRound: false})}
+          underlayColor='white'
+          onShowUnderlay={() => this.setState({ endRound: true })}
+          onHideUnderlay={() => this.setState({ endRound: false })}
           style={{
             borderColor: 'white',
             borderWidth: 2.5,
             borderRadius: 30,
             alignSelf: 'center',
-            width: '45%',
-          }}>
+            width: '45%'
+          }}
+        >
           <Text
             style={{
               fontFamily: font,
@@ -76,8 +80,9 @@ export default class Match extends React.Component {
               fontSize: 20,
               textAlign: 'center',
               padding: '6%',
-              fontWeight: 'bold',
-            }}>
+              fontWeight: 'bold'
+            }}
+          >
             End Round
           </Text>
         </TouchableHighlight>
@@ -89,25 +94,27 @@ export default class Match extends React.Component {
             borderWidth: 2.5,
             borderColor: 'white',
             borderRadius: 30,
-            alignSelf: 'center',
-          }}>
-          <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+            alignSelf: 'center'
+          }}
+        >
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <Icon
-              name="yelp"
-              style={{color: 'red', fontSize: 20, alignSelf: 'center'}}
+              name='yelp'
+              style={{ color: 'red', fontSize: 20, alignSelf: 'center' }}
             />
             <Text
               style={{
                 fontFamily: font,
                 textAlign: 'center',
-                padding: '5%',
-              }}>
+                padding: '5%'
+              }}
+            >
               Go To Yelp
             </Text>
           </View>
         </TouchableHighlight>
       </View>
-    );
+    )
   }
 }
 
@@ -115,7 +122,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: hex,
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-evenly'
   },
   text: {
     fontFamily: font,
@@ -124,17 +131,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     marginRight: '10%',
-    marginLeft: '10%',
+    marginLeft: '10%'
   },
   thumbIcon: {
     color: 'white',
     textAlign: 'center',
     fontFamily: font,
-    fontSize: 50,
+    fontSize: 50
   },
   map: {
     alignSelf: 'center',
     height: Dimensions.get('window').width * 0.55,
-    width: Dimensions.get('window').width * 0.55,
-  },
-});
+    width: Dimensions.get('window').width * 0.55
+  }
+})

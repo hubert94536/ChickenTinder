@@ -12,10 +12,11 @@ module.exports = (io) => {
     delete clientsIds[clients[socketUser]]
     clients[socketUser] = socket.id
     clientsIds[socket.id] = socketUser
+    var sender
 
     // send invite if previously sent before user connected
     if (socketUser in invites) {
-      var sender = invites[socketUser]
+      sender = invites[socketUser]
       io.to(clients[socketUser]).emit('invite', {
         username: sender,
         pic: sessions[sender].members[sender].pic,
@@ -24,7 +25,7 @@ module.exports = (io) => {
     }
     // send reconnect alert if user was in a room and room still exists
     if (socketUser in lastRoom && lastRoom[socketUser] in sessions) {
-      var sender = lastRoom[socketUser]
+      sender = lastRoom[socketUser]
       io.to(clients[socketUser]).emit('reconnectRoom', {
         username: sender,
         pic: sessions[sender].members[sender].pic,

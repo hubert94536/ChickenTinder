@@ -15,8 +15,8 @@ AsyncStorage.multiGet([USERNAME, NAME, PHOTO]).then(res => {
 
 const connect = () => {
   socket = io('https://wechews.herokuapp.com', {
-  query: `username=${myUsername}`
-})
+    query: `username=${myUsername}`
+  })
 }
 
 const createRoom = () => {

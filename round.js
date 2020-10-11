@@ -1,12 +1,11 @@
-import React from 'react';
-import Swiper from 'react-native-deck-swiper';
-import {Transitioning, Transition} from 'react-native-reanimated';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import Card from './roundCard.js';
+import React from 'react'
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import Swiper from 'react-native-deck-swiper'
+import Card from './roundCard.js'
 
-const hex = '#F25763';
-const font = 'CircularStd-Medium';
+const hex = '#F25763'
+const font = 'CircularStd-Medium'
 
 const restuarants = [
   {
@@ -17,12 +16,12 @@ const restuarants = [
     rating: 4.5,
     review_count: 177,
     distance: 10,
-    categories: [{title: 'Japanese'}],
+    categories: [{ title: 'Japanese' }],
     location: {
-      city: 'Sawtelle',
+      city: 'Sawtelle'
     },
     is_closed: true,
-    transactions: ['pickup', 'delivery'],
+    transactions: ['pickup', 'delivery']
   },
   {
     name: 'Padua Pasta Makers',
@@ -32,12 +31,12 @@ const restuarants = [
     rating: 4,
     review_count: 177,
     distance: 2,
-    categories: [{title: 'Italian'}],
+    categories: [{ title: 'Italian' }],
     location: {
-      city: 'Upland',
+      city: 'Upland'
     },
     is_closed: false,
-    transactions: ['pickup', 'delivery'],
+    transactions: ['pickup', 'delivery']
   },
   {
     name: 'Din Tai Fung',
@@ -47,12 +46,12 @@ const restuarants = [
     rating: 4.5,
     review_count: 177,
     distance: 28.6,
-    categories: [{title: 'Chinese'}],
+    categories: [{ title: 'Chinese' }],
     location: {
-      city: 'Arcadia',
+      city: 'Arcadia'
     },
     is_closed: false,
-    transactions: ['pickup'],
+    transactions: ['pickup']
   },
   {
     name: 'BCD Tofu House',
@@ -62,12 +61,12 @@ const restuarants = [
     rating: 3.6,
     review_count: 177,
     distance: 18.9,
-    categories: [{title: 'Korean'}],
+    categories: [{ title: 'Korean' }],
     location: {
-      city: 'Rowland Heights',
+      city: 'Rowland Heights'
     },
     is_closed: false,
-    transactions: ['pickup'],
+    transactions: ['pickup']
   },
   {
     name: 'Zaky Mediterranean Grill',
@@ -77,12 +76,12 @@ const restuarants = [
     rating: 3.5,
     review_count: 177,
     distance: 5,
-    categories: [{title: 'Mediterranean'}],
+    categories: [{ title: 'Mediterranean' }],
     location: {
-      city: 'Upland',
+      city: 'Upland'
     },
     is_closed: true,
-    transactions: ['pickup', 'delivery'],
+    transactions: ['pickup', 'delivery']
   },
   {
     name: 'Riceberry Thai Kitchen',
@@ -92,12 +91,12 @@ const restuarants = [
     rating: 4.7,
     review_count: 177,
     distance: 10,
-    categories: [{title: 'Thai'}],
+    categories: [{ title: 'Thai' }],
     location: {
-      city: 'Rancho Cucamonga',
+      city: 'Rancho Cucamonga'
     },
     is_closed: true,
-    transactions: ['pickup', 'delivery'],
+    transactions: ['pickup', 'delivery']
   },
   {
     name: "Alina's Lebanese Cuisine",
@@ -107,12 +106,12 @@ const restuarants = [
     rating: 4.4,
     review_count: 177,
     distance: 4.6,
-    categories: [{title: 'Middle Eastern'}],
+    categories: [{ title: 'Middle Eastern' }],
     location: {
-      city: 'Ontario',
+      city: 'Ontario'
     },
     is_closed: false,
-    transactions: ['pickup', 'delivery'],
+    transactions: ['pickup', 'delivery']
   },
   {
     name: "Leo's Taco Truck",
@@ -122,12 +121,12 @@ const restuarants = [
     rating: 4.9,
     review_count: 177,
     distance: 47,
-    categories: [{title: 'Mexican'}],
+    categories: [{ title: 'Mexican' }],
     location: {
-      city: 'Los Angeles',
+      city: 'Los Angeles'
     },
     is_closed: true,
-    transactions: ['pickup'],
+    transactions: ['pickup']
   },
   {
     name: 'Aroma Grill',
@@ -137,12 +136,12 @@ const restuarants = [
     rating: 2.6,
     review_count: 177,
     distance: 6.7,
-    categories: [{title: 'Indian'}],
+    categories: [{ title: 'Indian' }],
     location: {
-      city: 'City of Industry',
+      city: 'City of Industry'
     },
     is_closed: true,
-    transactions: ['pickup', 'delivery'],
+    transactions: ['pickup', 'delivery']
   },
   {
     name: 'UPLAND GERMAN DELI',
@@ -152,12 +151,12 @@ const restuarants = [
     rating: 4.5,
     review_count: 177,
     distance: 2.1,
-    categories: [{title: 'European'}],
+    categories: [{ title: 'European' }],
     location: {
-      city: 'Upland',
+      city: 'Upland'
     },
     is_closed: true,
-    transactions: ['pickup', 'delivery'],
+    transactions: ['pickup', 'delivery']
   },
   {
     name: 'Lotus Garden',
@@ -167,12 +166,12 @@ const restuarants = [
     rating: 4.5,
     review_count: 177,
     distance: 2.1,
-    categories: [{title: 'Asian Fusion'}],
+    categories: [{ title: 'Asian Fusion' }],
     location: {
-      city: 'Upland',
+      city: 'Upland'
     },
     is_closed: true,
-    transactions: ['pickup', 'delivery', 'dine-in'],
+    transactions: ['pickup', 'delivery', 'dine-in']
   },
   {
     name: 'In-N-Out Burger',
@@ -182,42 +181,42 @@ const restuarants = [
     rating: 4.2,
     review_count: 177,
     distance: 2.1,
-    categories: [{title: 'American'}],
+    categories: [{ title: 'American' }],
     location: {
-      city: 'Upland',
+      city: 'Upland'
     },
     is_closed: true,
-    transactions: ['pickup'],
-  },
-];
+    transactions: ['pickup']
+  }
+]
 
 export default class RestaurantCard extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       index: 0,
       results: restuarants,
-      isHost: true,
-    };
+      isHost: true
+    }
   }
 
-  onSwiped = () => {
+  handleSwiped () {
     // transitionRef.current.animateNextTransition();
-    this.setState({index: this.state.index + 1});
-  };
+    this.setState({ index: this.state.index + 1 })
+  }
 
-  render() {
+  render () {
     return (
       <SafeAreaView style={styles.mainContainer}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Icon
-            name="angle-left"
+            name='angle-left'
             style={{
               color: hex,
               fontFamily: font,
               fontSize: 25,
               margin: '3%',
-              fontWeight: 'bold',
+              fontWeight: 'bold'
             }}
             onPress={() => this.props.navigation.navigate('Home')}
           />
@@ -226,8 +225,9 @@ export default class RestaurantCard extends React.Component {
               color: hex,
               fontFamily: font,
               fontSize: 20,
-              textAlign: 'left',
-            }}>
+              textAlign: 'left'
+            }}
+          >
             {this.state.isHost ? 'End' : 'Leave'}
           </Text>
         </View>
@@ -235,10 +235,10 @@ export default class RestaurantCard extends React.Component {
           cards={this.state.results}
           cardIndex={this.state.index}
           renderCard={card => <Card card={card} />}
-          onSwiper={this.onSwiped}
+          onSwiper={this.handleSwiped}
           stackSize={10}
           stackSeparation={0}
-          backgroundColor="transparent"
+          backgroundColor='transparent'
           animateOverlayLabelsOpacity
           // Overlay offsets adjusted to flex sizing. May need to be retested on different device
           overlayLabels={{
@@ -250,16 +250,16 @@ export default class RestaurantCard extends React.Component {
                   borderColor: 'red',
                   color: 'white',
                   borderWidth: 1,
-                  fontSize: 24,
+                  fontSize: 24
                 },
                 wrapper: {
                   flexDirection: 'column',
                   alignItems: 'flex-end',
                   justifyContent: 'flex-start',
                   marginTop: 20,
-                  marginLeft: -50,
-                },
-              },
+                  marginLeft: -50
+                }
+              }
             },
             right: {
               title: 'LIKE',
@@ -269,16 +269,16 @@ export default class RestaurantCard extends React.Component {
                   borderColor: 'green',
                   color: 'white',
                   borderWidth: 1,
-                  fontSize: 24,
+                  fontSize: 24
                 },
                 wrapper: {
                   flexDirection: 'column',
                   alignItems: 'flex-start',
                   justifyContent: 'flex-start',
                   marginTop: 20,
-                  marginLeft: 20,
-                },
-              },
+                  marginLeft: 20
+                }
+              }
             },
             bottom: {
               title: 'HATE',
@@ -288,16 +288,16 @@ export default class RestaurantCard extends React.Component {
                   borderColor: 'black',
                   color: 'white',
                   borderWidth: 1,
-                  fontSize: 24,
+                  fontSize: 24
                 },
                 wrapper: {
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'flex-start',
                   marginTop: 20,
-                  marginLeft: -20,
-                },
-              },
+                  marginLeft: -20
+                }
+              }
             },
             top: {
               title: 'LOVE',
@@ -307,31 +307,34 @@ export default class RestaurantCard extends React.Component {
                   borderColor: 'pink',
                   color: 'white',
                   borderWidth: 1,
-                  fontSize: 24,
+                  fontSize: 24
                 },
                 wrapper: {
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'flex-end',
                   marginTop: -50,
-                  marginLeft: -20,
-                },
-              },
-            },
+                  marginLeft: -20
+                }
+              }
+            }
           }}
         />
-        <Text
-          style={{
-            color: hex,
-            fontFamily: font,
-            fontSize: 20,
-            textAlign: 'center',
-            marginBottom: '5%',
-          }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: '5%' }}>
+          <Icon name='chevron-left' style={{ fontFamily: font, color: hex, fontSize: 18, marginRight: '5%' }} />
+          <Text
+            style={{
+              color: hex,
+              fontFamily: font,
+              fontSize: 20
+            }}
+          >
           Swipe!
-        </Text>
+          </Text>
+          <Icon name='chevron-right' style={{ fontFamily: font, color: hex, fontSize: 18, marginLeft: '5%' }} />
+        </View>
       </SafeAreaView>
-    );
+    )
   }
 }
 
@@ -341,8 +344,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-between',
-    backgroundColor: 'white',
-  },
+    backgroundColor: 'white'
+  }
 
   // Card area is now flexsized and takes 90% of the width of screen
   // cardContainer: {
@@ -353,4 +356,4 @@ const styles = StyleSheet.create({
   //   width: '90%',
   //   height: '80%',
   // },
-});
+})
