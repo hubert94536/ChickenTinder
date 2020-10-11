@@ -126,9 +126,8 @@ export default class FilterSelector extends React.Component {
     };
   }
 
-  handleUpdate = e => {
-    console.log(e);
-    this.setState({selectedCuisine: e});
+  handleUpdate = event => {
+    this.setState({selectedCuisine: event});
   };
 
   componentDidMount() {
@@ -312,7 +311,7 @@ export default class FilterSelector extends React.Component {
               all={tagsCuisine}
               selected={this.state.selectedCuisine}
               isExclusive={false}
-              onChange={e => this.handleUpdate(e)}
+              onChange={event => this.handleUpdate(event)}
             />
           </View>
           {this.state.isHost && (

@@ -4,6 +4,7 @@ import {Transitioning, Transition} from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import Card from './roundCard.js';
+import socket from './socket.js';
 
 const hex = '#F25763';
 const font = 'CircularStd-Medium';
@@ -206,6 +207,14 @@ export default class RestaurantCard extends React.Component {
     this.setState({index: this.state.index + 1});
   };
 
+  
+  endGroup() {
+    socket.endSession();
+    socket.getSocket().on('leave', res => {
+      this.props.navigation.navigate('Home');
+    });
+  }
+
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
@@ -219,7 +228,7 @@ export default class RestaurantCard extends React.Component {
               margin: '3%',
               fontWeight: 'bold',
             }}
-            onPress={() => this.props.navigation.navigate('Home')}
+            onPress={() => this.endGroup()}
           />
           <Text
             style={{

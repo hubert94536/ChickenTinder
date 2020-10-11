@@ -17,56 +17,7 @@ import {SearchBar} from 'react-native-elements';
 const hex = '#F25763';
 const font = 'CircularStd-Bold';
 const height = Dimensions.get('window').height;
-const people = [
-  {
-    name: 'Hanna Co',
-    username: '@hannaco',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-  },
-  {
-    name: 'Hubert Chen',
-    username: '@hubesc',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-  },
-  {
-    name: 'Isha Gonu',
-    username: '@ishagonu',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-  },
-  {
-    name: 'Ruth Lee',
-    username: '@ruthlee',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-  },
-  {
-    name: 'Michelle Chan',
-    username: '@mishigan',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-  },
-  {
-    name: 'Janice Tsai',
-    username: '@jopanice',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-  },
-  {
-    name: 'Tiffany Chao',
-    username: '@tiffanychao',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-  },
-  {
-    name: 'Kyle Blake',
-    username: '@theekyleblake',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-  },
-];
+
 export default class ChooseFriends extends React.Component {
   constructor(props) {
     super(props);
@@ -84,9 +35,6 @@ export default class ChooseFriends extends React.Component {
       .getFriends()
       .then(res => {
         var pushFriends = [];
-        var friendOrRequest = this.state.isFriends
-          ? 'Accepted'
-          : 'Pending Request';
         for (var friend in res.friendList) {
           if (res.friendList[friend].status === 'Accepted') {
             pushFriends.push(res.friendList[friend]);
