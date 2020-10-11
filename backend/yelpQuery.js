@@ -19,15 +19,17 @@ const getRestaurants = (req) => {
           total: res.data.total,
           businessList: res.data.businesses.map(business => {
             return {
+              id: business.id,
               name: business.name,
-              distance: business.distance,
-              categories: business.categories,
+              distance: business.distance / 1600,
               reviewCount: business.review_count,
               rating: business.rating,
               price: business.price,
               phone: business.display_phone,
               location: business.location,
-              isClosed: business.is_closed
+              latitude: business.region.center.latitude,
+              longitude: business.region.center.longitude,
+              url: business.url
             }
           })
         }

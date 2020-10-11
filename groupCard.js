@@ -1,40 +1,40 @@
-import React from 'react';
-import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import socket from './socket.js';
+import React from 'react'
+import { View, Text, StyleSheet, Image, Dimensions } from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import socket from './socket.js'
 
-const hex = '#F25763';
-const font = 'CircularStd-Medium';
+const hex = '#F25763'
+const font = 'CircularStd-Medium'
 
 export default class Card extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
-      id: this.props.id,
-    };
+      id: this.props.id
+    }
   }
 
-  removeUser = username => {
-    socket.kickUser(username);
+  removeUser (username) {
+    socket.kickUser(username)
   };
 
-  render() {
+  render () {
     return (
       <View>
         <View style={styles.card}>
           <Image
-            source={{uri: this.props.image}}
+            source={{ uri: this.props.image }}
             style={this.props.filters ? styles.image : styles.imageFalse}
           />
           {this.props.filters ? (
             <Icon
-              name="check-circle"
+              name='check-circle'
               style={{
                 color: hex,
                 fontSize: 20,
                 position: 'absolute',
                 marginLeft: '14%',
-                marginTop: '1%',
+                marginTop: '1%'
               }}
             />
           ) : null}
@@ -42,44 +42,48 @@ export default class Card extends React.Component {
             style={{
               alignSelf: 'center',
               marginLeft: '3%',
-              flex: 1,
-            }}>
+              flex: 1
+            }}
+          >
             <Text
               style={{
                 color: hex,
                 fontWeight: 'bold',
-                fontFamily: font,
-              }}>
+                fontFamily: font
+              }}
+            >
               {this.props.name}
             </Text>
             <Text
               style={{
                 color: hex,
-                fontFamily: font,
-              }}>
+                fontFamily: font
+              }}
+            >
               {'@' + this.props.username}
             </Text>
           </View>
-          <View style={{flex: 1, flexDirection: 'row'}}>
-            {this.props.username != this.props.host ? (
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            {this.props.username !== this.props.host ? (
               <Text
                 style={{
                   color: hex,
                   alignSelf: 'center',
                   fontFamily: font,
-                  marginLeft: '30%',
-                }}>
+                  marginLeft: '30%'
+                }}
+              >
                 Remove
               </Text>
             ) : null}
-            {this.props.username != this.props.host ? (
+            {this.props.username !== this.props.host ? (
               <Icon
-                name="times-circle"
+                name='times-circle'
                 style={{
                   color: hex,
                   fontSize: 35,
                   alignSelf: 'center',
-                  marginLeft: '5%',
+                  marginLeft: '5%'
                 }}
                 onPress={() => this.removeUser(this.props.username)}
               />
@@ -87,7 +91,7 @@ export default class Card extends React.Component {
           </View>
         </View>
       </View>
-    );
+    )
   }
 }
 
@@ -102,7 +106,7 @@ const styles = StyleSheet.create({
     margin: 0,
     marginTop: '3%',
     flexDirection: 'row',
-    flex: 1,
+    flex: 1
   },
   image: {
     borderRadius: 63,
@@ -112,7 +116,7 @@ const styles = StyleSheet.create({
     borderColor: hex,
     alignSelf: 'flex-start',
     marginTop: '3.5%',
-    marginLeft: '2.5%',
+    marginLeft: '2.5%'
   },
   imageFalse: {
     borderRadius: 63,
@@ -122,6 +126,6 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginTop: '3.5%',
     marginBottom: '3.5%',
-    marginLeft: '2.5%',
-  },
-});
+    marginLeft: '2.5%'
+  }
+})

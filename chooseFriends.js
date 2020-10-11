@@ -1,35 +1,33 @@
-import React, {Component} from 'react';
+import React from 'react'
 import {
   StyleSheet,
   Text,
   View,
-  TouchableHighlight,
   Modal,
   FlatList,
-  Dimensions,
-} from 'react-native';
-import friendsApi from './friendsApi.js';
-import {BlurView} from '@react-native-community/blur';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Card from './chooseCard.js';
-import {SearchBar} from 'react-native-elements';
+  Dimensions
+} from 'react-native'
+import { SearchBar } from 'react-native-elements'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import Card from './chooseCard.js'
+import friendsApi from './friendsApi.js'
 
 const hex = '#F25763';
 const font = 'CircularStd-Bold';
 const height = Dimensions.get('window').height;
 
 export default class ChooseFriends extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       data: people,
       friends: people,
-      search: '',
-    };
-    this.getFriends();
+      search: ''
+    }
+    this.getFriends()
   }
 
-  getFriends() {
+  getFriends () {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
       .getFriends()
@@ -37,43 +35,41 @@ export default class ChooseFriends extends React.Component {
         var pushFriends = [];
         for (var friend in res.friendList) {
           if (res.friendList[friend].status === 'Accepted') {
-            pushFriends.push(res.friendList[friend]);
+            pushFriends.push(res.friendList[friend])
           }
         }
-        this.setState({friends: pushFriends, data: pushFriends});
+        this.setState({ friends: pushFriends, data: pushFriends })
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
   }
 
-  handlePress() {
-    this.props.press();
+  handlePress () {
+    this.props.press()
   }
 
-  searchFilterFunction = text => {
-    this.setState({
-      search: text,
-    });
+  searchFilterFunction (text) {
+    this.setState({ search: text })
 
     const newData = this.state.data.filter(item => {
-      const itemData = `${item.name.toUpperCase()} ${item.username.toUpperCase()}`;
+      const itemData = `${item.name.toUpperCase()} ${item.username.toUpperCase()}`
 
-      const textData = text.toUpperCase();
+      const textData = text.toUpperCase()
 
-      return itemData.indexOf(textData) > -1;
-    });
+      return itemData.indexOf(textData) > -1
+    })
 
-    this.setState({friends: newData});
-  };
+    this.setState({ friends: newData })
+  }
 
-  render() {
+  render () {
     return (
-      <Modal animationType="none" transparent={true}>
+      <Modal animationType='none' transparent>
         <View style={styles.container}>
           <View style={styles.main}>
             <View style={styles.header}>
               <Text style={styles.headertext}>Friends</Text>
               <Icon
-                name="times-circle"
+                name='times-circle'
                 style={styles.icon}
                 onPress={() => this.handlePress()}
               />
@@ -85,33 +81,33 @@ export default class ChooseFriends extends React.Component {
                 borderTopColor: 'transparent',
                 width: '100%',
                 height: 45,
-                alignSelf: 'center',
+                alignSelf: 'center'
               }}
               inputContainerStyle={{
                 height: 7,
                 width: '90%',
                 alignSelf: 'center',
-                backgroundColor: '#ebecf0',
+                backgroundColor: '#ebecf0'
               }}
               inputStyle={{
                 fontFamily: font,
-                fontSize: 15,
+                fontSize: 15
               }}
-              placeholder="Search by username"
+              placeholder='Search by username'
               onChangeText={text => this.searchFilterFunction(text)}
               value={this.state.search}
-              lightTheme={true}
-              round={true}
+              lightTheme
+              round
             />
             <FlatList
-              style={{marginLeft: '5%', marginRight: '5%', marginBottom: '10%'}}
+              style={{ marginLeft: '5%', marginRight: '5%', marginBottom: '10%' }}
               data={this.state.friends}
-              renderItem={({item}) => (
+              renderItem={({ item }) => (
                 <Card
                   name={item.name}
                   username={item.username}
                   image={item.image}
-                  added={true}
+                  added
                 />
               )}
               keyExtractor={item => item.username}
@@ -119,7 +115,7 @@ export default class ChooseFriends extends React.Component {
           </View>
         </View>
       </Modal>
-    );
+    )
   }
 }
 
@@ -128,7 +124,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     height: height,
     alignSelf: 'center',
-    width: '90%',
+    width: '90%'
   },
   main: {
     flex: 1,
@@ -136,23 +132,23 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignSelf: 'center',
     borderRadius: 30,
-    elevation: 20,
+    elevation: 20
   },
   header: {
     height: '10%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-between'
   },
   icon: {
     color: hex,
     fontSize: 25,
     alignSelf: 'center',
-    margin: '4%',
+    margin: '4%'
   },
   headertext: {
     fontFamily: font,
     color: hex,
     margin: '4%',
-    fontSize: 20,
-  },
-});
+    fontSize: 20
+  }
+})
