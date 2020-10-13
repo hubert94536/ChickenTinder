@@ -1,7 +1,4 @@
-/*
-    Filter Selection Menu
-*/
-import React from 'react'
+import React from 'react';
 import {
   StyleSheet,
   ScrollView,

@@ -204,18 +204,43 @@ const restuarants = [
 ]
 
 export default class RestaurantCard extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       index: 0,
       results: restuarants,
       isHost: true
     }
+    socket.getSocket().on('match', restaurant => {
+      console.log(restaurant)
+      // TODO: connect match here
+    })
+
+    socket.getSocket().on('exception', error => {
+      console.log(error)
+    })
   }
 
-  handleSwiped () {
+  handleSwiped() {
     // transitionRef.current.animateNextTransition();
     this.setState({ index: this.state.index + 1 })
+  }
+
+  likeRestaurant(resId) {
+    // uncomment and pass in host + restaurant id
+    // socket.likeRestaurant(this.state.host, resId)
+  }
+
+  endGroup() {
+    socket.endSession();
+    socket.getSocket().on('leave', res => {
+      this.props.navigation.navigate('Home');
+    });
+  }
+
+  leaveGroup () {
+    socket.leaveRoom()
+    this.props.navigation.navigate('Home')
   }
 
   render () {
@@ -231,18 +256,20 @@ export default class RestaurantCard extends React.Component {
               margin: '3%',
               fontWeight: 'bold'
             }}
-            onPress={() => this.props.navigation.navigate('Home')}
+            onPress={() => this.endGroup()}
           />
-          <Text
-            style={{
-              color: hex,
-              fontFamily: font,
-              fontSize: 20,
-              textAlign: 'left'
-            }}
-          >
-            {this.state.isHost ? 'End' : 'Leave'}
-          </Text>
+          <TouchableHighlight onPress={() => this.endGroup()}>
+            <Text
+              style={{
+                color: hex,
+                fontFamily: font,
+                fontSize: 20,
+                textAlign: 'left'
+              }}
+            >
+              {this.state.isHost ? 'End' : 'Leave'}
+            </Text>
+          </TouchableHighlight>
         </View>
         <Swiper
           cards={this.state.results}
@@ -345,7 +372,7 @@ export default class RestaurantCard extends React.Component {
               fontSize: 20
             }}
           >
-          Swipe!
+            Swipe!
           </Text>
           <Icon name='chevron-right' style={{ fontFamily: font, color: hex, fontSize: 18, marginLeft: '5%' }} />
         </View>

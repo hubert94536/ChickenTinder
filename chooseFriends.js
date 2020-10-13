@@ -12,59 +12,10 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Card from './chooseCard.js'
 import friendsApi from './friendsApi.js'
 
-const hex = '#F25763'
-const font = 'CircularStd-Bold'
-const height = Dimensions.get('window').height
-const people = [
-  {
-    name: 'Hanna Co',
-    username: '@hannaco',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg'
-  },
-  {
-    name: 'Hubert Chen',
-    username: '@hubesc',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg'
-  },
-  {
-    name: 'Isha Gonu',
-    username: '@ishagonu',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg'
-  },
-  {
-    name: 'Ruth Lee',
-    username: '@ruthlee',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg'
-  },
-  {
-    name: 'Michelle Chan',
-    username: '@mishigan',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg'
-  },
-  {
-    name: 'Janice Tsai',
-    username: '@jopanice',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg'
-  },
-  {
-    name: 'Tiffany Chao',
-    username: '@tiffanychao',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg'
-  },
-  {
-    name: 'Kyle Blake',
-    username: '@theekyleblake',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg'
-  }
-]
+const hex = '#F25763';
+const font = 'CircularStd-Bold';
+const height = Dimensions.get('window').height;
+
 export default class ChooseFriends extends React.Component {
   constructor (props) {
     super(props)
@@ -81,10 +32,7 @@ export default class ChooseFriends extends React.Component {
     friendsApi
       .getFriends()
       .then(res => {
-        var pushFriends = []
-        // var friendOrRequest = this.state.isFriends
-        //   ? 'Accepted'
-        //   : 'Pending Request'
+        var pushFriends = [];
         for (var friend in res.friendList) {
           if (res.friendList[friend].status === 'Accepted') {
             pushFriends.push(res.friendList[friend])
