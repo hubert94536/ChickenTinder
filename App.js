@@ -53,11 +53,13 @@
 
 import React from 'react'
 import FilterSelector from './filter.js'
+import Group from './group.js'
+import RestaurantCard from './round.js'
 
 export default class App extends React.Component{
   render () {
     return (
-      <FilterSelector isHost/>
+      <RestaurantCard/>
     )
   }
 }

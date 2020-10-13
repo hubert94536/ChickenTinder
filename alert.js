@@ -88,12 +88,12 @@ const styles = StyleSheet.create({
   modal: {
     flex: 1,
     width: '80%',
-    margin: '3%',
+    // margin: '3%',
     backgroundColor: 'white',
     alignSelf: 'center',
     borderRadius: 40,
-    elevation: 20
-    // margin: '50%'
+    elevation: 20,
+    margin: '50%'
   },
   title: {
     fontFamily: font,

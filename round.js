@@ -3,6 +3,7 @@ import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Swiper from 'react-native-deck-swiper'
 import Card from './roundCard.js'
+import socket from './socket.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -20,6 +21,7 @@ const restuarants = [
     location: {
       city: 'Sawtelle'
     },
+    id: 'Chinchikurin',
     is_closed: true,
     transactions: ['pickup', 'delivery']
   },
@@ -35,6 +37,7 @@ const restuarants = [
     location: {
       city: 'Upland'
     },
+    id: 'Padua Pasta Makers',
     is_closed: false,
     transactions: ['pickup', 'delivery']
   },
@@ -50,6 +53,7 @@ const restuarants = [
     location: {
       city: 'Arcadia'
     },
+    id: 'Din Tai Fung',
     is_closed: false,
     transactions: ['pickup']
   },
@@ -65,6 +69,7 @@ const restuarants = [
     location: {
       city: 'Rowland Heights'
     },
+    id: 'BCD Tofu House',
     is_closed: false,
     transactions: ['pickup']
   },
@@ -80,6 +85,7 @@ const restuarants = [
     location: {
       city: 'Upland'
     },
+    id: 'Zaky Mediterranean Grill',
     is_closed: true,
     transactions: ['pickup', 'delivery']
   },
@@ -95,6 +101,7 @@ const restuarants = [
     location: {
       city: 'Rancho Cucamonga'
     },
+    id: 'Riceberry Thai Kitchen',
     is_closed: true,
     transactions: ['pickup', 'delivery']
   },
@@ -110,6 +117,7 @@ const restuarants = [
     location: {
       city: 'Ontario'
     },
+    id: "Alina's Lebanese Cuisine",
     is_closed: false,
     transactions: ['pickup', 'delivery']
   },
@@ -125,6 +133,7 @@ const restuarants = [
     location: {
       city: 'Los Angeles'
     },
+    id: "Leo's Taco Truck",
     is_closed: true,
     transactions: ['pickup']
   },
@@ -140,6 +149,7 @@ const restuarants = [
     location: {
       city: 'City of Industry'
     },
+    id: 'Aroma Grill',
     is_closed: true,
     transactions: ['pickup', 'delivery']
   },
@@ -155,6 +165,7 @@ const restuarants = [
     location: {
       city: 'Upland'
     },
+    id: 'UPLAND GERMAN DELI',
     is_closed: true,
     transactions: ['pickup', 'delivery']
   },
@@ -170,6 +181,7 @@ const restuarants = [
     location: {
       city: 'Upland'
     },
+    id: 'Lotus Garden',
     is_closed: true,
     transactions: ['pickup', 'delivery', 'dine-in']
   },
@@ -185,6 +197,7 @@ const restuarants = [
     location: {
       city: 'Upland'
     },
+    id: 'In-N-Out Burger',
     is_closed: true,
     transactions: ['pickup']
   }
@@ -237,6 +250,9 @@ export default class RestaurantCard extends React.Component {
           renderCard={card => <Card card={card} />}
           onSwiper={this.handleSwiped}
           stackSize={10}
+          disableBottomSwipe
+          disableTopSwipe
+          onSwipedRight={(cardIndex) => socket.likeRestaurant(this.state.results[cardIndex].id)}
           stackSeparation={0}
           backgroundColor='transparent'
           animateOverlayLabelsOpacity
