@@ -208,11 +208,12 @@ export default class RestaurantCard extends React.Component {
     super(props)
     this.state = {
       index: 0,
-      results: restuarants,
+      results: this.props.navigation.state.params.results,
       isHost: true
     }
     socket.getSocket().on('match', restaurant => {
       console.log(restaurant)
+      this.props.navigation.navigate('Match', {match: restaurant})
       // TODO: connect match here
     })
 
@@ -228,7 +229,7 @@ export default class RestaurantCard extends React.Component {
 
   likeRestaurant(resId) {
     // uncomment and pass in host + restaurant id
-    // socket.likeRestaurant(this.state.host, resId)
+    socket.likeRestaurant(this.state.host, resId)
   }
 
   endGroup() {
@@ -279,7 +280,7 @@ export default class RestaurantCard extends React.Component {
           stackSize={10}
           disableBottomSwipe
           disableTopSwipe
-          onSwipedRight={(cardIndex) => socket.likeRestaurant(this.state.results[cardIndex].id)}
+          onSwipedRight={(cardIndex) => this.likeRestaurant(this.state.results[cardIndex].id)}
           stackSeparation={0}
           backgroundColor='transparent'
           animateOverlayLabelsOpacity

@@ -38,7 +38,8 @@ export default class Group extends React.Component {
       // show/hide the alerts
       leaveAlert: false,
       endAlert: false,
-      swipe: true
+      swipe: true,
+      filters: {}
     }
     this.updateMemberList()
 
@@ -60,7 +61,7 @@ export default class Group extends React.Component {
 
     socket.getSocket().on('start', restaurants => {
       console.log(restaurants)
-      this.props.navigation.navigate('Round', restaurants)
+      this.props.navigation.navigate('Round', {results: restaurants})
     })
 
     socket.getSocket().on('exception', error => {
@@ -128,9 +129,10 @@ export default class Group extends React.Component {
       : this.setState({ leaveAlert: false })
   }
 
-  submitFilters () {
+  submitFilters (setFilters) {
     this.refs.swiper.scrollBy(-1)
     this.setState({ swipe: false })
+    this.setState({ filters: setFilters })
   }
 
   componentDidMount () {
@@ -301,7 +303,7 @@ export default class Group extends React.Component {
         <FilterSelector
           host={this.state.host}
           isHost={this.state.host === this.state.username}
-          press={() => this.submitFilters()}
+          press={setFilters => this.submitFilters(setFilters)}
         />
       </Swiper>
     )

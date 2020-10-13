@@ -4,7 +4,8 @@ import {
   Text,
   StyleSheet,
   Dimensions,
-  TouchableHighlight
+  TouchableHighlight,
+  Linking
 } from 'react-native'
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -17,7 +18,8 @@ export default class Match extends React.Component {
     super(props)
     this.state = {
       endRound: false,
-      goToYelp: false
+      goToYelp: false,
+      restaurant: this.props.navigation.state.params.match
     }
   }
 
@@ -45,20 +47,20 @@ export default class Match extends React.Component {
             fontWeight: 'bold'
           }}
         >
-          {this.props.restaurant}
+          {this.state.restaurant.name}
         </Text>
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
           region={{
-            latitude: this.props.lat,
-            longitude: this.props.long,
+            latitude: this.state.restaurant.latitude,
+            longitude: this.state.restaurant.longitude,
             latitudeDelta: 0.015,
             longitudeDelta: 0.015
           }}
         >
           <Marker
-            coordinate={{ latitude: this.props.lat, longitude: this.props.long }}
+            coordinate={{ latitude: this.state.restaurant.latitude, longitude: this.state.restaurant.longitude }}
           />
         </MapView>
         <TouchableHighlight
@@ -96,6 +98,8 @@ export default class Match extends React.Component {
             borderRadius: 30,
             alignSelf: 'center'
           }}
+
+          onPress={() => Linking.openURL(this.state.restaurant.url)}
         >
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <Icon

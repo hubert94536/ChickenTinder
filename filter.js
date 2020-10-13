@@ -230,8 +230,8 @@ export default class FilterSelector extends React.Component {
     return categories
   }
 
-  handlePress () {
-    this.props.press()
+  handlePress (setFilters) {
+    this.props.press(setFilters)
   }
 
   evaluateFilters () {
@@ -259,7 +259,7 @@ export default class FilterSelector extends React.Component {
       filters.latitude = this.state.lat
       filters.longitude = this.state.long
       Socket.submitFilters(filters, this.state.host)
-      this.handlePress()
+      this.handlePress(filters)
     } else {
       if (
         this.state.isHost &&
@@ -270,7 +270,7 @@ export default class FilterSelector extends React.Component {
       } else {
         filters.location = this.state.location
         Socket.submitFilters(filters, this.state.host)
-        this.handlePress()
+        this.handlePress(filters)
       }
       // else if (true) {
       // this.setState({formatAlert: true});
