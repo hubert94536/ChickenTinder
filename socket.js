@@ -1,5 +1,5 @@
-import io from 'socket.io-client'
 import AsyncStorage from '@react-native-community/async-storage'
+import io from 'socket.io-client'
 import { USERNAME, NAME, PHOTO } from 'react-native-dotenv'
 
 var myUsername = ''

@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
+//  cards for when you're choosing friends for your group
 export default class Card extends React.Component {
   constructor(props) {
     super(props)

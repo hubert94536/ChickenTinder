@@ -1,7 +1,7 @@
 import React from 'react'
-import { Image, StyleSheet, View, Text, Dimensions, Linking } from 'react-native'
+import { Dimensions, Image, Linking, StyleSheet, Text, View } from 'react-native'
+import { faMapMarkerAlt, faUtensils } from '@fortawesome/free-solid-svg-icons'
 import { faStar } from '@fortawesome/free-regular-svg-icons'
-import { faUtensils, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { TouchableHighlight } from 'react-native-gesture-handler'
@@ -17,6 +17,7 @@ export default class Card extends React.Component {
     }
   }
 
+  // getting which stars to display
   getStarPath(rating) {
     switch (rating) {
       case 0:
@@ -42,6 +43,7 @@ export default class Card extends React.Component {
     }
   }
 
+  // get image based on cuisine
   getCuisine(category) {
     switch (category) {
       case 'American':
@@ -89,6 +91,7 @@ export default class Card extends React.Component {
   //     transactions: ['pickup', 'delivery'],
   //   },
 
+  // for each transaction, put into comma-separated string
   evaluateTransactions(transactions) {
     return transactions.map((item) => item).join(', ')
   }

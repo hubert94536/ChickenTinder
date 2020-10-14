@@ -1,67 +1,8 @@
 import React, { Component } from 'react'
-import { View, Text, FlatList, StyleSheet, Dimensions } from 'react-native'
+import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native'
 import { SearchBar } from 'react-native-elements'
-import api from './api.js'
+import api from './accountsApi.js'
 import Card from './searchCard.js'
-
-// const people = [
-//   {
-//     name: 'Hanna Co',
-//     username: '@hannaco',
-//     image:
-//       'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-//     friends: true
-//   },
-//   {
-//     name: 'Hubert Chen',
-//     username: '@hubesc',
-//     image:
-//       'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-//     friends: false
-//   },
-//   {
-//     name: 'Isha Gonu',
-//     username: '@ishagonu',
-//     image:
-//       'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-//     friends: true
-//   },
-//   {
-//     name: 'Ruth Lee',
-//     username: '@ruthlee',
-//     image:
-//       'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-//     friends: false
-//   },
-//   {
-//     name: 'Michelle Chan',
-//     username: '@mishigan',
-//     image:
-//       'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-//     friends: true
-//   },
-//   {
-//     name: 'Janice Tsai',
-//     username: '@jopanice',
-//     image:
-//       'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-//     friends: false
-//   },
-//   {
-//     name: 'Kyle Blake',
-//     username: '@theekyleblake',
-//     image:
-//       'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-//     friends: true
-//   },
-//   {
-//     name: 'Brenna Waterman',
-//     username: '@brennajune',
-//     image:
-//       'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-//     friends: false
-//   }
-// ]
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -76,6 +17,7 @@ export default class Search extends Component {
     api.createFBUser('boo', 1, 'booo', 'boo@gmail.com', 'pic')
   }
 
+  // for rendering a separator b/w cards
   renderSeparator() {
     return (
       <View
@@ -89,6 +31,7 @@ export default class Search extends Component {
     )
   }
 
+  // searches and modifies the display
   searchFilterFunction(text) {
     this.setState({ value: text })
 
@@ -105,6 +48,7 @@ export default class Search extends Component {
     )
   }
 
+  // for displaying the header
   renderHeader() {
     return (
       <SearchBar

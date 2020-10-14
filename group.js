@@ -1,13 +1,13 @@
 import React from 'react'
-import { View, Text, StyleSheet, ScrollView, TouchableHighlight } from 'react-native'
+import { ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { USERNAME } from 'react-native-dotenv'
 import Swiper from 'react-native-swiper'
 import Alert from './alert.js'
 import Card from './groupCard.js'
 import FilterSelector from './filter.js'
 import socket from './socket.js'
+import { USERNAME } from 'react-native-dotenv'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -26,13 +26,13 @@ export default class Group extends React.Component {
       host: this.props.navigation.state.params.host,
       groupName: members[Object.keys(members)[0]].name.split(' ')[0],
       needFilters: Object.keys(members).filter((user) => !user.filters).length,
-      // needFilters: this.countNeedFilters(members),
       start: false,
       username: myUsername,
       // show/hide the alerts
       leaveAlert: false,
       endAlert: false,
       swipe: true,
+      filters: {},
     }
     this.updateMemberList()
 
@@ -54,7 +54,7 @@ export default class Group extends React.Component {
 
     socket.getSocket().on('start', (restaurants) => {
       console.log(restaurants)
-      this.props.navigation.navigate('Round', restaurants)
+      this.props.navigation.navigate('Round', { results: restaurants })
     })
 
     socket.getSocket().on('exception', (error) => {
@@ -95,10 +95,12 @@ export default class Group extends React.Component {
     }
   }
 
+  // changing button appearance
   underlayShow() {
     this.setState({ start: true })
   }
 
+  // changing button appearance
   underlayHide() {
     this.setState({ start: false })
   }
@@ -115,15 +117,18 @@ export default class Group extends React.Component {
     })
   }
 
+  // shows proper alert based on if user is host
   cancelAlert() {
     this.state.host === this.state.username
       ? this.setState({ endAlert: false })
       : this.setState({ leaveAlert: false })
   }
 
-  submitFilters() {
+  // sets the filters, goes back to groups and stops user from going back to filters
+  submitFilters(setFilters) {
     this.refs.swiper.scrollBy(-1)
     this.setState({ swipe: false })
+    this.setState({ filters: setFilters })
   }
 
   componentDidMount() {
@@ -270,7 +275,7 @@ export default class Group extends React.Component {
         <FilterSelector
           host={this.state.host}
           isHost={this.state.host === this.state.username}
-          press={() => this.submitFilters()}
+          press={(setFilters) => this.submitFilters(setFilters)}
         />
       </Swiper>
     )

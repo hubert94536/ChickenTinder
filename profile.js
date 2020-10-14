@@ -1,16 +1,15 @@
 import React, { Component } from 'react'
 import {
+  Dimensions,
+  Image,
+  Keyboard,
+  Modal,
   StyleSheet,
   Text,
-  View,
-  Image,
-  TouchableHighlight,
   TextInput,
-  Modal,
-  Dimensions,
-  Keyboard,
+  TouchableHighlight,
+  View,
 } from 'react-native'
-import { NAME, USERNAME, PHOTO } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -19,6 +18,7 @@ import Alert from './alert.js'
 import api from './accountsApi.js'
 import { facebookService } from './facebookService.js'
 import Friends from './friends.js'
+import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -26,6 +26,7 @@ var img = ''
 var name = ''
 var username = ''
 
+//  gets user info
 AsyncStorage.getItem(PHOTO).then((res) => (img = res))
 AsyncStorage.getItem(NAME).then((res) => (name = res))
 AsyncStorage.getItem(USERNAME).then((res) => (username = res))
@@ -42,7 +43,7 @@ export default class UserProfileView extends Component {
       visible: false,
       changeName: false,
       changeUser: false,
-      // show button appearance
+      // button appearance
       logout: false,
       delete: false,
       // show alert
@@ -116,14 +117,17 @@ export default class UserProfileView extends Component {
       })
   }
 
+  // close alert for taken username
   closeTaken() {
     this.setState({ takenAlert: false })
   }
 
+  // close alert for error
   closeError() {
     this.setState({ errorAlert: false })
   }
 
+  // cancel deleting your account
   cancelDelete() {
     this.setState({ deleteAlert: false })
   }

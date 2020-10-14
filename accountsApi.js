@@ -1,44 +1,6 @@
+import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
 import { ID } from 'react-native-dotenv'
-// import { View, Text, PermissionsAndroid } from 'react-native'
-import AsyncStorage from '@react-native-community/async-storage'
-
-// import {globalAgent} from 'http';
-// import Geolocation from '@react-native-community/geolocation';
-
-// const App = () => {
-//   Geolocation.getCurrentPosition(data => console.warn(data));
-//   console.warn('Geolocation');
-//   return (
-//     <View>
-//       <Text style={{fontSize: 70}}>latitude longitude</Text>
-//     </View>
-//   );
-// };
-
-// const requestLocationPermission = async () => {
-//   try {
-//     const granted = await PermissionsAndroid.request(
-//       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-//       {
-//         title: 'Location Permission',
-//         message:
-//           'WeChews needs access to your location ' +
-//           'so you can find nearby restaurants.',
-//         buttonNeutral: 'Ask Me Later',
-//         buttonNegative: 'Cancel',
-//         buttonPositive: 'OK',
-//       },
-//     );
-//     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-//       console.log('Location access granted');
-//     } else {
-//       console.log('Location access denied');
-//     }
-//   } catch (err) {
-//     console.warn(err);
-//   }
-// };
 
 var myId = ''
 

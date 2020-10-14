@@ -1,9 +1,9 @@
 import React from 'react'
-import { StyleSheet, TouchableHighlight, View, Text, TextInput } from 'react-native'
+import { StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
-import { NAME, USERNAME, ID, UID, EMAIL, PHOTO } from 'react-native-dotenv'
 import Alert from './alert.js'
 import api from './accountsApi.js'
+import { NAME, USERNAME, ID, UID, EMAIL, PHOTO } from 'react-native-dotenv'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -24,14 +24,17 @@ class Username extends React.Component {
     }
   }
 
+  // closes taken alert
   closeTaken() {
     this.setState({ takenAlert: false })
   }
 
+  // closes error alert
   closeError() {
     this.setState({ errorAlert: false })
   }
 
+  // gets users information once component mounts
   async componentDidMount() {
     this.setState({
       name: await AsyncStorage.getItem(NAME),
@@ -42,14 +45,17 @@ class Username extends React.Component {
     })
   }
 
+  // adjusting the look of button
   underlayShow() {
     this.setState({ pressed: true })
   }
 
+  // adjusting the look of button
   underlayHide() {
     this.setState({ pressed: false })
   }
 
+  //  checks whether or not the username can be set
   handleClick() {
     api
       .checkUsername(this.state.username)
@@ -78,37 +84,11 @@ class Username extends React.Component {
 
   render() {
     return (
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'column',
-          backgroundColor: 'white',
-        }}
-      >
-        <Text
-          style={{
-            fontFamily: font,
-            color: hex,
-            fontSize: 40,
-            marginTop: '8%',
-            marginLeft: '3%',
-            textAlign: 'left',
-          }}
-        >
-          'Chews' a username!
-        </Text>
+      <View style={styles.mainContainer}>
+        <Text style={styles.header}>'Chews' a username!</Text>
         <View style={{ marginTop: '35%' }}>
           <TextInput
-            style={{
-              fontFamily: font,
-              color: hex,
-              fontSize: 25,
-              alignSelf: 'center',
-              borderBottomColor: hex,
-              borderBottomWidth: 2.5,
-              margin: '3%',
-              width: '70%',
-            }}
+            style={styles.input}
             textAlign="left"
             placeholder="Enter a username"
             onChangeText={(username) => {
@@ -151,6 +131,29 @@ class Username extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: 'white',
+  },
+  header: {
+    fontFamily: font,
+    color: hex,
+    fontSize: 40,
+    marginTop: '8%',
+    marginLeft: '3%',
+    textAlign: 'left',
+  },
+  input: {
+    fontFamily: font,
+    color: hex,
+    fontSize: 25,
+    alignSelf: 'center',
+    borderBottomColor: hex,
+    borderBottomWidth: 2.5,
+    margin: '3%',
+    width: '70%',
+  },
   button: {
     fontFamily: font,
     borderRadius: 25,

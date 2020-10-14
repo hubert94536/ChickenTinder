@@ -1,14 +1,6 @@
 import React from 'react'
-import { StyleSheet, View, Text, TouchableHighlight } from 'react-native'
-// import AsyncStorage from '@react-native-community/async-storage'
-// import { ID } from 'react-native-dotenv'
+import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import socket from './socket.js'
-
-// var myId = ''
-
-// AsyncStorage.getItem(ID).then(res => {
-//   myId = res
-// })
 
 class Home extends React.Component {
   constructor() {
