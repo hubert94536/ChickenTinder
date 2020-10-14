@@ -1,10 +1,5 @@
 import React from 'react'
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableHighlight
-} from 'react-native'
+import { StyleSheet, View, Text, TouchableHighlight } from 'react-native'
 // import AsyncStorage from '@react-native-community/async-storage'
 // import { ID } from 'react-native-dotenv'
 import socket from './socket.js'
@@ -16,40 +11,40 @@ import socket from './socket.js'
 // })
 
 class Home extends React.Component {
-  constructor () {
+  constructor() {
     super()
     this.state = {
       createPressed: false,
-      profilePressed: false
+      profilePressed: false,
     }
     socket.connect()
-    socket.getSocket().on('reconnectRoom', res => console.log(res))
+    socket.getSocket().on('reconnectRoom', (res) => console.log(res))
   }
 
-  underlayShowCreate () {
+  underlayShowCreate() {
     this.setState({ createPressed: true })
   }
 
-  underlayHideCreate () {
+  underlayHideCreate() {
     this.setState({ createPressed: false })
   }
 
-  underlayShowProfile () {
+  underlayShowProfile() {
     this.setState({ profilePressed: true })
   }
 
-  underlayHideProfile () {
+  underlayHideProfile() {
     this.setState({ profilePressed: false })
   }
 
-  createGroup () {
+  createGroup() {
     socket.createRoom()
-    socket.getSocket().on('update', res => {
+    socket.getSocket().on('update', (res) => {
       this.props.navigation.navigate('Group', res)
     })
   }
 
-  componentDidMount () {
+  componentDidMount() {
     // uncomment if testing friends/requests
     // api.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
     // api.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
@@ -62,26 +57,24 @@ class Home extends React.Component {
     // friendsapi.acceptFriendRequest(2)
   }
 
-  render () {
+  render() {
     return (
       <View
         style={{
           flex: 1,
           backgroundColor: '#F25763',
-          justifyContent: 'center'
+          justifyContent: 'center',
         }}
       >
         <TouchableHighlight
           onShowUnderlay={this.underlayShowCreate.bind(this)}
           onHideUnderlay={this.underlayHideCreate.bind(this)}
           activeOpacity={1}
-          underlayColor='#fff'
+          underlayColor="#fff"
           style={styles.button}
           onPress={() => this.createGroup()}
         >
-          <Text
-            style={this.state.createPressed ? styles.yesPress : styles.noPress}
-          >
+          <Text style={this.state.createPressed ? styles.yesPress : styles.noPress}>
             Create Group
           </Text>
         </TouchableHighlight>
@@ -89,15 +82,11 @@ class Home extends React.Component {
           onShowUnderlay={this.underlayShowProfile.bind(this)}
           onHideUnderlay={this.underlayHideProfile.bind(this)}
           activeOpacity={1}
-          underlayColor='#fff'
+          underlayColor="#fff"
           style={styles.button}
           onPress={() => this.props.navigation.navigate('Profile')}
         >
-          <Text
-            style={
-              this.state.profilePressed ? styles.yesPress : styles.noPress
-            }
-          >
+          <Text style={this.state.profilePressed ? styles.yesPress : styles.noPress}>
             My Profile
           </Text>
         </TouchableHighlight>
@@ -116,22 +105,22 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     margin: '3%',
     flexDirection: 'column',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   yesPress: {
     textAlign: 'center',
     color: '#F25763',
     fontFamily: 'CircularStd-Medium',
     fontSize: 27,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   noPress: {
     textAlign: 'center',
     color: '#fff',
     fontFamily: 'CircularStd-Medium',
     fontSize: 27,
-    fontWeight: 'bold'
-  }
+    fontWeight: 'bold',
+  },
 })
 
 export default Home

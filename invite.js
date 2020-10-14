@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableHighlight,
-  Modal,
-  Image
-} from 'react-native'
+import { StyleSheet, Text, View, TouchableHighlight, Modal, Image } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
@@ -14,48 +7,42 @@ const hex = '#F25763'
 const font = 'CircularStd-Medium'
 //  props are name, image url, and functions for cancel and go
 export default class Invite extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
-      pressed: false
+      pressed: false,
     }
   }
 
-  render () {
+  render() {
     return (
       <View>
         <Text />
         <BlurView
-          blurType='light'
+          blurType="light"
           blurAmount={20}
-          reducedTransparencyFallbackColor='white'
+          reducedTransparencyFallbackColor="white"
           style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}
         />
-        <Modal transparent animationType='none'>
+        <Modal transparent animationType="none">
           <View style={styles.modal}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-              <Icon
-                name='times-circle'
-                style={styles.icon}
-                onPress={() => this.handleCancel()}
-              />
+              <Icon name="times-circle" style={styles.icon} onPress={() => this.handleCancel()} />
             </View>
             <View
               style={{
                 flex: 1,
-                justifyContent: 'space-evenly'
+                justifyContent: 'space-evenly',
               }}
             >
-              <View
-                style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}
-              >
+              <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
                 <Image source={{ uri: this.props.image }} style={styles.avatar} />
                 <View>
                   <Text
                     style={{
                       fontFamily: font,
                       color: hex,
-                      fontSize: 25
+                      fontSize: 25,
                     }}
                   >
                     {this.props.name}
@@ -64,7 +51,7 @@ export default class Invite extends React.Component {
                     style={{
                       fontFamily: font,
                       color: hex,
-                      fontSize: 25
+                      fontSize: 25,
                     }}
                   >
                     invites you to join!
@@ -81,14 +68,10 @@ export default class Invite extends React.Component {
                   borderWidth: 2.5,
                   borderRadius: 60,
                   width: '50%',
-                  alignSelf: 'center'
+                  alignSelf: 'center',
                 }}
               >
-                <Text
-                  style={this.state.pressed ? styles.textPressed : styles.text}
-                >
-                  Go
-                </Text>
+                <Text style={this.state.pressed ? styles.textPressed : styles.text}>Go</Text>
               </TouchableHighlight>
             </View>
           </View>
@@ -104,7 +87,7 @@ const styles = StyleSheet.create({
     color: hex,
     marginTop: '5%',
     marginRight: '5%',
-    fontSize: 30
+    fontSize: 30,
   },
   modal: {
     flex: 1,
@@ -114,7 +97,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignSelf: 'center',
     borderRadius: 40,
-    elevation: 20
+    elevation: 20,
     // margin: '50%'
   },
   text: {
@@ -123,7 +106,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingTop: '5%',
     paddingBottom: '5%',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   textPressed: {
     fontFamily: font,
@@ -131,12 +114,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingTop: '5%',
     paddingBottom: '5%',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   avatar: {
     width: 80,
     height: 80,
     borderRadius: 63,
-    borderWidth: 4
-  }
+    borderWidth: 4,
+  },
 })

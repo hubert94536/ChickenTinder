@@ -4,8 +4,8 @@ const axios = require('axios')
 const yelpApi = axios.create({
   baseURL: 'https://api.yelp.com/v3',
   headers: {
-    Authorization: `Bearer ${process.env.YELP_KEY}`
-  }
+    Authorization: `Bearer ${process.env.YELP_KEY}`,
+  },
 })
 
 // getting list of resturants
@@ -14,10 +14,10 @@ const getRestaurants = (req) => {
     yelpApi
       .get('/businesses/search', { params: req })
       // returns business info from Yelp
-      .then(res => {
+      .then((res) => {
         return {
           total: res.data.total,
-          businessList: res.data.businesses.map(business => {
+          businessList: res.data.businesses.map((business) => {
             return {
               id: business.id,
               name: business.name,
@@ -29,12 +29,12 @@ const getRestaurants = (req) => {
               location: business.location,
               latitude: business.region.center.latitude,
               longitude: business.region.center.longitude,
-              url: business.url
+              url: business.url,
             }
-          })
+          }),
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error.response)
         throw error.response.status
       })
@@ -42,5 +42,5 @@ const getRestaurants = (req) => {
 }
 
 module.exports = {
-  getRestaurants
+  getRestaurants,
 }

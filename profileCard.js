@@ -8,45 +8,45 @@ const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
 export default class Card extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       isFriend: this.props.friends,
       id: this.props.id,
       pressed: false,
       errorAlert: false,
-      deleteFriend: false
+      deleteFriend: false,
     }
   }
 
-  async acceptFriend () {
+  async acceptFriend() {
     friendsApi
       .acceptFriendRequest(this.state.id)
       .then(() => {
         this.setState({ isFriend: true })
       })
-      .catch(error => console.log(error))
+      .catch((error) => console.log(error))
   }
 
-  async deleteFriend () {
+  async deleteFriend() {
     friendsApi
       .removeFriendship(this.state.id)
       .then(() => {
         this.setState({ deleteFriend: false })
-        var filteredArray = this.props.total.filter(item => {
+        var filteredArray = this.props.total.filter((item) => {
           return item.username !== this.props.username
         })
         this.props.press(this.props.id, filteredArray, true)
       })
-      .catch(error => console.log(error))
+      .catch((error) => console.log(error))
   }
 
-  render () {
+  render() {
     return (
       <View style={{ flexDirection: 'row', flex: 1 }}>
         <Image
           source={{
-            uri: this.props.image
+            uri: this.props.image,
           }}
           style={{ borderRadius: 63, height: 60, width: 60, margin: '3%' }}
         />
@@ -54,7 +54,7 @@ export default class Card extends React.Component {
           style={{
             alignSelf: 'center',
             marginLeft: '1%',
-            flex: 1
+            flex: 1,
           }}
         >
           <Text style={{ fontFamily: font, fontWeight: 'bold', fontSize: 15 }}>
@@ -63,9 +63,7 @@ export default class Card extends React.Component {
           <Text style={{ fontFamily: font }}>@{this.props.username}</Text>
         </View>
         {this.state.isFriend && (
-          <TouchableHighlight
-            onPress={() => this.setState({ deleteFriend: true })}
-          >
+          <TouchableHighlight onPress={() => this.setState({ deleteFriend: true })}>
             <View style={{ flexDirection: 'row', flex: 1 }}>
               <Text
                 style={{
@@ -73,7 +71,7 @@ export default class Card extends React.Component {
                   color: hex,
                   fontSize: 15,
                   alignSelf: 'center',
-                  marginLeft: '25%'
+                  marginLeft: '25%',
                 }}
               >
                 Friends
@@ -84,9 +82,9 @@ export default class Card extends React.Component {
                   color: hex,
                   fontSize: 35,
                   alignSelf: 'center',
-                  marginLeft: '5%'
+                  marginLeft: '5%',
                 }}
-                name='check-circle'
+                name="check-circle"
               />
             </View>
           </TouchableHighlight>
@@ -94,7 +92,7 @@ export default class Card extends React.Component {
         {!this.state.isFriend && (
           <View style={{ flex: 1, flexDirection: 'row' }}>
             <TouchableHighlight
-              underlayColor='black'
+              underlayColor="black"
               onHideUnderlay={() => this.setState({ pressed: false })}
               onShowUnderlay={() => this.setState({ pressed: true })}
               onPress={() => this.acceptFriend()}
@@ -105,7 +103,7 @@ export default class Card extends React.Component {
                 height: '30%',
                 width: '50%',
                 marginLeft: '25%',
-                alignSelf: 'center'
+                alignSelf: 'center',
               }}
             >
               <Text
@@ -113,7 +111,7 @@ export default class Card extends React.Component {
                   fontFamily: font,
                   fontSize: 15,
                   textAlign: 'center',
-                  color: this.state.pressed ? 'white' : 'black'
+                  color: this.state.pressed ? 'white' : 'black',
                 }}
               >
                 Accept
@@ -124,11 +122,11 @@ export default class Card extends React.Component {
                 fontFamily: font,
                 fontSize: 30,
                 alignSelf: 'center',
-                margin: '5%'
+                margin: '5%',
               }}
-              name='times-circle'
+              name="times-circle"
               onPress={() => {
-                var filteredArray = this.props.total.filter(item => {
+                var filteredArray = this.props.total.filter((item) => {
                   return item.username !== this.props.username
                 })
                 this.props.press(this.props.id, filteredArray, false)
@@ -138,12 +136,10 @@ export default class Card extends React.Component {
         )}
         {this.state.deleteFriend && (
           <Alert
-            title='Are you sure?'
-            body={
-              'You are about to remove @' + this.props.username + ' as a friend'
-            }
+            title="Are you sure?"
+            body={'You are about to remove @' + this.props.username + ' as a friend'}
             button
-            buttonText='Delete'
+            buttonText="Delete"
             press={() => this.deleteFriend()}
             cancel={() => this.setState({ deleteFriend: false })}
           />

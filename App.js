@@ -21,32 +21,32 @@ if (user === null) {
 const RootStack = createStackNavigator(
   {
     Home: {
-      screen: Home
+      screen: Home,
     },
     Login: {
-      screen: Login
+      screen: Login,
     },
     Username: {
-      screen: Username
+      screen: Username,
     },
     Profile: {
-      screen: UserProfileView
+      screen: UserProfileView,
     },
     Group: {
-      screen: Group
+      screen: Group,
     },
     Round: {
-      screen: RestaurantCard
-    }
+      screen: RestaurantCard,
+    },
   },
   {
     initialRouteName: 'Home',
-    headerMode: 'none'
-  }
+    headerMode: 'none',
+  },
 )
 const AppContainer = createAppContainer(RootStack)
 export default class App extends React.Component {
-  render () {
+  render() {
     return <AppContainer />
   }
 }

@@ -6,20 +6,20 @@ const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
 export default class Card extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       requested: this.props.requested,
-      pressed: false
+      pressed: false,
     }
   }
 
-  render () {
+  render() {
     return (
       <View style={{ flexDirection: 'row', flex: 1 }}>
         <Image
           source={{
-            uri: this.props.image
+            uri: this.props.image,
           }}
           style={{ borderRadius: 63, height: 60, width: 60, margin: '3%' }}
         />
@@ -27,7 +27,7 @@ export default class Card extends React.Component {
           style={{
             alignSelf: 'center',
             marginLeft: '1%',
-            flex: 1
+            flex: 1,
           }}
         >
           <Text style={{ fontFamily: font, fontWeight: 'bold', fontSize: 15 }}>
@@ -36,15 +36,13 @@ export default class Card extends React.Component {
           <Text style={{ fontFamily: font }}>{this.props.username}</Text>
         </View>
         {this.state.requested && (
-          <View
-            style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
-          >
+          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Text
               style={{
                 fontFamily: font,
                 color: hex,
                 fontSize: 15,
-                alignSelf: 'center'
+                alignSelf: 'center',
               }}
             >
               Requested
@@ -55,23 +53,21 @@ export default class Card extends React.Component {
                 color: hex,
                 fontSize: 35,
                 alignSelf: 'center',
-                margin: '8%'
+                margin: '8%',
               }}
               onPress={() => this.setState({ requested: false })}
-              name='times-circle'
+              name="times-circle"
             />
           </View>
         )}
         {!this.state.requested && (
-          <View
-            style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
-          >
+          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Text
               style={{
                 fontFamily: font,
                 color: hex,
                 fontSize: 15,
-                alignSelf: 'center'
+                alignSelf: 'center',
               }}
             >
               Add
@@ -82,10 +78,10 @@ export default class Card extends React.Component {
                 color: hex,
                 fontSize: 35,
                 alignSelf: 'center',
-                margin: '8%'
+                margin: '8%',
               }}
               onPress={() => this.setState({ requested: true })}
-              name='plus-circle'
+              name="plus-circle"
             />
           </View>
         )}

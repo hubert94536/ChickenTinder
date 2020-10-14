@@ -10,7 +10,7 @@ const createFriends = async (req, res) => {
     const friend = req.body.params.friend
     await Friends.bulkCreate([
       { m_id: main, status: 'Requested', f_id: friend, f_info: friend, include: [Accounts] },
-      { m_id: friend, status: 'Pending Request', f_id: main, f_info: main, include: [Accounts] }
+      { m_id: friend, status: 'Pending Request', f_id: main, f_info: main, include: [Accounts] },
     ])
     return res.status(201).send('Friend requested')
   } catch (error) {
@@ -23,10 +23,12 @@ const getFriends = async (req, res) => {
   try {
     const friends = await Friends.findAll({
       where: { m_id: req.params.user },
-      include: [{
-        model: Accounts,
-        attributes: attributes
-      }]
+      include: [
+        {
+          model: Accounts,
+          attributes: attributes,
+        },
+      ],
     })
     return res.status(200).json({ friends })
   } catch (error) {
@@ -39,16 +41,22 @@ const acceptRequest = async (req, res) => {
   try {
     const main = req.params.user
     const friend = req.params.friend
-    const mainAccount = await Friends.update({ status: 'Accepted' }, {
-      where: {
-        [Op.and]: [{ m_id: main }, { f_id: friend }]
-      }
-    })
-    const friendAccount = await Friends.update({ status: 'Accepted' }, {
-      where: {
-        [Op.and]: [{ m_id: friend }, { f_id: main }]
-      }
-    })
+    const mainAccount = await Friends.update(
+      { status: 'Accepted' },
+      {
+        where: {
+          [Op.and]: [{ m_id: main }, { f_id: friend }],
+        },
+      },
+    )
+    const friendAccount = await Friends.update(
+      { status: 'Accepted' },
+      {
+        where: {
+          [Op.and]: [{ m_id: friend }, { f_id: main }],
+        },
+      },
+    )
     if (mainAccount && friendAccount) {
       return res.status(200).send('Friendship accepted')
     }
@@ -67,9 +75,9 @@ const deleteFriendship = async (req, res) => {
       where: {
         [Op.or]: [
           { [Op.and]: [{ m_id: friend }, { f_id: main }] },
-          { [Op.and]: [{ m_id: main }, { f_id: friend }] }
-        ]
-      }
+          { [Op.and]: [{ m_id: main }, { f_id: friend }] },
+        ],
+      },
     })
     if (destroyed) {
       return res.status(204).send('Friendship deleted')
@@ -84,5 +92,5 @@ module.exports = {
   createFriends,
   getFriends,
   acceptRequest,
-  deleteFriendship
+  deleteFriendship,
 }

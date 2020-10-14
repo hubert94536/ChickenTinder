@@ -1,11 +1,5 @@
 import React from 'react'
-import {
-  StyleSheet,
-  TouchableHighlight,
-  View,
-  Text,
-  TextInput
-} from 'react-native'
+import { StyleSheet, TouchableHighlight, View, Text, TextInput } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import { NAME, USERNAME, ID, UID, EMAIL, PHOTO } from 'react-native-dotenv'
 import Alert from './alert.js'
@@ -15,7 +9,7 @@ const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
 class Username extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       username: null,
@@ -26,59 +20,69 @@ class Username extends React.Component {
       photo: '',
       // showing alerts
       errorAlert: false,
-      takenAlert: false
+      takenAlert: false,
     }
   }
 
-  closeTaken () {
+  closeTaken() {
     this.setState({ takenAlert: false })
   }
 
-  closeError () {
+  closeError() {
     this.setState({ errorAlert: false })
   }
 
-  async componentDidMount () {
+  async componentDidMount() {
     this.setState({
       name: await AsyncStorage.getItem(NAME),
       uid: await AsyncStorage.getItem(UID),
       id: await AsyncStorage.getItem(ID),
       email: await AsyncStorage.getItem(EMAIL),
-      photo: await AsyncStorage.getItem(PHOTO)
+      photo: await AsyncStorage.getItem(PHOTO),
     })
   }
 
-  underlayShow () {
+  underlayShow() {
     this.setState({ pressed: true })
   }
 
-  underlayHide () {
+  underlayHide() {
     this.setState({ pressed: false })
   }
 
-  handleClick () {
-    api.checkUsername(this.state.username).then(() => {
-      AsyncStorage.setItem(USERNAME, this.state.username)
-      return api.createFBUser(this.state.name, this.state.id, this.state.username, this.state.email, this.state.photo).then(() => {
-        this.props.navigation.navigate('Home')
+  handleClick() {
+    api
+      .checkUsername(this.state.username)
+      .then(() => {
+        AsyncStorage.setItem(USERNAME, this.state.username)
+        return api
+          .createFBUser(
+            this.state.name,
+            this.state.id,
+            this.state.username,
+            this.state.email,
+            this.state.photo,
+          )
+          .then(() => {
+            this.props.navigation.navigate('Home')
+          })
       })
-    })
-      .catch(error => {
+      .catch((error) => {
         if (error === 404) {
           this.setState({ takenAlert: true })
         } else {
           this.setState({ errorAlert: true })
         }
       })
-  };
+  }
 
-  render () {
+  render() {
     return (
       <View
         style={{
           flex: 1,
           flexDirection: 'column',
-          backgroundColor: 'white'
+          backgroundColor: 'white',
         }}
       >
         <Text
@@ -88,7 +92,7 @@ class Username extends React.Component {
             fontSize: 40,
             marginTop: '8%',
             marginLeft: '3%',
-            textAlign: 'left'
+            textAlign: 'left',
           }}
         >
           'Chews' a username!
@@ -103,11 +107,11 @@ class Username extends React.Component {
               borderBottomColor: hex,
               borderBottomWidth: 2.5,
               margin: '3%',
-              width: '70%'
+              width: '70%',
             }}
-            textAlign='left'
-            placeholder='Enter a username'
-            onChangeText={username => {
+            textAlign="left"
+            placeholder="Enter a username"
+            onChangeText={(username) => {
               this.setState({ username })
             }}
             value={this.state.username}
@@ -120,25 +124,23 @@ class Username extends React.Component {
             onPress={() => this.handleClick()}
             style={styles.button}
           >
-            <Text style={this.state.pressed ? styles.yesPress : styles.noPress}>
-              Enter
-            </Text>
+            <Text style={this.state.pressed ? styles.yesPress : styles.noPress}>Enter</Text>
           </TouchableHighlight>
         </View>
         {this.state.errorAlert && (
           <Alert
-            title='Error, please try again'
+            title="Error, please try again"
             button
-            buttonText='Close'
+            buttonText="Close"
             press={() => this.closeError()}
             cancel={() => this.closeError()}
           />
         )}
         {this.state.takenAlert && (
           <Alert
-            title='Username taken!'
+            title="Username taken!"
             button
-            buttonText='Close'
+            buttonText="Close"
             press={() => this.closeTaken()}
             cancel={() => this.closeTaken()}
           />
@@ -157,20 +159,20 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     width: '70%',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   yesPress: {
     fontFamily: font,
     alignSelf: 'center',
     color: '#fff',
-    fontSize: 20
+    fontSize: 20,
   },
   noPress: {
     fontFamily: font,
     alignSelf: 'center',
     color: hex,
-    fontSize: 20
-  }
+    fontSize: 20,
+  },
 })
 
 export default Username

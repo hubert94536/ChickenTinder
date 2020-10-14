@@ -10,14 +10,14 @@ import { TouchableHighlight } from 'react-native-gesture-handler'
 const font = 'CircularStd-Medium'
 
 export default class Card extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
-      press: false
+      press: false,
     }
   }
 
-  getStarPath (rating) {
+  getStarPath(rating) {
     switch (rating) {
       case 0:
         return require('./assets/stars/0.png')
@@ -42,7 +42,7 @@ export default class Card extends React.Component {
     }
   }
 
-  getCuisine (category) {
+  getCuisine(category) {
     switch (category) {
       case 'American':
         return require('./assets/images/american.png')
@@ -89,11 +89,11 @@ export default class Card extends React.Component {
   //     transactions: ['pickup', 'delivery'],
   //   },
 
-  evaluateTransactions (transactions) {
-    return transactions.map(item => item).join(', ')
+  evaluateTransactions(transactions) {
+    return transactions.map((item) => item).join(', ')
   }
 
-  render () {
+  render() {
     // while (restuarants.length == 0) {
     //   return (
     //     <View style={styles.card}>
@@ -112,16 +112,13 @@ export default class Card extends React.Component {
     // }
     return (
       <View style={styles.card}>
-        <Image
-          source={this.getCuisine(this.props.card.categories[0].title)}
-          style={styles.image}
-        />
+        <Image source={this.getCuisine(this.props.card.categories[0].title)} style={styles.image} />
         <Text style={styles.title}>{this.props.card.name}</Text>
         <View
           style={{
             flexDirection: 'row',
             marginLeft: '10%',
-            marginRight: '3%'
+            marginRight: '3%',
           }}
         >
           <Image
@@ -137,9 +134,7 @@ export default class Card extends React.Component {
         </Text>
         <View style={styles.info}>
           <FontAwesomeIcon icon={faStar} style={styles.icon} />
-          <Text style={styles.infoText}>
-            {this.props.card.categories[0].title}
-          </Text>
+          <Text style={styles.infoText}>{this.props.card.categories[0].title}</Text>
         </View>
         <View style={styles.info}>
           <FontAwesomeIcon icon={faMapMarkerAlt} style={styles.icon} />
@@ -154,7 +149,7 @@ export default class Card extends React.Component {
           </Text>
         </View>
         <TouchableHighlight
-          underlayColor='black'
+          underlayColor="black"
           onShowUnderlay={() => this.setState({ press: true })}
           onHideUnderlay={() => this.setState({ press: false })}
           style={styles.button}
@@ -165,19 +160,16 @@ export default class Card extends React.Component {
               flexDirection: 'row',
               padding: '1%',
               paddingLeft: '3%',
-              paddingRight: '3%'
+              paddingRight: '3%',
             }}
           >
-            <Icon
-              name='yelp'
-              style={{ color: 'red', fontSize: 18, marginRight: '2%' }}
-            />
+            <Icon name="yelp" style={{ color: 'red', fontSize: 18, marginRight: '2%' }} />
             <Text
               style={{
                 fontFamily: font,
                 fontSize: 15,
                 fontWeight: 'bold',
-                color: this.state.press ? 'white' : 'black'
+                color: this.state.press ? 'white' : 'black',
               }}
             >
               See more on Yelp
@@ -199,14 +191,14 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '90%',
     elevation: 10,
-    marginTop: '2%'
+    marginTop: '2%',
   },
   image: {
     marginTop: '10%',
     alignSelf: 'center',
     height: Dimensions.get('window').width * 0.5,
     width: Dimensions.get('window').width * 0.5,
-    borderRadius: 20
+    borderRadius: 20,
   },
   title: {
     fontFamily: font,
@@ -214,24 +206,24 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     fontWeight: 'bold',
     margin: '3%',
-    marginLeft: '10%'
+    marginLeft: '10%',
   },
   info: { flexDirection: 'row', marginTop: '2%', marginLeft: '10%' },
   infoText: {
     fontFamily: font,
     fontSize: 16,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   icon: {
     alignSelf: 'center',
     fontFamily: font,
     fontSize: 18,
-    marginRight: '2%'
+    marginRight: '2%',
   },
   button: {
     borderRadius: 17,
     borderWidth: 2.5,
     alignSelf: 'center',
-    margin: '5%'
-  }
+    margin: '5%',
+  },
 })
