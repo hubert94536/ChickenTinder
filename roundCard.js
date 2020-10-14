@@ -17,6 +17,7 @@ export default class Card extends React.Component {
     }
   }
 
+  // getting which stars to display
   getStarPath (rating) {
     switch (rating) {
       case 0:
@@ -42,6 +43,7 @@ export default class Card extends React.Component {
     }
   }
 
+  // get image based on cuisine
   getCuisine (category) {
     switch (category) {
       case 'American':
@@ -89,6 +91,7 @@ export default class Card extends React.Component {
   //     transactions: ['pickup', 'delivery'],
   //   },
 
+  // for each transaction, put into comma-separated string
   evaluateTransactions (transactions) {
     return transactions.map(item => item).join(', ')
   }

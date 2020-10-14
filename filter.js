@@ -21,6 +21,7 @@ import TagsView from './TagsView'
 const hex = '#F25763'
 const font = 'CircularStd-Bold'
 
+//  need this for choosing the time
 const hours = [
   { label: '0', value: 0 },
   { label: '1', value: 1 },
@@ -48,6 +49,7 @@ const hours = [
   { label: '23', value: 23 }
 ]
 
+//  need this for choosing the time
 const minutes = [
   { label: '00', value: 0 },
   { label: '05', value: 5 },
@@ -62,27 +64,25 @@ const minutes = [
   { label: '50', value: 50 },
   { label: '55', value: 55 }
 ]
-// const SCREEN_WIDTH = Dimensions.get('window').width
 
 const tagsCuisine = [
   'American',
   'European',
-  'Latin American', //  Argentine, Brazilian, Cuban, Caribbean, Honduran, Mexican, Nicaraguan, Peruvian
+  'Latin American',
   'Mediterranean',
-  'South Asian', // Indian, Pakistani, Afghan, Bangladeshi, Himalayan, Nepalese, Sri Lankan
-  'Southeast Asian', // Cambodian, Indonesian, Laotian, Malaysian, Filipino, Singaporean, Thai, Vietnamese
-  'Pacific Islander', //  Polynesian, Filipino
-  'East Asian', //  Chinese, Japanese, Korean, Taiwanese
+  'South Asian',
+  'Southeast Asian',
+  'Pacific Islander',
+  'East Asian',
   'Middle Eastern',
   'African'
 ]
-
-// const tagsDining = ['Dine-in', 'Delivery', 'Catering', 'Pickup'];
 
 const tagsDiet = ['Vegan', 'Vegetarian']
 
 const tagsPrice = ['$', '$$', '$$$', '$$$$']
 
+//  requests the users permission
 const requestLocationPermission = async () => {
   await PermissionsAndroid.request(
     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -120,16 +120,19 @@ export default class FilterSelector extends React.Component {
       selectedCuisine: [],
       selectedPrice: [],
       selectedRestriction: [],
+      // showing alerts and modals
       locationAlert: false,
       formatAlert: false,
       chooseFriends: false
     }
   }
 
+  // updates state when tag is selected/deselected
   handleUpdate (chosenState, event) {
     this.setState({ chosenState: event })
   }
 
+  // asks user for permission and get location as the component mounts
   componentDidMount () {
     if (requestLocationPermission()) {
       Geolocation.getCurrentPosition(
@@ -147,6 +150,7 @@ export default class FilterSelector extends React.Component {
     }
   }
 
+  //  pushes the 'subcategories' of each cusisine
   categorize (cat) {
     var categories = []
     for (var i = 0; i < cat.length; i++) {
@@ -229,10 +233,12 @@ export default class FilterSelector extends React.Component {
     return categories
   }
 
+  // this will pass the filters to the groups page
   handlePress (setFilters) {
     this.props.press(setFilters)
   }
 
+  //  formats the filters to call yelp api
   evaluateFilters () {
     var filters = {}
     //  convert to unix time
@@ -240,20 +246,16 @@ export default class FilterSelector extends React.Component {
     const dd = date.getDate()
     const mm = date.getMonth()
     const yyyy = date.getFullYear()
-    // const offset = date.getTimezoneOffset()
-    const unix =
-      Date.UTC(yyyy, mm, dd, this.state.hour, this.state.minute) / 1000
+    const unix = Date.UTC(yyyy, mm, dd, this.state.hour, this.state.minute) / 1000
     filters.open_at = unix
-
     filters.price = this.state.selectedPrice
       .map(item => item.length)
       .toString()
-
+      // puts the cuisine and restrictions into one array
     var selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
-
     filters.categories = this.categorize(selections)
-
     filters.radius = this.state.distance * 1600
+    //  making sure we have a valid location
     if (this.state.useLocation) {
       filters.latitude = this.state.lat
       filters.longitude = this.state.long

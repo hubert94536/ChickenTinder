@@ -214,7 +214,6 @@ export default class RestaurantCard extends React.Component {
     socket.getSocket().on('match', restaurant => {
       console.log(restaurant)
       this.props.navigation.navigate('Match', {match: restaurant})
-      // TODO: connect match here
     })
 
     socket.getSocket().on('exception', error => {

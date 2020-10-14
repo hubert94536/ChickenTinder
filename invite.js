@@ -13,6 +13,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
 //  props are name, image url, and functions for cancel and go
+// invite alert
 export default class Invite extends React.Component {
   constructor (props) {
     super(props)

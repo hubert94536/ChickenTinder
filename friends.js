@@ -7,42 +7,20 @@ import friendsApi from './friendsApi.js'
 
 const font = 'CircularStd-Medium'
 
-// const people = [
-//   {
-//     name: 'Hanna',
-//     username: 'hannaco'
-//   },
-//   {
-//     name: 'Isha',
-//     username: 'ishagonu'
-//   },
-//   {
-//     name: 'Hubert',
-//     username: 'hubesc'
-//   },
-//   {
-//     name: 'Janice',
-//     username: 'janicetsai'
-//   },
-//   {
-//     name: 'Ruth',
-//     username: 'ruthlee'
-//   }
-// ]
-
 export default class Friends extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
       search: '',
       errorAlert: false,
-      data: [],
+      data: [], // array for friends
       friends: [], // array of Profile components
       isFriends: this.props.isFriends // For rendering friends (true) or requests (false)
     }
     this.getFriends()
   }
 
+  //  gets the users friends
   getFriends () {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
@@ -57,11 +35,13 @@ export default class Friends extends React.Component {
             pushFriends.push(res.friendList[friend])
           }
         }
+        //  need two so when you search it doesn't get rid of all the friends
         this.setState({ friends: pushFriends, data: pushFriends })
       })
       .catch(err => console.log(err))
   }
 
+  //  searches the users friends by username
   searchFilterFunction (text) {
     this.setState({
       search: text

@@ -15,10 +15,12 @@ export default class Login extends React.Component {
     }
   }
 
+  // changing button appearance
   underlayShow () {
     this.setState({ pressed: true })
   }
 
+  // changing button appearance
   underlayHide () {
     this.setState({ pressed: false })
   }
@@ -27,24 +29,12 @@ export default class Login extends React.Component {
     return (
       <View>
         <Text
-          style={{
-            fontSize: 50,
-            color: hex,
-            alignSelf: 'center',
-            fontFamily: font,
-            fontWeight: 'bold',
-            marginTop: '40%'
-          }}
+          style={styles.header}
         >
           Welcome!
         </Text>
         <Text
-          style={{
-            fontFamily: font,
-            alignSelf: 'center',
-            color: hex,
-            fontSize: 30
-          }}
+          style={styles.subheading}
         >
           Let's get goin'.
         </Text>
@@ -98,6 +88,20 @@ export default class Login extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    fontSize: 50,
+    color: hex,
+    alignSelf: 'center',
+    fontFamily: font,
+    fontWeight: 'bold',
+    marginTop: '40%'
+  },
+  subheading: {
+    fontFamily: font,
+    alignSelf: 'center',
+    color: hex,
+    fontSize: 30
+  },
   button: {
     borderRadius: 25,
     borderWidth: 2.5,

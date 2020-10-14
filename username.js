@@ -30,14 +30,17 @@ class Username extends React.Component {
     }
   }
 
+  // closes alert
   closeTaken () {
     this.setState({ takenAlert: false })
   }
 
+  // closes alert
   closeError () {
     this.setState({ errorAlert: false })
   }
 
+  // gets users information once component mounts
   async componentDidMount () {
     this.setState({
       name: await AsyncStorage.getItem(NAME),
@@ -48,14 +51,17 @@ class Username extends React.Component {
     })
   }
 
+  // adjusting the look of button
   underlayShow () {
     this.setState({ pressed: true })
   }
 
+  // adjusting the look of button
   underlayHide () {
     this.setState({ pressed: false })
   }
 
+  //  checks whether or not the username can be set
   handleClick () {
     api.checkUsername(this.state.username).then(() => {
       AsyncStorage.setItem(USERNAME, this.state.username)
@@ -75,36 +81,16 @@ class Username extends React.Component {
   render () {
     return (
       <View
-        style={{
-          flex: 1,
-          flexDirection: 'column',
-          backgroundColor: 'white'
-        }}
+        style={styles.mainContainer}
       >
         <Text
-          style={{
-            fontFamily: font,
-            color: hex,
-            fontSize: 40,
-            marginTop: '8%',
-            marginLeft: '3%',
-            textAlign: 'left'
-          }}
+          style={styles.header}
         >
           'Chews' a username!
         </Text>
         <View style={{ marginTop: '35%' }}>
           <TextInput
-            style={{
-              fontFamily: font,
-              color: hex,
-              fontSize: 25,
-              alignSelf: 'center',
-              borderBottomColor: hex,
-              borderBottomWidth: 2.5,
-              margin: '3%',
-              width: '70%'
-            }}
+            style={styles.input}
             textAlign='left'
             placeholder='Enter a username'
             onChangeText={username => {
@@ -149,6 +135,29 @@ class Username extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: 'white'
+  },
+  header: {
+    fontFamily: font,
+    color: hex,
+    fontSize: 40,
+    marginTop: '8%',
+    marginLeft: '3%',
+    textAlign: 'left'
+  },
+  input: {
+    fontFamily: font,
+    color: hex,
+    fontSize: 25,
+    alignSelf: 'center',
+    borderBottomColor: hex,
+    borderBottomWidth: 2.5,
+    margin: '3%',
+    width: '70%'
+  },
   button: {
     fontFamily: font,
     borderRadius: 25,

@@ -5,10 +5,12 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
+// cards for the search for friends screen
 export default class Card extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      // for button display
       requested: this.props.requested,
       pressed: false
     }

@@ -32,7 +32,6 @@ export default class Group extends React.Component {
       host: this.props.navigation.state.params.host,
       groupName: members[Object.keys(members)[0]].name.split(' ')[0],
       needFilters: Object.keys(members).filter(user => !user.filters).length,
-      // needFilters: this.countNeedFilters(members),
       start: false,
       username: myUsername,
       // show/hide the alerts
@@ -103,10 +102,12 @@ export default class Group extends React.Component {
     }
   }
 
+  // changing button appearance
   underlayShow () {
     this.setState({ start: true })
   }
 
+  // changing button appearance
   underlayHide () {
     this.setState({ start: false })
   }
@@ -123,12 +124,14 @@ export default class Group extends React.Component {
     })
   }
 
+  // shows proper alert based on if user is host
   cancelAlert () {
     this.state.host === this.state.username
       ? this.setState({ endAlert: false })
       : this.setState({ leaveAlert: false })
   }
 
+  // sets the filters, goes back to groups and stops user from going back to filters
   submitFilters (setFilters) {
     this.refs.swiper.scrollBy(-1)
     this.setState({ swipe: false })

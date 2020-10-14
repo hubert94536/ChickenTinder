@@ -26,6 +26,7 @@ var img = ''
 var name = ''
 var username = ''
 
+//  gets user info
 AsyncStorage.getItem(PHOTO).then(res => (img = res))
 AsyncStorage.getItem(NAME).then(res => (name = res))
 AsyncStorage.getItem(USERNAME).then(res => (username = res))
@@ -42,7 +43,7 @@ export default class UserProfileView extends Component {
       visible: false,
       changeName: false,
       changeUser: false,
-      // show button appearance
+      // button appearance
       logout: false,
       delete: false,
       // show alert
@@ -117,14 +118,17 @@ export default class UserProfileView extends Component {
       })
   }
 
+  // close alert for taken username
   closeTaken () {
     this.setState({ takenAlert: false })
   }
 
+  // close alert for error
   closeError () {
     this.setState({ errorAlert: false })
   }
-
+  
+  // cancel deleting your account
   cancelDelete () {
     this.setState({ deleteAlert: false })
   }

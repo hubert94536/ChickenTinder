@@ -10,6 +10,7 @@ import RestaurantCard from './round.js'
 import Username from './username.js'
 import UserProfileView from './profile.js'
 
+//  determining which landing page to show
 var user = firebase.auth().currentUser
 var start = ''
 

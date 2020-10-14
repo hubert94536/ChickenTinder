@@ -19,6 +19,7 @@ export default class Card extends React.Component {
     }
   }
 
+  // accept friend request and modify card
   async acceptFriend () {
     friendsApi
       .acceptFriendRequest(this.state.id)
@@ -28,6 +29,7 @@ export default class Card extends React.Component {
       .catch(error => console.log(error))
   }
 
+  // delete friend and modify view
   async deleteFriend () {
     friendsApi
       .removeFriendship(this.state.id)
