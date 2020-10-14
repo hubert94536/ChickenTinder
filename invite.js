@@ -1,11 +1,11 @@
 import React from 'react'
 import {
+  Image,
+  Modal,
   StyleSheet,
   Text,
-  View,
   TouchableHighlight,
-  Modal,
-  Image
+  View
 } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/FontAwesome'

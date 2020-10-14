@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, ScrollView, StyleSheet } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import { SearchBar } from 'react-native-elements'
 import Alert from './alert.js'
 import Card from './profileCard.js'

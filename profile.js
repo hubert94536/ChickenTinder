@@ -1,16 +1,15 @@
 import React, { Component } from 'react'
 import {
+  Dimensions,
+  Image,
+  Keyboard,
+  Modal,
   StyleSheet,
   Text,
-  View,
-  Image,
-  TouchableHighlight,
   TextInput,
-  Modal,
-  Dimensions,
-  Keyboard
+  TouchableHighlight,
+  View
 } from 'react-native'
-import { NAME, USERNAME, PHOTO } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -19,6 +18,7 @@ import Alert from './alert.js'
 import api from './accountsApi.js'
 import { facebookService } from './facebookService.js'
 import Friends from './friends.js'
+import { NAME,  PHOTO, USERNAME } from 'react-native-dotenv'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'

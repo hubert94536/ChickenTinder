@@ -1,14 +1,13 @@
 import React from 'react';
 import {
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  // Dimensions,
-  TouchableHighlight,
   PermissionsAndroid,
+  ScrollView,
+  StyleSheet,
   Switch,
-  TextInput
+  Text,
+  TextInput,
+  TouchableHighlight,
+  View
 } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import DropDownPicker from 'react-native-dropdown-picker'

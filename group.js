@@ -1,19 +1,19 @@
 import React from 'react'
 import {
-  View,
-  Text,
-  StyleSheet,
   ScrollView,
-  TouchableHighlight
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
 } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { USERNAME } from 'react-native-dotenv'
 import Swiper from 'react-native-swiper'
 import Alert from './alert.js'
 import Card from './groupCard.js'
 import FilterSelector from './filter.js'
 import socket from './socket.js'
+import { USERNAME } from 'react-native-dotenv'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'

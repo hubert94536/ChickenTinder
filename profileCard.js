@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, Image, TouchableHighlight } from 'react-native'
+import { Image, Text, TouchableHighlight, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Alert from './alert.js'
 import friendsApi from './friendsApi.js'

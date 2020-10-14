@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import {
-  View,
-  Text,
+  Dimensions,
   FlatList,
   StyleSheet,
-  Dimensions
+  Text,
+  View
 } from 'react-native'
 import { SearchBar } from 'react-native-elements'
 import api from './api.js'

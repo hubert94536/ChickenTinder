@@ -1,9 +1,7 @@
 import React from 'react'
-import { StyleSheet, View, Text, TouchableHighlight } from 'react-native'
-import { facebookService } from './facebookService.js'
+import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import Alert from './alert.js'
-// import api from './accountsApi.js'
-// import friendsapi from './friendsApi.js'
+import { facebookService } from './facebookService.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'

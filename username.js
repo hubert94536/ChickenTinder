@@ -1,15 +1,15 @@
 import React from 'react'
 import {
   StyleSheet,
-  TouchableHighlight,
-  View,
   Text,
-  TextInput
+  TextInput,
+  TouchableHighlight,
+  View
 } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
-import { NAME, USERNAME, ID, UID, EMAIL, PHOTO } from 'react-native-dotenv'
 import Alert from './alert.js'
 import api from './accountsApi.js'
+import { NAME, USERNAME, ID, UID, EMAIL, PHOTO } from 'react-native-dotenv'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'

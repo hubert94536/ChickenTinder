@@ -1,14 +1,14 @@
 import React from 'react'
 import {
+  Dimensions,
+  FlatList,
+  Modal,
   StyleSheet,
   Text,
-  View,
-  Modal,
-  FlatList,
-  Dimensions
+  View
 } from 'react-native'
-import { SearchBar } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { SearchBar } from 'react-native-elements'
 import Card from './chooseCard.js'
 import friendsApi from './friendsApi.js'
 

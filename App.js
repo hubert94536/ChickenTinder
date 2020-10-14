@@ -1,14 +1,14 @@
 import React from 'react'
+import { createAppContainer } from 'react-navigation'
+import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
 import firebase from 'firebase'
 import Group from './group.js'
 import Home from './home.js'
-import RestaurantCard from './round.js'
 import Login from './login.js'
+import Match from './match.js'
+import RestaurantCard from './round.js'
 import Username from './username.js'
 import UserProfileView from './profile.js'
-import Match from './match.js'
-import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
-import { createAppContainer } from 'react-navigation'
 
 var user = firebase.auth().currentUser
 var start = ''
