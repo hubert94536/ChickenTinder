@@ -172,7 +172,6 @@ module.exports = (io) => {
         for (let category in data.filters.categories) {
           sessions[data.room].filters.categories.add(data.filters.categories[category])
         } 
-        console.log(sessions[data.room].filters.categories)
       } catch (error) {
         socket.emit('exception', error)
       }
@@ -187,11 +186,12 @@ module.exports = (io) => {
         ).toString()
         console.log(sessions[data.room].filters.categories)
         const restaurantList = await Yelp.getRestaurants(sessions[data.room].filters)
+        console.log(restaurantList.businessList)
         // store restaurant info in 'cache'
         for (let res in restaurantList.businessList) {
           restaurants[restaurantList.businessList[res].id] = restaurantList.businessList[res]
         }
-        io.in(data.room).emit('start', restaurantList)
+        io.in(data.room).emit('start', restaurantList.businessList)
       } catch (error) {
         socket.emit('exception', error)
       }
