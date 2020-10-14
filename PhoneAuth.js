@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import {
-  StyleSheet,
+  Alert,
   SafeAreaView,
-  TouchableOpacity,
-  View,
+  StyleSheet,
   Text,
   TextInput,
-  Alert
+  TouchableOpacity,
+  View
 } from 'react-native'
 import auth from '@react-native-firebase/auth'
 

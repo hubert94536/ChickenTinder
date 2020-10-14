@@ -1,9 +1,7 @@
 import React from 'react'
-import { StyleSheet, View, Text, TouchableHighlight } from 'react-native'
-import { facebookService } from './facebookService.js'
+import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import Alert from './alert.js'
-// import api from './accountsApi.js'
-// import friendsapi from './friendsApi.js'
+import { facebookService } from './facebookService.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -17,10 +15,12 @@ export default class Login extends React.Component {
     }
   }
 
+  // changing button appearance
   underlayShow () {
     this.setState({ pressed: true })
   }
 
+  // changing button appearance
   underlayHide () {
     this.setState({ pressed: false })
   }
@@ -29,24 +29,12 @@ export default class Login extends React.Component {
     return (
       <View>
         <Text
-          style={{
-            fontSize: 50,
-            color: hex,
-            alignSelf: 'center',
-            fontFamily: font,
-            fontWeight: 'bold',
-            marginTop: '40%'
-          }}
+          style={styles.header}
         >
           Welcome!
         </Text>
         <Text
-          style={{
-            fontFamily: font,
-            alignSelf: 'center',
-            color: hex,
-            fontSize: 30
-          }}
+          style={styles.subheading}
         >
           Let's get goin'.
         </Text>
@@ -100,6 +88,20 @@ export default class Login extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    fontSize: 50,
+    color: hex,
+    alignSelf: 'center',
+    fontFamily: font,
+    fontWeight: 'bold',
+    marginTop: '40%'
+  },
+  subheading: {
+    fontFamily: font,
+    alignSelf: 'center',
+    color: hex,
+    fontSize: 30
+  },
   button: {
     borderRadius: 25,
     borderWidth: 2.5,
