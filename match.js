@@ -1,23 +1,26 @@
 import React from 'react'
 import {
-  View,
-  Text,
-  StyleSheet,
   Dimensions,
-  TouchableHighlight
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View
 } from 'react-native'
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
+// the card for the restaurant match
 export default class Match extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
       endRound: false,
-      goToYelp: false
+      goToYelp: false,
+      restaurant: this.props.navigation.state.params.match
     }
   }
 
@@ -27,75 +30,45 @@ export default class Match extends React.Component {
         <Text style={styles.text}>It's A Match!</Text>
         <Icon name='thumbs-up' style={styles.thumbIcon} />
         <Text
-          style={{
-            fontFamily: font,
-            color: 'white',
-            textAlign: 'center',
-            fontSize: 20
-          }}
+          style={styles.subheading}
         >
           Your group has selected:
         </Text>
         <Text
-          style={{
-            fontFamily: font,
-            color: 'white',
-            textAlign: 'center',
-            fontSize: 30,
-            fontWeight: 'bold'
-          }}
+          style={styles.restaurantName}
         >
-          {this.props.restaurant}
+          {this.state.restaurant.name}
         </Text>
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
           region={{
-            latitude: this.props.lat,
-            longitude: this.props.long,
+            latitude: this.state.restaurant.latitude,
+            longitude: this.state.restaurant.longitude,
             latitudeDelta: 0.015,
             longitudeDelta: 0.015
           }}
         >
           <Marker
-            coordinate={{ latitude: this.props.lat, longitude: this.props.long }}
+            coordinate={{ latitude: this.state.restaurant.latitude, longitude: this.state.restaurant.longitude }}
           />
         </MapView>
         <TouchableHighlight
           underlayColor='white'
           onShowUnderlay={() => this.setState({ endRound: true })}
           onHideUnderlay={() => this.setState({ endRound: false })}
-          style={{
-            borderColor: 'white',
-            borderWidth: 2.5,
-            borderRadius: 30,
-            alignSelf: 'center',
-            width: '45%'
-          }}
+          style={styles.endButton}
         >
           <Text
-            style={{
-              fontFamily: font,
-              color: this.state.endRound ? hex : 'white',
-              fontSize: 20,
-              textAlign: 'center',
-              padding: '6%',
-              fontWeight: 'bold'
-            }}
+            style={styles.endText}
           >
             End Round
           </Text>
         </TouchableHighlight>
         <TouchableHighlight
-          style={{
-            backgroundColor: 'white',
-            width: '30%',
-            height: '5%',
-            borderWidth: 2.5,
-            borderColor: 'white',
-            borderRadius: 30,
-            alignSelf: 'center'
-          }}
+          style={styles.yelpButton}
+
+          onPress={() => Linking.openURL(this.state.restaurant.url)}
         >
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <Icon
@@ -103,11 +76,7 @@ export default class Match extends React.Component {
               style={{ color: 'red', fontSize: 20, alignSelf: 'center' }}
             />
             <Text
-              style={{
-                fontFamily: font,
-                textAlign: 'center',
-                padding: '5%'
-              }}
+              style={styles.yelpText}
             >
               Go To Yelp
             </Text>
@@ -139,9 +108,51 @@ const styles = StyleSheet.create({
     fontFamily: font,
     fontSize: 50
   },
+  restaurantName: {
+    fontFamily: font,
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 30,
+    fontWeight: 'bold'
+  },
+  subheading: {
+    fontFamily: font,
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 20
+  },
   map: {
     alignSelf: 'center',
     height: Dimensions.get('window').width * 0.55,
     width: Dimensions.get('window').width * 0.55
+  },
+  endButton: {
+    borderColor: 'white',
+    borderWidth: 2.5,
+    borderRadius: 30,
+    alignSelf: 'center',
+    width: '45%'
+  },
+  endText: {
+    fontFamily: font,
+    color: this.state.endRound ? hex : 'white',
+    fontSize: 20,
+    textAlign: 'center',
+    padding: '6%',
+    fontWeight: 'bold'
+  },
+  yelpButton: {
+    backgroundColor: 'white',
+    width: '30%',
+    height: '5%',
+    borderWidth: 2.5,
+    borderColor: 'white',
+    borderRadius: 30,
+    alignSelf: 'center'
+  },
+  yelpText: {
+    fontFamily: font,
+    textAlign: 'center',
+    padding: '5%'
   }
 })

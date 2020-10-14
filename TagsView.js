@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { addOrRemove } from './addOrRemove'
 import BackgroundButton from './BackgroundButton'
 
@@ -13,8 +13,8 @@ export default class TagsView extends React.Component {
     }
   }
 
-  handleUpdate () {
-    this.props.onChange(this.state.selected)
+  handleUpdate (newTags) {
+    console.log(newTags)
   }
 
   render () {
@@ -25,13 +25,17 @@ export default class TagsView extends React.Component {
     let chosen
     if (this.props.isExclusive) {
       chosen = [tag]
+      this.setState({
+        selected: chosen
+      })
+      this.handleUpdate(chosen)
     } else {
       chosen = addOrRemove(this.state.selected, tag)
+      this.setState({
+        selected: chosen
+      })
+      this.handleUpdate(chosen)
     }
-    this.setState({
-      selected: chosen
-    })
-    this.handleUpdate()
   }
 
   makeButtons () {

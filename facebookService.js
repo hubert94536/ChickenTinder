@@ -1,6 +1,7 @@
+import AsyncStorage from '@react-native-community/async-storage'
 import FBSDK from 'react-native-fbsdk'
-import firebase from 'firebase'
 import api from './accountsApi.js'
+import firebase from 'firebase'
 import {
   FIREBASE_API_KEY,
   FIREBASE_APPLICATION_ID,
@@ -15,7 +16,7 @@ import {
   EMAIL,
   PHOTO
 } from 'react-native-dotenv'
-import AsyncStorage from '@react-native-community/async-storage'
+
 const { LoginManager, AccessToken } = FBSDK
 // const { GraphRequest, GraphRequestManager } = FBSDK
 
