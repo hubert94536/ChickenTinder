@@ -171,7 +171,8 @@ module.exports = (io) => {
         }
         for (let category in data.filters.categories) {
           sessions[data.room].filters.categories.add(data.filters.categories[category])
-        }
+        } 
+        console.log(sessions[data.room].filters.categories)
       } catch (error) {
         socket.emit('exception', error)
       }
@@ -182,8 +183,9 @@ module.exports = (io) => {
       // proceed to restaurant matching after everyone submits filters
       try {
         sessions[data.room].filters.categories = Array.from(
-          sessions[data.room].filters.categories,
+          sessions[data.room].filters.categories
         ).toString()
+        console.log(sessions[data.room].filters.categories)
         const restaurantList = await Yelp.getRestaurants(sessions[data.room].filters)
         // store restaurant info in 'cache'
         for (let res in restaurantList.businessList) {
