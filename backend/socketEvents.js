@@ -6,9 +6,6 @@ var clientsIds = {} // associates client id with username
 var invites = {} // store invites
 var lastRoom = {} // store last room if user disconnected
 var restaurants = {} // caching of restaurants
-invites["hubes"].sender = "hco"
-invites["hubes"].pic = ""
-invites["hubes"].name = "hanna"
 module.exports = (io) => {
   io.on('connection', (socket) => {
     // replace old socket id with new one in both objects
@@ -18,7 +15,7 @@ module.exports = (io) => {
     clientsIds[socket.id] = socketUser
 
     // send invite if previously sent before user connected
-    if (socketUser in invites) {
+    if (socketUser in invites && invites[socketUser] in sessions) {
       let sender = invites[socketUser]
       io.to(clients[socketUser]).emit('invite', {
         username: sender,
