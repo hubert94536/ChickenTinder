@@ -5,6 +5,7 @@ import Username from './username.js';
 import UserProfileView from './profile.js';
 import Group from './group.js';
 import RestaurantCard from './round.js';
+import Search from "./search.js"
 import {UID} from 'react-native-dotenv';
 import firebase from 'firebase';
 import {createStackNavigator} from 'react-navigation-stack'; // 1.0.0-beta.27
@@ -39,9 +40,12 @@ const RootStack = createStackNavigator(
     Round: {
       screen: RestaurantCard,
     },
+    Search: {
+      screen: Search,
+    }
   },
   {
-    initialRouteName: 'Login',
+    initialRouteName: 'Home',
     headerMode: 'none',
   },
 );

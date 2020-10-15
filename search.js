@@ -9,7 +9,9 @@ import {
 } from 'react-native';
 import {SearchBar} from 'react-native-elements';
 import Card from './searchCard.js';
-import api from './api.js';
+import api from './accountsApi.js';
+import friendsApi from './friendsApi.js';
+
 
 const people = [
   {
@@ -79,8 +81,11 @@ export default class Search extends Component {
 
     this.state = {
       data: [],
+      friends: this.props.navigation.getParam('allFriends', null),
     };
     api.createFBUser('boo', 1, 'booo', 'boo@gmail.com', 'pic');
+    
+    // this.getFriends()
   }
 
   renderSeparator = () => {
@@ -108,11 +113,85 @@ export default class Search extends Component {
           .searchUsers(text)
           .then(res => {
             this.setState({data: res.userList});
+
+            var resultUsers = []
+            for (var user in res.userList) {
+
+              var status = 'Add'
+
+              if (res.userList[user].id in friends) {
+                status = friends[user]
+              }
+
+              var person = {
+                name: res.userList[user].name ,
+                username: res.userList[user].username ,
+                image: res.userList[user].photo,
+                status: status
+              }
+
+              resultUsers.push(person);
+            }
+
+
           })
           .catch(err => console.log(err)),
       100,
     );
   };
+
+
+
+  // getFriends() {
+  //   // Pushing accepted friends or pending requests into this.state.friends
+  //   friendsApi
+  //     .getFriends()
+  //     .then(res => {
+  //       var pushFriends = [];
+  //       for (var friend in res.friendList) {
+  //         pushFriends.push(res.friendList[friend]);
+  //       }
+  //       this.setState({ friends: pushFriends, data: pushFriends });
+  //     })
+  //     .catch(err => console.log(err));
+  // }
+
+  // getAccounts() {
+  //   // Get all accounts 
+  //   api
+  //     .getAllUsers()
+  //     .then(res => {
+  //       var accounts = []
+  //       for (var account in res.userList) {
+
+  //         var status = "Add";
+          
+
+  //         for(var i = 0; i < friends.length ; i++)
+  //         {
+  //           if(account.username == friends[i].username)
+  //           {
+  //             status = friends[i].status
+  //             break
+  //           }
+  //         }
+
+
+  //         var currAccount = {
+  //           name: account.name,
+  //           username: account.username,
+  //           image: account.photo,
+  //           friendStatus: status
+
+  //         }
+  //         accounts.push(currAccount);
+  //       }
+  //       this.setState({ friends: pushFriends, data: pushFriends });
+  //     })
+  //     .catch(err => console.log(err));
+  // }
+
+
 
   renderHeader = () => {
     return (
