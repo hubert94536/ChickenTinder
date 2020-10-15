@@ -133,7 +133,7 @@ export default class Card extends React.Component {
           </Text>
         </View>
         <Text style={{ marginLeft: '10%', fontFamily: font, color: '#bebebe' }}>
-          Based on {this.props.card.review_count} reviews
+          Based on {this.props.card.reviewCount} reviews
         </Text>
         <View style={styles.info}>
           <FontAwesomeIcon icon={faStar} style={styles.icon} />
@@ -142,7 +142,7 @@ export default class Card extends React.Component {
         <View style={styles.info}>
           <FontAwesomeIcon icon={faMapMarkerAlt} style={styles.icon} />
           <Text style={styles.infoText}>
-            {this.props.card.distance} miles — {this.props.card.location.city}
+            {this.props.card.distance} miles — {this.props.card.city}
           </Text>
         </View>
         <View style={styles.info}>

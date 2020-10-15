@@ -21,7 +21,7 @@ const getRestaurants = (req) => {
             return {
               id: business.id,
               name: business.name,
-              distance: business.distance / 1600,
+              distance: (business.distance / 1600).toFixed(1),
               reviewCount: business.review_count,
               rating: business.rating,
               price: business.price,

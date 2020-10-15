@@ -213,6 +213,7 @@ module.exports = (io) => {
           console.log(data.restaurant)
         }
       } catch (error) {
+        console.log(error)
         socket.emit('exception', error)
       }
     })

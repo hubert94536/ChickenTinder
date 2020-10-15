@@ -75,6 +75,7 @@ export default class Group extends React.Component {
 
   // pings server to fetch restaurants, start session
   start() {
+    console.log(this.state.filters)
     socket.startSession()
   }
 
