@@ -28,20 +28,20 @@ export default class Card extends React.Component {
 
   async addFriend() {
     friendsApi
-    .createFriendship(this.props.id)
-    .then(() => {
-      this.setState({ requested: 'Requested' })
-    })
-    .catch((error) => console.log(error))
+      .createFriendship(this.props.id)
+      .then(() => {
+        this.setState({ requested: 'Requested' })
+      })
+      .catch((error) => console.log(error))
   }
 
   async rejectFriend() {
     friendsApi
-    .removeFriendship(this.props.id)
-    .then(() => {
-      this.setState({ requested: 'Add' })
-    })
-    .catch((error) => console.log(error))
+      .removeFriendship(this.props.id)
+      .then(() => {
+        this.setState({ requested: 'Add' })
+      })
+      .catch((error) => console.log(error))
   }
 
   render() {

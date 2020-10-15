@@ -92,12 +92,7 @@ export default class ChooseFriends extends React.Component {
               style={{ marginLeft: '5%', marginRight: '5%', marginBottom: '10%' }}
               data={this.state.friends}
               renderItem={({ item }) => (
-                <Card
-                  name={item.name}
-                  username={item.username}
-                  image={item.image}
-                  added={false}
-                />
+                <Card name={item.name} username={item.username} image={item.image} added={false} />
               )}
               keyExtractor={(item) => item.username}
             />

@@ -108,7 +108,7 @@ module.exports = (io) => {
             name: sessions[data.host].members[data.host].name,
           })
         }
-      } catch (error) { 
+      } catch (error) {
         console.log(error)
         socket.emit('exception', error)
       }
