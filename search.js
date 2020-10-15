@@ -7,7 +7,7 @@ import {
   View
 } from 'react-native'
 import { SearchBar } from 'react-native-elements'
-import api from './api.js'
+import api from './accountsApi.js';
 import Card from './searchCard.js'
 
 const hex = '#F25763'

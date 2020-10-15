@@ -61,18 +61,17 @@ class Username extends React.Component {
       AsyncStorage.setItem(USERNAME, this.state.username)
       return api.createFBUser(this.state.name, this.state.id, this.state.username, this.state.email, this.state.photo).then(() => {
         this.props.navigation.navigate('Home')
-      })
-      .catch((error) => {
+      }).catch(error => {
         if (error === 404) {
           this.setState({ takenAlert: true })
         } else {
           this.setState({ errorAlert: true })
         }
       })
+    })
   }
-}
 
-  render() {
+  render () {
     return (
       <View style={styles.mainContainer}>
         <Text style={styles.header}>'Chews' a username!</Text>
@@ -118,6 +117,7 @@ class Username extends React.Component {
       </View>
     )
   }
+
 }
 
 const styles = StyleSheet.create({

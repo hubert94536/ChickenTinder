@@ -12,7 +12,6 @@ import socket from './socket.js'
 import api from './accountsApi.js'
 import friendsApi from './friendsApi.js'
 import { ID } from 'react-native-dotenv'
-import AsyncStorage from '@react-native-community/async-storage'
 
 var img = ''
 var name = ''
