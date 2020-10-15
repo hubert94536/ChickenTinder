@@ -51,8 +51,8 @@ const RootStack = createStackNavigator(
   },
   {
     initialRouteName: start,
-    headerMode: 'none',
-  },
+    headerMode: 'none'
+  }
 )
 const AppContainer = createAppContainer(RootStack)
 export default class App extends React.Component {
@@ -60,3 +60,16 @@ export default class App extends React.Component {
     return <AppContainer />
   }
 }
+
+// import React from 'react'
+// import FilterSelector from './filter.js'
+// import Group from './group.js'
+// import RestaurantCard from './round.js'
+
+// export default class App extends React.Component{
+//   render () {
+//     return (
+//       <Group/>
+//     )
+//   }
+// }

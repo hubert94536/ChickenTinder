@@ -137,6 +137,60 @@ export default class Card extends React.Component {
             />
           </View>
         )}
+         {this.state.requested === 'Accepted' && (
+          <View
+            style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
+          >
+            <Text
+              style={{
+                fontFamily: font,
+                color: hex,
+                fontSize: 15,
+                alignSelf: 'center'
+              }}
+            >
+              Friends
+            </Text>
+            <Icon
+              style={{
+                fontFamily: font,
+                color: hex,
+                fontSize: 35,
+                alignSelf: 'center',
+                margin: '8%'
+              }}
+              name='check-circle'
+            />
+          </View>
+        )}
+        {this.state.requested === 'Pending Request' && (
+          <View
+            style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
+          >
+            <Icon
+              style={{
+                fontFamily: font,
+                color: hex,
+                fontSize: 35,
+                alignSelf: 'center',
+                margin: '3%'
+              }}
+              name='check-circle'
+              onPress={() => this.setState({requested:'Accepted'})}
+            />
+            <Icon
+              style={{
+                fontFamily: font,
+                color: hex,
+                fontSize: 35,
+                alignSelf: 'center',
+                margin: '3%'
+              }}
+              name='times-circle'
+              onPress={() => this.setState({requested:'Add'})}
+            />
+          </View>
+        )}
       </View>
     )
   }

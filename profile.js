@@ -8,7 +8,7 @@ import {
   Text,
   TextInput,
   TouchableHighlight,
-  View,
+  View
 } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
@@ -18,7 +18,7 @@ import Alert from './alert.js'
 import api from './accountsApi.js'
 import { facebookService } from './facebookService.js'
 import Friends from './friends.js'
-import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
+import { NAME,  PHOTO, USERNAME } from 'react-native-dotenv'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -118,17 +118,17 @@ export default class UserProfileView extends Component {
   }
 
   // close alert for taken username
-  closeTaken() {
+  closeTaken () {
     this.setState({ takenAlert: false })
   }
 
   // close alert for error
-  closeError() {
+  closeError () {
     this.setState({ errorAlert: false })
   }
-
+  
   // cancel deleting your account
-  cancelDelete() {
+  cancelDelete () {
     this.setState({ deleteAlert: false })
   }
 

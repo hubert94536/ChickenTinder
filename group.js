@@ -1,5 +1,11 @@
 import React from 'react'
-import { ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
+} from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Swiper from 'react-native-swiper'
@@ -32,7 +38,7 @@ export default class Group extends React.Component {
       leaveAlert: false,
       endAlert: false,
       swipe: true,
-      filters: {},
+      filters: {}
     }
     this.updateMemberList()
 
@@ -86,6 +92,7 @@ export default class Group extends React.Component {
   updateMemberList() {
     memberList = []
     for (var user in this.state.members) {
+      console.log(user)
       memberList.push(
         <Card
           name={this.state.members[user].name}
@@ -100,12 +107,12 @@ export default class Group extends React.Component {
   }
 
   // changing button appearance
-  underlayShow() {
+  underlayShow () {
     this.setState({ start: true })
   }
 
   // changing button appearance
-  underlayHide() {
+  underlayHide () {
     this.setState({ start: false })
   }
 
@@ -122,14 +129,14 @@ export default class Group extends React.Component {
   }
 
   // shows proper alert based on if user is host
-  cancelAlert() {
+  cancelAlert () {
     this.state.host === this.state.username
       ? this.setState({ endAlert: false })
       : this.setState({ leaveAlert: false })
   }
 
   // sets the filters, goes back to groups and stops user from going back to filters
-  submitFilters(setFilters) {
+  submitFilters (setFilters) {
     this.refs.swiper.scrollBy(-1)
     this.setState({ swipe: false })
     this.setState({ filters: setFilters })

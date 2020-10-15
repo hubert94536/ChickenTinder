@@ -1,11 +1,26 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View
+} from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
+import Invite from './invite.js'
+import { NAME,  PHOTO, USERNAME } from 'react-native-dotenv'
 import socket from './socket.js'
 import api from './accountsApi.js'
 import friendsApi from './friendsApi.js'
 import { ID } from 'react-native-dotenv'
-import AsyncStorage from '@react-native-community/async-storage'
 
+var img = ''
+var name = ''
+var username = ''
+
+//  gets user info
+AsyncStorage.getItem(PHOTO).then(res => (img = res))
+AsyncStorage.getItem(NAME).then(res => (name = res))
+AsyncStorage.getItem(USERNAME).then(res => (username = res))
 var myId = ''
 
 AsyncStorage.getItem(ID).then((res) => {
@@ -18,10 +33,17 @@ class Home extends React.Component {
     this.state = {
       createPressed: false,
       profilePressed: false,
+      invite: false,
+      image: img,
+      name: name,
+      username: username,
       friends: new Object(),
     }
     socket.connect()
-    socket.getSocket().on('reconnectRoom', (res) => console.log(res))
+    socket.getSocket().on('reconnectRoom', res => console.log(res))
+    socket.getSocket().on('invite', (res => {
+      this.setState({ invite: true })
+    }))
   }
 
   underlayShowCreate() {
@@ -115,6 +137,7 @@ class Home extends React.Component {
             My Profile
           </Text>
         </TouchableHighlight>
+        {this.state.invite && <Invite image={this.state.image} name={this.state.name} onPress={() => this.setState({invite: false})}/>}
         <TouchableHighlight
           onShowUnderlay={this.underlayShowProfile.bind(this)}
           onHideUnderlay={this.underlayHideProfile.bind(this)}
