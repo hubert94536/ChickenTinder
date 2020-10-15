@@ -7,6 +7,7 @@ import {
   View
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+
 import { SearchBar } from 'react-native-elements'
 import api from './accountsApi.js';
 import Card from './searchCard.js'
