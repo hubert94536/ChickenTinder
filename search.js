@@ -5,13 +5,13 @@ import {
   StyleSheet,
   Text,
   View
-} from 'react-native';
-import {SearchBar} from 'react-native-elements';
-import Card from './searchCard.js';
+} from 'react-native'
+import { SearchBar } from 'react-native-elements'
 import api from './accountsApi.js';
+import Card from './searchCard.js'
 
-const hex = '#F25763';
-const font = 'CircularStd-Medium';
+const hex = '#F25763'
+const font = 'CircularStd-Medium'
 
 export default class Search extends Component {
   constructor(props) {

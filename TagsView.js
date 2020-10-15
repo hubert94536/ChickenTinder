@@ -13,7 +13,7 @@ export default class TagsView extends React.Component {
     }
   }
 
-  handleUpdate(newTags) {
+  handleUpdate (newTags) {
     console.log(newTags)
   }
 
@@ -26,13 +26,13 @@ export default class TagsView extends React.Component {
     if (this.props.isExclusive) {
       chosen = [tag]
       this.setState({
-        selected: chosen,
+        selected: chosen
       })
       this.handleUpdate(chosen)
     } else {
       chosen = addOrRemove(this.state.selected, tag)
       this.setState({
-        selected: chosen,
+        selected: chosen
       })
       this.handleUpdate(chosen)
     }
