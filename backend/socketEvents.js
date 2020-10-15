@@ -92,6 +92,7 @@ module.exports = (io) => {
 
     // send invite with host info to join a room
     socket.on('invite', async (data) => {
+      console.log(data.username)
       try {
         let user = await Accounts.findOne({
           where: { username: data.username },
