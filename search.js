@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {
-  View,
-  Text,
+  Dimensions,
   FlatList,
   ActivityIndicator,
   StyleSheet,
-  Dimensions,
+  Text,
+  View
 } from 'react-native';
 import {SearchBar} from 'react-native-elements';
 import Card from './searchCard.js';

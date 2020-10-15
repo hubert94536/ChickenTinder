@@ -17,6 +17,7 @@ export default class Friends extends React.Component {
       friends: [], // array of Profile components
       isFriends: this.props.isFriends // For rendering friends (true) or requests (false)
     }
+    this.getFriends()
   }
 
   //  gets the users friends
