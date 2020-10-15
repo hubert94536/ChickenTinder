@@ -22,6 +22,7 @@ class Home extends React.Component {
     }
     socket.connect()
     socket.getSocket().on('reconnectRoom', (res) => console.log(res))
+    socket.getSocket().on('invite', (res) => console.log(res))
   }
 
   underlayShowCreate() {

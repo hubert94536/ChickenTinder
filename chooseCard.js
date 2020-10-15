@@ -1,18 +1,23 @@
 import React from 'react'
 import { Text, View, Image } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import socket from './socket.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
-
 //  cards for when you're choosing friends for your group
 export default class Card extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      added: this.props.added,
+      added: false,
       pressed: false,
     }
+  }
+
+  sendInvite() {
+    socket.sendInvite(this.props.username)
+    this.setState({ added: true })
   }
 
   render() {
@@ -56,7 +61,7 @@ export default class Card extends React.Component {
                 alignSelf: 'center',
                 margin: '8%',
               }}
-              onPress={() => this.setState({ added: false })}
+              onPress={() => this.sendInvite(this.state.id)}
               name="check-circle"
             />
           </View>

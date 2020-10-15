@@ -6,6 +6,9 @@ var clientsIds = {} // associates client id with username
 var invites = {} // store invites
 var lastRoom = {} // store last room if user disconnected
 var restaurants = {} // caching of restaurants
+invites["hubes"].sender = "hco"
+invites["hubes"].pic = ""
+invites["hubes"].name = "hanna"
 module.exports = (io) => {
   io.on('connection', (socket) => {
     // replace old socket id with new one in both objects
@@ -107,7 +110,8 @@ module.exports = (io) => {
             name: sessions[data.host].members[data.host].name,
           })
         }
-      } catch (error) {
+      } catch (error) { 
+        console.log(error)
         socket.emit('exception', error)
       }
     })
