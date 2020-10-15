@@ -27,8 +27,8 @@ const getRestaurants = (req) => {
               price: business.price,
               phone: business.display_phone,
               location: business.location,
-              latitude: business.region.center.latitude,
-              longitude: business.region.center.longitude,
+              latitude: business.region.coordinates.latitude,
+              longitude: business.region.coordinates.longitude,
               url: business.url,
             }
           }),
