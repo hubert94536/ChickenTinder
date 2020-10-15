@@ -4,7 +4,7 @@ import { createAppContainer } from 'react-navigation'
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
 
 class HomeScreen extends React.Component {
-  render () {
+  render() {
     return (
       <View style={styles.container}>
         <Text>Home Screen</Text>
@@ -13,7 +13,7 @@ class HomeScreen extends React.Component {
   }
 }
 class ProfileScreen extends React.Component {
-  render () {
+  render() {
     return (
       <View style={styles.container}>
         <Text>Profile Screen</Text>
@@ -22,7 +22,7 @@ class ProfileScreen extends React.Component {
   }
 }
 class SavedScreen extends React.Component {
-  render () {
+  render() {
     return (
       <View style={styles.container}>
         <Text>Saved Screen</Text>
@@ -31,7 +31,7 @@ class SavedScreen extends React.Component {
   }
 }
 class GroupsScreen extends React.Component {
-  render () {
+  render() {
     return (
       <View style={styles.container}>
         <Text>Group Screen</Text>
@@ -43,40 +43,40 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 })
 const TabNavigator = createMaterialBottomTabNavigator(
   {
     Home: {
       screen: HomeScreen,
       navigationOptions: {
-        tabBarLabel: 'Home'
-      }
+        tabBarLabel: 'Home',
+      },
     },
     Profile: {
       screen: ProfileScreen,
       navigationOptions: {
-        tabBarLabel: 'Profile'
-      }
+        tabBarLabel: 'Profile',
+      },
     },
     Saved: {
       screen: SavedScreen,
       navigationOptions: {
-        tabBarLabel: 'Saved'
-      }
+        tabBarLabel: 'Saved',
+      },
     },
     Groups: {
       screen: GroupsScreen,
       navigationOptions: {
-        tabBarLabel: 'Groups'
-      }
-    }
+        tabBarLabel: 'Groups',
+      },
+    },
   },
   {
     initialRouteName: 'Home',
-    barStyle: { backgroundColor: '#FB6767' }
-  }
+    barStyle: { backgroundColor: '#FB6767' },
+  },
 )
 
 export default createAppContainer(TabNavigator)

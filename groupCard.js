@@ -7,18 +7,18 @@ const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
 export default class Card extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
-      id: this.props.id
+      id: this.props.id,
     }
   }
 
-  removeUser (username) {
+  removeUser(username) {
     socket.kickUser(username)
-  };
+  }
 
-  render () {
+  render() {
     return (
       <View>
         <View style={styles.card}>
@@ -28,13 +28,13 @@ export default class Card extends React.Component {
           />
           {this.props.filters ? (
             <Icon
-              name='check-circle'
+              name="check-circle"
               style={{
                 color: hex,
                 fontSize: 20,
                 position: 'absolute',
                 marginLeft: '14%',
-                marginTop: '1%'
+                marginTop: '1%',
               }}
             />
           ) : null}
@@ -42,14 +42,14 @@ export default class Card extends React.Component {
             style={{
               alignSelf: 'center',
               marginLeft: '3%',
-              flex: 1
+              flex: 1,
             }}
           >
             <Text
               style={{
                 color: hex,
                 fontWeight: 'bold',
-                fontFamily: font
+                fontFamily: font,
               }}
             >
               {this.props.name}
@@ -57,7 +57,7 @@ export default class Card extends React.Component {
             <Text
               style={{
                 color: hex,
-                fontFamily: font
+                fontFamily: font,
               }}
             >
               {'@' + this.props.username}
@@ -70,7 +70,7 @@ export default class Card extends React.Component {
                   color: hex,
                   alignSelf: 'center',
                   fontFamily: font,
-                  marginLeft: '30%'
+                  marginLeft: '30%',
                 }}
               >
                 Remove
@@ -78,12 +78,12 @@ export default class Card extends React.Component {
             ) : null}
             {this.props.username !== this.props.host ? (
               <Icon
-                name='times-circle'
+                name="times-circle"
                 style={{
                   color: hex,
                   fontSize: 35,
                   alignSelf: 'center',
-                  marginLeft: '5%'
+                  marginLeft: '5%',
                 }}
                 onPress={() => this.removeUser(this.props.username)}
               />
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     margin: 0,
     marginTop: '3%',
     flexDirection: 'row',
-    flex: 1
+    flex: 1,
   },
   image: {
     borderRadius: 63,
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     borderColor: hex,
     alignSelf: 'flex-start',
     marginTop: '3.5%',
-    marginLeft: '2.5%'
+    marginLeft: '2.5%',
   },
   imageFalse: {
     borderRadius: 63,
@@ -126,6 +126,6 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginTop: '3.5%',
     marginBottom: '3.5%',
-    marginLeft: '2.5%'
-  }
+    marginLeft: '2.5%',
+  },
 })

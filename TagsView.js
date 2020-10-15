@@ -6,39 +6,39 @@ import BackgroundButton from './BackgroundButton'
 const hex = '#F25763'
 
 export default class TagsView extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
-      selected: this.props.selected
+      selected: this.props.selected,
     }
   }
 
-  handleUpdate (newTags) {
+  handleUpdate(newTags) {
     console.log(newTags)
   }
 
-  render () {
+  render() {
     return <View style={styles.container}>{this.makeButtons()}</View>
   }
 
-  onPress (tag) {
+  onPress(tag) {
     let chosen
     if (this.props.isExclusive) {
       chosen = [tag]
       this.setState({
-        selected: chosen
+        selected: chosen,
       })
       this.handleUpdate(chosen)
     } else {
       chosen = addOrRemove(this.state.selected, tag)
       this.setState({
-        selected: chosen
+        selected: chosen,
       })
       this.handleUpdate(chosen)
     }
   }
 
-  makeButtons () {
+  makeButtons() {
     return this.props.all.map((tag, i) => {
       const on = this.state.selected.includes(tag)
       const backgroundColor = on ? hex : 'white'
@@ -65,6 +65,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingVertical: 5
-  }
+    paddingVertical: 5,
+  },
 })

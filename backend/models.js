@@ -12,69 +12,72 @@ const config = {
   // ssl: true,
   dialect: 'postgresql',
   ssl: {
-    rejectUnauthorized: false
-  }
+    rejectUnauthorized: false,
+  },
 }
 
 const sequelize = new Sequelize(config)
 
-const Accounts = sequelize.define('accounts', {
-  id: {
-    type: DataTypes.BIGINT,
-    allowNull: false,
-    unique: true,
-    autoIncrement: true,
-    primaryKey: true
-  },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  username: {
-    type: DataTypes.STRING(20),
-    unique: true,
-    allowNull: false
-  },
-  email: {
-    type: DataTypes.STRING,
-    unique: true,
-    allowNull: false,
-    validate: {
-      isEmail: true
-    }
-  },
-  phone_number: {
-    type: DataTypes.STRING,
-    unique: true
-  },
-  photo: DataTypes.STRING,
-  inSession: DataTypes.BOOLEAN
-  // password: DataTypes.STRING(20)
-},
-{
-  indexes: [
-    {
+const Accounts = sequelize.define(
+  'accounts',
+  {
+    id: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
       unique: true,
-      fields: ['id', 'username', 'email']
-    }
-  ]
-})
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    username: {
+      type: DataTypes.STRING(20),
+      unique: true,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: false,
+      validate: {
+        isEmail: true,
+      },
+    },
+    phone_number: {
+      type: DataTypes.STRING,
+      unique: true,
+    },
+    photo: DataTypes.STRING,
+    inSession: DataTypes.BOOLEAN,
+    // password: DataTypes.STRING(20)
+  },
+  {
+    indexes: [
+      {
+        unique: true,
+        fields: ['id', 'username', 'email'],
+      },
+    ],
+  },
+)
 
 const Friends = sequelize.define('friends', {
   m_id: {
     type: DataTypes.BIGINT,
     allowNull: false,
-    primaryKey: true
+    primaryKey: true,
   },
   status: {
     type: DataTypes.STRING(20),
-    allowNull: false
+    allowNull: false,
   },
   f_id: {
     type: DataTypes.BIGINT,
     allowNull: false,
-    primaryKey: true
-  }
+    primaryKey: true,
+  },
 })
 
 Friends.belongsTo(Accounts, { foreignKey: 'f_info', foreignKeyConstraint: true })
