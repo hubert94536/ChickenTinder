@@ -171,7 +171,7 @@ module.exports = (io) => {
         }
         for (let category in data.filters.categories) {
           sessions[data.room].filters.categories.add(data.filters.categories[category])
-        } 
+        }
       } catch (error) {
         socket.emit('exception', error)
       }
@@ -182,7 +182,7 @@ module.exports = (io) => {
       // proceed to restaurant matching after everyone submits filters
       try {
         sessions[data.room].filters.categories = Array.from(
-          sessions[data.room].filters.categories
+          sessions[data.room].filters.categories,
         ).toString()
         const restaurantList = await Yelp.getRestaurants(sessions[data.room].filters)
         // store restaurant info in 'cache'
@@ -208,7 +208,6 @@ module.exports = (io) => {
         ) {
           // return restaurant info from 'cache'
           io.in(data.room).emit('match', { restaurant: restaurants[data.restaurant] })
-          console.log(restaurants[data.restaurant])
         } else {
           console.log(data.restaurant)
         }
@@ -247,7 +246,6 @@ module.exports = (io) => {
     socket.on('kick', (data) => {
       try {
         io.to(clients[data.username]).emit('kick', { username: data.username, room: data.room })
-        console.log(data.username)
       } catch (error) {
         socket.emit('exception', error)
       }

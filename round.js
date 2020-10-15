@@ -15,7 +15,7 @@ export default class RestaurantCard extends React.Component {
       index: 0,
       results: this.props.navigation.state.params.results,
       host: this.props.navigation.state.params.host,
-      isHost: this.props.navigation.state.params.isHost
+      isHost: this.props.navigation.state.params.isHost,
     }
     socket.getSocket().on('match', (data) => {
       this.props.navigation.navigate('Match', { restaurant: data.restaurant })

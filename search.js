@@ -1,24 +1,30 @@
-import React, { Component } from 'react'
-import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native'
-import { SearchBar } from 'react-native-elements'
-import api from './accountsApi.js'
-import Card from './searchCard.js'
+import React, {Component} from 'react';
+import {
+  Dimensions,
+  FlatList,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
+import {SearchBar} from 'react-native-elements';
+import Card from './searchCard.js';
+import api from './accountsApi.js';
 
-const hex = '#F25763'
-const font = 'CircularStd-Medium'
+const hex = '#F25763';
+const font = 'CircularStd-Medium';
 
 export default class Search extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       data: [],
-    }
-    api.createFBUser('boo', 1, 'booo', 'boo@gmail.com', 'pic')
+      friends: this.props.navigation.state.params.allFriends,
+    };
+    
   }
 
-  // for rendering a separator b/w cards
-  renderSeparator() {
+  renderSeparator = () => {
     return (
       <View
         style={{
@@ -28,58 +34,78 @@ export default class Search extends Component {
           marginLeft: '14%',
         }}
       />
-    )
-  }
+    );
+  };
 
-  // searches and modifies the display
-  searchFilterFunction(text) {
-    this.setState({ value: text })
+  searchFilterFunction = text => {
+    this.setState({
+      value: text,
+    });
 
-    clearTimeout(this.timeout) // clears the old timer
+    clearTimeout(this.timeout); // clears the old timer
     this.timeout = setTimeout(
       () =>
         api
           .searchUsers(text)
-          .then((res) => {
-            this.setState({ data: res.userList })
+          .then(res => {
+            // this.setState({data: res.userList});
+            var resultUsers = []
+            for (var user in res.userList) {
+              var status = 'Add'
+              if (res.userList[user].id in this.state.friends) {
+                status = this.state.friends[res.userList[user].id ]
+              }
+              var person = {
+                name: res.userList[user].name ,
+                username: res.userList[user].username ,
+                image: res.userList[user].photo,
+                status: status
+              }
+              resultUsers.push(person);
+            }
+            this.setState({data: resultUsers});
           })
-          .catch((err) => console.log(err)),
+          .catch(() => {}),
       100,
-    )
-  }
+    );
+  };
 
-  // for displaying the header
-  renderHeader() {
+  renderHeader = () => {
     return (
       <SearchBar
         containerStyle={styles.container}
         inputContainerStyle={styles.inputContainer}
         inputStyle={styles.input}
         placeholder="Seach by username"
-        lightTheme
-        round
-        onChangeText={(text) => this.searchFilterFunction(text)}
+        lightTheme={true}
+        round={true}
+        onChangeText={text => this.searchFilterFunction(text)}
         autoCorrect={false}
         value={this.state.value}
       />
-    )
-  }
+    );
+  };
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <View style={{flex: 1, backgroundColor: 'white'}}>
         <Text style={styles.title}>Find New Friends!</Text>
         <FlatList
           data={this.state.data}
-          renderItem={({ item }) => (
-            <Card name={item.name} username={'@' + item.username} image={item.photo} requested />
+          renderItem={({item}) => (
+            <Card
+              name={item.name}
+              username={'@' + item.username}
+              image={item.photo}
+              requested={item.status}
+            />
           )}
           keyExtractor={(item) => item.username}
           ItemSeparatorComponent={this.renderSeparator}
           ListHeaderComponent={this.renderHeader}
         />
       </View>
-    )
+    );
   }
 }
 
@@ -110,4 +136,4 @@ const styles = StyleSheet.create({
     fontFamily: font,
     fontSize: 18,
   },
-})
+});
