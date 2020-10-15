@@ -51,6 +51,7 @@ const RootStack = createStackNavigator(
   },
   {
     initialRouteName: 'Home',
+<<<<<<< HEAD
     headerMode: 'none'
   }
 )
@@ -60,12 +61,18 @@ export default class App extends React.Component {
     return <AppContainer />
   }
 }
+=======
+    headerMode: 'none',
+  },
+);
+>>>>>>> 24bd0f2cddd528fb8949c3cbe766abe231c8e5cb
 
 // // import React from 'react'
 // import FilterSelector from './filter.js'
 // import Group from './group.js'
 // import RestaurantCard from './round.js'
 
+<<<<<<< HEAD
 // export default class App extends React.Component{
 //   render () {
 //     return (
@@ -73,3 +80,10 @@ export default class App extends React.Component {
 //     )
 //   }
 // }
+=======
+export default class App extends React.Component {
+  render() {
+    return <AppContainer />;
+  }
+}
+>>>>>>> 24bd0f2cddd528fb8949c3cbe766abe231c8e5cb

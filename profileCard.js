@@ -1,20 +1,29 @@
 import React from 'react'
+<<<<<<< HEAD
 import { Image, Text, TouchableHighlight, View } from 'react-native'
+=======
+
+import { Text, View, Image, TouchableHighlight } from 'react-native'
+>>>>>>> 24bd0f2cddd528fb8949c3cbe766abe231c8e5cb
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Alert from './alert.js'
+import friendsApi from './friendsApi.js'
+
+import alert from './alert.js';
 import friendsApi from './friendsApi.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
 export default class Card extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       isFriend: this.props.friends,
       id: this.props.id,
       pressed: false,
       errorAlert: false,
+<<<<<<< HEAD
       deleteFriend: false
     }
   }
@@ -44,6 +53,21 @@ export default class Card extends React.Component {
   }
 
   render () {
+=======
+    }
+  }
+
+  acceptFriend() {
+    friendsApi.acceptFriendRequest(this.state.id)
+    .then(()=> {
+      this.setState({ isFriend: true })
+    })
+    .catch(error => {
+    })
+  }
+
+  render() {
+>>>>>>> 24bd0f2cddd528fb8949c3cbe766abe231c8e5cb
     return (
       <View style={{ flexDirection: 'row', flex: 1 }}>
         <Image
@@ -65,6 +89,7 @@ export default class Card extends React.Component {
           <Text style={{ fontFamily: font }}>@{this.props.username}</Text>
         </View>
         {this.state.isFriend && (
+<<<<<<< HEAD
           <TouchableHighlight
             onPress={() => this.setState({ deleteFriend: true })}
           >
@@ -92,6 +117,31 @@ export default class Card extends React.Component {
               />
             </View>
           </TouchableHighlight>
+=======
+          <View style={{ flexDirection: 'row', flex: 1 }}>
+            <Text
+              style={{
+                fontFamily: font,
+                color: hex,
+                fontSize: 15,
+                alignSelf: 'center',
+                marginLeft: '25%'
+              }}
+            >
+              Friends
+              </Text>
+            <Icon
+              style={{
+                fontFamily: font,
+                color: hex,
+                fontSize: 35,
+                alignSelf: 'center',
+                marginLeft: '5%'
+              }}
+              name='check-circle'
+            />
+          </View>
+>>>>>>> 24bd0f2cddd528fb8949c3cbe766abe231c8e5cb
         )}
         {!this.state.isFriend && (
           <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -119,7 +169,7 @@ export default class Card extends React.Component {
                 }}
               >
                 Accept
-              </Text>
+                </Text>
             </TouchableHighlight>
             <Icon
               style={{
