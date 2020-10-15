@@ -5,17 +5,36 @@ import {
   TouchableHighlight,
   View
 } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
+import Invite from './invite.js'
+import { NAME,  PHOTO, USERNAME } from 'react-native-dotenv'
 import socket from './socket.js'
+
+var img = ''
+var name = ''
+var username = ''
+
+//  gets user info
+AsyncStorage.getItem(PHOTO).then(res => (img = res))
+AsyncStorage.getItem(NAME).then(res => (name = res))
+AsyncStorage.getItem(USERNAME).then(res => (username = res))
 
 class Home extends React.Component {
   constructor () {
     super()
     this.state = {
       createPressed: false,
-      profilePressed: false
+      profilePressed: false,
+      invite: false,
+      image: img,
+      name: name,
+      username: username
     }
     socket.connect()
     socket.getSocket().on('reconnectRoom', res => console.log(res))
+    socket.getSocket().on('invite', (res => {
+      this.setState({ invite: true })
+    }))
   }
 
   underlayShowCreate () {
@@ -93,6 +112,7 @@ class Home extends React.Component {
             My Profile
           </Text>
         </TouchableHighlight>
+        {this.state.invite && <Invite image={this.state.image} name={this.state.name} onPress={() => this.setState({invite: false})}/>}
       </View>
     )
   }

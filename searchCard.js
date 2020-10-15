@@ -46,7 +46,8 @@ export default class Card extends React.Component {
                 fontFamily: font,
                 color: hex,
                 fontSize: 15,
-                alignSelf: 'center'
+                alignSelf: 'center',
+                margin: '1%'
               }}
             >
               Requested
@@ -127,7 +128,7 @@ export default class Card extends React.Component {
                 color: hex,
                 fontSize: 35,
                 alignSelf: 'center',
-                margin: '8%'
+                margin: '3%'
               }}
               name='check-circle'
               onPress={() => this.setState({requested:'Accepted'})}
@@ -138,7 +139,7 @@ export default class Card extends React.Component {
                 color: hex,
                 fontSize: 35,
                 alignSelf: 'center',
-                margin: '8%'
+                margin: '3%'
               }}
               name='times-circle'
               onPress={() => this.setState({requested:'Add'})}

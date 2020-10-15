@@ -38,7 +38,7 @@ export default class Invite extends React.Component {
               <Icon
                 name='times-circle'
                 style={styles.icon}
-                onPress={() => this.handleCancel()}
+                onPress={() => this.props.onPress()}
               />
             </View>
             <View

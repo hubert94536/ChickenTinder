@@ -60,7 +60,7 @@ export default class Match extends React.Component {
           style={styles.endButton}
         >
           <Text
-            style={styles.endText}
+            style={this.state.endRound ? styles.endTextPressed : styles.endText}
           >
             End Round
           </Text>
@@ -136,6 +136,14 @@ const styles = StyleSheet.create({
   endText: {
     fontFamily: font,
     color: this.state.endRound ? hex : 'white',
+    fontSize: 20,
+    textAlign: 'center',
+    padding: '6%',
+    fontWeight: 'bold'
+  },
+  endTextPressed: {
+    fontFamily: font,
+    color: 'white',
     fontSize: 20,
     textAlign: 'center',
     padding: '6%',
