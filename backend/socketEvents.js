@@ -193,6 +193,7 @@ module.exports = (io) => {
         }
         io.in(data.room).emit('start', restaurantList.businessList)
       } catch (error) {
+        console.log(error)
         socket.emit('exception', error)
       }
     })
