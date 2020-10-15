@@ -184,9 +184,7 @@ module.exports = (io) => {
         sessions[data.room].filters.categories = Array.from(
           sessions[data.room].filters.categories
         ).toString()
-        console.log(sessions[data.room].filters.categories)
         const restaurantList = await Yelp.getRestaurants(sessions[data.room].filters)
-        console.log(restaurantList.businessList)
         // store restaurant info in 'cache'
         for (let res in restaurantList.businessList) {
           restaurants[restaurantList.businessList[res].id] = restaurantList.businessList[res]

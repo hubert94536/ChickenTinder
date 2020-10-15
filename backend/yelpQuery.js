@@ -26,10 +26,11 @@ const getRestaurants = (req) => {
               rating: business.rating,
               price: business.price,
               phone: business.display_phone,
-              location: business.location,
+              city: business.location.city,
               latitude: business.coordinates.latitude,
               longitude: business.coordinates.longitude,
               url: business.url,
+              transactions: business.transactions
             }
           }),
         }
