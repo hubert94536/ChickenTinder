@@ -30,7 +30,8 @@ const getRestaurants = (req) => {
               latitude: business.coordinates.latitude,
               longitude: business.coordinates.longitude,
               url: business.url,
-              transactions: business.transactions
+              transactions: business.transactions,
+              categories: business.categories
             }
           }),
         }
