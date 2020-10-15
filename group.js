@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
-<<<<<<< HEAD
   View,
 } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
@@ -15,17 +14,6 @@ import Card from './groupCard.js'
 import FilterSelector from './filter.js'
 import socket from './socket.js'
 import { USERNAME } from 'react-native-dotenv'
-=======
-} from 'react-native';
-import Card from './groupCard.js';
-import { USERNAME } from 'react-native-dotenv';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import AsyncStorage from '@react-native-community/async-storage';
-import socket from './socket.js';
-import Alert from './alert.js';
-import FilterSelector from './filter.js';
-import Swiper from 'react-native-swiper';
->>>>>>> 24bd0f2cddd528fb8949c3cbe766abe231c8e5cb
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -50,7 +38,6 @@ export default class Group extends React.Component {
       leaveAlert: false,
       endAlert: false,
       swipe: true,
-<<<<<<< HEAD
       filters: {}
     }
     this.updateMemberList()
@@ -100,22 +87,6 @@ export default class Group extends React.Component {
   // update user cards in group
   updateMemberList () {
     memberList = []
-=======
-    };
-    this.updateMemberList()
-    socket.getSocket().on('kick', res => {
-      if (res.username === this.state.username) {
-        socket.leaveRoom(res.room);
-        this.props.navigation.navigate('Home');
-      }
-    });
-    socket.getSocket().on('update', res => {
-      this.setState({ members: res })
-    })
-  }
-  updateMemberList() {
-    memberList = [];
->>>>>>> 24bd0f2cddd528fb8949c3cbe766abe231c8e5cb
     for (var user in this.state.members) {
       console.log(user)
       memberList.push(
@@ -130,7 +101,6 @@ export default class Group extends React.Component {
       )
     }
   }
-<<<<<<< HEAD
 
   // changing button appearance
   underlayShow () {
@@ -140,14 +110,6 @@ export default class Group extends React.Component {
   // changing button appearance
   underlayHide () {
     this.setState({ start: false })
-=======
-  underlayShow() {
-    this.setState({ start: true });
-  }
-
-  underlayHide() {
-    this.setState({ start: false });
->>>>>>> 24bd0f2cddd528fb8949c3cbe766abe231c8e5cb
   }
 
   leaveGroup () {
@@ -166,7 +128,6 @@ export default class Group extends React.Component {
   cancelAlert () {
     this.state.host === this.state.username
       ? this.setState({ endAlert: false })
-<<<<<<< HEAD
       : this.setState({ leaveAlert: false })
   }
 
@@ -188,18 +149,6 @@ export default class Group extends React.Component {
 
   render () {
     // this.updateMemberList();
-=======
-      : this.setState({ leaveAlert: false });
-  }
-
-  submitFilters() {
-    this.refs.swiper.scrollBy(-1);
-    this.setState({ swipe: false });
-  }
-
-  render() {
-    this.updateMemberList()
->>>>>>> 24bd0f2cddd528fb8949c3cbe766abe231c8e5cb
     return (
       <Swiper
         ref='swiper'
@@ -232,15 +181,9 @@ export default class Group extends React.Component {
                 onPress={() =>
                   this.state.host === this.state.username
                     ? this.setState({ endAlert: true })
-<<<<<<< HEAD
                     : this.setState({ leaveAlert: true })}
                 underlayColor='white'
               >
-=======
-                    : this.setState({ leaveAlert: true })
-                }
-                underlayColor="white">
->>>>>>> 24bd0f2cddd528fb8949c3cbe766abe231c8e5cb
                 <Text
                   style={
                     this.state.leaveGroup
@@ -253,11 +196,7 @@ export default class Group extends React.Component {
               </TouchableHighlight>
             </View>
             <View style={{ flexDirection: 'row' }}>
-<<<<<<< HEAD
               <Icon name='user' style={styles.icon} />
-=======
-              <Icon name="user" style={styles.icon} />
->>>>>>> 24bd0f2cddd528fb8949c3cbe766abe231c8e5cb
               <Text
                 style={{
                   color: '#fff',

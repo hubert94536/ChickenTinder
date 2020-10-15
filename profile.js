@@ -14,11 +14,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Swiper from 'react-native-swiper'
-<<<<<<< HEAD
 import Alert from './alert.js'
-=======
-import Friends from './friends.js'
->>>>>>> 24bd0f2cddd528fb8949c3cbe766abe231c8e5cb
 import api from './accountsApi.js'
 import { facebookService } from './facebookService.js'
 import Friends from './friends.js'
@@ -228,19 +224,11 @@ export default class UserProfileView extends Component {
             onIndexChanged={() =>
               this.setState({ friends: !this.state.friends })}
           >
-<<<<<<< HEAD
             <Friends
               isFriends
             />
             <Friends
               isFriends={false}
-=======
-            <Friends 
-              isFriends = {true}
-            />
-            <Friends 
-              isFriends = {false}
->>>>>>> 24bd0f2cddd528fb8949c3cbe766abe231c8e5cb
             />
           </Swiper>
         </View>
