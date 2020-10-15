@@ -8,7 +8,7 @@ const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
 export default class Card extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       isFriend: this.props.friends,
@@ -119,7 +119,7 @@ export default class Card extends React.Component {
                 }}
               >
                 Accept
-              </Text>
+                </Text>
             </TouchableHighlight>
             <Icon
               style={{

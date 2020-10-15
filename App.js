@@ -1,14 +1,16 @@
-import React from 'react'
-import { createAppContainer } from 'react-navigation'
-import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
-import firebase from 'firebase'
-import Group from './group.js'
-import Home from './home.js'
-import Login from './login.js'
-import Match from './match.js'
-import RestaurantCard from './round.js'
-import Username from './username.js'
-import UserProfileView from './profile.js'
+import React from 'react';
+import Login from './login.js';
+import Home from './home.js';
+import Username from './username.js';
+import UserProfileView from './profile.js';
+import Group from './group.js';
+import RestaurantCard from './round.js';
+import Search from "./search.js"
+import {UID} from 'react-native-dotenv';
+import firebase from 'firebase';
+import {createStackNavigator} from 'react-navigation-stack'; // 1.0.0-beta.27
+import {createAppContainer} from 'react-navigation';
+import Match from './match.js';
 
 //  determining which landing page to show
 var user = firebase.auth().currentUser
@@ -43,9 +45,12 @@ const RootStack = createStackNavigator(
     Match: {
       screen: Match
     },
+    Search: {
+      screen: Search,
+    }
   },
   {
-    initialRouteName: start,
+    initialRouteName: 'Home',
     headerMode: 'none'
   }
 )
@@ -56,15 +61,15 @@ export default class App extends React.Component {
   }
 }
 
-import React from 'react'
-import FilterSelector from './filter.js'
-import Group from './group.js'
-import RestaurantCard from './round.js'
+// // import React from 'react'
+// import FilterSelector from './filter.js'
+// import Group from './group.js'
+// import RestaurantCard from './round.js'
 
-export default class App extends React.Component{
-  render () {
-    return (
-      <Group/>
-    )
-  }
-}
+// export default class App extends React.Component{
+//   render () {
+//     return (
+//       <Group/>
+//     )
+//   }
+// }
