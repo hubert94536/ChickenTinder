@@ -8,14 +8,14 @@ import friendsApi from './friendsApi.js'
 const font = 'CircularStd-Medium'
 
 export default class Friends extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       search: '',
       errorAlert: false,
       data: [], // array for friends
       friends: [], // array of Profile components
-      isFriends: this.props.isFriends // For rendering friends (true) or requests (false)
+      isFriends: this.props.isFriends, // For rendering friends (true) or requests (false)
     }
     this.getFriends()
   }
@@ -25,11 +25,9 @@ export default class Friends extends React.Component {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
       .getFriends()
-      .then(res => {
+      .then((res) => {
         var pushFriends = []
-        var friendOrRequest = this.state.isFriends
-          ? 'Accepted'
-          : 'Pending Request'
+        var friendOrRequest = this.state.isFriends ? 'Accepted' : 'Pending Request'
         for (var friend in res.friendList) {
           if (res.friendList[friend].status === friendOrRequest) {
             pushFriends.push(res.friendList[friend])
@@ -38,16 +36,16 @@ export default class Friends extends React.Component {
         //  need two so when you search it doesn't get rid of all the friends
         this.setState({ friends: pushFriends, data: pushFriends })
       })
-      .catch(err => console.log(err))
+      .catch((err) => console.log(err))
   }
 
   //  searches the users friends by username
   searchFilterFunction (text) {
     this.setState({
-      search: text
+      search: text,
     })
 
-    const newData = this.state.data.filter(item => {
+    const newData = this.state.data.filter((item) => {
       const itemData = `${item.name.toUpperCase()} ${item.username.toUpperCase()}`
 
       const textData = text.toUpperCase()
@@ -58,14 +56,14 @@ export default class Friends extends React.Component {
     this.setState({ friends: newData })
   }
 
-  removeRequest (id, newArr, status) {
+  removeRequest(id, newArr, status) {
     if (!status) {
       friendsApi
         .removeFriendship(id)
-        .then(res => {
+        .then((res) => {
           this.setState({ friends: newArr })
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err)
           this.setState({ errorAlert: true })
         })
@@ -74,7 +72,7 @@ export default class Friends extends React.Component {
     }
   }
 
-  render () {
+  render() {
     var friends = []
     var friendList = this.state.friends
     // Create all friend/request cards
@@ -90,9 +88,8 @@ export default class Friends extends React.Component {
             id={friendList[i].id}
             key={i}
             index={i}
-            press={(id, newArr, status) =>
-              this.removeRequest(id, newArr, status)}
-          />
+            press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
+          />,
         )
       }
     }
@@ -103,8 +100,8 @@ export default class Friends extends React.Component {
             containerStyle={styles.container}
             inputContainerStyle={styles.inputContainer}
             inputStyle={styles.input}
-            placeholder='Search by username'
-            onChangeText={text => this.searchFilterFunction(text)}
+            placeholder="Search by username"
+            onChangeText={(text) => this.searchFilterFunction(text)}
             value={this.state.search}
             lightTheme
             round
@@ -113,10 +110,10 @@ export default class Friends extends React.Component {
         <ScrollView style={{ flexDirection: 'column' }}>{friends}</ScrollView>
         {this.state.errorAlert && (
           <Alert
-            title='Error!'
-            body='Please try again'
+            title="Error!"
+            body="Please try again"
             button
-            buttonText='Close'
+            buttonText="Close"
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />
@@ -133,16 +130,16 @@ const styles = StyleSheet.create({
     borderTopColor: 'transparent',
     width: '100%',
     height: 45,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   inputContainer: {
     height: 7,
     width: '90%',
     alignSelf: 'center',
-    backgroundColor: '#ebecf0'
+    backgroundColor: '#ebecf0',
   },
   input: {
     fontFamily: font,
-    fontSize: 15
-  }
+    fontSize: 15,
+  },
 })

@@ -7,7 +7,7 @@ var myPic = ''
 var myName = ''
 var socket = null
 
-AsyncStorage.multiGet([USERNAME, NAME, PHOTO]).then(res => {
+AsyncStorage.multiGet([USERNAME, NAME, PHOTO]).then((res) => {
   myUsername = res[0][1]
   myName = res[1][1]
   myPic = res[2][1]
@@ -15,7 +15,7 @@ AsyncStorage.multiGet([USERNAME, NAME, PHOTO]).then(res => {
 
 const connect = () => {
   socket = io('https://wechews.herokuapp.com', {
-    query: `username=${myUsername}`
+    query: `username=${myUsername}`,
   })
 }
 
@@ -77,5 +77,5 @@ export default {
   endSession,
   submitFilters,
   likeRestaurant,
-  getSocket
+  getSocket,
 }

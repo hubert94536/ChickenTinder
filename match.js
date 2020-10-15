@@ -15,30 +15,23 @@ const font = 'CircularStd-Medium'
 
 // the card for the restaurant match
 export default class Match extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       endRound: false,
       goToYelp: false,
-      restaurant: this.props.navigation.state.params.match
+      restaurant: this.props.navigation.state.params.restaurant,
     }
+    console.log(this.props.navigation.state.params.restaurant)
   }
 
-  render () {
+  render() {
     return (
       <View style={styles.container}>
         <Text style={styles.text}>It's A Match!</Text>
-        <Icon name='thumbs-up' style={styles.thumbIcon} />
-        <Text
-          style={styles.subheading}
-        >
-          Your group has selected:
-        </Text>
-        <Text
-          style={styles.restaurantName}
-        >
-          {this.state.restaurant.name}
-        </Text>
+        <Icon name="thumbs-up" style={styles.thumbIcon} />
+        <Text style={styles.subheading}>Your group has selected:</Text>
+        <Text style={styles.restaurantName}>{this.state.restaurant.name}</Text>
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
@@ -46,40 +39,31 @@ export default class Match extends React.Component {
             latitude: this.state.restaurant.latitude,
             longitude: this.state.restaurant.longitude,
             latitudeDelta: 0.015,
-            longitudeDelta: 0.015
+            longitudeDelta: 0.015,
           }}
         >
           <Marker
-            coordinate={{ latitude: this.state.restaurant.latitude, longitude: this.state.restaurant.longitude }}
+            coordinate={{
+              latitude: this.state.restaurant.latitude,
+              longitude: this.state.restaurant.longitude,
+            }}
           />
         </MapView>
         <TouchableHighlight
-          underlayColor='white'
+          underlayColor="white"
           onShowUnderlay={() => this.setState({ endRound: true })}
           onHideUnderlay={() => this.setState({ endRound: false })}
           style={styles.endButton}
         >
-          <Text
-            style={this.state.endRound ? styles.endTextPressed : styles.endText}
-          >
-            End Round
-          </Text>
+          <Text style={  this.state.endRound ? styles.endTextPressed : styles.endText}>End Round</Text>
         </TouchableHighlight>
         <TouchableHighlight
           style={styles.yelpButton}
-
           onPress={() => Linking.openURL(this.state.restaurant.url)}
         >
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <Icon
-              name='yelp'
-              style={{ color: 'red', fontSize: 20, alignSelf: 'center' }}
-            />
-            <Text
-              style={styles.yelpText}
-            >
-              Go To Yelp
-            </Text>
+            <Icon name="yelp" style={{ color: 'red', fontSize: 20, alignSelf: 'center' }} />
+            <Text style={styles.yelpText}>Go To Yelp</Text>
           </View>
         </TouchableHighlight>
       </View>
@@ -91,7 +75,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: hex,
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
   },
   text: {
     fontFamily: font,
@@ -100,13 +84,26 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     marginRight: '10%',
-    marginLeft: '10%'
+    marginLeft: '10%',
   },
   thumbIcon: {
     color: 'white',
     textAlign: 'center',
     fontFamily: font,
-    fontSize: 50
+    fontSize: 50,
+  },
+  restaurantName: {
+    fontFamily: font,
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+  subheading: {
+    fontFamily: font,
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 20,
   },
   restaurantName: {
     fontFamily: font,
@@ -131,11 +128,11 @@ const styles = StyleSheet.create({
     borderWidth: 2.5,
     borderRadius: 30,
     alignSelf: 'center',
-    width: '45%'
+    width: '45%',
   },
   endText: {
     fontFamily: font,
-    color: this.state.endRound ? hex : 'white',
+    color: 'white',
     fontSize: 20,
     textAlign: 'center',
     padding: '6%',
@@ -143,7 +140,7 @@ const styles = StyleSheet.create({
   },
   endTextPressed: {
     fontFamily: font,
-    color: 'white',
+    color: hex,
     fontSize: 20,
     textAlign: 'center',
     padding: '6%',

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
   PermissionsAndroid,
   ScrollView,
@@ -46,7 +46,7 @@ const hours = [
   { label: '20', value: 20 },
   { label: '21', value: 21 },
   { label: '22', value: 22 },
-  { label: '23', value: 23 }
+  { label: '23', value: 23 },
 ]
 
 //  need this for choosing the time
@@ -62,7 +62,7 @@ const minutes = [
   { label: '40', value: 40 },
   { label: '45', value: 45 },
   { label: '50', value: 50 },
-  { label: '55', value: 55 }
+  { label: '55', value: 55 },
 ]
 
 const tagsCuisine = [
@@ -75,7 +75,7 @@ const tagsCuisine = [
   'Pacific Islander',
   'East Asian',
   'Middle Eastern',
-  'African'
+  'African',
 ]
 
 const tagsDiet = ['Vegan', 'Vegetarian']
@@ -84,28 +84,27 @@ const tagsPrice = ['$', '$$', '$$$', '$$$$']
 
 //  requests the users permission
 const requestLocationPermission = async () => {
-  await PermissionsAndroid.request(
-    PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    {
-      title: 'Location Permission',
-      message:
-        'WeChews needs access to your location ' +
-        'so you can find nearby restaurants.',
-      buttonNeutral: 'Ask Me Later',
-      buttonNegative: 'Cancel',
-      buttonPositive: 'OK'
-    }
-  ).then(res => {
-    if (res === PermissionsAndroid.RESULTS.GRANTED) {
-      return true
-    } else {
-      return false
-    }
+  PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
+    title: 'Location Permission',
+    message: 'WeChews needs access to your location ' + 'so you can find nearby restaurants.',
+    buttonNeutral: 'Ask Me Later',
+    buttonNegative: 'Cancel',
+    buttonPositive: 'OK',
   })
+    .then((res) => {
+      if (res === PermissionsAndroid.RESULTS.GRANTED) {
+        return true
+      } else {
+        return false
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+    })
 }
 
 export default class FilterSelector extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       host: this.props.host,
@@ -123,7 +122,7 @@ export default class FilterSelector extends React.Component {
       // showing alerts and modals
       locationAlert: false,
       formatAlert: false,
-      chooseFriends: false
+      chooseFriends: false,
     }
   }
 
@@ -136,16 +135,16 @@ export default class FilterSelector extends React.Component {
   componentDidMount () {
     if (requestLocationPermission()) {
       Geolocation.getCurrentPosition(
-        position => {
+        (position) => {
           this.setState({
             long: position.coords.longitude,
-            lat: position.coords.latitude
+            lat: position.coords.latitude,
           })
         },
-        error => {
+        (error) => {
           console.log(error.code, error.message)
         },
-        { venableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        { venableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
       )
     }
   }
@@ -262,11 +261,7 @@ export default class FilterSelector extends React.Component {
       Socket.submitFilters(filters, this.state.host)
       this.handlePress(filters)
     } else {
-      if (
-        this.state.isHost &&
-        this.state.location === null &&
-        this.state.useLocation === false
-      ) {
+      if (this.state.isHost && this.state.location === null && this.state.useLocation === false) {
         this.setState({ locationAlert: true })
       } else {
         filters.location = this.state.location
@@ -282,16 +277,14 @@ export default class FilterSelector extends React.Component {
     }
   }
 
-  render () {
+  render() {
     return (
       <View style={styles.mainContainer}>
         <View style={styles.titleStyle}>
           <Text style={styles.titleText}>
             {this.state.isHost ? 'Group Settings' : 'Set Your Filters'}
           </Text>
-          {this.state.isHost && (
-            <Text style={styles.titleSub}>(only visible to host)</Text>
-          )}
+          {this.state.isHost && <Text style={styles.titleSub}>(only visible to host)</Text>}
         </View>
         <ScrollView>
           {this.state.isHost && (
@@ -302,9 +295,7 @@ export default class FilterSelector extends React.Component {
                 underlayColor={hex}
                 style={styles.touchableFriends}
               >
-                <Text style={styles.touchableFriendsText}>
-                  Select from Friends
-                </Text>
+                <Text style={styles.touchableFriendsText}>Select from Friends</Text>
               </TouchableHighlight>
             </View>
           )}
@@ -314,7 +305,7 @@ export default class FilterSelector extends React.Component {
               all={tagsCuisine}
               selected={this.state.selectedCuisine}
               isExclusive={false}
-              onChange={event => this.handleUpdate(this.state.selectedCuisine, event)}
+              onChange={(event) => this.handleUpdate(this.state.selectedCuisine, event)}
             />
           </View>
           {this.state.isHost && (
@@ -322,13 +313,13 @@ export default class FilterSelector extends React.Component {
               style={{
                 marginLeft: '5%',
                 marginRight: '5%',
-                marginTop: '2%'
+                marginTop: '2%',
               }}
             >
               <View
                 style={{
                   flexDirection: 'row',
-                  justifyContent: 'space-between'
+                  justifyContent: 'space-between',
                 }}
               >
                 <Text style={styles.header}>Use Current Location:</Text>
@@ -337,25 +328,19 @@ export default class FilterSelector extends React.Component {
                   trackColor={{ true: '#eba2a8' }}
                   style={{ marginTop: '1%' }}
                   value={this.state.useLocation}
-                  onValueChange={val => {
+                  onValueChange={(val) => {
                     this.setState({
-                      useLocation: val
+                      useLocation: val,
                     })
                   }}
                 />
               </View>
               <TextInput
                 placeholder={
-                  this.state.useLocation
-                    ? 'Using Current Location'
-                    : 'Enter City, State'
+                  this.state.useLocation ? 'Using Current Location' : 'Enter City, State'
                 }
-                onChangeText={text => this.setState({ location: text })}
-                style={
-                  this.state.useLocation
-                    ? styles.inputDisabled
-                    : styles.inputEnabled
-                }
+                onChangeText={(text) => this.setState({ location: text })}
+                style={this.state.useLocation ? styles.inputDisabled : styles.inputEnabled}
                 //  To make TextInput enable/disable
                 editable={!this.state.useLocation}
               />
@@ -371,7 +356,7 @@ export default class FilterSelector extends React.Component {
                     fontFamily: font,
                     alignSelf: 'center',
                     marginLeft: '1%',
-                    marginTop: '1%'
+                    marginTop: '1%',
                   }}
                 >
                   ({this.state.distance} miles)
@@ -381,7 +366,7 @@ export default class FilterSelector extends React.Component {
                 style={{
                   width: '85%',
                   height: 30,
-                  alignSelf: 'center'
+                  alignSelf: 'center',
                 }}
                 minimumValue={5}
                 maximumValue={25}
@@ -389,14 +374,12 @@ export default class FilterSelector extends React.Component {
                 step={0.5}
                 minimumTrackTintColor={hex}
                 thumbTintColor={hex}
-                onValueChange={value => this.setState({ distance: value })}
+                onValueChange={(value) => this.setState({ distance: value })}
               />
             </View>
           )}
           {this.state.isHost && (
-            <View
-              style={{ marginLeft: '5%', marginRight: '5%', marginTop: '2%' }}
-            >
+            <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '2%' }}>
               <Text style={styles.header}>Open at:</Text>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <DropDownPicker
@@ -404,31 +387,30 @@ export default class FilterSelector extends React.Component {
                     color: hex,
                     fontFamily: font,
                     fontSize: 20,
-                    textAlign: 'right'
+                    textAlign: 'right',
                   }}
                   arrowColor={hex}
                   arrowSize={25}
-                  placeholder=' '
+                  placeholder=" "
                   items={hours}
                   containerStyle={{ height: 40, width: '50%' }}
                   style={{
                     flexDirection: 'row-reverse',
                     backgroundColor: 'white',
-                    borderWidth: 0
+                    borderWidth: 0,
                   }}
                   labelStyle={{
                     color: hex,
                     fontSize: 20,
-                    fontFamily: font
+                    fontFamily: font,
                   }}
-                  onChangeItem={selection =>
-                    this.setState({ hour: selection.value })}
+                  onChangeItem={(selection) => this.setState({ hour: selection.value })}
                 />
                 <Text
                   style={{
                     fontFamily: font,
                     color: hex,
-                    fontSize: 25
+                    fontSize: 25,
                   }}
                 >
                   :
@@ -437,24 +419,23 @@ export default class FilterSelector extends React.Component {
                   selectedLabelStyle={{
                     color: hex,
                     fontFamily: font,
-                    fontSize: 20
+                    fontSize: 20,
                   }}
                   arrowColor={hex}
                   arrowSize={25}
-                  placeholder=' '
+                  placeholder=" "
                   items={minutes}
                   containerStyle={{ height: 40, width: '50%' }}
                   style={{
                     backgroundColor: 'white',
-                    borderWidth: 0
+                    borderWidth: 0,
                   }}
                   labelStyle={{
                     color: hex,
                     fontSize: 20,
-                    fontFamily: font
+                    fontFamily: font,
                   }}
-                  onChangeItem={selection =>
-                    this.setState({ minute: selection.value })}
+                  onChangeItem={(selection) => this.setState({ minute: selection.value })}
                 />
               </View>
             </View>
@@ -466,7 +447,7 @@ export default class FilterSelector extends React.Component {
                 all={tagsPrice}
                 selected={this.state.selectedPrice}
                 isExclusive={false}
-                onChange={event => this.handleUpdate(this.state.selectedPrice, event)}
+                onChange={(event) => this.handleUpdate(this.state.selectedPrice, event)}
               />
             </View>
           )}
@@ -476,7 +457,7 @@ export default class FilterSelector extends React.Component {
               all={tagsDiet}
               selected={this.state.selectedRestriction}
               isExclusive={false}
-              onChange={event => this.handleUpdate(this.state.selectedRestriction, event)}
+              onChange={(event) => this.handleUpdate(this.state.selectedRestriction, event)}
             />
           </View>
         </ScrollView>
@@ -485,34 +466,32 @@ export default class FilterSelector extends React.Component {
           style={styles.touchable}
           onPress={() => this.evaluateFilters()}
         >
-          <Text style={styles.nextTitle}>
-            {this.state.isHost ? "Let's Go" : 'Submit Filters'}
-          </Text>
+          <Text style={styles.nextTitle}>{this.state.isHost ? "Let's Go" : 'Submit Filters'}</Text>
         </TouchableHighlight>
         {(this.state.locationAlert || this.state.formatAlert || this.state.chooseFriends) && (
           <BlurView
-            blurType='light'
+            blurType="light"
             blurAmount={20}
-            reducedTransparencyFallbackColor='white'
+            reducedTransparencyFallbackColor="white"
             style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}
           />
         )}
         {this.state.locationAlert && (
           <Alert
-            title='Location Required'
-            body='Your location is required to find nearby restuarants'
+            title="Location Required"
+            body="Your location is required to find nearby restuarants"
             button
-            buttonText='Close'
+            buttonText="Close"
             press={() => this.setState({ locationAlert: false })}
             cancel={() => this.setState({ locationAlert: false })}
           />
         )}
         {this.state.formatAlert && (
           <Alert
-            title='Error'
-            body='Make sure your location is in the correct format: City, State'
+            title="Error"
+            body="Make sure your location is in the correct format: City, State"
             button
-            buttonText='Close'
+            buttonText="Close"
             press={() => this.setState({ formatAlert: false })}
             cancel={() => this.setState({ formatAlert: false })}
           />
@@ -530,31 +509,31 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: 'white',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   titleStyle: {
     flexDirection: 'row',
-    margin: '5%'
+    margin: '5%',
     // alignItems: 'center',
   },
   titleText: {
     fontFamily: font,
     fontSize: 28,
-    color: hex
+    color: hex,
   },
   titleSub: {
     fontFamily: font,
     color: hex,
     alignSelf: 'center',
     margin: '1%',
-    marginTop: '2%'
+    marginTop: '2%',
   },
   touchableFriends: {
     borderWidth: 2,
     borderRadius: 25,
     borderColor: hex,
     alignSelf: 'center',
-    marginTop: '5%'
+    marginTop: '5%',
   },
   touchableFriendsText: {
     color: hex,
@@ -564,14 +543,14 @@ const styles = StyleSheet.create({
     paddingLeft: '3%',
     paddingRight: '3%',
     paddingTop: '2%',
-    paddingBottom: '2%'
+    paddingBottom: '2%',
   },
   header: {
     textAlign: 'left',
     color: hex,
     fontSize: 25,
     margin: '1%',
-    fontFamily: font
+    fontFamily: font,
   },
   touchable: {
     width: '50%',
@@ -580,7 +559,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 25,
     justifyContent: 'center',
-    margin: '5%'
+    margin: '5%',
   },
   nextTitle: {
     textAlign: 'center',
@@ -588,13 +567,13 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontFamily: font,
     paddingTop: '2%',
-    paddingBottom: '2%'
+    paddingBottom: '2%',
   },
   inputEnabled: {
     backgroundColor: 'white',
-    borderColor: 'black'
+    borderColor: 'black',
   },
   inputDisabled: {
-    backgroundColor: 'white'
-  }
+    backgroundColor: 'white',
+  },
 })

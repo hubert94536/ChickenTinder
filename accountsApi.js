@@ -4,40 +4,42 @@ import { ID } from 'react-native-dotenv'
 
 var myId = ''
 
-AsyncStorage.getItem(ID).then(res => {
+AsyncStorage.getItem(ID).then((res) => {
   myId = res
 })
 
 const accountsApi = axios.create({
-  baseURL: 'https://wechews.herokuapp.com'
+  baseURL: 'https://wechews.herokuapp.com',
 })
 
 // creates user and returns id
 const createFBUser = async (name, id, username, email, photo) => {
-  return accountsApi
-    .post('/accounts', {
-      params: {
-        id: id,
-        name: name,
-        username: username,
-        email: email,
-        photo: photo
-      }
-    })
-    //  returns business info from Yelp
-    .then(res => {
-      return res.status
-    })
-    .catch(error => {
-      throw error.response.status
-    })
+  return (
+    accountsApi
+      .post('/accounts', {
+        params: {
+          id: id,
+          name: name,
+          username: username,
+          email: email,
+          photo: photo,
+        },
+      })
+      //  returns business info from Yelp
+      .then((res) => {
+        return res.status
+      })
+      .catch((error) => {
+        throw error.response.status
+      })
+  )
 }
 
 // gets list of users
 const getAllUsers = async () => {
   return accountsApi
     .get('/accounts')
-    .then(res => {
+    .then((res) => {
       return {
         status: res.status,
         userList: res.data.users.map(function (users) {
@@ -46,21 +48,21 @@ const getAllUsers = async () => {
             name: users.name,
             username: users.username,
             photo: users.photo,
-            id: users.id
+            id: users.id,
           }
-        })
+        }),
       }
     })
-    .catch(error => {
+    .catch((error) => {
       throw error.response.status
     })
 }
 
 // gets first 100 account usernames/names starting with text input
-const searchUsers = async text => {
+const searchUsers = async (text) => {
   return accountsApi
     .get(`/accounts/search/${text}`)
-    .then(res => {
+    .then((res) => {
       return {
         status: res.status,
         count: res.data.users.count,
@@ -70,12 +72,12 @@ const searchUsers = async text => {
             name: users.name,
             username: users.username,
             photo: users.photo,
-            id: users.id
+            id: users.id,
           }
-        })
+        }),
       }
     })
-    .catch(error => {
+    .catch((error) => {
       throw error.response.status
     })
 }
@@ -84,10 +86,10 @@ const searchUsers = async text => {
 const deleteUser = async () => {
   return accountsApi
     .delete(`/accounts/${myId}`)
-    .then(res => {
+    .then((res) => {
       return res.status
     })
-    .catch(error => {
+    .catch((error) => {
       throw error.response.status
     })
 }
@@ -96,7 +98,7 @@ const deleteUser = async () => {
 const getUser = async () => {
   return accountsApi
     .get(`/accounts/${myId}`)
-    .then(res => {
+    .then((res) => {
       return {
         status: res.status,
         username: res.data.user.username,
@@ -104,82 +106,82 @@ const getUser = async () => {
         phone_number: res.data.user.phone_number,
         name: res.data.user.name,
         photo: res.data.user.photo,
-        id: res.data.user.id
+        id: res.data.user.id,
       }
     })
-    .catch(error => {
+    .catch((error) => {
       throw error.response.status
     })
 }
 
 // update email and returns status
-const updateEmail = async info => {
+const updateEmail = async (info) => {
   const req = {
-    email: info
+    email: info,
   }
   return updateUser(req)
 }
 
 // update username and returns status
-const updateUsername = async info => {
+const updateUsername = async (info) => {
   const req = {
-    username: info
+    username: info,
   }
   return updateUser(req)
 }
 
 // update username and returns status
-const updateName = async info => {
+const updateName = async (info) => {
   const req = {
-    name: info
+    name: info,
   }
   return updateUser(req)
 }
 
 // update username and returns status
-const updatePhoneNumber = async info => {
+const updatePhoneNumber = async (info) => {
   const req = {
-    phone_number: info
+    phone_number: info,
   }
   return updateUser(req)
 }
 
 // updates user and returns status
-const updateUser = async req => {
+const updateUser = async (req) => {
   return accountsApi
     .put(`/accounts/${myId}`, {
-      params: req
+      params: req,
     })
-    .then(res => {
+    .then((res) => {
       return {
-        status: res.status
+        status: res.status,
       }
     })
-    .catch(error => {
+    .catch((error) => {
       throw error.response.status
     })
 }
 
 // checks username and returns status
-const checkUsername = async username => {
+const checkUsername = async (username) => {
   return accountsApi
     .get(`/username/${username}`)
-    .then(res => {
+    .then((res) => {
       return res.status
     })
-    .catch(error => {
+    .catch((error) => {
       throw error.response.status
     })
 }
 
 // checks phone number and returns status
-const checkPhoneNumber = async phoneNumber => {
+const checkPhoneNumber = async (phoneNumber) => {
   return accountsApi
     .get(`/phoneNumber/${phoneNumber}`)
-    .then(res => {
+    .then((res) => {
       return res.status
     })
-    .catch(error => {
+    .catch((error) => {
       throw error.response.status
     })
 }
@@ -195,5 +197,5 @@ export default {
   updatePhoneNumber,
   checkUsername,
   checkPhoneNumber,
-  searchUsers
+  searchUsers,
 }

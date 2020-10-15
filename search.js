@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -14,83 +14,98 @@ const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
 export default class Search extends Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
 
     this.state = {
-      data: []
-    }
-    api.createFBUser('boo', 1, 'booo', 'boo@gmail.com', 'pic')
+      data: [],
+      friends: this.props.navigation.state.params.allFriends,
+    };
+    
   }
 
-  // for rendering a separator b/w cards
-  renderSeparator () {
+  renderSeparator = () => {
     return (
       <View
         style={{
           height: 1,
           width: '86%',
           backgroundColor: '#CED0CE',
-          marginLeft: '14%'
+          marginLeft: '14%',
         }}
       />
-    )
+    );
   };
 
-  // searches and modifies the display
-  searchFilterFunction (text) {
-    this.setState({ value: text })
+  searchFilterFunction = text => {
+    this.setState({
+      value: text,
+    });
 
-    clearTimeout(this.timeout) // clears the old timer
+    clearTimeout(this.timeout); // clears the old timer
     this.timeout = setTimeout(
       () =>
         api
           .searchUsers(text)
           .then(res => {
-            this.setState({ data: res.userList })
+            // this.setState({data: res.userList});
+            var resultUsers = []
+            for (var user in res.userList) {
+              var status = 'Add'
+              if (res.userList[user].id in this.state.friends) {
+                status = this.state.friends[res.userList[user].id ]
+              }
+              var person = {
+                name: res.userList[user].name ,
+                username: res.userList[user].username ,
+                image: res.userList[user].photo,
+                status: status
+              }
+              resultUsers.push(person);
+            }
+            this.setState({data: resultUsers});
           })
-          .catch(err => console.log(err)),
-      100
-    )
+          .catch(() => {}),
+      100,
+    );
   };
 
-  // for displaying the header
-  renderHeader () {
+  renderHeader = () => {
     return (
       <SearchBar
         containerStyle={styles.container}
         inputContainerStyle={styles.inputContainer}
         inputStyle={styles.input}
-        placeholder='Seach by username'
-        lightTheme
-        round
+        placeholder="Seach by username"
+        lightTheme={true}
+        round={true}
         onChangeText={text => this.searchFilterFunction(text)}
         autoCorrect={false}
         value={this.state.value}
       />
-    )
+    );
   };
 
-  render () {
+  render() {
     return (
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <View style={{flex: 1, backgroundColor: 'white'}}>
         <Text style={styles.title}>Find New Friends!</Text>
         <FlatList
           data={this.state.data}
-          renderItem={({ item }) => (
+          renderItem={({item}) => (
             <Card
               name={item.name}
               username={'@' + item.username}
               image={item.photo}
-              requested
+              requested={item.status}
             />
           )}
-          keyExtractor={item => item.username}
+          keyExtractor={(item) => item.username}
           ItemSeparatorComponent={this.renderSeparator}
           ListHeaderComponent={this.renderHeader}
         />
       </View>
-    )
+    );
   }
 }
 
@@ -100,7 +115,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     color: hex,
     textAlign: 'center',
-    margin: '4%'
+    margin: '4%',
   },
   container: {
     backgroundColor: 'white',
@@ -108,17 +123,17 @@ const styles = StyleSheet.create({
     borderTopColor: 'transparent',
     width: '100%',
     height: Dimensions.get('window').height * 0.08,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   inputContainer: {
     height: Dimensions.get('window').height * 0.05,
     width: '90%',
     alignSelf: 'center',
-    backgroundColor: '#ebecf0'
+    backgroundColor: '#ebecf0',
   },
   input: {
     textAlignVertical: 'center',
     fontFamily: font,
-    fontSize: 18
-  }
-})
+    fontSize: 18,
+  },
+});

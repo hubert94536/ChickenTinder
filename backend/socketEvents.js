@@ -7,7 +7,7 @@ var invites = {} // store invites
 var lastRoom = {} // store last room if user disconnected
 var restaurants = {} // caching of restaurants
 module.exports = (io) => {
-  io.on('connection', socket => {
+  io.on('connection', (socket) => {
     // replace old socket id with new one in both objects
     let socketUser = socket.handshake.query.username
     delete clientsIds[clients[socketUser]]
@@ -21,7 +21,7 @@ module.exports = (io) => {
       io.to(clients[socketUser]).emit('invite', {
         username: sender,
         pic: sessions[sender].members[sender].pic,
-        name: sessions[sender].members[sender].name
+        name: sessions[sender].members[sender].name,
       })
     }
     // send reconnect alert if user was in a room and room still exists
@@ -30,20 +30,23 @@ module.exports = (io) => {
       io.to(clients[socketUser]).emit('reconnectRoom', {
         username: sender,
         pic: sessions[sender].members[sender].pic,
-        name: sessions[sender].members[sender].name
+        name: sessions[sender].members[sender].name,
       })
     }
 
     // check for disconnection
-    socket.on('disconnect', async data => {
+    socket.on('disconnect', async () => {
       try {
         let username = clientsIds[socket.id]
         if (username in lastRoom) {
-          await Accounts.update({
-            inSession: false
-          }, {
-            where: { username: username }
-          })
+          await Accounts.update(
+            {
+              inSession: false,
+            },
+            {
+              where: { username: username },
+            },
+          )
           let room = lastRoom[username]
           delete sessions[room].members[username]
           // delete room if this is last member in room
@@ -60,13 +63,16 @@ module.exports = (io) => {
     })
 
     // creates session and return session info to host
-    socket.on('createRoom', async data => {
+    socket.on('createRoom', async (data) => {
       try {
-        await Accounts.update({
-          inSession: true
-        }, {
-          where: { username: data.host }
-        })
+        await Accounts.update(
+          {
+            inSession: true,
+          },
+          {
+            where: { username: data.host },
+          },
+        )
         socket.join(data.host)
         sessions[data.host] = {}
         sessions[data.host].members = {}
@@ -86,10 +92,10 @@ module.exports = (io) => {
     })
 
     // send invite with host info to join a room
-    socket.on('invite', async data => {
+    socket.on('invite', async (data) => {
       try {
         let user = await Accounts.findOne({
-          where: { username: data.username }
+          where: { username: data.username },
         })
         // check if friend is in another group
         if (user.inSession) {
@@ -99,7 +105,7 @@ module.exports = (io) => {
           io.to(clients[data.username]).emit('invite', {
             username: data.host,
             pic: sessions[data.host].members[data.host].pic,
-            name: sessions[data.host].members[data.host].name
+            name: sessions[data.host].members[data.host].name,
           })
         }
       } catch (error) {
@@ -108,7 +114,7 @@ module.exports = (io) => {
     })
 
     // declines invite and send to host
-    socket.on('decline', data => {
+    socket.on('decline', (data) => {
       try {
         delete invites[data.username]
         io.to(clients[data.room]).emit('decline', data.username)
@@ -118,15 +124,18 @@ module.exports = (io) => {
     })
 
     // alerts everyone in room updated status
-    socket.on('joinRoom', async data => {
+    socket.on('joinRoom', async (data) => {
       // include to check if room exists
       if (data.room in sessions) {
         try {
-          await Accounts.update({
-            inSession: true
-          }, {
-            where: { username: data.username }
-          })
+          await Accounts.update(
+            {
+              inSession: true,
+            },
+            {
+              where: { username: data.username },
+            },
+          )
           socket.join(data.room)
           delete invites[data.username]
           sessions[data.room].members[data.username] = {}
@@ -144,7 +153,7 @@ module.exports = (io) => {
     })
 
     // alerts to everyone user submitted filters & returns selected filters
-    socket.on('submitFilters', data => {
+    socket.on('submitFilters', (data) => {
       // merge to master list, send response back
       try {
         sessions[data.room].members[data.username].filters = true
@@ -170,46 +179,56 @@ module.exports = (io) => {
     })
 
     // alert to all clients in room to start
-    socket.on('start', async data => {
+    socket.on('start', async (data) => {
       // proceed to restaurant matching after everyone submits filters
       try {
-        sessions[data.room].filters.categories = Array.from(sessions[data.room].filters.categories).toString()
+        sessions[data.room].filters.categories = Array.from(
+          sessions[data.room].filters.categories,
+        ).toString()
         const restaurantList = await Yelp.getRestaurants(sessions[data.room].filters)
         // store restaurant info in 'cache'
         for (let res in restaurantList.businessList) {
           restaurants[restaurantList.businessList[res].id] = restaurantList.businessList[res]
         }
-        io.in(data.room).emit('start', restaurantList)
+        io.in(data.room).emit('start', restaurantList.businessList)
       } catch (error) {
+        console.log(error)
         socket.emit('exception', error)
       }
     })
 
-    socket.on('like', data => {
+    socket.on('like', (data) => {
       // add restaurant id to list + check for matches
       try {
         // increment restaurant count
-        sessions[data.room].restaurants[data.restaurant] = (sessions[data.room].restaurants[data.restaurant] || 0) + 1
-        if (sessions[data.room].restaurants[data.restaurant] === Object.keys(sessions[data.room].members).length) {
+        sessions[data.room].restaurants[data.restaurant] =
+          (sessions[data.room].restaurants[data.restaurant] || 0) + 1
+        if (
+          sessions[data.room].restaurants[data.restaurant] ===
+          Object.keys(sessions[data.room].members).length
+        ) {
           // return restaurant info from 'cache'
           io.in(data.room).emit('match', { restaurant: restaurants[data.restaurant] })
-          console.log(restaurants[data.restaurant])
         } else {
           console.log(data.restaurant)
         }
       } catch (error) {
+        console.log(error)
         socket.emit('exception', error)
       }
     })
 
     // leaving a session
-    socket.on('leave', async data => {
+    socket.on('leave', async (data) => {
       try {
-        await Accounts.update({
-          inSession: false
-        }, {
-          where: { username: data.username }
-        })
+        await Accounts.update(
+          {
+            inSession: false,
+          },
+          {
+            where: { username: data.username },
+          },
+        )
         socket.leave(data.room)
         delete sessions[data.room].members[data.username]
         delete lastRoom[data.username]
@@ -225,17 +244,16 @@ module.exports = (io) => {
     })
 
     // host can kick a user from room
-    socket.on('kick', data => {
+    socket.on('kick', (data) => {
       try {
         io.to(clients[data.username]).emit('kick', { username: data.username, room: data.room })
-        console.log(data.username)
       } catch (error) {
         socket.emit('exception', error)
       }
     })
 
     // alert all users to leave room
-    socket.on('end', data => {
+    socket.on('end', (data) => {
       try {
         io.in(data.room).emit('leave', data.room)
       } catch (error) {

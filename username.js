@@ -1,11 +1,5 @@
 import React from 'react'
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableHighlight,
-  View
-} from 'react-native'
+import { StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import Alert from './alert.js'
 import api from './accountsApi.js'
@@ -15,7 +9,7 @@ const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
 class Username extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       username: null,
@@ -26,7 +20,7 @@ class Username extends React.Component {
       photo: '',
       // showing alerts
       errorAlert: false,
-      takenAlert: false
+      takenAlert: false,
     }
   }
 
@@ -47,7 +41,7 @@ class Username extends React.Component {
       uid: await AsyncStorage.getItem(UID),
       id: await AsyncStorage.getItem(ID),
       email: await AsyncStorage.getItem(EMAIL),
-      photo: await AsyncStorage.getItem(PHOTO)
+      photo: await AsyncStorage.getItem(PHOTO),
     })
   }
 
@@ -68,32 +62,26 @@ class Username extends React.Component {
       return api.createFBUser(this.state.name, this.state.id, this.state.username, this.state.email, this.state.photo).then(() => {
         this.props.navigation.navigate('Home')
       })
-    })
-      .catch(error => {
+      .catch((error) => {
         if (error === 404) {
           this.setState({ takenAlert: true })
         } else {
           this.setState({ errorAlert: true })
         }
       })
-  };
+  }
+}
 
-  render () {
+  render() {
     return (
-      <View
-        style={styles.mainContainer}
-      >
-        <Text
-          style={styles.header}
-        >
-          'Chews' a username!
-        </Text>
+      <View style={styles.mainContainer}>
+        <Text style={styles.header}>'Chews' a username!</Text>
         <View style={{ marginTop: '35%' }}>
           <TextInput
             style={styles.input}
-            textAlign='left'
-            placeholder='Enter a username'
-            onChangeText={username => {
+            textAlign="left"
+            placeholder="Enter a username"
+            onChangeText={(username) => {
               this.setState({ username })
             }}
             value={this.state.username}
@@ -106,25 +94,23 @@ class Username extends React.Component {
             onPress={() => this.handleClick()}
             style={styles.button}
           >
-            <Text style={this.state.pressed ? styles.yesPress : styles.noPress}>
-              Enter
-            </Text>
+            <Text style={this.state.pressed ? styles.yesPress : styles.noPress}>Enter</Text>
           </TouchableHighlight>
         </View>
         {this.state.errorAlert && (
           <Alert
-            title='Error, please try again'
+            title="Error, please try again"
             button
-            buttonText='Close'
+            buttonText="Close"
             press={() => this.closeError()}
             cancel={() => this.closeError()}
           />
         )}
         {this.state.takenAlert && (
           <Alert
-            title='Username taken!'
+            title="Username taken!"
             button
-            buttonText='Close'
+            buttonText="Close"
             press={() => this.closeTaken()}
             cancel={() => this.closeTaken()}
           />
@@ -166,20 +152,20 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     width: '70%',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   yesPress: {
     fontFamily: font,
     alignSelf: 'center',
     color: '#fff',
-    fontSize: 20
+    fontSize: 20,
   },
   noPress: {
     fontFamily: font,
     alignSelf: 'center',
     color: hex,
-    fontSize: 20
-  }
+    fontSize: 20,
+  },
 })
 
 export default Username

@@ -7,20 +7,20 @@ const font = 'CircularStd-Medium'
 
 //  cards for when you're choosing friends for your group
 export default class Card extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       added: this.props.added,
-      pressed: false
+      pressed: false,
     }
   }
 
-  render () {
+  render() {
     return (
       <View style={{ flexDirection: 'row', flex: 1 }}>
         <Image
           source={{
-            uri: this.props.image
+            uri: this.props.image,
           }}
           style={{ borderRadius: 63, height: 60, width: 60, margin: '3%' }}
         />
@@ -28,7 +28,7 @@ export default class Card extends React.Component {
           style={{
             alignSelf: 'center',
             marginLeft: '1%',
-            flex: 1
+            flex: 1,
           }}
         >
           <Text style={{ fontFamily: font, fontWeight: 'bold', fontSize: 15 }}>
@@ -37,15 +37,13 @@ export default class Card extends React.Component {
           <Text style={{ fontFamily: font }}>{this.props.username}</Text>
         </View>
         {this.state.added && (
-          <View
-            style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
-          >
+          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Text
               style={{
                 fontFamily: font,
                 color: hex,
                 fontSize: 15,
-                alignSelf: 'center'
+                alignSelf: 'center',
               }}
             >
               Added
@@ -56,23 +54,21 @@ export default class Card extends React.Component {
                 color: hex,
                 fontSize: 35,
                 alignSelf: 'center',
-                margin: '8%'
+                margin: '8%',
               }}
               onPress={() => this.setState({ added: false })}
-              name='check-circle'
+              name="check-circle"
             />
           </View>
         )}
         {!this.state.added && (
-          <View
-            style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
-          >
+          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Text
               style={{
                 fontFamily: font,
                 color: hex,
                 fontSize: 15,
-                alignSelf: 'center'
+                alignSelf: 'center',
               }}
             >
               Add
@@ -83,10 +79,10 @@ export default class Card extends React.Component {
                 color: hex,
                 fontSize: 35,
                 alignSelf: 'center',
-                margin: '8%'
+                margin: '8%',
               }}
               onPress={() => this.setState({ added: true })}
-              name='plus-circle'
+              name="plus-circle"
             />
           </View>
         )}
