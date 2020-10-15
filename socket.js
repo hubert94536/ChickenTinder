@@ -1,5 +1,5 @@
-import io from 'socket.io-client'
 import AsyncStorage from '@react-native-community/async-storage'
+import io from 'socket.io-client'
 import { USERNAME, NAME, PHOTO } from 'react-native-dotenv'
 
 var myUsername = ''
@@ -15,8 +15,8 @@ AsyncStorage.multiGet([USERNAME, NAME, PHOTO]).then(res => {
 
 const connect = () => {
   socket = io('https://wechews.herokuapp.com', {
-  query: `username=${myUsername}`
-})
+    query: `username=${myUsername}`
+  })
 }
 
 const createRoom = () => {
@@ -51,13 +51,14 @@ const startSession = () => {
   socket.emit('start', { room: myUsername })
 }
 
+// past filters object & room username
 const submitFilters = (filters, room) => {
   socket.emit('submitFilters', { username: myUsername, filters: filters, room: room })
 }
 
+// pass restaurant id
 const likeRestaurant = (room, restaurant) => {
   socket.emit('like', { room: room, restaurant: restaurant })
-  return 200
 }
 
 const getSocket = () => {

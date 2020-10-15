@@ -5,26 +5,28 @@ var clients = {} // associates username with client id
 var clientsIds = {} // associates client id with username
 var invites = {} // store invites
 var lastRoom = {} // store last room if user disconnected
+var restaurants = {} // caching of restaurants
 module.exports = (io) => {
   io.on('connection', socket => {
     // replace old socket id with new one in both objects
-    var socketUser = socket.handshake.query.username
+    let socketUser = socket.handshake.query.username
     delete clientsIds[clients[socketUser]]
     clients[socketUser] = socket.id
     clientsIds[socket.id] = socketUser
+    var sender
 
-    // send invite if previously sent before connection
+    // send invite if previously sent before user connected
     if (socketUser in invites) {
-      var sender = invites[socketUser]
+      let sender = invites[socketUser]
       io.to(clients[socketUser]).emit('invite', {
         username: sender,
         pic: sessions[sender].members[sender].pic,
         name: sessions[sender].members[sender].name
       })
     }
-    // send reconnection if user was in a room and room still exists
+    // send reconnect alert if user was in a room and room still exists
     if (socketUser in lastRoom && lastRoom[socketUser] in sessions) {
-      var sender = lastRoom[socketUser]
+      let sender = lastRoom[socketUser]
       io.to(clients[socketUser]).emit('reconnectRoom', {
         username: sender,
         pic: sessions[sender].members[sender].pic,
@@ -35,14 +37,14 @@ module.exports = (io) => {
     // check for disconnection
     socket.on('disconnect', async data => {
       try {
-        var username = clientsIds[socket.id]
+        let username = clientsIds[socket.id]
         if (username in lastRoom) {
           await Accounts.update({
             inSession: false
           }, {
             where: { username: username }
           })
-          var room = lastRoom[username]
+          let room = lastRoom[username]
           delete sessions[room].members[username]
           // delete room if this is last member in room
           if (Object.keys(sessions[room].members).length === 0) {
@@ -86,7 +88,7 @@ module.exports = (io) => {
     // send invite with host info to join a room
     socket.on('invite', async data => {
       try {
-        var user = await Accounts.findOne({
+        let user = await Accounts.findOne({
           where: { username: data.username }
         })
         // check if friend is in another group
@@ -149,16 +151,19 @@ module.exports = (io) => {
         io.in(data.room).emit('update', sessions[data.room].members)
         // check if host
         if (data.username === data.room) {
-          sessions[data.host].filters.price = data.price
-          sessions[data.host].filters.open_at = data.open_at
-          sessions[data.host].filters.radius = data.radius
-          sessions[data.host].filters.latitude = data.latitude
-          sessions[data.host].filters.longitude = data.longitude
+          if (data.filters.price) {
+            sessions[data.room].filters.price = data.filters.price
+          }
+          if (data.filters.open_at) {
+            sessions[data.room].filters.open_at = data.open_at
+          }
+          sessions[data.room].filters.radius = data.filters.radius
+          sessions[data.room].filters.latitude = data.filters.latitude
+          sessions[data.room].filters.longitude = data.filters.longitude
         }
-        for (var category in data.categories) {
-          sessions[data.host].filters.categories.add(category)
+        for (let category in data.filters.categories) {
+          sessions[data.room].filters.categories.add(data.filters.categories[category])
         }
-        console.log(sessions[data.host].filters)
       } catch (error) {
         socket.emit('exception', error)
       }
@@ -166,10 +171,15 @@ module.exports = (io) => {
 
     // alert to all clients in room to start
     socket.on('start', async data => {
-      // proceed to restaurant matching after EVERYONE submits filters
+      // proceed to restaurant matching after everyone submits filters
       try {
-        const restaurantList = await Yelp.getRestaurants(data.req)
-        io.in(data.room).emit('start', { restaurantList: restaurantList })
+        sessions[data.room].filters.categories = Array.from(sessions[data.room].filters.categories).toString()
+        const restaurantList = await Yelp.getRestaurants(sessions[data.room].filters)
+        // store restaurant info in 'cache'
+        for (let res in restaurantList.businessList) {
+          restaurants[restaurantList.businessList[res].id] = restaurantList.businessList[res]
+        }
+        io.in(data.room).emit('start', restaurantList)
       } catch (error) {
         socket.emit('exception', error)
       }
@@ -178,21 +188,15 @@ module.exports = (io) => {
     socket.on('like', data => {
       // add restaurant id to list + check for matches
       try {
+        // increment restaurant count
         sessions[data.room].restaurants[data.restaurant] = (sessions[data.room].restaurants[data.restaurant] || 0) + 1
         if (sessions[data.room].restaurants[data.restaurant] === Object.keys(sessions[data.room].members).length) {
-          socket.emit('like', { restaurant: data.restaurant, room: data.room })
-          console.log(data.restaurant)
+          // return restaurant info from 'cache'
+          io.in(data.room).emit('match', { restaurant: restaurants[data.restaurant] })
+          console.log(restaurants[data.restaurant])
         } else {
-          console.log(sessions[data.room])
+          console.log(data.restaurant)
         }
-      } catch (error) {
-        socket.emit('exception', error)
-      }
-    })
-
-    socket.on('match', data => {
-      try {
-        io.in(data.room).emit('match', data.restaurant)
       } catch (error) {
         socket.emit('exception', error)
       }

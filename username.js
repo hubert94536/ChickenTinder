@@ -1,23 +1,22 @@
-import React from 'react';
+import React from 'react'
 import {
   StyleSheet,
-  TouchableHighlight,
-  View,
   Text,
   TextInput,
-  Dimensions,
-} from 'react-native';
-import api from './accountsApi.js';
-import AsyncStorage from '@react-native-community/async-storage';
-import { NAME, USERNAME, ID, UID, EMAIL, PHOTO } from 'react-native-dotenv';
-import Alert from './alert.js';
+  TouchableHighlight,
+  View
+} from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
+import Alert from './alert.js'
+import api from './accountsApi.js'
+import { NAME, USERNAME, ID, UID, EMAIL, PHOTO } from 'react-native-dotenv'
 
-const hex = '#F25763';
-const font = 'CircularStd-Medium';
+const hex = '#F25763'
+const font = 'CircularStd-Medium'
 
 class Username extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       username: null,
       name: '',
@@ -25,98 +24,77 @@ class Username extends React.Component {
       id: '',
       email: '',
       photo: '',
-      //showing alerts
+      // showing alerts
       errorAlert: false,
-      takenAlert: false,
-    };
+      takenAlert: false
+    }
   }
 
-  closeTaken() {
-    this.setState({ takenAlert: false });
+  // closes alert
+  closeTaken () {
+    this.setState({ takenAlert: false })
   }
 
-  closeError() {
-    this.setState({ errorAlert: false });
+  // closes alert
+  closeError () {
+    this.setState({ errorAlert: false })
   }
 
-  async componentDidMount() {
+  // gets users information once component mounts
+  async componentDidMount () {
     this.setState({
       name: await AsyncStorage.getItem(NAME),
       uid: await AsyncStorage.getItem(UID),
       id: await AsyncStorage.getItem(ID),
       email: await AsyncStorage.getItem(EMAIL),
-      photo: await AsyncStorage.getItem(PHOTO),
-    });
+      photo: await AsyncStorage.getItem(PHOTO)
+    })
   }
 
-  underlayShow() {
-    this.setState({ pressed: true });
+  // adjusting the look of button
+  underlayShow () {
+    this.setState({ pressed: true })
   }
 
-  underlayHide() {
-    this.setState({ pressed: false });
+  // adjusting the look of button
+  underlayHide () {
+    this.setState({ pressed: false })
   }
 
-  handleClick = () => {
-    api
-      .checkUsername(this.state.username)
-      .then(() => {
-        AsyncStorage.setItem(USERNAME, this.state.username);
-        return api.createFBUser(
-          this.state.name,
-          this.state.id,
-          this.state.username,
-          this.state.email,
-          this.state.photo
-        )
-        .then(() => {
-          this.props.navigation.navigate('Home');
-        })
+  //  checks whether or not the username can be set
+  handleClick () {
+    api.checkUsername(this.state.username).then(() => {
+      AsyncStorage.setItem(USERNAME, this.state.username)
+      return api.createFBUser(this.state.name, this.state.id, this.state.username, this.state.email, this.state.photo).then(() => {
+        this.props.navigation.navigate('Home')
       })
+    })
       .catch(error => {
         if (error === 404) {
-          this.setState({ takenAlert: true });
+          this.setState({ takenAlert: true })
         } else {
-          this.setState({ errorAlert: true });
+          this.setState({ errorAlert: true })
         }
-      });
+      })
   };
 
-  render() {
+  render () {
     return (
       <View
-        style={{
-          flex: 1,
-          flexDirection: 'column',
-          backgroundColor: 'white',
-        }}>
+        style={styles.mainContainer}
+      >
         <Text
-          style={{
-            fontFamily: font,
-            color: hex,
-            fontSize: 40,
-            marginTop: '8%',
-            marginLeft: '3%',
-            textAlign: 'left',
-          }}>
+          style={styles.header}
+        >
           'Chews' a username!
         </Text>
         <View style={{ marginTop: '35%' }}>
           <TextInput
-            style={{
-              fontFamily: font,
-              color: hex,
-              fontSize: 25,
-              alignSelf: 'center',
-              borderBottomColor: hex,
-              borderBottomWidth: 2.5,
-              margin: '3%',
-              width: '70%',
-            }}
-            textAlign="left"
-            placeholder={'Enter a username'}
+            style={styles.input}
+            textAlign='left'
+            placeholder='Enter a username'
             onChangeText={username => {
-              this.setState({ username });
+              this.setState({ username })
             }}
             value={this.state.username}
           />
@@ -126,7 +104,8 @@ class Username extends React.Component {
             activeOpacity={1}
             underlayColor={hex}
             onPress={() => this.handleClick()}
-            style={styles.button}>
+            style={styles.button}
+          >
             <Text style={this.state.pressed ? styles.yesPress : styles.noPress}>
               Enter
             </Text>
@@ -134,28 +113,51 @@ class Username extends React.Component {
         </View>
         {this.state.errorAlert && (
           <Alert
-            title="Error, please try again"
-            button={true}
-            buttonText="Close"
+            title='Error, please try again'
+            button
+            buttonText='Close'
             press={() => this.closeError()}
             cancel={() => this.closeError()}
           />
         )}
         {this.state.takenAlert && (
           <Alert
-            title="Username taken!"
-            button={true}
-            buttonText="Close"
+            title='Username taken!'
+            button
+            buttonText='Close'
             press={() => this.closeTaken()}
             cancel={() => this.closeTaken()}
           />
         )}
       </View>
-    );
+    )
   }
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: 'white'
+  },
+  header: {
+    fontFamily: font,
+    color: hex,
+    fontSize: 40,
+    marginTop: '8%',
+    marginLeft: '3%',
+    textAlign: 'left'
+  },
+  input: {
+    fontFamily: font,
+    color: hex,
+    fontSize: 25,
+    alignSelf: 'center',
+    borderBottomColor: hex,
+    borderBottomWidth: 2.5,
+    margin: '3%',
+    width: '70%'
+  },
   button: {
     fontFamily: font,
     borderRadius: 25,
@@ -164,20 +166,20 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     width: '70%',
-    alignSelf: 'center',
+    alignSelf: 'center'
   },
   yesPress: {
     fontFamily: font,
     alignSelf: 'center',
     color: '#fff',
-    fontSize: 20,
+    fontSize: 20
   },
   noPress: {
     fontFamily: font,
     alignSelf: 'center',
     color: hex,
-    fontSize: 20,
-  },
-});
+    fontSize: 20
+  }
+})
 
-export default Username;
+export default Username

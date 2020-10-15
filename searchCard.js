@@ -1,14 +1,16 @@
 import React from 'react'
-import { Text, View, Image, TouchableHighlight } from 'react-native'
+import { Image, Text, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
+// cards for the search for friends screen
 export default class Card extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      // for button display
       requested: this.props.requested,
       pressed: false
     }
@@ -35,7 +37,7 @@ export default class Card extends React.Component {
           </Text>
           <Text style={{ fontFamily: font }}>{this.props.username}</Text>
         </View>
-        {this.state.requested && (
+        {this.state.requested === 'Requested' && (
           <View
             style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
           >
@@ -49,7 +51,7 @@ export default class Card extends React.Component {
             >
               Requested
             </Text>
-            <Icon
+            {/* <Icon
               style={{
                 fontFamily: font,
                 color: hex,
@@ -59,10 +61,10 @@ export default class Card extends React.Component {
               }}
               onPress={() => this.setState({ requested: false })}
               name='times-circle'
-            />
+            /> */}
           </View>
         )}
-        {!this.state.requested && (
+        {this.state.requested === 'Add' && (
           <View
             style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
           >
@@ -84,8 +86,62 @@ export default class Card extends React.Component {
                 alignSelf: 'center',
                 margin: '8%'
               }}
-              onPress={() => this.setState({ requested: true })}
+              onPress={() => this.setState({ requested: 'Requested' })}
               name='plus-circle'
+            />
+          </View>
+        )}
+         {this.state.requested === 'Accepted' && (
+          <View
+            style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
+          >
+            <Text
+              style={{
+                fontFamily: font,
+                color: hex,
+                fontSize: 15,
+                alignSelf: 'center'
+              }}
+            >
+              Friends
+            </Text>
+            <Icon
+              style={{
+                fontFamily: font,
+                color: hex,
+                fontSize: 35,
+                alignSelf: 'center',
+                margin: '8%'
+              }}
+              name='check-circle'
+            />
+          </View>
+        )}
+        {this.state.requested === 'Pending Request' && (
+          <View
+            style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
+          >
+            <Icon
+              style={{
+                fontFamily: font,
+                color: hex,
+                fontSize: 35,
+                alignSelf: 'center',
+                margin: '8%'
+              }}
+              name='check-circle'
+              onPress={() => this.setState({requested:'Accepted'})}
+            />
+            <Icon
+              style={{
+                fontFamily: font,
+                color: hex,
+                fontSize: 35,
+                alignSelf: 'center',
+                margin: '8%'
+              }}
+              name='times-circle'
+              onPress={() => this.setState({requested:'Add'})}
             />
           </View>
         )}

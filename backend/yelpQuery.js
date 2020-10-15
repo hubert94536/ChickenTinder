@@ -12,28 +12,31 @@ const yelpApi = axios.create({
 const getRestaurants = (req) => {
   return (
     yelpApi
-      .get('/businesses/search', req)
+      .get('/businesses/search', { params: req })
       // returns business info from Yelp
       .then(res => {
         return {
           total: res.data.total,
-          businessList: res.data.businesses.map(function (business) {
+          businessList: res.data.businesses.map(business => {
             return {
+              id: business.id,
               name: business.name,
-              distance: business.distance,
-              categories: business.categories,
+              distance: business.distance / 1600,
               reviewCount: business.review_count,
               rating: business.rating,
               price: business.price,
               phone: business.display_phone,
               location: business.location,
-              isClosed: business.is_closed
+              latitude: business.region.center.latitude,
+              longitude: business.region.center.longitude,
+              url: business.url
             }
           })
         }
       })
       .catch(error => {
-        return Promise.reject(new Error(error.response.status))
+        console.log(error.response)
+        throw error.response.status
       })
   )
 }

@@ -1,115 +1,120 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react'
 import {
-  StyleSheet,
+  Alert,
   SafeAreaView,
-  TouchableOpacity,
-  View,
+  StyleSheet,
   Text,
   TextInput,
-} from 'react-native';
-import auth from '@react-native-firebase/auth';
+  TouchableOpacity,
+  View
+} from 'react-native'
+import auth from '@react-native-firebase/auth'
 
 class PhoneAuthScreen extends Component {
-  state = {
-    phone: '',
-    confirmResult: null,
-    verificationCode: '',
-    userId: '',
-  };
+  constructor (props) {
+    super(props)
+    this.state = {
+      phone: '',
+      confirmResult: null,
+      verificationCode: '',
+      userId: ''
+    }
+  }
 
-  validatePhoneNumber = () => {
-    var regexp = /1?\W*([2-9][0-8][0-9])\W*([2-9][0-9]{2})\W*([0-9]{4})(\se?x?t?(\d*))?/;
-    return regexp.test(this.state.phone);
-  };
+  validatePhoneNumber () {
+    var regexp = /1?\W*([2-9][0-8][0-9])\W*([2-9][0-9]{2})\W*([0-9]{4})(\se?x?t?(\d*))?/
+    return regexp.test(this.state.phone)
+  }
 
-  handleSendCode = () => {
+  handleSendCode () {
     // Request to send OTP
     if (this.validatePhoneNumber()) {
       auth()
         .signInWithPhoneNumber(this.state.phone)
         .then(confirmResult => {
-          this.setState({confirmResult});
+          this.setState({ confirmResult })
         })
         .catch(error => {
-          alert(error.message);
-
-          console.log(error);
-        });
+          Alert.alert(error.message)
+          console.log(error)
+        })
     } else {
-      alert('Invalid Phone Number');
+      Alert.alert('Invalid Phone Number')
     }
   };
 
-  changePhoneNumber = () => {
-    this.setState({confirmResult: null, verificationCode: ''});
-  };
+  changePhoneNumber () {
+    this.setState({ confirmResult: null, verificationCode: '' })
+  }
 
-  handleVerifyCode = () => {
+  handleVerifyCode () {
     // Request for OTP verification
-    const {confirmResult, verificationCode} = this.state;
-    if (verificationCode.length == 6) {
+    const { confirmResult, verificationCode } = this.state
+    if (verificationCode.length === 6) {
       confirmResult
         .confirm(verificationCode)
         .then(user => {
-          this.setState({userId: user.uid});
-          alert(`Verified!`);
+          this.setState({ userId: user.uid })
+          Alert.alert('Verified!')
         })
         .catch(error => {
-          alert(error.message);
-          console.log(error);
-        });
+          Alert.alert(error.message)
+          console.log(error)
+        })
     } else {
-      alert('Please enter a 6 digit OTP code.');
+      Alert.alert('Please enter a 6 digit OTP code.')
     }
-  };
+  }
 
-  renderConfirmationCodeView = () => {
+  renderConfirmationCodeView () {
     return (
       <View style={styles.verificationView}>
         <TextInput
           style={styles.textInput}
-          placeholder="Verification code"
-          placeholderTextColor="#eee"
+          placeholder='Verification code'
+          placeholderTextColor='#eee'
           value={this.state.verificationCode}
-          keyboardType="numeric"
+          keyboardType='numeric'
           onChangeText={verificationCode => {
-            this.setState({verificationCode});
+            this.setState({ verificationCode })
           }}
           maxLength={6}
         />
         <TouchableOpacity
-          style={[styles.themeButton, {marginTop: 20}]}
-          onPress={this.handleVerifyCode}>
+          style={[styles.themeButton, { marginTop: 20 }]}
+          onPress={this.handleVerifyCode}
+        >
           <Text style={styles.themeButtonTitle}>Verify Code</Text>
         </TouchableOpacity>
       </View>
-    );
-  };
+    )
+  }
 
-  render() {
+  render () {
     return (
-      <SafeAreaView style={[styles.container, {backgroundColor: '#de4a4a'}]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: '#de4a4a' }]}>
         <View style={styles.page}>
           <TextInput
             style={styles.textInput}
-            placeholder="Phone Number (+1 xxx xxx xxxx)"
-            placeholderTextColor="#eee"
-            keyboardType="phone-pad"
+            placeholder='Phone Number (+1 xxx xxx xxxx)'
+            placeholderTextColor='#eee'
+            keyboardType='phone-pad'
             value={this.state.phone}
             onChangeText={phone => {
-              this.setState({phone});
+              this.setState({ phone })
             }}
             maxLength={15}
-            editable={this.state.confirmResult ? false : true}
+            editable={!this.state.confirmResult}
           />
 
           <TouchableOpacity
-            style={[styles.themeButton, {marginTop: 20}]}
+            style={[styles.themeButton, { marginTop: 20 }]}
             onPress={
               this.state.confirmResult
                 ? this.changePhoneNumber
                 : this.handleSendCode
-            }>
+            }
+          >
             <Text style={styles.themeButtonTitle}>
               {this.state.confirmResult ? 'Change Phone Number' : 'Send Code'}
             </Text>
@@ -118,19 +123,19 @@ class PhoneAuthScreen extends Component {
           {this.state.confirmResult ? this.renderConfirmationCodeView() : null}
         </View>
       </SafeAreaView>
-    );
+    )
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#de4a4a',
+    backgroundColor: '#de4a4a'
   },
   page: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   textInput: {
     marginTop: 20,
@@ -141,7 +146,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingLeft: 10,
     color: '#fff',
-    fontSize: 16,
+    fontSize: 16
   },
   themeButton: {
     width: '90%',
@@ -151,18 +156,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#de4a4a',
     borderColor: '#fff',
     borderWidth: 2,
-    borderRadius: 5,
+    borderRadius: 5
   },
   themeButtonTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#fff'
   },
   verificationView: {
     width: '100%',
     alignItems: 'center',
-    marginTop: 50,
-  },
-});
+    marginTop: 50
+  }
+})
 
-export default PhoneAuthScreen;
+export default PhoneAuthScreen

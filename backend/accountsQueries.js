@@ -41,7 +41,7 @@ const createAccount = async (req, res) => {
       inSession: false,
       phone_number: req.body.params.phone_number
     })
-    return res.status(201).send("Account created")
+    return res.status(201).send('Account created')
   } catch (error) {
     return res.status(500).json({ error: error.message })
   }

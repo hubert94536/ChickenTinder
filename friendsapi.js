@@ -1,6 +1,6 @@
+import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
 import { ID } from 'react-native-dotenv'
-import AsyncStorage from '@react-native-community/async-storage'
 
 var myId = ''
 
@@ -9,20 +9,20 @@ AsyncStorage.getItem(ID).then(res => {
 })
 
 const friendsApi = axios.create({
-  baseURL: 'https://wechews.herokuapp.com',
+  baseURL: 'https://wechews.herokuapp.com'
 })
 
-//creates friendship
+// creates friendship
 const createFriendship = async (main, friend) => {
   return friendsApi
-    .post(`/friendships`, {
+    .post('/friendships', {
       params: {
         main: main,
         friend: friend
-      },
+      }
     })
     .then(res => {
-      return res.status;
+      return res.status
     })
     .catch(error => {
       throw error.response.status
@@ -53,7 +53,7 @@ const getFriends = async () => {
     })
 }
 
-//accept a friend request
+// accept a friend request
 const acceptFriendRequest = async (friend) => {
   return friendsApi
     .put(`/friendships/friends/${myId}/${friend}`)

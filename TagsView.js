@@ -1,53 +1,63 @@
-import React from 'react';
-import {View, StyleSheet, Button} from 'react-native';
-// import R from 'res/R'
-import BackgroundButton from './BackgroundButton';
-import {addOrRemove} from './addOrRemove';
+import React from 'react'
+import { StyleSheet, View } from 'react-native'
+import { addOrRemove } from './addOrRemove'
+import BackgroundButton from './BackgroundButton'
 
-const hex = '#F25763';
+const hex = '#F25763'
 
 export default class TagsView extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
-      selected: props.selected,
-    };
+      selected: this.props.selected
+    }
   }
 
-  render() {
-    return <View style={styles.container}>{this.makeButtons()}</View>;
+  handleUpdate (newTags) {
+    console.log(newTags)
   }
-  onPress = tag => {
-    let selected;
+
+  render () {
+    return <View style={styles.container}>{this.makeButtons()}</View>
+  }
+
+  onPress (tag) {
+    let chosen
     if (this.props.isExclusive) {
-      selected = [tag];
+      chosen = [tag]
+      this.setState({
+        selected: chosen
+      })
+      this.handleUpdate(chosen)
     } else {
-      selected = addOrRemove(this.state.selected, tag);
+      chosen = addOrRemove(this.state.selected, tag)
+      this.setState({
+        selected: chosen
+      })
+      this.handleUpdate(chosen)
     }
-    this.setState({
-      selected,
-    });
-  };
-  makeButtons() {
+  }
+
+  makeButtons () {
     return this.props.all.map((tag, i) => {
-      const on = this.state.selected.includes(tag);
-      const backgroundColor = on ? hex : 'white';
-      const textColor = on ? 'white' : hex;
-      const borderColor = on ? 'white' : hex;
+      const on = this.state.selected.includes(tag)
+      const backgroundColor = on ? hex : 'white'
+      const textColor = on ? 'white' : hex
+      const borderColor = on ? 'white' : hex
       return (
         <BackgroundButton
           backgroundColor={backgroundColor}
           textColor={textColor}
           borderColor={borderColor}
           onPress={() => {
-            this.onPress(tag);
+            this.onPress(tag)
           }}
           key={i}
           showImage={on}
           title={tag}
         />
-      );
-    });
+      )
+    })
   }
 }
 const styles = StyleSheet.create({
@@ -55,6 +65,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingVertical: 5,
-  },
-});
+    paddingVertical: 5
+  }
+})

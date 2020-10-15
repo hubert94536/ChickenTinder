@@ -13,65 +13,6 @@ import api from './accountsApi.js';
 import friendsApi from './friendsApi.js';
 
 
-const people = [
-  {
-    name: 'Hanna Co',
-    username: '@hannaco',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-    friends: true,
-  },
-  {
-    name: 'Hubert Chen',
-    username: '@hubesc',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-    friends: false,
-  },
-  {
-    name: 'Isha Gonu',
-    username: '@ishagonu',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-    friends: true,
-  },
-  {
-    name: 'Ruth Lee',
-    username: '@ruthlee',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-    friends: false,
-  },
-  {
-    name: 'Michelle Chan',
-    username: '@mishigan',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-    friends: true,
-  },
-  {
-    name: 'Janice Tsai',
-    username: '@jopanice',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-    friends: false,
-  },
-  {
-    name: 'Kyle Blake',
-    username: '@theekyleblake',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-    friends: true,
-  },
-  {
-    name: 'Brenna Waterman',
-    username: '@brennajune',
-    image:
-      'https://i.pinimg.com/236x/ec/d3/8c/ecd38c516c19d5cf6624ce3eeae1c4b2.jpg',
-    friends: false,
-  },
-];
-
 const hex = '#F25763';
 const font = 'CircularStd-Medium';
 
@@ -81,11 +22,10 @@ export default class Search extends Component {
 
     this.state = {
       data: [],
-      friends: this.props.navigation.getParam('allFriends', null),
+      friends: this.props.navigation.state.params.allFriends,
     };
     api.createFBUser('boo', 1, 'booo', 'boo@gmail.com', 'pic');
     
-    // this.getFriends()
   }
 
   renderSeparator = () => {
@@ -132,6 +72,8 @@ export default class Search extends Component {
 
               resultUsers.push(person);
             }
+
+            this.setState({data: resultUsers});
 
 
           })
@@ -220,7 +162,7 @@ export default class Search extends Component {
               name={item.name}
               username={'@' + item.username}
               image={item.photo}
-              requested={true}
+              requested={item.status}
             />
           )}
           keyExtractor={item => item.username}
