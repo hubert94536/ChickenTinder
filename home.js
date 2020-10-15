@@ -60,6 +60,9 @@ class Home extends React.Component {
     api.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
     api.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
     api.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
+    api.createFBUser('Helen', 5, 'helenthemelon', 'helenw@gmail.com', 'sjdkf'),
+    api.createFBUser('Kevin', 6, 'kevint', 'kevintang@gmail.com', 'sdfddf'),
+    
     // console.log("My id:" + myId)
     friendsApi.createFriendship(2, myId),
     friendsApi.createFriendship(4, 2),
@@ -80,6 +83,11 @@ class Home extends React.Component {
           friendsMap[res.friendList[friend].id] = res.friendList[friend].status
         }
         this.setState({ friends: friendsMap});
+        // console.log(this.state.friends)
+
+        this.props.navigation.navigate('Search', {
+          allFriends: friendsMap
+        })
       })
       .catch(err => console.log(err));
   }
@@ -131,9 +139,7 @@ class Home extends React.Component {
           style={styles.button}
           onPress={() => {
             this.getFriends()
-            this.props.navigation.navigate('Search', {
-            allFriends: this.state.friends
-          })}}>
+            }}>
           <Text
             style={
               this.state.profilePressed ? styles.yesPress : styles.noPress

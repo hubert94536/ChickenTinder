@@ -135,7 +135,8 @@ const styles = StyleSheet.create({
   },
   endText: {
     fontFamily: font,
-    color: this.state.endRound ? hex : 'white',
+    // color: this.state.endRound ? hex : 'white',
+    color: hex,
     fontSize: 20,
     textAlign: 'center',
     padding: '6%',

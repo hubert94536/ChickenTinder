@@ -52,17 +52,17 @@ export default class Search extends Component {
         api
           .searchUsers(text)
           .then(res => {
-            this.setState({data: res.userList});
+            // this.setState({data: res.userList});
 
             var resultUsers = []
             for (var user in res.userList) {
 
               var status = 'Add'
 
-              if (res.userList[user].id in friends) {
-                status = friends[user]
+              if (res.userList[user].id in this.state.friends) {
+                status = this.state.friends[res.userList[user].id ]
               }
-
+              
               var person = {
                 name: res.userList[user].name ,
                 username: res.userList[user].username ,
@@ -72,6 +72,7 @@ export default class Search extends Component {
 
               resultUsers.push(person);
             }
+
 
             this.setState({data: resultUsers});
 
