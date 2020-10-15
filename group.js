@@ -53,8 +53,7 @@ export default class Group extends React.Component {
     })
 
     socket.getSocket().on('start', (restaurants) => {
-      console.log(restaurants)
-      this.props.navigation.navigate('Round', { results: restaurants })
+      this.props.navigation.navigate('Round', { results: restaurants, host: this.state.host, isHost: this.state.host == this.state.username })
     })
 
     socket.getSocket().on('exception', (error) => {

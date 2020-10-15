@@ -20,8 +20,9 @@ export default class Match extends React.Component {
     this.state = {
       endRound: false,
       goToYelp: false,
-      restaurant: this.props.navigation.state.params.match
+      restaurant: this.props.navigation.state.params.restaurant
     }
+    console.log(this.props.navigation.state.params.restaurant)
   }
 
   render () {
@@ -135,7 +136,7 @@ const styles = StyleSheet.create({
   },
   endText: {
     fontFamily: font,
-    // color: this.state.endRound ? hex : 'white',
+    color: 'white',
     fontSize: 20,
     textAlign: 'center',
     padding: '6%',

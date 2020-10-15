@@ -14,11 +14,11 @@ export default class RestaurantCard extends React.Component {
     this.state = {
       index: 0,
       results: this.props.navigation.state.params.results,
-      isHost: true,
+      host: this.props.navigation.state.params.host,
+      isHost: this.props.navigation.state.params.isHost
     }
-    socket.getSocket().on('match', (restaurant) => {
-      console.log(restaurant)
-      this.props.navigation.navigate('Match', { match: restaurant })
+    socket.getSocket().on('match', (data) => {
+      this.props.navigation.navigate('Match', { restaurant: data.restaurant })
     })
 
     socket.getSocket().on('exception', (error) => {
@@ -32,7 +32,6 @@ export default class RestaurantCard extends React.Component {
   }
 
   likeRestaurant(resId) {
-    // uncomment and pass in host + restaurant id
     socket.likeRestaurant(this.state.host, resId)
   }
 
