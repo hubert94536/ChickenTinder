@@ -128,6 +128,7 @@ class Username extends React.Component {
       </View>
     )
   }
+
 }
 
 const styles = StyleSheet.create({

@@ -50,9 +50,9 @@ const RootStack = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'Home',
-    headerMode: 'none',
-  },
+    initialRouteName: start,
+    headerMode: 'none'
+  }
 )
 const AppContainer = createAppContainer(RootStack)
 export default class App extends React.Component {
