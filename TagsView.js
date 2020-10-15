@@ -13,8 +13,9 @@ export default class TagsView extends React.Component {
     }
   }
 
-  handleUpdate(newTags) {
-    console.log(newTags)
+  handleUpdate (newTags) {
+    // console.log(newTags)
+    this.props.onChange(newTags)
   }
 
   render() {

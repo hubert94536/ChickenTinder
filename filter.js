@@ -126,11 +126,6 @@ export default class FilterSelector extends React.Component {
     }
   }
 
-  // updates state when tag is selected/deselected
-  handleUpdate(chosenState, event) {
-    this.setState({ chosenState: event })
-  }
-
   // asks user for permission and get location as the component mounts
   componentDidMount() {
     if (requestLocationPermission()) {
@@ -303,7 +298,7 @@ export default class FilterSelector extends React.Component {
               all={tagsCuisine}
               selected={this.state.selectedCuisine}
               isExclusive={false}
-              onChange={(event) => this.handleUpdate(this.state.selectedCuisine, event)}
+              onChange={(event) => this.setState({selectedCuisine: event})}
             />
           </View>
           {this.state.isHost && (
@@ -445,7 +440,7 @@ export default class FilterSelector extends React.Component {
                 all={tagsPrice}
                 selected={this.state.selectedPrice}
                 isExclusive={false}
-                onChange={(event) => this.handleUpdate(this.state.selectedPrice, event)}
+                onChange={(event) => this.setState({selectedPrice: event})}
               />
             </View>
           )}
@@ -455,7 +450,7 @@ export default class FilterSelector extends React.Component {
               all={tagsDiet}
               selected={this.state.selectedRestriction}
               isExclusive={false}
-              onChange={(event) => this.handleUpdate(this.state.selectedRestriction, event)}
+              onChange={(event) => this.setState({selectedRestriction: event})}
             />
           </View>
         </ScrollView>

@@ -6,6 +6,8 @@ import {
   Text,
   View
 } from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
+
 import { SearchBar } from 'react-native-elements'
 import accountsApi from './accountsApi.js';
 import Card from './searchCard.js'
@@ -89,6 +91,11 @@ export default class Search extends Component {
   render() {
     return (
       <View style={{flex: 1, backgroundColor: 'white'}}>
+        <Icon
+              name="chevron-left"
+              style={styles.topIcons}
+              onPress={() => this.props.navigation.navigate('Home')}
+            />    
         <Text style={styles.title}>Find New Friends!</Text>
         <FlatList
           data={this.state.data}
@@ -111,12 +118,18 @@ export default class Search extends Component {
 }
 
 const styles = StyleSheet.create({
+  topIcons: {
+    color: hex,
+    fontSize: 27,
+    marginLeft: '5%',
+    marginTop: '5%'
+  },
   title: {
     fontFamily: font,
     fontSize: 40,
     color: hex,
     textAlign: 'center',
-    margin: '4%',
+    marginBottom: '4%'
   },
   container: {
     backgroundColor: 'white',

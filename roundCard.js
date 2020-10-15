@@ -1,10 +1,10 @@
 import React from 'react'
-import { Dimensions, Image, Linking, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, Image, Linking, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { faMapMarkerAlt, faUtensils } from '@fortawesome/free-solid-svg-icons'
 import { faStar } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { TouchableHighlight } from 'react-native-gesture-handler'
+// import { TouchableHighlight } from 'react-native-gesture-handler'
 
 // const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -73,46 +73,12 @@ export default class Card extends React.Component {
     }
   }
 
-  //   {
-  //     name: 'Chinchikurin',
-  //     url:
-  //       'https://www.yelp.com/biz/chinchikurin-little-tokyo-los-angeles-2?osq=chinchikurin',
-  //     image: require('./assets/images/japanese.png'),
-  //     stars: require('./assets/stars/4.5.png'),
-  //     price: '$$',
-  //     rating: 4.5,
-  //     review_count: 177,
-  //     distance: 10,
-  //     categories: [{title: 'Japanese'}],
-  //     location: {
-  //       city: 'Sawtelle',
-  //     },
-  //     is_closed: true,
-  //     transactions: ['pickup', 'delivery'],
-  //   },
-
   // for each transaction, put into comma-separated string
   evaluateTransactions(transactions) {
     return transactions.map((item) => item).join(', ')
   }
 
   render() {
-    // while (restuarants.length == 0) {
-    //   return (
-    //     <View style={styles.card}>
-    //       <Text
-    //         style={{
-    //           fontFamily: font,
-    //           color: hex,
-    //           textAlign: 'center',
-    //           fontSize: 40,
-    //           marginTop: '30%',
-    //         }}>
-    //         Fetching Restaurants!
-    //       </Text>
-    //     </View>
-    //   );
-    // }
     return (
       <View style={styles.card}>
         <Image source={this.getCuisine(this.props.card.categories[0].title)} style={styles.image} />
