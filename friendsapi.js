@@ -4,12 +4,12 @@ import { ID } from 'react-native-dotenv'
 
 var myId = ''
 
-AsyncStorage.getItem(ID).then(res => {
+AsyncStorage.getItem(ID).then((res) => {
   myId = res
 })
 
 const friendsApi = axios.create({
-  baseURL: 'https://wechews.herokuapp.com'
+  baseURL: 'https://wechews.herokuapp.com',
 })
 
 // creates friendship
@@ -18,13 +18,13 @@ const createFriendship = async (main, friend) => {
     .post('/friendships', {
       params: {
         main: main,
-        friend: friend
-      }
+        friend: friend,
+      },
     })
-    .then(res => {
+    .then((res) => {
       return res.status
     })
-    .catch(error => {
+    .catch((error) => {
       throw error.response.status
     })
 }
@@ -33,7 +33,7 @@ const createFriendship = async (main, friend) => {
 const getFriends = async () => {
   return friendsApi
     .get(`/friendships/friends/${myId}`)
-    .then(res => {
+    .then((res) => {
       return {
         status: res.status,
         friendList: res.data.friends.map(function (friends) {
@@ -43,12 +43,12 @@ const getFriends = async () => {
             name: friends.account.name,
             photo: friends.account.photo,
             username: friends.account.username,
-            status: friends.status
+            status: friends.status,
           }
-        })
+        }),
       }
     })
-    .catch(error => {
+    .catch((error) => {
       throw error.response.status
     })
 }
@@ -57,10 +57,10 @@ const getFriends = async () => {
 const acceptFriendRequest = async (friend) => {
   return friendsApi
     .put(`/friendships/friends/${myId}/${friend}`)
-    .then(res => {
+    .then((res) => {
       return res.status
     })
-    .catch(error => {
+    .catch((error) => {
       throw error.response.status
     })
 }
@@ -69,10 +69,10 @@ const acceptFriendRequest = async (friend) => {
 const removeFriendship = async (friend) => {
   return friendsApi
     .delete(`/friendships/friends/${myId}/${friend}`)
-    .then(res => {
+    .then((res) => {
       return res.status
     })
-    .catch(error => {
+    .catch((error) => {
       throw error.response.status
     })
 }
@@ -81,5 +81,5 @@ export default {
   createFriendship,
   getFriends,
   acceptFriendRequest,
-  removeFriendship
+  removeFriendship,
 }

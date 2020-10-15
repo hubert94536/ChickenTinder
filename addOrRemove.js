@@ -1,7 +1,7 @@
 export const addOrRemove = (array, item) => {
   const exists = array.includes(item)
   if (exists) {
-    return array.filter(c => {
+    return array.filter((c) => {
       return c !== item
     })
   } else {

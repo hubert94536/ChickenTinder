@@ -7,21 +7,21 @@ const font = 'CircularStd-Medium'
 
 // cards for the search for friends screen
 export default class Card extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       // for button display
       requested: this.props.requested,
-      pressed: false
+      pressed: false,
     }
   }
 
-  render () {
+  render() {
     return (
       <View style={{ flexDirection: 'row', flex: 1 }}>
         <Image
           source={{
-            uri: this.props.image
+            uri: this.props.image,
           }}
           style={{ borderRadius: 63, height: 60, width: 60, margin: '3%' }}
         />
@@ -29,7 +29,7 @@ export default class Card extends React.Component {
           style={{
             alignSelf: 'center',
             marginLeft: '1%',
-            flex: 1
+            flex: 1,
           }}
         >
           <Text style={{ fontFamily: font, fontWeight: 'bold', fontSize: 15 }}>
@@ -38,15 +38,13 @@ export default class Card extends React.Component {
           <Text style={{ fontFamily: font }}>{this.props.username}</Text>
         </View>
         {this.state.requested === 'Requested' && (
-          <View
-            style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
-          >
+          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Text
               style={{
                 fontFamily: font,
                 color: hex,
                 fontSize: 15,
-                alignSelf: 'center'
+                alignSelf: 'center',
               }}
             >
               Requested
@@ -57,7 +55,7 @@ export default class Card extends React.Component {
                 color: hex,
                 fontSize: 35,
                 alignSelf: 'center',
-                margin: '8%'
+                margin: '8%',
               }}
               onPress={() => this.setState({ requested: false })}
               name='times-circle'
@@ -65,15 +63,13 @@ export default class Card extends React.Component {
           </View>
         )}
         {this.state.requested === 'Add' && (
-          <View
-            style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
-          >
+          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Text
               style={{
                 fontFamily: font,
                 color: hex,
                 fontSize: 15,
-                alignSelf: 'center'
+                alignSelf: 'center',
               }}
             >
               Add
@@ -84,23 +80,21 @@ export default class Card extends React.Component {
                 color: hex,
                 fontSize: 35,
                 alignSelf: 'center',
-                margin: '8%'
+                margin: '8%',
               }}
               onPress={() => this.setState({ requested: 'Requested' })}
-              name='plus-circle'
+              name="plus-circle"
             />
           </View>
         )}
-         {this.state.requested === 'Accepted' && (
-          <View
-            style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
-          >
+        {this.state.requested === 'Accepted' && (
+          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Text
               style={{
                 fontFamily: font,
                 color: hex,
                 fontSize: 15,
-                alignSelf: 'center'
+                alignSelf: 'center',
               }}
             >
               Friends
@@ -111,26 +105,24 @@ export default class Card extends React.Component {
                 color: hex,
                 fontSize: 35,
                 alignSelf: 'center',
-                margin: '8%'
+                margin: '8%',
               }}
-              name='check-circle'
+              name="check-circle"
             />
           </View>
         )}
         {this.state.requested === 'Pending Request' && (
-          <View
-            style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
-          >
+          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Icon
               style={{
                 fontFamily: font,
                 color: hex,
                 fontSize: 35,
                 alignSelf: 'center',
-                margin: '8%'
+                margin: '8%',
               }}
-              name='check-circle'
-              onPress={() => this.setState({requested:'Accepted'})}
+              name="check-circle"
+              onPress={() => this.setState({ requested: 'Accepted' })}
             />
             <Icon
               style={{
@@ -138,10 +130,10 @@ export default class Card extends React.Component {
                 color: hex,
                 fontSize: 35,
                 alignSelf: 'center',
-                margin: '8%'
+                margin: '8%',
               }}
-              name='times-circle'
-              onPress={() => this.setState({requested:'Add'})}
+              name="times-circle"
+              onPress={() => this.setState({ requested: 'Add' })}
             />
           </View>
         )}

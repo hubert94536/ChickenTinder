@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {
   Dimensions,
   FlatList,
-  ActivityIndicator,
   StyleSheet,
   Text,
   View
@@ -10,8 +9,6 @@ import {
 import {SearchBar} from 'react-native-elements';
 import Card from './searchCard.js';
 import api from './accountsApi.js';
-import friendsApi from './friendsApi.js';
-
 
 const hex = '#F25763';
 const font = 'CircularStd-Medium';
@@ -24,7 +21,6 @@ export default class Search extends Component {
       data: [],
       friends: this.props.navigation.state.params.allFriends,
     };
-    api.createFBUser('boo', 1, 'booo', 'boo@gmail.com', 'pic');
     
   }
 
@@ -53,88 +49,26 @@ export default class Search extends Component {
           .searchUsers(text)
           .then(res => {
             // this.setState({data: res.userList});
-
             var resultUsers = []
             for (var user in res.userList) {
-
               var status = 'Add'
-
               if (res.userList[user].id in this.state.friends) {
                 status = this.state.friends[res.userList[user].id ]
               }
-              
               var person = {
                 name: res.userList[user].name ,
                 username: res.userList[user].username ,
                 image: res.userList[user].photo,
                 status: status
               }
-
               resultUsers.push(person);
             }
-
-
             this.setState({data: resultUsers});
-
-
           })
-          .catch(err => console.log(err)),
+          .catch(() => {}),
       100,
     );
   };
-
-
-
-  // getFriends() {
-  //   // Pushing accepted friends or pending requests into this.state.friends
-  //   friendsApi
-  //     .getFriends()
-  //     .then(res => {
-  //       var pushFriends = [];
-  //       for (var friend in res.friendList) {
-  //         pushFriends.push(res.friendList[friend]);
-  //       }
-  //       this.setState({ friends: pushFriends, data: pushFriends });
-  //     })
-  //     .catch(err => console.log(err));
-  // }
-
-  // getAccounts() {
-  //   // Get all accounts 
-  //   api
-  //     .getAllUsers()
-  //     .then(res => {
-  //       var accounts = []
-  //       for (var account in res.userList) {
-
-  //         var status = "Add";
-          
-
-  //         for(var i = 0; i < friends.length ; i++)
-  //         {
-  //           if(account.username == friends[i].username)
-  //           {
-  //             status = friends[i].status
-  //             break
-  //           }
-  //         }
-
-
-  //         var currAccount = {
-  //           name: account.name,
-  //           username: account.username,
-  //           image: account.photo,
-  //           friendStatus: status
-
-  //         }
-  //         accounts.push(currAccount);
-  //       }
-  //       this.setState({ friends: pushFriends, data: pushFriends });
-  //     })
-  //     .catch(err => console.log(err));
-  // }
-
-
 
   renderHeader = () => {
     return (
@@ -166,7 +100,7 @@ export default class Search extends Component {
               requested={item.status}
             />
           )}
-          keyExtractor={item => item.username}
+          keyExtractor={(item) => item.username}
           ItemSeparatorComponent={this.renderSeparator}
           ListHeaderComponent={this.renderHeader}
         />

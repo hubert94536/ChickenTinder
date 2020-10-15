@@ -3,7 +3,7 @@ import { TouchableOpacity, View, Text, StyleSheet } from 'react-native'
 // import R from 'res/R'
 
 export default class BackgroundButton extends React.Component {
-  render () {
+  render() {
     const styles = this.makeStyles()
     return (
       <TouchableOpacity style={styles.touchable} onPress={this.props.onPress}>
@@ -19,7 +19,7 @@ export default class BackgroundButton extends React.Component {
   //     }
   //   }
 
-  makeStyles () {
+  makeStyles() {
     return StyleSheet.create({
       view: {
         flexDirection: 'row',
@@ -34,18 +34,18 @@ export default class BackgroundButton extends React.Component {
         justifyContent: 'center',
         // paddingLeft: 16,
         // paddingRight: 16
-        paddingHorizontal: 8
+        paddingHorizontal: 8,
       },
       touchable: {
         // marginLeft: 4,
         marginRight: 8,
-        marginBottom: 6
+        marginBottom: 6,
         // marginLeft: 3,
         // marginRight: 3,
         // marginBottom: 6
       },
       image: {
-        marginRight: 8
+        marginRight: 8,
       },
       text: {
         // fontSize: 5,
@@ -55,8 +55,8 @@ export default class BackgroundButton extends React.Component {
         color: this.props.textColor,
         // fontSize: 16
         fontSize: 15,
-        fontFamily: 'CircularStd-Bold'
-      }
+        fontFamily: 'CircularStd-Bold',
+      },
     })
   }
 }

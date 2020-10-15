@@ -19,9 +19,12 @@ const searchAccounts = async (req, res) => {
       limit: 100,
       where: {
         username: Sequelize.where(
-          Sequelize.fn('LOWER', Sequelize.col('username')), 'LIKE', text + '%')
+          Sequelize.fn('LOWER', Sequelize.col('username')),
+          'LIKE',
+          text + '%',
+        ),
       },
-      attributes: ['id', 'name', 'username', 'phone_number']
+      attributes: ['id', 'name', 'username', 'phone_number'],
     })
     return res.status(200).json({ users })
   } catch (error) {
@@ -39,7 +42,7 @@ const createAccount = async (req, res) => {
       email: req.body.params.email,
       photo: req.body.params.photo,
       inSession: false,
-      phone_number: req.body.params.phone_number
+      phone_number: req.body.params.phone_number,
     })
     return res.status(201).send('Account created')
   } catch (error) {
@@ -66,7 +69,7 @@ const updateAccount = async (req, res) => {
   try {
     const { id } = req.params
     const updated = await Accounts.update(req.body.params, {
-      where: { id: id }
+      where: { id: id },
     })
     if (updated) {
       return res.status(200).send('Updated account info')
@@ -82,7 +85,7 @@ const deleteAccount = async (req, res) => {
   try {
     const { id } = req.params
     const deleted = await Accounts.destroy({
-      where: { id: id }
+      where: { id: id },
     })
     if (deleted) {
       return res.status(204).send('User deleted')
@@ -112,7 +115,7 @@ const checkPhoneNumber = async (req, res) => {
   try {
     const { phone_number } = req.params
     const user = await Accounts.findOne({
-      where: { phone_number: phone_number }
+      where: { phone_number: phone_number },
     })
     if (user) {
       return res.status(404).send('Phone number unavailable')
@@ -131,5 +134,5 @@ module.exports = {
   deleteAccount,
   checkUsername,
   checkPhoneNumber,
-  searchAccounts
+  searchAccounts,
 }
