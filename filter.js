@@ -144,7 +144,7 @@ export default class FilterSelector extends React.Component {
         (error) => {
           console.log(error.code, error.message)
         },
-        { venableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
       )
     }
   }

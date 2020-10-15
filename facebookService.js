@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage'
 import FBSDK from 'react-native-fbsdk'
-import api from './accountsApi.js'
+import accountsApi from './accountsApi.js'
 import firebase from 'firebase'
 import {
   FIREBASE_API_KEY,
@@ -55,7 +55,7 @@ class FacebookService {
         AsyncStorage.setItem(PHOTO, currentUser.user.photoURL)
         // Get username from database if not new user
         if (!currentUser.additionalUserInfo.isNewUser) {
-          api.getUser().then((res) => {
+          accountsApi.getUser().then((res) => {
             AsyncStorage.setItem(USERNAME, res.username)
           })
           return 'Home'
@@ -90,7 +90,7 @@ class FacebookService {
   }
 
   async deleteUser() {
-    api
+    accountsApi
       .deleteUser()
       .then(() => {
         // Need to refresh access token since old one expired

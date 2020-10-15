@@ -50,7 +50,7 @@ const RootStack = createStackNavigator(
     },
   },
   {
-    initialRouteName: start,
+    initialRouteName: 'Home',
     headerMode: 'none',
   },
 )

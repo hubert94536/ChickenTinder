@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import Alert from './alert.js'
-import api from './accountsApi.js'
+import accountsApi from './accountsApi.js'
 import { NAME, USERNAME, ID, UID, EMAIL, PHOTO } from 'react-native-dotenv'
 
 const hex = '#F25763'
@@ -57,11 +57,11 @@ class Username extends React.Component {
 
   //  checks whether or not the username can be set
   handleClick() {
-    api
+    accountsApi
       .checkUsername(this.state.username)
       .then(() => {
         AsyncStorage.setItem(USERNAME, this.state.username)
-        return api
+        return accountsApi
           .createFBUser(
             this.state.name,
             this.state.id,

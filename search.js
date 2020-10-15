@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import {SearchBar} from 'react-native-elements';
 import Card from './searchCard.js';
-import api from './accountsApi.js';
+import accountsApi from './accountsApi.js';
 
 const hex = '#F25763';
 const font = 'CircularStd-Medium';
@@ -21,7 +21,6 @@ export default class Search extends Component {
       data: [],
       friends: this.props.navigation.state.params.allFriends,
     };
-    
   }
 
   renderSeparator = () => {
@@ -45,7 +44,7 @@ export default class Search extends Component {
     clearTimeout(this.timeout); // clears the old timer
     this.timeout = setTimeout(
       () =>
-        api
+        accountsApi
           .searchUsers(text)
           .then(res => {
             // this.setState({data: res.userList});
@@ -59,6 +58,7 @@ export default class Search extends Component {
                 name: res.userList[user].name ,
                 username: res.userList[user].username ,
                 image: res.userList[user].photo,
+                id: res.userList[user].id,
                 status: status
               }
               resultUsers.push(person);
@@ -97,6 +97,7 @@ export default class Search extends Component {
               name={item.name}
               username={'@' + item.username}
               image={item.photo}
+              id = {item.id}
               requested={item.status}
             />
           )}

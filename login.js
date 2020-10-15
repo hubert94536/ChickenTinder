@@ -57,7 +57,7 @@ export default class Login extends React.Component {
     )
   }
 
-  handleClick() {
+  async handleClick() {
     facebookService
       .loginWithFacebook()
       .then((result) => {

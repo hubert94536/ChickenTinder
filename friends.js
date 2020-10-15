@@ -21,7 +21,7 @@ export default class Friends extends React.Component {
   }
 
   //  gets the users friends
-  getFriends() {
+  async getFriends() {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
       .getFriends()
@@ -44,23 +44,19 @@ export default class Friends extends React.Component {
     this.setState({
       search: text,
     })
-
     const newData = this.state.data.filter((item) => {
       const itemData = `${item.name.toUpperCase()} ${item.username.toUpperCase()}`
-
       const textData = text.toUpperCase()
-
       return itemData.indexOf(textData) > -1
     })
-
     this.setState({ friends: newData })
   }
 
-  removeRequest(id, newArr, status) {
+  async removeRequest(id, newArr, status) {
     if (!status) {
       friendsApi
         .removeFriendship(id)
-        .then((res) => {
+        .then(() => {
           this.setState({ friends: newArr })
         })
         .catch((err) => {
