@@ -26,6 +26,7 @@ AsyncStorage.getItem(USERNAME).then((res) => {
 export default class Group extends React.Component {
   constructor(props) {
     super(props)
+    this._isMounted = false;
     const members = this.props.navigation.state.params.members
     this.state = {
       members: members,

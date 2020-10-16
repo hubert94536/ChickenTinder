@@ -1,12 +1,12 @@
 import React from 'react'
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Swiper from 'react-native-deck-swiper'
 import Card from './roundCard.js'
 import socket from './socket.js'
 
 const hex = '#F25763'
-const font = 'CircularStd-Medium'
+const font = 'CircularStd-Bold'
 
 export default class RestaurantCard extends React.Component {
   constructor(props) {
@@ -50,31 +50,30 @@ export default class RestaurantCard extends React.Component {
   render () {
     return (
       <SafeAreaView style={styles.mainContainer}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Icon
-            name="angle-left"
-            style={{
-              color: hex,
-              fontFamily: font,
-              fontSize: 25,
-              margin: '3%',
-              fontWeight: 'bold',
-            }}
-            onPress={() => this.endGroup()}
-          />
           <TouchableHighlight onPress={() => this.endGroup()}>
-            <Text
-              style={{
-                color: hex,
-                fontFamily: font,
-                fontSize: 20,
-                textAlign: 'left',
-              }}
-            >
-              {this.state.isHost ? 'End' : 'Leave'}
-            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Icon
+                name="angle-left"
+                style={{
+                  color: hex,
+                  fontFamily: font,
+                  fontSize: 25,
+                  margin: '3%',
+                  fontWeight: 'bold',
+                }}
+              />
+              <Text
+                style={{
+                  color: hex,
+                  fontFamily: font,
+                  fontSize: 20,
+                  textAlign: 'left',
+                }}
+              >
+                {this.state.isHost ? 'End' : 'Leave'}
+              </Text>
+            </View>
           </TouchableHighlight>
-        </View>
         <Swiper
           cards={this.state.results}
           cardIndex={this.state.index}
@@ -87,85 +86,6 @@ export default class RestaurantCard extends React.Component {
           stackSeparation={0}
           backgroundColor="transparent"
           animateOverlayLabelsOpacity
-          // Overlay offsets adjusted to flex sizing. May need to be retested on different device
-          overlayLabels={{
-            left: {
-              title: 'NOPE',
-              style: {
-                label: {
-                  backgroundColor: 'red',
-                  borderColor: 'red',
-                  color: 'white',
-                  borderWidth: 1,
-                  fontSize: 24,
-                },
-                wrapper: {
-                  flexDirection: 'column',
-                  alignItems: 'flex-end',
-                  justifyContent: 'flex-start',
-                  marginTop: 20,
-                  marginLeft: -50,
-                },
-              },
-            },
-            right: {
-              title: 'LIKE',
-              style: {
-                label: {
-                  backgroundColor: 'green',
-                  borderColor: 'green',
-                  color: 'white',
-                  borderWidth: 1,
-                  fontSize: 24,
-                },
-                wrapper: {
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  justifyContent: 'flex-start',
-                  marginTop: 20,
-                  marginLeft: 20,
-                },
-              },
-            },
-            bottom: {
-              title: 'HATE',
-              style: {
-                label: {
-                  backgroundColor: 'black',
-                  borderColor: 'black',
-                  color: 'white',
-                  borderWidth: 1,
-                  fontSize: 24,
-                },
-                wrapper: {
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'flex-start',
-                  marginTop: 20,
-                  marginLeft: -20,
-                },
-              },
-            },
-            top: {
-              title: 'LOVE',
-              style: {
-                label: {
-                  backgroundColor: 'pink',
-                  borderColor: 'pink',
-                  color: 'white',
-                  borderWidth: 1,
-                  fontSize: 24,
-                },
-                wrapper: {
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'flex-end',
-                  marginTop: -50,
-                  marginLeft: -20,
-                },
-              },
-            },
-          }}
         />
         <View
           style={{

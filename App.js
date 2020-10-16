@@ -50,7 +50,7 @@ const RootStack = createStackNavigator(
     },
   },
   {
-    initialRouteName: start,
+    initialRouteName: 'Login',
     headerMode: 'none'
   }
 )
@@ -65,11 +65,12 @@ export default class App extends React.Component {
 // import FilterSelector from './filter.js'
 // import Group from './group.js'
 // import RestaurantCard from './round.js'
+// import Match from './match.js'
 
 // export default class App extends React.Component{
 //   render () {
 //     return (
-//       <Group/>
+//       <Match/>
 //     )
 //   }
 // }

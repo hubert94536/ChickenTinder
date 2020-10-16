@@ -22,7 +22,7 @@ export default class Match extends React.Component {
       goToYelp: false,
       restaurant: this.props.navigation.state.params.restaurant,
     }
-    console.log(this.props.navigation.state.params.restaurant)
+    // console.log(this.props.navigation.state.params.restaurant)
   }
 
   render() {
@@ -54,6 +54,7 @@ export default class Match extends React.Component {
           onShowUnderlay={() => this.setState({ endRound: true })}
           onHideUnderlay={() => this.setState({ endRound: false })}
           style={styles.endButton}
+          onPress={() => this.props.navigation.navigate('Home')}
         >
           <Text style={  this.state.endRound ? styles.endTextPressed : styles.endText}>End Round</Text>
         </TouchableHighlight>
