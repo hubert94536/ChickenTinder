@@ -29,7 +29,7 @@ export default class ChooseFriends extends React.Component {
   }
 
   //  gets your friends
-  getFriends () {
+  async getFriends () {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
       .getFriends()
@@ -53,15 +53,11 @@ export default class ChooseFriends extends React.Component {
   //  function for searching your friends
   searchFilterFunction (text) {
     this.setState({ search: text })
-
     const newData = this.state.data.filter((item) => {
       const itemData = `${item.name.toUpperCase()} ${item.username.toUpperCase()}`
-
       const textData = text.toUpperCase()
-
       return itemData.indexOf(textData) > -1
     })
-
     this.setState({ friends: newData })
   }
 
@@ -103,7 +99,7 @@ export default class ChooseFriends extends React.Component {
               style={{ marginLeft: '5%', marginRight: '5%', marginBottom: '10%' }}
               data={this.state.friends}
               renderItem={({ item }) => (
-                <Card name={item.name} username={item.username} image={item.image} added />
+                <Card name={item.name} username={item.username} image={item.image} added={false} />
               )}
               keyExtractor={(item) => item.username}
             />

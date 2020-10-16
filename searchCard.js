@@ -1,6 +1,7 @@
 import React from 'react'
 import { Image, Text, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import friendsApi from './friendsApi.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -14,6 +15,33 @@ export default class Card extends React.Component {
       requested: this.props.requested,
       pressed: false,
     }
+  }
+
+  async acceptFriend() {
+    friendsApi
+      .acceptFriendRequest(this.props.id)
+      .then(() => {
+        this.setState({ requested: 'Accepted' })
+      })
+      .catch((error) => console.log(error))
+  }
+
+  async addFriend() {
+    friendsApi
+      .createFriendship(this.props.id)
+      .then(() => {
+        this.setState({ requested: 'Requested' })
+      })
+      .catch((error) => console.log(error))
+  }
+
+  async rejectFriend() {
+    friendsApi
+      .removeFriendship(this.props.id)
+      .then(() => {
+        this.setState({ requested: 'Add' })
+      })
+      .catch((error) => console.log(error))
   }
 
   render() {
@@ -44,6 +72,7 @@ export default class Card extends React.Component {
                 fontFamily: font,
                 color: hex,
                 fontSize: 15,
+                marginRight: 25,
                 alignSelf: 'center',
               }}
             >
@@ -82,7 +111,7 @@ export default class Card extends React.Component {
                 alignSelf: 'center',
                 margin: '8%',
               }}
-              onPress={() => this.setState({ requested: 'Requested' })}
+              onPress={() => this.addFriend()}
               name="plus-circle"
             />
           </View>
@@ -137,10 +166,8 @@ export default class Card extends React.Component {
             />
           </View>
         )}
-         {this.state.requested === 'Accepted' && (
-          <View
-            style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
-          >
+        {this.state.requested === 'Accepted' && (
+          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Text
               style={{
                 fontFamily: font,
@@ -164,9 +191,7 @@ export default class Card extends React.Component {
           </View>
         )}
         {this.state.requested === 'Pending Request' && (
-          <View
-            style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
-          >
+          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Icon
               style={{
                 fontFamily: font,
@@ -176,7 +201,7 @@ export default class Card extends React.Component {
                 margin: '3%'
               }}
               name='check-circle'
-              onPress={() => this.setState({requested:'Accepted'})}
+              onPress={() => this.acceptFriend()}
             />
             <Icon
               style={{
@@ -186,8 +211,8 @@ export default class Card extends React.Component {
                 alignSelf: 'center',
                 margin: '3%'
               }}
-              name='times-circle'
-              onPress={() => this.setState({requested:'Add'})}
+              name="times-circle"
+              onPress={() => this.rejectFriend()}
             />
           </View>
         )}
