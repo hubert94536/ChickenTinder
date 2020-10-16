@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { SearchBar } from 'react-native-elements'
+import Alert from './alert.js'
 import Card from './chooseCard.js'
 import friendsApi from './friendsApi.js'
 
@@ -24,6 +25,7 @@ export default class ChooseFriends extends React.Component {
       data: '',
       friends: '',
       search: '',
+      errorAlert: false
     }
     this.getFriends()
   }
@@ -42,7 +44,7 @@ export default class ChooseFriends extends React.Component {
         }
         this.setState({ friends: pushFriends, data: pushFriends })
       })
-      .catch((err) => console.log(err))
+      .catch((err) => this.setState({errorAlert: true}))
   }
 
   //  closes the choose friends modal in filters
@@ -105,6 +107,15 @@ export default class ChooseFriends extends React.Component {
             />
           </View>
         </View>
+        {this.state.errorAlert && (
+          <Alert
+            title="Error, please try again"
+            button
+            buttonText="Close"
+            press={() => this.setState({errorAlert: false})}
+            cancel={() => this.setState({errorAlert: false})}
+          />
+        )}
       </Modal>
     )
   }

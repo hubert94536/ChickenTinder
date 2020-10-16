@@ -49,6 +49,7 @@ export default class UserProfileView extends Component {
       // show alert
       logoutAlert: false,
       deleteAlert: false,
+      errorAlert: false
       // public: false,
     }
   }
@@ -112,6 +113,7 @@ export default class UserProfileView extends Component {
         this.props.navigation.navigate('Login')
       })
       .catch((error) => {
+        this.setState({errorAlert: true})
         console.log(error)
         // alert
       })

@@ -1,5 +1,6 @@
 import React from 'react'
 import {
+  Dimensions,
   ScrollView,
   StyleSheet,
   Text,
@@ -14,6 +15,10 @@ import Card from './groupCard.js'
 import FilterSelector from './filter.js'
 import socket from './socket.js'
 import { USERNAME } from 'react-native-dotenv'
+
+console.log(Dimensions.get('screen').width)
+console.log(Dimensions.get('screen').height)
+
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -93,7 +98,6 @@ export default class Group extends React.Component {
   updateMemberList() {
     memberList = []
     for (var user in this.state.members) {
-      console.log(user)
       memberList.push(
         <Card
           name={this.state.members[user].name}

@@ -7,9 +7,9 @@ import {
   View
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
-
 import { SearchBar } from 'react-native-elements'
 import accountsApi from './accountsApi.js';
+import Alert from './alert.js'
 import Card from './searchCard.js'
 
 const hex = '#F25763'
@@ -22,6 +22,7 @@ export default class Search extends Component {
     this.state = {
       data: [],
       friends: this.props.navigation.state.params.allFriends,
+      errorAlert: false
     };
   }
 
@@ -67,7 +68,7 @@ export default class Search extends Component {
             }
             this.setState({data: resultUsers});
           })
-          .catch(() => {}),
+          .catch(() => this.setState({errorAlert:true})),
       100,
     );
   };
@@ -112,6 +113,15 @@ export default class Search extends Component {
           ItemSeparatorComponent={this.renderSeparator}
           ListHeaderComponent={this.renderHeader}
         />
+        {this.state.errorAlert && (
+          <Alert
+            title="Error, please try again"
+            button
+            buttonText="Close"
+            press={() => this.setState({errorAlert: false})}
+            cancel={() => this.setState({errorAlert: false})}
+          />
+        )}
       </View>
     );
   }

@@ -10,6 +10,7 @@ import Invite from './invite.js'
 import { NAME,  PHOTO, USERNAME } from 'react-native-dotenv'
 import socket from './socket.js'
 import accountsApi from './accountsApi.js'
+import Alert from './alert.js'
 import friendsApi from './friendsApi.js'
 import { ID } from 'react-native-dotenv'
 
@@ -33,33 +34,19 @@ class Home extends React.Component {
     this.state = {
       createPressed: false,
       profilePressed: false,
+      searchPressed: false,
       invite: false,
       image: img,
       name: name,
       username: username,
       friends: new Object(),
+      errorAlert: false
     }
     socket.connect()
     socket.getSocket().on('reconnectRoom', res => console.log(res))
     socket.getSocket().on('invite', (res => {
       this.setState({ invite: true })
     }))
-  }
-
-  underlayShowCreate() {
-    this.setState({ createPressed: true })
-  }
-
-  underlayHideCreate() {
-    this.setState({ createPressed: false })
-  }
-
-  underlayShowProfile() {
-    this.setState({ profilePressed: true })
-  }
-
-  underlayHideProfile() {
-    this.setState({ profilePressed: false })
   }
 
   createGroup() {
@@ -98,10 +85,9 @@ class Home extends React.Component {
           allFriends: friendsMap,
         })
       })
-      .catch((err) =>
-        //Need alert
-        console.log(err),
-      )
+      .catch((err) =>{
+        this.setState({errorAlert: true})
+      })
   }
 
   render() {
@@ -114,8 +100,8 @@ class Home extends React.Component {
         }}
       >
         <TouchableHighlight
-          onShowUnderlay={this.underlayShowCreate.bind(this)}
-          onHideUnderlay={this.underlayHideCreate.bind(this)}
+          onShowUnderlay={this.setState({ createPressed: true })}
+          onHideUnderlay={this.setState({ createPressed: false })}
           activeOpacity={1}
           underlayColor="#fff"
           style={styles.button}
@@ -126,8 +112,8 @@ class Home extends React.Component {
           </Text>
         </TouchableHighlight>
         <TouchableHighlight
-          onShowUnderlay={this.underlayShowProfile.bind(this)}
-          onHideUnderlay={this.underlayHideProfile.bind(this)}
+          onShowUnderlay={this.setState({ profilePressed: true })}
+          onHideUnderlay={this.setState({ profilePressed: true })}
           activeOpacity={1}
           underlayColor="#fff"
           style={styles.button}
@@ -139,8 +125,8 @@ class Home extends React.Component {
         </TouchableHighlight>
         {this.state.invite && <Invite image={this.state.image} name={this.state.name} onPress={() => this.setState({invite: false})}/>}
         <TouchableHighlight
-          onShowUnderlay={this.underlayShowProfile.bind(this)}
-          onHideUnderlay={this.underlayHideProfile.bind(this)}
+          onShowUnderlay={this.setState({ searchPressed: true })}
+          onHideUnderlay={this.setState({ searchPressed: true })}
           activeOpacity={1}
           underlayColor="#fff"
           style={styles.button}
@@ -148,10 +134,19 @@ class Home extends React.Component {
             this.getFriends()
           }}
         >
-          <Text style={this.state.profilePressed ? styles.yesPress : styles.noPress}>
+          <Text style={this.state.searchPressed ? styles.yesPress : styles.noPress}>
             Find Friends
           </Text>
         </TouchableHighlight>
+        {this.state.errorAlert && (
+          <Alert
+            title="Error, please try again"
+            button
+            buttonText="Close"
+            press={() => this.setState({errorAlert: false})}
+            cancel={() => this.setState({errorAlert: false})}
+          />
+        )}
       </View>
     )
   }
