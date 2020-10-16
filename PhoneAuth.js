@@ -6,7 +6,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native'
 import auth from '@react-native-firebase/auth'
 
@@ -26,7 +26,7 @@ class PhoneAuthScreen extends Component {
     return regexp.test(this.state.phone)
   }
 
-  handleSendCode() {
+  async handleSendCode() {
     // Request to send OTP
     if (this.validatePhoneNumber()) {
       auth()
@@ -47,7 +47,7 @@ class PhoneAuthScreen extends Component {
     this.setState({ confirmResult: null, verificationCode: '' })
   }
 
-  handleVerifyCode() {
+  async handleVerifyCode() {
     // Request for OTP verification
     const { confirmResult, verificationCode } = this.state
     if (verificationCode.length === 6) {

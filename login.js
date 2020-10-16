@@ -16,12 +16,12 @@ export default class Login extends React.Component {
   }
 
   // changing button appearance
-  underlayShow () {
+  underlayShow() {
     this.setState({ pressed: true })
   }
 
   // changing button appearance
-  underlayHide () {
+  underlayHide() {
     this.setState({ pressed: false })
   }
 
@@ -57,7 +57,7 @@ export default class Login extends React.Component {
     )
   }
 
-  handleClick() {
+  async handleClick() {
     facebookService
       .loginWithFacebook()
       .then((result) => {
@@ -86,13 +86,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     fontFamily: font,
     fontWeight: 'bold',
-    marginTop: '40%'
+    marginTop: '40%',
   },
   subheading: {
     fontFamily: font,
     alignSelf: 'center',
     color: hex,
-    fontSize: 30
+    fontSize: 30,
   },
   button: {
     borderRadius: 25,

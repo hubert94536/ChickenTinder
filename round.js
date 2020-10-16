@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View, TouchableHighlight } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Swiper from 'react-native-deck-swiper'
 import Card from './roundCard.js'
@@ -47,7 +47,7 @@ export default class RestaurantCard extends React.Component {
     this.props.navigation.navigate('Home')
   }
 
-  render () {
+  render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>

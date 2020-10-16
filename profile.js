@@ -8,17 +8,17 @@ import {
   Text,
   TextInput,
   TouchableHighlight,
-  View
+  View,
 } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Swiper from 'react-native-swiper'
 import Alert from './alert.js'
-import api from './accountsApi.js'
+import accountsApi from './accountsApi.js'
 import { facebookService } from './facebookService.js'
 import Friends from './friends.js'
-import { NAME,  PHOTO, USERNAME } from 'react-native-dotenv'
+import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -56,7 +56,7 @@ export default class UserProfileView extends Component {
   // getting current user's info
   async changeName() {
     if (this.state.nameValue !== this.state.name) {
-      return api
+      return accountsApi
         .updateName(this.state.nameValue)
         .then((res) => {
           // update name locally
@@ -79,11 +79,11 @@ export default class UserProfileView extends Component {
   async changeUsername() {
     if (this.state.username !== this.state.usernameValue) {
       const user = this.state.usernameValue
-      return api
+      return accountsApi
         .checkUsername(user)
         .then(() => {
           // update username locally
-          return api.updateUsername(user).then(() => {
+          return accountsApi.updateUsername(user).then(() => {
             AsyncStorage.setItem(USERNAME, user)
             this.setState({ username: this.state.usernameValue })
             Keyboard.dismiss()
@@ -118,17 +118,17 @@ export default class UserProfileView extends Component {
   }
 
   // close alert for taken username
-  closeTaken () {
+  closeTaken() {
     this.setState({ takenAlert: false })
   }
 
   // close alert for error
-  closeError () {
+  closeError() {
     this.setState({ errorAlert: false })
   }
-  
+
   // cancel deleting your account
-  cancelDelete () {
+  cancelDelete() {
     this.setState({ deleteAlert: false })
   }
 
