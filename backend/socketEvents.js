@@ -13,10 +13,9 @@ module.exports = (io) => {
     delete clientsIds[clients[socketUser]]
     clients[socketUser] = socket.id
     clientsIds[socket.id] = socketUser
-    var sender
 
     // send invite if previously sent before user connected
-    if (socketUser in invites) {
+    if (socketUser in invites && invites[socketUser] in sessions) {
       let sender = invites[socketUser]
       io.to(clients[socketUser]).emit('invite', {
         username: sender,
@@ -93,6 +92,7 @@ module.exports = (io) => {
 
     // send invite with host info to join a room
     socket.on('invite', async (data) => {
+      console.log(data.username)
       try {
         let user = await Accounts.findOne({
           where: { username: data.username },
@@ -109,6 +109,7 @@ module.exports = (io) => {
           })
         }
       } catch (error) {
+        console.log(error)
         socket.emit('exception', error)
       }
     })

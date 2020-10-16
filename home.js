@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import Invite from './invite.js'
 import { NAME,  PHOTO, USERNAME } from 'react-native-dotenv'
 import socket from './socket.js'
-import api from './accountsApi.js'
+import accountsApi from './accountsApi.js'
 import friendsApi from './friendsApi.js'
 import { ID } from 'react-native-dotenv'
 
@@ -71,20 +71,20 @@ class Home extends React.Component {
 
   componentDidMount() {
     //uncomment if testing friends/requests
-    // api.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
-    // api.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
-    // api.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
-    // api.createFBUser('Helen', 5, 'helenthemelon', 'helenw@gmail.com', 'sjdkf'),
-    // api.createFBUser('Kevin', 6, 'kevint', 'kevintang@gmail.com', 'sdfddf'),
+    // accountsApi.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
+    // accountsApi.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
+    // accountsApi.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
+    // accountsApi.createFBUser('Helen', 5, 'helenthemelon', 'helenw@gmail.com', 'sjdkf'),
+    // accountsApi.createFBUser('Kevin', 6, 'kevint', 'kevintang@gmail.com', 'sdfddf'),
     // // console.log("My id:" + myId)
-    // friendsApi.createFriendship(2, myId),
-    // friendsApi.createFriendship(4, 2),
-    // friendsApi.createFriendship(3, myId),
-    // friendsApi.createFriendship(4, myId)
+    // friendsApi.createFriendshipTest(2, myId),
+    // friendsApi.createFriendshipTest(4, 2),
+    // friendsApi.createFriendshipTest(3, myId),
+    // friendsApi.createFriendshipTest(4, myId)
     // friendsApi.acceptFriendRequest(2)
   }
 
-  getFriends() {
+  async getFriends() {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
       .getFriends()

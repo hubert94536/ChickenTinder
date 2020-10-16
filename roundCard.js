@@ -18,7 +18,7 @@ export default class Card extends React.Component {
   }
 
   // getting which stars to display
-  getStarPath (rating) {
+  getStarPath(rating) {
     switch (rating) {
       case 0:
         return require('./assets/stars/0.png')
@@ -44,7 +44,7 @@ export default class Card extends React.Component {
   }
 
   // get image based on cuisine
-  getCuisine (category) {
+  getCuisine(category) {
     switch (category) {
       case 'American':
         return require('./assets/images/american.png')
@@ -73,46 +73,12 @@ export default class Card extends React.Component {
     }
   }
 
-  //   {
-  //     name: 'Chinchikurin',
-  //     url:
-  //       'https://www.yelp.com/biz/chinchikurin-little-tokyo-los-angeles-2?osq=chinchikurin',
-  //     image: require('./assets/images/japanese.png'),
-  //     stars: require('./assets/stars/4.5.png'),
-  //     price: '$$',
-  //     rating: 4.5,
-  //     review_count: 177,
-  //     distance: 10,
-  //     categories: [{title: 'Japanese'}],
-  //     location: {
-  //       city: 'Sawtelle',
-  //     },
-  //     is_closed: true,
-  //     transactions: ['pickup', 'delivery'],
-  //   },
-
   // for each transaction, put into comma-separated string
-  evaluateTransactions (transactions) {
-    return transactions.map(item => item).join(', ')
+  evaluateTransactions(transactions) {
+    return transactions.map((item) => item).join(', ')
   }
 
   render() {
-    // while (restuarants.length == 0) {
-    //   return (
-    //     <View style={styles.card}>
-    //       <Text
-    //         style={{
-    //           fontFamily: font,
-    //           color: hex,
-    //           textAlign: 'center',
-    //           fontSize: 40,
-    //           marginTop: '30%',
-    //         }}>
-    //         Fetching Restaurants!
-    //       </Text>
-    //     </View>
-    //   );
-    // }
     return (
       <View style={styles.card}>
         <Image source={this.getCuisine(this.props.card.categories[0].title)} style={styles.image} />

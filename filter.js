@@ -7,7 +7,7 @@ import {
   Text,
   TextInput,
   TouchableHighlight,
-  View
+  View,
 } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import DropDownPicker from 'react-native-dropdown-picker'
@@ -127,7 +127,7 @@ export default class FilterSelector extends React.Component {
   }
 
   // asks user for permission and get location as the component mounts
-  componentDidMount () {
+  componentDidMount() {
     if (requestLocationPermission()) {
       Geolocation.getCurrentPosition(
         (position) => {
@@ -139,13 +139,13 @@ export default class FilterSelector extends React.Component {
         (error) => {
           console.log(error.code, error.message)
         },
-        { venableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
       )
     }
   }
 
   //  pushes the 'subcategories' of each cusisine
-  categorize (cat) {
+  categorize(cat) {
     var categories = []
     for (var i = 0; i < cat.length; i++) {
       switch (cat[i]) {
@@ -228,12 +228,12 @@ export default class FilterSelector extends React.Component {
   }
 
   // this will pass the filters to the groups page
-  handlePress (setFilters) {
+  handlePress(setFilters) {
     this.props.press(setFilters)
   }
 
   //  formats the filters to call yelp api
-  evaluateFilters () {
+  evaluateFilters() {
     var filters = {}
     //  convert to unix time
     const date = new Date()
@@ -242,10 +242,8 @@ export default class FilterSelector extends React.Component {
     const yyyy = date.getFullYear()
     const unix = Date.UTC(yyyy, mm, dd, this.state.hour, this.state.minute) / 1000
     filters.open_at = unix
-    filters.price = this.state.selectedPrice
-      .map(item => item.length)
-      .toString()
-      // puts the cuisine and restrictions into one array
+    filters.price = this.state.selectedPrice.map((item) => item.length).toString()
+    // puts the cuisine and restrictions into one array
     var selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
     filters.categories = this.categorize(selections)
     filters.radius = this.state.distance * 1600

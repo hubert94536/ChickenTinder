@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  Dimensions,
-  Linking,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View
-} from 'react-native'
+import { Dimensions, Linking, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
@@ -110,18 +103,18 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     fontSize: 30,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   subheading: {
     fontFamily: font,
     color: 'white',
     textAlign: 'center',
-    fontSize: 20
+    fontSize: 20,
   },
   map: {
     alignSelf: 'center',
     height: Dimensions.get('window').width * 0.55,
-    width: Dimensions.get('window').width * 0.55
+    width: Dimensions.get('window').width * 0.55,
   },
   endButton: {
     borderColor: 'white',
@@ -140,11 +133,11 @@ const styles = StyleSheet.create({
   },
   endTextPressed: {
     fontFamily: font,
-    color: hex,
+    color: 'white',
     fontSize: 20,
     textAlign: 'center',
     padding: '6%',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   yelpButton: {
     backgroundColor: 'white',
@@ -153,11 +146,11 @@ const styles = StyleSheet.create({
     borderWidth: 2.5,
     borderColor: 'white',
     borderRadius: 30,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   yelpText: {
     fontFamily: font,
     textAlign: 'center',
-    padding: '5%'
-  }
+    padding: '5%',
+  },
 })
