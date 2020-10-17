@@ -24,18 +24,18 @@ class Username extends React.Component {
     }
   }
 
-  // closes taken alert
-  closeTaken() {
+  // closes alert
+  closeTaken () {
     this.setState({ takenAlert: false })
   }
 
-  // closes error alert
-  closeError() {
+  // closes alert
+  closeError () {
     this.setState({ errorAlert: false })
   }
 
   // gets users information once component mounts
-  async componentDidMount() {
+  async componentDidMount () {
     this.setState({
       name: await AsyncStorage.getItem(NAME),
       uid: await AsyncStorage.getItem(UID),
@@ -46,12 +46,12 @@ class Username extends React.Component {
   }
 
   // adjusting the look of button
-  underlayShow() {
+  underlayShow () {
     this.setState({ pressed: true })
   }
 
   // adjusting the look of button
-  underlayHide() {
+  underlayHide () {
     this.setState({ pressed: false })
   }
 
@@ -80,9 +80,9 @@ class Username extends React.Component {
           this.setState({ errorAlert: true })
         }
       })
-  }
+    }
 
-  render() {
+  render () {
     return (
       <View style={styles.mainContainer}>
         <Text style={styles.header}>'Chews' a username!</Text>
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
   header: {
     fontFamily: font,
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     marginTop: '8%',
     marginLeft: '3%',
-    textAlign: 'left',
+    textAlign: 'left'
   },
   input: {
     fontFamily: font,
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     borderBottomColor: hex,
     borderBottomWidth: 2.5,
     margin: '3%',
-    width: '70%',
+    width: '70%'
   },
   button: {
     fontFamily: font,

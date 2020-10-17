@@ -20,17 +20,17 @@ export default class Card extends React.Component {
   }
 
   // accept friend request and modify card
-  async acceptFriend() {
+  async acceptFriend () {
     friendsApi
       .acceptFriendRequest(this.state.id)
       .then(() => {
         this.setState({ isFriend: true })
       })
-      .catch((error) => console.log(error))
+      .catch((error) => this.setState({errorAlert:true}))
   }
 
   // delete friend and modify view
-  async deleteFriend() {
+  async deleteFriend () {
     friendsApi
       .removeFriendship(this.state.id)
       .then(() => {
@@ -40,7 +40,7 @@ export default class Card extends React.Component {
         })
         this.props.press(this.props.id, filteredArray, true)
       })
-      .catch((error) => console.log(error))
+      .catch((error) => this.setState({errorAlert: true}))
   }
 
   render() {
@@ -144,6 +144,15 @@ export default class Card extends React.Component {
             buttonText="Delete"
             press={() => this.deleteFriend()}
             cancel={() => this.setState({ deleteFriend: false })}
+          />
+        )}
+        {this.state.errorAlert && (
+          <Alert
+            title="Error, please try again"
+            button
+            buttonText="Close"
+            press={() => this.setState({errorAlert: false})}
+            cancel={() => this.setState({errorAlert: false})}
           />
         )}
       </View>

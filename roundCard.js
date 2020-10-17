@@ -4,7 +4,6 @@ import { faMapMarkerAlt, faUtensils } from '@fortawesome/free-solid-svg-icons'
 import { faStar } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import Icon from 'react-native-vector-icons/FontAwesome'
-// import { TouchableHighlight } from 'react-native-gesture-handler'
 
 // const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -18,7 +17,7 @@ export default class Card extends React.Component {
   }
 
   // getting which stars to display
-  getStarPath(rating) {
+  getStarPath (rating) {
     switch (rating) {
       case 0:
         return require('./assets/stars/0.png')
@@ -44,7 +43,7 @@ export default class Card extends React.Component {
   }
 
   // get image based on cuisine
-  getCuisine(category) {
+  getCuisine (category) {
     switch (category) {
       case 'American':
         return require('./assets/images/american.png')
@@ -74,8 +73,8 @@ export default class Card extends React.Component {
   }
 
   // for each transaction, put into comma-separated string
-  evaluateTransactions(transactions) {
-    return transactions.map((item) => item).join(', ')
+  evaluateTransactions (transactions) {
+    return transactions.map(item => item).join(', ')
   }
 
   render() {
@@ -171,7 +170,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: font,
-    fontSize: 30,
+    // fontSize: 30,
+    fontSize: Dimensions.get('window').width * 0.06,
     textAlign: 'left',
     fontWeight: 'bold',
     margin: '3%',
@@ -193,6 +193,6 @@ const styles = StyleSheet.create({
     borderRadius: 17,
     borderWidth: 2.5,
     alignSelf: 'center',
-    margin: '5%',
+    margin: '3%',
   },
 })
