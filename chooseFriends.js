@@ -3,7 +3,7 @@ import { Dimensions, FlatList, Modal, StyleSheet, Text, View } from 'react-nativ
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { SearchBar } from 'react-native-elements'
 import Alert from './alert.js'
-import Card from './chooseCard.js'
+import ChooseCard from './chooseCard.js'
 import friendsApi from './friendsApi.js'
 
 const hex = '#F25763'
