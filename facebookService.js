@@ -55,10 +55,10 @@ class FacebookService {
         AsyncStorage.setItem(PHOTO, currentUser.user.photoURL)
         // Get username from database if not new user
         if (!currentUser.additionalUserInfo.isNewUser) {
-          accountsApi.getUser().then((res) => {
+          return accountsApi.getUser().then((res) => {
             AsyncStorage.setItem(USERNAME, res.username)
+            return 'Home'
           })
-          return 'Home'
         }
         return 'Username'
       })

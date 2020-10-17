@@ -40,10 +40,15 @@ class Home extends React.Component {
       friends: new Object(),
     }
     socket.connect()
-    socket.getSocket().on('reconnectRoom', res => console.log(res))
+    // socket.getSocket().on('reconnectRoom', res => console.log(res))
     socket.getSocket().on('invite', (res => {
+      console.log(res)
       this.setState({ invite: true })
     }))
+    socket.getSocket().on('update', (res) => {
+      this.props.navigation.navigate('Group', res)
+    })
+    // socket.joinRoom('hannaco')
   }
 
   underlayShowCreate() {
@@ -64,9 +69,6 @@ class Home extends React.Component {
 
   createGroup() {
     socket.createRoom()
-    socket.getSocket().on('update', (res) => {
-      this.props.navigation.navigate('Group', res)
-    })
   }
 
   componentDidMount() {

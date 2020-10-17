@@ -93,6 +93,8 @@ module.exports = (io) => {
     // send invite with host info to join a room
     socket.on('invite', async (data) => {
       console.log(data.username)
+      console.log(clients[data.username])
+      console.log(clients)
       try {
         let user = await Accounts.findOne({
           where: { username: data.username },
@@ -100,7 +102,9 @@ module.exports = (io) => {
         // check if friend is in another group
         if (user.inSession) {
           socket.emit('unreachable', data.username)
+          console.log('bad')
         } else {
+          console.log('good')
           invites[data.username] = data.host
           io.to(clients[data.username]).emit('invite', {
             username: data.host,
@@ -144,7 +148,7 @@ module.exports = (io) => {
           sessions[data.room].members[data.username].pic = data.pic
           sessions[data.room].members[data.username].name = data.name
           lastRoom[data.username] = data.room
-          io.in(data.room).emit('update', sessions[data.room].members)
+          io.in(data.room).emit('update', sessions[data.room])
         } catch (error) {
           socket.emit('exception', error)
         }

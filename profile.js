@@ -27,9 +27,10 @@ var name = ''
 var username = ''
 
 //  gets user info
+AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 AsyncStorage.getItem(PHOTO).then((res) => (img = res))
 AsyncStorage.getItem(NAME).then((res) => (name = res))
-AsyncStorage.getItem(USERNAME).then((res) => (username = res))
+
 export default class UserProfileView extends Component {
   constructor(props) {
     super(props)

@@ -136,7 +136,6 @@ export default class Group extends React.Component {
   }
 
   componentDidMount() {
-    this.updateMemberList()
     this._isMounted = true
   }
 
@@ -145,7 +144,6 @@ export default class Group extends React.Component {
   }
 
   render() {
-    // this.updateMemberList();
     return (
       <Swiper ref="swiper" loop={false} showsPagination={false} scrollEnabled={this.state.swipe}>
         <View style={styles.main}>

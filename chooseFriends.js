@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import { SearchBar } from 'react-native-elements'
 import Card from './chooseCard.js'
 import friendsApi from './friendsApi.js'
+import socket from './socket.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Bold'
