@@ -1,6 +1,6 @@
+import { ID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
-import { ID } from 'react-native-dotenv'
 
 var myId = ''
 
@@ -95,9 +95,9 @@ const deleteUser = async () => {
 }
 
 // gets user by id and returns user info
-const getUser = async () => {
+const getUser = async (id) => {
   return accountsApi
-    .get(`/accounts/${myId}`)
+    .get(`/accounts/${id}`)
     .then((res) => {
       return {
         status: res.status,

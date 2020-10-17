@@ -7,7 +7,7 @@ import friendsApi from './friendsApi.js'
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
-export default class Card extends React.Component {
+export default class ProfileCard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {

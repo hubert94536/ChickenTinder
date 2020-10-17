@@ -16,7 +16,7 @@ import Slider from '@react-native-community/slider'
 import Alert from './alert.js'
 import ChooseFriends from './chooseFriends.js'
 import Socket from './socket.js'
-import TagsView from './TagsView'
+import TagsView from './tagsView'
 
 const hex = '#F25763'
 const font = 'CircularStd-Bold'
@@ -302,7 +302,7 @@ export default class FilterSelector extends React.Component {
               all={tagsCuisine}
               selected={this.state.selectedCuisine}
               isExclusive={false}
-              onChange={(event) => this.setState({selectedCuisine: event})}
+              onChange={(event) => this.setState({ selectedCuisine: event })}
             />
           </View>
           {this.state.isHost && (
@@ -444,7 +444,7 @@ export default class FilterSelector extends React.Component {
                 all={tagsPrice}
                 selected={this.state.selectedPrice}
                 isExclusive={false}
-                onChange={(event) => this.setState({selectedPrice: event})}
+                onChange={(event) => this.setState({ selectedPrice: event })}
               />
             </View>
           )}
@@ -454,7 +454,7 @@ export default class FilterSelector extends React.Component {
               all={tagsDiet}
               selected={this.state.selectedRestriction}
               isExclusive={false}
-              onChange={(event) => this.setState({selectedRestriction: event})}
+              onChange={(event) => this.setState({ selectedRestriction: event })}
             />
           </View>
         </ScrollView>

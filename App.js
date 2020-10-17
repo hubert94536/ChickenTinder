@@ -4,9 +4,8 @@ import Home from './home.js'
 import Username from './username.js'
 import UserProfileView from './profile.js'
 import Group from './group.js'
-import RestaurantCard from './round.js'
+import Round from './round.js'
 import Search from './search.js'
-import { UID } from 'react-native-dotenv'
 import firebase from 'firebase'
 import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
 import { createAppContainer } from 'react-navigation'
@@ -41,7 +40,7 @@ const RootStack = createStackNavigator(
       screen: Group,
     },
     Round: {
-      screen: RestaurantCard,
+      screen: Round,
     },
     Match: {
       screen: Match,
@@ -54,9 +53,9 @@ const RootStack = createStackNavigator(
     }
   },
   {
-    initialRouteName: 'Login',
-    headerMode: 'none'
-  }
+    initialRouteName: start,
+    headerMode: 'none',
+  },
 )
 const AppContainer = createAppContainer(RootStack)
 export default class App extends React.Component {

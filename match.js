@@ -25,6 +25,14 @@ export default class Match extends React.Component {
     // console.log(this.props.navigation.state.params.restaurant)
   }
 
+  componentDidMount() {
+    this._isMounted = true
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -56,7 +64,9 @@ export default class Match extends React.Component {
           style={styles.endButton}
           onPress={() => this.props.navigation.navigate('Home')}
         >
-          <Text style={  this.state.endRound ? styles.endTextPressed : styles.endText}>End Round</Text>
+          <Text style={this.state.endRound ? styles.endTextPressed : styles.endText}>
+            End Round
+          </Text>
         </TouchableHighlight>
         <TouchableHighlight
           style={styles.yelpButton}
@@ -137,7 +147,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     padding: '6%',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   endTextPressed: {
     fontFamily: font,
