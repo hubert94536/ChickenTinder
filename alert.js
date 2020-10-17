@@ -13,12 +13,12 @@ export default class Alert extends Component {
   }
 
   // function called when main button is pressed
-  handlePress() {
+  handlePress () {
     this.props.press()
   }
 
   //  function called when 'x' is pressed
-  handleCancel() {
+  handleCancel () {
     this.props.cancel()
   }
 
