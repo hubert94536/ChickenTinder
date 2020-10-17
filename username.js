@@ -1,9 +1,9 @@
 import React from 'react'
 import { StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
+import { NAME, USERNAME, ID, UID, EMAIL, PHOTO } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import Alert from './alert.js'
 import accountsApi from './accountsApi.js'
-import { NAME, USERNAME, ID, UID, EMAIL, PHOTO } from 'react-native-dotenv'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -24,18 +24,18 @@ class Username extends React.Component {
     }
   }
 
-  // closes alert
-  closeTaken () {
+  // closes taken alert
+  closeTaken() {
     this.setState({ takenAlert: false })
   }
 
-  // closes alert
-  closeError () {
+  // closes error alert
+  closeError() {
     this.setState({ errorAlert: false })
   }
 
   // gets users information once component mounts
-  async componentDidMount () {
+  async componentDidMount() {
     this.setState({
       name: await AsyncStorage.getItem(NAME),
       uid: await AsyncStorage.getItem(UID),
@@ -46,12 +46,12 @@ class Username extends React.Component {
   }
 
   // adjusting the look of button
-  underlayShow () {
+  underlayShow() {
     this.setState({ pressed: true })
   }
 
   // adjusting the look of button
-  underlayHide () {
+  underlayHide() {
     this.setState({ pressed: false })
   }
 
@@ -82,7 +82,7 @@ class Username extends React.Component {
       })
     }
 
-  render () {
+  render() {
     return (
       <View style={styles.mainContainer}>
         <Text style={styles.header}>'Chews' a username!</Text>
@@ -128,14 +128,13 @@ class Username extends React.Component {
       </View>
     )
   }
-
 }
 
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   header: {
     fontFamily: font,
@@ -143,7 +142,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     marginTop: '8%',
     marginLeft: '3%',
-    textAlign: 'left'
+    textAlign: 'left',
   },
   input: {
     fontFamily: font,
@@ -153,7 +152,7 @@ const styles = StyleSheet.create({
     borderBottomColor: hex,
     borderBottomWidth: 2.5,
     margin: '3%',
-    width: '70%'
+    width: '70%',
   },
   button: {
     fontFamily: font,
