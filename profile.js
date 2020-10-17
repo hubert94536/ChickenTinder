@@ -16,7 +16,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Swiper from 'react-native-swiper'
 import Alert from './alert.js'
 import accountsApi from './accountsApi.js'
-import { facebookService } from './facebookService.js'
+import facebookService from './facebookService.js'
 import Friends from './friends.js'
 import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 

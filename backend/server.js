@@ -10,7 +10,7 @@ const server = http.createServer(app)
 io.attach(server)
 require('./socketEvents.js')(io)
 
-var PORT = process.env.PORT || 3000
+var PORT = process.env.PORT || 5000
 
 app.use(bodyParser.json())
 app.use(

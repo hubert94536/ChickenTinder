@@ -72,6 +72,10 @@ export default class Group extends React.Component {
       })
     })
 
+    socket.getSocket().on('leave', () => {
+      this.leaveGroup()
+    })
+
     socket.getSocket().on('exception', (error) => {
       console.log(error)
     })
@@ -129,9 +133,6 @@ export default class Group extends React.Component {
 
   endGroup() {
     socket.endSession()
-    socket.getSocket().on('leave', () => {
-      this.props.navigation.navigate('Home')
-    })
   }
 
   // shows proper alert based on if user is host

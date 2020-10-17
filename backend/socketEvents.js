@@ -29,6 +29,7 @@ module.exports = (io) => {
         let sender = lastRoom[socketUser]
         io.to(clients[socketUser]).emit('reconnectRoom', {
           username: sender,
+          //bug
           pic: sessions[sender].members[sender].pic,
           name: sessions[sender].members[sender].name,
         })
@@ -37,7 +38,7 @@ module.exports = (io) => {
       }
     }
 
-    // check for disconnection
+    // disconnects user and removes them if in room
     socket.on('disconnect', async () => {
       try {
         let username = clientsIds[socket.id]
@@ -77,6 +78,7 @@ module.exports = (io) => {
           },
         )
         socket.join(data.host)
+        // initialize the session object
         sessions[data.host] = {}
         sessions[data.host].members = {}
         sessions[data.host].host = data.host
@@ -118,7 +120,7 @@ module.exports = (io) => {
       }
     })
 
-    // declines invite and send to host
+    // declines invite and remove from invites object
     socket.on('decline', (data) => {
       try {
         delete invites[data.username]
@@ -143,6 +145,7 @@ module.exports = (io) => {
           )
           socket.join(data.room)
           delete invites[data.username]
+          // initialize member in members object
           sessions[data.room].members[data.username] = {}
           sessions[data.room].members[data.username].filters = false
           sessions[data.room].members[data.username].pic = data.pic
@@ -165,6 +168,7 @@ module.exports = (io) => {
         io.in(data.room).emit('update', sessions[data.room])
         // check if host
         if (data.username === data.room) {
+          // setting filters
           if (data.filters.price) {
             sessions[data.room].filters.price = data.filters.price
           }
@@ -175,6 +179,7 @@ module.exports = (io) => {
           sessions[data.room].filters.latitude = data.filters.latitude
           sessions[data.room].filters.longitude = data.filters.longitude
         }
+        // add categories to set
         for (let category in data.filters.categories) {
           sessions[data.room].filters.categories.add(data.filters.categories[category])
         }
@@ -185,11 +190,12 @@ module.exports = (io) => {
 
     // alert to all clients in room to start
     socket.on('start', async (data) => {
-      // proceed to restaurant matching after everyone submits filters
       try {
+        // transform categories set to string
         sessions[data.room].filters.categories = Array.from(
           sessions[data.room].filters.categories,
         ).toString()
+        console.log(sessions[data.room].filters)
         const restaurantList = await Yelp.getRestaurants(sessions[data.room].filters)
         // store restaurant info in 'cache'
         for (let res in restaurantList.businessList) {
@@ -208,7 +214,8 @@ module.exports = (io) => {
         // increment restaurant count
         sessions[data.room].restaurants[data.restaurant] =
           (sessions[data.room].restaurants[data.restaurant] || 0) + 1
-        if (
+        // check if count == group size => match
+          if (
           sessions[data.room].restaurants[data.restaurant] ===
           Object.keys(sessions[data.room].members).length
         ) {
@@ -244,6 +251,7 @@ module.exports = (io) => {
           io.in(data.room).emit('update', sessions[data.room])
         }
       } catch (error) {
+        console.log(error)
         socket.emit('exception', error)
       }
     })

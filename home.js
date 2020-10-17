@@ -44,6 +44,7 @@ class Home extends React.Component {
       this.setState({ invite: true, inviteInfo: res })
     })
     socket.getSocket().on('update', (res) => {
+      this.setState({invite: false})
       this.props.navigation.navigate('Group', res)
     })
   }
