@@ -45,6 +45,7 @@ class Home extends React.Component {
     socket.connect()
     socket.getSocket().on('reconnectRoom', res => console.log(res))
     socket.getSocket().on('invite', (res => {
+      console.log('hi')
       this.setState({ invite: true })
     }))
   }
@@ -100,8 +101,8 @@ class Home extends React.Component {
         }}
       >
         <TouchableHighlight
-          onShowUnderlay={this.setState({ createPressed: true })}
-          onHideUnderlay={this.setState({ createPressed: false })}
+          onShowUnderlay={() => this.setState({ createPressed: true })}
+          onHideUnderlay={() => this.setState({ createPressed: false })}
           activeOpacity={1}
           underlayColor="#fff"
           style={styles.button}
@@ -112,8 +113,8 @@ class Home extends React.Component {
           </Text>
         </TouchableHighlight>
         <TouchableHighlight
-          onShowUnderlay={this.setState({ profilePressed: true })}
-          onHideUnderlay={this.setState({ profilePressed: true })}
+          onShowUnderlay={() => this.setState({ profilePressed: true })}
+          onHideUnderlay={() => this.setState({ profilePressed: false })}
           activeOpacity={1}
           underlayColor="#fff"
           style={styles.button}
@@ -123,10 +124,10 @@ class Home extends React.Component {
             My Profile
           </Text>
         </TouchableHighlight>
-        {this.state.invite && <Invite image={this.state.image} name={this.state.name} onPress={() => this.setState({invite: false})}/>}
+        {this.state.invite && <Invite image={this.state.image} name={this.state.name}/>}
         <TouchableHighlight
-          onShowUnderlay={this.setState({ searchPressed: true })}
-          onHideUnderlay={this.setState({ searchPressed: true })}
+          onShowUnderlay={() => this.setState({ searchPressed: true })}
+          onHideUnderlay={() => this.setState({ searchPressed: false })}
           activeOpacity={1}
           underlayColor="#fff"
           style={styles.button}

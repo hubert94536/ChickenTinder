@@ -114,12 +114,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-evenly',
     width: '80%',
-    margin: '3%',
+    // margin: '3%',
     backgroundColor: 'white',
     alignSelf: 'center',
     borderRadius: 40,
     elevation: 20,
-    // margin: '50%'
+    margin: '50%'
   },
   text: {
     fontFamily: font,

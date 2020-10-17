@@ -56,8 +56,9 @@ export default class Group extends React.Component {
 
     // listens for group updates
     socket.getSocket().on('update', (res) => {
-      this.setState({ members: res })
-      const count = this.countNeedFilters(res)
+      console.log(res)
+      this.setState({ members: res.members })
+      const count = this.countNeedFilters(res.members)
       this.setState({ needFilters: count })
       if (!count) {
         this.setState({ start: true })
@@ -148,7 +149,7 @@ export default class Group extends React.Component {
   }
 
   componentDidMount() {
-    this.updateMemberList()
+    // this.updateMemberList()
     this._isMounted = true
   }
 
@@ -157,7 +158,7 @@ export default class Group extends React.Component {
   }
 
   render() {
-    // this.updateMemberList();
+    this.updateMemberList();
     return (
       <Swiper ref="swiper" loop={false} showsPagination={false} scrollEnabled={this.state.swipe}>
         <View style={styles.main}>
