@@ -1,7 +1,3 @@
-import AsyncStorage from '@react-native-community/async-storage'
-import FBSDK from 'react-native-fbsdk'
-import accountsApi from './accountsApi.js'
-import firebase from 'firebase'
 import {
   FIREBASE_API_KEY,
   FIREBASE_APPLICATION_ID,
@@ -16,6 +12,10 @@ import {
   EMAIL,
   PHOTO,
 } from 'react-native-dotenv'
+import AsyncStorage from '@react-native-community/async-storage'
+import FBSDK from 'react-native-fbsdk'
+import Firebase from 'firebase'
+import accountsApi from './accountsApi.js'
 
 const { LoginManager, AccessToken } = FBSDK
 // const { GraphRequest, GraphRequestManager } = FBSDK
@@ -29,7 +29,7 @@ const config = {
   storageBucket: FIREBASE_STORAGE_BUCKET, // Storage
 }
 
-firebase.initializeApp(config)
+Firebase.initializeApp(config)
 
 class FacebookService {
   async loginWithFacebook() {
@@ -42,20 +42,20 @@ class FacebookService {
         return AccessToken.getCurrentAccessToken()
       })
       .then((data) => {
-        const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken)
+        const credential = Firebase.auth.FacebookAuthProvider.credential(data.accessToken)
         // Sign in with Firebase oauth using credential and authentication token
-        return firebase.auth().signInWithCredential(credential)
+        return Firebase.auth().signInWithCredential(credential)
       })
       .then((currentUser) => {
         // Set user's info locally
-        AsyncStorage.setItem(UID, firebase.auth().currentUser.uid)
+        AsyncStorage.setItem(UID, Firebase.auth().currentUser.uid)
         AsyncStorage.setItem(NAME, currentUser.additionalUserInfo.profile.name)
         AsyncStorage.setItem(ID, currentUser.additionalUserInfo.profile.id)
         AsyncStorage.setItem(EMAIL, currentUser.additionalUserInfo.profile.email)
         AsyncStorage.setItem(PHOTO, currentUser.user.photoURL)
         // Get username from database if not new user
         if (!currentUser.additionalUserInfo.isNewUser) {
-          return accountsApi.getUser().then((res) => {
+          return accountsApi.getUser(currentUser.additionalUserInfo.profile.id).then((res) => {
             AsyncStorage.setItem(USERNAME, res.username)
             return 'Home'
           })
@@ -72,13 +72,12 @@ class FacebookService {
   }
 
   // isSignedIn = () => {
-  //   return firebase.auth().currentUser;
+  //   return Firebase.auth().currentUser;
   // }
 
   // Log out of Firebase and Facebook
   async logoutWithFacebook() {
-    firebase
-      .auth()
+    Firebase.auth()
       .signOut()
       .then(() => {
         LoginManager.logOut()
@@ -99,9 +98,9 @@ class FacebookService {
       .then(() => {
         // Retrieve accesstoken to delete use from Firebase
         AccessToken.getCurrentAccessToken().then((accessToken) => {
-          const credential = firebase.auth.FacebookAuthProvider.credential(accessToken)
-          firebase.auth().currentUser.reauthenticateWithCredential(credential)
-          firebase.auth().currentUser.delete()
+          const credential = Firebase.auth.FacebookAuthProvider.credential(accessToken)
+          Firebase.auth().currentUser.reauthenticateWithCredential(credential)
+          Firebase.auth().currentUser.delete()
           AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO])
         })
       })

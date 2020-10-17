@@ -24,13 +24,17 @@ module.exports = (io) => {
       })
     }
     // send reconnect alert if user was in a room and room still exists
-    if (socketUser in lastRoom && lastRoom[socketUser] in sessions) {
-      let sender = lastRoom[socketUser]
-      io.to(clients[socketUser]).emit('reconnectRoom', {
-        username: sender,
-        pic: sessions[sender].members[sender].pic,
-        name: sessions[sender].members[sender].name,
-      })
+    if (socketUser in lastRoom) {
+      if (lastRoom[socketUser] in sessions) {
+        let sender = lastRoom[socketUser]
+        io.to(clients[socketUser]).emit('reconnectRoom', {
+          username: sender,
+          pic: sessions[sender].members[sender].pic,
+          name: sessions[sender].members[sender].name,
+        })
+      } else {
+        delete lastRoom[socketUser]
+      }
     }
 
     // check for disconnection
@@ -53,7 +57,7 @@ module.exports = (io) => {
             delete sessions[room]
             delete lastRoom[username]
           } else {
-            io.in(room).emit('update', sessions[room].members)
+            io.in(room).emit('update', sessions[room])
           }
         }
       } catch (error) {
@@ -92,9 +96,6 @@ module.exports = (io) => {
 
     // send invite with host info to join a room
     socket.on('invite', async (data) => {
-      console.log(data.username)
-      console.log(clients[data.username])
-      console.log(clients)
       try {
         let user = await Accounts.findOne({
           where: { username: data.username },
@@ -102,9 +103,7 @@ module.exports = (io) => {
         // check if friend is in another group
         if (user.inSession) {
           socket.emit('unreachable', data.username)
-          console.log('bad')
         } else {
-          console.log('good')
           invites[data.username] = data.host
           io.to(clients[data.username]).emit('invite', {
             username: data.host,
@@ -162,7 +161,7 @@ module.exports = (io) => {
       // merge to master list, send response back
       try {
         sessions[data.room].members[data.username].filters = true
-        io.in(data.room).emit('update', sessions[data.room].members)
+        io.in(data.room).emit('update', sessions[data.room])
         // check if host
         if (data.username === data.room) {
           if (data.filters.price) {
@@ -241,7 +240,7 @@ module.exports = (io) => {
         if (Object.keys(sessions[data.room].members).length === 0) {
           delete sessions[data.room]
         } else {
-          io.in(data.room).emit('update', sessions[data.room].members)
+          io.in(data.room).emit('update', sessions[data.room])
         }
       } catch (error) {
         socket.emit('exception', error)

@@ -14,14 +14,19 @@ export default class Invite extends React.Component {
     this.state = {
       pressed: false,
     }
+    socket.getSocket().on('update', (res) => {
+      this.props.navigation.navigate('Group', res)
+    })
   }
 
   handleAccept() {
     socket.joinRoom(this.props.username)
+    this.props.cancel()
   }
 
   handleCancel() {
     socket.declineInvite(this.props.username)
+    this.props.cancel()
   }
 
   render() {
@@ -103,12 +108,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-evenly',
     width: '80%',
-    margin: '3%',
     backgroundColor: 'white',
     alignSelf: 'center',
     borderRadius: 40,
     elevation: 20,
-    // margin: '50%'
+    margin: '50%',
   },
   text: {
     fontFamily: font,

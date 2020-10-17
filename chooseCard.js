@@ -6,7 +6,7 @@ import socket from './socket.js'
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
 //  cards for when you're choosing friends for your group
-export default class Card extends React.Component {
+export default class ChooseCard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {

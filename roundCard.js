@@ -1,15 +1,22 @@
 import React from 'react'
-import { Dimensions, Image, Linking, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import {
+  Dimensions,
+  Image,
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
+} from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import { faMapMarkerAlt, faUtensils } from '@fortawesome/free-solid-svg-icons'
 import { faStar } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import Icon from 'react-native-vector-icons/FontAwesome'
-// import { TouchableHighlight } from 'react-native-gesture-handler'
 
 // const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
-export default class Card extends React.Component {
+export default class RoundCard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {

@@ -1,13 +1,8 @@
 import React from 'react'
-import {
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View
-} from 'react-native'
+import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import Invite from './invite.js'
-import { NAME,  PHOTO, USERNAME } from 'react-native-dotenv'
+import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 import socket from './socket.js'
 import accountsApi from './accountsApi.js'
 import friendsApi from './friendsApi.js'
@@ -18,9 +13,9 @@ var name = ''
 var username = ''
 
 //  gets user info
-AsyncStorage.getItem(PHOTO).then(res => (img = res))
-AsyncStorage.getItem(NAME).then(res => (name = res))
-AsyncStorage.getItem(USERNAME).then(res => (username = res))
+AsyncStorage.getItem(PHOTO).then((res) => (img = res))
+AsyncStorage.getItem(NAME).then((res) => (name = res))
+AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 var myId = ''
 
 AsyncStorage.getItem(ID).then((res) => {
@@ -37,14 +32,14 @@ class Home extends React.Component {
       image: img,
       name: name,
       username: username,
-      friends: new Object(),
+      inviteInfo: '',
+      friends: '',
     }
     socket.connect()
     // socket.getSocket().on('reconnectRoom', res => console.log(res))
-    socket.getSocket().on('invite', (res => {
-      console.log(res)
-      this.setState({ invite: true })
-    }))
+    socket.getSocket().on('invite', (res) => {
+      this.setState({ invite: true, inviteInfo: res })
+    })
     socket.getSocket().on('update', (res) => {
       this.props.navigation.navigate('Group', res)
     })
@@ -65,6 +60,10 @@ class Home extends React.Component {
 
   underlayHideProfile() {
     this.setState({ profilePressed: false })
+  }
+
+  closeInvite() {
+    this.setState({ invite: false })
   }
 
   createGroup() {
@@ -139,7 +138,15 @@ class Home extends React.Component {
             My Profile
           </Text>
         </TouchableHighlight>
-        {this.state.invite && <Invite image={this.state.image} name={this.state.name} onPress={() => this.setState({invite: false})}/>}
+        {this.state.invite && (
+          <Invite
+            image={this.state.inviteInfo.pic}
+            username={this.state.inviteInfo.username}
+            name={this.state.inviteInfo.name}
+            cancel={() => this.closeInvite()}
+            onPress={() => this.closeInvite()}
+          />
+        )}
         <TouchableHighlight
           onShowUnderlay={this.underlayShowProfile.bind(this)}
           onHideUnderlay={this.underlayHideProfile.bind(this)}

@@ -1,9 +1,9 @@
 import React from 'react'
 import { StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
+import { NAME, USERNAME, ID, UID, EMAIL, PHOTO } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import Alert from './alert.js'
 import accountsApi from './accountsApi.js'
-import { NAME, USERNAME, ID, UID, EMAIL, PHOTO } from 'react-native-dotenv'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -128,7 +128,6 @@ class Username extends React.Component {
       </View>
     )
   }
-
 }
 
 const styles = StyleSheet.create({

@@ -7,10 +7,9 @@ import {
   View
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
-
 import { SearchBar } from 'react-native-elements'
 import accountsApi from './accountsApi.js';
-import Card from './searchCard.js'
+import SearchCard from './searchCard.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -100,7 +99,7 @@ export default class Search extends Component {
         <FlatList
           data={this.state.data}
           renderItem={({item}) => (
-            <Card
+            <SearchCard
               name={item.name}
               username={'@' + item.username}
               image={item.photo}

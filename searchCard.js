@@ -7,7 +7,7 @@ const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
 // cards for the search for friends screen
-export default class Card extends React.Component {
+export default class SearchCard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -198,7 +198,7 @@ export default class Card extends React.Component {
                 color: hex,
                 fontSize: 35,
                 alignSelf: 'center',
-                margin: '3%'
+                margin: '3%',
               }}
               name="check-circle"
               onPress={() => this.acceptFriend()}
@@ -209,7 +209,7 @@ export default class Card extends React.Component {
                 color: hex,
                 fontSize: 35,
                 alignSelf: 'center',
-                margin: '3%'
+                margin: '3%',
               }}
               name="times-circle"
               onPress={() => this.rejectFriend()}

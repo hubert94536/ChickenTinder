@@ -48,7 +48,9 @@ export default class Match extends React.Component {
           onHideUnderlay={() => this.setState({ endRound: false })}
           style={styles.endButton}
         >
-          <Text style={  this.state.endRound ? styles.endTextPressed : styles.endText}>End Round</Text>
+          <Text style={this.state.endRound ? styles.endTextPressed : styles.endText}>
+            End Round
+          </Text>
         </TouchableHighlight>
         <TouchableHighlight
           style={styles.yelpButton}
@@ -129,7 +131,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     padding: '6%',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   endTextPressed: {
     fontFamily: font,

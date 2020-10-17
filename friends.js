@@ -2,7 +2,7 @@ import React from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
 import { SearchBar } from 'react-native-elements'
 import Alert from './alert.js'
-import Card from './profileCard.js'
+import ProfileCard from './profileCard.js'
 import friendsApi from './friendsApi.js'
 
 const font = 'CircularStd-Medium'
@@ -75,7 +75,7 @@ export default class Friends extends React.Component {
     if (Array.isArray(friendList) && friendList.length) {
       for (var i = 0; i < friendList.length; i++) {
         friends.push(
-          <Card
+          <ProfileCard
             total={this.state.friends}
             name={friendList[i].name}
             username={friendList[i].username}

@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Swiper from 'react-native-swiper'
 import Alert from './alert.js'
-import Card from './groupCard.js'
+import GroupCard from './groupCard.js'
 import FilterSelector from './filter.js'
 import socket from './socket.js'
 import { USERNAME } from 'react-native-dotenv'
@@ -44,8 +44,8 @@ export default class Group extends React.Component {
 
     // listens for group updates
     socket.getSocket().on('update', (res) => {
-      this.setState({ members: res })
-      const count = this.countNeedFilters(res)
+      this.setState({ members: res.members })
+      const count = this.countNeedFilters(res.members)
       this.setState({ needFilters: count })
       if (!count) {
         this.setState({ start: true })
@@ -87,12 +87,13 @@ export default class Group extends React.Component {
     memberList = []
     for (var user in this.state.members) {
       memberList.push(
-        <Card
+        <GroupCard
           name={this.state.members[user].name}
           username={user}
           image={this.state.members[user].pic}
           filters={this.state.members[user].filters}
           host={this.state.host}
+          isHost={this.state.host == this.state.username}
           key={user}
         />,
       )
@@ -110,13 +111,13 @@ export default class Group extends React.Component {
   }
 
   leaveGroup() {
-    socket.leaveRoom()
+    socket.leaveRoom(this.state.host)
     this.props.navigation.navigate('Home')
   }
 
   endGroup() {
     socket.endSession()
-    socket.getSocket().on('leave', (res) => {
+    socket.getSocket().on('leave', () => {
       this.props.navigation.navigate('Home')
     })
   }
@@ -423,7 +424,6 @@ const styles = StyleSheet.create({
   center: {
     flex: 0.6,
     color: '#fff',
-    // backgroundColor: '#add8e6',
   },
   bottom: {
     flex: 0.45,

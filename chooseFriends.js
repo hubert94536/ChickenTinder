@@ -2,9 +2,8 @@ import React from 'react'
 import { Dimensions, FlatList, Modal, StyleSheet, Text, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { SearchBar } from 'react-native-elements'
-import Card from './chooseCard.js'
+import ChooseCard from './chooseCard.js'
 import friendsApi from './friendsApi.js'
-import socket from './socket.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Bold'
@@ -93,7 +92,12 @@ export default class ChooseFriends extends React.Component {
               style={{ marginLeft: '5%', marginRight: '5%', marginBottom: '10%' }}
               data={this.state.friends}
               renderItem={({ item }) => (
-                <Card name={item.name} username={item.username} image={item.image} added={false} />
+                <ChooseCard
+                  name={item.name}
+                  username={item.username}
+                  image={item.image}
+                  added={false}
+                />
               )}
               keyExtractor={(item) => item.username}
             />

@@ -2,13 +2,13 @@ import React from 'react'
 import { SafeAreaView, StyleSheet, Text, View, TouchableHighlight } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Swiper from 'react-native-deck-swiper'
-import Card from './roundCard.js'
+import RoundCard from './roundCard.js'
 import socket from './socket.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
-export default class RestaurantCard extends React.Component {
+export default class Round extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -78,7 +78,7 @@ export default class RestaurantCard extends React.Component {
         <Swiper
           cards={this.state.results}
           cardIndex={this.state.index}
-          renderCard={(card) => <Card card={card} />}
+          renderCard={(card) => <RoundCard card={card} />}
           onSwiper={this.handleSwiped}
           stackSize={10}
           disableBottomSwipe
