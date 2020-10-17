@@ -99,6 +99,7 @@ const requestLocationPermission = async () => {
       }
     })
     .catch((err) => {
+      this.setState({errorAlert: true})
       console.log(err)
     })
 }
@@ -123,6 +124,7 @@ export default class FilterSelector extends React.Component {
       locationAlert: false,
       formatAlert: false,
       chooseFriends: false,
+      errorAlert: false
     }
   }
 
@@ -487,6 +489,15 @@ export default class FilterSelector extends React.Component {
             buttonText="Close"
             press={() => this.setState({ formatAlert: false })}
             cancel={() => this.setState({ formatAlert: false })}
+          />
+        )}
+        {this.state.errorAlert && (
+          <Alert
+            title="Error, please try again"
+            button
+            buttonText="Close"
+            press={() => this.setState({errorAlert: false})}
+            cancel={() => this.setState({errorAlert: false})}
           />
         )}
         {this.state.chooseFriends && (

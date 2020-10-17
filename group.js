@@ -1,5 +1,12 @@
 import React from 'react'
-import { ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import {
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
+} from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Swiper from 'react-native-swiper'
@@ -8,6 +15,10 @@ import GroupCard from './groupCard.js'
 import FilterSelector from './filter.js'
 import socket from './socket.js'
 import { USERNAME } from 'react-native-dotenv'
+
+console.log(Dimensions.get('screen').width)
+console.log(Dimensions.get('screen').height)
+
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -20,6 +31,7 @@ AsyncStorage.getItem(USERNAME).then((res) => {
 export default class Group extends React.Component {
   constructor(props) {
     super(props)
+    this._isMounted = false;
     const members = this.props.navigation.state.params.members
     this.state = {
       members: members,
@@ -145,6 +157,7 @@ export default class Group extends React.Component {
   }
 
   render() {
+    this.updateMemberList();
     return (
       <Swiper ref="swiper" loop={false} showsPagination={false} scrollEnabled={this.state.swipe}>
         <View style={styles.main}>

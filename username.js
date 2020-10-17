@@ -80,7 +80,7 @@ class Username extends React.Component {
           this.setState({ errorAlert: true })
         }
       })
-  }
+    }
 
   render() {
     return (

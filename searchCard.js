@@ -1,6 +1,7 @@
 import React from 'react'
 import { Image, Text, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import Alert from './alert.js'
 import friendsApi from './friendsApi.js'
 
 const hex = '#F25763'
@@ -14,6 +15,7 @@ export default class SearchCard extends React.Component {
       // for button display
       requested: this.props.requested,
       pressed: false,
+      errorAlert: false,
     }
   }
 
@@ -23,7 +25,7 @@ export default class SearchCard extends React.Component {
       .then(() => {
         this.setState({ requested: 'Accepted' })
       })
-      .catch((error) => console.log(error))
+      .catch(() => this.setState({errorAlert: true}))
   }
 
   async addFriend() {
@@ -32,7 +34,7 @@ export default class SearchCard extends React.Component {
       .then(() => {
         this.setState({ requested: 'Requested' })
       })
-      .catch((error) => console.log(error))
+      .catch(() => this.setState({errorAlert: true}))
   }
 
   async rejectFriend() {
@@ -41,7 +43,7 @@ export default class SearchCard extends React.Component {
       .then(() => {
         this.setState({ requested: 'Add' })
       })
-      .catch((error) => console.log(error))
+      .catch(() => this.setState({errorAlert: true}))
   }
 
   render() {
@@ -200,7 +202,7 @@ export default class SearchCard extends React.Component {
                 alignSelf: 'center',
                 margin: '3%',
               }}
-              name="check-circle"
+              name='check-circle'
               onPress={() => this.acceptFriend()}
             />
             <Icon
@@ -215,6 +217,15 @@ export default class SearchCard extends React.Component {
               onPress={() => this.rejectFriend()}
             />
           </View>
+        )}
+        {this.state.errorAlert && (
+          <Alert
+            title="Error, please try again"
+            button
+            buttonText="Close"
+            press={() => this.setState({errorAlert: false})}
+            cancel={() => this.setState({errorAlert: false})}
+          />
         )}
       </View>
     )

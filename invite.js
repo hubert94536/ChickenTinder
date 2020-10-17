@@ -29,6 +29,14 @@ export default class Invite extends React.Component {
     this.props.cancel()
   }
 
+  handleAccept() {
+    socket.joinRoom(this.props.username)
+  }
+
+  handleCancel() {
+    socket.declineInvite(this.props.username)
+  }
+
   render() {
     return (
       <View>
@@ -108,6 +116,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-evenly',
     width: '80%',
+    // margin: '3%',
     backgroundColor: 'white',
     alignSelf: 'center',
     borderRadius: 40,
