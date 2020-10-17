@@ -8,7 +8,7 @@ const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
 // cards for the search for friends screen
-export default class Card extends React.Component {
+export default class SearchCard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -25,7 +25,7 @@ export default class Card extends React.Component {
       .then(() => {
         this.setState({ requested: 'Accepted' })
       })
-      .catch((error) => this.setState({errorAlert: true}))
+      .catch(() => this.setState({errorAlert: true}))
   }
 
   async addFriend() {
@@ -34,7 +34,7 @@ export default class Card extends React.Component {
       .then(() => {
         this.setState({ requested: 'Requested' })
       })
-      .catch((error) => this.setState({errorAlert: true}))
+      .catch(() => this.setState({errorAlert: true}))
   }
 
   async rejectFriend() {
@@ -43,7 +43,7 @@ export default class Card extends React.Component {
       .then(() => {
         this.setState({ requested: 'Add' })
       })
-      .catch((error) => this.setState({errorAlert: true}))
+      .catch(() => this.setState({errorAlert: true}))
   }
 
   render() {
@@ -175,7 +175,7 @@ export default class Card extends React.Component {
                 fontFamily: font,
                 color: hex,
                 fontSize: 15,
-                alignSelf: 'center'
+                alignSelf: 'center',
               }}
             >
               Friends
@@ -186,9 +186,9 @@ export default class Card extends React.Component {
                 color: hex,
                 fontSize: 35,
                 alignSelf: 'center',
-                margin: '8%'
+                margin: '8%',
               }}
-              name='check-circle'
+              name="check-circle"
             />
           </View>
         )}
@@ -200,7 +200,7 @@ export default class Card extends React.Component {
                 color: hex,
                 fontSize: 35,
                 alignSelf: 'center',
-                margin: '3%'
+                margin: '3%',
               }}
               name='check-circle'
               onPress={() => this.acceptFriend()}
@@ -211,7 +211,7 @@ export default class Card extends React.Component {
                 color: hex,
                 fontSize: 35,
                 alignSelf: 'center',
-                margin: '3%'
+                margin: '3%',
               }}
               name="times-circle"
               onPress={() => this.rejectFriend()}

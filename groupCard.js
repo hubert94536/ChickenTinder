@@ -6,7 +6,7 @@ import socket from './socket.js'
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
-export default class Card extends React.Component {
+export default class GroupCard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -64,7 +64,7 @@ export default class Card extends React.Component {
             </Text>
           </View>
           <View style={{ flex: 1, flexDirection: 'row' }}>
-            {this.props.username !== this.props.host ? (
+            {this.props.username !== this.props.host && this.isHost ? (
               <Text
                 style={{
                   color: hex,
@@ -76,7 +76,7 @@ export default class Card extends React.Component {
                 Remove
               </Text>
             ) : null}
-            {this.props.username !== this.props.host ? (
+            {this.props.username !== this.props.host && this.isHost ? (
               <Icon
                 name="times-circle"
                 style={{

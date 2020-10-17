@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  Image,
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View
-} from 'react-native'
+import { Image, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import socket from './socket.js'
@@ -21,6 +14,19 @@ export default class Invite extends React.Component {
     this.state = {
       pressed: false,
     }
+    socket.getSocket().on('update', (res) => {
+      this.props.navigation.navigate('Group', res)
+    })
+  }
+
+  handleAccept() {
+    socket.joinRoom(this.props.username)
+    this.props.cancel()
+  }
+
+  handleCancel() {
+    socket.declineInvite(this.props.username)
+    this.props.cancel()
   }
 
   handleAccept() {
@@ -44,11 +50,7 @@ export default class Invite extends React.Component {
         <Modal transparent animationType="none">
           <View style={styles.modal}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-              <Icon
-                name='times-circle'
-                style={styles.icon}
-                onPress={() => this.props.onPress()}
-              />
+              <Icon name="times-circle" style={styles.icon} onPress={() => this.handleCancel()} />
             </View>
             <View
               style={{
@@ -119,7 +121,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 40,
     elevation: 20,
-    margin: '50%'
+    margin: '50%',
   },
   text: {
     fontFamily: font,

@@ -2,13 +2,13 @@ import React from 'react'
 import { SafeAreaView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Swiper from 'react-native-deck-swiper'
-import Card from './roundCard.js'
+import RoundCard from './roundCard.js'
 import socket from './socket.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Bold'
 
-export default class RestaurantCard extends React.Component {
+export default class Round extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -35,6 +35,14 @@ export default class RestaurantCard extends React.Component {
     socket.likeRestaurant(this.state.host, resId)
   }
 
+  componentDidMount() {
+    this._isMounted = true
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false
+  }
+
   endGroup() {
     socket.endSession()
     socket.getSocket().on('leave', (res) => {
@@ -47,7 +55,7 @@ export default class RestaurantCard extends React.Component {
     this.props.navigation.navigate('Home')
   }
 
-  render () {
+  render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
           <TouchableHighlight onPress={() => this.endGroup()}>
@@ -77,7 +85,7 @@ export default class RestaurantCard extends React.Component {
         <Swiper
           cards={this.state.results}
           cardIndex={this.state.index}
-          renderCard={(card) => <Card card={card} />}
+          renderCard={(card) => <RoundCard card={card} />}
           onSwiper={this.handleSwiped}
           stackSize={10}
           disableBottomSwipe

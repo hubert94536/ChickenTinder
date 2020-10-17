@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  Dimensions,
-  FlatList,
-  Modal,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import { Dimensions, FlatList, Modal, StyleSheet, Text, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { SearchBar } from 'react-native-elements'
 import Alert from './alert.js'
@@ -31,7 +24,7 @@ export default class ChooseFriends extends React.Component {
   }
 
   //  gets your friends
-  async getFriends () {
+  async getFriends() {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
       .getFriends()
@@ -48,12 +41,12 @@ export default class ChooseFriends extends React.Component {
   }
 
   //  closes the choose friends modal in filters
-  handlePress () {
+  handlePress() {
     this.props.press()
   }
 
   //  function for searching your friends
-  searchFilterFunction (text) {
+  searchFilterFunction(text) {
     this.setState({ search: text })
     const newData = this.state.data.filter((item) => {
       const itemData = `${item.name.toUpperCase()} ${item.username.toUpperCase()}`
@@ -101,7 +94,12 @@ export default class ChooseFriends extends React.Component {
               style={{ marginLeft: '5%', marginRight: '5%', marginBottom: '10%' }}
               data={this.state.friends}
               renderItem={({ item }) => (
-                <Card name={item.name} username={item.username} image={item.image} added={false} />
+                <ChooseCard
+                  name={item.name}
+                  username={item.username}
+                  image={item.image}
+                  added={false}
+                />
               )}
               keyExtractor={(item) => item.username}
             />
