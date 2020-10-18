@@ -73,7 +73,7 @@ export default class Group extends React.Component {
       })
     })
 
-    socket.getSocket().on('leave', () => {
+    socket.getSocket().on('leaveSession', () => {
       this.leaveGroup()
     })
 

@@ -244,7 +244,6 @@ module.exports = (io) => {
         if (Object.keys(sessions[data.room].members).length === 0) {
           delete sessions[data.room]
         } else {
-          console.log(sessions[data.room])
           io.in(data.room).emit('update', sessions[data.room])
         }
       } catch (error) {
@@ -265,8 +264,7 @@ module.exports = (io) => {
     // alert all users to leave room
     socket.on('end', (data) => {
       try {
-        io.in(data.room).emit('leave', data.room)
-        console.log(sessions)
+        io.in(data.room).emit('leaveSession', data.room)
       } catch (error) {
         socket.emit('exception', error.toString())
       }
