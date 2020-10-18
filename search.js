@@ -6,14 +6,23 @@ import {
   Text,
   View
 } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { SearchBar } from 'react-native-elements'
+import PropTypes from 'prop-types';
 import accountsApi from './accountsApi.js';
 import SearchCard from './searchCard.js'
 import Alert from './alert.js'
+import { USERNAME } from 'react-native-dotenv'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
+var username = ''
+AsyncStorage.getItem(USERNAME).then((res) => (username = res))
+
+Search.propTypes = {
+  allFriends: PropTypes.array
+}
 
 export default class Search extends Component {
   constructor(props) {
@@ -73,6 +82,22 @@ export default class Search extends Component {
     );
   };
 
+  async removeRequest(id, newArr, status) {
+    if (!status) {
+      friendsApi
+        .removeFriendship(id)
+        .then(() => {
+          this.setState({ friends: newArr })
+        })
+        .catch((err) => {
+          console.log(err)
+          this.setState({ errorAlert: true })
+        })
+    } else if (status) {
+      this.setState({ friends: newArr })
+    }
+  }
+
   renderHeader = () => {
     return (
       <SearchBar
@@ -93,20 +118,23 @@ export default class Search extends Component {
     return (
       <View style={{flex: 1, backgroundColor: 'white'}}>
         <Icon
-              name="chevron-left"
-              style={styles.topIcons}
-              onPress={() => this.props.navigation.navigate('Home')}
-            />    
+          name="chevron-left"
+          style={styles.topIcons}
+          onPress={() => this.props.navigation.navigate('Home')}
+        />    
         <Text style={styles.title}>Find New Friends!</Text>
         <FlatList
           data={this.state.data}
           renderItem={({item}) => (
             <SearchCard
+              currentUser={username}
               name={item.name}
               username={'@' + item.username}
               image={item.photo}
               id = {item.id}
               requested={item.status}
+              total={this.state.data}
+              press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
             />
           )}
           keyExtractor={(item) => item.username}

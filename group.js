@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import PropTypes from 'prop-types';
 import Swiper from 'react-native-swiper'
 import Alert from './alert.js'
 import GroupCard from './groupCard.js'
@@ -28,6 +29,12 @@ AsyncStorage.getItem(USERNAME).then((res) => {
   myUsername = res
 })
 
+Group.propTypes = {
+  members: PropTypes.array,
+  host: PropTypes.string,
+  
+}
+
 export default class Group extends React.Component {
   constructor(props) {
     super(props)
@@ -44,7 +51,7 @@ export default class Group extends React.Component {
       leaveAlert: false,
       endAlert: false,
       swipe: true,
-      filters: {},
+      filters: {}
     }
     this.updateMemberList()
 
@@ -113,12 +120,12 @@ export default class Group extends React.Component {
   }
 
   // changing button appearance
-  underlayShow() {
+  underlayShow () {
     this.setState({ start: true })
   }
 
   // changing button appearance
-  underlayHide() {
+  underlayHide () {
     this.setState({ start: false })
   }
 
@@ -135,14 +142,14 @@ export default class Group extends React.Component {
   }
 
   // shows proper alert based on if user is host
-  cancelAlert() {
+  cancelAlert () {
     this.state.host === this.state.username
       ? this.setState({ endAlert: false })
       : this.setState({ leaveAlert: false })
   }
 
   // sets the filters, goes back to groups and stops user from going back to filters
-  submitFilters(setFilters) {
+  submitFilters (setFilters) {
     this.refs.swiper.scrollBy(-1)
     this.setState({ swipe: false })
     this.setState({ filters: setFilters })

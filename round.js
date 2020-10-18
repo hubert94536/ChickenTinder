@@ -1,12 +1,19 @@
 import React from 'react'
 import { SafeAreaView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import PropTypes from 'prop-types'
 import Swiper from 'react-native-deck-swiper'
 import RoundCard from './roundCard.js'
 import socket from './socket.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Bold'
+
+Round.propTypes = {
+  results: PropTypes.array,
+  host: PropTypes.string,
+  isHost: PropTypes.bool
+}
 
 export default class Round extends React.Component {
   constructor(props) {
@@ -55,9 +62,9 @@ export default class Round extends React.Component {
     this.props.navigation.navigate('Home')
   }
 
-  render() {
+  render () {
     return (
-      <SafeAreaView style={styles.mainContainer}>
+      <View style={styles.mainContainer}>
           <TouchableHighlight onPress={() => this.endGroup()}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Icon
@@ -121,7 +128,7 @@ export default class Round extends React.Component {
             style={{ fontFamily: font, color: hex, fontSize: 18, marginLeft: '5%' }}
           />
         </View>
-      </SafeAreaView>
+      </View>
     )
   }
 }
