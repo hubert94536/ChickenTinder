@@ -39,33 +39,33 @@ module.exports = (io) => {
     }
 
     // disconnects user and removes them if in room
-    // socket.on('disconnect', async () => {
-    //   try {
-    //     let username = clientsIds[socket.id]
-    //     if (username in lastRoom) {
-    //       await Accounts.update(
-    //         {
-    //           inSession: false,
-    //         },
-    //         {
-    //           where: { username: username },
-    //         },
-    //       )
-    //       let room = lastRoom[username]
-    //       socket.leave(room)
-    //       delete sessions[room].members[username]
-    //       // delete room if this is last member in room
-    //       if (Object.keys(sessions[room].members).length === 0) {
-    //         delete sessions[room]
-    //         delete lastRoom[username]
-    //       } else {
-    //         io.in(room).emit('update', sessions[room])
-    //       }
-    //     }
-    //   } catch (error) {
-    //     socket.emit('exception', error)
-    //   }
-    // })
+    socket.on('disconnect', async () => {
+      try {
+        let username = clientsIds[socket.id]
+        if (username in lastRoom) {
+          await Accounts.update(
+            {
+              inSession: false,
+            },
+            {
+              where: { username: username },
+            },
+          )
+          let room = lastRoom[username]
+          socket.leave(room)
+          delete sessions[room].members[username]
+          // delete room if this is last member in room
+          if (Object.keys(sessions[room].members).length === 0) {
+            delete sessions[room]
+            delete lastRoom[username]
+          } else {
+            io.in(room).emit('update', sessions[room])
+          }
+        }
+      } catch (error) {
+        socket.emit('exception', error)
+      }
+    })
 
     // creates session and return session info to host
     socket.on('createRoom', async (data) => {
@@ -80,10 +80,8 @@ module.exports = (io) => {
         )
         socket.join(data.host)
         // initialize the session object
-        console.log(sessions)
         sessions[data.host] = {}
         sessions[data.host].members = {}
-        console.log(sessions)
         sessions[data.host].host = data.host
         sessions[data.host].members[data.host] = {}
         sessions[data.host].members[data.host].pic = data.pic
@@ -203,7 +201,6 @@ module.exports = (io) => {
         }
         io.in(data.room).emit('start', restaurantList.businessList)
       } catch (error) {
-        console.log(error)
         socket.emit('exception', error.toString())
       }
     })
@@ -223,13 +220,13 @@ module.exports = (io) => {
           io.in(data.room).emit('match', { restaurant: restaurants[data.restaurant] })
         }
       } catch (error) {
-        console.log(error)
         socket.emit('exception', error.toString())
       }
     })
 
     // leaving a session
     socket.on('leave', async (data) => {
+      console.log(sessions)
       try {
         await Accounts.update(
           {
@@ -247,6 +244,7 @@ module.exports = (io) => {
         if (Object.keys(sessions[data.room].members).length === 0) {
           delete sessions[data.room]
         } else {
+          console.log(sessions[data.room])
           io.in(data.room).emit('update', sessions[data.room])
         }
       } catch (error) {
@@ -267,8 +265,8 @@ module.exports = (io) => {
     // alert all users to leave room
     socket.on('end', (data) => {
       try {
-        console.log(sessions)
         io.in(data.room).emit('leave', data.room)
+        console.log(sessions)
       } catch (error) {
         socket.emit('exception', error.toString())
       }
