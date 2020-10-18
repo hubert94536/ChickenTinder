@@ -130,6 +130,7 @@ export default class Group extends React.Component {
   endGroup() {
     socket.endSession()
     socket.getSocket().on('leave', () => {
+      socket.leaveRoom(this.state.host)
       this.props.navigation.navigate('Home')
     })
   }
