@@ -16,10 +16,6 @@ import FilterSelector from './filter.js'
 import socket from './socket.js'
 import { USERNAME } from 'react-native-dotenv'
 
-console.log(Dimensions.get('screen').width)
-console.log(Dimensions.get('screen').height)
-
-
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
 var memberList = []
@@ -49,19 +45,19 @@ export default class Group extends React.Component {
     this.updateMemberList()
 
     // listens if user is to be kicked
-    socket.getSocket().on('kick', (res) => {
-      socket.leaveRoom(res.room)
-      this.props.navigation.navigate('Home')
+    socket.getSocket().on('kick', () => {
+      this.leaveGroup
     })
 
     // listens for group updates
     socket.getSocket().on('update', (res) => {
-      console.log(res)
-      this.setState({ members: res.members })
-      const count = this.countNeedFilters(res.members)
-      this.setState({ needFilters: count })
-      if (!count) {
-        this.setState({ start: true })
+      if (this._isMounted) {
+        this.setState({ members: res.members })
+        const count = this.countNeedFilters(res.members)
+        this.setState({ needFilters: count })
+        if (!count) {
+          this.setState({ start: true })
+        }
       }
     })
 
@@ -74,7 +70,9 @@ export default class Group extends React.Component {
     })
 
     socket.getSocket().on('leaveSession', () => {
-      this.leaveGroup()
+      if (this._isMounted) {
+        this.leaveGroup()
+      }
     })
 
     socket.getSocket().on('exception', (error) => {

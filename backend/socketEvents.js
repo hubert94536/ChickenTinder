@@ -226,7 +226,6 @@ module.exports = (io) => {
 
     // leaving a session
     socket.on('leave', async (data) => {
-      console.log(sessions)
       try {
         await Accounts.update(
           {
@@ -236,7 +235,6 @@ module.exports = (io) => {
             where: { username: data.username },
           },
         )
-        console.log(sessions)
         socket.leave(data.room)
         delete sessions[data.room].members[data.username]
         delete lastRoom[data.username]
@@ -264,7 +262,7 @@ module.exports = (io) => {
     // alert all users to leave room
     socket.on('end', (data) => {
       try {
-        io.in(data.room).emit('leaveSession', data.room)
+        io.in(data.room).emit('leave', data.room)
       } catch (error) {
         socket.emit('exception', error.toString())
       }
