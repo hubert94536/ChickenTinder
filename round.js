@@ -18,7 +18,7 @@ export default class Round extends React.Component {
       isHost: this.props.navigation.state.params.isHost,
     }
     socket.getSocket().on('match', (data) => {
-      this.props.navigation.navigate('Match', { restaurant: data.restaurant })
+      this.props.navigation.navigate('Match', { restaurant: data.restaurant, host: this.state.host })
     })
 
     socket.getSocket().on('exception', (error) => {

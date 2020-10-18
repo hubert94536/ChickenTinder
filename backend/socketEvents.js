@@ -82,6 +82,7 @@ module.exports = (io) => {
         console.log(sessions)
         sessions[data.host] = {}
         sessions[data.host].members = {}
+        console.log(sessions)
         sessions[data.host].host = data.host
         sessions[data.host].members[data.host] = {}
         sessions[data.host].members[data.host].pic = data.pic

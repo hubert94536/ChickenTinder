@@ -2,6 +2,7 @@ import React from 'react'
 import { Dimensions, Linking, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import socket from './socket.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -14,8 +15,16 @@ export default class Match extends React.Component {
       endRound: false,
       goToYelp: false,
       restaurant: this.props.navigation.state.params.restaurant,
+      host: this.props.host
     }
-    // console.log(this.props.navigation.state.params.restaurant)
+    socket.getSocket().on('leave', () => {
+      socket.leaveRoom(this.state.host)
+      this.props.navigation.navigate('Home')
+    })
+  }
+
+  endRound() {
+    socket.endSession()
   }
 
   componentDidMount() {
@@ -55,7 +64,7 @@ export default class Match extends React.Component {
           onShowUnderlay={() => this.setState({ endRound: true })}
           onHideUnderlay={() => this.setState({ endRound: false })}
           style={styles.endButton}
-          onPress={() => this.props.navigation.navigate('Home')}
+          onPress={() => this.endRound()}
         >
           <Text style={this.state.endRound ? styles.endTextPressed : styles.endText}>
             End Round
