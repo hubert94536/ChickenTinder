@@ -241,6 +241,7 @@ export default class FilterSelector extends React.Component {
     const dd = date.getDate()
     const mm = date.getMonth()
     const yyyy = date.getFullYear()
+    //  const timezone = date.getTimezoneOffset()
     const unix = Date.UTC(yyyy, mm, dd, this.state.hour, this.state.minute) / 1000
     filters.open_at = unix
     filters.price = this.state.selectedPrice.map((item) => item.length).toString()

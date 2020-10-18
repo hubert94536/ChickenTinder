@@ -97,9 +97,12 @@ const deleteUser = async () => {
       // Retrieve accesstoken to delete use from Firebase
       AccessToken.getCurrentAccessToken().then((accessToken) => {
         const credential = Firebase.auth.FacebookAuthProvider.credential(accessToken)
-        Firebase.auth().currentUser.reauthenticateWithCredential(credential)
-        Firebase.auth().currentUser.delete()
-        AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO])
+        Firebase.auth()
+          .currentUser.reauthenticateWithCredential(credential)
+          .then(() => {
+            Firebase.auth().currentUser.delete()
+            AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO])
+          })
       })
     })
     .catch((error) => {

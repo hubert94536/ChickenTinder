@@ -21,7 +21,8 @@ export default class Match extends React.Component {
   }
 
   endRound() {
-    socket.endSession()
+    // socket.leaveRoom(this.props.host)
+    this.props.navigation.navigate('Home')
   }
 
   componentDidMount() {

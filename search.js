@@ -124,7 +124,7 @@ export default class Search extends Component {
             <SearchCard
               currentUser={username}
               name={item.name}
-              username={'@' + item.username}
+              username={item.username}
               image={item.photo}
               id = {item.id}
               requested={item.status}

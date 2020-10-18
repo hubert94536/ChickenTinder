@@ -69,11 +69,7 @@ export default class ChooseCard extends React.Component {
           </View>
         )}
         {!this.state.added && (
-          <TouchableHighlight
-            onPress={() => {
-              this.sendInvite(this.state.id), this.setState({ added: true })
-            }}
-          >
+          <TouchableHighlight onPress={() => this.sendInvite()}>
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
               <Text
                 style={{

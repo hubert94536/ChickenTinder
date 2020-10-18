@@ -81,7 +81,7 @@ export default class SearchCard extends React.Component {
           <Text style={{ fontFamily: font, fontWeight: 'bold', fontSize: 15 }}>
             {this.props.name}
           </Text>
-          <Text style={{ fontFamily: font }}>{this.props.username}</Text>
+          <Text style={{ fontFamily: font }}>{'@' + this.props.username}</Text>
         </View>
         {this.state.requested === 'Requested' && this.state.renderOption && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
