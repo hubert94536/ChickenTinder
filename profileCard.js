@@ -1,22 +1,12 @@
 import React from 'react'
 import { Image, Text, TouchableHighlight, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 import Alert from './alert.js'
 import friendsApi from './friendsApi.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
-
-ProfileCard.propTypes = {
-  isFriends: PropTypes.bool,
-  id: PropTypes.number,
-  total: PropTypes.array,
-  username: PropTypes.string,
-  press: PropTypes.func,
-  name: PropTypes.string,
-  image: PropTypes.string
-}
 
 export default class ProfileCard extends React.Component {
   constructor(props) {
@@ -31,17 +21,17 @@ export default class ProfileCard extends React.Component {
   }
 
   // accept friend request and modify card
-  async acceptFriend () {
+  async acceptFriend() {
     friendsApi
       .acceptFriendRequest(this.state.id)
       .then(() => {
         this.setState({ isFriend: true })
       })
-      .catch((error) => this.setState({errorAlert:true}))
+      .catch((error) => this.setState({ errorAlert: true }))
   }
 
   // delete friend and modify view
-  async deleteFriend () {
+  async deleteFriend() {
     friendsApi
       .removeFriendship(this.state.id)
       .then(() => {
@@ -51,7 +41,7 @@ export default class ProfileCard extends React.Component {
         })
         this.props.press(this.props.id, filteredArray, true)
       })
-      .catch((error) => this.setState({errorAlert: true}))
+      .catch((error) => this.setState({ errorAlert: true }))
   }
 
   render() {
@@ -162,11 +152,21 @@ export default class ProfileCard extends React.Component {
             title="Error, please try again"
             button
             buttonText="Close"
-            press={() => this.setState({errorAlert: false})}
-            cancel={() => this.setState({errorAlert: false})}
+            press={() => this.setState({ errorAlert: false })}
+            cancel={() => this.setState({ errorAlert: false })}
           />
         )}
       </View>
     )
   }
+}
+
+ProfileCard.propTypes = {
+  isFriends: PropTypes.bool,
+  id: PropTypes.string,
+  total: PropTypes.array,
+  username: PropTypes.string,
+  press: PropTypes.func,
+  name: PropTypes.string,
+  image: PropTypes.string,
 }

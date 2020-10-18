@@ -20,10 +20,6 @@ const font = 'CircularStd-Medium'
 var username = ''
 AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 
-Search.propTypes = {
-  allFriends: PropTypes.array
-}
-
 export default class Search extends Component {
   constructor(props) {
     super(props);
@@ -77,7 +73,7 @@ export default class Search extends Component {
             }
             this.setState({data: resultUsers});
           })
-          .catch(() => this.setState({errorAlert:true})),
+          .catch(() => {}),
       100,
     );
   };
@@ -89,8 +85,7 @@ export default class Search extends Component {
         .then(() => {
           this.setState({ friends: newArr })
         })
-        .catch((err) => {
-          console.log(err)
+        .catch(() => {
           this.setState({ errorAlert: true })
         })
     } else if (status) {
@@ -129,7 +124,7 @@ export default class Search extends Component {
             <SearchCard
               currentUser={username}
               name={item.name}
-              username={'@' + item.username}
+              username={item.username}
               image={item.photo}
               id = {item.id}
               requested={item.status}
@@ -153,6 +148,10 @@ export default class Search extends Component {
       </View>
     );
   }
+}
+
+Search.propTypes = {
+  allFriends: PropTypes.array
 }
 
 const styles = StyleSheet.create({

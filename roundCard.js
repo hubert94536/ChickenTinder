@@ -12,14 +12,9 @@ import { faMapMarkerAlt, faUtensils } from '@fortawesome/free-solid-svg-icons'
 import { faStar } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 
-// const hex = '#F25763'
 const font = 'CircularStd-Medium'
-
-RoundCard.propTypes = {
-  card: PropTypes.array
-}
 
 export default class RoundCard extends React.Component {
   constructor(props) {
@@ -30,7 +25,7 @@ export default class RoundCard extends React.Component {
   }
 
   // getting which stars to display
-  getStarPath (rating) {
+  getStarPath(rating) {
     switch (rating) {
       case 0:
         return require('./assets/stars/0.png')
@@ -56,7 +51,7 @@ export default class RoundCard extends React.Component {
   }
 
   // get image based on cuisine
-  getCuisine (category) {
+  getCuisine(category) {
     switch (category) {
       case 'American':
         return require('./assets/images/american.png')
@@ -86,8 +81,8 @@ export default class RoundCard extends React.Component {
   }
 
   // for each transaction, put into comma-separated string
-  evaluateTransactions (transactions) {
-    return transactions.map(item => item).join(', ')
+  evaluateTransactions(transactions) {
+    return transactions.map((item) => item).join(', ')
   }
 
   render() {
@@ -160,6 +155,10 @@ export default class RoundCard extends React.Component {
       </View>
     )
   }
+}
+
+RoundCard.propTypes = {
+  card: PropTypes.object,
 }
 
 const styles = StyleSheet.create({

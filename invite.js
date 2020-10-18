@@ -1,29 +1,14 @@
 import React from 'react'
-import {
-  Image,
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View
-} from 'react-native'
+import { Image, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 import socket from './socket.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
 //  props are name, image url, and functions for cancel and go
 // invite alert
-
-Home.propTypes = {
-  username: PropTypes.string,
-  image: PropTypes.string,
-  cancel: PropTypes.func,
-  onPress: PropTypes.func,
-  name: PropTypes.string
-}
 
 export default class Invite extends React.Component {
   constructor(props) {
@@ -52,6 +37,15 @@ export default class Invite extends React.Component {
 
   handleCancel() {
     socket.declineInvite(this.props.username)
+    this.props.cancel()
+  }
+
+  handleAccept() {
+    socket.joinRoom(this.props.username)
+  }
+
+  handleCancel() {
+    socket.declineInvite(this.props.username)
   }
 
   render() {
@@ -67,11 +61,7 @@ export default class Invite extends React.Component {
         <Modal transparent animationType="none">
           <View style={styles.modal}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-              <Icon
-                name='times-circle'
-                style={styles.icon}
-                onPress={() => this.props.onPress()}
-              />
+              <Icon name="times-circle" style={styles.icon} onPress={() => this.handleCancel()} />
             </View>
             <View
               style={{
@@ -125,6 +115,14 @@ export default class Invite extends React.Component {
   }
 }
 
+Invite.propTypes = {
+  username: PropTypes.string,
+  image: PropTypes.string,
+  cancel: PropTypes.func,
+  onPress: PropTypes.func,
+  name: PropTypes.string,
+}
+
 const styles = StyleSheet.create({
   icon: {
     fontFamily: font,
@@ -142,7 +140,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 40,
     elevation: 20,
-    margin: '50%'
+    margin: '50%',
   },
   text: {
     fontFamily: font,

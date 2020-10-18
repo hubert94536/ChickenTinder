@@ -9,12 +9,6 @@ import socket from './socket.js'
 const hex = '#F25763'
 const font = 'CircularStd-Bold'
 
-Round.propTypes = {
-  results: PropTypes.array,
-  host: PropTypes.string,
-  isHost: PropTypes.bool
-}
-
 export default class Round extends React.Component {
   constructor(props) {
     super(props)
@@ -25,7 +19,10 @@ export default class Round extends React.Component {
       isHost: this.props.navigation.state.params.isHost,
     }
     socket.getSocket().on('match', (data) => {
-      this.props.navigation.navigate('Match', { restaurant: data.restaurant })
+      this.props.navigation.navigate('Match', {
+        restaurant: data.restaurant,
+        host: this.state.host,
+      })
     })
 
     socket.getSocket().on('exception', (error) => {
@@ -62,33 +59,33 @@ export default class Round extends React.Component {
     this.props.navigation.navigate('Home')
   }
 
-  render () {
+  render() {
     return (
       <View style={styles.mainContainer}>
-          <TouchableHighlight onPress={() => this.endGroup()}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Icon
-                name="angle-left"
-                style={{
-                  color: hex,
-                  fontFamily: font,
-                  fontSize: 25,
-                  margin: '3%',
-                  fontWeight: 'bold',
-                }}
-              />
-              <Text
-                style={{
-                  color: hex,
-                  fontFamily: font,
-                  fontSize: 20,
-                  textAlign: 'left',
-                }}
-              >
-                {this.state.isHost ? 'End' : 'Leave'}
-              </Text>
-            </View>
-          </TouchableHighlight>
+        <TouchableHighlight onPress={() => this.endGroup()}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Icon
+              name="angle-left"
+              style={{
+                color: hex,
+                fontFamily: font,
+                fontSize: 25,
+                margin: '3%',
+                fontWeight: 'bold',
+              }}
+            />
+            <Text
+              style={{
+                color: hex,
+                fontFamily: font,
+                fontSize: 20,
+                textAlign: 'left',
+              }}
+            >
+              {this.state.isHost ? 'End' : 'Leave'}
+            </Text>
+          </View>
+        </TouchableHighlight>
         <Swiper
           cards={this.state.results}
           cardIndex={this.state.index}
@@ -131,6 +128,12 @@ export default class Round extends React.Component {
       </View>
     )
   }
+}
+
+Round.propTypes = {
+  results: PropTypes.array,
+  host: PropTypes.string,
+  isHost: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({
