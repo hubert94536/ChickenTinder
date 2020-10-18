@@ -79,6 +79,7 @@ module.exports = (io) => {
         )
         socket.join(data.host)
         // initialize the session object
+        console.log(sessions)
         sessions[data.host] = {}
         sessions[data.host].members = {}
         sessions[data.host].host = data.host
@@ -172,8 +173,8 @@ module.exports = (io) => {
           if (data.filters.price) {
             sessions[data.room].filters.price = data.filters.price
           }
-          if (data.filters.open_at && data.filters.open_at != undefined) {
-            sessions[data.room].filters.open_at = data.open_at
+          if (data.filters.open_at) {
+            sessions[data.room].filters.open_at = data.filters.open_at
           }
           sessions[data.room].filters.radius = data.filters.radius
           sessions[data.room].filters.latitude = data.filters.latitude
@@ -195,7 +196,6 @@ module.exports = (io) => {
         sessions[data.room].filters.categories = Array.from(
           sessions[data.room].filters.categories,
         ).toString()
-        console.log(sessions[data.room].filters)
         const restaurantList = await Yelp.getRestaurants(sessions[data.room].filters)
         // store restaurant info in 'cache'
         for (let res in restaurantList.businessList) {
@@ -241,10 +241,6 @@ module.exports = (io) => {
             where: { username: data.username },
           },
         )
-        socket.leave(data.room)
-        console.log(sessions)
-        console.log(sessions[data.room])
-        console.log(data.room)
         delete sessions[data.room].members[data.username]
         delete lastRoom[data.username]
         // delete room if this is last member in room

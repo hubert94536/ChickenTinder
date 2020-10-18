@@ -152,76 +152,76 @@ export default class FilterSelector extends React.Component {
     for (var i = 0; i < cat.length; i++) {
       switch (cat[i]) {
         case 'American':
-          categories.push('American')
+          categories.push('american')
           break
         case 'European':
-          categories.push('Eastern European')
-          categories.push('French')
-          categories.push('British')
-          categories.push('Spanish')
-          categories.push('Portuguese')
-          categories.push('German')
-          categories.push('Austrian')
-          categories.push('Danish')
-          categories.push('Swedish')
+          categories.push('eastern_european')
+          categories.push('french')
+          categories.push('british')
+          categories.push('spanish')
+          categories.push('portuguese')
+          categories.push('german')
+          categories.push('austrian')
+          categories.push('danish')
+          categories.push('swedish')
           break
         case 'Latin American':
-          categories.push('Argentine')
-          categories.push('Brazilian')
-          categories.push('Cuban')
-          categories.push('Caribbean')
-          categories.push('Honduran')
-          categories.push('Mexican')
-          categories.push('Nicaraguan')
-          categories.push('Peruvian')
+          categories.push('argentine')
+          categories.push('brazilian')
+          categories.push('cuban')
+          categories.push('caribbean')
+          categories.push('honduran')
+          categories.push('mexican')
+          categories.push('nicaraguan')
+          categories.push('peruvian')
           break
         case 'Mediterranean':
-          categories.push('Mediterranean')
+          categories.push('mediterranean')
           break
         case 'South Asian':
-          categories.push('Indian')
-          categories.push('Pakistani')
-          categories.push('Afghan')
-          categories.push('Bangladeshi')
-          categories.push('Himalayan')
-          categories.push('Nepalese')
-          categories.push('Sri Lankan')
+          categories.push('indian')
+          categories.push('pakistani')
+          categories.push('afghan')
+          categories.push('bangladeshi')
+          categories.push('himalayan')
+          categories.push('nepalese')
+          categories.push('srilankan')
           break
         case 'Southeast Asian':
-          categories.push('Cambodian')
-          categories.push('Indonesian')
-          categories.push('Laotian')
-          categories.push('Malaysian')
-          categories.push('Filipino')
-          categories.push('Singaporean')
-          categories.push('Thai')
-          categories.push('Vietnamese')
+          categories.push('cambodian')
+          categories.push('indonesian')
+          categories.push('laotian')
+          categories.push('aalaysian')
+          categories.push('filipino')
+          categories.push('singaporean')
+          categories.push('thai')
+          categories.push('vietnamese')
           break
         case 'Pacific Islander':
-          categories.push('Polynesian')
-          categories.push('Filipino')
+          categories.push('polynesian')
+          categories.push('filipino')
           break
         case 'East Asian':
-          categories.push('Japanese')
-          categories.push('Korean')
-          categories.push('Chinese')
-          categories.push('Taiwanese')
-          categories.push('Mongolian')
+          categories.push('japanese')
+          categories.push('korean')
+          categories.push('chinese')
+          categories.push('taiwanese')
+          categories.push('mongolian')
           break
         case 'Middle Eastern':
-          categories.push('Middle Eastern')
+          categories.push('middle_eastern')
           break
         case 'African':
-          categories.push('African')
+          categories.push('african')
           break
         case 'Asian Fusion':
-          categories.push('Asian Fusion')
+          categories.push('asianfusion')
           break
         case 'Vegetarian':
-          categories.push('Vegetarian')
+          categories.push('vegetarian')
           break
         case 'Vegan':
-          categories.push('Vegan')
+          categories.push('vegan')
           break
       }
     }
