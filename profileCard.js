@@ -1,11 +1,22 @@
 import React from 'react'
 import { Image, Text, TouchableHighlight, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import PropTypes from 'prop-types';
 import Alert from './alert.js'
 import friendsApi from './friendsApi.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
+
+ProfileCard.propTypes = {
+  isFriends: PropTypes.bool,
+  id: PropTypes.number,
+  total: PropTypes.array,
+  username: PropTypes.string,
+  press: PropTypes.func,
+  name: PropTypes.string,
+  image: PropTypes.string
+}
 
 export default class ProfileCard extends React.Component {
   constructor(props) {

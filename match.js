@@ -7,11 +7,16 @@ import {
   TouchableHighlight,
   View
 } from 'react-native'
+import PropTypes from 'prop-types';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
+
+Match.propTypes = {
+  restaurant: PropTypes.array
+}
 
 // the card for the restaurant match
 export default class Match extends React.Component {

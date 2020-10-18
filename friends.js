@@ -1,11 +1,16 @@
 import React from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
+import PropTypes from 'prop-types';
 import { SearchBar } from 'react-native-elements'
 import Alert from './alert.js'
 import ProfileCard from './profileCard.js'
 import friendsApi from './friendsApi.js'
 
 const font = 'CircularStd-Medium'
+
+Friends.propTypes = {
+  isFriends: PropTypes.bool,
+}
 
 export default class Friends extends React.Component {
   constructor(props) {

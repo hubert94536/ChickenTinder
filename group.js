@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import PropTypes from 'prop-types';
 import Swiper from 'react-native-swiper'
 import Alert from './alert.js'
 import GroupCard from './groupCard.js'
@@ -27,6 +28,12 @@ var myUsername = ''
 AsyncStorage.getItem(USERNAME).then((res) => {
   myUsername = res
 })
+
+Group.propTypes = {
+  members: PropTypes.array,
+  host: PropTypes.string,
+  
+}
 
 export default class Group extends React.Component {
   constructor(props) {

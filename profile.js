@@ -67,9 +67,7 @@ export default class UserProfileView extends Component {
           Keyboard.dismiss()
         })
         .catch((error) => {
-          console.log(error)
           this.setState({ errorAlert: true })
-          // Alert.alert('Error changing name. Please try again.');
           this.setState({
             nameValue: this.state.name,
           })
@@ -115,8 +113,6 @@ export default class UserProfileView extends Component {
       })
       .catch((error) => {
         this.setState({errorAlert: true})
-        console.log(error)
-        // alert
       })
   }
 
@@ -144,8 +140,7 @@ export default class UserProfileView extends Component {
         this.props.navigation.navigate('Login')
       })
       .catch((error) => {
-        console.log(error)
-        // alert
+        this.setState({errorAlert: true})
       })
   }
 

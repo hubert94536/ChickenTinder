@@ -12,6 +12,7 @@ import {
 import { BlurView } from '@react-native-community/blur'
 import DropDownPicker from 'react-native-dropdown-picker'
 import Geolocation from 'react-native-geolocation-service'
+import PropTypes from 'prop-types';
 import Slider from '@react-native-community/slider'
 import Alert from './alert.js'
 import ChooseFriends from './chooseFriends.js'
@@ -102,6 +103,12 @@ const requestLocationPermission = async () => {
       this.setState({errorAlert: true})
       console.log(err)
     })
+}
+
+FilterSelector.propTypes = {
+  host: PropTypes.string,
+  isHost: PropTypes.bool,
+  press: PropTypes.func
 }
 
 export default class FilterSelector extends React.Component {

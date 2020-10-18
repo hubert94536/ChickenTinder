@@ -8,6 +8,7 @@ import {
   View
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import PropTypes from 'prop-types';
 import { SearchBar } from 'react-native-elements'
 import Alert from './alert.js'
 import Card from './chooseCard.js'
@@ -16,6 +17,10 @@ import friendsApi from './friendsApi.js'
 const hex = '#F25763'
 const font = 'CircularStd-Bold'
 const height = Dimensions.get('window').height
+
+ChooseFriends.propTypes = {
+  press: PropTypes.func
+}
 
 //  little pop up modal that is showed when you click choose friends in filters
 export default class ChooseFriends extends React.Component {
