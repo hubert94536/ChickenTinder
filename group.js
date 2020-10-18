@@ -56,6 +56,7 @@ export default class Group extends React.Component {
 
     // listens for group updates
     socket.getSocket().on('update', (res) => {
+      console.log(res)
       this.setState({ members: res.members })
       const count = this.countNeedFilters(res.members)
       this.setState({ needFilters: count })
@@ -94,7 +95,6 @@ export default class Group extends React.Component {
 
   // pings server to fetch restaurants, start session
   start() {
-    console.log(this.state.filters)
     socket.startSession()
   }
 
