@@ -49,21 +49,21 @@ class Home extends React.Component {
     })
   }
 
-  underlayShowCreate() {
-    this.setState({ createPressed: true })
-  }
+  // underlayShowCreate() {
+  //   this.setState({ createPressed: true })
+  // }
 
-  underlayHideCreate() {
-    this.setState({ createPressed: false })
-  }
+  // underlayHideCreate() {
+  //   this.setState({ createPressed: false })
+  // }
 
-  underlayShowProfile() {
-    this.setState({ profilePressed: true })
-  }
+  // underlayShowProfile() {
+  //   this.setState({ profilePressed: true })
+  // }
 
-  underlayHideProfile() {
-    this.setState({ profilePressed: false })
-  }
+  // underlayHideProfile() {
+  //   this.setState({ profilePressed: false })
+  // }
 
   closeInvite() {
     this.setState({ invite: false })

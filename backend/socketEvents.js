@@ -52,6 +52,7 @@ module.exports = (io) => {
             },
           )
           let room = lastRoom[username]
+          socket.leave(room)
           delete sessions[room].members[username]
           // delete room if this is last member in room
           if (Object.keys(sessions[room].members).length === 0) {
@@ -242,6 +243,8 @@ module.exports = (io) => {
             where: { username: data.username },
           },
         )
+        console.log(sessions)
+        socket.leave(data.room)
         delete sessions[data.room].members[data.username]
         delete lastRoom[data.username]
         // delete room if this is last member in room
@@ -252,7 +255,7 @@ module.exports = (io) => {
         }
       } catch (error) {
         console.log(error)
-        socket.emit('exception', error)
+        socket.emit('exception', error.toString())
       }
     })
 
@@ -268,6 +271,7 @@ module.exports = (io) => {
     // alert all users to leave room
     socket.on('end', (data) => {
       try {
+        console.log(sessions)
         io.in(data.room).emit('leave', data.room)
       } catch (error) {
         socket.emit('exception', error)
