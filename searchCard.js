@@ -1,11 +1,23 @@
 import React from 'react'
 import { Image, Text, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import PropTypes from 'prop-types';
 import Alert from './alert.js'
 import friendsApi from './friendsApi.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
+
+SearchCard.propTypes = {
+  requested: PropTypes.string,
+  currentUser: PropTypes.string,
+  username: PropTypes.string,
+  id: PropTypes.number,
+  name: PropTypes.string,
+  image: PropTypes.string,
+  total: PropTypes.array,
+  press: PropTypes.func
+}
 
 // cards for the search for friends screen
 export default class SearchCard extends React.Component {
@@ -16,6 +28,8 @@ export default class SearchCard extends React.Component {
       requested: this.props.requested,
       pressed: false,
       errorAlert: false,
+      deleteFriend: false,
+      renderOption: this.props.currentUser !== this.props.username
     }
   }
 
@@ -46,6 +60,19 @@ export default class SearchCard extends React.Component {
       .catch(() => this.setState({errorAlert: true}))
   }
 
+  async deleteFriend () {
+    friendsApi
+      .removeFriendship(this.state.id)
+      .then(() => {
+        this.setState({ deleteFriend: false })
+        var filteredArray = this.props.total.filter((item) => {
+          return item.username !== this.props.username
+        })
+        this.props.press(this.props.id, filteredArray, true)
+      })
+      .catch((error) => this.setState({errorAlert: true}))
+  }
+
   render() {
     return (
       <View style={{ flexDirection: 'row', flex: 1 }}>
@@ -67,7 +94,7 @@ export default class SearchCard extends React.Component {
           </Text>
           <Text style={{ fontFamily: font }}>{this.props.username}</Text>
         </View>
-        {this.state.requested === 'Requested' && (
+        {this.state.requested === 'Requested' && this.state.renderOption && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Text
               style={{
@@ -93,7 +120,7 @@ export default class SearchCard extends React.Component {
             /> */}
           </View>
         )}
-        {this.state.requested === 'Add' && (
+        {this.state.requested === 'Add' && this.state.renderOption && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Text
               style={{
@@ -118,8 +145,9 @@ export default class SearchCard extends React.Component {
             />
           </View>
         )}
-        {this.state.requested === 'Accepted' && (
-          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
+        {this.state.requested === 'Accepted' && this.state.renderOption && (
+          <TouchableHighlight>
+            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Text
               style={{
                 fontFamily: font,
@@ -141,58 +169,9 @@ export default class SearchCard extends React.Component {
               name="check-circle"
             />
           </View>
+          </TouchableHighlight>
         )}
-        {this.state.requested === 'Pending Request' && (
-          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-            <Icon
-              style={{
-                fontFamily: font,
-                color: hex,
-                fontSize: 35,
-                alignSelf: 'center',
-                margin: '8%',
-              }}
-              name="check-circle"
-              onPress={() => this.setState({ requested: 'Accepted' })}
-            />
-            <Icon
-              style={{
-                fontFamily: font,
-                color: hex,
-                fontSize: 35,
-                alignSelf: 'center',
-                margin: '8%',
-              }}
-              name="times-circle"
-              onPress={() => this.setState({ requested: 'Add' })}
-            />
-          </View>
-        )}
-        {this.state.requested === 'Accepted' && (
-          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-            <Text
-              style={{
-                fontFamily: font,
-                color: hex,
-                fontSize: 15,
-                alignSelf: 'center',
-              }}
-            >
-              Friends
-            </Text>
-            <Icon
-              style={{
-                fontFamily: font,
-                color: hex,
-                fontSize: 35,
-                alignSelf: 'center',
-                margin: '8%',
-              }}
-              name="check-circle"
-            />
-          </View>
-        )}
-        {this.state.requested === 'Pending Request' && (
+        {this.state.requested === 'Pending Request' && this.state.renderOption && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Icon
               style={{
@@ -225,6 +204,16 @@ export default class SearchCard extends React.Component {
             buttonText="Close"
             press={() => this.setState({errorAlert: false})}
             cancel={() => this.setState({errorAlert: false})}
+          />
+        )}
+                {this.state.deleteFriend && (
+          <Alert
+            title="Are you sure?"
+            body={'You are about to remove @' + this.props.username + ' as a friend'}
+            button
+            buttonText="Delete"
+            press={() => this.deleteFriend()}
+            cancel={() => this.setState({ deleteFriend: false })}
           />
         )}
       </View>

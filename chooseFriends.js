@@ -1,6 +1,14 @@
 import React from 'react'
-import { Dimensions, FlatList, Modal, StyleSheet, Text, View } from 'react-native'
+import {
+  Dimensions,
+  FlatList,
+  Modal,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import PropTypes from 'prop-types';
 import { SearchBar } from 'react-native-elements'
 import Alert from './alert.js'
 import Card from './chooseCard.js'
@@ -9,6 +17,10 @@ import friendsApi from './friendsApi.js'
 const hex = '#F25763'
 const font = 'CircularStd-Bold'
 const height = Dimensions.get('window').height
+
+ChooseFriends.propTypes = {
+  press: PropTypes.func
+}
 
 //  little pop up modal that is showed when you click choose friends in filters
 export default class ChooseFriends extends React.Component {
@@ -24,7 +36,7 @@ export default class ChooseFriends extends React.Component {
   }
 
   //  gets your friends
-  async getFriends() {
+  async getFriends () {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
       .getFriends()
@@ -41,12 +53,12 @@ export default class ChooseFriends extends React.Component {
   }
 
   //  closes the choose friends modal in filters
-  handlePress() {
+  handlePress () {
     this.props.press()
   }
 
   //  function for searching your friends
-  searchFilterFunction(text) {
+  searchFilterFunction (text) {
     this.setState({ search: text })
     const newData = this.state.data.filter((item) => {
       const itemData = `${item.name.toUpperCase()} ${item.username.toUpperCase()}`
