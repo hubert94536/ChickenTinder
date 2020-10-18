@@ -17,22 +17,10 @@ export default class Match extends React.Component {
       restaurant: this.props.navigation.state.params.restaurant,
       host: this.props.host
     }
-    socket.getSocket().on('leave', () => {
-      socket.leaveRoom(this.state.host)
-      this.props.navigation.navigate('Home')
-    })
   }
 
   endRound() {
     socket.endSession()
-  }
-
-  componentDidMount() {
-    this._isMounted = true
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false
   }
 
   render() {

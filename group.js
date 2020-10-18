@@ -27,7 +27,7 @@ AsyncStorage.getItem(USERNAME).then((res) => {
 export default class Group extends React.Component {
   constructor(props) {
     super(props)
-    this._isMounted = false;
+    this._isMounted = false
     const members = this.props.navigation.state.params.members
     this.state = {
       members: members,
@@ -69,14 +69,16 @@ export default class Group extends React.Component {
       })
     })
 
-    socket.getSocket().on('leaveSession', () => {
+    socket.getSocket().on('leave', () => {
       if (this._isMounted) {
         this.leaveGroup()
       }
     })
 
     socket.getSocket().on('exception', (error) => {
-      console.log(error)
+      if (this._isMounted) {
+        console.log(error)
+      }
     })
   }
 

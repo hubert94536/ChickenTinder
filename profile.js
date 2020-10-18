@@ -51,7 +51,6 @@ export default class UserProfileView extends Component {
       logoutAlert: false,
       deleteAlert: false,
       errorAlert: false
-      // public: false,
     }
   }
 
@@ -60,16 +59,14 @@ export default class UserProfileView extends Component {
     if (this.state.nameValue !== this.state.name) {
       return accountsApi
         .updateName(this.state.nameValue)
-        .then((res) => {
+        .then(() => {
           // update name locally
           AsyncStorage.setItem(NAME, this.state.name)
           this.setState({ name: this.state.nameValue })
           Keyboard.dismiss()
         })
-        .catch((error) => {
-          console.log(error)
+        .catch(() => {
           this.setState({ errorAlert: true })
-          // Alert.alert('Error changing name. Please try again.');
           this.setState({
             nameValue: this.state.name,
           })
@@ -94,10 +91,8 @@ export default class UserProfileView extends Component {
         .catch((error) => {
           if (error === 404) {
             this.setState({ takenAlert: true })
-            // Alert.alert('Username taken!');
           } else {
             this.setState({ errorAlert: true })
-            // Alert.alert('Error changing username. Please try again.');
           }
           this.setState({ usernameValue: this.state.username })
           Keyboard.dismiss()
@@ -113,10 +108,8 @@ export default class UserProfileView extends Component {
         this.setState({ visible: false })
         this.props.navigation.navigate('Login')
       })
-      .catch((error) => {
+      .catch(() => {
         this.setState({errorAlert: true})
-        console.log(error)
-        // alert
       })
   }
 
@@ -246,9 +239,7 @@ export default class UserProfileView extends Component {
                   style={{ color: hex, fontFamily: font, fontSize: 30 }}
                   onPress={() =>
                     this.setState({
-                      visible: false,
-                      usernameValue: this.state.username,
-                      nameValue: this.state.name,
+                      visible: false
                     })
                   }
                 />

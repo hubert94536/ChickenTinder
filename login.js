@@ -16,6 +16,26 @@ export default class Login extends React.Component {
     }
   }
 
+  async handleClick() {
+    facebookService
+      .loginWithFacebook()
+      .then((result) => {
+        this.setState({ alert: false })
+        this.props.navigation.navigate(result)
+      })
+      .catch(() => {
+        this.setState({errorAlert:true})
+      })
+  }
+
+  cancelClick() {
+    this.setState({ alert: false })
+  }
+
+  login() {
+    this.setState({ alert: true })
+  }
+
   // changing button appearance
   underlayShow() {
     this.setState({ pressed: true })
@@ -65,28 +85,6 @@ export default class Login extends React.Component {
         )}
       </View>
     )
-  }
-
-  async handleClick() {
-    facebookService
-      .loginWithFacebook()
-      .then((result) => {
-        this.props.navigation.navigate(result)
-      })
-      .catch((error) => {
-        this.setState({errorAlert:true})
-        // Alert
-        console.log(error)
-      })
-    this.setState({ alert: false })
-  }
-
-  cancelClick() {
-    this.setState({ alert: false })
-  }
-
-  login() {
-    this.setState({ alert: true })
   }
 }
 

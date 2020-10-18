@@ -100,7 +100,6 @@ const requestLocationPermission = async () => {
     })
     .catch((err) => {
       this.setState({errorAlert: true})
-      console.log(err)
     })
 }
 
@@ -225,7 +224,6 @@ export default class FilterSelector extends React.Component {
           break
       }
     }
-    console.log(categories)
     return categories
   }
 
@@ -244,7 +242,6 @@ export default class FilterSelector extends React.Component {
     const yyyy = date.getFullYear()
     const unix = Date.UTC(yyyy, mm, dd, this.state.hour, this.state.minute) / 1000
     filters.open_at = unix
-    console.log(unix)
     filters.price = this.state.selectedPrice.map((item) => item.length).toString()
     // puts the cuisine and restrictions into one array
     var selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
