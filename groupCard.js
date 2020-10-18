@@ -1,6 +1,7 @@
 import React from 'react'
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import PropTypes from 'prop-types'
 import socket from './socket.js'
 
 const hex = '#F25763'
@@ -93,6 +94,15 @@ export default class GroupCard extends React.Component {
       </View>
     )
   }
+}
+
+GroupCard.propTypes = {
+  id: PropTypes.number,
+  image: PropTypes.string,
+  filters: PropTypes.bool,
+  name: PropTypes.string,
+  username: PropTypes.string,
+  host: PropTypes.string,
 }
 
 const styles = StyleSheet.create({

@@ -53,11 +53,10 @@ const loginWithFacebook = async () => {
       AsyncStorage.setItem(PHOTO, currentUser.user.photoURL)
       // Get username from database if not new user
       if (!currentUser.additionalUserInfo.isNewUser) {
-        return accountsApi.getUser(currentUser.additionalUserInfo.profile.id)
-          .then((res) => {
-            AsyncStorage.setItem(USERNAME, res.username)
-            return 'Home'
-          })
+        return accountsApi.getUser(currentUser.additionalUserInfo.profile.id).then((res) => {
+          AsyncStorage.setItem(USERNAME, res.username)
+          return 'Home'
+        })
       }
       return 'Username'
     })
@@ -96,8 +95,7 @@ const deleteUser = async () => {
     })
     .then(() => {
       // Retrieve accesstoken to delete use from Firebase
-      AccessToken.getCurrentAccessToken()
-      .then((accessToken) => {
+      AccessToken.getCurrentAccessToken().then((accessToken) => {
         const credential = Firebase.auth.FacebookAuthProvider.credential(accessToken)
         Firebase.auth().currentUser.reauthenticateWithCredential(credential)
         Firebase.auth().currentUser.delete()
@@ -134,9 +132,8 @@ const deleteUser = async () => {
 //   new GraphRequestManager().addRequest(profileRequest).start();
 // };
 
-
 export default {
   loginWithFacebook,
   logoutWithFacebook,
-  deleteUser
+  deleteUser,
 }

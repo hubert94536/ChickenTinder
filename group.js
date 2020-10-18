@@ -1,14 +1,8 @@
 import React from 'react'
-import {
-  Dimensions,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View,
-} from 'react-native'
+import { ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import PropTypes from 'prop-types'
 import Swiper from 'react-native-swiper'
 import Alert from './alert.js'
 import GroupCard from './groupCard.js'
@@ -158,7 +152,7 @@ export default class Group extends React.Component {
   }
 
   render() {
-    this.updateMemberList();
+    this.updateMemberList()
     return (
       <Swiper ref="swiper" loop={false} showsPagination={false} scrollEnabled={this.state.swipe}>
         <View style={styles.main}>
@@ -297,6 +291,11 @@ export default class Group extends React.Component {
       </Swiper>
     )
   }
+}
+
+Group.propTypes = {
+  members: PropTypes.array,
+  host: PropTypes.string,
 }
 
 const styles = StyleSheet.create({

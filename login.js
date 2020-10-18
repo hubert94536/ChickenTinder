@@ -12,7 +12,7 @@ export default class Login extends React.Component {
     this.state = {
       pressed: false,
       alert: false,
-      errorAlert: false
+      errorAlert: false,
     }
   }
 
@@ -24,7 +24,7 @@ export default class Login extends React.Component {
         this.props.navigation.navigate(result)
       })
       .catch(() => {
-        this.setState({errorAlert:true})
+        this.setState({ errorAlert: true })
       })
   }
 
@@ -79,8 +79,8 @@ export default class Login extends React.Component {
             title="Error, please try again"
             button
             buttonText="Close"
-            press={() => this.setState({errorAlert: false})}
-            cancel={() => this.setState({errorAlert: false})}
+            press={() => this.setState({ errorAlert: false })}
+            cancel={() => this.setState({ errorAlert: false })}
           />
         )}
       </View>

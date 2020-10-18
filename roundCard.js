@@ -12,8 +12,8 @@ import { faMapMarkerAlt, faUtensils } from '@fortawesome/free-solid-svg-icons'
 import { faStar } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import PropTypes from 'prop-types'
 
-// const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
 export default class RoundCard extends React.Component {
@@ -155,6 +155,10 @@ export default class RoundCard extends React.Component {
       </View>
     )
   }
+}
+
+RoundCard.propTypes = {
+  card: PropTypes.object,
 }
 
 const styles = StyleSheet.create({

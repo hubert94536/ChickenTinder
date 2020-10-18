@@ -1,5 +1,6 @@
 import React from 'react'
 import { Dimensions, Linking, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import PropTypes from 'prop-types'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import socket from './socket.js'
@@ -15,12 +16,20 @@ export default class Match extends React.Component {
       endRound: false,
       goToYelp: false,
       restaurant: this.props.navigation.state.params.restaurant,
-      host: this.props.host
+      host: this.props.host,
     }
   }
 
   endRound() {
     socket.endSession()
+  }
+
+  componentDidMount() {
+    this._isMounted = true
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false
   }
 
   render() {
@@ -70,6 +79,10 @@ export default class Match extends React.Component {
       </View>
     )
   }
+}
+
+Match.propTypes = {
+  restaurant: PropTypes.array,
 }
 
 const styles = StyleSheet.create({

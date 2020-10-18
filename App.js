@@ -1,5 +1,5 @@
 import React from 'react'
-import {Text} from 'react-native'
+import { Text } from 'react-native'
 import Login from './login.js'
 import Home from './home.js'
 import Username from './username.js'
@@ -70,13 +70,13 @@ export default class App extends React.Component {
     super()
     this.state = {
       // can change to our loading screen
-      appContainer: <Text />
+      appContainer: <Text />,
     }
   }
 
   componentDidMount() {
     var start
-    var unsubscribe = firebase.auth().onAuthStateChanged(user => {
+    var unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user === null) {
         start = 'Login'
       } else {
@@ -110,7 +110,7 @@ export default class App extends React.Component {
           },
           Invite: {
             screen: Invite,
-          }
+          },
         },
         {
           initialRouteName: start,
@@ -119,7 +119,7 @@ export default class App extends React.Component {
       )
       unsubscribe()
       var AppContainer = createAppContainer(RootStack)
-      this.setState({appContainer: <AppContainer />})
+      this.setState({ appContainer: <AppContainer /> })
     })
   }
 

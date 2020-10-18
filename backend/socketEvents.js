@@ -29,7 +29,6 @@ module.exports = (io) => {
         let sender = lastRoom[socketUser]
         io.to(clients[socketUser]).emit('reconnectRoom', {
           username: sender,
-          //bug
           pic: sessions[sender].members[sender].pic,
           name: sessions[sender].members[sender].name,
         })
@@ -212,7 +211,7 @@ module.exports = (io) => {
         sessions[data.room].restaurants[data.restaurant] =
           (sessions[data.room].restaurants[data.restaurant] || 0) + 1
         // check if count == group size => match
-          if (
+        if (
           sessions[data.room].restaurants[data.restaurant] ===
           Object.keys(sessions[data.room].members).length
         ) {

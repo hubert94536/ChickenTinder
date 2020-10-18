@@ -50,7 +50,7 @@ export default class UserProfileView extends Component {
       // show alert
       logoutAlert: false,
       deleteAlert: false,
-      errorAlert: false
+      errorAlert: false,
     }
   }
 
@@ -109,7 +109,7 @@ export default class UserProfileView extends Component {
         this.props.navigation.navigate('Login')
       })
       .catch(() => {
-        this.setState({errorAlert: true})
+        this.setState({ errorAlert: true })
       })
   }
 
@@ -137,8 +137,7 @@ export default class UserProfileView extends Component {
         this.props.navigation.navigate('Login')
       })
       .catch((error) => {
-        console.log(error)
-        // alert
+        this.setState({ errorAlert: true })
       })
   }
 
@@ -239,7 +238,7 @@ export default class UserProfileView extends Component {
                   style={{ color: hex, fontFamily: font, fontSize: 30 }}
                   onPress={() =>
                     this.setState({
-                      visible: false
+                      visible: false,
                     })
                   }
                 />

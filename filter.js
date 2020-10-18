@@ -12,6 +12,7 @@ import {
 import { BlurView } from '@react-native-community/blur'
 import DropDownPicker from 'react-native-dropdown-picker'
 import Geolocation from 'react-native-geolocation-service'
+import PropTypes from 'prop-types'
 import Slider from '@react-native-community/slider'
 import Alert from './alert.js'
 import ChooseFriends from './chooseFriends.js'
@@ -99,7 +100,7 @@ const requestLocationPermission = async () => {
       }
     })
     .catch((err) => {
-      this.setState({errorAlert: true})
+      this.setState({ errorAlert: true })
     })
 }
 
@@ -123,7 +124,7 @@ export default class FilterSelector extends React.Component {
       locationAlert: false,
       formatAlert: false,
       chooseFriends: false,
-      errorAlert: false
+      errorAlert: false,
     }
   }
 
@@ -494,8 +495,8 @@ export default class FilterSelector extends React.Component {
             title="Error, please try again"
             button
             buttonText="Close"
-            press={() => this.setState({errorAlert: false})}
-            cancel={() => this.setState({errorAlert: false})}
+            press={() => this.setState({ errorAlert: false })}
+            cancel={() => this.setState({ errorAlert: false })}
           />
         )}
         {this.state.chooseFriends && (
@@ -504,6 +505,12 @@ export default class FilterSelector extends React.Component {
       </View>
     )
   }
+}
+
+FilterSelector.propTypes = {
+  host: PropTypes.string,
+  isHost: PropTypes.bool,
+  press: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
