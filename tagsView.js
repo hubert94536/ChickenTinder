@@ -1,16 +1,9 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 import BackgroundButton from './backgroundButton.js'
 
 const hex = '#F25763'
-
-TagsView.propTypes = {
-  selected: PropTypes.array,
-  onChange: PropTypes.func,
-  isExclusive: PropTypes.bool,
-  all: PropTypes.array
-}
 
 export default class TagsView extends React.Component {
   constructor(props) {
@@ -47,13 +40,13 @@ export default class TagsView extends React.Component {
     if (this.props.isExclusive) {
       chosen = [tag]
       this.setState({
-        selected: chosen
+        selected: chosen,
       })
       this.handleUpdate(chosen)
     } else {
       chosen = this.addOrRemove(this.state.selected, tag)
       this.setState({
-        selected: chosen
+        selected: chosen,
       })
       this.handleUpdate(chosen)
     }
@@ -81,6 +74,14 @@ export default class TagsView extends React.Component {
     })
   }
 }
+
+TagsView.propTypes = {
+  selected: PropTypes.array,
+  onChange: PropTypes.func,
+  isExclusive: PropTypes.bool,
+  all: PropTypes.array,
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

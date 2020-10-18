@@ -13,7 +13,6 @@ module.exports = (io) => {
     delete clientsIds[clients[socketUser]]
     clients[socketUser] = socket.id
     clientsIds[socket.id] = socketUser
-    var sender
 
     // send invite if previously sent before user connected
     if (socketUser in invites && invites[socketUser] in sessions) {
@@ -38,7 +37,7 @@ module.exports = (io) => {
       }
     }
 
-    // check for disconnection
+    // disconnects user and removes them if in room
     socket.on('disconnect', async () => {
       try {
         let username = clientsIds[socket.id]
@@ -52,6 +51,7 @@ module.exports = (io) => {
             },
           )
           let room = lastRoom[username]
+          socket.leave(room)
           delete sessions[room].members[username]
           // delete room if this is last member in room
           if (Object.keys(sessions[room].members).length === 0) {
@@ -78,6 +78,7 @@ module.exports = (io) => {
           },
         )
         socket.join(data.host)
+        // initialize the session object
         sessions[data.host] = {}
         sessions[data.host].members = {}
         sessions[data.host].host = data.host
@@ -91,13 +92,12 @@ module.exports = (io) => {
         lastRoom[data.host] = data.host
         socket.emit('update', sessions[data.host])
       } catch (error) {
-        socket.emit('exception', error)
+        socket.emit('exception', error.toString())
       }
     })
 
     // send invite with host info to join a room
     socket.on('invite', async (data) => {
-      console.log(data.username)
       try {
         let user = await Accounts.findOne({
           where: { username: data.username },
@@ -114,18 +114,17 @@ module.exports = (io) => {
           })
         }
       } catch (error) {
-        console.log(error)
-        socket.emit('exception', error)
+        socket.emit('exception', error.toString())
       }
     })
 
-    // declines invite and send to host
+    // declines invite and remove from invites object
     socket.on('decline', (data) => {
       try {
         delete invites[data.username]
         io.to(clients[data.room]).emit('decline', data.username)
       } catch (error) {
-        socket.emit('exception', error)
+        socket.emit('exception', error.toString())
       }
     })
 
@@ -144,6 +143,7 @@ module.exports = (io) => {
           )
           socket.join(data.room)
           delete invites[data.username]
+          // initialize member in members object
           sessions[data.room].members[data.username] = {}
           sessions[data.room].members[data.username].filters = false
           sessions[data.room].members[data.username].pic = data.pic
@@ -151,7 +151,7 @@ module.exports = (io) => {
           lastRoom[data.username] = data.room
           io.in(data.room).emit('update', sessions[data.room])
         } catch (error) {
-          socket.emit('exception', error)
+          socket.emit('exception', error.toString())
         }
       } else {
         socket.emit('exception', 'status 404')
@@ -166,28 +166,30 @@ module.exports = (io) => {
         io.in(data.room).emit('update', sessions[data.room])
         // check if host
         if (data.username === data.room) {
+          // setting filters
           if (data.filters.price) {
             sessions[data.room].filters.price = data.filters.price
           }
           if (data.filters.open_at) {
-            sessions[data.room].filters.open_at = data.open_at
+            sessions[data.room].filters.open_at = data.filters.open_at
           }
           sessions[data.room].filters.radius = data.filters.radius
           sessions[data.room].filters.latitude = data.filters.latitude
           sessions[data.room].filters.longitude = data.filters.longitude
         }
+        // add categories to set
         for (let category in data.filters.categories) {
           sessions[data.room].filters.categories.add(data.filters.categories[category])
         }
       } catch (error) {
-        socket.emit('exception', error)
+        socket.emit('exception', error.toString())
       }
     })
 
     // alert to all clients in room to start
     socket.on('start', async (data) => {
-      // proceed to restaurant matching after everyone submits filters
       try {
+        // transform categories set to string
         sessions[data.room].filters.categories = Array.from(
           sessions[data.room].filters.categories,
         ).toString()
@@ -198,8 +200,7 @@ module.exports = (io) => {
         }
         io.in(data.room).emit('start', restaurantList.businessList)
       } catch (error) {
-        console.log(error)
-        socket.emit('exception', error)
+        socket.emit('exception', error.toString())
       }
     })
 
@@ -209,18 +210,16 @@ module.exports = (io) => {
         // increment restaurant count
         sessions[data.room].restaurants[data.restaurant] =
           (sessions[data.room].restaurants[data.restaurant] || 0) + 1
+        // check if count == group size => match
         if (
           sessions[data.room].restaurants[data.restaurant] ===
           Object.keys(sessions[data.room].members).length
         ) {
           // return restaurant info from 'cache'
           io.in(data.room).emit('match', { restaurant: restaurants[data.restaurant] })
-        } else {
-          console.log(data.restaurant)
         }
       } catch (error) {
-        console.log(error)
-        socket.emit('exception', error)
+        socket.emit('exception', error.toString())
       }
     })
 
@@ -245,7 +244,8 @@ module.exports = (io) => {
           io.in(data.room).emit('update', sessions[data.room])
         }
       } catch (error) {
-        socket.emit('exception', error)
+        console.log(error)
+        socket.emit('exception', error.toString())
       }
     })
 
@@ -254,7 +254,7 @@ module.exports = (io) => {
       try {
         io.to(clients[data.username]).emit('kick', { username: data.username, room: data.room })
       } catch (error) {
-        socket.emit('exception', error)
+        socket.emit('exception', error.toString())
       }
     })
 
@@ -263,7 +263,7 @@ module.exports = (io) => {
       try {
         io.in(data.room).emit('leave', data.room)
       } catch (error) {
-        socket.emit('exception', error)
+        socket.emit('exception', error.toString())
       }
     })
   })

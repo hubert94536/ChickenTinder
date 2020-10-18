@@ -1,5 +1,4 @@
 const { Sequelize, DataTypes } = require('sequelize')
-// require ('dotenv').config();
 
 // configuration for database
 const config = {
@@ -7,9 +6,8 @@ const config = {
   username: process.env.USERS_USER,
   host: process.env.USERS_HOST,
   password: process.env.USERS_PASSWORD,
-  port: 5432,
+  port: process.env.USERS_PORT,
   database: process.env.USERS_DATABASE,
-  // ssl: true,
   dialect: 'postgresql',
   ssl: {
     rejectUnauthorized: false,

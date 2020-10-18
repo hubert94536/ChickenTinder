@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import Alert from './alert.js'
-import { facebookService } from './facebookService.js'
+import facebookService from './facebookService.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -12,17 +12,37 @@ export default class Login extends React.Component {
     this.state = {
       pressed: false,
       alert: false,
-      errorAlert: false
+      errorAlert: false,
     }
   }
 
+  async handleClick() {
+    facebookService
+      .loginWithFacebook()
+      .then((result) => {
+        this.setState({ alert: false })
+        this.props.navigation.navigate(result)
+      })
+      .catch(() => {
+        this.setState({ errorAlert: true })
+      })
+  }
+
+  cancelClick() {
+    this.setState({ alert: false })
+  }
+
+  login() {
+    this.setState({ alert: true })
+  }
+
   // changing button appearance
-  underlayShow () {
+  underlayShow() {
     this.setState({ pressed: true })
   }
 
   // changing button appearance
-  underlayHide () {
+  underlayHide() {
     this.setState({ pressed: false })
   }
 
@@ -59,34 +79,12 @@ export default class Login extends React.Component {
             title="Error, please try again"
             button
             buttonText="Close"
-            press={() => this.setState({errorAlert: false})}
-            cancel={() => this.setState({errorAlert: false})}
+            press={() => this.setState({ errorAlert: false })}
+            cancel={() => this.setState({ errorAlert: false })}
           />
         )}
       </View>
     )
-  }
-
-  async handleClick() {
-    facebookService
-      .loginWithFacebook()
-      .then((result) => {
-        this.props.navigation.navigate(result)
-      })
-      .catch((error) => {
-        this.setState({errorAlert:true})
-        // Alert
-        console.log(error)
-      })
-    this.setState({ alert: false })
-  }
-
-  cancelClick() {
-    this.setState({ alert: false })
-  }
-
-  login() {
-    this.setState({ alert: true })
   }
 }
 
@@ -97,13 +95,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     fontFamily: font,
     fontWeight: 'bold',
-    marginTop: '40%'
+    marginTop: '40%',
   },
   subheading: {
     fontFamily: font,
     alignSelf: 'center',
     color: hex,
-    fontSize: 30
+    fontSize: 30,
   },
   button: {
     borderRadius: 25,
