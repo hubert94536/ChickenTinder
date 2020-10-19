@@ -6,14 +6,15 @@ import {
   Text,
   View
 } from 'react-native'
-import AsyncStorage from '@react-native-community/async-storage'
+import { USERNAME } from 'react-native-dotenv'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { SearchBar } from 'react-native-elements'
+import AsyncStorage from '@react-native-community/async-storage'
 import PropTypes from 'prop-types';
-import accountsApi from './accountsApi.js';
-import SearchCard from './searchCard.js'
-import Alert from './alert.js'
-import { USERNAME } from 'react-native-dotenv'
+import accountsApi from '../apis/accountsApi.js';
+import SearchCard from '../cards/searchCard.js'
+import Alert from '../modals/alert.js'
+
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'

@@ -13,49 +13,34 @@ export default class BackgroundButton extends React.Component {
       </TouchableOpacity>
     )
   }
-  // makeImageIfAny(styles) {
-  //     if (this.props.showImage) {
-  //       return <Image style={styles.image} source={R.images.check} />
-  //     }
-  //   }
 
   makeStyles() {
     return StyleSheet.create({
       view: {
         flexDirection: 'row',
-        // borderRadius: 23,
         borderRadius: 14,
         borderColor: this.props.borderColor,
         borderWidth: 2,
         backgroundColor: this.props.backgroundColor,
-        // height: 46,
         height: 28,
         alignItems: 'center',
         justifyContent: 'center',
-        // paddingLeft: 16,
-        // paddingRight: 16
-        paddingHorizontal: 8,
+        paddingHorizontal: 8
       },
       touchable: {
-        // marginLeft: 4,
         marginRight: 8,
-        marginBottom: 6,
-        // marginLeft: 3,
-        // marginRight: 3,
-        // marginBottom: 6
+        marginBottom: 6
       },
       image: {
         marginRight: 8,
       },
       text: {
-        // fontSize: 5,
         paddingLeft: '2%',
         paddingRight: '2%',
         textAlign: 'center',
         color: this.props.textColor,
-        // fontSize: 16
         fontSize: 15,
-        fontFamily: 'CircularStd-Bold',
+        fontFamily: 'CircularStd-Bold'
       },
     })
   }
