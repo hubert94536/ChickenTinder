@@ -48,22 +48,6 @@ class Home extends React.Component {
     })
   }
 
-  // underlayShowCreate() {
-  //   this.setState({ createPressed: true })
-  // }
-
-  // underlayHideCreate() {
-  //   this.setState({ createPressed: false })
-  // }
-
-  // underlayShowProfile() {
-  //   this.setState({ profilePressed: true })
-  // }
-
-  // underlayHideProfile() {
-  //   this.setState({ profilePressed: false })
-  // }
-
   closeInvite() {
     this.setState({ invite: false })
   }
@@ -74,16 +58,17 @@ class Home extends React.Component {
 
   componentDidMount() {
     //uncomment if testing friends/requests
+
     // accountsApi.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
     // accountsApi.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
     // accountsApi.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
     // accountsApi.createFBUser('Helen', 5, 'helenthemelon', 'helenw@gmail.com', 'sjdkf'),
     // accountsApi.createFBUser('Kevin', 6, 'kevint', 'kevintang@gmail.com', 'sdfddf'),
     // // console.log("My id:" + myId)
-    // friendsApi.createFriendshipTest(2, myId),
+    // friendsApi.createFriendshipTest(myId, 2),
     // friendsApi.createFriendshipTest(4, 2),
-    // friendsApi.createFriendshipTest(3, myId),
-    // friendsApi.createFriendshipTest(4, myId)
+    // friendsApi.createFriendshipTest(myId, 3),
+    // friendsApi.createFriendshipTest(myId, 4)
     // friendsApi.acceptFriendRequest(2)
   }
 

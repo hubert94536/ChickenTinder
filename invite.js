@@ -16,9 +16,6 @@ export default class Invite extends React.Component {
     this.state = {
       pressed: false,
     }
-    socket.getSocket().on('update', (res) => {
-      this.props.navigation.navigate('Group', res)
-    })
   }
 
   handleAccept() {
