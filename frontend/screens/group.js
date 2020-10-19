@@ -57,11 +57,15 @@ export default class Group extends React.Component {
     })
 
     socket.getSocket().on('start', (restaurants) => {
-      this.props.navigation.navigate('Round', {
-        results: restaurants,
-        host: this.state.host,
-        isHost: this.state.host == this.state.username,
-      })
+      if (restaurants) {
+        this.props.navigation.navigate('Round', {
+          results: restaurants,
+          host: this.state.host,
+          isHost: this.state.host == this.state.username,
+        })
+      } else {
+        // need to handle no restaurants returned
+      }
     })
 
     socket.getSocket().on('leave', () => {
@@ -112,12 +116,12 @@ export default class Group extends React.Component {
   }
 
   // changing button appearance
-  underlayShow () {
+  underlayShow() {
     this.setState({ start: true })
   }
 
   // changing button appearance
-  underlayHide () {
+  underlayHide() {
     this.setState({ start: false })
   }
 
@@ -131,14 +135,14 @@ export default class Group extends React.Component {
   }
 
   // shows proper alert based on if user is host
-  cancelAlert () {
+  cancelAlert() {
     this.state.host === this.state.username
       ? this.setState({ endAlert: false })
       : this.setState({ leaveAlert: false })
   }
 
   // sets the filters, goes back to groups and stops user from going back to filters
-  submitFilters (setFilters) {
+  submitFilters(setFilters) {
     this.refs.swiper.scrollBy(-1)
     this.setState({ swipe: false })
     this.setState({ filters: setFilters })
