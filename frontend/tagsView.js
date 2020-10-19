@@ -5,13 +5,6 @@ import BackgroundButton from './backgroundButton.js'
 
 const hex = '#F25763'
 
-TagsView.propTypes = {
-  selected: PropTypes.array,
-  onChange: PropTypes.func,
-  isExclusive: PropTypes.bool,
-  all: PropTypes.array
-}
-
 export default class TagsView extends React.Component {
   constructor(props) {
     super(props)

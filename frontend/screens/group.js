@@ -1,14 +1,15 @@
 import React from 'react'
 import { ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
-import AsyncStorage from '@react-native-community/async-storage'
+import { USERNAME } from 'react-native-dotenv'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import PropTypes from 'prop-types'
 import Swiper from 'react-native-swiper'
+import AsyncStorage from '@react-native-community/async-storage'
+import PropTypes from 'prop-types'
 import Alert from '../modals/alert.js'
 import GroupCard from '../cards/groupCard.js'
 import FilterSelector from './filter.js'
-import socket from '../../socket.js'
-import { USERNAME } from 'react-native-dotenv'
+import socket from '../apis/socket.js'
+
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -17,12 +18,6 @@ var myUsername = ''
 AsyncStorage.getItem(USERNAME).then((res) => {
   myUsername = res
 })
-
-Group.propTypes = {
-  members: PropTypes.array,
-  host: PropTypes.string,
-  
-}
 
 export default class Group extends React.Component {
   constructor(props) {

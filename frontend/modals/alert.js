@@ -1,19 +1,11 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, View, TouchableHighlight, Modal } from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import { BlurView } from '@react-native-community/blur'
 import PropTypes from 'prop-types'
-import Icon from 'react-native-vector-icons/FontAwesome'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
-
-Alert.propTypes = {
-  press: PropTypes.func,
-  cancel: PropTypes.func,
-  button: PropTypes.bool,
-  title: PropTypes.string,
-  body: PropTypes.string
-}
 
 export default class Alert extends Component {
   constructor(props) {

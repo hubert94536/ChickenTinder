@@ -16,7 +16,7 @@ import PropTypes from 'prop-types'
 import Slider from '@react-native-community/slider'
 import Alert from '../modals/alert.js'
 import ChooseFriends from '../modals/chooseFriends.js'
-import Socket from '../../socket.js'
+import Socket from '../apis/socket.js'
 import TagsView from '../tagsView'
 
 const hex = '#F25763'
@@ -102,12 +102,6 @@ const requestLocationPermission = async () => {
     .catch((err) => {
       this.setState({ errorAlert: true })
     })
-}
-
-FilterSelector.propTypes = {
-  host: PropTypes.string,
-  isHost: PropTypes.bool,
-  press: PropTypes.func
 }
 
 export default class FilterSelector extends React.Component {

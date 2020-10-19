@@ -3,21 +3,10 @@ import { Image, Text, View, TouchableHighlight } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import Alert from '../modals/alert.js'
-import friendsApi from '../../friendsApi.js'
+import friendsApi from '../apis/friendsApi.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
-
-SearchCard.propTypes = {
-  requested: PropTypes.string,
-  currentUser: PropTypes.string,
-  username: PropTypes.string,
-  id: PropTypes.number,
-  name: PropTypes.string,
-  image: PropTypes.string,
-  total: PropTypes.array,
-  press: PropTypes.func
-}
 
 // cards for the search for friends screen
 export default class SearchCard extends React.Component {
