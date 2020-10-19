@@ -191,7 +191,7 @@ export default class FilterSelector extends React.Component {
           categories.push('cambodian')
           categories.push('indonesian')
           categories.push('laotian')
-          categories.push('aalaysian')
+          categories.push('malaysian')
           categories.push('filipino')
           categories.push('singaporean')
           categories.push('thai')
@@ -241,8 +241,8 @@ export default class FilterSelector extends React.Component {
     const dd = date.getDate()
     const mm = date.getMonth()
     const yyyy = date.getFullYear()
-    //  const timezone = date.getTimezoneOffset()
-    const unix = Date.UTC(yyyy, mm, dd, this.state.hour, this.state.minute) / 1000
+    const timezone = date.getTimezoneOffset()
+    const unix = Date.UTC(yyyy, mm, dd, this.state.hour, this.state.minute + timezone) / 1000
     filters.open_at = unix
     filters.price = this.state.selectedPrice.map((item) => item.length).toString()
     // puts the cuisine and restrictions into one array
