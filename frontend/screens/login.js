@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
-import Alert from './alert.js'
-import facebookService from './facebookService.js'
+import Alert from '../modals/alert.js'
+import facebookService from '../apis/facebookService.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -37,12 +37,12 @@ export default class Login extends React.Component {
   }
 
   // changing button appearance
-  underlayShow() {
+  underlayShow () {
     this.setState({ pressed: true })
   }
 
   // changing button appearance
-  underlayHide() {
+  underlayHide () {
     this.setState({ pressed: false })
   }
 
@@ -95,13 +95,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     fontFamily: font,
     fontWeight: 'bold',
-    marginTop: '40%',
+    marginTop: '40%'
   },
   subheading: {
     fontFamily: font,
     alignSelf: 'center',
     color: hex,
-    fontSize: 30,
+    fontSize: 30
   },
   button: {
     borderRadius: 25,
