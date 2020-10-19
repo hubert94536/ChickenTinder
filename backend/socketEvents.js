@@ -23,19 +23,6 @@ module.exports = (io) => {
         name: sessions[sender].members[sender].name,
       })
     }
-    // send reconnect alert if user was in a room and room still exists
-    if (socketUser in lastRoom) {
-      if (lastRoom[socketUser] in sessions) {
-        let sender = lastRoom[socketUser]
-        io.to(clients[socketUser]).emit('reconnectRoom', {
-          username: sender,
-          pic: sessions[sender].members[sender].pic,
-          name: sessions[sender].members[sender].name,
-        })
-      } else {
-        delete lastRoom[socketUser]
-      }
-    }
 
     // disconnects user and removes them if in room
     socket.on('disconnect', async () => {
@@ -174,8 +161,12 @@ module.exports = (io) => {
             sessions[data.room].filters.open_at = data.filters.open_at
           }
           sessions[data.room].filters.radius = data.filters.radius
+          if (data.filters.location) {
+            sessions[data.room].filters.location = data.filters.location
+          } else {
           sessions[data.room].filters.latitude = data.filters.latitude
           sessions[data.room].filters.longitude = data.filters.longitude
+          }
         }
         // add categories to set
         for (let category in data.filters.categories) {
