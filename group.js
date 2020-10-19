@@ -1,25 +1,14 @@
 import React from 'react'
-import {
-  Dimensions,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View,
-} from 'react-native'
+import { ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 import Swiper from 'react-native-swiper'
 import Alert from './alert.js'
 import GroupCard from './groupCard.js'
 import FilterSelector from './filter.js'
 import socket from './socket.js'
 import { USERNAME } from 'react-native-dotenv'
-
-console.log(Dimensions.get('screen').width)
-console.log(Dimensions.get('screen').height)
-
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -38,7 +27,7 @@ Group.propTypes = {
 export default class Group extends React.Component {
   constructor(props) {
     super(props)
-    this._isMounted = false;
+    this._isMounted = false
     const members = this.props.navigation.state.params.members
     this.state = {
       members: members,
@@ -56,18 +45,19 @@ export default class Group extends React.Component {
     this.updateMemberList()
 
     // listens if user is to be kicked
-    socket.getSocket().on('kick', (res) => {
-      socket.leaveRoom(res.room)
-      this.props.navigation.navigate('Home')
+    socket.getSocket().on('kick', () => {
+      this.leaveGroup
     })
 
     // listens for group updates
     socket.getSocket().on('update', (res) => {
-      this.setState({ members: res.members })
-      const count = this.countNeedFilters(res.members)
-      this.setState({ needFilters: count })
-      if (!count) {
-        this.setState({ start: true })
+      if (this._isMounted) {
+        this.setState({ members: res.members })
+        const count = this.countNeedFilters(res.members)
+        this.setState({ needFilters: count })
+        if (!count) {
+          this.setState({ start: true })
+        }
       }
     })
 
@@ -79,8 +69,16 @@ export default class Group extends React.Component {
       })
     })
 
+    socket.getSocket().on('leave', () => {
+      if (this._isMounted) {
+        this.leaveGroup()
+      }
+    })
+
     socket.getSocket().on('exception', (error) => {
-      console.log(error)
+      if (this._isMounted) {
+        console.log(error)
+      }
     })
   }
 
@@ -97,7 +95,6 @@ export default class Group extends React.Component {
 
   // pings server to fetch restaurants, start session
   start() {
-    console.log(this.state.filters)
     socket.startSession()
   }
 
@@ -136,9 +133,6 @@ export default class Group extends React.Component {
 
   endGroup() {
     socket.endSession()
-    socket.getSocket().on('leave', () => {
-      this.props.navigation.navigate('Home')
-    })
   }
 
   // shows proper alert based on if user is host
@@ -164,7 +158,7 @@ export default class Group extends React.Component {
   }
 
   render() {
-    this.updateMemberList();
+    this.updateMemberList()
     return (
       <Swiper ref="swiper" loop={false} showsPagination={false} scrollEnabled={this.state.swipe}>
         <View style={styles.main}>
@@ -303,6 +297,11 @@ export default class Group extends React.Component {
       </Swiper>
     )
   }
+}
+
+Group.propTypes = {
+  members: PropTypes.array,
+  host: PropTypes.string,
 }
 
 const styles = StyleSheet.create({

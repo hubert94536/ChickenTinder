@@ -1,5 +1,4 @@
 const { Sequelize, DataTypes } = require('sequelize')
-// require ('dotenv').config();
 
 // configuration for database
 const config = {
@@ -7,16 +6,15 @@ const config = {
   username: process.env.USERS_USER,
   host: process.env.USERS_HOST,
   password: process.env.USERS_PASSWORD,
-  port: 5432,
+  port: process.env.USERS_PORT,
   database: process.env.USERS_DATABASE,
-  // ssl: true,
   dialect: 'postgresql',
   ssl: {
     rejectUnauthorized: false,
   },
 }
-
-const sequelize = new Sequelize(config)
+// const sequelize = new Sequelize(config)
+const sequelize = new Sequelize(process.env.HEROKU_POSTGRESQL_ONYX_URL)
 
 const Accounts = sequelize.define(
   'accounts',
@@ -82,8 +80,8 @@ const Friends = sequelize.define('friends', {
 
 Friends.belongsTo(Accounts, { foreignKey: 'f_info', foreignKeyConstraint: true })
 
-sequelize.sync({ force: true }).then(() => {
-  console.log('Friend model was synchronized successfully.')
-})
+// sequelize.sync({ force: true }).then(() => {
+//   console.log('Friend model was synchronized successfully.')
+// })
 
 module.exports = { Accounts, Friends }

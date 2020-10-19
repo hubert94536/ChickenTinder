@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image, Text, TouchableHighlight, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 import Alert from './alert.js'
 import friendsApi from './friendsApi.js'
 
@@ -37,7 +37,7 @@ export default class ProfileCard extends React.Component {
       .then(() => {
         this.setState({ isFriend: true })
       })
-      .catch((error) => this.setState({errorAlert:true}))
+      .catch((error) => this.setState({ errorAlert: true }))
   }
 
   // delete friend and modify view
@@ -51,7 +51,7 @@ export default class ProfileCard extends React.Component {
         })
         this.props.press(this.props.id, filteredArray, true)
       })
-      .catch((error) => this.setState({errorAlert: true}))
+      .catch((error) => this.setState({ errorAlert: true }))
   }
 
   render() {
@@ -162,11 +162,21 @@ export default class ProfileCard extends React.Component {
             title="Error, please try again"
             button
             buttonText="Close"
-            press={() => this.setState({errorAlert: false})}
-            cancel={() => this.setState({errorAlert: false})}
+            press={() => this.setState({ errorAlert: false })}
+            cancel={() => this.setState({ errorAlert: false })}
           />
         )}
       </View>
     )
   }
+}
+
+ProfileCard.propTypes = {
+  isFriends: PropTypes.bool,
+  id: PropTypes.string,
+  total: PropTypes.array,
+  username: PropTypes.string,
+  press: PropTypes.func,
+  name: PropTypes.string,
+  image: PropTypes.string,
 }

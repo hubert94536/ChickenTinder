@@ -2,12 +2,11 @@ import React from 'react'
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import Invite from './invite.js'
-import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
-import socket from './socket.js'
+import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
 import accountsApi from './accountsApi.js'
 import Alert from './alert.js'
 import friendsApi from './friendsApi.js'
-import { ID } from 'react-native-dotenv'
+import socket from './socket.js'
 
 var img = ''
 var name = ''
@@ -36,7 +35,7 @@ class Home extends React.Component {
       username: username,
       inviteInfo: '',
       friends: '',
-      errorAlert: false
+      errorAlert: false,
     }
     socket.connect()
     // socket.getSocket().on('reconnectRoom', res => console.log(res))
@@ -44,24 +43,9 @@ class Home extends React.Component {
       this.setState({ invite: true, inviteInfo: res })
     })
     socket.getSocket().on('update', (res) => {
+      this.setState({ invite: false })
       this.props.navigation.navigate('Group', res)
     })
-  }
-
-  underlayShowCreate() {
-    this.setState({ createPressed: true })
-  }
-
-  underlayHideCreate() {
-    this.setState({ createPressed: false })
-  }
-
-  underlayShowProfile() {
-    this.setState({ profilePressed: true })
-  }
-
-  underlayHideProfile() {
-    this.setState({ profilePressed: false })
   }
 
   closeInvite() {
@@ -74,16 +58,17 @@ class Home extends React.Component {
 
   componentDidMount() {
     //uncomment if testing friends/requests
+
     // accountsApi.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
     // accountsApi.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
     // accountsApi.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
     // accountsApi.createFBUser('Helen', 5, 'helenthemelon', 'helenw@gmail.com', 'sjdkf'),
     // accountsApi.createFBUser('Kevin', 6, 'kevint', 'kevintang@gmail.com', 'sdfddf'),
     // // console.log("My id:" + myId)
-    // friendsApi.createFriendshipTest(2, myId),
+    // friendsApi.createFriendshipTest(myId, 2),
     // friendsApi.createFriendshipTest(4, 2),
-    // friendsApi.createFriendshipTest(3, myId),
-    // friendsApi.createFriendshipTest(4, myId)
+    // friendsApi.createFriendshipTest(myId, 3),
+    // friendsApi.createFriendshipTest(myId, 4)
     // friendsApi.acceptFriendRequest(2)
   }
 
@@ -101,8 +86,8 @@ class Home extends React.Component {
           allFriends: friendsMap,
         })
       })
-      .catch((err) =>{
-        this.setState({errorAlert: true})
+      .catch((err) => {
+        this.setState({ errorAlert: true })
       })
   }
 
@@ -167,8 +152,8 @@ class Home extends React.Component {
             title="Error, please try again"
             button
             buttonText="Close"
-            press={() => this.setState({errorAlert: false})}
-            cancel={() => this.setState({errorAlert: false})}
+            press={() => this.setState({ errorAlert: false })}
+            cancel={() => this.setState({ errorAlert: false })}
           />
         )}
       </View>

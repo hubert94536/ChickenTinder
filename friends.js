@@ -1,6 +1,6 @@
 import React from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 import { SearchBar } from 'react-native-elements'
 import Alert from './alert.js'
 import ProfileCard from './profileCard.js'
@@ -21,7 +21,7 @@ export default class Friends extends React.Component {
       data: [], // array for friends
       friends: [], // array of Profile components
       isFriends: this.props.isFriends, // For rendering friends (true) or requests (false)
-      errorAlert: false
+      errorAlert: false,
     }
     this.getFriends()
   }
@@ -42,7 +42,7 @@ export default class Friends extends React.Component {
         //  need two so when you search it doesn't get rid of all the friends
         this.setState({ friends: pushFriends, data: pushFriends })
       })
-      .catch((err) => this.setState({errorAlert:true}))
+      .catch((err) => this.setState({ errorAlert: true }))
   }
 
   //  searches the users friends by username
@@ -123,6 +123,10 @@ export default class Friends extends React.Component {
       </View>
     )
   }
+}
+
+Friends.propTypes = {
+  isFriends: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

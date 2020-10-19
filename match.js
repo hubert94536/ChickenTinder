@@ -1,15 +1,9 @@
 import React from 'react'
-import {
-  Dimensions,
-  Linking,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View
-} from 'react-native'
-import PropTypes from 'prop-types';
+import { Dimensions, Linking, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import PropTypes from 'prop-types'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import socket from './socket.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -26,8 +20,13 @@ export default class Match extends React.Component {
       endRound: false,
       goToYelp: false,
       restaurant: this.props.navigation.state.params.restaurant,
+      host: this.props.host,
     }
-    // console.log(this.props.navigation.state.params.restaurant)
+  }
+
+  endRound() {
+    // socket.leaveRoom(this.props.host)
+    this.props.navigation.navigate('Home')
   }
 
   componentDidMount() {
@@ -67,7 +66,7 @@ export default class Match extends React.Component {
           onShowUnderlay={() => this.setState({ endRound: true })}
           onHideUnderlay={() => this.setState({ endRound: false })}
           style={styles.endButton}
-          onPress={() => this.props.navigation.navigate('Home')}
+          onPress={() => this.endRound()}
         >
           <Text style={this.state.endRound ? styles.endTextPressed : styles.endText}>
             End Round
@@ -85,6 +84,10 @@ export default class Match extends React.Component {
       </View>
     )
   }
+}
+
+Match.propTypes = {
+  restaurant: PropTypes.array,
 }
 
 const styles = StyleSheet.create({

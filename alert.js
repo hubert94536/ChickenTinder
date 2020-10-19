@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, View, TouchableHighlight, Modal } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 const hex = '#F25763'
@@ -78,6 +78,14 @@ export default class Alert extends Component {
       </View>
     )
   }
+}
+
+Alert.propTypes = {
+  press: PropTypes.func,
+  cancel: PropTypes.func,
+  button: PropTypes.bool,
+  title: PropTypes.string,
+  body: PropTypes.string,
 }
 
 const styles = StyleSheet.create({

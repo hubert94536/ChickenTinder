@@ -2,18 +2,12 @@ import React from 'react'
 import { Text, View, Image } from 'react-native'
 import { TouchableHighlight } from 'react-native-gesture-handler'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 import socket from './socket.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
-ChooseCard.propTypes = {
-  added: PropTypes.bool,
-  username: PropTypes.string,
-  image: PropTypes.string,
-  name: PropTypes.string
-}
 //  cards for when you're choosing friends for your group
 export default class ChooseCard extends React.Component {
   constructor(props) {
@@ -75,7 +69,7 @@ export default class ChooseCard extends React.Component {
           </View>
         )}
         {!this.state.added && (
-          <TouchableHighlight onPress={() => {this.sendInvite(this.state.id), this.setState({ added: true })}}>
+          <TouchableHighlight >
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
               <Text
                 style={{
@@ -96,6 +90,10 @@ export default class ChooseCard extends React.Component {
                   margin: '8%',
                 }}
                 name="plus-circle"
+                onPress={() => {
+                  this.setState({added: true})
+                  this.sendInvite()}
+                }
               />
             </View>
           </TouchableHighlight>
@@ -103,4 +101,11 @@ export default class ChooseCard extends React.Component {
       </View>
     )
   }
+}
+
+ChooseCard.propTypes = {
+  added: PropTypes.bool,
+  username: PropTypes.string,
+  image: PropTypes.string,
+  name: PropTypes.string,
 }

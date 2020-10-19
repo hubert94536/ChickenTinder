@@ -8,10 +8,10 @@ import {
   View
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 import { SearchBar } from 'react-native-elements'
 import Alert from './alert.js'
-import Card from './chooseCard.js'
+import ChooseCard from './chooseCard.js'
 import friendsApi from './friendsApi.js'
 
 const hex = '#F25763'
@@ -30,7 +30,7 @@ export default class ChooseFriends extends React.Component {
       data: '',
       friends: '',
       search: '',
-      errorAlert: false
+      errorAlert: false,
     }
     this.getFriends()
   }
@@ -49,7 +49,7 @@ export default class ChooseFriends extends React.Component {
         }
         this.setState({ friends: pushFriends, data: pushFriends })
       })
-      .catch((err) => this.setState({errorAlert: true}))
+      .catch((err) => this.setState({ errorAlert: true }))
   }
 
   //  closes the choose friends modal in filters
@@ -122,8 +122,8 @@ export default class ChooseFriends extends React.Component {
             title="Error, please try again"
             button
             buttonText="Close"
-            press={() => this.setState({errorAlert: false})}
-            cancel={() => this.setState({errorAlert: false})}
+            press={() => this.setState({ errorAlert: false })}
+            cancel={() => this.setState({ errorAlert: false })}
           />
         )}
       </Modal>
@@ -164,3 +164,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 })
+
+ChooseFriends.propTypes = {
+  press: PropTypes.func,
+}
