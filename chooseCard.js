@@ -1,10 +1,13 @@
 import React from 'react'
 import { Text, View, Image } from 'react-native'
+import { TouchableHighlight } from 'react-native-gesture-handler'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import PropTypes from 'prop-types'
 import socket from './socket.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
+
 //  cards for when you're choosing friends for your group
 export default class ChooseCard extends React.Component {
   constructor(props) {
@@ -61,37 +64,44 @@ export default class ChooseCard extends React.Component {
                 alignSelf: 'center',
                 margin: '8%',
               }}
-              onPress={() => this.sendInvite(this.state.id)}
               name="check-circle"
             />
           </View>
         )}
         {!this.state.added && (
-          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-            <Text
-              style={{
-                fontFamily: font,
-                color: hex,
-                fontSize: 15,
-                alignSelf: 'center',
-              }}
-            >
-              Add
-            </Text>
-            <Icon
-              style={{
-                fontFamily: font,
-                color: hex,
-                fontSize: 35,
-                alignSelf: 'center',
-                margin: '8%',
-              }}
-              onPress={() => this.setState({ added: true })}
-              name="plus-circle"
-            />
-          </View>
+          <TouchableHighlight onPress={() => this.sendInvite()}>
+            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
+              <Text
+                style={{
+                  fontFamily: font,
+                  color: hex,
+                  fontSize: 15,
+                  alignSelf: 'center',
+                }}
+              >
+                Add
+              </Text>
+              <Icon
+                style={{
+                  fontFamily: font,
+                  color: hex,
+                  fontSize: 35,
+                  alignSelf: 'center',
+                  margin: '8%',
+                }}
+                name="plus-circle"
+              />
+            </View>
+          </TouchableHighlight>
         )}
       </View>
     )
   }
+}
+
+ChooseCard.propTypes = {
+  added: PropTypes.bool,
+  username: PropTypes.string,
+  image: PropTypes.string,
+  name: PropTypes.string,
 }

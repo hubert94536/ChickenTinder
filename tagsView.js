@@ -1,5 +1,6 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
+import PropTypes from 'prop-types'
 import BackgroundButton from './backgroundButton.js'
 
 const hex = '#F25763'
@@ -73,6 +74,14 @@ export default class TagsView extends React.Component {
     })
   }
 }
+
+TagsView.propTypes = {
+  selected: PropTypes.array,
+  onChange: PropTypes.func,
+  isExclusive: PropTypes.bool,
+  all: PropTypes.array,
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

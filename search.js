@@ -6,14 +6,19 @@ import {
   Text,
   View
 } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { SearchBar } from 'react-native-elements'
+import PropTypes from 'prop-types';
 import accountsApi from './accountsApi.js';
 import SearchCard from './searchCard.js'
 import Alert from './alert.js'
+import { USERNAME } from 'react-native-dotenv'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
+var username = ''
+AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 
 export default class Search extends Component {
   constructor(props) {
@@ -68,10 +73,25 @@ export default class Search extends Component {
             }
             this.setState({data: resultUsers});
           })
-          .catch(() => this.setState({errorAlert:true})),
+          .catch(() => {}),
       100,
     );
   };
+
+  async removeRequest(id, newArr, status) {
+    if (!status) {
+      friendsApi
+        .removeFriendship(id)
+        .then(() => {
+          this.setState({ friends: newArr })
+        })
+        .catch(() => {
+          this.setState({ errorAlert: true })
+        })
+    } else if (status) {
+      this.setState({ friends: newArr })
+    }
+  }
 
   renderHeader = () => {
     return (
@@ -93,20 +113,23 @@ export default class Search extends Component {
     return (
       <View style={{flex: 1, backgroundColor: 'white'}}>
         <Icon
-              name="chevron-left"
-              style={styles.topIcons}
-              onPress={() => this.props.navigation.navigate('Home')}
-            />    
+          name="chevron-left"
+          style={styles.topIcons}
+          onPress={() => this.props.navigation.navigate('Home')}
+        />    
         <Text style={styles.title}>Find New Friends!</Text>
         <FlatList
           data={this.state.data}
           renderItem={({item}) => (
             <SearchCard
+              currentUser={username}
               name={item.name}
-              username={'@' + item.username}
+              username={item.username}
               image={item.photo}
               id = {item.id}
               requested={item.status}
+              total={this.state.data}
+              press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
             />
           )}
           keyExtractor={(item) => item.username}
@@ -125,6 +148,10 @@ export default class Search extends Component {
       </View>
     );
   }
+}
+
+Search.propTypes = {
+  allFriends: PropTypes.array
 }
 
 const styles = StyleSheet.create({

@@ -2,12 +2,14 @@ import React from 'react'
 import { Image, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import PropTypes from 'prop-types'
 import socket from './socket.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
 //  props are name, image url, and functions for cancel and go
 // invite alert
+
 export default class Invite extends React.Component {
   constructor(props) {
     super(props)
@@ -22,6 +24,15 @@ export default class Invite extends React.Component {
   handleAccept() {
     socket.joinRoom(this.props.username)
     this.props.cancel()
+  }
+
+  handleCancel() {
+    socket.declineInvite(this.props.username)
+    this.props.cancel()
+  }
+
+  handleAccept() {
+    socket.joinRoom(this.props.username)
   }
 
   handleCancel() {
@@ -102,6 +113,14 @@ export default class Invite extends React.Component {
       </View>
     )
   }
+}
+
+Invite.propTypes = {
+  username: PropTypes.string,
+  image: PropTypes.string,
+  cancel: PropTypes.func,
+  onPress: PropTypes.func,
+  name: PropTypes.string,
 }
 
 const styles = StyleSheet.create({
