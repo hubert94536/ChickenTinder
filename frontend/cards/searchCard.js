@@ -2,8 +2,8 @@ import React from 'react'
 import { Image, Text, View, TouchableHighlight } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
-import Alert from './alert.js'
-import friendsApi from './friendsApi.js'
+import Alert from '../modals/alert.js'
+import friendsApi from '../../friendsApi.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -159,7 +159,7 @@ export default class SearchCard extends React.Component {
           </View>
         )}
         {this.state.requested === 'Accepted' && this.state.renderOption && (
-          <TouchableHighlight>
+          <TouchableHighlight onPress={() => this.setState({deleteFriend: true})}>
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
               <Text
                 style={{

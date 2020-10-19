@@ -3,7 +3,7 @@ import { Text, View, Image } from 'react-native'
 import { TouchableHighlight } from 'react-native-gesture-handler'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
-import socket from './socket.js'
+import socket from '../../socket.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'

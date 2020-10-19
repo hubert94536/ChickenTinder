@@ -10,9 +10,9 @@ import AsyncStorage from '@react-native-community/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { SearchBar } from 'react-native-elements'
 import PropTypes from 'prop-types';
-import accountsApi from './accountsApi.js';
-import SearchCard from './searchCard.js'
-import Alert from './alert.js'
+import accountsApi from '../../accountsApi.js';
+import SearchCard from '../cards/searchCard.js'
+import Alert from '../modals/alert.js'
 import { USERNAME } from 'react-native-dotenv'
 
 const hex = '#F25763'

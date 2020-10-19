@@ -3,8 +3,8 @@ import { SafeAreaView, StyleSheet, Text, TouchableHighlight, View } from 'react-
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import Swiper from 'react-native-deck-swiper'
-import RoundCard from './roundCard.js'
-import socket from './socket.js'
+import RoundCard from '../cards/roundCard.js'
+import socket from '../../socket.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Bold'

@@ -3,7 +3,7 @@ import { Dimensions, Linking, StyleSheet, Text, TouchableHighlight, View } from 
 import PropTypes from 'prop-types'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import socket from './socket.js'
+import socket from '../../socket.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
