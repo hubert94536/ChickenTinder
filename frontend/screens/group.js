@@ -35,7 +35,7 @@ export default class Group extends React.Component {
       leaveAlert: false,
       endAlert: false,
       swipe: true,
-      filters: {}
+      filters: {},
     }
     this.updateMemberList()
 
@@ -65,6 +65,12 @@ export default class Group extends React.Component {
         })
       } else {
         // need to handle no restaurants returned
+      }
+    })
+
+    socket.getSocket().on('leave', () => {
+      if (this._isMounted) {
+        this.leaveGroup()
       }
     })
 
