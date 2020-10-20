@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import Alert from '../modals/alert.js'
 import friendsApi from '../apis/friendsApi.js'
+import imgStyles from '../../styles/cardImage.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -82,7 +83,7 @@ export default class SearchCard extends React.Component {
           source={{
             uri: this.props.image,
           }}
-          style={{ borderRadius: 63, height: 60, width: 60, margin: '3%' }}
+          style={imgStyles.button}
         />
         <View
           style={{
@@ -99,13 +100,7 @@ export default class SearchCard extends React.Component {
         {this.state.requested === 'Requested' && this.state.renderOption && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Text
-              style={{
-                fontFamily: font,
-                color: hex,
-                fontSize: 15,
-                marginRight: 25,
-                alignSelf: 'center',
-              }}
+              style={imgStyles.text, { marginRight: 25 }}
             >
               Requested
             </Text>
@@ -125,23 +120,12 @@ export default class SearchCard extends React.Component {
         {this.state.requested === 'Add' && this.state.renderOption && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Text
-              style={{
-                fontFamily: font,
-                color: hex,
-                fontSize: 15,
-                alignSelf: 'center',
-              }}
+              style={imgStyles.text}
             >
               Add
             </Text>
             <Icon
-              style={{
-                fontFamily: font,
-                color: hex,
-                fontSize: 35,
-                alignSelf: 'center',
-                margin: '8%',
-              }}
+              style={imgStyles.icon, { margin: '8%' }}
               onPress={() => this.addFriend()}
               name="plus-circle"
             />
@@ -151,23 +135,12 @@ export default class SearchCard extends React.Component {
           <TouchableHighlight onPress={() => this.setState({deleteFriend: true})}>
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
               <Text
-                style={{
-                  fontFamily: font,
-                  color: hex,
-                  fontSize: 15,
-                  alignSelf: 'center',
-                }}
+                style={imgStyles.text}
               >
                 Friends
               </Text>
               <Icon
-                style={{
-                  fontFamily: font,
-                  color: hex,
-                  fontSize: 35,
-                  alignSelf: 'center',
-                  margin: '8%',
-                }}
+                style={imgStyles.icon, { margin: '8%' }}
                 name='check-circle'
               />
             </View>
@@ -176,24 +149,12 @@ export default class SearchCard extends React.Component {
         {this.state.requested === 'Pending Request' && this.state.renderOption && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Icon
-              style={{
-                fontFamily: font,
-                color: hex,
-                fontSize: 35,
-                alignSelf: 'center',
-                margin: '3%',
-              }}
+              style={imgStyles.icon, { margin: '3%' }}
               name="check-circle"
               onPress={() => this.acceptFriend()}
             />
             <Icon
-              style={{
-                fontFamily: font,
-                color: hex,
-                fontSize: 35,
-                alignSelf: 'center',
-                margin: '3%',
-              }}
+              style={imgStyles.icon, { margin: '3%' }}
               name="times-circle"
               onPress={() => this.rejectFriend()}
             />

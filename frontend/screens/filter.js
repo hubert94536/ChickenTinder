@@ -18,6 +18,8 @@ import Alert from '../modals/alert.js'
 import ChooseFriends from '../modals/chooseFriends.js'
 import Socket from '../apis/socket.js'
 import TagsView from '../tagsView'
+import screenStyles from '../../styles/screenStyles.js'
+import modalStyles from '../../styles/modalStyles.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Bold'
@@ -280,10 +282,10 @@ export default class FilterSelector extends React.Component {
     return (
       <View style={styles.mainContainer}>
         <View style={styles.titleStyle}>
-          <Text style={styles.titleText}>
+          <Text style={screenStyles.text, {fontSize: 28}}>
             {this.state.isHost ? 'Group Settings' : 'Set Your Filters'}
           </Text>
-          {this.state.isHost && <Text style={styles.titleSub}>(only visible to host)</Text>}
+          {this.state.isHost && <Text style={screenStyles.text, styles.titleSub}>(only visible to host)</Text>}
         </View>
         <ScrollView>
           {this.state.isHost && (
@@ -292,7 +294,7 @@ export default class FilterSelector extends React.Component {
               <TouchableHighlight
                 onPress={() => this.setState({ chooseFriends: true })}
                 underlayColor={hex}
-                style={styles.touchableFriends}
+                style={screenStyles.text, styles.touchableFriends}
               >
                 <Text style={styles.touchableFriendsText}>Select from Friends</Text>
               </TouchableHighlight>
@@ -451,7 +453,7 @@ export default class FilterSelector extends React.Component {
             </View>
           )}
           <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '1%' }}>
-            <Text style={styles.header}>Dietary Restrictions</Text>
+            <Text style={screenStyles.text, styles.header}>Dietary Restrictions</Text>
             <TagsView
               all={tagsDiet}
               selected={this.state.selectedRestriction}
@@ -465,14 +467,14 @@ export default class FilterSelector extends React.Component {
           style={styles.touchable}
           onPress={() => this.evaluateFilters()}
         >
-          <Text style={styles.nextTitle}>{this.state.isHost ? "Let's Go" : 'Submit Filters'}</Text>
+          <Text style={screenStyles.text, styles.nextTitle}>{this.state.isHost ? "Let's Go" : 'Submit Filters'}</Text>
         </TouchableHighlight>
         {(this.state.locationAlert || this.state.formatAlert || this.state.chooseFriends) && (
           <BlurView
             blurType="light"
             blurAmount={20}
             reducedTransparencyFallbackColor="white"
-            style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}
+            style={modalStyles.blur}
           />
         )}
         {this.state.locationAlert && (
@@ -528,16 +530,8 @@ const styles = StyleSheet.create({
   titleStyle: {
     flexDirection: 'row',
     margin: '5%',
-    // alignItems: 'center',
-  },
-  titleText: {
-    fontFamily: font,
-    fontSize: 28,
-    color: hex,
   },
   titleSub: {
-    fontFamily: font,
-    color: hex,
     alignSelf: 'center',
     margin: '1%',
     marginTop: '2%',
@@ -550,8 +544,6 @@ const styles = StyleSheet.create({
     marginTop: '5%',
   },
   touchableFriendsText: {
-    color: hex,
-    fontFamily: font,
     fontSize: 18,
     alignSelf: 'center',
     paddingLeft: '3%',
@@ -561,10 +553,8 @@ const styles = StyleSheet.create({
   },
   header: {
     textAlign: 'left',
-    color: hex,
     fontSize: 25,
     margin: '1%',
-    fontFamily: font,
   },
   touchable: {
     width: '50%',
@@ -577,9 +567,7 @@ const styles = StyleSheet.create({
   },
   nextTitle: {
     textAlign: 'center',
-    color: hex,
     fontSize: 25,
-    fontFamily: font,
     paddingTop: '2%',
     paddingBottom: '2%',
   },

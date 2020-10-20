@@ -3,6 +3,7 @@ import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
+import imgStyles from '../../styles/cardImage.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -80,12 +81,7 @@ export default class GroupCard extends React.Component {
             {this.props.username !== this.props.host && this.isHost ? (
               <Icon
                 name="times-circle"
-                style={{
-                  color: hex,
-                  fontSize: 35,
-                  alignSelf: 'center',
-                  marginLeft: '5%',
-                }}
+                style={imgStyles.icon, { marginLeft: '5%' }}
                 onPress={() => this.removeUser(this.props.username)}
               />
             ) : null}

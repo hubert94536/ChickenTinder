@@ -4,17 +4,16 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
+import screenStyles from '../../styles/screenStyles.js'
 
 const hex = '#F25763'
-const font = 'CircularStd-Medium'
+const font = 'CircularStd-Bold'
 
 // the card for the restaurant match
 export default class Match extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      endRound: false,
-      goToYelp: false,
       restaurant: this.props.navigation.state.params.restaurant,
       host: this.props.host,
     }
@@ -36,10 +35,10 @@ export default class Match extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.text}>It's A Match!</Text>
-        <Icon name="thumbs-up" style={styles.thumbIcon} />
-        <Text style={styles.subheading}>Your group has selected:</Text>
-        <Text style={styles.restaurantName}>{this.state.restaurant.name}</Text>
+        <Text style={styles.general, { fontSize: 65, marginRight: '10%',  marginLeft: '10%'}}>It's A Match!</Text>
+        <Icon name="thumbs-up" style={styles.general, {fontSize: 50}} />
+        <Text style={styles.general, {fontSize: 20}}>Your group has selected:</Text>
+        <Text style={styles.general, {fontSize: 30}}>{this.state.restaurant.name}</Text>
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
@@ -59,12 +58,10 @@ export default class Match extends React.Component {
         </MapView>
         <TouchableHighlight
           underlayColor="white"
-          onShowUnderlay={() => this.setState({ endRound: true })}
-          onHideUnderlay={() => this.setState({ endRound: false })}
           style={styles.endButton}
           onPress={() => this.endRound()}
         >
-          <Text style={this.state.endRound ? styles.endTextPressed : styles.endText}>
+          <Text style={styles.endText}>
             End Round
           </Text>
         </TouchableHighlight>
@@ -92,46 +89,10 @@ const styles = StyleSheet.create({
     backgroundColor: hex,
     justifyContent: 'space-evenly',
   },
-  text: {
+  general:{
     fontFamily: font,
     color: 'white',
-    fontSize: 65,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    marginRight: '10%',
-    marginLeft: '10%',
-  },
-  thumbIcon: {
-    color: 'white',
-    textAlign: 'center',
-    fontFamily: font,
-    fontSize: 50,
-  },
-  restaurantName: {
-    fontFamily: font,
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 30,
-    fontWeight: 'bold',
-  },
-  subheading: {
-    fontFamily: font,
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 20,
-  },
-  restaurantName: {
-    fontFamily: font,
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 30,
-    fontWeight: 'bold'
-  },
-  subheading: {
-    fontFamily: font,
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 20
+    textAlign: 'center'
   },
   map: {
     alignSelf: 'center',
@@ -152,14 +113,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     padding: '6%',
     fontWeight: 'bold',
-  },
-  endTextPressed: {
-    fontFamily: font,
-    color: hex,
-    fontSize: 20,
-    textAlign: 'center',
-    padding: '6%',
-    fontWeight: 'bold'
   },
   yelpButton: {
     backgroundColor: 'white',

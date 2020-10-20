@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
 import accountsApi from '../apis/accountsApi.js';
 import SearchCard from '../cards/searchCard.js'
 import Alert from '../modals/alert.js'
-
+import screenStyles from '../../styles/screenStyles.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -118,7 +118,7 @@ export default class Search extends Component {
           style={styles.topIcons}
           onPress={() => this.props.navigation.navigate('Home')}
         />    
-        <Text style={styles.title}>Find New Friends!</Text>
+        <Text style={screenStyles.text, styles.title}>Find New Friends!</Text>
         <FlatList
           data={this.state.data}
           renderItem={({item}) => (
@@ -163,9 +163,7 @@ const styles = StyleSheet.create({
     marginTop: '5%'
   },
   title: {
-    fontFamily: font,
     fontSize: 40,
-    color: hex,
     textAlign: 'center',
     marginBottom: '4%'
   },

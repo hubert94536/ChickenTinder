@@ -7,6 +7,7 @@ import Alert from '../modals/alert.js'
 import friendsApi from '../apis/friendsApi.js'
 import Invite from '../modals/invite.js'
 import socket from '../apis/socket.js'
+import screenStyles from '../../styles/screenStyles.js'
 
 var img = ''
 var name = ''
@@ -138,7 +139,7 @@ class Home extends React.Component {
           onHideUnderlay={() => this.setState({ searchPressed: false })}
           activeOpacity={1}
           underlayColor="#fff"
-          style={styles.button}
+          style={screenStyles.bigButton, {  height: 65, margin: '3%', flexDirection: 'column', justifyContent: 'center'} }
           onPress={() => {
             this.getFriends()
           }}
@@ -162,17 +163,6 @@ class Home extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  button: {
-    borderRadius: 40,
-    borderColor: '#fff',
-    borderWidth: 2,
-    width: '65%',
-    height: 65,
-    alignSelf: 'center',
-    margin: '3%',
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
   yesPress: {
     textAlign: 'center',
     color: '#F25763',

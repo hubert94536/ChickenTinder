@@ -4,6 +4,8 @@ import { TouchableHighlight } from 'react-native-gesture-handler'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
+import imgStyles from '../../styles/cardImage.js'
+
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -30,7 +32,7 @@ export default class ChooseCard extends React.Component {
           source={{
             uri: this.props.image,
           }}
-          style={{ borderRadius: 63, height: 60, width: 60, margin: '3%' }}
+          style={imgStyles.button}
         />
         <View
           style={{
@@ -47,23 +49,12 @@ export default class ChooseCard extends React.Component {
         {this.state.added && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Text
-              style={{
-                fontFamily: font,
-                color: hex,
-                fontSize: 15,
-                alignSelf: 'center',
-              }}
+              style={imgStyles.text}
             >
               Added
             </Text>
             <Icon
-              style={{
-                fontFamily: font,
-                color: hex,
-                fontSize: 35,
-                alignSelf: 'center',
-                margin: '8%',
-              }}
+              style={imgStyles.icon, {  margin: '8%' }}
               name="check-circle"
             />
           </View>
@@ -72,23 +63,12 @@ export default class ChooseCard extends React.Component {
           <TouchableHighlight >
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
               <Text
-                style={{
-                  fontFamily: font,
-                  color: hex,
-                  fontSize: 15,
-                  alignSelf: 'center',
-                }}
+                style={imgStyles.text}
               >
                 Add
               </Text>
               <Icon
-                style={{
-                  fontFamily: font,
-                  color: hex,
-                  fontSize: 35,
-                  alignSelf: 'center',
-                  margin: '8%',
-                }}
+                style={imgStyles.icon, { margin: '8%' }}
                 name="plus-circle"
                 onPress={() => {
                   this.setState({added: true})

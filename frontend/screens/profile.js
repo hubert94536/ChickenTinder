@@ -19,9 +19,11 @@ import Alert from '../modals/alert.js'
 import accountsApi from '../apis/accountsApi.js'
 import facebookService from '../apis/facebookService.js'
 import Friends from './friends.js'
+import screenStyles from '../../styles/screenStyles.js'
+import modalStyles from '../../styles/modalStyles.js'
 
 const hex = '#F25763'
-const font = 'CircularStd-Medium'
+const font = 'CircularStd-Bold'
 var img = ''
 var name = ''
 var username = ''
@@ -161,7 +163,7 @@ export default class UserProfileView extends Component {
               onPress={() => this.setState({ visible: true })}
             />
           </View>
-          <Text style={styles.myProfile}>My Profile</Text>
+          <Text style={screenStyles.text, styles.myProfile}>My Profile</Text>
           <View style={styles.userInfo}>
             <Image
               source={{
@@ -170,26 +172,26 @@ export default class UserProfileView extends Component {
               style={styles.avatar}
             />
             <View style={{ fontFamily: font }}>
-              <Text style={{ fontSize: 28, fontWeight: 'bold' }}>{this.state.name}</Text>
+              <Text style={{ fontSize: 28 }}>{this.state.name}</Text>
               <Text style={{ fontSize: 17 }}>{'@' + this.state.usernameValue}</Text>
             </View>
           </View>
           <View style={{ flexDirection: 'row' }}>
             <TouchableHighlight
               underlayColor="#fff"
-              style={this.state.friends ? styles.selected : styles.unselected}
+              style={screenStyles.profileSelected, this.state.friends ? {backgroundColor: hex} : {backgroundColor: 'white'}}
               onPress={() => this.refs.swiper.scrollBy(-1)}
             >
-              <Text style={this.state.friends ? styles.selectedText : styles.unselectedText}>
+              <Text style={screenStyles.profileSelectedText, this.state.friends ? {color: 'white'} : {color: hex}}>
                 Friends
               </Text>
             </TouchableHighlight>
             <TouchableHighlight
               underlayColor="#fff"
-              style={!this.state.friends ? styles.selected : styles.unselected}
+              style={screenStyles.profileSelected, !this.state.friends ? {backgroundColor: hex} : {backgroundColor: 'white'}}
               onPress={() => this.refs.swiper.scrollBy(1)}
             >
-              <Text style={!this.state.friends ? styles.selectedText : styles.unselectedText}>
+              <Text style={screenStyles.profileSelectedText, !this.state.friends ? {color: 'white'} : {color: hex}}>
                 Requests
               </Text>
             </TouchableHighlight>
@@ -210,7 +212,7 @@ export default class UserProfileView extends Component {
             blurType="light"
             blurAmount={20}
             reducedTransparencyFallbackColor="white"
-            style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}
+            style={modalStyles.blur}
           />
         )}
         {this.state.visible && (
@@ -224,18 +226,13 @@ export default class UserProfileView extends Component {
                 }}
               >
                 <Text
-                  style={{
-                    fontFamily: font,
-                    fontSize: 18,
-                    color: hex,
-                    alignSelf: 'center',
-                  }}
+                  style={screenStyles.text, { fontSize: 18, alignSelf: 'center' }}
                 >
                   Settings
                 </Text>
                 <Icon
                   name="times-circle"
-                  style={{ color: hex, fontFamily: font, fontSize: 30 }}
+                  style={screenStyles.text, { fontSize: 30 }}
                   onPress={() =>
                     this.setState({
                       visible: false,
@@ -253,13 +250,7 @@ export default class UserProfileView extends Component {
                 <View>
                   <Text style={{ fontFamily: font, fontSize: 18 }}>Name:</Text>
                   <TextInput
-                    style={{
-                      fontFamily: font,
-                      color: hex,
-                      fontSize: 20,
-                      margin: 0,
-                      padding: 0,
-                    }}
+                    style={screenStyles.text, screenStyles.profileInput}
                     value={this.state.nameValue}
                     onChangeText={(text) => this.setState({ nameValue: text })}
                   />
@@ -288,13 +279,7 @@ export default class UserProfileView extends Component {
                 <View>
                   <Text style={{ fontFamily: font, fontSize: 18 }}>Username:</Text>
                   <TextInput
-                    style={{
-                      fontFamily: font,
-                      color: hex,
-                      fontSize: 20,
-                      margin: 0,
-                      padding: 0,
-                    }}
+                    style={screenStyles.text, screenStyles.profileInput}
                     value={this.state.usernameValue}
                     onChangeText={(text) => this.setState({ usernameValue: text })}
                   />
@@ -335,7 +320,7 @@ export default class UserProfileView extends Component {
                     marginTop: '5%',
                   }}
                 >
-                  <Text style={this.state.delete ? styles.changeTextSelected : styles.changeText}>
+                  <Text style={screenStyles.profileChangeText,  this.state.delete ? {color: 'white'} : {color: hex}}>
                     Delete
                   </Text>
                 </TouchableHighlight>
@@ -354,7 +339,7 @@ export default class UserProfileView extends Component {
                     marginTop: '5%',
                   }}
                 >
-                  <Text style={this.state.logout ? styles.changeTextSelected : styles.changeText}>
+                  <Text style={screenStyles.profileChangeText,  this.state.delete ? {color: 'white'} : {color: hex}}>
                     Logout
                   </Text>
                 </TouchableHighlight>
@@ -470,11 +455,9 @@ const styles = StyleSheet.create({
     margin: '5%',
   },
   myProfile: {
-    color: hex,
     fontWeight: 'bold',
     fontSize: 17,
     paddingLeft: '5%',
-    fontFamily: font,
   },
   avatar: {
     width: 100,
@@ -484,38 +467,6 @@ const styles = StyleSheet.create({
     margin: '5%',
   },
   userInfo: { flexDirection: 'row', alignItems: 'center' },
-  selected: {
-    borderRadius: 40,
-    borderColor: hex,
-    borderWidth: 2,
-    marginLeft: '5%',
-    backgroundColor: hex,
-  },
-  unselected: {
-    borderRadius: 40,
-    borderColor: hex,
-    borderWidth: 2,
-    marginLeft: '5%',
-    backgroundColor: '#fff',
-  },
-  selectedText: {
-    fontFamily: font,
-    color: '#fff',
-    fontSize: 17,
-    paddingLeft: '3%',
-    paddingRight: '3%',
-    paddingTop: '0.5%',
-    paddingBottom: '0.5%',
-  },
-  unselectedText: {
-    fontFamily: font,
-    color: hex,
-    fontSize: 17,
-    paddingLeft: '3%',
-    paddingRight: '3%',
-    paddingTop: '0.5%',
-    paddingBottom: '0.5%',
-  },
   modal: {
     height: Dimensions.get('window').height * 0.45,
     width: '75%',
@@ -531,21 +482,5 @@ const styles = StyleSheet.create({
     borderColor: hex,
     borderRadius: 50,
     width: '35%',
-  },
-  changeText: {
-    fontFamily: font,
-    color: hex,
-    textAlign: 'center',
-    fontSize: 17,
-    paddingTop: '2.5%',
-    paddingBottom: '2.5%',
-  },
-  changeTextSelected: {
-    fontFamily: font,
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 17,
-    paddingTop: '2.5%',
-    paddingBottom: '2.5%',
   },
 })

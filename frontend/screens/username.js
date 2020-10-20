@@ -4,6 +4,7 @@ import { NAME, USERNAME, ID, UID, EMAIL, PHOTO } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import Alert from '../modals/alert.js'
 import accountsApi from '../apis/accountsApi.js'
+import screenStyles from '../../styles/screenStyles.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -45,16 +46,6 @@ class Username extends React.Component {
     })
   }
 
-  // adjusting the look of button
-  underlayShow () {
-    this.setState({ pressed: true })
-  }
-
-  // adjusting the look of button
-  underlayHide () {
-    this.setState({ pressed: false })
-  }
-
   //  checks whether or not the username can be set
   handleClick() {
     accountsApi
@@ -85,10 +76,10 @@ class Username extends React.Component {
   render () {
     return (
       <View style={styles.mainContainer}>
-        <Text style={styles.header}>'Chews' a username!</Text>
+        <Text style={screenStyles.text, styles.header}>'Chews' a username!</Text>
         <View style={{ marginTop: '35%' }}>
           <TextInput
-            style={styles.input}
+            style={screenStyles.text, styles.input}
             textAlign="left"
             placeholder="Enter a username"
             onChangeText={(username) => {
@@ -97,12 +88,12 @@ class Username extends React.Component {
             value={this.state.username}
           />
           <TouchableHighlight
-            onShowUnderlay={this.underlayShow.bind(this)}
-            onHideUnderlay={this.underlayHide.bind(this)}
+            onShowUnderlay={() => this.setState({ pressed: true })}
+            onHideUnderlay={() => this.setState({ pressed: false })}
             activeOpacity={1}
             underlayColor={hex}
             onPress={() => this.handleClick()}
-            style={styles.button}
+            style={screenStyles.text, styles.button}
           >
             <Text style={this.state.pressed ? styles.yesPress : styles.noPress}>Enter</Text>
           </TouchableHighlight>
@@ -137,16 +128,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   header: {
-    fontFamily: font,
-    color: hex,
     fontSize: 40,
     marginTop: '8%',
     marginLeft: '3%',
     textAlign: 'left'
   },
   input: {
-    fontFamily: font,
-    color: hex,
     fontSize: 25,
     alignSelf: 'center',
     borderBottomColor: hex,
@@ -155,10 +142,8 @@ const styles = StyleSheet.create({
     width: '70%'
   },
   button: {
-    fontFamily: font,
     borderRadius: 25,
     borderWidth: 2.5,
-    borderColor: hex,
     paddingVertical: 10,
     paddingHorizontal: 12,
     width: '70%',
