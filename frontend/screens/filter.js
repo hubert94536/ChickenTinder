@@ -104,6 +104,8 @@ const requestLocationPermission = async () => {
     })
 }
 
+const date = new Date();  
+
 export default class FilterSelector extends React.Component {
   constructor(props) {
     super(props)
@@ -237,7 +239,7 @@ export default class FilterSelector extends React.Component {
   evaluateFilters () {
     var filters = {}
     //  convert to unix time
-    const date = new Date()
+    // const date = new Date();  
     const dd = date.getDate()
     const mm = date.getMonth()
     const yyyy = date.getFullYear()
@@ -503,7 +505,7 @@ export default class FilterSelector extends React.Component {
           />
         )}
         {this.state.chooseFriends && (
-          <ChooseFriends press={() => this.setState({ chooseFriends: false })} />
+          <ChooseFriends members={this.props.members} press={() => this.setState({ chooseFriends: false })} />
         )}
       </View>
     )
