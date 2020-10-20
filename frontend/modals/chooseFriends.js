@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  Dimensions,
-  FlatList,
-  Modal,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import { Dimensions, FlatList, Modal, StyleSheet, Text, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { SearchBar } from 'react-native-elements'
 import PropTypes from 'prop-types'
@@ -27,12 +20,13 @@ export default class ChooseFriends extends React.Component {
       friends: '',
       search: '',
       errorAlert: false,
+      members: this.props.members
     }
     this.getFriends()
   }
 
   //  gets your friends
-  async getFriends () {
+  async getFriends() {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
       .getFriends()
@@ -40,7 +34,14 @@ export default class ChooseFriends extends React.Component {
         var pushFriends = []
         for (var friend in res.friendList) {
           if (res.friendList[friend].status === 'Accepted') {
-            pushFriends.push(res.friendList[friend])
+            if (this.state.members.some(member => member.username === res.friendList[friend].username)){
+              res.friendList[friend].added = true
+              pushFriends.push(res.friendList[friend])
+            }
+            else{
+              res.friendList[friend].added = false
+              pushFriends.push(res.friendList[friend])
+            }
           }
         }
         this.setState({ friends: pushFriends, data: pushFriends })
@@ -49,12 +50,12 @@ export default class ChooseFriends extends React.Component {
   }
 
   //  closes the choose friends modal in filters
-  handlePress () {
+  handlePress() {
     this.props.press()
   }
 
   //  function for searching your friends
-  searchFilterFunction (text) {
+  searchFilterFunction(text) {
     this.setState({ search: text })
     const newData = this.state.data.filter((item) => {
       const itemData = `${item.name.toUpperCase()} ${item.username.toUpperCase()}`
