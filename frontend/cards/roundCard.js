@@ -32,25 +32,25 @@ export default class RoundCard extends React.Component {
   getStarPath (rating) {
     switch (rating) {
       case 0:
-        return require('../../assets/stars/0.png')
+        return require('../assets/stars/0.png')
       case 1:
-        return require('../../assets/stars/1.png')
+        return require('../assets/stars/1.png')
       case 1.5:
-        return require('../../assets/stars/1.5.png')
+        return require('../assets/stars/1.5.png')
       case 2:
-        return require('../../assets/stars/2.png')
+        return require('../assets/stars/2.png')
       case 2.5:
-        return require('../../assets/stars/2.5.png')
+        return require('../assets/stars/2.5.png')
       case 3:
-        return require('../../assets/stars/3.png')
+        return require('../assets/stars/3.png')
       case 3.5:
-        return require('../../assets/stars/3.5.png')
+        return require('../assets/stars/3.5.png')
       case 4:
-        return require('../../assets/stars/4.png')
+        return require('../assets/stars/4.png')
       case 4.5:
-        return require('../../assets/stars/4.5.png')
+        return require('../assets/stars/4.5.png')
       case 5:
-        return require('../../assets/stars/5.png')
+        return require('../assets/stars/5.png')
     }
   }
 
@@ -58,29 +58,29 @@ export default class RoundCard extends React.Component {
   getCuisine (category) {
     switch (category) {
       case 'American':
-        return require('../../assets/images/american.png')
+        return require('../assets/images/american.png')
       case 'Asian Fusion':
-        return require('../../assets/images/asianFusion.png')
+        return require('../assets/images/asianFusion.png')
       case 'Chinese':
-        return require('../../assets/images/chinese.png')
+        return require('../assets/images/chinese.png')
       case 'European':
-        return require('../../assets/images/european.png')
+        return require('../assets/images/european.png')
       case 'Indian':
-        return require('../../assets/images/indian.png')
+        return require('../assets/images/indian.png')
       case 'Italian':
-        return require('../../assets/images/italian.png')
+        return require('../assets/images/italian.png')
       case 'Japanese':
-        return require('../../assets/images/japanese.png')
+        return require('../assets/images/japanese.png')
       case 'Korean':
-        return require('../../assets/images/korean.png')
+        return require('../assets/images/korean.png')
       case 'Mediterranean':
-        return require('../../assets/images/mediterranean.png')
+        return require('../assets/images/mediterranean.png')
       case 'Mexican':
-        return require('../../assets/images/mexican.png')
+        return require('../assets/images/mexican.png')
       case 'Middle Eastern':
-        return require('../../assets/images/middleEastern.png')
+        return require('../assets/images/middleEastern.png')
       case 'Thai':
-        return require('../../assets/images/thai.png')
+        return require('../assets/images/thai.png')
     }
   }
 

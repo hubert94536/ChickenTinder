@@ -3,7 +3,7 @@ import { StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-nat
 import { NAME, USERNAME, ID, UID, EMAIL, PHOTO } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import Alert from '../modals/alert.js'
-import accountsApi from '../../accountsApi.js'
+import accountsApi from '../apis/accountsApi.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'

@@ -8,11 +8,11 @@ import {
   View
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import PropTypes from 'prop-types'
 import { SearchBar } from 'react-native-elements'
+import PropTypes from 'prop-types'
 import Alert from './alert.js'
 import ChooseCard from '../cards/chooseCard.js'
-import friendsApi from '../../friendsApi.js'
+import friendsApi from '../apis/friendsApi.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Bold'

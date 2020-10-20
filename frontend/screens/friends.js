@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { SearchBar } from 'react-native-elements'
 import Alert from '../modals/alert.js'
 import ProfileCard from '../cards/profileCard.js'
-import friendsApi from '../../friendsApi.js'
+import friendsApi from '../apis/friendsApi.js'
 
 const font = 'CircularStd-Medium'
 

@@ -16,7 +16,7 @@ import PropTypes from 'prop-types'
 import Slider from '@react-native-community/slider'
 import Alert from '../modals/alert.js'
 import ChooseFriends from '../modals/chooseFriends.js'
-import Socket from '../../socket.js'
+import Socket from '../apis/socket.js'
 import TagsView from '../tagsView'
 
 const hex = '#F25763'
@@ -119,8 +119,8 @@ export default class FilterSelector extends React.Component {
       distance: 5,
       location: null,
       useLocation: false,
-      hour: '',
-      minute: '',
+      hour: date.getUTCHours(),
+      minute: date.getUTCMinutes(),
       lat: 0,
       long: 0,
       selectedCuisine: [],
