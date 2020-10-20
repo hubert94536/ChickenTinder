@@ -2,9 +2,9 @@ import React from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
 import PropTypes from 'prop-types'
 import { SearchBar } from 'react-native-elements'
-import Alert from './alert.js'
-import ProfileCard from './profileCard.js'
-import friendsApi from './friendsApi.js'
+import Alert from '../modals/alert.js'
+import ProfileCard from '../cards/profileCard.js'
+import friendsApi from '../apis/friendsApi.js'
 
 const font = 'CircularStd-Medium'
 
@@ -23,7 +23,7 @@ export default class Friends extends React.Component {
   }
 
   //  gets the users friends
-  async getFriends() {
+  async getFriends () {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
       .getFriends()
@@ -42,7 +42,7 @@ export default class Friends extends React.Component {
   }
 
   //  searches the users friends by username
-  searchFilterFunction(text) {
+  searchFilterFunction (text) {
     this.setState({
       search: text,
     })

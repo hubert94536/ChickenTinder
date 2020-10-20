@@ -1,9 +1,16 @@
 import React from 'react'
-import { Image, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import {
+  Image,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View
+} from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
-import socket from './socket.js'
+import socket from '../apis/socket.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -58,7 +65,11 @@ export default class Invite extends React.Component {
         <Modal transparent animationType="none">
           <View style={styles.modal}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-              <Icon name="times-circle" style={styles.icon} onPress={() => this.handleCancel()} />
+              <Icon
+                name='times-circle'
+                style={styles.icon}
+                onPress={() => this.props.onPress()}
+              />
             </View>
             <View
               style={{
@@ -137,7 +148,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 40,
     elevation: 20,
-    margin: '50%',
+    margin: '50%'
   },
   text: {
     fontFamily: font,
