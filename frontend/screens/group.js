@@ -292,6 +292,7 @@ export default class Group extends React.Component {
           host={this.state.host}
           isHost={this.state.host === this.state.username}
           press={(setFilters) => this.submitFilters(setFilters)}
+          members={memberList}
         />
       </Swiper>
     )
