@@ -107,6 +107,7 @@ const requestLocationPermission = async () => {
 export default class FilterSelector extends React.Component {
   constructor(props) {
     super(props)
+    let date = new Date()
     this.state = {
       host: this.props.host,
       isHost: this.props.isHost,
