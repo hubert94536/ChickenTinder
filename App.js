@@ -74,18 +74,57 @@ export default class App extends React.Component {
   render() {
     return this.state.appContainer
   }
+
+  componentDidMount() {
+    var start
+    var unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      if (user === null) {
+        start = 'Login'
+      } else {
+        start = 'Home'
+      }
+      var RootStack = createStackNavigator(
+        {
+          Home: {
+            screen: Home,
+          },
+          Login: {
+            screen: Login,
+          },
+          Username: {
+            screen: Username,
+          },
+          Profile: {
+            screen: UserProfileView,
+          },
+          Group: {
+            screen: Group,
+          },
+          Round: {
+            screen: Round,
+          },
+          Match: {
+            screen: Match,
+          },
+          Search: {
+            screen: Search,
+          },
+          Invite: {
+            screen: Invite,
+          },
+        },
+        {
+          initialRouteName: start,
+          headerMode: 'none',
+        },
+      )
+      unsubscribe()
+      var AppContainer = createAppContainer(RootStack)
+      this.setState({ appContainer: <AppContainer /> })
+    })
+  }
+
+  render() {
+    return this.state.appContainer
+  }
 }
-
-// import React from 'react'
-// import FilterSelector from './filter.js'
-// import Group from './group.js'
-// import RestaurantCard from './round.js'
-// import Match from './match.js'
-
-// export default class App extends React.Component{
-//   render () {
-//     return (
-//       <Match/>
-//     )
-//   }
-// }

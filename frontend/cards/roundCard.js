@@ -25,7 +25,7 @@ export default class RoundCard extends React.Component {
   }
 
   // getting which stars to display
-  getStarPath (rating) {
+  getStarPath(rating) {
     switch (rating) {
       case 0:
         return require('../assets/stars/0.png')
@@ -51,7 +51,7 @@ export default class RoundCard extends React.Component {
   }
 
   // get image based on cuisine
-  getCuisine (category) {
+  getCuisine(category) {
     switch (category) {
       case 'American':
         return require('../assets/images/american.png')
@@ -81,8 +81,8 @@ export default class RoundCard extends React.Component {
   }
 
   // for each transaction, put into comma-separated string
-  evaluateTransactions (transactions) {
-    return transactions.map(item => item).join(', ')
+  evaluateTransactions(transactions) {
+    return transactions.map((item) => item).join(', ')
   }
 
   render() {

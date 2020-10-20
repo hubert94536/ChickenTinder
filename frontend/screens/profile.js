@@ -8,7 +8,7 @@ import {
   Text,
   TextInput,
   TouchableHighlight,
-  View
+  View,
 } from 'react-native'
 import { NAME,  PHOTO, USERNAME } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
@@ -114,17 +114,17 @@ export default class UserProfileView extends Component {
   }
 
   // close alert for taken username
-  closeTaken () {
+  closeTaken() {
     this.setState({ takenAlert: false })
   }
 
   // close alert for error
-  closeError () {
+  closeError() {
     this.setState({ errorAlert: false })
   }
-  
+
   // cancel deleting your account
-  cancelDelete () {
+  cancelDelete() {
     this.setState({ deleteAlert: false })
   }
 

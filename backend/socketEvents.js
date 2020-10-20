@@ -13,7 +13,6 @@ module.exports = (io) => {
     delete clientsIds[clients[socketUser]]
     clients[socketUser] = socket.id
     clientsIds[socket.id] = socketUser
-    var sender
 
     // send invite if previously sent before user connected
     if (socketUser in invites && invites[socketUser] in sessions) {
