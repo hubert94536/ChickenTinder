@@ -7,14 +7,6 @@ import PropTypes from 'prop-types'
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
-Alert.propTypes = {
-  press: PropTypes.func,
-  cancel: PropTypes.func,
-  button: PropTypes.bool,
-  title: PropTypes.string,
-  body: PropTypes.string
-}
-
 export default class Alert extends Component {
   constructor(props) {
     super(props)

@@ -8,10 +8,6 @@ import friendsApi from '../apis/friendsApi.js'
 
 const font = 'CircularStd-Medium'
 
-Friends.propTypes = {
-  isFriends: PropTypes.bool,
-}
-
 export default class Friends extends React.Component {
   constructor(props) {
     super(props)

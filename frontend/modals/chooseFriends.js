@@ -18,10 +18,6 @@ const hex = '#F25763'
 const font = 'CircularStd-Bold'
 const height = Dimensions.get('window').height
 
-ChooseFriends.propTypes = {
-  press: PropTypes.func
-}
-
 //  little pop up modal that is showed when you click choose friends in filters
 export default class ChooseFriends extends React.Component {
   constructor(props) {

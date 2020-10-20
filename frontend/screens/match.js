@@ -8,10 +8,6 @@ import socket from '../apis/socket.js'
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
-Match.propTypes = {
-  restaurant: PropTypes.array
-}
-
 // the card for the restaurant match
 export default class Match extends React.Component {
   constructor(props) {

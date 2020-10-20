@@ -104,12 +104,6 @@ const requestLocationPermission = async () => {
     })
 }
 
-FilterSelector.propTypes = {
-  host: PropTypes.string,
-  isHost: PropTypes.bool,
-  press: PropTypes.func
-}
-
 export default class FilterSelector extends React.Component {
   constructor(props) {
     super(props)

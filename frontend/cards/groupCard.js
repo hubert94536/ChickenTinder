@@ -7,15 +7,6 @@ import socket from '../apis/socket.js'
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
-GroupCard.propTypes = {
-  id: PropTypes.number,
-  image: PropTypes.string,
-  filters: PropTypes.array,
-  name: PropTypes.string,
-  username: PropTypes.string,
-  host: PropTypes.string
-}
-
 export default class GroupCard extends React.Component {
   constructor(props) {
     super(props)

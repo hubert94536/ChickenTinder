@@ -9,12 +9,6 @@ import socket from '../apis/socket.js'
 const hex = '#F25763'
 const font = 'CircularStd-Bold'
 
-Round.propTypes = {
-  results: PropTypes.array,
-  host: PropTypes.string,
-  isHost: PropTypes.bool
-}
-
 export default class Round extends React.Component {
   constructor(props) {
     super(props)
