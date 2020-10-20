@@ -1,14 +1,15 @@
 import React from 'react'
 import { ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
-import AsyncStorage from '@react-native-community/async-storage'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import PropTypes from 'prop-types'
-import Swiper from 'react-native-swiper'
-import Alert from './alert.js'
-import GroupCard from './groupCard.js'
-import FilterSelector from './filter.js'
-import socket from './socket.js'
 import { USERNAME } from 'react-native-dotenv'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import Swiper from 'react-native-swiper'
+import AsyncStorage from '@react-native-community/async-storage'
+import PropTypes from 'prop-types'
+import Alert from '../modals/alert.js'
+import GroupCard from '../cards/groupCard.js'
+import FilterSelector from './filter.js'
+import socket from '../apis/socket.js'
+
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -56,11 +57,21 @@ export default class Group extends React.Component {
     })
 
     socket.getSocket().on('start', (restaurants) => {
-      this.props.navigation.navigate('Round', {
-        results: restaurants,
-        host: this.state.host,
-        isHost: this.state.host == this.state.username,
-      })
+      if (restaurants) {
+        this.props.navigation.navigate('Round', {
+          results: restaurants,
+          host: this.state.host,
+          isHost: this.state.host == this.state.username,
+        })
+      } else {
+        // need to handle no restaurants returned
+      }
+    })
+
+    socket.getSocket().on('leave', () => {
+      if (this._isMounted) {
+        this.leaveGroup()
+      }
     })
 
     socket.getSocket().on('leave', () => {

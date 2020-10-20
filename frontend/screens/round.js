@@ -1,10 +1,10 @@
 import React from 'react'
-import { SafeAreaView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import PropTypes from 'prop-types'
 import Swiper from 'react-native-deck-swiper'
-import RoundCard from './roundCard.js'
-import socket from './socket.js'
+import PropTypes from 'prop-types'
+import RoundCard from '../cards/roundCard.js'
+import socket from '../apis/socket.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Bold'
@@ -144,14 +144,4 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: 'white',
   },
-
-  // Card area is now flexsized and takes 90% of the width of screen
-  // cardContainer: {
-  //   backgroundColor: hex,
-  //   borderRadius: 17,
-  //   height: '75%',
-  //   alignSelf: 'center',
-  //   width: '90%',
-  //   height: '80%',
-  // },
 })

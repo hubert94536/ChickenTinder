@@ -3,7 +3,7 @@ import { Image, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
-import socket from './socket.js'
+import socket from '../apis/socket.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'

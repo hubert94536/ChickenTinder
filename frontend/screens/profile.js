@@ -10,15 +10,15 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
+import { NAME,  PHOTO, USERNAME } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Swiper from 'react-native-swiper'
-import Alert from './alert.js'
-import accountsApi from './accountsApi.js'
-import facebookService from './facebookService.js'
+import Alert from '../modals/alert.js'
+import accountsApi from '../apis/accountsApi.js'
+import facebookService from '../apis/facebookService.js'
 import Friends from './friends.js'
-import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'

@@ -2,8 +2,8 @@ import React from 'react'
 import { Image, Text, View, TouchableHighlight } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
-import Alert from './alert.js'
-import friendsApi from './friendsApi.js'
+import Alert from '../modals/alert.js'
+import friendsApi from '../apis/friendsApi.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -47,6 +47,19 @@ export default class SearchCard extends React.Component {
         this.setState({ requested: 'Add' })
       })
       .catch(() => this.setState({ errorAlert: true }))
+  }
+
+  async deleteFriend() {
+    friendsApi
+      .removeFriendship(this.state.id)
+      .then(() => {
+        this.setState({ deleteFriend: false })
+        var filteredArray = this.props.total.filter((item) => {
+          return item.username !== this.props.username
+        })
+        this.props.press(this.props.id, filteredArray, true)
+      })
+      .catch((error) => this.setState({ errorAlert: true }))
   }
 
   async deleteFriend() {
@@ -135,7 +148,7 @@ export default class SearchCard extends React.Component {
           </View>
         )}
         {this.state.requested === 'Accepted' && this.state.renderOption && (
-          <TouchableHighlight>
+          <TouchableHighlight onPress={() => this.setState({deleteFriend: true})}>
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
               <Text
                 style={{
@@ -155,7 +168,7 @@ export default class SearchCard extends React.Component {
                   alignSelf: 'center',
                   margin: '8%',
                 }}
-                name="check-circle"
+                name='check-circle'
               />
             </View>
           </TouchableHighlight>
@@ -193,6 +206,16 @@ export default class SearchCard extends React.Component {
             buttonText="Close"
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
+          />
+        )}
+        {this.state.deleteFriend && (
+          <Alert
+            title="Are you sure?"
+            body={'You are about to remove @' + this.props.username + ' as a friend'}
+            button
+            buttonText="Delete"
+            press={() => this.deleteFriend()}
+            cancel={() => this.setState({ deleteFriend: false })}
           />
         )}
         {this.state.deleteFriend && (
