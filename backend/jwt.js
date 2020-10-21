@@ -34,7 +34,7 @@ const decodeToken = (token) => {
             "issuer": "Wechews"
         }
         var payload = jwt.verify(token, publicKey, options);
-        if (!(uid in payload)) throw "Invalid token";
+        if (!("uid" in payload)) throw "Invalid token";
         return res.status(200).send(payload.uid);
     } catch (error) {
         return res.status(500).send(error.message);
@@ -50,7 +50,7 @@ const verifyToken = (token, uid) => {
             "issuer": "Wechews"
         }
         var payload = jwt.verify(token, publicKey, options);
-        if (!(uid in payload)) throw "Invalid token";
+        if (!("uid" in payload)) throw "Invalid token";
         if (payload.uid != uid) return res.status(401).send("User mismatch");
         return res.status(200).send("Verified");
     } catch (error) {
