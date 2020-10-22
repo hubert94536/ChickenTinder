@@ -67,10 +67,10 @@ export default class Round extends React.Component {
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Icon
               name="angle-left"
-              style={screenStyles.text, { fontSize: 25, margin: '3%' }}
+              style={[screenStyles.text, { fontSize: 25, margin: '3%' }]}
             />
             <Text
-              style={screenStyles.text, {fontSize: 20, textAlign: 'left' }}
+              style={[screenStyles.text, {fontSize: 20, textAlign: 'left' }]}
             >
               {this.state.isHost ? 'End' : 'Leave'}
             </Text>
@@ -99,16 +99,16 @@ export default class Round extends React.Component {
         >
           <Icon
             name="chevron-left"
-            style={screenStyles.text, { fontSize: 18, marginRight: '5%' }}
+            style={[screenStyles.text, { fontSize: 18, marginRight: '5%' }]}
           />
           <Text
-            style={screenStyles.text, { fontSize: 20 }}
+            style={[screenStyles.text, { fontSize: 20 }]}
           >
             Swipe!
           </Text>
           <Icon
             name="chevron-right"
-            style={screenStyles.text, { fontSize: 18, marginLeft: '5%' }}
+            style={[screenStyles.text, { fontSize: 18, marginLeft: '5%' }]}
           />
         </View>
       </View>

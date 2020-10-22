@@ -12,7 +12,7 @@ import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 
 const hex = '#F25763'
-const font = 'CircularStd-Medium'
+const font = 'CircularStd-Bold'
 var memberList = []
 var myUsername = ''
 AsyncStorage.getItem(USERNAME).then((res) => {
@@ -175,7 +175,7 @@ export default class Group extends React.Component {
                 }
                 underlayColor="white"
               >
-                <Text style={this.state.leaveGroup ? styles.leaveTextPressed : styles.leaveText}>
+                <Text style={[styles.leaveText, this.state.leaveGroup ? {color: hex} : {color: 'white'}]}>
                   {this.state.host === this.state.username ? 'End' : 'Leave'}
                 </Text>
               </TouchableHighlight>
@@ -242,16 +242,16 @@ export default class Group extends React.Component {
                 onHideUnderlay={() => this.setState({start: false})}
                 onShowUnderlay={() => this.setState({start: true})}
                 onPress={() => this.start()}
-                style={[screenStyles.bigButton, styles.bigButton], this.state.start ? {opacity: 1} : {opacity: 0.5}}
+                style={[screenStyles.bigButton, styles.bigButton, this.state.start ? {opacity: 1} : {opacity: 0.5}]}
               >
                 <Text style={styles.buttonText}>Start Round</Text>
               </TouchableHighlight>
             )}
             {this.state.host !== this.state.username && (
               <TouchableHighlight
-                style={[screenStyles.bigButton, styles.bigButton], this.state.pressed ? {opacity: 1} : {opacity: 0.5}}
+                style={[screenStyles.bigButton, styles.bigButton, this.state.start ? {opacity: 1} : {opacity: 0.5}]}
               >
-                <Text style={this.state.start ? styles.pressedText : styles.buttonText}>
+                <Text style={styles.buttonText}>
                   {this.state.start ? 'Ready!' : 'Waiting...'}
                 </Text>
               </TouchableHighlight>
@@ -319,15 +319,6 @@ const styles = StyleSheet.create({
   },
   leaveText: {
     fontFamily: font,
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 20,
-    paddingTop: '2%',
-    paddingBottom: '2%',
-  },
-  leaveTextPressed: {
-    fontFamily: font,
-    color: hex,
     textAlign: 'center',
     fontSize: 20,
     paddingTop: '2%',
@@ -367,7 +358,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     fontSize: 30,
     fontWeight: 'bold',
-    fontFamily: font,
   },
   bottomText: {
     color: '#fff',
@@ -383,13 +373,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     width: '60%',
     marginTop: '3%',
-  },
-  pressedText: {
-    color: hex,
-    alignSelf: 'center',
-    fontSize: 30,
-    fontWeight: 'bold',
-    fontFamily: font,
   },
   top: {
     flex: 0.38,

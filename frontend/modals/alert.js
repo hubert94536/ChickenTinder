@@ -58,9 +58,9 @@ export default class Alert extends Component {
                   onHideUnderlay={() => this.setState({ pressed: false })}
                   onShowUnderlay={() => this.setState({ pressed: true })}
                   onPress={() => this.handlePress()}
-                  style={modalStyles.button, {marginBottom: '3%'}}
+                  style={[modalStyles.button, {marginBottom: '3%'}]}
                 >
-                  <Text style={this.state.pressed ? modalStyles.textPressed : modalStyles.text}>
+                  <Text style={[modalStyles.text, this.state.pressed ? {color: 'white'} : {color: hex}]}>
                     {this.props.buttonText}
                   </Text>
                 </TouchableHighlight>

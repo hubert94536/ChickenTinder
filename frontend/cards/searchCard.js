@@ -100,7 +100,7 @@ export default class SearchCard extends React.Component {
         {this.state.requested === 'Requested' && this.state.renderOption && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Text
-              style={imgStyles.text, { marginRight: 25 }}
+              style={[imgStyles.text, { marginRight: 25 }]}
             >
               Requested
             </Text>
@@ -125,7 +125,7 @@ export default class SearchCard extends React.Component {
               Add
             </Text>
             <Icon
-              style={imgStyles.icon, { margin: '8%' }}
+              style={[imgStyles.icon, { margin: '8%' }]}
               onPress={() => this.addFriend()}
               name="plus-circle"
             />
@@ -140,7 +140,7 @@ export default class SearchCard extends React.Component {
                 Friends
               </Text>
               <Icon
-                style={imgStyles.icon, { margin: '8%' }}
+                style={[imgStyles.icon, { margin: '8%' }]}
                 name='check-circle'
               />
             </View>
@@ -149,12 +149,12 @@ export default class SearchCard extends React.Component {
         {this.state.requested === 'Pending Request' && this.state.renderOption && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Icon
-              style={imgStyles.icon, { margin: '3%' }}
+              style={[imgStyles.icon, { margin: '3%' }]}
               name="check-circle"
               onPress={() => this.acceptFriend()}
             />
             <Icon
-              style={imgStyles.icon, { margin: '3%' }}
+              style={[imgStyles.icon, { margin: '3%' }]}
               name="times-circle"
               onPress={() => this.rejectFriend()}
             />

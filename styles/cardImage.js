@@ -6,14 +6,14 @@ export default StyleSheet.create({
         borderRadius: 63, height: 60, width: 60, margin: '3%'
     },
     text: {
-        fontFamily: font,
-        color: hex,
+        fontFamily: 'CircularStd-Bold',
+        color: '#F25763',
         fontSize: 15,
         alignSelf: 'center',
     },
     icon: {
-        fontFamily: font,
-        color: hex,
+        fontFamily: 'CircularStd-Bold',
+        color: '#F25763',
         fontSize: 35,
         alignSelf: 'center',
     }

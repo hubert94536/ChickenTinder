@@ -7,7 +7,7 @@ import accountsApi from '../apis/accountsApi.js'
 import screenStyles from '../../styles/screenStyles.js'
 
 const hex = '#F25763'
-const font = 'CircularStd-Medium'
+const font = 'CircularStd-Bold'
 
 class Username extends React.Component {
   constructor(props) {
@@ -76,7 +76,7 @@ class Username extends React.Component {
   render () {
     return (
       <View style={styles.mainContainer}>
-        <Text style={screenStyles.text, styles.header}>'Chews' a username!</Text>
+        <Text style={[screenStyles.text, screenStyles.title, styles.header]}>'Chews' a username!</Text>
         <View style={{ marginTop: '35%' }}>
           <TextInput
             style={screenStyles.text, styles.input}
@@ -93,9 +93,9 @@ class Username extends React.Component {
             activeOpacity={1}
             underlayColor={hex}
             onPress={() => this.handleClick()}
-            style={screenStyles.text, styles.button}
+            style={[screenStyles.medButton, styles.button, this.state.pressed ? {borderColor: 'white'} : {borderColor: hex}]}
           >
-            <Text style={this.state.pressed ? styles.yesPress : styles.noPress}>Enter</Text>
+            <Text style={[screenStyles.medButtonText, this.state.pressed ? {color: hex} : {color: 'white'}]}>Enter</Text>
           </TouchableHighlight>
         </View>
         {this.state.errorAlert && (
@@ -125,13 +125,11 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   header: {
-    fontSize: 40,
     marginTop: '8%',
     marginLeft: '3%',
-    textAlign: 'left'
   },
   input: {
     fontSize: 25,
@@ -142,24 +140,10 @@ const styles = StyleSheet.create({
     width: '70%'
   },
   button: {
-    borderRadius: 25,
-    borderWidth: 2.5,
     paddingVertical: 10,
     paddingHorizontal: 12,
     width: '70%',
-    alignSelf: 'center',
-  },
-  yesPress: {
-    fontFamily: font,
-    alignSelf: 'center',
-    color: '#fff',
-    fontSize: 20,
-  },
-  noPress: {
-    fontFamily: font,
-    alignSelf: 'center',
-    color: hex,
-    fontSize: 20,
+    borderColor: hex
   },
 })
 

@@ -13,30 +13,43 @@ export default StyleSheet.create({
         fontFamily: 'CircularStd-Bold',
         color: '#F25763'
     },
-    profileInput: {
+    input: {
         fontSize: 20,
         margin: 0,
         padding: 0
     },
-    profileSelectedText: {
-        fontFamily: 'CircularStd-Bold',
-        fontSize: 17,
-        paddingLeft: '3%',
-        paddingRight: '3%',
-        paddingTop: '0.5%',
-        paddingBottom: '0.5%',
-    },
-    profileSelected: {
-        borderRadius: 40,
+    smallButton: {
+        borderRadius: 45,
         borderColor: '#F25763',
-        borderWidth: 2,
-        marginLeft: '5%'
+        borderWidth: 2
     },
-    profileChangeText: {
+    smallButtonText: {
         fontFamily: 'CircularStd-Bold',
         textAlign: 'center',
         fontSize: 17,
-        paddingTop: '2.5%',
-        paddingBottom: '2.5%',
-    }
+        paddingTop: '0.5%',
+        paddingBottom: '0.5%',
+        // paddingTop: '2.5%',
+        // paddingBottom: '2.5%',
+    },
+    title: {
+        textAlign: 'center',
+        fontSize: 45,
+    },
+    icons: {
+        color: '#F25763',
+        fontSize: 27,
+        fontFamily: 'CircularStd-Bold'
+    },
+    medButton: {
+        borderRadius: 30,
+        borderWidth: 2.5,
+        alignSelf:'center'
+    },
+    medButtonText: {
+        fontFamily: 'CircularStd-Bold',
+        fontSize: 20,
+        textAlign: 'center'
+    },
+
 })

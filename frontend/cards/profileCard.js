@@ -99,13 +99,13 @@ export default class ProfileCard extends React.Component {
               }}
             >
               <Text
-                style={imgStyles.text, {color: this.state.pressed ? 'white' : 'black'}}
+                style={[imgStyles.text, {color: this.state.pressed ? 'white' : 'black'}]}
               >
                 Accept
               </Text>
             </TouchableHighlight>
             <Icon
-              style={imgStyles.icon, { margin: '5%' }}
+              style={[imgStyles.icon, { margin: '5%' }]}
               name="times-circle"
               onPress={() => {
                 var filteredArray = this.props.total.filter((item) => {

@@ -35,10 +35,10 @@ export default class Match extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.general, { fontSize: 65, marginRight: '10%',  marginLeft: '10%'}}>It's A Match!</Text>
-        <Icon name="thumbs-up" style={styles.general, {fontSize: 50}} />
-        <Text style={styles.general, {fontSize: 20}}>Your group has selected:</Text>
-        <Text style={styles.general, {fontSize: 30}}>{this.state.restaurant.name}</Text>
+        <Text style={[styles.general, { fontSize: 65, marginRight: '10%',  marginLeft: '10%'}]}>It's A Match!</Text>
+        <Icon name="thumbs-up" style={[styles.general, {fontSize: 50}]} />
+        <Text style={[styles.general, {fontSize: 20}]}>Your group has selected:</Text>
+        <Text style={[styles.general, {fontSize: 30}]}>{this.state.restaurant.name}</Text>
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
@@ -58,15 +58,15 @@ export default class Match extends React.Component {
         </MapView>
         <TouchableHighlight
           underlayColor="white"
-          style={styles.endButton}
+          style={[screenStyles.medButton, { borderColor: 'white', width: '45%' }]}
           onPress={() => this.endRound()}
         >
-          <Text style={styles.endText}>
+          <Text style={[styles.endText, screenStyles.medButtonText, {color: 'white', padding: '6%'}]}>
             End Round
           </Text>
         </TouchableHighlight>
         <TouchableHighlight
-          style={styles.yelpButton}
+          style={[screenStyles.medButton, styles.yelpButton]}
           onPress={() => Linking.openURL(this.state.restaurant.url)}
         >
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
@@ -97,31 +97,13 @@ const styles = StyleSheet.create({
   map: {
     alignSelf: 'center',
     height: Dimensions.get('window').width * 0.55,
-    width: Dimensions.get('window').width * 0.55
-  },
-  endButton: {
-    borderColor: 'white',
-    borderWidth: 2.5,
-    borderRadius: 30,
-    alignSelf: 'center',
-    width: '45%',
-  },
-  endText: {
-    fontFamily: font,
-    color: 'white',
-    fontSize: 20,
-    textAlign: 'center',
-    padding: '6%',
-    fontWeight: 'bold',
+    width: Dimensions.get('window').width * 0.55,
   },
   yelpButton: {
     backgroundColor: 'white',
     width: '30%',
     height: '5%',
-    borderWidth: 2.5,
     borderColor: 'white',
-    borderRadius: 30,
-    alignSelf: 'center'
   },
   yelpText: {
     fontFamily: font,

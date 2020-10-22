@@ -54,7 +54,7 @@ export default class ChooseCard extends React.Component {
               Added
             </Text>
             <Icon
-              style={imgStyles.icon, {  margin: '8%' }}
+              style={[imgStyles.icon, {  margin: '8%' }]}
               name="check-circle"
             />
           </View>
@@ -68,7 +68,7 @@ export default class ChooseCard extends React.Component {
                 Add
               </Text>
               <Icon
-                style={imgStyles.icon, { margin: '8%' }}
+                style={[imgStyles.icon, { margin: '8%' }]}
                 name="plus-circle"
                 onPress={() => {
                   this.setState({added: true})

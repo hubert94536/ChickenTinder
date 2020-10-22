@@ -106,10 +106,10 @@ class Home extends React.Component {
           onHideUnderlay={() => this.setState({ createPressed: false })}
           activeOpacity={1}
           underlayColor="#fff"
-          style={styles.button}
+          style={[screenStyles.bigButton, styles.button ]}
           onPress={() => this.createGroup()}
         >
-          <Text style={this.state.createPressed ? styles.yesPress : styles.noPress}>
+          <Text style={[styles.buttonText, this.state.createPressed ? {color: '#F25763'} : {color: 'white'}]}>
             Create Group
           </Text>
         </TouchableHighlight>
@@ -118,10 +118,10 @@ class Home extends React.Component {
           onHideUnderlay={() => this.setState({ profilePressed: false })}
           activeOpacity={1}
           underlayColor="#fff"
-          style={styles.button}
+          style={[screenStyles.bigButton, styles.button ]}
           onPress={() => this.props.navigation.navigate('Profile')}
         >
-          <Text style={this.state.profilePressed ? styles.yesPress : styles.noPress}>
+          <Text style={[styles.buttonText, this.state.profilePressed ? {color: '#F25763'} : {color: 'white'}]}>
             My Profile
           </Text>
         </TouchableHighlight>
@@ -139,12 +139,12 @@ class Home extends React.Component {
           onHideUnderlay={() => this.setState({ searchPressed: false })}
           activeOpacity={1}
           underlayColor="#fff"
-          style={screenStyles.bigButton, {  height: 65, margin: '3%', flexDirection: 'column', justifyContent: 'center'} }
+          style={[screenStyles.bigButton, styles.button ]}
           onPress={() => {
             this.getFriends()
           }}
         >
-          <Text style={this.state.searchPressed ? styles.yesPress : styles.noPress}>
+          <Text style={[styles.buttonText, this.state.searchPressed ? {color: '#F25763'} : {color: 'white'}]}>
             Find Friends
           </Text>
         </TouchableHighlight>
@@ -163,16 +163,11 @@ class Home extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  yesPress: {
-    textAlign: 'center',
-    color: '#F25763',
-    fontFamily: 'CircularStd-Medium',
-    fontSize: 27,
-    fontWeight: 'bold',
+  button: {
+    height: 65, margin: '3%', flexDirection: 'column', justifyContent: 'center'
   },
-  noPress: {
+  buttonText: {
     textAlign: 'center',
-    color: '#fff',
     fontFamily: 'CircularStd-Medium',
     fontSize: 27,
     fontWeight: 'bold',

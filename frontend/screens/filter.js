@@ -117,8 +117,8 @@ export default class FilterSelector extends React.Component {
       distance: 5,
       location: null,
       useLocation: false,
-      hour: Date().getUTCHours(),
-      minute: Date().getUTCMinutes(),
+      hour: date.getUTCHours(),
+      minute: date.getUTCMinutes(),
       lat: 0,
       long: 0,
       selectedCuisine: [],
@@ -282,26 +282,26 @@ export default class FilterSelector extends React.Component {
     return (
       <View style={styles.mainContainer}>
         <View style={styles.titleStyle}>
-          <Text style={screenStyles.text, {fontSize: 28}}>
+          <Text style={[screenStyles.text, {fontSize: 28}]}>
             {this.state.isHost ? 'Group Settings' : 'Set Your Filters'}
           </Text>
-          {this.state.isHost && <Text style={screenStyles.text, styles.titleSub}>(only visible to host)</Text>}
+          {this.state.isHost && <Text style={[screenStyles.text, styles.titleSub]}>(only visible to host)</Text>}
         </View>
         <ScrollView>
           {this.state.isHost && (
             <View style={{ margin: '5%' }}>
-              <Text style={styles.header}>Members</Text>
+              <Text style={[screenStyles.text, styles.header]}>Members</Text>
               <TouchableHighlight
                 onPress={() => this.setState({ chooseFriends: true })}
                 underlayColor={hex}
-                style={screenStyles.text, styles.touchableFriends}
+                style={[screenStyles.text, screenStyles.medButton, {borderColor: hex,  marginTop: '5%'}]}
               >
-                <Text style={styles.touchableFriendsText}>Select from Friends</Text>
+                <Text style={[screenStyles.text, styles.touchableFriendsText]}>Select from Friends</Text>
               </TouchableHighlight>
             </View>
           )}
           <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '2%' }}>
-            <Text style={styles.header}>Cuisines</Text>
+            <Text style={[screenStyles.text, styles.header]}>Cuisines</Text>
             <TagsView
               all={tagsCuisine}
               selected={this.state.selectedCuisine}
@@ -323,7 +323,7 @@ export default class FilterSelector extends React.Component {
                   justifyContent: 'space-between',
                 }}
               >
-                <Text style={styles.header}>Use Current Location:</Text>
+                <Text style={[screenStyles.text, styles.header]}>Use Current Location:</Text>
                 <Switch
                   thumbColor={hex}
                   trackColor={{ true: '#eba2a8' }}
@@ -350,7 +350,7 @@ export default class FilterSelector extends React.Component {
           {this.state.isHost && (
             <View style={{ margin: '5%' }}>
               <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.header}>Distance</Text>
+                <Text style={[screenStyles.text, styles.header]}>Distance</Text>
                 <Text
                   style={{
                     color: hex,
@@ -381,7 +381,7 @@ export default class FilterSelector extends React.Component {
           )}
           {this.state.isHost && (
             <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '2%' }}>
-              <Text style={styles.header}>Open at:</Text>
+              <Text style={[screenStyles.text, styles.header]}>Open at:</Text>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <DropDownPicker
                   selectedLabelStyle={{
@@ -443,7 +443,7 @@ export default class FilterSelector extends React.Component {
           )}
           {this.state.isHost && (
             <View style={{ margin: '5%' }}>
-              <Text style={styles.header}>Price</Text>
+              <Text style={[screenStyles.text, styles.header]}>Price</Text>
               <TagsView
                 all={tagsPrice}
                 selected={this.state.selectedPrice}
@@ -453,7 +453,7 @@ export default class FilterSelector extends React.Component {
             </View>
           )}
           <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '1%' }}>
-            <Text style={screenStyles.text, styles.header}>Dietary Restrictions</Text>
+            <Text style={[screenStyles.text, styles.header]}>Dietary Restrictions</Text>
             <TagsView
               all={tagsDiet}
               selected={this.state.selectedRestriction}
@@ -464,10 +464,10 @@ export default class FilterSelector extends React.Component {
         </ScrollView>
         <TouchableHighlight
           underlayColor={hex}
-          style={styles.touchable}
+          style={[screenStyles.medButton, styles.touchable]}
           onPress={() => this.evaluateFilters()}
         >
-          <Text style={screenStyles.text, styles.nextTitle}>{this.state.isHost ? "Let's Go" : 'Submit Filters'}</Text>
+          <Text style={[screenStyles.text, styles.nextTitle]}>{this.state.isHost ? "Let's Go" : 'Submit Filters'}</Text>
         </TouchableHighlight>
         {(this.state.locationAlert || this.state.formatAlert || this.state.chooseFriends) && (
           <BlurView
@@ -536,13 +536,6 @@ const styles = StyleSheet.create({
     margin: '1%',
     marginTop: '2%',
   },
-  touchableFriends: {
-    borderWidth: 2,
-    borderRadius: 25,
-    borderColor: hex,
-    alignSelf: 'center',
-    marginTop: '5%',
-  },
   touchableFriendsText: {
     fontSize: 18,
     alignSelf: 'center',
@@ -558,10 +551,7 @@ const styles = StyleSheet.create({
   },
   touchable: {
     width: '50%',
-    alignSelf: 'center',
     borderColor: hex,
-    borderWidth: 2,
-    borderRadius: 25,
     justifyContent: 'center',
     margin: '5%',
   },

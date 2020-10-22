@@ -91,7 +91,7 @@ export default class Invite extends React.Component {
                 onPress={() => this.handleAccept()}
                 style={modalStyles.button}
               >
-                <Text style={this.state.pressed ? modalStyles.textPressed : modalStyles.text}>Go</Text>
+                <Text style={[modalStyles.text, this.state.pressed ? {color: 'white'} : {color: hex}]}>Go</Text>
               </TouchableHighlight>
             </View>
           </View>
