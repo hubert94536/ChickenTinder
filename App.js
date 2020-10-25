@@ -12,6 +12,8 @@ import Round from './frontend/screens/round.js'
 import Search from './frontend/screens/search.js'
 import Username from './frontend/screens/username.js'
 import UserProfileView from './frontend/screens/profile.js'
+import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
+
 
 export default class App extends React.Component {
   constructor() {
@@ -59,6 +61,9 @@ export default class App extends React.Component {
           Invite: {
             screen: Invite,
           },
+          Phone: {
+            screen: PhoneAuthScreen
+          }
         },
         {
           initialRouteName: start,
@@ -75,56 +80,13 @@ export default class App extends React.Component {
     return this.state.appContainer
   }
 
-  componentDidMount() {
-    var start
-    var unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-      if (user === null) {
-        start = 'Login'
-      } else {
-        start = 'Home'
-      }
-      var RootStack = createStackNavigator(
-        {
-          Home: {
-            screen: Home,
-          },
-          Login: {
-            screen: Login,
-          },
-          Username: {
-            screen: Username,
-          },
-          Profile: {
-            screen: UserProfileView,
-          },
-          Group: {
-            screen: Group,
-          },
-          Round: {
-            screen: Round,
-          },
-          Match: {
-            screen: Match,
-          },
-          Search: {
-            screen: Search,
-          },
-          Invite: {
-            screen: Invite,
-          },
-        },
-        {
-          initialRouteName: start,
-          headerMode: 'none',
-        },
-      )
-      unsubscribe()
-      var AppContainer = createAppContainer(RootStack)
-      this.setState({ appContainer: <AppContainer /> })
-    })
-  }
+// import React from 'react'
+// import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
 
-  render() {
-    return this.state.appContainer
-  }
-}
+// export default class App extends React.Component{
+//   render () {
+//     return (
+//       <PhoneAuthScreen/>
+//     )
+//   }
+// }
