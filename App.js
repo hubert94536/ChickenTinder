@@ -79,7 +79,6 @@ export default class App extends React.Component {
   render() {
     return this.state.appContainer
   }
-}
 
 // import React from 'react'
 // import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'

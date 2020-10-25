@@ -60,7 +60,7 @@ export default class Round extends React.Component {
     this.props.navigation.navigate('Home')
   }
 
-  render () {
+  render() {
     return (
       <View style={styles.mainContainer}>
         <TouchableHighlight onPress={() => this.endGroup()}>

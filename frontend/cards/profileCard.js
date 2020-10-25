@@ -22,7 +22,7 @@ export default class ProfileCard extends React.Component {
   }
 
   // accept friend request and modify card
-  async acceptFriend () {
+  async acceptFriend() {
     friendsApi
       .acceptFriendRequest(this.state.id)
       .then(() => {
@@ -32,7 +32,7 @@ export default class ProfileCard extends React.Component {
   }
 
   // delete friend and modify view
-  async deleteFriend () {
+  async deleteFriend() {
     friendsApi
       .removeFriendship(this.state.id)
       .then(() => {

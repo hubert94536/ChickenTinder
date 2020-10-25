@@ -24,7 +24,7 @@ export default class Friends extends React.Component {
   }
 
   //  gets the users friends
-  async getFriends () {
+  async getFriends() {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
       .getFriends()
@@ -43,7 +43,7 @@ export default class Friends extends React.Component {
   }
 
   //  searches the users friends by username
-  searchFilterFunction (text) {
+  searchFilterFunction(text) {
     this.setState({
       search: text,
     })

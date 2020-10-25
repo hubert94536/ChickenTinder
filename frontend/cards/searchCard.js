@@ -63,7 +63,7 @@ export default class SearchCard extends React.Component {
       .catch((error) => this.setState({ errorAlert: true }))
   }
 
-  async deleteFriend () {
+  async deleteFriend() {
     friendsApi
       .removeFriendship(this.state.id)
       .then(() => {
@@ -73,7 +73,7 @@ export default class SearchCard extends React.Component {
         })
         this.props.press(this.props.id, filteredArray, true)
       })
-      .catch((error) => this.setState({errorAlert: true}))
+      .catch((error) => this.setState({ errorAlert: true }))
   }
 
   render() {
@@ -179,7 +179,7 @@ export default class SearchCard extends React.Component {
             cancel={() => this.setState({ deleteFriend: false })}
           />
         )}
-                {this.state.deleteFriend && (
+        {this.state.deleteFriend && (
           <Alert
             title="Are you sure?"
             body={'You are about to remove @' + this.props.username + ' as a friend'}

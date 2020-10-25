@@ -108,6 +108,6 @@ const styles = StyleSheet.create({
   yelpText: {
     fontFamily: font,
     textAlign: 'center',
-    padding: '5%'
-  }
+    padding: '5%',
+  },
 })

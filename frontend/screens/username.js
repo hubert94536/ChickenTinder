@@ -25,18 +25,18 @@ class Username extends React.Component {
     }
   }
 
-  // closes alert
-  closeTaken () {
+  // closes taken alert
+  closeTaken() {
     this.setState({ takenAlert: false })
   }
 
-  // closes alert
-  closeError () {
+  // closes error alert
+  closeError() {
     this.setState({ errorAlert: false })
   }
 
   // gets users information once component mounts
-  async componentDidMount () {
+  async componentDidMount() {
     this.setState({
       name: await AsyncStorage.getItem(NAME),
       uid: await AsyncStorage.getItem(UID),
@@ -73,7 +73,7 @@ class Username extends React.Component {
       })
   }
 
-  render () {
+  render() {
     return (
       <View style={styles.mainContainer}>
         <Text style={[screenStyles.text, screenStyles.title, styles.header]}>'Chews' a username!</Text>
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     borderBottomColor: hex,
     borderBottomWidth: 2.5,
     margin: '3%',
-    width: '70%'
+    width: '70%',
   },
   button: {
     paddingVertical: 10,
