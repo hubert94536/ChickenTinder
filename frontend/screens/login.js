@@ -43,6 +43,18 @@ export default class Login extends React.Component {
         <Text style={[screenStyles.text, screenStyles.title, {marginTop: '40%'}]}>Welcome!</Text>
         <Text style={[screenStyles.text, screenStyles.medButtonText]}>Let's get goin'.</Text>
         <TouchableHighlight
+          onShowUnderlay={() => this.setState({ phonePressed: true })}
+          onHideUnderlay={() => this.setState({ phonePressed: false })}
+          activeOpacity={1}
+          underlayColor={hex}
+          onPress={() => this.props.navigation.navigate('Phone')}
+          style={[screenStyles.medButton, styles.button, {borderColor: hex}]}
+        >
+          <Text style={[styles.buttonText, this.state.phonePressed ? {color: 'white'} : {color: hex}]}>
+            Phone Number Login
+          </Text>
+        </TouchableHighlight>
+        <TouchableHighlight
           onShowUnderlay={() => this.setState({ pressed: true })}
           onHideUnderlay={() => this.setState({ pressed: false })}
           activeOpacity={1}

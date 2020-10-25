@@ -12,6 +12,8 @@ import Round from './frontend/screens/round.js'
 import Search from './frontend/screens/search.js'
 import Username from './frontend/screens/username.js'
 import UserProfileView from './frontend/screens/profile.js'
+import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
+
 
 export default class App extends React.Component {
   constructor() {
@@ -59,6 +61,9 @@ export default class App extends React.Component {
           Invite: {
             screen: Invite,
           },
+          Phone: {
+            screen: PhoneAuthScreen
+          }
         },
         {
           initialRouteName: start,
@@ -77,15 +82,12 @@ export default class App extends React.Component {
 }
 
 // import React from 'react'
-// import FilterSelector from './filter.js'
-// import Group from './group.js'
-// import RestaurantCard from './round.js'
-// import Match from './match.js'
+// import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
 
 // export default class App extends React.Component{
 //   render () {
 //     return (
-//       <Match/>
+//       <PhoneAuthScreen/>
 //     )
 //   }
 // }

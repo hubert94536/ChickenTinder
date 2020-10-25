@@ -79,7 +79,7 @@ class Username extends React.Component {
         <Text style={[screenStyles.text, screenStyles.title, styles.header]}>'Chews' a username!</Text>
         <View style={{ marginTop: '35%' }}>
           <TextInput
-            style={screenStyles.text, styles.input}
+            style={[screenStyles.text, styles.input]}
             textAlign="left"
             placeholder="Enter a username"
             onChangeText={(username) => {
@@ -95,7 +95,7 @@ class Username extends React.Component {
             onPress={() => this.handleClick()}
             style={[screenStyles.medButton, styles.button, this.state.pressed ? {borderColor: 'white'} : {borderColor: hex}]}
           >
-            <Text style={[screenStyles.medButtonText, this.state.pressed ? {color: hex} : {color: 'white'}]}>Enter</Text>
+            <Text style={[screenStyles.medButtonText, this.state.pressed ? {color: 'white'} : {color: hex}]}>Enter</Text>
           </TouchableHighlight>
         </View>
         {this.state.errorAlert && (
