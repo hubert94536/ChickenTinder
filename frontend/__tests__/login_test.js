@@ -3,7 +3,7 @@ import React from 'react';
 import Login from '../screens/login';
 import renderer from 'react-test-renderer';
 // import accountsApi from '../apis/accountsApi.js'
-import MockAsyncStorage from 'mock-async-storage';
+// import MockAsyncStorage from 'mock-async-storage';
 import { Item } from 'react-native-paper/lib/typescript/src/components/List/List';
 // import facebookService from '../apis/facebookService.js'
  
@@ -12,19 +12,21 @@ import { Item } from 'react-native-paper/lib/typescript/src/components/List/List
 const facebookService = require('../apis/facebookService.js')
 jest.mock('../apis/facebookService.js')
 
-// it('returns username', async () => {
-//   const username = 'Username'
-//   retVal = facebookService.loginWithFacebook.mockResolvedValue(username);
-
-//   // const retVal = await facebookService.loginWithFacebook();
-//   expect(retVal).toEqual('Username');
-// });
-
-test('renders correctly', () => {
-    facebookService.loginWithFacebook.mockResolvedValue('Username')
-    const tree = renderer.create(<Login />).toJSON();
-    expect(tree).toMatchSnapshot();
+test('should return username', () => {
+  
+  facebookService.loginWithFacebook().then(retVal => {
+    expect(retVal).toEqual('Username');
   });
+
+  // const retVal = await facebookService.loginWithFacebook();
+  
+});
+
+// test('renders correctly', () => {
+//     // facebookService.loginWithFacebook.mockResolvedValue('Username')
+//     const tree = renderer.create(<Login />).toJSON();
+//     expect(tree).toMatchSnapshot();
+//   });
 
 // import 'react-native';
 // import MockAsyncStorage from 'mock-async-storage'
