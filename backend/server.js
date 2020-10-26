@@ -3,6 +3,7 @@ const io = require('socket.io')()
 const bodyParser = require('body-parser')
 const accounts = require('./accountsQueries.js')
 const friends = require('./friendsQueries.js')
+const auth = require('./auth.js')
 const http = require('http')
 
 const app = express()
@@ -18,6 +19,10 @@ app.use(
     extended: true,
   }),
 )
+// uncomment below once front-end is set up
+// app.use(auth.decodeJWT)
+// app.use(auth.isAuthenticated)
+
 // if development mode, allow self-signed ssl
 if (app.get('env') === 'development') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'

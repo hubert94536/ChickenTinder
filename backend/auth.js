@@ -1,17 +1,17 @@
-//Tokens used only for authorizing API Requests
+// Tokens used only for authorizing API Requests
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
 
-//TODO: Store private and public keys in files and replace path with their paths
 var privateKey = process.env.PRIVATE_KEY;
 var publicKey = process.env.PUBLIC_KEY;
 
-//TODO: Decide on token algorithm, TTL, and (optional) audience
-//TODO: Most API calls will have to be verified (so must send token and possibly uid)
-//TODO: Figure out when token is generated (on login, ...) and how to re-generate token if expired
+// TODO: Most API calls will have to be verified (so must send token and possibly uid)
+// TODO: Implement Refresh Token generation and validation (for generating access tokens)
 
-//Generate and returns user token
-const generateToken = (uid) => {
+
+// Generate and returns user token
+// Use only with login or refresh - no independent api endpoint
+const generateJWT = (uid) => {
     try {
         var payload = {
             uid: uid
@@ -28,8 +28,12 @@ const generateToken = (uid) => {
     }
 }
 
-//Decodes token and returns user id
-const decodeToken = (token) => {
+// Middleware: Decodes token and returns user id
+// JWT MUST be attached to Access-Token for every request header 
+// Notes that requests cannot have a pre-set 'uid' in their body
+const decodeJWT = (req, res, next) => {
+    const token = req.header("Access-Token")
+    if (!token) return next();
     try{
         var options = {
             algorithms: ["RS256"],
@@ -38,35 +42,25 @@ const decodeToken = (token) => {
             audience: "https://wechews.herokuapp.com"
         }
         var payload = jwt.verify(token, publicKey, options);
-        if (!("uid" in payload)) throw "Invalid token";
-        return payload.uid;
+        // consider checking db to see if uid exists
+        req.uid = payload.uid
+        return next();
     } catch (error) {
-        throw error;
+        return next();
     }
 }
 
-//Decodes token and checks if token matches uid
-const verifyToken = (token, uid) => {
-    try{
-        var options = {
-            "algorithms": ["RS256"],
-            "maxAge": "1d",
-            "issuer": "Wechews",
-            "audience": "https://wechews.herokuapp.com"
-        }
-        var payload = jwt.verify(token, publicKey, options);
-        if (!("uid" in payload)) throw "Invalid token";
-        if (payload.uid != uid) throw "User mismatch";
-        return "Verified";
-    } catch (error) {
-        throw error;
-    }
+// Middleware: Checks if user has been authenticated
+const isAuthenticated = (req, res, next) => {
+    if (req.uid) return next();
+    res.status(401);
+    res.send('User not authenticated')
 }
 
-//Import these functions into relevant backend files - do not make these directly accessible by api call
-//Store user token in async storage -- find a way to refresh once token expires
+// Import these functions into relevant backend files - do not make these directly accessible by api call
+// Store refresh token and access token in async storage -- if refresh token expires, logout
 module.exports = {
-    generateToken,
-    decodeToken,
-    verifyToken
+    generateJWT,
+    decodeJWT,
+    isAuthenticated
 }
