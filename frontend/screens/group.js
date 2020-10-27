@@ -10,7 +10,6 @@ import GroupCard from '../cards/groupCard.js'
 import FilterSelector from './filter.js'
 import socket from '../apis/socket.js'
 
-
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
 var memberList = []

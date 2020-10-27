@@ -80,8 +80,8 @@ const Friends = sequelize.define('friends', {
 
 Friends.belongsTo(Accounts, { foreignKey: 'f_info', foreignKeyConstraint: true })
 
-// sequelize.sync({ force: true }).then(() => {
-//   console.log('Friend model was synchronized successfully.')
-// })
+/* sequelize.sync({ force: true }).then(() => {
+   console.log('Friend model was synchronized successfully.')
+ }) */
 
 module.exports = { Accounts, Friends }
