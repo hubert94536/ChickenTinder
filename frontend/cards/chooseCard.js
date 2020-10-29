@@ -69,7 +69,7 @@ export default class ChooseCard extends React.Component {
           </View>
         )}
         {!this.state.added && (
-          <TouchableHighlight >
+          <TouchableHighlight>
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
               <Text
                 style={{
@@ -91,9 +91,9 @@ export default class ChooseCard extends React.Component {
                 }}
                 name="plus-circle"
                 onPress={() => {
-                  this.setState({added: true})
-                  this.sendInvite()}
-                }
+                  this.setState({ added: true })
+                  this.sendInvite()
+                }}
               />
             </View>
           </TouchableHighlight>

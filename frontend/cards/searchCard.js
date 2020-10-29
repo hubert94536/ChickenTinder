@@ -148,7 +148,7 @@ export default class SearchCard extends React.Component {
           </View>
         )}
         {this.state.requested === 'Accepted' && this.state.renderOption && (
-          <TouchableHighlight onPress={() => this.setState({deleteFriend: true})}>
+          <TouchableHighlight onPress={() => this.setState({ deleteFriend: true })}>
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
               <Text
                 style={{
@@ -168,7 +168,7 @@ export default class SearchCard extends React.Component {
                   alignSelf: 'center',
                   margin: '8%',
                 }}
-                name='check-circle'
+                name="check-circle"
               />
             </View>
           </TouchableHighlight>
