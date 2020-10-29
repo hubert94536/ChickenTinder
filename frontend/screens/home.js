@@ -7,6 +7,7 @@ import Alert from '../modals/alert.js'
 import friendsApi from '../apis/friendsApi.js'
 import Invite from '../modals/invite.js'
 import socket from '../apis/socket.js'
+import screenStyles from '../../styles/screenStyles.js'
 
 var img = ''
 var name = ''
@@ -105,10 +106,10 @@ class Home extends React.Component {
           onHideUnderlay={() => this.setState({ createPressed: false })}
           activeOpacity={1}
           underlayColor="#fff"
-          style={styles.button}
+          style={[screenStyles.bigButton, styles.button ]}
           onPress={() => this.createGroup()}
         >
-          <Text style={this.state.createPressed ? styles.yesPress : styles.noPress}>
+          <Text style={[styles.buttonText, this.state.createPressed ? {color: '#F25763'} : {color: 'white'}]}>
             Create Group
           </Text>
         </TouchableHighlight>
@@ -117,10 +118,10 @@ class Home extends React.Component {
           onHideUnderlay={() => this.setState({ profilePressed: false })}
           activeOpacity={1}
           underlayColor="#fff"
-          style={styles.button}
+          style={[screenStyles.bigButton, styles.button ]}
           onPress={() => this.props.navigation.navigate('Profile')}
         >
-          <Text style={this.state.profilePressed ? styles.yesPress : styles.noPress}>
+          <Text style={[styles.buttonText, this.state.profilePressed ? {color: '#F25763'} : {color: 'white'}]}>
             My Profile
           </Text>
         </TouchableHighlight>
@@ -138,12 +139,12 @@ class Home extends React.Component {
           onHideUnderlay={() => this.setState({ searchPressed: false })}
           activeOpacity={1}
           underlayColor="#fff"
-          style={styles.button}
+          style={[screenStyles.bigButton, styles.button ]}
           onPress={() => {
             this.getFriends()
           }}
         >
-          <Text style={this.state.searchPressed ? styles.yesPress : styles.noPress}>
+          <Text style={[styles.buttonText, this.state.searchPressed ? {color: '#F25763'} : {color: 'white'}]}>
             Find Friends
           </Text>
         </TouchableHighlight>
@@ -163,26 +164,10 @@ class Home extends React.Component {
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 40,
-    borderColor: '#fff',
-    borderWidth: 2,
-    width: '65%',
-    height: 65,
-    alignSelf: 'center',
-    margin: '3%',
-    flexDirection: 'column',
-    justifyContent: 'center',
+    height: 65, margin: '3%', flexDirection: 'column', justifyContent: 'center'
   },
-  yesPress: {
+  buttonText: {
     textAlign: 'center',
-    color: '#F25763',
-    fontFamily: 'CircularStd-Medium',
-    fontSize: 27,
-    fontWeight: 'bold',
-  },
-  noPress: {
-    textAlign: 'center',
-    color: '#fff',
     fontFamily: 'CircularStd-Medium',
     fontSize: 27,
     fontWeight: 'bold',

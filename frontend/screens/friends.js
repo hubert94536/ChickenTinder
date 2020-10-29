@@ -5,6 +5,7 @@ import { SearchBar } from 'react-native-elements'
 import Alert from '../modals/alert.js'
 import ProfileCard from '../cards/profileCard.js'
 import friendsApi from '../apis/friendsApi.js'
+import screenStyles from '../../styles/screenStyles.js'
 
 const font = 'CircularStd-Medium'
 
