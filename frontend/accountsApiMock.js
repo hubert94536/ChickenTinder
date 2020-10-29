@@ -155,12 +155,6 @@ const searchUsers = jest
     ]
   })); 
 
-const searchUsers = (text) => {
-    return Promise.resolve({
-        
-      })
-}
-
 // deletes user and returns status
 const deleteUser = jest
   .fn(() => Promise.resolve(200)) // Pass
