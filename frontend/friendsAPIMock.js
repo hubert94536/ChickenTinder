@@ -1,18 +1,12 @@
-// mock functions for friendsAPi.js
+// friendsAPi.js mock functions
 
 // returns res.status 200
-// function not used
-const createFriendshipTestMock = async () => {
-    return 200;
+const createFriendshipMock = (friend) => {
+    return Promise.resolve(200);
 }
 
-// returns res.status 200
-const createFriendshipMock = async () => {
-    return 200;
-}
-
-// returns res.status and an array of user info for 5 users
-const getFriendsMock = async () => {
+// returns res.status 200 and an array of user info for 5 users
+const getFriendsMock = () => {
     const data = 
     {
         status: 200,
@@ -54,21 +48,20 @@ const getFriendsMock = async () => {
             }
         ]
     }
-    return data;
+    return Promise.resolve(data);
 }
 
 // returns res.status 200
-const acceptFriendRequestMock = async () => {
-    return 200;
+const acceptFriendRequestMock = (friend) => {
+    return Promise.resolve(200);
 }
 
 // returns res.status 200
-const removeFriendshipMock = async () => {
-    return 200;
+const removeFriendshipMock = (friend) => {
+    return Promise.resolve(200);
 }
 
 export default{
-    createFriendshipTestMock,
     createFriendshipMock,
     getFriendsMock,
     acceptFriendRequestMock,
