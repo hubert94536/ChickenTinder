@@ -1,6 +1,142 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
+exports[`renders error correctly 1`] = `
+<View>
+  <Text
+    style={
+      Object {
+        "alignSelf": "center",
+        "color": "#F25763",
+        "fontFamily": "CircularStd-Medium",
+        "fontSize": 50,
+        "fontWeight": "bold",
+        "marginTop": "40%",
+      }
+    }
+  >
+    Welcome!
+  </Text>
+  <Text
+    style={
+      Object {
+        "alignSelf": "center",
+        "color": "#F25763",
+        "fontFamily": "CircularStd-Medium",
+        "fontSize": 30,
+      }
+    }
+  >
+    Let's get goin'.
+  </Text>
+  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "alignSelf": "center",
+        "borderColor": "#3b5998",
+        "borderRadius": 25,
+        "borderWidth": 2.5,
+        "marginTop": "10%",
+        "paddingHorizontal": 12,
+        "paddingVertical": 10,
+        "width": "70%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "alignSelf": "center",
+          "color": "#3b5998",
+          "fontFamily": "CircularStd-Medium",
+          "fontSize": 17,
+          "fontWeight": "bold",
+        }
+      }
+    >
+      Log in with Facebook
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`renders home correctly 1`] = `
+<View>
+  <Text
+    style={
+      Object {
+        "alignSelf": "center",
+        "color": "#F25763",
+        "fontFamily": "CircularStd-Medium",
+        "fontSize": 50,
+        "fontWeight": "bold",
+        "marginTop": "40%",
+      }
+    }
+  >
+    Welcome!
+  </Text>
+  <Text
+    style={
+      Object {
+        "alignSelf": "center",
+        "color": "#F25763",
+        "fontFamily": "CircularStd-Medium",
+        "fontSize": 30,
+      }
+    }
+  >
+    Let's get goin'.
+  </Text>
+  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "alignSelf": "center",
+        "borderColor": "#3b5998",
+        "borderRadius": 25,
+        "borderWidth": 2.5,
+        "marginTop": "10%",
+        "paddingHorizontal": 12,
+        "paddingVertical": 10,
+        "width": "70%",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "alignSelf": "center",
+          "color": "#3b5998",
+          "fontFamily": "CircularStd-Medium",
+          "fontSize": 17,
+          "fontWeight": "bold",
+        }
+      }
+    >
+      Log in with Facebook
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`renders username correctly 1`] = `
 <View>
   <Text
     style={
