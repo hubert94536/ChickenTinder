@@ -20,6 +20,7 @@ app.use(
     extended: true,
   }),
 )
+
 // if development mode, allow self-signed ssl
 if (app.get('env') === 'development') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
@@ -53,7 +54,7 @@ function checkCreateAccountsSchema(req, res, next) {
     id: Joi.number().unsafe().required(), //ids are BigInts, which can be outside of the safe range
     name: Joi.string().required(),
     username: Joi.string().required(),
-    email: Joi.email().required(),
+    email: Joi.string().email().required(),
     photo: Joi.string().required(),
     phone_number: Joi.string().min(7).max(15),
   })
@@ -65,7 +66,7 @@ app.route('/accounts/search/:text').get(accounts.searchAccounts)
 app
   .route('/accounts/:id')
   .get(accounts.getAccountById)
-  .put(accounts.updateAccount)
+  .put(checkUpdateAccountSchema, accounts.updateAccount)
   .delete(accounts.deleteAccount)
 function checkUpdateAccountSchema(req, res, next) {
   const updateAccountSchema = Joi.object()
@@ -73,7 +74,7 @@ function checkUpdateAccountSchema(req, res, next) {
       id: Joi.number().unsafe(), //ids are BigInts, which can be outside of the safe range
       name: Joi.string(),
       username: Joi.string(),
-      email: Joi.email(),
+      email: Joi.string().email(),
       photo: Joi.string(),
       phone_number: Joi.string().min(7).max(15),
     })
