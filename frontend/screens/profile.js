@@ -151,12 +151,12 @@ export default class UserProfileView extends Component {
     return (
       <View style={{ backgroundColor: 'white' }}>
         <View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Icon
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+            {/* <Icon
               name="chevron-left"
               style={[screenStyles.icons, {margin: '5%'}]}
               onPress={() => this.props.navigation.navigate('Home')}
-            />
+            /> */}
             <Icon
               name="cog"
               style={[screenStyles.icons, {margin: '5%'}]}

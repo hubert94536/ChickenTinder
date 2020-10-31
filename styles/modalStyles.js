@@ -13,7 +13,7 @@ export default StyleSheet.create({
         fontSize: 30,
     },
     modal: {
-        flex: 1,
+        // flex: 1,
         justifyContent: 'space-evenly',
         width: '80%',
         backgroundColor: 'white',

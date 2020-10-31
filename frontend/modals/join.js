@@ -5,17 +5,20 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import modalStyles from '../../styles/modalStyles.js'
+import { TextInput } from 'react-native-paper'
+import screenStyles from '../../styles/screenStyles.js'
 
 const hex = '#F25763'
-const font = 'CircularStd-Medium'
+const font = 'CircularStd-Bold'
 //  props are name, image url, and functions for cancel and go
 // invite alert
 
-export default class Invite extends React.Component {
+export default class Join extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       pressed: false,
+      code: ''
     }
   }
 
@@ -40,7 +43,7 @@ export default class Invite extends React.Component {
           style={modalStyles.blur}
         />
         <Modal transparent animationType="none">
-          <View style={modalStyles.modal}>
+          <View style={[modalStyles.modal, {height: 300}]}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               <Icon
                 name='times-circle'
@@ -55,7 +58,16 @@ export default class Invite extends React.Component {
               }}
             >
               <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-                <Image source={{ uri: this.props.image }} style={styles.avatar} />
+                <TextInput
+                style={[screenStyles.input], {height: 50, fontSize: 20, textAlignVertical:'center'}}
+                  textAlign="left"
+                  placeholder="Enter a group code"
+                  onChangeText={(code) => {
+                    this.setState({ code })
+                  }}
+                  value={this.state.code}
+              />
+                {/* <Image source={{ uri: this.props.image }} style={styles.avatar} />
                 <View>
                   <Text
                     style={{
@@ -75,7 +87,7 @@ export default class Invite extends React.Component {
                   >
                     invites you to join!
                   </Text>
-                </View>
+                </View> */}
               </View>
               <TouchableHighlight
                 underlayColor={hex}
@@ -94,7 +106,7 @@ export default class Invite extends React.Component {
   }
 }
 
-Invite.propTypes = {
+Join.propTypes = {
   username: PropTypes.string,
   image: PropTypes.string,
   cancel: PropTypes.func,

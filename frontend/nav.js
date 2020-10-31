@@ -2,43 +2,37 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { createAppContainer } from 'react-navigation'
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import Home from './screens/home.js'
+import Search from './screens/search.js'
+import UserProfileView from './screens/profile.js'
 
-class HomeScreen extends React.Component {
+import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
+import firebase from 'firebase'
+import Group from './screens/group.js'
+import Login from './screens/login.js'
+import Match from './screens/match.js'
+import Round from './screens/round.js'
+import Username from './screens/username.js'
+import PhoneAuthScreen from './screens/PhoneAuth.js'
+
+const HomeStack = createStackNavigator({ Home, Group, Round, Match }, {initialRouteName:'Home', headerMode: 'none'});
+
+
+const hex = '#F25763'
+const font = 'CircularStd-Bold'
+
+
+class Notifications extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Home Screen</Text>
+        <Text style={{ fontFamily: font }}>Notifications</Text>
       </View>
     )
   }
 }
-class ProfileScreen extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>Profile Screen</Text>
-      </View>
-    )
-  }
-}
-class SavedScreen extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>Saved Screen</Text>
-      </View>
-    )
-  }
-}
-class GroupsScreen extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>Group Screen</Text>
-      </View>
-    )
-  }
-}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -49,33 +43,37 @@ const styles = StyleSheet.create({
 const TabNavigator = createMaterialBottomTabNavigator(
   {
     Home: {
-      screen: HomeScreen,
+      screen: HomeStack,
       navigationOptions: {
         tabBarLabel: 'Home',
+        tabBarIcon: <Icon name='home' size={26}/>
+      },
+    },
+    Search: {
+      screen: Search,
+      navigationOptions: {
+        tabBarLabel: 'Search',
+        tabBarIcon: <Icon name='search' size={26}/>
+      },
+    },
+    Notifications: {
+      screen: Notifications,
+      navigationOptions: {
+        tabBarLabel: 'Notifications',
+        tabBarIcon: <Icon name='bullhorn' size={26}/>
       },
     },
     Profile: {
-      screen: ProfileScreen,
+      screen: UserProfileView,
       navigationOptions: {
         tabBarLabel: 'Profile',
-      },
-    },
-    Saved: {
-      screen: SavedScreen,
-      navigationOptions: {
-        tabBarLabel: 'Saved',
-      },
-    },
-    Groups: {
-      screen: GroupsScreen,
-      navigationOptions: {
-        tabBarLabel: 'Groups',
+        tabBarIcon: <Icon name='user' size={26}/>
       },
     },
   },
   {
     initialRouteName: 'Home',
-    barStyle: { backgroundColor: '#FB6767' },
+    barStyle:  { backgroundColor: '#fff2f2'}
   },
 )
 
