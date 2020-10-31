@@ -5,6 +5,7 @@ const accounts = require('./accountsQueries.js')
 const friends = require('./friendsQueries.js')
 const Joi = require('joi')
 const http = require('http')
+const { valid } = require('joi')
 
 const app = express()
 const server = http.createServer(app)
@@ -49,7 +50,7 @@ app
   .post(checkCreateAccountsSchema, accounts.createAccount)
 function checkCreateAccountsSchema(req, res, next) {
   const createAccountsSchema = Joi.object().keys({
-    id: Joi.number().integer().required(),
+    id: Joi.number().unsafe().required(), //ids are BigInts, which can be outside of the safe range
     name: Joi.string().required(),
     username: Joi.string().required(),
     email: Joi.email().required(),
@@ -66,6 +67,20 @@ app
   .get(accounts.getAccountById)
   .put(accounts.updateAccount)
   .delete(accounts.deleteAccount)
+function checkUpdateAccountSchema(req, res, next) {
+  const updateAccountSchema = Joi.object()
+    .keys({
+      id: Joi.number().unsafe(), //ids are BigInts, which can be outside of the safe range
+      name: Joi.string(),
+      username: Joi.string(),
+      email: Joi.email(),
+      photo: Joi.string(),
+      phone_number: Joi.string().min(7).max(15),
+    })
+    //.or(peer1, peer2, ...) ==> at least 1 peer is required, there can be more than 1
+    .or('id', 'name', 'username', 'email', 'photo', 'phone_number')
+  validateRequest(req, next, updateAccountSchema)
+}
 
 app.route('/username/:username').get(accounts.checkUsername)
 
