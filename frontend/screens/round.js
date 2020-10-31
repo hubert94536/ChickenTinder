@@ -14,7 +14,6 @@ export default class Round extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      index: 0,
       results: this.props.navigation.state.params.results,
       host: this.props.navigation.state.params.host,
       isHost: this.props.navigation.state.params.isHost,
@@ -29,11 +28,6 @@ export default class Round extends React.Component {
     socket.getSocket().on('exception', (error) => {
       console.log(error)
     })
-  }
-
-  handleSwiped() {
-    // transitionRef.current.animateNextTransition();
-    this.setState({ index: this.state.index + 1 })
   }
 
   likeRestaurant(resId) {
@@ -78,10 +72,9 @@ export default class Round extends React.Component {
         </TouchableHighlight>
         <Swiper
           cards={this.state.results}
-          cardIndex={this.state.index}
+          cardIndex={0}
           renderCard={(card) => <RoundCard card={card} />}
-          onSwiper={this.handleSwiped}
-          stackSize={10}
+          stackSize={3}
           disableBottomSwipe
           disableTopSwipe
           onSwipedRight={(cardIndex) => this.likeRestaurant(this.state.results[cardIndex].id)}
