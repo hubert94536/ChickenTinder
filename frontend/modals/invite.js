@@ -43,7 +43,7 @@ export default class Invite extends React.Component {
           <View style={modalStyles.modal}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               <Icon
-                name='times-circle'
+                name="times-circle"
                 style={modalStyles.icon}
                 onPress={() => this.props.onPress()}
               />
@@ -84,7 +84,14 @@ export default class Invite extends React.Component {
                 onPress={() => this.handleAccept()}
                 style={modalStyles.button}
               >
-                <Text style={[modalStyles.text, this.state.pressed ? {color: 'white'} : {color: hex}]}>Go</Text>
+                <Text
+                  style={[
+                    modalStyles.text,
+                    this.state.pressed ? { color: 'white' } : { color: hex },
+                  ]}
+                >
+                  Go
+                </Text>
               </TouchableHighlight>
             </View>
           </View>

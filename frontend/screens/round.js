@@ -59,13 +59,8 @@ export default class Round extends React.Component {
       <View style={styles.mainContainer}>
         <TouchableHighlight onPress={() => this.endGroup()}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Icon
-              name="angle-left"
-              style={[screenStyles.text, { fontSize: 25, margin: '3%' }]}
-            />
-            <Text
-              style={[screenStyles.text, {fontSize: 20, textAlign: 'left' }]}
-            >
+            <Icon name="angle-left" style={[screenStyles.text, { fontSize: 25, margin: '3%' }]} />
+            <Text style={[screenStyles.text, { fontSize: 20, textAlign: 'left' }]}>
               {this.state.isHost ? 'End' : 'Leave'}
             </Text>
           </View>
@@ -94,11 +89,7 @@ export default class Round extends React.Component {
             name="chevron-left"
             style={[screenStyles.text, { fontSize: 18, marginRight: '5%' }]}
           />
-          <Text
-            style={[screenStyles.text, { fontSize: 20 }]}
-          >
-            Swipe!
-          </Text>
+          <Text style={[screenStyles.text, { fontSize: 20 }]}>Swipe!</Text>
           <Icon
             name="chevron-right"
             style={[screenStyles.text, { fontSize: 18, marginLeft: '5%' }]}

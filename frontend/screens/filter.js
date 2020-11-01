@@ -106,7 +106,7 @@ const requestLocationPermission = async () => {
     })
 }
 
-const date = new Date();  
+const date = new Date()
 
 export default class FilterSelector extends React.Component {
   constructor(props) {
@@ -242,7 +242,7 @@ export default class FilterSelector extends React.Component {
   evaluateFilters() {
     var filters = {}
     //  convert to unix time
-    // const date = new Date();  
+    // const date = new Date();
     const dd = date.getDate()
     const mm = date.getMonth()
     const yyyy = date.getFullYear()
@@ -281,10 +281,12 @@ export default class FilterSelector extends React.Component {
     return (
       <View style={styles.mainContainer}>
         <View style={styles.titleStyle}>
-          <Text style={[screenStyles.text, {fontSize: 28}]}>
+          <Text style={[screenStyles.text, { fontSize: 28 }]}>
             {this.state.isHost ? 'Group Settings' : 'Set Your Filters'}
           </Text>
-          {this.state.isHost && <Text style={[screenStyles.text, styles.titleSub]}>(only visible to host)</Text>}
+          {this.state.isHost && (
+            <Text style={[screenStyles.text, styles.titleSub]}>(only visible to host)</Text>
+          )}
         </View>
         <ScrollView>
           {this.state.isHost && (
@@ -293,9 +295,15 @@ export default class FilterSelector extends React.Component {
               <TouchableHighlight
                 onPress={() => this.setState({ chooseFriends: true })}
                 underlayColor={hex}
-                style={[screenStyles.text, screenStyles.medButton, {borderColor: hex,  marginTop: '5%'}]}
+                style={[
+                  screenStyles.text,
+                  screenStyles.medButton,
+                  { borderColor: hex, marginTop: '5%' },
+                ]}
               >
-                <Text style={[screenStyles.text, styles.touchableFriendsText]}>Select from Friends</Text>
+                <Text style={[screenStyles.text, styles.touchableFriendsText]}>
+                  Select from Friends
+                </Text>
               </TouchableHighlight>
             </View>
           )}
@@ -466,7 +474,9 @@ export default class FilterSelector extends React.Component {
           style={[screenStyles.medButton, styles.touchable]}
           onPress={() => this.evaluateFilters()}
         >
-          <Text style={[screenStyles.text, styles.nextTitle]}>{this.state.isHost ? "Let's Go" : 'Submit Filters'}</Text>
+          <Text style={[screenStyles.text, styles.nextTitle]}>
+            {this.state.isHost ? "Let's Go" : 'Submit Filters'}
+          </Text>
         </TouchableHighlight>
         {(this.state.locationAlert || this.state.formatAlert || this.state.chooseFriends) && (
           <BlurView
@@ -506,7 +516,10 @@ export default class FilterSelector extends React.Component {
           />
         )}
         {this.state.chooseFriends && (
-          <ChooseFriends members={this.props.members} press={() => this.setState({ chooseFriends: false })} />
+          <ChooseFriends
+            members={this.props.members}
+            press={() => this.setState({ chooseFriends: false })}
+          />
         )}
       </View>
     )

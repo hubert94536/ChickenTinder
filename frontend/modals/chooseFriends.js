@@ -20,7 +20,7 @@ export default class ChooseFriends extends React.Component {
       friends: '',
       search: '',
       errorAlert: false,
-      members: this.props.members
+      members: this.props.members,
     }
     this.getFriends()
   }
@@ -34,11 +34,14 @@ export default class ChooseFriends extends React.Component {
         var pushFriends = []
         for (var friend in res.friendList) {
           if (res.friendList[friend].status === 'Accepted') {
-            if (this.state.members.some(member => member.username === res.friendList[friend].username)){
+            if (
+              this.state.members.some(
+                (member) => member.username === res.friendList[friend].username,
+              )
+            ) {
               res.friendList[friend].added = true
               pushFriends.push(res.friendList[friend])
-            }
-            else{
+            } else {
               res.friendList[friend].added = false
               pushFriends.push(res.friendList[friend])
             }

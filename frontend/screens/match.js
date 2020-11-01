@@ -35,10 +35,12 @@ export default class Match extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={[styles.general, { fontSize: 65, marginRight: '10%',  marginLeft: '10%'}]}>It's A Match!</Text>
-        <Icon name="thumbs-up" style={[styles.general, {fontSize: 50}]} />
-        <Text style={[styles.general, {fontSize: 20}]}>Your group has selected:</Text>
-        <Text style={[styles.general, {fontSize: 30}]}>{this.state.restaurant.name}</Text>
+        <Text style={[styles.general, { fontSize: 65, marginRight: '10%', marginLeft: '10%' }]}>
+          It's A Match!
+        </Text>
+        <Icon name="thumbs-up" style={[styles.general, { fontSize: 50 }]} />
+        <Text style={[styles.general, { fontSize: 20 }]}>Your group has selected:</Text>
+        <Text style={[styles.general, { fontSize: 30 }]}>{this.state.restaurant.name}</Text>
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
@@ -61,7 +63,9 @@ export default class Match extends React.Component {
           style={[screenStyles.medButton, { borderColor: 'white', width: '45%' }]}
           onPress={() => this.endRound()}
         >
-          <Text style={[styles.endText, screenStyles.medButtonText, {color: 'white', padding: '6%'}]}>
+          <Text
+            style={[styles.endText, screenStyles.medButtonText, { color: 'white', padding: '6%' }]}
+          >
             End Round
           </Text>
         </TouchableHighlight>
@@ -89,10 +93,10 @@ const styles = StyleSheet.create({
     backgroundColor: hex,
     justifyContent: 'space-evenly',
   },
-  general:{
+  general: {
     fontFamily: font,
     color: 'white',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   map: {
     alignSelf: 'center',

@@ -25,11 +25,11 @@ export default class BackgroundButton extends React.Component {
         height: 28,
         alignItems: 'center',
         justifyContent: 'center',
-        paddingHorizontal: 8
+        paddingHorizontal: 8,
       },
       touchable: {
         marginRight: 8,
-        marginBottom: 6
+        marginBottom: 6,
       },
       image: {
         marginRight: 8,
@@ -40,7 +40,7 @@ export default class BackgroundButton extends React.Component {
         textAlign: 'center',
         color: this.props.textColor,
         fontSize: 15,
-        fontFamily: 'CircularStd-Bold'
+        fontFamily: 'CircularStd-Bold',
       },
     })
   }

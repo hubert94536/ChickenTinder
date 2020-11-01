@@ -1,12 +1,5 @@
 import React, { Component } from 'react'
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import auth from '@react-native-firebase/auth'
 import Alert from '../modals/alert.js'
 
@@ -24,7 +17,6 @@ class PhoneAuthScreen extends Component {
       errorAlert: false,
       invalidNumberAlert: false,
       badCodeAlert: false,
-
     }
   }
 
@@ -42,11 +34,11 @@ class PhoneAuthScreen extends Component {
           this.setState({ confirmResult: res })
         })
         .catch((error) => {
-          this.setState({errorAlert: true})
+          this.setState({ errorAlert: true })
           console.log(error)
         })
     } else {
-      this.setState({invalidNumberAlert: true})
+      this.setState({ invalidNumberAlert: true })
     }
   }
 
@@ -66,11 +58,11 @@ class PhoneAuthScreen extends Component {
           this.props.navigation.navigate('Username')
         })
         .catch((error) => {
-          this.setState({errorAlert: true})
+          this.setState({ errorAlert: true })
           console.log(error)
         })
     } else {
-      this.setState({badCodeAlert: true})
+      this.setState({ badCodeAlert: true })
     }
   }
 
@@ -115,55 +107,55 @@ class PhoneAuthScreen extends Component {
             editable={!this.state.confirmResult}
           />
 
-          {this.state.confirmResult && 
-          <TouchableOpacity
-          style={[styles.themeButton, { marginTop: 20 }]}
-          onPress={() => this.changePhoneNumber()}
-        >
-          <Text style={styles.themeButtonTitle}>
-            {this.state.confirmResult ? 'Change Phone Number' : 'Send Code'}
-          </Text>
-        </TouchableOpacity>
-        }
+          {this.state.confirmResult && (
+            <TouchableOpacity
+              style={[styles.themeButton, { marginTop: 20 }]}
+              onPress={() => this.changePhoneNumber()}
+            >
+              <Text style={styles.themeButtonTitle}>
+                {this.state.confirmResult ? 'Change Phone Number' : 'Send Code'}
+              </Text>
+            </TouchableOpacity>
+          )}
 
-        {!this.state.confirmResult &&
-        <TouchableOpacity
-          style={[styles.themeButton, { marginTop: 20 }]}
-          onPress={() => this.handleSendCode()}
-        >
-          <Text style={styles.themeButtonTitle}>
-            {this.state.confirmResult ? 'Change Phone Number' : 'Send Code'}
-          </Text>
-        </TouchableOpacity>
-        }
+          {!this.state.confirmResult && (
+            <TouchableOpacity
+              style={[styles.themeButton, { marginTop: 20 }]}
+              onPress={() => this.handleSendCode()}
+            >
+              <Text style={styles.themeButtonTitle}>
+                {this.state.confirmResult ? 'Change Phone Number' : 'Send Code'}
+              </Text>
+            </TouchableOpacity>
+          )}
 
           {this.state.confirmResult ? this.renderConfirmationCodeView() : null}
         </View>
         {this.state.errorAlert && (
           <Alert
-            title='Error, please try again'
+            title="Error, please try again"
             button
-            buttonText='Close'
-            press={() => this.setState({errorAlert: false})}
-            cancel={() => this.setState({errorAlert: false})}
-                />
+            buttonText="Close"
+            press={() => this.setState({ errorAlert: false })}
+            cancel={() => this.setState({ errorAlert: false })}
+          />
         )}
         {this.state.invalidNumberAlert && (
           <Alert
-            title='Invalid Phone Number'
+            title="Invalid Phone Number"
             button
             buttonText="Close"
-            press={() => this.setState({invalidNumberAlert: false})}
-            cancel={() => this.setState({invalidNumberAlert: false})}
+            press={() => this.setState({ invalidNumberAlert: false })}
+            cancel={() => this.setState({ invalidNumberAlert: false })}
           />
         )}
         {this.state.badCodeAlert && (
           <Alert
-            title='Please enter a 6 digit OTP code.'
+            title="Please enter a 6 digit OTP code."
             button
-            buttonText='Close'
-            press={() => this.setState({badCodeAlert: false})}
-            cancel={() => this.setState({badCodeAlert: false})}
+            buttonText="Close"
+            press={() => this.setState({ badCodeAlert: false })}
+            cancel={() => this.setState({ badCodeAlert: false })}
           />
         )}
       </SafeAreaView>
@@ -178,7 +170,7 @@ const styles = StyleSheet.create({
   },
   page: {
     flex: 1,
-    height:'100%',
+    height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -189,7 +181,7 @@ const styles = StyleSheet.create({
     borderColor: '#fff',
     borderWidth: 2,
     borderWidth: 0,
-    borderBottomWidth:2,
+    borderBottomWidth: 2,
     paddingLeft: 10,
     color: '#fff',
     fontSize: 20,

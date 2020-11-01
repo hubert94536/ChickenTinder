@@ -6,7 +6,6 @@ import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import imgStyles from '../../styles/cardImage.js'
 
-
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
@@ -48,32 +47,21 @@ export default class ChooseCard extends React.Component {
         </View>
         {this.state.added && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-            <Text
-              style={imgStyles.text}
-            >
-              Added
-            </Text>
-            <Icon
-              style={[imgStyles.icon, {  margin: '8%' }]}
-              name="check-circle"
-            />
+            <Text style={imgStyles.text}>Added</Text>
+            <Icon style={[imgStyles.icon, { margin: '8%' }]} name="check-circle" />
           </View>
         )}
         {!this.state.added && (
-          <TouchableHighlight >
+          <TouchableHighlight>
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-              <Text
-                style={imgStyles.text}
-              >
-                Add
-              </Text>
+              <Text style={imgStyles.text}>Add</Text>
               <Icon
                 style={[imgStyles.icon, { margin: '8%' }]}
                 name="plus-circle"
                 onPress={() => {
-                  this.setState({added: true})
-                  this.sendInvite()}
-                }
+                  this.setState({ added: true })
+                  this.sendInvite()
+                }}
               />
             </View>
           </TouchableHighlight>

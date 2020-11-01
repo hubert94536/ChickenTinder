@@ -69,15 +69,8 @@ export default class ProfileCard extends React.Component {
         {this.state.isFriend && (
           <TouchableHighlight onPress={() => this.setState({ deleteFriend: true })}>
             <View style={{ flexDirection: 'row', flex: 1 }}>
-              <Text
-                style={imgStyles.text, { marginLeft: '25%' }}
-              >
-                Friends
-              </Text>
-              <Icon
-                style={imgStyles.icon, { marginLeft: '5%' }}
-                name="check-circle"
-              />
+              <Text style={(imgStyles.text, { marginLeft: '25%' })}>Friends</Text>
+              <Icon style={(imgStyles.icon, { marginLeft: '5%' })} name="check-circle" />
             </View>
           </TouchableHighlight>
         )}
@@ -98,9 +91,7 @@ export default class ProfileCard extends React.Component {
                 alignSelf: 'center',
               }}
             >
-              <Text
-                style={[imgStyles.text, {color: this.state.pressed ? 'white' : 'black'}]}
-              >
+              <Text style={[imgStyles.text, { color: this.state.pressed ? 'white' : 'black' }]}>
                 Accept
               </Text>
             </TouchableHighlight>
