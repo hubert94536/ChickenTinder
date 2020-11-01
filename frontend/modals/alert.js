@@ -38,7 +38,11 @@ export default class Alert extends Component {
           <View style={modalStyles.modal}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               {this.props.button && (
-                <Icon name="times-circle" style={modalStyles.icon} onPress={() => this.handleCancel()} />
+                <Icon
+                  name="times-circle"
+                  style={modalStyles.icon}
+                  onPress={() => this.handleCancel()}
+                />
               )}
             </View>
             <View
@@ -58,9 +62,14 @@ export default class Alert extends Component {
                   onHideUnderlay={() => this.setState({ pressed: false })}
                   onShowUnderlay={() => this.setState({ pressed: true })}
                   onPress={() => this.handlePress()}
-                  style={[modalStyles.button, {marginBottom: '3%'}]}
+                  style={[modalStyles.button, { marginBottom: '3%' }]}
                 >
-                  <Text style={[modalStyles.text, this.state.pressed ? {color: 'white'} : {color: hex}]}>
+                  <Text
+                    style={[
+                      modalStyles.text,
+                      this.state.pressed ? { color: 'white' } : { color: hex },
+                    ]}
+                  >
                     {this.props.buttonText}
                   </Text>
                 </TouchableHighlight>

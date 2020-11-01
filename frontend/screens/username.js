@@ -7,7 +7,6 @@ import accountsApi from '../apis/accountsApi.js'
 import screenStyles from '../../styles/screenStyles.js'
 
 const hex = '#F25763'
-const font = 'CircularStd-Bold'
 
 class Username extends React.Component {
   constructor(props) {
@@ -76,7 +75,9 @@ class Username extends React.Component {
   render() {
     return (
       <View style={styles.mainContainer}>
-        <Text style={[screenStyles.text, screenStyles.title, styles.header]}>'Chews' a username!</Text>
+        <Text style={[screenStyles.text, screenStyles.title, styles.header]}>
+          'Chews' a username!
+        </Text>
         <View style={{ marginTop: '35%' }}>
           <TextInput
             style={[screenStyles.text, styles.input]}
@@ -93,9 +94,20 @@ class Username extends React.Component {
             activeOpacity={1}
             underlayColor={hex}
             onPress={() => this.handleClick()}
-            style={[screenStyles.medButton, styles.button, this.state.pressed ? {borderColor: 'white'} : {borderColor: hex}]}
+            style={[
+              screenStyles.medButton,
+              styles.button,
+              this.state.pressed ? { borderColor: 'white' } : { borderColor: hex },
+            ]}
           >
-            <Text style={[screenStyles.medButtonText, this.state.pressed ? {color: 'white'} : {color: hex}]}>Enter</Text>
+            <Text
+              style={[
+                screenStyles.medButtonText,
+                this.state.pressed ? { color: 'white' } : { color: hex },
+              ]}
+            >
+              Enter
+            </Text>
           </TouchableHighlight>
         </View>
         {this.state.errorAlert && (
@@ -143,7 +155,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     width: '70%',
-    borderColor: hex
+    borderColor: hex,
   },
 })
 

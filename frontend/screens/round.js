@@ -7,9 +7,6 @@ import RoundCard from '../cards/roundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 
-const hex = '#F25763'
-const font = 'CircularStd-Bold'
-
 export default class Round extends React.Component {
   constructor(props) {
     super(props)
@@ -44,7 +41,7 @@ export default class Round extends React.Component {
 
   endGroup() {
     socket.endSession()
-    socket.getSocket().on('leave', (res) => {
+    socket.getSocket().on('leave', () => {
       this.props.navigation.navigate('Home')
     })
   }
@@ -59,13 +56,8 @@ export default class Round extends React.Component {
       <View style={styles.mainContainer}>
         <TouchableHighlight onPress={() => this.endGroup()}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Icon
-              name="angle-left"
-              style={[screenStyles.text, { fontSize: 25, margin: '3%' }]}
-            />
-            <Text
-              style={[screenStyles.text, {fontSize: 20, textAlign: 'left' }]}
-            >
+            <Icon name="angle-left" style={[screenStyles.text, { fontSize: 25, margin: '3%' }]} />
+            <Text style={[screenStyles.text, { fontSize: 20, textAlign: 'left' }]}>
               {this.state.isHost ? 'End' : 'Leave'}
             </Text>
           </View>
@@ -94,11 +86,7 @@ export default class Round extends React.Component {
             name="chevron-left"
             style={[screenStyles.text, { fontSize: 18, marginRight: '5%' }]}
           />
-          <Text
-            style={[screenStyles.text, { fontSize: 20 }]}
-          >
-            Swipe!
-          </Text>
+          <Text style={[screenStyles.text, { fontSize: 20 }]}>Swipe!</Text>
           <Icon
             name="chevron-right"
             style={[screenStyles.text, { fontSize: 18, marginLeft: '5%' }]}

@@ -164,8 +164,8 @@ module.exports = (io) => {
           if (data.filters.location) {
             sessions[data.room].filters.location = data.filters.location
           } else {
-          sessions[data.room].filters.latitude = data.filters.latitude
-          sessions[data.room].filters.longitude = data.filters.longitude
+            sessions[data.room].filters.latitude = data.filters.latitude
+            sessions[data.room].filters.longitude = data.filters.longitude
           }
         }
         // add categories to set
