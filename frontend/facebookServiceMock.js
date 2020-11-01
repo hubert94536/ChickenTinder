@@ -1,13 +1,18 @@
 // facebookService.js mock functions
 
-// returns 'Username' by default and 'Home' if the first argument is "1"
-const loginWithFacebook = (home) => {
-  if (home == 1) {
-    return Promise.resolve('Home')
-  }
-  return Promise.resolve('Username')
-}
+// Log in to Firebase and Facebook
+const loginWithFacebook = jest
+  .fn(() => Promise.resolve('Username')) // Default: 'Username'
+  .mockImplementationOnce(() => Promise.resolve('Home')) //First Call: returns 'Home'
+
+// Log out of Firebase and Facebook
+const logoutWithFacebook = jest.fn(() => Promise.resolve())
+
+// Deletes user
+const deleteUser = jest.fn(() => Promise.resolve())
 
 export default {
-    loginWithFacebook
+  loginWithFacebook,
+  logoutWithFacebook,
+  deleteUser,
 }

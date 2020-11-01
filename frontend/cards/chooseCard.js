@@ -6,7 +6,6 @@ import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import imgStyles from '../../styles/cardImage.js'
 
-const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
 //  cards for when you're choosing friends for your group

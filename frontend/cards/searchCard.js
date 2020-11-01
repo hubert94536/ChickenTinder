@@ -6,7 +6,8 @@ import Alert from '../modals/alert.js'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
 
-const hex = '#F25763'
+// commented out during linting but hex is used in commented-out code below
+//const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
 // cards for the search for friends screen
@@ -60,20 +61,7 @@ export default class SearchCard extends React.Component {
         })
         this.props.press(this.props.id, filteredArray, true)
       })
-      .catch((error) => this.setState({ errorAlert: true }))
-  }
-
-  async deleteFriend() {
-    friendsApi
-      .removeFriendship(this.state.id)
-      .then(() => {
-        this.setState({ deleteFriend: false })
-        var filteredArray = this.props.total.filter((item) => {
-          return item.username !== this.props.username
-        })
-        this.props.press(this.props.id, filteredArray, true)
-      })
-      .catch((error) => this.setState({ errorAlert: true }))
+      .catch(() => this.setState({ errorAlert: true }))
   }
 
   render() {
