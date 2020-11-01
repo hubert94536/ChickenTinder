@@ -109,7 +109,6 @@ const date = new Date();
 export default class FilterSelector extends React.Component {
   constructor(props) {
     super(props)
-    let date = new Date()
     this.state = {
       host: this.props.host,
       isHost: this.props.isHost,
@@ -240,7 +239,6 @@ export default class FilterSelector extends React.Component {
   evaluateFilters() {
     var filters = {}
     //  convert to unix time
-    // const date = new Date();  
     const dd = date.getDate()
     const mm = date.getMonth()
     const yyyy = date.getFullYear()
