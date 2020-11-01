@@ -14,10 +14,10 @@ import PropTypes from 'prop-types';
 import accountsApi from '../apis/accountsApi.js';
 import SearchCard from '../cards/searchCard.js'
 import Alert from '../modals/alert.js'
-
+import screenStyles from '../../styles/screenStyles.js'
 
 const hex = '#F25763'
-const font = 'CircularStd-Medium'
+const font = 'CircularStd-Bold'
 var username = ''
 AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 
@@ -115,10 +115,10 @@ export default class Search extends Component {
       <View style={{flex: 1, backgroundColor: 'white'}}>
         <Icon
           name="chevron-left"
-          style={styles.topIcons}
+          style={[screenStyles.icons, styles.topIcons]}
           onPress={() => this.props.navigation.navigate('Home')}
         />    
-        <Text style={styles.title}>Find New Friends!</Text>
+        <Text style={[screenStyles.text, screenStyles.title, {marginBottom: '4%'}]}>Find New Friends!</Text>
         <FlatList
           data={this.state.data}
           renderItem={({item}) => (
@@ -157,17 +157,8 @@ Search.propTypes = {
 
 const styles = StyleSheet.create({
   topIcons: {
-    color: hex,
-    fontSize: 27,
     marginLeft: '5%',
     marginTop: '5%'
-  },
-  title: {
-    fontFamily: font,
-    fontSize: 40,
-    color: hex,
-    textAlign: 'center',
-    marginBottom: '4%'
   },
   container: {
     backgroundColor: 'white',
