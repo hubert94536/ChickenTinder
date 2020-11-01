@@ -26,7 +26,10 @@ export default class GroupCard extends React.Component {
         <View style={styles.card}>
           <Image
             source={{ uri: this.props.image }}
-            style={[styles.image, this.props.filters ? {borderColor: hex} : {borderColor: 'white'}]}
+            style={[
+              styles.image,
+              this.props.filters ? { borderColor: hex } : { borderColor: 'white' },
+            ]}
           />
           {this.props.filters ? (
             <Icon
