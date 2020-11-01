@@ -101,7 +101,7 @@ const requestLocationPermission = async () => {
         return false
       }
     })
-    .catch((err) => {
+    .catch(() => {
       this.setState({ errorAlert: true })
     })
 }

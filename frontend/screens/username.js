@@ -7,7 +7,6 @@ import accountsApi from '../apis/accountsApi.js'
 import screenStyles from '../../styles/screenStyles.js'
 
 const hex = '#F25763'
-const font = 'CircularStd-Bold'
 
 class Username extends React.Component {
   constructor(props) {
