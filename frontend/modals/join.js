@@ -46,7 +46,7 @@ export default class Join extends React.Component {
           <View style={[modalStyles.modal, {height: 300}]}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               <Icon
-                name='times-circle'
+                name="times-circle"
                 style={modalStyles.icon}
                 onPress={() => this.props.onPress()}
               />
@@ -96,7 +96,14 @@ export default class Join extends React.Component {
                 onPress={() => this.handleAccept()}
                 style={modalStyles.button}
               >
-                <Text style={[modalStyles.text, this.state.pressed ? {color: 'white'} : {color: hex}]}>Go</Text>
+                <Text
+                  style={[
+                    modalStyles.text,
+                    this.state.pressed ? { color: 'white' } : { color: hex },
+                  ]}
+                >
+                  Go
+                </Text>
               </TouchableHighlight>
             </View>
           </View>

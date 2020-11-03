@@ -10,7 +10,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
-import { NAME,  PHOTO, USERNAME } from 'react-native-dotenv'
+import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -154,12 +154,12 @@ export default class UserProfileView extends Component {
           <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
             {/* <Icon
               name="chevron-left"
-              style={[screenStyles.icons, {margin: '5%'}]}
+              style={[screenStyles.icons, { margin: '5%' }]}
               onPress={() => this.props.navigation.navigate('Home')}
             /> */}
             <Icon
               name="cog"
-              style={[screenStyles.icons, {margin: '5%'}]}
+              style={[screenStyles.icons, { margin: '5%' }]}
               onPress={() => this.setState({ visible: true })}
             />
           </View>
@@ -173,25 +173,47 @@ export default class UserProfileView extends Component {
             />
             <View>
               <Text style={{ fontFamily: font, fontSize: 28 }}>{this.state.name}</Text>
-              <Text style={{ fontFamily: font, fontSize: 17 }}>{'@' + this.state.usernameValue}</Text>
+              <Text style={{ fontFamily: font, fontSize: 17 }}>
+                {'@' + this.state.usernameValue}
+              </Text>
             </View>
           </View>
           <View style={{ flexDirection: 'row' }}>
             <TouchableHighlight
               underlayColor="#fff"
-              style={[screenStyles.smallButton, this.state.friends ? {backgroundColor: hex} : {backgroundColor: 'white'}, {marginLeft: '5%'}]}
+              style={[
+                screenStyles.smallButton,
+                this.state.friends ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                { marginLeft: '5%' },
+              ]}
               onPress={() => this.refs.swiper.scrollBy(-1)}
             >
-              <Text style={[screenStyles.smallButtonText, styles.selectedText, this.state.friends ? {color: 'white'} : {color: hex} ]}>
+              <Text
+                style={[
+                  screenStyles.smallButtonText,
+                  styles.selectedText,
+                  this.state.friends ? { color: 'white' } : { color: hex },
+                ]}
+              >
                 Friends
               </Text>
             </TouchableHighlight>
             <TouchableHighlight
               underlayColor="#fff"
-              style={[screenStyles.smallButton, !this.state.friends ? {backgroundColor: hex} : {backgroundColor: 'white'}, {marginLeft: '5%'}]}
+              style={[
+                screenStyles.smallButton,
+                !this.state.friends ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                { marginLeft: '5%' },
+              ]}
               onPress={() => this.refs.swiper.scrollBy(1)}
             >
-              <Text style={[screenStyles.smallButtonText, styles.selectedText, !this.state.friends ? {color: 'white'} : {color: hex}]}>
+              <Text
+                style={[
+                  screenStyles.smallButtonText,
+                  styles.selectedText,
+                  !this.state.friends ? { color: 'white' } : { color: hex },
+                ]}
+              >
                 Requests
               </Text>
             </TouchableHighlight>
@@ -225,9 +247,7 @@ export default class UserProfileView extends Component {
                   margin: '5%',
                 }}
               >
-                <Text
-                  style={[screenStyles.text, { fontSize: 18, alignSelf: 'center' }]}
-                >
+                <Text style={[screenStyles.text, { fontSize: 18, alignSelf: 'center' }]}>
                   Settings
                 </Text>
                 <Icon
@@ -256,14 +276,21 @@ export default class UserProfileView extends Component {
                   />
                 </View>
                 <TouchableHighlight
-                  style={[screenStyles.smallButton, styles.changeButtons, this.state.changeName ? {backgroundColor: hex} : {backgroundColor: 'white'}]}
+                  style={[
+                    screenStyles.smallButton,
+                    styles.changeButtons,
+                    this.state.changeName ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                  ]}
                   underlayColor={hex}
                   onShowUnderlay={() => this.setState({ changeName: true })}
                   onHideUnderlay={() => this.setState({ changeName: false })}
                   onPress={() => this.changeName()}
                 >
                   <Text
-                    style={[screenStyles.smallButtonText, this.state.changeName ? {color: 'white'} : {color: hex}]}
+                    style={[
+                      screenStyles.smallButtonText,
+                      this.state.changeName ? { color: 'white' } : { color: hex },
+                    ]}
                   >
                     Change
                   </Text>
@@ -285,14 +312,21 @@ export default class UserProfileView extends Component {
                   />
                 </View>
                 <TouchableHighlight
-                  style={[screenStyles.smallButton, styles.changeButtons, this.state.changeUser ? {backgroundColor: hex} : {backgroundColor: 'white'}]}
+                  style={[
+                    screenStyles.smallButton,
+                    styles.changeButtons,
+                    this.state.changeUser ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                  ]}
                   underlayColor={hex}
                   onShowUnderlay={() => this.setState({ changeUser: true })}
                   onHideUnderlay={() => this.setState({ changeUser: false })}
                   onPress={() => this.changeUsername()}
                 >
                   <Text
-                    style={[screenStyles.smallButtonText, this.state.changeUser ? {color: 'white'} : {color: hex}]}
+                    style={[
+                      screenStyles.smallButtonText,
+                      this.state.changeUser ? { color: 'white' } : { color: hex },
+                    ]}
                   >
                     Change
                   </Text>
@@ -309,9 +343,18 @@ export default class UserProfileView extends Component {
                   onShowUnderlay={() => this.setState({ delete: true })}
                   onHideUnderlay={() => this.setState({ delete: false })}
                   onPress={() => this.setState({ deleteAlert: true })}
-                  style={[screenStyles.smallButton, styles.button, this.state.delete ? {backgroundColor: hex} : {backgroundColor: 'white'}]}
+                  style={[
+                    screenStyles.smallButton,
+                    styles.button,
+                    this.state.delete ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                  ]}
                 >
-                  <Text style={[screenStyles.smallButtonText,  this.state.delete ? {color: 'white'} : {color: hex}]}>
+                  <Text
+                    style={[
+                      screenStyles.smallButtonText,
+                      this.state.delete ? { color: 'white' } : { color: hex },
+                    ]}
+                  >
                     Delete
                   </Text>
                 </TouchableHighlight>
@@ -320,9 +363,18 @@ export default class UserProfileView extends Component {
                   onShowUnderlay={() => this.setState({ logout: true })}
                   onHideUnderlay={() => this.setState({ logout: false })}
                   onPress={() => this.setState({ logoutAlert: true })}
-                  style={[screenStyles.smallButton, styles.button, this.state.logout ? {backgroundColor: hex} : {backgroundColor: 'white'}]}
+                  style={[
+                    screenStyles.smallButton,
+                    styles.button,
+                    this.state.logout ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                  ]}
                 >
-                  <Text style={[screenStyles.smallButtonText,  this.state.logout ? {color: 'white'} : {color: hex}]}>
+                  <Text
+                    style={[
+                      screenStyles.smallButtonText,
+                      this.state.logout ? { color: 'white' } : { color: hex },
+                    ]}
+                  >
                     Logout
                   </Text>
                 </TouchableHighlight>
@@ -466,5 +518,5 @@ const styles = StyleSheet.create({
     width: '35%',
     marginRight: '5%',
     marginTop: '5%',
-  }
+  },
 })

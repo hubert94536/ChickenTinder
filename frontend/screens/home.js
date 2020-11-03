@@ -57,7 +57,6 @@ class Home extends React.Component {
 
   componentDidMount() {
     //uncomment if testing friends/requests
-
     // accountsApi.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
     // accountsApi.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
     // accountsApi.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
@@ -110,7 +109,12 @@ class Home extends React.Component {
           style={{backgroundColor: '#F25763', borderRadius: 40, width: width*0.5, height: 45, justifyContent:'center', alignSelf:'center', margin:'3%'}}
           onPress={() => this.createGroup()}
         >
-          <Text style={[styles.buttonText, this.state.createPressed ? {color: '#F25763'} : {color: 'white'}]}>
+          <Text
+            style={[
+              styles.buttonText,
+              this.state.createPressed ? { color: '#F25763' } : { color: 'white' },
+            ]}
+          >
             Create Group
           </Text>
         </TouchableHighlight>
@@ -152,7 +156,10 @@ class Home extends React.Component {
 
 const styles = StyleSheet.create({
   button: {
-    height: 65, margin: '3%', flexDirection: 'column', justifyContent: 'center'
+    height: 65,
+    margin: '3%',
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
   buttonText: {
     textAlign: 'center',
