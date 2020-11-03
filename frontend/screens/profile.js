@@ -21,6 +21,9 @@ import facebookService from '../apis/facebookService.js'
 import Friends from './friends.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
+import PropTypes from 'prop-types'
+
+
 
 const hex = '#F25763'
 const font = 'CircularStd-Bold'
@@ -138,7 +141,7 @@ export default class UserProfileView extends Component {
         this.setState({ visible: false })
         this.props.navigation.navigate('Login')
       })
-      .catch((error) => {
+      .catch(() => {
         this.setState({ errorAlert: true })
       })
   }
@@ -186,7 +189,7 @@ export default class UserProfileView extends Component {
                 this.state.friends ? { backgroundColor: hex } : { backgroundColor: 'white' },
                 { marginLeft: '5%' },
               ]}
-              onPress={() => this.refs.swiper.scrollBy(-1)}
+              onPress={() => this.swiperRef.scrollBy(-1)}
             >
               <Text
                 style={[
@@ -205,7 +208,7 @@ export default class UserProfileView extends Component {
                 !this.state.friends ? { backgroundColor: hex } : { backgroundColor: 'white' },
                 { marginLeft: '5%' },
               ]}
-              onPress={() => this.refs.swiper.scrollBy(1)}
+              onPress={() => this.swiperRef.scrollBy(1)}
             >
               <Text
                 style={[
@@ -221,7 +224,7 @@ export default class UserProfileView extends Component {
         </View>
         <View style={{ height: '100%', marginTop: '5%' }}>
           <Swiper
-            ref="swiper"
+            ref={(ref) => (this.swiperRef = ref)}
             loop={false}
             onIndexChanged={() => this.setState({ friends: !this.state.friends })}
           >
@@ -481,6 +484,10 @@ export default class UserProfileView extends Component {
       </View>
     )
   }
+}
+
+UserProfileView.propTypes = {
+  navigation: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

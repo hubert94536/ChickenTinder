@@ -101,6 +101,7 @@ Round.propTypes = {
   results: PropTypes.array,
   host: PropTypes.string,
   isHost: PropTypes.bool,
+  navigation: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

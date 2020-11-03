@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import Alert from '../modals/alert.js'
 import facebookService from '../apis/facebookService.js'
 import screenStyles from '../../styles/screenStyles.js'
+import PropTypes from 'prop-types'
 
 const hex = '#F25763'
 const font = 'CircularStd-Bold'
@@ -41,7 +42,9 @@ export default class Login extends React.Component {
     return (
       <View>
         <Text style={[screenStyles.text, screenStyles.title, { marginTop: '40%' }]}>Welcome!</Text>
-        <Text style={[screenStyles.text, screenStyles.medButtonText]}>Let's get goin'.</Text>
+        <Text style={[screenStyles.text, screenStyles.medButtonText]}>
+          Let&#x27s get goin&#x27.
+        </Text>
         <TouchableHighlight
           onShowUnderlay={() => this.setState({ phonePressed: true })}
           onHideUnderlay={() => this.setState({ phonePressed: false })}
@@ -99,6 +102,10 @@ export default class Login extends React.Component {
       </View>
     )
   }
+}
+
+Login.propTypes = {
+  navigation: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

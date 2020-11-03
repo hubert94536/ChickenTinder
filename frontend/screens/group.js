@@ -9,10 +9,7 @@ import Alert from '../modals/alert.js'
 import GroupCard from '../cards/groupCard.js'
 import FilterSelector from './filter.js'
 import socket from '../apis/socket.js'
-<<<<<<< HEAD
-=======
 import screenStyles from '../../styles/screenStyles.js'
->>>>>>> 8853b7f8e5d2c215ffa49f4a243e7189ecddbb28
 
 const hex = '#F25763'
 const font = 'CircularStd-Bold'

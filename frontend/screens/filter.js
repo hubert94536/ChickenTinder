@@ -530,6 +530,7 @@ FilterSelector.propTypes = {
   host: PropTypes.string,
   isHost: PropTypes.bool,
   press: PropTypes.func,
+  members: PropTypes.array,
 }
 
 const styles = StyleSheet.create({

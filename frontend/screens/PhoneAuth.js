@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import auth from '@react-native-firebase/auth'
 import Alert from '../modals/alert.js'
+import PropTypes from 'prop-types'
 
 const hex = '#F25763'
 const font = 'CircularStd-Bold'
@@ -179,7 +180,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: '90%',
     borderColor: '#fff',
-    borderWidth: 2,
     borderWidth: 0,
     borderBottomWidth: 2,
     paddingLeft: 10,
