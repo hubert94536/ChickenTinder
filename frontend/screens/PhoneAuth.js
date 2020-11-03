@@ -1,14 +1,10 @@
 import React, { Component } from 'react'
-import {
-  Alert,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import auth from '@react-native-firebase/auth'
+import Alert from '../modals/alert.js'
+
+const hex = '#F25763'
+const font = 'CircularStd-Bold'
 
 class PhoneAuthScreen extends Component {
   constructor(props) {
@@ -18,6 +14,9 @@ class PhoneAuthScreen extends Component {
       confirmResult: null,
       verificationCode: '',
       userId: '',
+      errorAlert: false,
+      invalidNumberAlert: false,
+      badCodeAlert: false,
     }
   }
 
@@ -31,15 +30,15 @@ class PhoneAuthScreen extends Component {
     if (this.validatePhoneNumber()) {
       auth()
         .signInWithPhoneNumber(this.state.phone)
-        .then((confirmResult) => {
-          this.setState({ confirmResult })
+        .then((res) => {
+          this.setState({ confirmResult: res })
         })
         .catch((error) => {
-          Alert.alert(error.message)
+          this.setState({ errorAlert: true })
           console.log(error)
         })
     } else {
-      Alert.alert('Invalid Phone Number')
+      this.setState({ invalidNumberAlert: true })
     }
   }
 
@@ -54,15 +53,16 @@ class PhoneAuthScreen extends Component {
       confirmResult
         .confirm(verificationCode)
         .then((user) => {
+          console.log(user)
           this.setState({ userId: user.uid })
-          Alert.alert('Verified!')
+          this.props.navigation.navigate('Username')
         })
         .catch((error) => {
-          Alert.alert(error.message)
+          this.setState({ errorAlert: true })
           console.log(error)
         })
     } else {
-      Alert.alert('Please enter a 6 digit OTP code.')
+      this.setState({ badCodeAlert: true })
     }
   }
 
@@ -75,14 +75,14 @@ class PhoneAuthScreen extends Component {
           placeholderTextColor="#eee"
           value={this.state.verificationCode}
           keyboardType="numeric"
-          onChangeText={(verificationCode) => {
-            this.setState({ verificationCode })
+          onChangeText={(code) => {
+            this.setState({ verificationCode: code })
           }}
           maxLength={6}
         />
         <TouchableOpacity
           style={[styles.themeButton, { marginTop: 20 }]}
-          onPress={this.handleVerifyCode}
+          onPress={() => this.handleVerifyCode()}
         >
           <Text style={styles.themeButtonTitle}>Verify Code</Text>
         </TouchableOpacity>
@@ -92,7 +92,7 @@ class PhoneAuthScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: '#de4a4a' }]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: hex }]}>
         <View style={styles.page}>
           <TextInput
             style={styles.textInput}
@@ -100,24 +100,64 @@ class PhoneAuthScreen extends Component {
             placeholderTextColor="#eee"
             keyboardType="phone-pad"
             value={this.state.phone}
-            onChangeText={(phone) => {
-              this.setState({ phone })
+            onChangeText={(num) => {
+              this.setState({ phone: num })
             }}
             maxLength={15}
             editable={!this.state.confirmResult}
           />
 
-          <TouchableOpacity
-            style={[styles.themeButton, { marginTop: 20 }]}
-            onPress={this.state.confirmResult ? this.changePhoneNumber : this.handleSendCode}
-          >
-            <Text style={styles.themeButtonTitle}>
-              {this.state.confirmResult ? 'Change Phone Number' : 'Send Code'}
-            </Text>
-          </TouchableOpacity>
+          {this.state.confirmResult && (
+            <TouchableOpacity
+              style={[styles.themeButton, { marginTop: 20 }]}
+              onPress={() => this.changePhoneNumber()}
+            >
+              <Text style={styles.themeButtonTitle}>
+                {this.state.confirmResult ? 'Change Phone Number' : 'Send Code'}
+              </Text>
+            </TouchableOpacity>
+          )}
+
+          {!this.state.confirmResult && (
+            <TouchableOpacity
+              style={[styles.themeButton, { marginTop: 20 }]}
+              onPress={() => this.handleSendCode()}
+            >
+              <Text style={styles.themeButtonTitle}>
+                {this.state.confirmResult ? 'Change Phone Number' : 'Send Code'}
+              </Text>
+            </TouchableOpacity>
+          )}
 
           {this.state.confirmResult ? this.renderConfirmationCodeView() : null}
         </View>
+        {this.state.errorAlert && (
+          <Alert
+            title="Error, please try again"
+            button
+            buttonText="Close"
+            press={() => this.setState({ errorAlert: false })}
+            cancel={() => this.setState({ errorAlert: false })}
+          />
+        )}
+        {this.state.invalidNumberAlert && (
+          <Alert
+            title="Invalid Phone Number"
+            button
+            buttonText="Close"
+            press={() => this.setState({ invalidNumberAlert: false })}
+            cancel={() => this.setState({ invalidNumberAlert: false })}
+          />
+        )}
+        {this.state.badCodeAlert && (
+          <Alert
+            title="Please enter a 6 digit OTP code."
+            button
+            buttonText="Close"
+            press={() => this.setState({ badCodeAlert: false })}
+            cancel={() => this.setState({ badCodeAlert: false })}
+          />
+        )}
       </SafeAreaView>
     )
   }
@@ -126,35 +166,38 @@ class PhoneAuthScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#de4a4a',
+    backgroundColor: hex,
   },
   page: {
     flex: 1,
+    height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },
   textInput: {
+    fontFamily: font,
     marginTop: 20,
     width: '90%',
-    height: 40,
     borderColor: '#fff',
     borderWidth: 2,
-    borderRadius: 5,
+    borderWidth: 0,
+    borderBottomWidth: 2,
     paddingLeft: 10,
     color: '#fff',
-    fontSize: 16,
+    fontSize: 20,
   },
   themeButton: {
     width: '90%',
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#de4a4a',
+    backgroundColor: hex,
     borderColor: '#fff',
     borderWidth: 2,
-    borderRadius: 5,
+    borderRadius: 30,
   },
   themeButtonTitle: {
+    fontFamily: font,
     fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
