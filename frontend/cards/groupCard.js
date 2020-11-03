@@ -3,6 +3,7 @@ import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
+import imgStyles from '../../styles/cardImage.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -25,7 +26,10 @@ export default class GroupCard extends React.Component {
         <View style={styles.card}>
           <Image
             source={{ uri: this.props.image }}
-            style={this.props.filters ? styles.image : styles.imageFalse}
+            style={[
+              styles.image,
+              this.props.filters ? { borderColor: hex } : { borderColor: 'white' },
+            ]}
           />
           {this.props.filters ? (
             <Icon
@@ -80,12 +84,7 @@ export default class GroupCard extends React.Component {
             {this.props.username !== this.props.host && this.isHost ? (
               <Icon
                 name="times-circle"
-                style={{
-                  color: hex,
-                  fontSize: 35,
-                  alignSelf: 'center',
-                  marginLeft: '5%',
-                }}
+                style={[imgStyles.icon, { marginLeft: '5%' }]}
                 onPress={() => this.removeUser(this.props.username)}
               />
             ) : null}
@@ -126,16 +125,6 @@ const styles = StyleSheet.create({
     borderColor: hex,
     alignSelf: 'flex-start',
     marginTop: '3.5%',
-    marginLeft: '2.5%',
-  },
-  imageFalse: {
-    borderRadius: 63,
-    height: Dimensions.get('window').height * 0.09,
-    width: Dimensions.get('window').height * 0.09,
-    borderWidth: 3,
-    alignSelf: 'flex-start',
-    marginTop: '3.5%',
-    marginBottom: '3.5%',
     marginLeft: '2.5%',
   },
 })

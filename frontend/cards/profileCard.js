@@ -4,8 +4,8 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import Alert from '../modals/alert.js'
 import friendsApi from '../apis/friendsApi.js'
+import imgStyles from '../../styles/cardImage.js'
 
-const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
 export default class ProfileCard extends React.Component {
@@ -27,7 +27,7 @@ export default class ProfileCard extends React.Component {
       .then(() => {
         this.setState({ isFriend: true })
       })
-      .catch((error) => this.setState({ errorAlert: true }))
+      .catch(() => this.setState({ errorAlert: true }))
   }
 
   // delete friend and modify view
@@ -41,7 +41,7 @@ export default class ProfileCard extends React.Component {
         })
         this.props.press(this.props.id, filteredArray, true)
       })
-      .catch((error) => this.setState({ errorAlert: true }))
+      .catch(() => this.setState({ errorAlert: true }))
   }
 
   render() {
@@ -51,7 +51,7 @@ export default class ProfileCard extends React.Component {
           source={{
             uri: this.props.image,
           }}
-          style={{ borderRadius: 63, height: 60, width: 60, margin: '3%' }}
+          style={imgStyles.button}
         />
         <View
           style={{
@@ -68,27 +68,8 @@ export default class ProfileCard extends React.Component {
         {this.state.isFriend && (
           <TouchableHighlight onPress={() => this.setState({ deleteFriend: true })}>
             <View style={{ flexDirection: 'row', flex: 1 }}>
-              <Text
-                style={{
-                  fontFamily: font,
-                  color: hex,
-                  fontSize: 15,
-                  alignSelf: 'center',
-                  marginLeft: '25%',
-                }}
-              >
-                Friends
-              </Text>
-              <Icon
-                style={{
-                  fontFamily: font,
-                  color: hex,
-                  fontSize: 35,
-                  alignSelf: 'center',
-                  marginLeft: '5%',
-                }}
-                name="check-circle"
-              />
+              <Text style={(imgStyles.text, { marginLeft: '25%' })}>Friends</Text>
+              <Icon style={(imgStyles.icon, { marginLeft: '5%' })} name="check-circle" />
             </View>
           </TouchableHighlight>
         )}
@@ -109,24 +90,12 @@ export default class ProfileCard extends React.Component {
                 alignSelf: 'center',
               }}
             >
-              <Text
-                style={{
-                  fontFamily: font,
-                  fontSize: 15,
-                  textAlign: 'center',
-                  color: this.state.pressed ? 'white' : 'black',
-                }}
-              >
+              <Text style={[imgStyles.text, { color: this.state.pressed ? 'white' : 'black' }]}>
                 Accept
               </Text>
             </TouchableHighlight>
             <Icon
-              style={{
-                fontFamily: font,
-                fontSize: 30,
-                alignSelf: 'center',
-                margin: '5%',
-              }}
+              style={[imgStyles.icon, { margin: '5%' }]}
               name="times-circle"
               onPress={() => {
                 var filteredArray = this.props.total.filter((item) => {
@@ -162,7 +131,7 @@ export default class ProfileCard extends React.Component {
 }
 
 ProfileCard.propTypes = {
-  isFriends: PropTypes.bool,
+  friends: PropTypes.bool,
   id: PropTypes.string,
   total: PropTypes.array,
   username: PropTypes.string,
