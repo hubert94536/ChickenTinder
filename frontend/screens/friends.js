@@ -5,7 +5,6 @@ import { SearchBar } from 'react-native-elements'
 import Alert from '../modals/alert.js'
 import ProfileCard from '../cards/profileCard.js'
 import friendsApi from '../apis/friendsApi.js'
-import screenStyles from '../../styles/screenStyles.js'
 
 const font = 'CircularStd-Medium'
 
@@ -18,7 +17,6 @@ export default class Friends extends React.Component {
       data: [], // array for friends
       friends: [], // array of Profile components
       isFriends: this.props.isFriends, // For rendering friends (true) or requests (false)
-      errorAlert: false,
     }
     this.getFriends()
   }
@@ -39,7 +37,7 @@ export default class Friends extends React.Component {
         //  need two so when you search it doesn't get rid of all the friends
         this.setState({ friends: pushFriends, data: pushFriends })
       })
-      .catch((err) => this.setState({ errorAlert: true }))
+      .catch(() => this.setState({ errorAlert: true }))
   }
 
   //  searches the users friends by username

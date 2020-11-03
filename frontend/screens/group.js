@@ -184,7 +184,12 @@ export default class Group extends React.Component {
                 }
                 underlayColor="white"
               >
-                <Text style={[styles.leaveText, this.state.leaveGroup ? {color: hex} : {color: 'white'}]}>
+                <Text
+                  style={[
+                    styles.leaveText,
+                    this.state.leaveGroup ? { color: hex } : { color: 'white' },
+                  ]}
+                >
                   {this.state.host === this.state.username ? 'End' : 'Leave'}
                 </Text>
               </TouchableHighlight>
@@ -248,21 +253,27 @@ export default class Group extends React.Component {
               <TouchableHighlight
                 underlayColor="#fff"
                 activeOpacity={1}
-                onHideUnderlay={() => this.setState({start: false})}
-                onShowUnderlay={() => this.setState({start: true})}
+                onHideUnderlay={() => this.setState({ start: false })}
+                onShowUnderlay={() => this.setState({ start: true })}
                 onPress={() => this.start()}
-                style={[screenStyles.bigButton, styles.bigButton, this.state.start ? {opacity: 1} : {opacity: 0.5}]}
+                style={[
+                  screenStyles.bigButton,
+                  styles.bigButton,
+                  this.state.start ? { opacity: 1 } : { opacity: 0.5 },
+                ]}
               >
                 <Text style={styles.buttonText}>Start Round</Text>
               </TouchableHighlight>
             )}
             {this.state.host !== this.state.username && (
               <TouchableHighlight
-                style={[screenStyles.bigButton, styles.bigButton, this.state.start ? {opacity: 1} : {opacity: 0.5}]}
+                style={[
+                  screenStyles.bigButton,
+                  styles.bigButton,
+                  this.state.start ? { opacity: 1 } : { opacity: 0.5 },
+                ]}
               >
-                <Text style={styles.buttonText}>
-                  {this.state.start ? 'Ready!' : 'Waiting...'}
-                </Text>
+                <Text style={styles.buttonText}>{this.state.start ? 'Ready!' : 'Waiting...'}</Text>
               </TouchableHighlight>
             )}
           </View>

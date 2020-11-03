@@ -7,9 +7,6 @@ import RoundCard from '../cards/roundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 
-const hex = '#F25763'
-const font = 'CircularStd-Bold'
-
 export default class Round extends React.Component {
   constructor(props) {
     super(props)
@@ -44,7 +41,7 @@ export default class Round extends React.Component {
 
   endGroup() {
     socket.endSession()
-    socket.getSocket().on('leave', (res) => {
+    socket.getSocket().on('leave', () => {
       this.props.navigation.navigate('Home')
     })
   }

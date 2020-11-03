@@ -6,7 +6,8 @@ import Alert from '../modals/alert.js'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
 
-const hex = '#F25763'
+// commented out during linting but hex is used in commented-out code below
+//const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
 // cards for the search for friends screen
@@ -60,20 +61,7 @@ export default class SearchCard extends React.Component {
         })
         this.props.press(this.props.id, filteredArray, true)
       })
-      .catch((error) => this.setState({ errorAlert: true }))
-  }
-
-  async deleteFriend() {
-    friendsApi
-      .removeFriendship(this.state.id)
-      .then(() => {
-        this.setState({ deleteFriend: false })
-        var filteredArray = this.props.total.filter((item) => {
-          return item.username !== this.props.username
-        })
-        this.props.press(this.props.id, filteredArray, true)
-      })
-      .catch((error) => this.setState({ errorAlert: true }))
+      .catch(() => this.setState({ errorAlert: true }))
   }
 
   render() {
@@ -99,11 +87,7 @@ export default class SearchCard extends React.Component {
         </View>
         {this.state.requested === 'Requested' && this.state.renderOption && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-            <Text
-              style={[imgStyles.text, { marginRight: 25 }]}
-            >
-              Requested
-            </Text>
+            <Text style={[imgStyles.text, { marginRight: 25 }]}>Requested</Text>
             {/* <Icon
               style={{
                 fontFamily: font,
@@ -119,11 +103,7 @@ export default class SearchCard extends React.Component {
         )}
         {this.state.requested === 'Add' && this.state.renderOption && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-            <Text
-              style={imgStyles.text}
-            >
-              Add
-            </Text>
+            <Text style={imgStyles.text}>Add</Text>
             <Icon
               style={[imgStyles.icon, { margin: '8%' }]}
               onPress={() => this.addFriend()}
@@ -134,6 +114,7 @@ export default class SearchCard extends React.Component {
         {this.state.requested === 'Accepted' && this.state.renderOption && (
           <TouchableHighlight onPress={() => this.setState({ deleteFriend: true })}>
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
+<<<<<<< HEAD
               <Text
                 style={imgStyles.text}
               >
@@ -154,6 +135,10 @@ export default class SearchCard extends React.Component {
                 name='check-circle'
 >>>>>>> 8853b7f8e5d2c215ffa49f4a243e7189ecddbb28
               />
+=======
+              <Text style={imgStyles.text}>Friends</Text>
+              <Icon style={[imgStyles.icon, { margin: '8%' }]} name="check-circle" />
+>>>>>>> 2f056d0839be22e82bf47a4158918c952bf3b43c
             </View>
           </TouchableHighlight>
         )}

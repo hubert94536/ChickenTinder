@@ -6,7 +6,6 @@ import Alert from '../modals/alert.js'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
 
-const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
 export default class ProfileCard extends React.Component {
@@ -28,7 +27,7 @@ export default class ProfileCard extends React.Component {
       .then(() => {
         this.setState({ isFriend: true })
       })
-      .catch((error) => this.setState({ errorAlert: true }))
+      .catch(() => this.setState({ errorAlert: true }))
   }
 
   // delete friend and modify view
@@ -42,7 +41,7 @@ export default class ProfileCard extends React.Component {
         })
         this.props.press(this.props.id, filteredArray, true)
       })
-      .catch((error) => this.setState({ errorAlert: true }))
+      .catch(() => this.setState({ errorAlert: true }))
   }
 
   render() {
@@ -132,7 +131,7 @@ export default class ProfileCard extends React.Component {
 }
 
 ProfileCard.propTypes = {
-  isFriends: PropTypes.bool,
+  friends: PropTypes.bool,
   id: PropTypes.string,
   total: PropTypes.array,
   username: PropTypes.string,
