@@ -40,7 +40,7 @@ export default class Login extends React.Component {
   render() {
     return (
       <View>
-        <Text style={[screenStyles.text, screenStyles.title, {marginTop: '40%'}]}>Welcome!</Text>
+        <Text style={[screenStyles.text, screenStyles.title, { marginTop: '40%' }]}>Welcome!</Text>
         <Text style={[screenStyles.text, screenStyles.medButtonText]}>Let's get goin'.</Text>
         <TouchableHighlight
           onShowUnderlay={() => this.setState({ phonePressed: true })}
@@ -48,9 +48,14 @@ export default class Login extends React.Component {
           activeOpacity={1}
           underlayColor={hex}
           onPress={() => this.props.navigation.navigate('Phone')}
-          style={[screenStyles.medButton, styles.button, {borderColor: hex}]}
+          style={[screenStyles.medButton, styles.button, { borderColor: hex }]}
         >
-          <Text style={[styles.buttonText, this.state.phonePressed ? {color: 'white'} : {color: hex}]}>
+          <Text
+            style={[
+              styles.buttonText,
+              this.state.phonePressed ? { color: 'white' } : { color: hex },
+            ]}
+          >
             Phone Number Login
           </Text>
         </TouchableHighlight>
@@ -62,7 +67,12 @@ export default class Login extends React.Component {
           onPress={() => this.login()}
           style={[screenStyles.medButton, styles.button]}
         >
-          <Text style={[styles.buttonText, this.state.pressed ? {color: 'white'} : {color: '#3b5998'}]}>
+          <Text
+            style={[
+              styles.buttonText,
+              this.state.pressed ? { color: 'white' } : { color: '#3b5998' },
+            ]}
+          >
             {/* <Icon name="facebook" style={{fontSize: 20}} /> */}
             Log in with Facebook
           </Text>

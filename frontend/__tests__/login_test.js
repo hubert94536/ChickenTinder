@@ -2,6 +2,7 @@ import 'react-native';
 import React from 'react';
 import Login from '../screens/login';
 import renderer from 'react-test-renderer';
+<<<<<<< HEAD
 // import facebookService from '../apis/facebookService.js'
 import {loginWithFacebook} from '../apis/facebookService.js'
 
@@ -58,4 +59,18 @@ jest.mock('../apis/facebookService.js', () => ({
 //   expect(tree).toMatchSnapshot();
 
 // })
+=======
+
+ 
+
+
+const facebookService = require('../apis/facebookService.js')
+jest.mock('../apis/facebookService.js')
+
+
+test('renders correctly', () => {
+    const tree = renderer.create(<Login />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+>>>>>>> f0c39505509fa92b6ed0fd7507999106e9c4618e
 

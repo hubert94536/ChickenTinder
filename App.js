@@ -15,7 +15,6 @@ import UserProfileView from './frontend/screens/profile.js'
 import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
 import Notif from "./frontend/screens/notif.js"
 
-
 export default class App extends React.Component {
   constructor() {
     super()
@@ -63,11 +62,16 @@ export default class App extends React.Component {
             screen: Invite,
           },
           Phone: {
+<<<<<<< HEAD
             screen: PhoneAuthScreen
           },
           Notifications: {
             screen: Notif
           }
+=======
+            screen: PhoneAuthScreen,
+          },
+>>>>>>> f0c39505509fa92b6ed0fd7507999106e9c4618e
         },
         {
           initialRouteName: start,
@@ -84,13 +88,13 @@ export default class App extends React.Component {
     return this.state.appContainer
   }
 
-// import React from 'react'
-// import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
+  // import React from 'react'
+  // import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
 
-// export default class App extends React.Component{
-//   render () {
-//     return (
-//       <PhoneAuthScreen/>
-//     )
-//   }
+  // export default class App extends React.Component{
+  //   render () {
+  //     return (
+  //       <PhoneAuthScreen/>
+  //     )
+  //   }
 }
