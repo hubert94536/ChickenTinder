@@ -23,8 +23,6 @@ import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import PropTypes from 'prop-types'
 
-
-
 const hex = '#F25763'
 const font = 'CircularStd-Bold'
 var img = ''

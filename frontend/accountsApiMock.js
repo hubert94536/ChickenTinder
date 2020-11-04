@@ -52,50 +52,10 @@ const getAllUsers = jest
       ],
     }),
   )
-  .mockImplementationOnce(() =>
-    Promise.resolve({
-      // Fail
-      status: 500,
-      userList: [
-        // returns individual user info
-        {
-          name: 'John Wick',
-          username: 'j0hn',
-          photo:
-            'https://scontent-lax3-1.xx.fbcdn.net/v/t1.30497-1/cp0/c15.0.50.50a/p50x50/84628273_176159830277856_972693363922829312_n.jpg?_nc_cat=1&ccb=2&_nc_sid=12b3be&_nc_ohc=ZEui8MAu8YMAX8gwK_s&_nc_ht=scontent-lax3-1.xx&tp=27&oh=37a708095535bfb06a83a65981aee779&oe=5FC08038',
-          id: '1',
-        },
-        {
-          name: 'Bobby Brown',
-          username: 'b0bby',
-          photo:
-            'phohttps://scontent-lax3-1.xx.fbcdn.net/v/t1.30497-1/cp0/c15.0.50.50a/p50x50/84628273_176159830277856_972693363922829312_n.jpg?_nc_cat=1&ccb=2&_nc_sid=12b3be&_nc_ohc=ZEui8MAu8YMAX8gwK_s&_nc_ht=scontent-lax3-1.xx&tp=27&oh=37a708095535bfb06a83a65981aee779&oe=5FC08038to2',
-          id: '2',
-        },
-        {
-          name: 'Caitlin Lee',
-          username: 'cait1in',
-          photo:
-            'https://scontent-lax3-1.xx.fbcdn.net/v/t1.30497-1/cp0/c15.0.50.50a/p50x50/84628273_176159830277856_972693363922829312_n.jpg?_nc_cat=1&ccb=2&_nc_sid=12b3be&_nc_ohc=ZEui8MAu8YMAX8gwK_s&_nc_ht=scontent-lax3-1.xx&tp=27&oh=37a708095535bfb06a83a65981aee779&oe=5FC08038',
-          id: '3',
-        },
-        {
-          name: 'Sasha Suresh',
-          username: 'sa5ha',
-          photo:
-            'https://scontent-lax3-1.xx.fbcdn.net/v/t1.30497-1/cp0/c15.0.50.50a/p50x50/84628273_176159830277856_972693363922829312_n.jpg?_nc_cat=1&ccb=2&_nc_sid=12b3be&_nc_ohc=ZEui8MAu8YMAX8gwK_s&_nc_ht=scontent-lax3-1.xx&tp=27&oh=37a708095535bfb06a83a65981aee779&oe=5FC08038',
-          id: '4',
-        },
-        {
-          name: 'Ashley Nguyen',
-          username: 'ashl3y',
-          photo:
-            'https://scontent-lax3-1.xx.fbcdn.net/v/t1.30497-1/cp0/c15.0.50.50a/p50x50/84628273_176159830277856_972693363922829312_n.jpg?_nc_cat=1&ccb=2&_nc_sid=12b3be&_nc_ohc=ZEui8MAu8YMAX8gwK_s&_nc_ht=scontent-lax3-1.xx&tp=27&oh=37a708095535bfb06a83a65981aee779&oe=5FC08038',
-          id: '5',
-        },
-      ],
-    }),
-  )
+  .mockImplementationOnce(() => ({
+    // Fail
+    status: 500,
+  }))
 
 // gets first 100 account usernames/names starting with text input
 // mock function calls 5
@@ -145,51 +105,10 @@ const searchUsers = jest
       ],
     }),
   )
-  .mockImplementationOnce((text) =>
-    Promise.resolve({
-      // Fail
-      status: 500,
-      count: 5,
-      userList: [
-        // returns individual user info
-        {
-          name: 'John Wick',
-          username: 'j0hn',
-          photo:
-            'https://scontent-lax3-1.xx.fbcdn.net/v/t1.30497-1/cp0/c15.0.50.50a/p50x50/84628273_176159830277856_972693363922829312_n.jpg?_nc_cat=1&ccb=2&_nc_sid=12b3be&_nc_ohc=ZEui8MAu8YMAX8gwK_s&_nc_ht=scontent-lax3-1.xx&tp=27&oh=37a708095535bfb06a83a65981aee779&oe=5FC08038',
-          id: '1',
-        },
-        {
-          name: 'Bobby Brown',
-          username: 'b0bby',
-          photo:
-            'phohttps://scontent-lax3-1.xx.fbcdn.net/v/t1.30497-1/cp0/c15.0.50.50a/p50x50/84628273_176159830277856_972693363922829312_n.jpg?_nc_cat=1&ccb=2&_nc_sid=12b3be&_nc_ohc=ZEui8MAu8YMAX8gwK_s&_nc_ht=scontent-lax3-1.xx&tp=27&oh=37a708095535bfb06a83a65981aee779&oe=5FC08038to2',
-          id: '2',
-        },
-        {
-          name: 'Caitlin Lee',
-          username: 'cait1in',
-          photo:
-            'https://scontent-lax3-1.xx.fbcdn.net/v/t1.30497-1/cp0/c15.0.50.50a/p50x50/84628273_176159830277856_972693363922829312_n.jpg?_nc_cat=1&ccb=2&_nc_sid=12b3be&_nc_ohc=ZEui8MAu8YMAX8gwK_s&_nc_ht=scontent-lax3-1.xx&tp=27&oh=37a708095535bfb06a83a65981aee779&oe=5FC08038',
-          id: '3',
-        },
-        {
-          name: 'Sasha Suresh',
-          username: 'sa5ha',
-          photo:
-            'https://scontent-lax3-1.xx.fbcdn.net/v/t1.30497-1/cp0/c15.0.50.50a/p50x50/84628273_176159830277856_972693363922829312_n.jpg?_nc_cat=1&ccb=2&_nc_sid=12b3be&_nc_ohc=ZEui8MAu8YMAX8gwK_s&_nc_ht=scontent-lax3-1.xx&tp=27&oh=37a708095535bfb06a83a65981aee779&oe=5FC08038',
-          id: '4',
-        },
-        {
-          name: 'Ashley Nguyen',
-          username: 'ashl3y',
-          photo:
-            'https://scontent-lax3-1.xx.fbcdn.net/v/t1.30497-1/cp0/c15.0.50.50a/p50x50/84628273_176159830277856_972693363922829312_n.jpg?_nc_cat=1&ccb=2&_nc_sid=12b3be&_nc_ohc=ZEui8MAu8YMAX8gwK_s&_nc_ht=scontent-lax3-1.xx&tp=27&oh=37a708095535bfb06a83a65981aee779&oe=5FC08038',
-          id: '5',
-        },
-      ],
-    }),
-  )
+  .mockImplementationOnce((text) => ({
+    // Fail
+    status: 500,
+  }))
 
 // deletes user and returns status
 const deleteUser = jest

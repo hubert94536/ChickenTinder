@@ -1,9 +1,9 @@
 // mock functions for asyncStroage
 
-getItem = (text) => {
+const getItem = (text) => {
   return Promise.resolve(text)
 }
-setItem = (text) => {
+const setItem = (text) => {
   return Promise.resolve(text)
 }
 

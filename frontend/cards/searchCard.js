@@ -114,31 +114,8 @@ export default class SearchCard extends React.Component {
         {this.state.requested === 'Accepted' && this.state.renderOption && (
           <TouchableHighlight onPress={() => this.setState({ deleteFriend: true })}>
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-<<<<<<< HEAD
-              <Text
-                style={imgStyles.text}
-              >
-                Friends
-              </Text>
-              <Icon
-<<<<<<< HEAD
-                style={{
-                  fontFamily: font,
-                  color: hex,
-                  fontSize: 35,
-                  alignSelf: 'center',
-                  margin: '8%',
-                }}
-                name="check-circle"
-=======
-                style={[imgStyles.icon, { margin: '8%' }]}
-                name='check-circle'
->>>>>>> 8853b7f8e5d2c215ffa49f4a243e7189ecddbb28
-              />
-=======
               <Text style={imgStyles.text}>Friends</Text>
               <Icon style={[imgStyles.icon, { margin: '8%' }]} name="check-circle" />
->>>>>>> 2f056d0839be22e82bf47a4158918c952bf3b43c
             </View>
           </TouchableHighlight>
         )}

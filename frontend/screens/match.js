@@ -37,7 +37,7 @@ export default class Match extends React.Component {
     return (
       <View style={styles.container}>
         <Text style={[styles.general, { fontSize: 65, marginRight: '10%', marginLeft: '10%' }]}>
-          It&#x27s A Match!
+          {"It's A Match! testing"}
         </Text>
         <Icon name="thumbs-up" style={[styles.general, { fontSize: 50 }]} />
         <Text style={[styles.general, { fontSize: 20 }]}>Your group has selected:</Text>

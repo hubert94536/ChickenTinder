@@ -42,9 +42,7 @@ export default class Login extends React.Component {
     return (
       <View>
         <Text style={[screenStyles.text, screenStyles.title, { marginTop: '40%' }]}>Welcome!</Text>
-        <Text style={[screenStyles.text, screenStyles.medButtonText]}>
-          Let&#x27s get goin&#x27.
-        </Text>
+        <Text style={[screenStyles.text, screenStyles.medButtonText]}>{"Let's get goin'"}.</Text>
         <TouchableHighlight
           onShowUnderlay={() => this.setState({ phonePressed: true })}
           onHideUnderlay={() => this.setState({ phonePressed: false })}
