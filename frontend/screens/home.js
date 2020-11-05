@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dimensions, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import accountsApi from '../apis/accountsApi.js'
@@ -97,9 +97,13 @@ class Home extends React.Component {
           backgroundColor: 'white',
           alignItems:'center',
           justifyContent: 'space-evenly',
+          height: '100%'
         }}
       >
         <Text style={[screenStyles.text, screenStyles.title, {fontSize: 30}]}>Hungry? Chews wisely.</Text>
+        {/* dummy image */}
+        <Image source={{ uri: 'https://banner2.cleanpng.com/20181107/fhg/kisspng-computer-icons-location-map-united-states-of-ameri-5be33fd26a48d9.3500512415416196664353.jpg' }} 
+        style={{width: 200, height: 200,}}/> 
         <View >
         <TouchableHighlight
           onShowUnderlay={() => this.setState({ createPressed: true })}
@@ -123,7 +127,7 @@ class Home extends React.Component {
           onHideUnderlay={() => this.setState({ joinPressed: false })}
           activeOpacity={1}
           underlayColor="#F25763"
-          style={{backgroundColor: 'white', borderRadius: 40, width: width*0.5, height: 45, justifyContent:'center', alignSelf:'center', borderColor:'#F25763', borderWidth:2, margin:'3%'}}
+          style={{backgroundColor: 'white', borderRadius: 40, width: width*0.5, height: 45, justifyContent:'center', alignSelf:'center', borderColor:'#F25763', borderWidth:2}}
           onPress={() => this.setState({join: true})}
         >
           <Text style={[styles.buttonText, this.state.profilePressed ? {color: 'white'} : {color: '#F25763'}]}>

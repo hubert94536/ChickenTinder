@@ -85,10 +85,11 @@
 import React from 'react'
 import TabNavigator from './frontend/nav.js'
 
+
 export default class App extends React.Component{
   render () {
     return (
-      <TabNavigator/>
+        <TabNavigator/>
     )
   }
 }
