@@ -52,10 +52,7 @@ const getAllUsers = jest
       ],
     }),
   )
-  .mockImplementationOnce(() => ({
-    // Fail
-    status: 500,
-  }))
+  .mockImplementationOnce(() => ({ status: 500 })) // Fail
 
 // gets first 100 account usernames/names starting with text input
 // mock function calls 5
@@ -105,10 +102,7 @@ const searchUsers = jest
       ],
     }),
   )
-  .mockImplementationOnce((text) => ({
-    // Fail
-    status: 500,
-  }))
+  .mockImplementationOnce((text) => ({ status: 500 })) // Fail
 
 // deletes user and returns status
 const deleteUser = jest
@@ -129,18 +123,7 @@ const getUser = jest
       id: 1,
     }),
   )
-  .mockImplementationOnce(() =>
-    Promise.resolve({
-      // Fail
-      status: 500,
-      username: 'j0hn',
-      email: 'j0hn@gmail.com',
-      phone_number: 9491234567,
-      name: 'John Wick',
-      photo: 'photoJohn',
-      id: 1,
-    }),
-  )
+  .mockImplementationOnce(() => ({ status: 500 })) // Fail
 
 // update email and returns status
 const updateEmail = jest
