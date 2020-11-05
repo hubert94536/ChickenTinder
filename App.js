@@ -62,19 +62,14 @@ export default class App extends React.Component {
             screen: Invite,
           },
           Phone: {
-<<<<<<< HEAD
             screen: PhoneAuthScreen
           },
           Notifications: {
             screen: Notif
           }
-=======
-            screen: PhoneAuthScreen,
-          },
->>>>>>> f0c39505509fa92b6ed0fd7507999106e9c4618e
         },
         {
-          initialRouteName: start,
+          initialRouteName: 'Notifications',
           headerMode: 'none',
         },
       )

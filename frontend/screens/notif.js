@@ -4,13 +4,14 @@ import {
   Image,
   Keyboard,
   Modal,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableHighlight,
   View,
 } from 'react-native'
-import { NAME,  PHOTO, USERNAME } from 'react-native-dotenv'
+import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -21,6 +22,8 @@ import facebookService from '../apis/facebookService.js'
 import Friends from './friends.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
+import friendsApi from '../apis/friendsApi.js'
+import NotifCard from '../cards/notifCard.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Bold'
@@ -33,6 +36,12 @@ AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 AsyncStorage.getItem(PHOTO).then((res) => (img = res))
 AsyncStorage.getItem(NAME).then((res) => (name = res))
 
+var myId = ''
+
+AsyncStorage.getItem(ID).then((res) => {
+  myId = res
+})
+
 export default class Notif extends Component {
   constructor(props) {
     super(props)
@@ -43,6 +52,8 @@ export default class Notif extends Component {
       usernameValue: username,
       image: img,
       friends: true,
+      notifs: [],
+      activity:true,
       visible: false,
       changeName: false,
       changeUser: false,
@@ -54,145 +65,123 @@ export default class Notif extends Component {
       deleteAlert: false,
       errorAlert: false,
     }
+  
   }
 
-  // getting current user's info
-  async changeName() {
-    if (this.state.nameValue !== this.state.name) {
-      return accountsApi
-        .updateName(this.state.nameValue)
-        .then(() => {
-          // update name locally
-          AsyncStorage.setItem(NAME, this.state.name)
-          this.setState({ name: this.state.nameValue })
-          Keyboard.dismiss()
-        })
-        .catch(() => {
-          this.setState({ errorAlert: true })
-          this.setState({
-            nameValue: this.state.name,
-          })
-          Keyboard.dismiss()
-        })
+  componentDidMount() {
+    // uncomment if testing friends/requests
+    this.getNotifs();
+    accountsApi.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
+    accountsApi.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
+    accountsApi.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
+    accountsApi.createFBUser('Helen', 5, 'helenthemelon', 'helenw@gmail.com', 'sjdkf'),
+    accountsApi.createFBUser('Kevin', 6, 'kevint', 'kevintang@gmail.com', 'sdfddf'),
+    console.log("My id:" + myId)
+    friendsApi.createFriendshipTest(myId, 2),
+    friendsApi.createFriendshipTest(4, 2),
+    friendsApi.createFriendshipTest(myId, 3),
+    friendsApi.createFriendshipTest(myId, 4)
+    friendsApi.createFriendshipTest(6, myId)
+    friendsApi.acceptFriendRequest(2)
+  }
+
+  
+  async getNotifs() {
+    // Pushing notifs into this.state.notif
+    var pushNotifs = []
+    let notifList = [
+      {
+        "name": "Hanna Co",
+        "username": "hco",
+        "id": 3,
+        "type": "Invite"
+      },
+      {
+        "name": "Hubert Chen",
+        "username": "hubesc",
+        "id": 5,
+        "type": "Request"
+      },
+    ]
+    
+    console.log(notifList)
+    for (var notif in notifList) {
+      pushNotifs.push(notifList[notif])
     }
+    this.setState({notifs: pushNotifs})
   }
-
-  async changeUsername() {
-    if (this.state.username !== this.state.usernameValue) {
-      const user = this.state.usernameValue
-      return accountsApi
-        .checkUsername(user)
-        .then(() => {
-          // update username locally
-          return accountsApi.updateUsername(user).then(() => {
-            AsyncStorage.setItem(USERNAME, user)
-            this.setState({ username: this.state.usernameValue })
-            Keyboard.dismiss()
-          })
-        })
-        .catch((error) => {
-          if (error === 404) {
-            this.setState({ takenAlert: true })
-          } else {
-            this.setState({ errorAlert: true })
-          }
-          this.setState({ usernameValue: this.state.username })
-          Keyboard.dismiss()
-        })
-    }
-  }
-
-  async handleDelete() {
-    facebookService
-      .deleteUser()
-      .then(() => {
-        // close settings and navigate to Login
-        this.setState({ visible: false })
-        this.props.navigation.navigate('Login')
-      })
-      .catch(() => {
-        this.setState({ errorAlert: true })
-      })
-  }
-
-  // close alert for taken username
-  closeTaken() {
-    this.setState({ takenAlert: false })
-  }
-
-  // close alert for error
-  closeError() {
-    this.setState({ errorAlert: false })
-  }
-
-  // cancel deleting your account
-  cancelDelete() {
-    this.setState({ deleteAlert: false })
-  }
-
-  async handleLogout() {
-    facebookService
-      .logoutWithFacebook()
-      .then(() => {
-        // close settings and navigate to Login
-        this.setState({ visible: false })
-        this.props.navigation.navigate('Login')
-      })
-      .catch((error) => {
-        this.setState({ errorAlert: true })
-      })
-  }
-
-  cancelLogout() {
-    this.setState({ logoutAlert: false })
-  }
+  
 
   render() {
+
+    var notifs = []
+    var notifList = this.state.notifs
+    // Create all friend/request cards
+    if (Array.isArray(notifList) && notifList.length) {
+      for (var i = 0; i < notifList.length; i++) {
+        notifs.push(
+          <NotifCard
+            total={this.state.notifs}
+            name={notifList[i].name}
+            username={notifList[i].username}
+            id={notifList[i].id}
+            type={notifList[i].type}
+            key={i}
+            index={i}
+            press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
+          />,
+        )
+      }
+    }
     return (
       <View style={{ backgroundColor: 'white' }}>
         <View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Icon
               name="chevron-left"
-              style={[screenStyles.icons, {margin: '5%'}]}
+              style={[screenStyles.icons, { margin: '5%' }]}
               onPress={() => this.props.navigation.navigate('Home')}
             />
-            <Icon
-              name="cog"
-              style={[screenStyles.icons, {margin: '5%'}]}
-              onPress={() => this.setState({ visible: true })}
-            />
           </View>
-          <Text style={[screenStyles.text, styles.myProfile]}>My Profile</Text>
-          <View style={styles.userInfo}>
-            <Image
-              source={{
-                uri: this.state.image,
-              }}
-              style={styles.avatar}
-            />
-            <View>
-              <Text style={{ fontFamily: font, fontSize: 28 }}>{this.state.name}</Text>
-              <Text style={{ fontFamily: font, fontSize: 17 }}>{'@' + this.state.usernameValue}</Text>
-            </View>
-          </View>
+          <Text style={[screenStyles.text, styles.NotifTitle]}>Notifications</Text>
+          
           <View style={{ flexDirection: 'row' }}>
             <TouchableHighlight
               underlayColor="#fff"
-              style={[screenStyles.smallButton, this.state.friends ? {backgroundColor: hex} : {backgroundColor: 'white'}, {marginLeft: '5%'}]}
+              style={[
+                screenStyles.smallButton,
+                this.state.activity ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                { marginLeft: '5%' },
+              ]}
               onPress={() => this.refs.swiper.scrollBy(-1)}
             >
-              <Text style={[screenStyles.smallButtonText, styles.selectedText, this.state.friends ? {color: 'white'} : {color: hex} ]}>
-                Friends
+              <Text
+                style={[
+                  screenStyles.smallButtonText,
+                  styles.selectedText,
+                  this.state.activity ? { color: 'white' } : { color: hex },
+                ]}
+              >
+                Activity
               </Text>
             </TouchableHighlight>
             <TouchableHighlight
               underlayColor="#fff"
-              style={[screenStyles.smallButton, !this.state.friends ? {backgroundColor: hex} : {backgroundColor: 'white'}, {marginLeft: '5%'}]}
+              style={[
+                screenStyles.smallButton,
+                !this.state.activity ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                { marginLeft: '5%'},
+              ]}
               onPress={() => this.refs.swiper.scrollBy(1)}
             >
-              <Text style={[screenStyles.smallButtonText, styles.selectedText, !this.state.friends ? {color: 'white'} : {color: hex}]}>
-                Requests
+              <Text
+                style={[
+                  screenStyles.smallButtonText,
+                  styles.selectedText,
+                  !this.state.activity ? { color: 'white' } : { color: hex },
+                ]}
+              >
+                Friend Requests
               </Text>
             </TouchableHighlight>
           </View>
@@ -201,9 +190,11 @@ export default class Notif extends Component {
           <Swiper
             ref="swiper"
             loop={false}
-            onIndexChanged={() => this.setState({ friends: !this.state.friends })}
+            onIndexChanged={() => this.setState({ activity: !this.state.activity })}
           >
-            <Friends isFriends />
+            {/* <Friends isFriends /> */}
+            {/* <View /> */}
+            <ScrollView style={{ flexDirection: 'column' }}>{notifs}</ScrollView>
             <Friends isFriends={false} />
           </Swiper>
         </View>
@@ -215,226 +206,17 @@ export default class Notif extends Component {
             style={modalStyles.blur}
           />
         )}
-        {this.state.visible && (
-          <Modal animationType="fade" visible={this.state.visible} transparent>
-            <View style={styles.modal}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  margin: '5%',
-                }}
-              >
-                <Text
-                  style={[screenStyles.text, { fontSize: 18, alignSelf: 'center' }]}
-                >
-                  Settings
-                </Text>
-                <Icon
-                  name="times-circle"
-                  style={[screenStyles.text, { fontSize: 30 }]}
-                  onPress={() =>
-                    this.setState({
-                      visible: false,
-                    })
-                  }
-                />
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  margin: '5%',
-                }}
-              >
-                <View>
-                  <Text style={{ fontFamily: font, fontSize: 18 }}>Name:</Text>
-                  <TextInput
-                    style={[screenStyles.text, screenStyles.input]}
-                    value={this.state.nameValue}
-                    onChangeText={(text) => this.setState({ nameValue: text })}
-                  />
-                </View>
-                <TouchableHighlight
-                  style={[screenStyles.smallButton, styles.changeButtons, this.state.changeName ? {backgroundColor: hex} : {backgroundColor: 'white'}]}
-                  underlayColor={hex}
-                  onShowUnderlay={() => this.setState({ changeName: true })}
-                  onHideUnderlay={() => this.setState({ changeName: false })}
-                  onPress={() => this.changeName()}
-                >
-                  <Text
-                    style={[screenStyles.smallButtonText, this.state.changeName ? {color: 'white'} : {color: hex}]}
-                  >
-                    Change
-                  </Text>
-                </TouchableHighlight>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  margin: '5%',
-                }}
-              >
-                <View>
-                  <Text style={{ fontFamily: font, fontSize: 18 }}>Username:</Text>
-                  <TextInput
-                    style={[screenStyles.text, screenStyles.input]}
-                    value={this.state.usernameValue}
-                    onChangeText={(text) => this.setState({ usernameValue: text })}
-                  />
-                </View>
-                <TouchableHighlight
-                  style={[screenStyles.smallButton, styles.changeButtons, this.state.changeUser ? {backgroundColor: hex} : {backgroundColor: 'white'}]}
-                  underlayColor={hex}
-                  onShowUnderlay={() => this.setState({ changeUser: true })}
-                  onHideUnderlay={() => this.setState({ changeUser: false })}
-                  onPress={() => this.changeUsername()}
-                >
-                  <Text
-                    style={[screenStyles.smallButtonText, this.state.changeUser ? {color: 'white'} : {color: hex}]}
-                  >
-                    Change
-                  </Text>
-                </TouchableHighlight>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                }}
-              >
-                <TouchableHighlight
-                  underlayColor={hex}
-                  onShowUnderlay={() => this.setState({ delete: true })}
-                  onHideUnderlay={() => this.setState({ delete: false })}
-                  onPress={() => this.setState({ deleteAlert: true })}
-                  style={[screenStyles.smallButton, styles.button, this.state.delete ? {backgroundColor: hex} : {backgroundColor: 'white'}]}
-                >
-                  <Text style={[screenStyles.smallButtonText,  this.state.delete ? {color: 'white'} : {color: hex}]}>
-                    Delete
-                  </Text>
-                </TouchableHighlight>
-                <TouchableHighlight
-                  underlayColor={hex}
-                  onShowUnderlay={() => this.setState({ logout: true })}
-                  onHideUnderlay={() => this.setState({ logout: false })}
-                  onPress={() => this.setState({ logoutAlert: true })}
-                  style={[screenStyles.smallButton, styles.button, this.state.logout ? {backgroundColor: hex} : {backgroundColor: 'white'}]}
-                >
-                  <Text style={[screenStyles.smallButtonText,  this.state.logout ? {color: 'white'} : {color: hex}]}>
-                    Logout
-                  </Text>
-                </TouchableHighlight>
-                {this.state.deleteAlert && (
-                  <Alert
-                    title="Delete your account?"
-                    body="You will not be able to recover your information"
-                    button
-                    buttonText="Yes"
-                    press={() => this.handleDelete()}
-                    cancel={() => this.cancelDelete()}
-                  />
-                )}
-                {this.state.logoutAlert && (
-                  <Alert
-                    title="Log Out?"
-                    body="You will have to log back in"
-                    button
-                    buttonText="Yes"
-                    press={() => this.handleLogout()}
-                    cancel={() => this.cancelLogout()}
-                  />
-                )}
-                {this.state.errorAlert && (
-                  <Alert
-                    title="Error, please try again"
-                    button
-                    buttonText="Close"
-                    press={() => this.closeError()}
-                    cancel={() => this.closeError()}
-                  />
-                )}
-                {this.state.takenAlert && (
-                  <Alert
-                    title="Username taken!"
-                    button
-                    buttonText="Close"
-                    press={() => this.closeTaken()}
-                    cancel={() => this.closeTaken()}
-                  />
-                )}
-              </View>
-              {/* <View
-                style={{
-                  margin: '5%',
-                }}>
-                <Text style={{fontFamily: font, fontSize: 18}}>
-                  Friends List Display:
-                </Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    margin: '5%',
-                  }}>
-                  <TouchableHighlight
-                    underlayColor={hex}
-                    onShowUnderlay={() => this.setState({public: true})}
-                    style={{
-                      alignSelf: 'center',
-                      borderWidth: 2,
-                      borderColor: hex,
-                      borderRadius: 50,
-                      width: '35%',
-                      marginRight: '5%',
-                      backgroundColor: this.state.public ? hex : 'white',
-                    }}
-                    onPress={() => this.setState({public: true})}>
-                    <Text
-                      style={
-                        this.state.public
-                          ? styles.changeTextSelected
-                          : styles.changeText
-                      }>
-                      Public
-                    </Text>
-                  </TouchableHighlight>
-                  <TouchableHighlight
-                    underlayColor={hex}
-                    onShowUnderlay={() => this.setState({public: false})}
-                    style={{
-                      alignSelf: 'center',
-                      borderWidth: 2,
-                      borderColor: hex,
-                      borderRadius: 50,
-                      width: '35%',
-                      backgroundColor: this.state.public ? 'white' : hex,
-                    }}
-                    onPress={() => this.setState({public: false})}>
-                    <Text
-                      style={
-                        this.state.public
-                          ? styles.changeText
-                          : styles.changeTextSelected
-                      }>
-                      Private
-                    </Text>
-                  </TouchableHighlight>
-                </View>
-              </View> */}
-            </View>
-          </Modal>
-        )}
+        
       </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  myProfile: {
+  NotifTitle: {
     fontSize: 17,
     paddingLeft: '5%',
+    paddingBottom: '5%',
   },
   avatar: {
     width: 100,
@@ -466,5 +248,5 @@ const styles = StyleSheet.create({
     width: '35%',
     marginRight: '5%',
     marginTop: '5%',
-  }
+  },
 })
