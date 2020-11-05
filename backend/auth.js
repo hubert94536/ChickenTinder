@@ -7,6 +7,8 @@ const privateKey = process.env.PRIVATE_KEY;
 const publicKey = process.env.PUBLIC_KEY;
 const secret = process.env.JWT_SECRET;
 
+// TODO: Integrate with APIs (check response header for new access token, append tokens to all requests)
+
 // Generate and returns access token
 // TODO: Figure out when to generate access token
 const getAccessToken = (req, res) => {
@@ -31,7 +33,7 @@ const getAccessToken = (req, res) => {
 // 'Access-Token' MUST BE ATTACHED to every request header 
 const decodeAccessToken = (req, res, next) => {
     try{
-        const token = req.header("Access-Token")
+        const token = req.header("x-access-token");
         if (!token) return next();
         var options = {
             algorithms: ["RS256"],
@@ -44,6 +46,23 @@ const decodeAccessToken = (req, res, next) => {
         req.uid = payload.uid // NOTE: Unsure if this will work as intended
         return next();
     } catch (error) {
+        if (error.name === "TokenExpiredError"){
+            // TODO: See if token can be requested from client during request rather than always passing in token
+            // Checks refresh token with expired token, then generates new token and conitnues with request
+            try{
+                const uid = decodeRefreshToken(req);
+                options.ignoreExpiration = true;
+                payload = jwt.verify(token, publicKey, options);
+                if (payload.uid === uid) {
+                    const newToken = getRefreshToken(uid);
+                    req.uid = uid;
+                    res.setHeader('x-access-token', newToken);
+                }
+            }
+            catch (error) {
+                return next();
+            }
+        }
         return next();
     }
 }
@@ -51,7 +70,7 @@ const decodeAccessToken = (req, res, next) => {
 // Uncomment to independently test function via endpoint
 // const decodeAccessToken = (req, res) => {
 //     try{
-//         const token = req.header("Access-Token")
+//         const token = req.header("x-access-token")
 //         if (!token) throw "No token";
 //         var options = {
 //             algorithms: ["RS256"],
@@ -64,6 +83,21 @@ const decodeAccessToken = (req, res, next) => {
 //         req.uid = payload.uid
 //         return res.status(200).send(payload.uid);
 //     } catch (error) {
+//             if (error.name === "TokenExpiredError"){
+//                 try{
+//                     const uid = decodeRefreshToken(req);
+//                     options.ignoreExpiration = true;
+//                     payload = jwt.verify(token, publicKey, options);
+//                     if (payload.uid === uid) {
+//                         const newToken = getRefreshToken(uid);
+//                         req.uid = uid;
+//                         res.setHeader('x-access-token', newToken);
+//                     }
+//                 }
+//                 catch (error) {
+//                     // do nothing
+//                 }
+//             }
 //         return res.status(500).send(error.message);
 //     }
 // }
@@ -109,7 +143,7 @@ const getRefreshToken = (uid) => {
 // Decodes refresh token and returns uid
 const decodeRefreshToken = (req) => {
     try{
-        const token = req.header("Refresh-Token");
+        const token = req.header("x-refresh-token");
         if (!token) throw "Invalid header";
         var options = {
             algorithms: ["HS256"],
@@ -128,7 +162,7 @@ const decodeRefreshToken = (req) => {
 // Uncomment to independently test function via endpoint
 // const decodeRefreshToken = (req, res) => {
 //     try{
-//         const token = req.header("Refresh-Token")
+//         const token = req.header("x-refresh-token")
 //         if (!token) throw "Invalid header";
 //         var options = {
 //             algorithms: ["HS256"],
@@ -147,8 +181,7 @@ const decodeRefreshToken = (req) => {
 // Middleware: Checks if user has been authenticated
 const isAuthenticated = (req, res, next) => {
     if (req.uid) return next();
-    res.status(401);
-    res.send('User not authenticated')
+    return res.status(401).send('Unauthenticated request');
 }
 
 // Import these functions into relevant backend files - do not make these directly accessible by api call
