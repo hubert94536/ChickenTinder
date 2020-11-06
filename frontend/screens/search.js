@@ -15,11 +15,31 @@ import accountsApi from '../apis/accountsApi.js';
 import SearchCard from '../cards/searchCard.js'
 import Alert from '../modals/alert.js'
 import screenStyles from '../../styles/screenStyles.js'
+import friendsApi from '../apis/friendsApi.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Bold'
 var username = ''
 AsyncStorage.getItem(USERNAME).then((res) => (username = res))
+
+// async function getFriends() {
+//   // Pushing accepted friends or pending requests into this.state.friends
+//   friendsApi
+//     .getFriends()
+//     .then((res) => {
+//       var friendsMap = new Object()
+//       for (var friend in res.friendList) {
+//         friendsMap[res.friendList[friend].id] = res.friendList[friend].status
+//       }
+//       this.setState({ friends: friendsMap })
+//       this.props.navigation.navigate('Search', {
+//         allFriends: friendsMap,
+//       })
+//     })
+//     .catch((err) => {
+//       this.setState({ errorAlert: true })
+//     })
+// }
 
 export default class Search extends Component {
   constructor(props) {
@@ -27,9 +47,22 @@ export default class Search extends Component {
 
     this.state = {
       data: [],
-      friends: this.props.navigation.state.params.allFriends,
+      // friends: this.props.navigation.state.params.allFriends,
+      friends: [],
       errorAlert: false
     };
+    friendsApi
+    .getFriends()
+    .then((res) => {
+      var friendsMap = new Object()
+      for (var friend in res.friendList) {
+        friendsMap[res.friendList[friend].id] = res.friendList[friend].status
+      }
+      this.setState({ allFriends: friendsMap })
+    })
+    .catch((err) => {
+      this.setState({ errorAlert: true })
+    })
   }
 
   renderSeparator = () => {
@@ -99,9 +132,9 @@ export default class Search extends Component {
       <SearchBar
         containerStyle={styles.container}
         inputContainerStyle={styles.inputContainer}
-        inputStyle={styles.input}
-        placeholder="Seach by username"
-        lightTheme={true}
+        inputStyle={[styles.input, {textAlignVertical:'center'}]}
+        placeholder='Search for friends'
+        lightTheme={true} 
         round={true}
         onChangeText={text => this.searchFilterFunction(text)}
         autoCorrect={false}
@@ -113,12 +146,7 @@ export default class Search extends Component {
   render() {
     return (
       <View style={{flex: 1, backgroundColor: 'white'}}>
-        <Icon
-          name="chevron-left"
-          style={[screenStyles.icons, styles.topIcons]}
-          onPress={() => this.props.navigation.navigate('Home')}
-        />    
-        <Text style={[screenStyles.text, screenStyles.title, {marginBottom: '4%'}]}>Find New Friends!</Text>
+        <Text style={[screenStyles.icons, {marginTop: '4%', textAlign:'center'}]}>Find friends</Text>
         <FlatList
           data={this.state.data}
           renderItem={({item}) => (
@@ -151,9 +179,9 @@ export default class Search extends Component {
   }
 }
 
-Search.propTypes = {
-  allFriends: PropTypes.array
-}
+// Search.propTypes = {
+//   allFriends: PropTypes.array
+// }
 
 const styles = StyleSheet.create({
   topIcons: {
@@ -172,7 +200,7 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height * 0.05,
     width: '90%',
     alignSelf: 'center',
-    backgroundColor: '#ebecf0',
+    backgroundColor: '#e7e7e7',
   },
   input: {
     textAlignVertical: 'center',
