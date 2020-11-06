@@ -61,24 +61,7 @@ export default class SearchCard extends React.Component {
         })
         this.props.press(this.props.id, filteredArray, true)
       })
-<<<<<<< HEAD
-      .catch((error) => this.setState({ errorAlert: true }))
-  }
-
-  async deleteFriend() {
-    friendsApi
-      .removeFriendship(this.state.id)
-      .then(() => {
-        this.setState({ deleteFriend: false })
-        var filteredArray = this.props.total.filter((item) => {
-          return item.username !== this.props.username
-        })
-        this.props.press(this.props.id, filteredArray, true)
-      })
-      .catch((error) => this.setState({ errorAlert: true }))
-=======
       .catch(() => this.setState({ errorAlert: true }))
->>>>>>> 2f056d0839be22e82bf47a4158918c952bf3b43c
   }
 
   render() {

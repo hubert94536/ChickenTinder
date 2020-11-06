@@ -15,24 +15,22 @@ const accountsApi = axios.create({
 
 // creates user and returns id
 const createFBUser = async (name, id, username, email, photo) => {
-  return (
-    accountsApi
-      .post('/accounts', {
-        params: {
-          id: id,
-          name: name,
-          username: username,
-          email: email,
-          photo: photo,
-        },
-      })
-      .then((res) => {
-        return res.status
-      })
-      .catch((error) => {
-        throw error.response.status
-      })
-  )
+  return accountsApi
+    .post('/accounts', {
+      params: {
+        id: id,
+        name: name,
+        username: username,
+        email: email,
+        photo: photo,
+      },
+    })
+    .then((res) => {
+      return res.status
+    })
+    .catch((error) => {
+      throw error.response.status
+    })
 }
 
 // gets list of users

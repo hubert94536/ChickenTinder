@@ -89,10 +89,10 @@ class Home extends React.Component {
       .catch((err) => {
         this.setState({ errorAlert: true })
       })
-      this.setState({ friends: friendsMap })
-        this.props.navigation.navigate('Search', {
-          allFriends: friendsMap,
-        })
+    this.setState({ friends: friendsMap })
+    this.props.navigation.navigate('Search', {
+      allFriends: friendsMap,
+    })
   }
 
   render() {
