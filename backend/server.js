@@ -35,11 +35,11 @@ function validateRequest(req, next, schema) {
   }
   // schema.validate(val, options) ==> validates val using current schema and options
   // Returns obj w keys value (validated, normalised val) and error (any validation errors)
-  const { value, error } = schema.validate(req.body, validationOptions)
+  const { value, error } = schema.validate(req.body.params, validationOptions)
   if (error) {
     next(`Validation error: ${error.details.map((x) => x.message).join(', ')}`)
   } else {
-    req.body = value
+    req.body.params = value
     next()
   }
 }
@@ -49,7 +49,12 @@ app
   .route('/accounts')
   .get(accounts.getAllAccounts)
   .post(checkCreateAccountsSchema, accounts.createAccount)
+//.post(accounts.createAccount);
+
 function checkCreateAccountsSchema(req, res, next) {
+  console.log(' in create accounts schema handler!!')
+  console.log(req.body)
+
   const createAccountsSchema = Joi.object().keys({
     id: Joi.number().unsafe().required(), //ids are BigInts, which can be outside of the safe range
     name: Joi.string().required(),
@@ -79,7 +84,7 @@ function checkUpdateAccountSchema(req, res, next) {
       phone_number: Joi.string().min(7).max(15),
     })
     //.or(peer1, peer2, ...) ==> at least 1 peer is required, there can be more than 1
-    .or('id', 'name', 'username', 'email', 'photo', 'phone_number')
+    .or('name', 'username', 'email', 'photo', 'phone_number')
   validateRequest(req, next, updateAccountSchema)
 }
 
@@ -95,7 +100,7 @@ function checkCreateFriendsSchema(req, res, next) {
       main: Joi.number().integer().required(),
       friend: Joi.number().integer().required(),
     })
-    .with('main', 'friend')
+    .with('main', 'friend') //every main must have a friend
   validateRequest(req, next, createFriendsSchema)
 }
 
