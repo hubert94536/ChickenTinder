@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View, Modal } from 'react-native'
 import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import accountsApi from '../apis/accountsApi.js'
@@ -8,6 +8,9 @@ import friendsApi from '../apis/friendsApi.js'
 import Join from '../modals/join.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
+import TabBar from '../nav.js'
+import Icon from 'react-native-vector-icons/FontAwesome'
+
 
 var img = ''
 var name = ''
@@ -20,6 +23,7 @@ AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 var myId = ''
 
 const width = Dimensions.get('window').width
+const height = Dimensions.get('window').height
 
 AsyncStorage.getItem(ID).then((res) => {
   myId = res
@@ -97,7 +101,6 @@ class Home extends React.Component {
           backgroundColor: 'white',
           alignItems:'center',
           justifyContent: 'space-evenly',
-          height: '100%'
         }}
       >
         <Text style={[screenStyles.text, screenStyles.title, {fontSize: 30}]}>Hungry? Chews wisely.</Text>
@@ -110,13 +113,13 @@ class Home extends React.Component {
           onHideUnderlay={() => this.setState({ createPressed: false })}
           activeOpacity={1}
           underlayColor="white"
-          style={{backgroundColor: '#F25763', borderRadius: 40, width: width*0.5, height: 45, justifyContent:'center', alignSelf:'center', margin:'3%'}}
+          style={{backgroundColor: '#F15763', borderRadius: 40, width: width*0.5, height: 45, justifyContent:'center', alignSelf:'center', margin:'3%'}}
           onPress={() => this.createGroup()}
         >
           <Text
             style={[
               styles.buttonText,
-              this.state.createPressed ? { color: '#F25763' } : { color: 'white' },
+              this.state.createPressed ? { color: '#F15763' } : { color: 'white' },
             ]}
           >
             Create Group
@@ -126,15 +129,22 @@ class Home extends React.Component {
           onShowUnderlay={() => this.setState({ joinPressed: true })}
           onHideUnderlay={() => this.setState({ joinPressed: false })}
           activeOpacity={1}
-          underlayColor="#F25763"
-          style={{backgroundColor: 'white', borderRadius: 40, width: width*0.5, height: 45, justifyContent:'center', alignSelf:'center', borderColor:'#F25763', borderWidth:2}}
+          underlayColor='#F15763'
+          style={{backgroundColor: 'white', borderRadius: 40, width: width*0.5, height: 45, justifyContent:'center', alignSelf:'center', borderColor:'#F15763', borderWidth:2}}
           onPress={() => this.setState({join: true})}
         >
-          <Text style={[styles.buttonText, this.state.profilePressed ? {color: 'white'} : {color: '#F25763'}]}>
+          <Text style={[styles.buttonText, this.state.profilePressed ? {color: 'white'} : {color: '#F15763'}]}>
             Join Group
           </Text>
         </TouchableHighlight>
         </View>
+        <TabBar 
+          goHome={() => this.props.navigation.navigate('Home')}
+          goSearch={() => this.props.navigation.navigate('Search')}
+          goNotifs={() => this.props.navigation.navigate('Notifications')}
+          goProfile={() => this.props.navigation.navigate('Profile')}
+          cur='Home'
+        />
         {this.state.join && (
           <Join
             image={this.state.inviteInfo.pic}

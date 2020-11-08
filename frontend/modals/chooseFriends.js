@@ -7,8 +7,8 @@ import Alert from './alert.js'
 import ChooseCard from '../cards/chooseCard.js'
 import friendsApi from '../apis/friendsApi.js'
 
-const hex = '#F25763'
-const font = 'CircularStd-Bold'
+const hex = '#F15763'
+const font = 'CircularStd-Medium'
 const height = Dimensions.get('window').height
 
 //  little pop up modal that is showed when you click choose friends in filters

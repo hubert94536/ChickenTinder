@@ -21,8 +21,8 @@ import TagsView from '../tagsView'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 
-const hex = '#F25763'
-const font = 'CircularStd-Bold'
+const hex = '#F15763'
+const font = 'CircularStd-Medium'
 
 //  need this for choosing the time
 const hours = [

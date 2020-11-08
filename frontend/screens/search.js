@@ -16,9 +16,10 @@ import SearchCard from '../cards/searchCard.js'
 import Alert from '../modals/alert.js'
 import screenStyles from '../../styles/screenStyles.js'
 import friendsApi from '../apis/friendsApi.js'
+import TabBar from '../nav.js'
 
-const hex = '#F25763'
-const font = 'CircularStd-Bold'
+const hex = '#F15763'
+const font = 'CircularStd-Medium'
 var username = ''
 AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 
@@ -174,6 +175,13 @@ export default class Search extends Component {
             cancel={() => this.setState({errorAlert: false})}
           />
         )}
+        <TabBar 
+          goHome={() => this.props.navigation.navigate('Home')}
+          goSearch={() => this.props.navigation.navigate('Search')}
+          goNotifs={() => this.props.navigation.navigate('Notifications')}
+          goProfile={() => this.props.navigation.navigate('Profile')}
+          cur='Search'
+        />
       </View>
     );
   }

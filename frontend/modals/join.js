@@ -8,8 +8,8 @@ import modalStyles from '../../styles/modalStyles.js'
 import { TextInput } from 'react-native-paper'
 import screenStyles from '../../styles/screenStyles.js'
 
-const hex = '#F25763'
-const font = 'CircularStd-Bold'
+const hex = '#F15763'
+const font = 'CircularStd-Medium'
 //  props are name, image url, and functions for cancel and go
 // invite alert
 
