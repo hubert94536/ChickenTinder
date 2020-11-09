@@ -19,9 +19,8 @@
 
 // export default Tab
 
-
-import * as React from "react"
-import { Animated, TouchableOpacity } from "react-native"
+import * as React from 'react'
+import { Animated, TouchableOpacity } from 'react-native'
 
 const Tab = ({ focusAnim, title, onPress }) => {
   return (
@@ -32,8 +31,7 @@ const Tab = ({ focusAnim, title, onPress }) => {
           borderRadius: 10,
         }}
       >
-        <Animated.Text
-        >{title}</Animated.Text>
+        <Animated.Text>{title}</Animated.Text>
       </Animated.View>
     </TouchableOpacity>
   )
