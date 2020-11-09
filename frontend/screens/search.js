@@ -59,25 +59,25 @@ export default class Search extends Component {
       for (var friend in res.friendList) {
         friendsMap[res.friendList[friend].id] = res.friendList[friend].status
       }
-      this.setState({ allFriends: friendsMap })
+      this.setState({ friends: friendsMap })
     })
     .catch((err) => {
       this.setState({ errorAlert: true })
     })
   }
 
-  renderSeparator = () => {
-    return (
-      <View
-        style={{
-          height: 1,
-          width: '86%',
-          backgroundColor: '#CED0CE',
-          marginLeft: '14%',
-        }}
-      />
-    );
-  };
+  // renderSeparator = () => {
+  //   return (
+  //     <View
+  //       style={{
+  //         height: 1,
+  //         width: '86%',
+  //         backgroundColor: '#CED0CE',
+  //         marginLeft: '14%',
+  //       }}
+  //     />
+  //   );
+  // };
 
   searchFilterFunction = text => {
     this.setState({
@@ -104,7 +104,7 @@ export default class Search extends Component {
                 id: res.userList[user].id,
                 status: status
               }
-              resultUsers.push(person);
+=              resultUsers.push(person);
             }
             this.setState({data: resultUsers});
           })
@@ -147,7 +147,7 @@ export default class Search extends Component {
   render() {
     return (
       <View style={{flex: 1, backgroundColor: 'white'}}>
-        <Text style={[screenStyles.icons, {marginTop: '4%', textAlign:'center'}]}>Find friends</Text>
+        <Text style={[screenStyles.icons, {marginTop: '10%', textAlign:'center'}]}>Find friends</Text>
         <FlatList
           data={this.state.data}
           renderItem={({item}) => (
@@ -163,7 +163,7 @@ export default class Search extends Component {
             />
           )}
           keyExtractor={(item) => item.username}
-          ItemSeparatorComponent={this.renderSeparator}
+          // ItemSeparatorComponent={this.renderSeparator}
           ListHeaderComponent={this.renderHeader}
         />
         {this.state.errorAlert && (
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderBottomColor: 'transparent',
     borderTopColor: 'transparent',
-    width: '100%',
+    width: '95%',
     height: Dimensions.get('window').height * 0.08,
     alignSelf: 'center',
   },
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e7e7e7',
   },
   input: {
-    textAlignVertical: 'center',
+    textAlignVertical: 'bottom',
     fontFamily: font,
     fontSize: 18,
   },

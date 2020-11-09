@@ -3,9 +3,9 @@ import { StyleSheet } from 'react-native'
 export default StyleSheet.create({
   button: {
     borderRadius: 63,
-    height: 60,
-    width: 60,
-    margin: '3%',
+    height: 45,
+    width: 45,
+    margin: '1%',
   },
   text: {
     fontFamily: 'CircularStd-Medium',

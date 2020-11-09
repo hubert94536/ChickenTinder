@@ -44,9 +44,9 @@ export default class Join extends React.Component {
 
   render() {
     return (
-      <View style={{position: 'absolute'}}>
+      <View>
         <Modal transparent animationType="none">
-          <View style={[modalStyles.modal, {height: 180}]}>
+          <View style={[modalStyles.modal, {flex: 0, height: 180, borderRadius: 15}]}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               <Icon
                 name="times-circle"
@@ -60,8 +60,8 @@ export default class Join extends React.Component {
                 justifyContent: 'space-evenly',
               }}
             >
-              <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems:'center' }}>
-                <Text style={[screenStyles.text, {fontSize: 20}]}>Group PIN:</Text>
+              <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems:'center' }}>
+                <Text style={[screenStyles.text, {fontSize: 20, margin: '2%'}]}>Group PIN:</Text>
                 <TextInput
                   style={[screenStyles.input], {height: 30, fontSize: 20, textAlignVertical:'center'}}
                   placeholderTextColor='#999999'
@@ -73,6 +73,7 @@ export default class Join extends React.Component {
                   value={this.state.code}
               />
               </View>
+              {!this.state.invalid && <Text style={{textAlign:'center'}}> </Text>}
               {this.state.invalid && <Text style={{textAlign:'center'}}>Sorry, PIN is invalid or expired</Text>}
               {this.state.isValid && 
                 <TouchableHighlight
