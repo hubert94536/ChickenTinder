@@ -15,7 +15,6 @@
 // import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
 // import TabNavigator from './frontend/nav.js'
 
-
 // export default class App extends React.Component {
 //   constructor() {
 //     super()
@@ -85,10 +84,8 @@
 import React from 'react'
 import TabNavigator from './frontend/nav.js'
 
-export default class App extends React.Component{
-  render () {
-    return (
-        <TabNavigator style={{backgroundColor:'white'}}/>
-    )
+export default class App extends React.Component {
+  render() {
+    return <TabNavigator style={{ backgroundColor: 'white' }} />
   }
 }

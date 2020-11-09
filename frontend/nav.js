@@ -17,12 +17,13 @@ import Username from './screens/username.js'
 import PhoneAuthScreen from './screens/PhoneAuth.js'
 import TabBar from './TabBar.js'
 
-const HomeStack = createStackNavigator({ Home, Group, Round, Match }, {initialRouteName:'Home', headerMode: 'none'});
-
+const HomeStack = createStackNavigator(
+  { Home, Group, Round, Match },
+  { initialRouteName: 'Home', headerMode: 'none' },
+)
 
 const hex = '#F25763'
 const font = 'CircularStd-Bold'
-
 
 class Notifications extends React.Component {
   render() {
@@ -49,7 +50,9 @@ const TabNavigator = createBottomTabNavigator(
       tabBarAccessibilityLabel: 'Home',
       navigationOptions: {
         tabBarLabel: 'Home',
-        tabBarIcon: ({focused, tintColor}) => (<Icon focused={focused} name='home' color={tintColor} size={26}/>)
+        tabBarIcon: ({ focused, tintColor }) => (
+          <Icon focused={focused} name="home" color={tintColor} size={26} />
+        ),
       },
     },
     Search: {
@@ -57,7 +60,9 @@ const TabNavigator = createBottomTabNavigator(
       tabBarAccessibilityLabel: 'Search',
       navigationOptions: {
         tabBarLabel: 'Search',
-        tabBarIcon: ({focused, tintColor}) => (<Icon focused={focused} name='search' color={tintColor} size={26}/>)
+        tabBarIcon: ({ focused, tintColor }) => (
+          <Icon focused={focused} name="search" color={tintColor} size={26} />
+        ),
       },
     },
     Notifications: {
@@ -65,7 +70,9 @@ const TabNavigator = createBottomTabNavigator(
       tabBarAccessibilityLabel: 'Notifications',
       navigationOptions: {
         tabBarLabel: 'Notifications',
-        tabBarIcon: ({focused, tintColor}) => (<Icon focused={focused} name='bullhorn' color={tintColor} size={26}/>)
+        tabBarIcon: ({ focused, tintColor }) => (
+          <Icon focused={focused} name="bullhorn" color={tintColor} size={26} />
+        ),
       },
     },
     Profile: {
@@ -73,19 +80,27 @@ const TabNavigator = createBottomTabNavigator(
       tabBarAccessibilityLabel: 'Profile',
       navigationOptions: {
         tabBarLabel: 'Profile',
-        tabBarIcon: ({focused, tintColor}) => (<Icon focused={focused} name='user' color={tintColor} size={26}/>)
+        tabBarIcon: ({ focused, tintColor }) => (
+          <Icon focused={focused} name="user" color={tintColor} size={26} />
+        ),
       },
     },
   },
   {
     initialRouteName: 'Home',
-    tabBarOptions:{
-      backgroundColor:'white',
+    tabBarOptions: {
+      backgroundColor: 'white',
       activeTintColor: hex,
-      inactiveTintColor:'#777777',
+      inactiveTintColor: '#777777',
       showLabel: false,
-      style:{margin:'2%', backgroundColor:'#fff2f2', borderWidth: 0, borderRadius:10, elevation:20}
-    }
+      style: {
+        margin: '2%',
+        backgroundColor: '#fff2f2',
+        borderWidth: 0,
+        borderRadius: 10,
+        elevation: 20,
+      },
+    },
   },
 )
 
