@@ -95,45 +95,74 @@ class Home extends React.Component {
         style={{
           flex: 1,
           backgroundColor: 'white',
-          alignItems:'center',
+          alignItems: 'center',
           justifyContent: 'space-evenly',
-          height: '100%'
+          height: '100%',
         }}
       >
-        <Text style={[screenStyles.text, screenStyles.title, {fontSize: 30}]}>Hungry? Chews wisely.</Text>
+        <Text style={[screenStyles.text, screenStyles.title, { fontSize: 30 }]}>
+          Hungry? Chews wisely.
+        </Text>
         {/* dummy image */}
-        <Image source={{ uri: 'https://banner2.cleanpng.com/20181107/fhg/kisspng-computer-icons-location-map-united-states-of-ameri-5be33fd26a48d9.3500512415416196664353.jpg' }} 
-        style={{width: 200, height: 200,}}/> 
-        <View >
-        <TouchableHighlight
-          onShowUnderlay={() => this.setState({ createPressed: true })}
-          onHideUnderlay={() => this.setState({ createPressed: false })}
-          activeOpacity={1}
-          underlayColor="white"
-          style={{backgroundColor: '#F25763', borderRadius: 40, width: width*0.5, height: 45, justifyContent:'center', alignSelf:'center', margin:'3%'}}
-          onPress={() => this.createGroup()}
-        >
-          <Text
-            style={[
-              styles.buttonText,
-              this.state.createPressed ? { color: '#F25763' } : { color: 'white' },
-            ]}
+        <Image
+          source={{
+            uri:
+              'https://banner2.cleanpng.com/20181107/fhg/kisspng-computer-icons-location-map-united-states-of-ameri-5be33fd26a48d9.3500512415416196664353.jpg',
+          }}
+          style={{ width: 200, height: 200 }}
+        />
+        <View>
+          <TouchableHighlight
+            onShowUnderlay={() => this.setState({ createPressed: true })}
+            onHideUnderlay={() => this.setState({ createPressed: false })}
+            activeOpacity={1}
+            underlayColor="white"
+            style={{
+              backgroundColor: '#F25763',
+              borderRadius: 40,
+              width: width * 0.5,
+              height: 45,
+              justifyContent: 'center',
+              alignSelf: 'center',
+              margin: '3%',
+            }}
+            onPress={() => this.createGroup()}
           >
-            Create Group
-          </Text>
-        </TouchableHighlight>
-        <TouchableHighlight
-          onShowUnderlay={() => this.setState({ joinPressed: true })}
-          onHideUnderlay={() => this.setState({ joinPressed: false })}
-          activeOpacity={1}
-          underlayColor="#F25763"
-          style={{backgroundColor: 'white', borderRadius: 40, width: width*0.5, height: 45, justifyContent:'center', alignSelf:'center', borderColor:'#F25763', borderWidth:2}}
-          onPress={() => this.setState({join: true})}
-        >
-          <Text style={[styles.buttonText, this.state.profilePressed ? {color: 'white'} : {color: '#F25763'}]}>
-            Join Group
-          </Text>
-        </TouchableHighlight>
+            <Text
+              style={[
+                styles.buttonText,
+                this.state.createPressed ? { color: '#F25763' } : { color: 'white' },
+              ]}
+            >
+              Create Group
+            </Text>
+          </TouchableHighlight>
+          <TouchableHighlight
+            onShowUnderlay={() => this.setState({ joinPressed: true })}
+            onHideUnderlay={() => this.setState({ joinPressed: false })}
+            activeOpacity={1}
+            underlayColor="#F25763"
+            style={{
+              backgroundColor: 'white',
+              borderRadius: 40,
+              width: width * 0.5,
+              height: 45,
+              justifyContent: 'center',
+              alignSelf: 'center',
+              borderColor: '#F25763',
+              borderWidth: 2,
+            }}
+            onPress={() => this.setState({ join: true })}
+          >
+            <Text
+              style={[
+                styles.buttonText,
+                this.state.profilePressed ? { color: 'white' } : { color: '#F25763' },
+              ]}
+            >
+              Join Group
+            </Text>
+          </TouchableHighlight>
         </View>
         {this.state.join && (
           <Join
