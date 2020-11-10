@@ -7,8 +7,8 @@ import screenStyles from '../../styles/screenStyles.js'
 // commented out during linting but socket is used in commented-out code below
 //import socket from '../apis/socket.js'
 
-const hex = '#F25763'
-const font = 'CircularStd-Bold'
+const hex = '#F15763'
+const font = 'CircularStd-Medium'
 
 // the card for the restaurant match
 export default class Match extends React.Component {
