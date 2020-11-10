@@ -3,7 +3,6 @@ import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } fro
 import auth from '@react-native-firebase/auth'
 import PropTypes from 'prop-types'
 import Alert from '../modals/alert.js'
-import PropTypes from 'prop-types'
 
 const hex = '#F25763'
 const font = 'CircularStd-Bold'

@@ -86,6 +86,7 @@ Alert.propTypes = {
   press: PropTypes.func,
   cancel: PropTypes.func,
   button: PropTypes.bool,
+  buttonText: PropTypes.string,
   title: PropTypes.string,
   body: PropTypes.string,
 }

@@ -19,11 +19,11 @@
 
 // export default Tab
 
+import * as React from 'react'
+import { Animated, TouchableOpacity } from 'react-native'
+import PropTypes from 'prop-types'
 
-import * as React from "react"
-import { Animated, TouchableOpacity } from "react-native"
-
-const Tab = ({ focusAnim, title, onPress }) => {
+const Tab = ({ title, onPress }) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <Animated.View
@@ -32,11 +32,15 @@ const Tab = ({ focusAnim, title, onPress }) => {
           borderRadius: 10,
         }}
       >
-        <Animated.Text
-        >{title}</Animated.Text>
+        <Animated.Text>{title}</Animated.Text>
       </Animated.View>
     </TouchableOpacity>
   )
+}
+
+Tab.propTypes = {
+  title: PropTypes.string,
+  onPress: PropTypes.func,
 }
 
 export default Tab
