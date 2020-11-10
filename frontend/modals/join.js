@@ -8,8 +8,8 @@ import modalStyles from '../../styles/modalStyles.js'
 import { TextInput } from 'react-native-paper'
 import screenStyles from '../../styles/screenStyles.js'
 
-const hex = '#F25763'
-const font = 'CircularStd-Bold'
+const hex = '#F15763'
+const font = 'CircularStd-Medium'
 //  props are name, image url, and functions for cancel and go
 // invite alert
 
@@ -42,9 +42,15 @@ export default class Join extends React.Component {
 
   render() {
     return (
+<<<<<<< HEAD
       <View style={{ position: 'absolute' }}>
         <Modal transparent animationType="none">
           <View style={[modalStyles.modal, { height: 180 }]}>
+=======
+      <View>
+        <Modal transparent animationType="none">
+          <View style={[modalStyles.modal, {flex: 0, height: 180, borderRadius: 15}]}>
+>>>>>>> 8522c47d83d5811d63c3936d16b94aec8a8de1d6
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               <Icon
                 name="times-circle"
@@ -58,6 +64,7 @@ export default class Join extends React.Component {
                 justifyContent: 'space-evenly',
               }}
             >
+<<<<<<< HEAD
               <View
                 style={{
                   flexDirection: 'row',
@@ -66,6 +73,10 @@ export default class Join extends React.Component {
                 }}
               >
                 <Text style={[screenStyles.text, { fontSize: 20 }]}>Group PIN:</Text>
+=======
+              <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems:'center' }}>
+                <Text style={[screenStyles.text, {fontSize: 20, margin: '2%'}]}>Group PIN:</Text>
+>>>>>>> 8522c47d83d5811d63c3936d16b94aec8a8de1d6
                 <TextInput
                   style={
                     ([screenStyles.input],
@@ -80,10 +91,16 @@ export default class Join extends React.Component {
                   value={this.state.code}
                 />
               </View>
+<<<<<<< HEAD
               {this.state.invalid && (
                 <Text style={{ textAlign: 'center' }}>Sorry, PIN is invalid or expired</Text>
               )}
               {this.state.isValid && (
+=======
+              {!this.state.invalid && <Text style={{textAlign:'center'}}> </Text>}
+              {this.state.invalid && <Text style={{textAlign:'center'}}>Sorry, PIN is invalid or expired</Text>}
+              {this.state.isValid && 
+>>>>>>> 8522c47d83d5811d63c3936d16b94aec8a8de1d6
                 <TouchableHighlight
                   underlayColor={hex}
                   onHideUnderlay={() => this.setState({ pressed: false })}

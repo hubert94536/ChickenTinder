@@ -4,7 +4,7 @@ import Alert from '../modals/alert.js'
 import facebookService from '../apis/facebookService.js'
 import screenStyles from '../../styles/screenStyles.js'
 
-const hex = '#F25763'
+const hex = '#F15763'
 const font = 'CircularStd-Bold'
 
 export default class Login extends React.Component {

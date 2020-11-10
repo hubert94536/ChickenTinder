@@ -21,9 +21,10 @@ import facebookService from '../apis/facebookService.js'
 import Friends from './friends.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
+import TabBar from '../nav.js'
 
-const hex = '#F25763'
-const font = 'CircularStd-Bold'
+const hex = '#F15763'
+const font = 'CircularStd-Medium'
 var img = ''
 var name = ''
 var username = ''
@@ -149,7 +150,8 @@ export default class UserProfileView extends Component {
 
   render() {
     return (
-      <View style={{ backgroundColor: 'white' }}>
+      <View style={{flex: 1, backgroundColor:'white'}}>
+              <View style={{ backgroundColor: 'white', height:'90%' }}>       
         <View>
           <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
             {/* <Icon
@@ -229,6 +231,7 @@ export default class UserProfileView extends Component {
             <Friends isFriends={false} />
           </Swiper>
         </View>
+
         {this.state.visible && (
           <BlurView
             blurType="light"
@@ -478,6 +481,14 @@ export default class UserProfileView extends Component {
             </View>
           </Modal>
         )}
+        </View>
+          <TabBar 
+            goHome={() => this.props.navigation.navigate('Home')}
+            goSearch={() => this.props.navigation.navigate('Search')}
+            goNotifs={() => this.props.navigation.navigate('Notifications')}
+            goProfile={() => this.props.navigation.navigate('Profile')}
+            cur='Profile'
+          />
       </View>
     )
   }
