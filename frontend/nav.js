@@ -2,8 +2,7 @@ import React from 'react'
 import { Image, Modal, Dimensions, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
-const height=Dimensions.get('window').height
-const heigwidthht=Dimensions.get('window').width
+const height = Dimensions.get('window').height
 
 const hex = '#F15763'
 

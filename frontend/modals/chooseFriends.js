@@ -34,6 +34,7 @@ export default class ChooseFriends extends React.Component {
         var pushFriends = []
         for (var friend in res.friendList) {
           if (res.friendList[friend].status === 'Accepted') {
+            // if (res.friendList[friend].username in this.state.members) {
             if (
               this.state.members.some(
                 (member) => member.username === res.friendList[friend].username,

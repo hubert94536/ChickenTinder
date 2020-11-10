@@ -147,7 +147,7 @@ export default class Search extends Component {
   render() {
     return (
       <View style={{flex: 1, backgroundColor: 'white'}}>
-        <Text style={[screenStyles.icons, {marginTop: '10%', textAlign:'center'}]}>Find friends</Text>
+        <Text style={[screenStyles.icons, { marginTop: '10%', textAlign:'center' }]}>Find friends</Text>
         <FlatList
           data={this.state.data}
           renderItem={({item}) => (

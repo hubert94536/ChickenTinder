@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View, Modal } from 'react-native'
+import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import accountsApi from '../apis/accountsApi.js'
@@ -23,7 +23,6 @@ AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 var myId = ''
 
 const width = Dimensions.get('window').width
-const height = Dimensions.get('window').height
 
 AsyncStorage.getItem(ID).then((res) => {
   myId = res

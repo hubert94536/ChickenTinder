@@ -8,7 +8,7 @@ import imgStyles from '../../styles/cardImage.js'
 
 // commented out during linting but hex is used in commented-out code below
 const hex = '#F25763'
-const font = 'CircularStd-Book'
+const font = 'CircularStd-Medium'
 
 // cards for the search for friends screen
 export default class SearchCard extends React.Component {
@@ -83,30 +83,22 @@ export default class SearchCard extends React.Component {
           <Text style={{ fontFamily: font, fontSize: 15 }}>
             {this.props.name}
           </Text>
-          <Text style={{ fontFamily: font, color:hex }}>{'@' + this.props.username}</Text>
+          <Text style={{ fontFamily: font, color: hex }}>{'@' + this.props.username}</Text>
         </View>
         {this.state.requested === 'Requested' && this.state.renderOption && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-            <Text
-              style={[imgStyles.text, {color:'#777777'}]}
-            >
-              Request Sent
-            </Text>
+            <Text style={[imgStyles.text, { color: '#777777' }]}>Request Sent</Text>
             <Icon
-              style={[imgStyles.icon, { fontSize: 20, margin: '8%', color:'#777777' }]}
-              name='hourglass-end'
+              style={[imgStyles.icon, { fontSize: 20, margin: '8%', color: '#777777' }]}
+              name="hourglass-end"
             />
           </View>
         )}
         {this.state.requested === 'Add' && this.state.renderOption && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-            <Text
-              style={[imgStyles.text, {color:'black'}]}
-            >
-              Add Friend
-            </Text>
+            <Text style={[imgStyles.text, { color: 'black' }]}>Add Friend</Text>
             <Icon
-              style={[imgStyles.icon, { fontSize: 25, margin: '8%', color:'black' }]}
+              style={[imgStyles.icon, { fontSize: 25, margin: '8%', color: 'black' }]}
               onPress={() => this.addFriend()}
               name="plus-circle"
             />
@@ -115,28 +107,21 @@ export default class SearchCard extends React.Component {
         {this.state.requested === 'Accepted' && this.state.renderOption && (
           <TouchableHighlight onPress={() => this.setState({ deleteFriend: true })}>
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-              <Text
-                style={[imgStyles.text]}
-              >
-                Friends
-              </Text>
-              <Icon
-                style={[imgStyles.icon, { fontSize: 20, margin: '8%'}]}
-                name='heart'
-              />
+              <Text style={[imgStyles.text]}>Friends</Text>
+              <Icon style={[imgStyles.icon, { fontSize: 20, margin: '8%' }]} name="heart" />
             </View>
           </TouchableHighlight>
         )}
         {this.state.requested === 'Pending Request' && this.state.renderOption && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-            <Text style={[imgStyles.text, {color:'black'}]}>Pending Request</Text>
+            <Text style={[imgStyles.text, { color: 'black' }]}>Pending Request</Text>
             <Icon
               style={[imgStyles.icon, { fontSize: 25, margin: '3%' }]}
               name="check-circle"
               onPress={() => this.acceptFriend()}
             />
             <Icon
-              style={[imgStyles.icon, { fontSize: 25, margin: '3%', color:'black' }]}
+              style={[imgStyles.icon, { fontSize: 25, margin: '3%', color: 'black' }]}
               name="times-circle"
               onPress={() => this.rejectFriend()}
             />

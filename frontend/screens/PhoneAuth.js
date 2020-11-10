@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
 })
 
 PhoneAuthScreen.propTypes = {
-  navigation: PropTypes.bool,
+  navigation: PropTypes.object,
 }
 
 export default PhoneAuthScreen
