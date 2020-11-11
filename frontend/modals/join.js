@@ -7,7 +7,8 @@ import modalStyles from '../../styles/modalStyles.js'
 import { TextInput } from 'react-native-paper'
 import screenStyles from '../../styles/screenStyles.js'
 
-const hex = '#F25763'
+const hex = '#F15763'
+const font = 'CircularStd-Medium'
 //  props are name, image url, and functions for cancel and go
 // invite alert
 
@@ -40,9 +41,9 @@ export default class Join extends React.Component {
 
   render() {
     return (
-      <View style={{ position: 'absolute' }}>
+      <View>
         <Modal transparent animationType="none">
-          <View style={[modalStyles.modal, { height: 180 }]}>
+          <View style={[modalStyles.modal, { flex: 0, height: 180, borderRadius: 15 }]}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               <Icon
                 name="times-circle"
@@ -57,13 +58,9 @@ export default class Join extends React.Component {
               }}
             >
               <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-evenly',
-                  alignItems: 'center',
-                }}
+                style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
               >
-                <Text style={[screenStyles.text, { fontSize: 20 }]}>Group PIN:</Text>
+                <Text style={[screenStyles.text, { fontSize: 20, margin: '2%' }]}>Group PIN:</Text>
                 <TextInput
                   style={
                     ([screenStyles.input],
@@ -78,6 +75,7 @@ export default class Join extends React.Component {
                   value={this.state.code}
                 />
               </View>
+              {!this.state.invalid && <Text style={{ textAlign: 'center' }}> </Text>}
               {this.state.invalid && (
                 <Text style={{ textAlign: 'center' }}>Sorry, PIN is invalid or expired</Text>
               )}
@@ -125,12 +123,3 @@ Join.propTypes = {
   onPress: PropTypes.func,
   name: PropTypes.string,
 }
-
-const styles = StyleSheet.create({
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 63,
-    borderWidth: 4,
-  },
-})

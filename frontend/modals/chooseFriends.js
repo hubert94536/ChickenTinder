@@ -7,8 +7,8 @@ import Alert from './alert.js'
 import ChooseCard from '../cards/chooseCard.js'
 import friendsApi from '../apis/friendsApi.js'
 
-const hex = '#F25763'
-const font = 'CircularStd-Bold'
+const hex = '#F15763'
+const font = 'CircularStd-Medium'
 const height = Dimensions.get('window').height
 
 //  little pop up modal that is showed when you click choose friends in filters
@@ -34,6 +34,7 @@ export default class ChooseFriends extends React.Component {
         var pushFriends = []
         for (var friend in res.friendList) {
           if (res.friendList[friend].status === 'Accepted') {
+            // if (res.friendList[friend].username in this.state.members) {
             if (
               this.state.members.some(
                 (member) => member.username === res.friendList[friend].username,

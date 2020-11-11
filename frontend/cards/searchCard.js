@@ -7,7 +7,7 @@ import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
 
 // commented out during linting but hex is used in commented-out code below
-//const hex = '#F25763'
+const hex = '#F25763'
 const font = 'CircularStd-Medium'
 
 // cards for the search for friends screen
@@ -66,10 +66,11 @@ export default class SearchCard extends React.Component {
 
   render() {
     return (
-      <View style={{ flexDirection: 'row', flex: 1 }}>
+      <View style={{ flexDirection: 'row', flex: 1, width: '85%', alignSelf: 'center' }}>
         <Image
           source={{
-            uri: this.props.image,
+            uri:
+              'https://d1kdq4z3qhht46.cloudfront.net/uploads/2019/08/Adventures_from_Moominvalley_1990_Moomintroll_TV.jpg',
           }}
           style={imgStyles.button}
         />
@@ -80,9 +81,7 @@ export default class SearchCard extends React.Component {
             flex: 1,
           }}
         >
-          <Text style={{ fontFamily: font, fontWeight: 'bold', fontSize: 15 }}>
-            {this.props.name}
-          </Text>
+          <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
           <Text style={{ fontFamily: font, color: hex }}>{'@' + this.props.username}</Text>
         </View>
         {this.state.requested === 'Requested' && this.state.renderOption && (

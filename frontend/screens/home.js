@@ -8,6 +8,9 @@ import friendsApi from '../apis/friendsApi.js'
 import Join from '../modals/join.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
+import TabBar from '../nav.js'
+import Icon from 'react-native-vector-icons/FontAwesome'
+
 
 var img = ''
 var name = ''
@@ -97,13 +100,17 @@ class Home extends React.Component {
           backgroundColor: 'white',
           alignItems: 'center',
           justifyContent: 'space-evenly',
+<<<<<<< HEAD
           height: '100%',
+=======
+>>>>>>> 8522c47d83d5811d63c3936d16b94aec8a8de1d6
         }}
       >
         <Text style={[screenStyles.text, screenStyles.title, { fontSize: 30 }]}>
           Hungry? Chews wisely.
         </Text>
         {/* dummy image */}
+<<<<<<< HEAD
         <Image
           source={{
             uri:
@@ -163,7 +170,48 @@ class Home extends React.Component {
               Join Group
             </Text>
           </TouchableHighlight>
+=======
+        <Image source={{ uri: 'https://banner2.cleanpng.com/20181107/fhg/kisspng-computer-icons-location-map-united-states-of-ameri-5be33fd26a48d9.3500512415416196664353.jpg' }} 
+        style={{width: 200, height: 200,}}/> 
+        <View >
+        <TouchableHighlight
+          onShowUnderlay={() => this.setState({ createPressed: true })}
+          onHideUnderlay={() => this.setState({ createPressed: false })}
+          activeOpacity={1}
+          underlayColor="white"
+          style={{backgroundColor: '#F15763', borderRadius: 40, width: width*0.5, height: 45, justifyContent:'center', alignSelf:'center', margin:'3%'}}
+          onPress={() => this.createGroup()}
+        >
+          <Text
+            style={[
+              styles.buttonText,
+              this.state.createPressed ? { color: '#F15763' } : { color: 'white' },
+            ]}
+          >
+            Create Group
+          </Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          onShowUnderlay={() => this.setState({ joinPressed: true })}
+          onHideUnderlay={() => this.setState({ joinPressed: false })}
+          activeOpacity={1}
+          underlayColor='#F15763'
+          style={{backgroundColor: 'white', borderRadius: 40, width: width*0.5, height: 45, justifyContent:'center', alignSelf:'center', borderColor:'#F15763', borderWidth:2}}
+          onPress={() => this.setState({join: true})}
+        >
+          <Text style={[styles.buttonText, this.state.profilePressed ? {color: 'white'} : {color: '#F15763'}]}>
+            Join Group
+          </Text>
+        </TouchableHighlight>
+>>>>>>> 8522c47d83d5811d63c3936d16b94aec8a8de1d6
         </View>
+        <TabBar 
+          goHome={() => this.props.navigation.navigate('Home')}
+          goSearch={() => this.props.navigation.navigate('Search')}
+          goNotifs={() => this.props.navigation.navigate('Notifications')}
+          goProfile={() => this.props.navigation.navigate('Profile')}
+          cur='Home'
+        />
         {this.state.join && (
           <Join
             image={this.state.inviteInfo.pic}

@@ -9,8 +9,8 @@ export default StyleSheet.create({
     alignSelf: 'center',
   },
   text: {
-    fontFamily: 'CircularStd-Bold',
-    color: '#F25763',
+    fontFamily: 'CircularStd-Medium',
+    color: '#F15763',
   },
   input: {
     fontSize: 20,
@@ -19,11 +19,11 @@ export default StyleSheet.create({
   },
   smallButton: {
     borderRadius: 45,
-    borderColor: '#F25763',
+    borderColor: '#F15763',
     borderWidth: 2,
   },
   smallButtonText: {
-    fontFamily: 'CircularStd-Bold',
+    fontFamily: 'CircularStd-Medium',
     textAlign: 'center',
     fontSize: 17,
     paddingTop: '0.5%',
@@ -36,9 +36,9 @@ export default StyleSheet.create({
     fontSize: 45,
   },
   icons: {
-    color: '#F25763',
+    color: '#F15763',
     fontSize: 27,
-    fontFamily: 'CircularStd-Bold',
+    fontFamily: 'CircularStd-Medium',
   },
   medButton: {
     borderRadius: 30,
@@ -46,7 +46,7 @@ export default StyleSheet.create({
     alignSelf: 'center',
   },
   medButtonText: {
-    fontFamily: 'CircularStd-Bold',
+    fontFamily: 'CircularStd-Medium',
     fontSize: 20,
     textAlign: 'center',
   },

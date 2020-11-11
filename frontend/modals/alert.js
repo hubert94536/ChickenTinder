@@ -5,7 +5,7 @@ import { BlurView } from '@react-native-community/blur'
 import PropTypes from 'prop-types'
 import modalStyles from '../../styles/modalStyles.js'
 
-const hex = '#F25763'
+const hex = '#F15763'
 const font = 'CircularStd-Medium'
 
 export default class Alert extends Component {

@@ -11,8 +11,8 @@ import FilterSelector from './filter.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 
-const hex = '#F25763'
-const font = 'CircularStd-Bold'
+const hex = '#F15763'
+const font = 'CircularStd-Medium'
 var memberList = []
 var myUsername = ''
 AsyncStorage.getItem(USERNAME).then((res) => {
@@ -57,13 +57,14 @@ export default class Group extends React.Component {
     })
 
     socket.getSocket().on('start', (restaurants) => {
-      if (restaurants) {
+      if (restaurants.length > 0) {
         this.props.navigation.navigate('Round', {
           results: restaurants,
           host: this.state.host,
           isHost: this.state.host == this.state.username,
         })
       } else {
+        console.log('no restaurants found')
         // need to handle no restaurants returned
       }
     })
