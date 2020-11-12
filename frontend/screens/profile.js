@@ -21,11 +21,7 @@ import facebookService from '../apis/facebookService.js'
 import Friends from './friends.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
-<<<<<<< HEAD
-import PropTypes from 'prop-types'
-=======
 import TabBar from '../nav.js'
->>>>>>> 8522c47d83d5811d63c3936d16b94aec8a8de1d6
 
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
@@ -154,277 +150,281 @@ export default class UserProfileView extends Component {
 
   render() {
     return (
-      <View style={{flex: 1, backgroundColor:'white'}}>
-              <View style={{ backgroundColor: 'white', height:'90%' }}>       
-        <View>
-          <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-            {/* <Icon
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
+        <View style={{ backgroundColor: 'white', height: '90%' }}>
+          <View>
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+              {/* <Icon
               name="chevron-left"
               style={[screenStyles.icons, { margin: '5%' }]}
               onPress={() => this.props.navigation.navigate('Home')}
             /> */}
-            <Icon
-              name="cog"
-              style={[screenStyles.icons, { margin: '5%' }]}
-              onPress={() => this.setState({ visible: true })}
-            />
-          </View>
-          <Text style={[screenStyles.text, styles.myProfile]}>My Profile</Text>
-          <View style={styles.userInfo}>
-            <Image
-              source={{
-                uri: this.state.image,
-              }}
-              style={styles.avatar}
-            />
-            <View>
-              <Text style={{ fontFamily: font, fontSize: 28 }}>{this.state.name}</Text>
-              <Text style={{ fontFamily: font, fontSize: 17 }}>
-                {'@' + this.state.usernameValue}
-              </Text>
+              <Icon
+                name="cog"
+                style={[screenStyles.icons, { margin: '5%' }]}
+                onPress={() => this.setState({ visible: true })}
+              />
+            </View>
+            <Text style={[screenStyles.text, styles.myProfile]}>My Profile</Text>
+            <View style={styles.userInfo}>
+              <Image
+                source={{
+                  uri: this.state.image,
+                }}
+                style={styles.avatar}
+              />
+              <View>
+                <Text style={{ fontFamily: font, fontSize: 28 }}>{this.state.name}</Text>
+                <Text style={{ fontFamily: font, fontSize: 17 }}>
+                  {'@' + this.state.usernameValue}
+                </Text>
+              </View>
+            </View>
+            <View style={{ flexDirection: 'row' }}>
+              <TouchableHighlight
+                underlayColor="#fff"
+                style={[
+                  screenStyles.smallButton,
+                  this.state.friends ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                  { marginLeft: '5%' },
+                ]}
+                onPress={() => this.swiperRef.scrollBy(-1)}
+              >
+                <Text
+                  style={[
+                    screenStyles.smallButtonText,
+                    styles.selectedText,
+                    this.state.friends ? { color: 'white' } : { color: hex },
+                  ]}
+                >
+                  Friends
+                </Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                underlayColor="#fff"
+                style={[
+                  screenStyles.smallButton,
+                  !this.state.friends ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                  { marginLeft: '5%' },
+                ]}
+                onPress={() => this.swiperRef.scrollBy(1)}
+              >
+                <Text
+                  style={[
+                    screenStyles.smallButtonText,
+                    styles.selectedText,
+                    !this.state.friends ? { color: 'white' } : { color: hex },
+                  ]}
+                >
+                  Requests
+                </Text>
+              </TouchableHighlight>
             </View>
           </View>
-          <View style={{ flexDirection: 'row' }}>
-            <TouchableHighlight
-              underlayColor="#fff"
-              style={[
-                screenStyles.smallButton,
-                this.state.friends ? { backgroundColor: hex } : { backgroundColor: 'white' },
-                { marginLeft: '5%' },
-              ]}
-              onPress={() => this.swiperRef.scrollBy(-1)}
+          <View style={{ height: '100%', marginTop: '5%' }}>
+            <Swiper
+              ref={(ref) => (this.swiperRef = ref)}
+              loop={false}
+              onIndexChanged={() => this.setState({ friends: !this.state.friends })}
             >
-              <Text
-                style={[
-                  screenStyles.smallButtonText,
-                  styles.selectedText,
-                  this.state.friends ? { color: 'white' } : { color: hex },
-                ]}
-              >
-                Friends
-              </Text>
-            </TouchableHighlight>
-            <TouchableHighlight
-              underlayColor="#fff"
-              style={[
-                screenStyles.smallButton,
-                !this.state.friends ? { backgroundColor: hex } : { backgroundColor: 'white' },
-                { marginLeft: '5%' },
-              ]}
-              onPress={() => this.swiperRef.scrollBy(1)}
-            >
-              <Text
-                style={[
-                  screenStyles.smallButtonText,
-                  styles.selectedText,
-                  !this.state.friends ? { color: 'white' } : { color: hex },
-                ]}
-              >
-                Requests
-              </Text>
-            </TouchableHighlight>
+              <Friends isFriends />
+              <Friends isFriends={false} />
+            </Swiper>
           </View>
-        </View>
-        <View style={{ height: '100%', marginTop: '5%' }}>
-          <Swiper
-            ref={(ref) => (this.swiperRef = ref)}
-            loop={false}
-            onIndexChanged={() => this.setState({ friends: !this.state.friends })}
-          >
-            <Friends isFriends />
-            <Friends isFriends={false} />
-          </Swiper>
-        </View>
 
-        {this.state.visible && (
-          <BlurView
-            blurType="light"
-            blurAmount={20}
-            reducedTransparencyFallbackColor="white"
-            style={modalStyles.blur}
-          />
-        )}
-        {this.state.visible && (
-          <Modal animationType="fade" visible={this.state.visible} transparent>
-            <View style={styles.modal}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  margin: '5%',
-                }}
-              >
-                <Text style={[screenStyles.text, { fontSize: 18, alignSelf: 'center' }]}>
-                  Settings
-                </Text>
-                <Icon
-                  name="times-circle"
-                  style={[screenStyles.text, { fontSize: 30 }]}
-                  onPress={() =>
-                    this.setState({
-                      visible: false,
-                    })
-                  }
-                />
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  margin: '5%',
-                }}
-              >
-                <View>
-                  <Text style={{ fontFamily: font, fontSize: 18 }}>Name:</Text>
-                  <TextInput
-                    style={[screenStyles.text, screenStyles.input]}
-                    value={this.state.nameValue}
-                    onChangeText={(text) => this.setState({ nameValue: text })}
+          {this.state.visible && (
+            <BlurView
+              blurType="light"
+              blurAmount={20}
+              reducedTransparencyFallbackColor="white"
+              style={modalStyles.blur}
+            />
+          )}
+          {this.state.visible && (
+            <Modal animationType="fade" visible={this.state.visible} transparent>
+              <View style={styles.modal}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    margin: '5%',
+                  }}
+                >
+                  <Text style={[screenStyles.text, { fontSize: 18, alignSelf: 'center' }]}>
+                    Settings
+                  </Text>
+                  <Icon
+                    name="times-circle"
+                    style={[screenStyles.text, { fontSize: 30 }]}
+                    onPress={() =>
+                      this.setState({
+                        visible: false,
+                      })
+                    }
                   />
                 </View>
-                <TouchableHighlight
-                  style={[
-                    screenStyles.smallButton,
-                    styles.changeButtons,
-                    this.state.changeName ? { backgroundColor: hex } : { backgroundColor: 'white' },
-                  ]}
-                  underlayColor={hex}
-                  onShowUnderlay={() => this.setState({ changeName: true })}
-                  onHideUnderlay={() => this.setState({ changeName: false })}
-                  onPress={() => this.changeName()}
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    margin: '5%',
+                  }}
                 >
-                  <Text
+                  <View>
+                    <Text style={{ fontFamily: font, fontSize: 18 }}>Name:</Text>
+                    <TextInput
+                      style={[screenStyles.text, screenStyles.input]}
+                      value={this.state.nameValue}
+                      onChangeText={(text) => this.setState({ nameValue: text })}
+                    />
+                  </View>
+                  <TouchableHighlight
                     style={[
-                      screenStyles.smallButtonText,
-                      this.state.changeName ? { color: 'white' } : { color: hex },
+                      screenStyles.smallButton,
+                      styles.changeButtons,
+                      this.state.changeName
+                        ? { backgroundColor: hex }
+                        : { backgroundColor: 'white' },
                     ]}
+                    underlayColor={hex}
+                    onShowUnderlay={() => this.setState({ changeName: true })}
+                    onHideUnderlay={() => this.setState({ changeName: false })}
+                    onPress={() => this.changeName()}
                   >
-                    Change
-                  </Text>
-                </TouchableHighlight>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  margin: '5%',
-                }}
-              >
-                <View>
-                  <Text style={{ fontFamily: font, fontSize: 18 }}>Username:</Text>
-                  <TextInput
-                    style={[screenStyles.text, screenStyles.input]}
-                    value={this.state.usernameValue}
-                    onChangeText={(text) => this.setState({ usernameValue: text })}
-                  />
+                    <Text
+                      style={[
+                        screenStyles.smallButtonText,
+                        this.state.changeName ? { color: 'white' } : { color: hex },
+                      ]}
+                    >
+                      Change
+                    </Text>
+                  </TouchableHighlight>
                 </View>
-                <TouchableHighlight
-                  style={[
-                    screenStyles.smallButton,
-                    styles.changeButtons,
-                    this.state.changeUser ? { backgroundColor: hex } : { backgroundColor: 'white' },
-                  ]}
-                  underlayColor={hex}
-                  onShowUnderlay={() => this.setState({ changeUser: true })}
-                  onHideUnderlay={() => this.setState({ changeUser: false })}
-                  onPress={() => this.changeUsername()}
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    margin: '5%',
+                  }}
                 >
-                  <Text
+                  <View>
+                    <Text style={{ fontFamily: font, fontSize: 18 }}>Username:</Text>
+                    <TextInput
+                      style={[screenStyles.text, screenStyles.input]}
+                      value={this.state.usernameValue}
+                      onChangeText={(text) => this.setState({ usernameValue: text })}
+                    />
+                  </View>
+                  <TouchableHighlight
                     style={[
-                      screenStyles.smallButtonText,
-                      this.state.changeUser ? { color: 'white' } : { color: hex },
+                      screenStyles.smallButton,
+                      styles.changeButtons,
+                      this.state.changeUser
+                        ? { backgroundColor: hex }
+                        : { backgroundColor: 'white' },
+                    ]}
+                    underlayColor={hex}
+                    onShowUnderlay={() => this.setState({ changeUser: true })}
+                    onHideUnderlay={() => this.setState({ changeUser: false })}
+                    onPress={() => this.changeUsername()}
+                  >
+                    <Text
+                      style={[
+                        screenStyles.smallButtonText,
+                        this.state.changeUser ? { color: 'white' } : { color: hex },
+                      ]}
+                    >
+                      Change
+                    </Text>
+                  </TouchableHighlight>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <TouchableHighlight
+                    underlayColor={hex}
+                    onShowUnderlay={() => this.setState({ delete: true })}
+                    onHideUnderlay={() => this.setState({ delete: false })}
+                    onPress={() => this.setState({ deleteAlert: true })}
+                    style={[
+                      screenStyles.smallButton,
+                      styles.button,
+                      this.state.delete ? { backgroundColor: hex } : { backgroundColor: 'white' },
                     ]}
                   >
-                    Change
-                  </Text>
-                </TouchableHighlight>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                }}
-              >
-                <TouchableHighlight
-                  underlayColor={hex}
-                  onShowUnderlay={() => this.setState({ delete: true })}
-                  onHideUnderlay={() => this.setState({ delete: false })}
-                  onPress={() => this.setState({ deleteAlert: true })}
-                  style={[
-                    screenStyles.smallButton,
-                    styles.button,
-                    this.state.delete ? { backgroundColor: hex } : { backgroundColor: 'white' },
-                  ]}
-                >
-                  <Text
+                    <Text
+                      style={[
+                        screenStyles.smallButtonText,
+                        this.state.delete ? { color: 'white' } : { color: hex },
+                      ]}
+                    >
+                      Delete
+                    </Text>
+                  </TouchableHighlight>
+                  <TouchableHighlight
+                    underlayColor={hex}
+                    onShowUnderlay={() => this.setState({ logout: true })}
+                    onHideUnderlay={() => this.setState({ logout: false })}
+                    onPress={() => this.setState({ logoutAlert: true })}
                     style={[
-                      screenStyles.smallButtonText,
-                      this.state.delete ? { color: 'white' } : { color: hex },
+                      screenStyles.smallButton,
+                      styles.button,
+                      this.state.logout ? { backgroundColor: hex } : { backgroundColor: 'white' },
                     ]}
                   >
-                    Delete
-                  </Text>
-                </TouchableHighlight>
-                <TouchableHighlight
-                  underlayColor={hex}
-                  onShowUnderlay={() => this.setState({ logout: true })}
-                  onHideUnderlay={() => this.setState({ logout: false })}
-                  onPress={() => this.setState({ logoutAlert: true })}
-                  style={[
-                    screenStyles.smallButton,
-                    styles.button,
-                    this.state.logout ? { backgroundColor: hex } : { backgroundColor: 'white' },
-                  ]}
-                >
-                  <Text
-                    style={[
-                      screenStyles.smallButtonText,
-                      this.state.logout ? { color: 'white' } : { color: hex },
-                    ]}
-                  >
-                    Logout
-                  </Text>
-                </TouchableHighlight>
-                {this.state.deleteAlert && (
-                  <Alert
-                    title="Delete your account?"
-                    body="You will not be able to recover your information"
-                    button
-                    buttonText="Yes"
-                    press={() => this.handleDelete()}
-                    cancel={() => this.cancelDelete()}
-                  />
-                )}
-                {this.state.logoutAlert && (
-                  <Alert
-                    title="Log Out?"
-                    body="You will have to log back in"
-                    button
-                    buttonText="Yes"
-                    press={() => this.handleLogout()}
-                    cancel={() => this.cancelLogout()}
-                  />
-                )}
-                {this.state.errorAlert && (
-                  <Alert
-                    title="Error, please try again"
-                    button
-                    buttonText="Close"
-                    press={() => this.closeError()}
-                    cancel={() => this.closeError()}
-                  />
-                )}
-                {this.state.takenAlert && (
-                  <Alert
-                    title="Username taken!"
-                    button
-                    buttonText="Close"
-                    press={() => this.closeTaken()}
-                    cancel={() => this.closeTaken()}
-                  />
-                )}
-              </View>
-              {/* <View
+                    <Text
+                      style={[
+                        screenStyles.smallButtonText,
+                        this.state.logout ? { color: 'white' } : { color: hex },
+                      ]}
+                    >
+                      Logout
+                    </Text>
+                  </TouchableHighlight>
+                  {this.state.deleteAlert && (
+                    <Alert
+                      title="Delete your account?"
+                      body="You will not be able to recover your information"
+                      button
+                      buttonText="Yes"
+                      press={() => this.handleDelete()}
+                      cancel={() => this.cancelDelete()}
+                    />
+                  )}
+                  {this.state.logoutAlert && (
+                    <Alert
+                      title="Log Out?"
+                      body="You will have to log back in"
+                      button
+                      buttonText="Yes"
+                      press={() => this.handleLogout()}
+                      cancel={() => this.cancelLogout()}
+                    />
+                  )}
+                  {this.state.errorAlert && (
+                    <Alert
+                      title="Error, please try again"
+                      button
+                      buttonText="Close"
+                      press={() => this.closeError()}
+                      cancel={() => this.closeError()}
+                    />
+                  )}
+                  {this.state.takenAlert && (
+                    <Alert
+                      title="Username taken!"
+                      button
+                      buttonText="Close"
+                      press={() => this.closeTaken()}
+                      cancel={() => this.closeTaken()}
+                    />
+                  )}
+                </View>
+                {/* <View
                 style={{
                   margin: '5%',
                 }}>
@@ -482,17 +482,17 @@ export default class UserProfileView extends Component {
                   </TouchableHighlight>
                 </View>
               </View> */}
-            </View>
-          </Modal>
-        )}
+              </View>
+            </Modal>
+          )}
         </View>
-          <TabBar 
-            goHome={() => this.props.navigation.navigate('Home')}
-            goSearch={() => this.props.navigation.navigate('Search')}
-            goNotifs={() => this.props.navigation.navigate('Notifications')}
-            goProfile={() => this.props.navigation.navigate('Profile')}
-            cur='Profile'
-          />
+        <TabBar
+          goHome={() => this.props.navigation.navigate('Home')}
+          goSearch={() => this.props.navigation.navigate('Search')}
+          goNotifs={() => this.props.navigation.navigate('Notifications')}
+          goProfile={() => this.props.navigation.navigate('Profile')}
+          cur="Profile"
+        />
       </View>
     )
   }

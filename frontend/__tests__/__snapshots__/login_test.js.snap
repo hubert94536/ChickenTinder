@@ -6,8 +6,8 @@ exports[`renders login page correctly 1`] = `
     style={
       Array [
         Object {
-          "color": "#F25763",
-          "fontFamily": "CircularStd-Bold",
+          "color": "#F15763",
+          "fontFamily": "CircularStd-Medium",
         },
         Object {
           "fontSize": 45,
@@ -25,18 +25,19 @@ exports[`renders login page correctly 1`] = `
     style={
       Array [
         Object {
-          "color": "#F25763",
-          "fontFamily": "CircularStd-Bold",
+          "color": "#F15763",
+          "fontFamily": "CircularStd-Medium",
         },
         Object {
-          "fontFamily": "CircularStd-Bold",
+          "fontFamily": "CircularStd-Medium",
           "fontSize": 20,
           "textAlign": "center",
         },
       ]
     }
   >
-    Let's get goin'.
+    Let's get goin'
+    .
   </Text>
   <View
     accessible={true}
@@ -63,7 +64,7 @@ exports[`renders login page correctly 1`] = `
           "width": "70%",
         },
         Object {
-          "borderColor": "#F25763",
+          "borderColor": "#F15763",
         },
       ]
     }
@@ -78,7 +79,7 @@ exports[`renders login page correctly 1`] = `
             "fontWeight": "bold",
           },
           Object {
-            "color": "#F25763",
+            "color": "#F15763",
           },
         ]
       }
@@ -140,8 +141,8 @@ exports[`renders login with Facebook alert 1`] = `
     style={
       Array [
         Object {
-          "color": "#F25763",
-          "fontFamily": "CircularStd-Bold",
+          "color": "#F15763",
+          "fontFamily": "CircularStd-Medium",
         },
         Object {
           "fontSize": 45,
@@ -159,18 +160,19 @@ exports[`renders login with Facebook alert 1`] = `
     style={
       Array [
         Object {
-          "color": "#F25763",
-          "fontFamily": "CircularStd-Bold",
+          "color": "#F15763",
+          "fontFamily": "CircularStd-Medium",
         },
         Object {
-          "fontFamily": "CircularStd-Bold",
+          "fontFamily": "CircularStd-Medium",
           "fontSize": 20,
           "textAlign": "center",
         },
       ]
     }
   >
-    Let's get goin'.
+    Let's get goin'
+    .
   </Text>
   <View
     accessible={true}
@@ -197,7 +199,7 @@ exports[`renders login with Facebook alert 1`] = `
           "width": "70%",
         },
         Object {
-          "borderColor": "#F25763",
+          "borderColor": "#F15763",
         },
       ]
     }
@@ -212,7 +214,7 @@ exports[`renders login with Facebook alert 1`] = `
             "fontWeight": "bold",
           },
           Object {
-            "color": "#F25763",
+            "color": "#F15763",
           },
         ]
       }

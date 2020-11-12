@@ -1,16 +1,5 @@
 import 'react-native'
 import React from 'react'
-<<<<<<< HEAD
-import Login from '../screens/login'
-import renderer from 'react-test-renderer'
-
-const facebookService = require('../apis/facebookService.js')
-jest.mock('../apis/facebookService.js')
-
-test('renders correctly', () => {
-  const tree = renderer.create(<Login />).toJSON()
-  expect(tree).toMatchSnapshot()
-=======
 import { render, fireEvent, cleanup } from '@testing-library/react-native'
 import Renderer from 'react-test-renderer'
 import Login from '../screens/login'
@@ -40,5 +29,4 @@ test('renders login with Facebook alert', async () => {
       expect(create.state.errorAlert).toBe(true)
     })
   })
->>>>>>> 8522c47d83d5811d63c3936d16b94aec8a8de1d6
 })

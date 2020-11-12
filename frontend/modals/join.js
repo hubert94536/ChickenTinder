@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Modal, Text, TouchableHighlight, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
@@ -8,7 +8,6 @@ import { TextInput } from 'react-native-paper'
 import screenStyles from '../../styles/screenStyles.js'
 
 const hex = '#F15763'
-const font = 'CircularStd-Medium'
 //  props are name, image url, and functions for cancel and go
 // invite alert
 
