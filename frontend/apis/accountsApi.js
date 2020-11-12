@@ -1,4 +1,4 @@
-import { ID } from 'react-native-dotenv'
+import { ID, REFRESH_TOKEN, ACCESS_TOKEN } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
 
@@ -8,9 +8,21 @@ AsyncStorage.getItem(ID).then((res) => {
   myId = res
 })
 
+// uncomment when tokens are set up
+// var tokenHeaders = {};
+// AsyncStorage.multiGet([REFRESH_TOKEN, ACCESS_TOKEN]).then((res) => {
+//   tokenHeaders = {
+//     'x-access-token': res[0][1],
+//     'x-refresh-token': res[1][1]
+//   }
+// })
+
 const accountsApi = axios.create({
   baseURL: 'https://wechews.herokuapp.com',
-  // baseURL: 'http://192.168.0.23:5000'
+  // baseURL: 'http://192.168.0.23:5000',
+  
+  // uncomment when tokens are set up
+  // headers: tokenHeaders
 })
 
 // creates user and returns id

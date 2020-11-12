@@ -8,10 +8,11 @@ const publicKey = process.env.PUBLIC_KEY;
 const secret = process.env.JWT_SECRET;
 
 // TODO: Integrate with APIs (check response header for new access token, append tokens to all requests)
+// TODO: Find how to skip for certain functions/paths (Ex. account creation)
 
 // Generate and returns access token
 // TODO: Figure out when to generate access token
-const getAccessToken = (req, res) => {
+const generateAccessToken = (req, res) => {
     try {
         const uid = decodeRefreshToken(req);
         var payload = {
@@ -35,15 +36,8 @@ const decodeAccessToken = (req, res, next) => {
     try{
         const token = req.header("x-access-token");
         if (!token) return next();
-        var options = {
-            algorithms: ["RS256"],
-            maxAge: "1d",
-            issuer: "Wechews",
-            audience: "https://wechews.herokuapp.com"
-        }
-        var payload = jwt.verify(token, publicKey, options);
         // consider checking db to see if uid exists
-        req.uid = payload.uid // NOTE: Unsure if this will work as intended
+        req.uid = decodeAccess(token);
         return next();
     } catch (error) {
         if (error.name === "TokenExpiredError"){
@@ -64,6 +58,24 @@ const decodeAccessToken = (req, res, next) => {
             }
         }
         return next();
+    }
+}
+
+// General decode function for use in sockets
+const decodeAccess = (token) => {
+    try{
+        var options = {
+            algorithms: ["RS256"],
+            maxAge: "1d",
+            issuer: "Wechews",
+            audience: "https://wechews.herokuapp.com"
+        }
+        var payload = jwt.verify(token, publicKey, options);
+        return payload.uid
+    }
+    catch (error){
+        // TODO: Handle expired token
+        throw error;
     }
 }
 
@@ -105,7 +117,7 @@ const decodeAccessToken = (req, res, next) => {
 // Generate refresh token
 // Generate upon login or daily app open (further trigger events TBD)
 // Do not expose as indepedent endpoint - attach it to login or other event
-const getRefreshToken = (uid) => {
+const generateRefreshToken = (uid) => {
     try {
         var payload = {
             uid: uid
@@ -123,7 +135,7 @@ const getRefreshToken = (uid) => {
 }
 
 // Uncomment to independently test function via endpoint
-// const getRefreshToken = (req, res) => {
+// const generateRefreshToken = (req, res) => {
 //     try {
 //         var payload = {
 //             uid: req.body.uid
@@ -180,6 +192,7 @@ const decodeRefreshToken = (req) => {
 
 // Middleware: Checks if user has been authenticated
 const isAuthenticated = (req, res, next) => {
+    // Check path url for special case functions
     if (req.uid) return next();
     return res.status(401).send('Unauthenticated request');
 }
@@ -187,9 +200,9 @@ const isAuthenticated = (req, res, next) => {
 // Import these functions into relevant backend files - do not make these directly accessible by api call
 // Store refresh token and access token in async storage -- if refresh token expires, logout
 module.exports = {
-    getAccessToken,
+    generateAccessToken,
     decodeAccessToken,
-    getRefreshToken,
+    generateRefreshToken,
     decodeRefreshToken,
     isAuthenticated
 }

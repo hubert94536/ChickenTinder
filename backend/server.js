@@ -29,6 +29,7 @@ if (app.get('env') === 'development') {
 }
 
 // accounts table
+// TODO: Unauthenticated
 app.route('/accounts').get(accounts.getAllAccounts).post(accounts.createAccount)
 
 app.route('/accounts/search/:text').get(accounts.searchAccounts)
@@ -39,8 +40,10 @@ app
   .put(accounts.updateAccount)
   .delete(accounts.deleteAccount)
 
+// TODO: Unauthenticated
 app.route('/username/:username').get(accounts.checkUsername)
 
+// TODO: Unauthenticated
 app.route('/phoneNumber/:phone_number').get(accounts.checkPhoneNumber)
 
 // friendships table
@@ -56,3 +59,7 @@ app
 server.listen(PORT, () => {
   console.log(`App running on port ${PORT}.`)
 })
+
+// auth services
+app.route('/auth/access')
+app.route('/auth/refresh') // TODO: FIND how to make secure
