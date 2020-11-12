@@ -66,19 +66,6 @@ export default class Search extends Component {
     })
   }
 
-  // renderSeparator = () => {
-  //   return (
-  //     <View
-  //       style={{
-  //         height: 1,
-  //         width: '86%',
-  //         backgroundColor: '#CED0CE',
-  //         marginLeft: '14%',
-  //       }}
-  //     />
-  //   );
-  // };
-
   searchFilterFunction = text => {
     this.setState({
       value: text,
@@ -104,8 +91,13 @@ export default class Search extends Component {
                 id: res.userList[user].id,
                 status: status
               }
-=              resultUsers.push(person);
+              if (person === undefined) {
+                this.setState({errorAlert: true})
+                return
+              }
+              resultUsers.push(person);
             }
+            console.log(resultUsers)
             this.setState({data: resultUsers});
           })
           .catch(() => {}),
@@ -163,7 +155,6 @@ export default class Search extends Component {
             />
           )}
           keyExtractor={(item) => item.username}
-          // ItemSeparatorComponent={this.renderSeparator}
           ListHeaderComponent={this.renderHeader}
         />
         {this.state.errorAlert && (
