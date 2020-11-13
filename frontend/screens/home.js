@@ -111,23 +111,14 @@ class Home extends React.Component {
           onShowUnderlay={() => this.setState({ createPressed: true })}
           onHideUnderlay={() => this.setState({ createPressed: false })}
           activeOpacity={1}
-<<<<<<< HEAD
-          underlayColor="#fff"
-          style={[screenStyles.bigButton, styles.button]}
-=======
           underlayColor="white"
           style={{backgroundColor: '#F15763', borderRadius: 40, width: width*0.5, height: 45, justifyContent:'center', alignSelf:'center', margin:'3%'}}
->>>>>>> 4ce2aa88b10804c5dccb45b6d8d843d1916b1416
           onPress={() => this.createGroup()}
         >
           <Text
             style={[
               styles.buttonText,
-<<<<<<< HEAD
-              this.state.createPressed ? { color: '#F25763' } : { color: 'white' },
-=======
               this.state.createPressed ? { color: '#F15763' } : { color: 'white' },
->>>>>>> 4ce2aa88b10804c5dccb45b6d8d843d1916b1416
             ]}
           >
             Create Group
@@ -137,26 +128,12 @@ class Home extends React.Component {
           onShowUnderlay={() => this.setState({ joinPressed: true })}
           onHideUnderlay={() => this.setState({ joinPressed: false })}
           activeOpacity={1}
-<<<<<<< HEAD
-          underlayColor="#fff"
-          style={[screenStyles.bigButton, styles.button]}
-          onPress={() => this.props.navigation.navigate('Profile')}
-        >
-          <Text
-            style={[
-              styles.buttonText,
-              this.state.profilePressed ? { color: '#F25763' } : { color: 'white' },
-            ]}
-          >
-            My Profile
-=======
           underlayColor='#F15763'
           style={{backgroundColor: 'white', borderRadius: 40, width: width*0.5, height: 45, justifyContent:'center', alignSelf:'center', borderColor:'#F15763', borderWidth:2}}
           onPress={() => this.setState({join: true})}
         >
           <Text style={[styles.buttonText, this.state.profilePressed ? {color: 'white'} : {color: '#F15763'}]}>
             Join Group
->>>>>>> 4ce2aa88b10804c5dccb45b6d8d843d1916b1416
           </Text>
         </TouchableHighlight>
         </View>
@@ -176,28 +153,6 @@ class Home extends React.Component {
             onPress={() => this.setState({ join: false })}
           />
         )}
-<<<<<<< HEAD
-        <TouchableHighlight
-          onShowUnderlay={() => this.setState({ searchPressed: true })}
-          onHideUnderlay={() => this.setState({ searchPressed: false })}
-          activeOpacity={1}
-          underlayColor="#fff"
-          style={[screenStyles.bigButton, styles.button]}
-          onPress={() => {
-            this.getFriends()
-          }}
-        >
-          <Text
-            style={[
-              styles.buttonText,
-              this.state.searchPressed ? { color: '#F25763' } : { color: 'white' },
-            ]}
-          >
-            Find Friends
-          </Text>
-        </TouchableHighlight>
-=======
->>>>>>> 4ce2aa88b10804c5dccb45b6d8d843d1916b1416
         {this.state.errorAlert && (
           <Alert
             title="Error, please try again"

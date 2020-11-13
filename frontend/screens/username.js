@@ -6,11 +6,7 @@ import Alert from '../modals/alert.js'
 import accountsApi from '../apis/accountsApi.js'
 import screenStyles from '../../styles/screenStyles.js'
 
-<<<<<<< HEAD
-const hex = '#F25763'
-=======
 const hex = '#F15763'
->>>>>>> 4ce2aa88b10804c5dccb45b6d8d843d1916b1416
 
 class Username extends React.Component {
   constructor(props) {

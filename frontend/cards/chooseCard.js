@@ -47,13 +47,13 @@ export default class ChooseCard extends React.Component {
         </View>
         {this.state.added && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-            <Text style={[imgStyles.text, {color: '#6A6A6A', fontFamily: 'CircularStd-Medium'},]}>Added!</Text>
+            <Text style={[imgStyles.text, {color: '#6A6A6A', marginRight: '8%',},]}>Added!</Text>
           </View>
         )}
         {!this.state.added && (
           <TouchableHighlight>
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-              <Text style={[imgStyles.text, {marginTop: '10%', fontFamily: 'CircularStd-Medium'},]}>Add</Text>
+              <Text style={[imgStyles.text, {marginTop: '10%'},]}>Add</Text>
               <AntDesign
                 style={[imgStyles.icon, { margin: '10%', marginTop: '20%', fontSize: 25},]}
                 name="pluscircleo"

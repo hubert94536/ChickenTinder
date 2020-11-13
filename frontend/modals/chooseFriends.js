@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   header2: {
-    height: '5%',
+    height: '4.5%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
   },

@@ -242,10 +242,6 @@ export default class FilterSelector extends React.Component {
   evaluateFilters() {
     var filters = {}
     //  convert to unix time
-<<<<<<< HEAD
-    // const date = new Date();
-=======
->>>>>>> 4ce2aa88b10804c5dccb45b6d8d843d1916b1416
     const dd = date.getDate()
     const mm = date.getMonth()
     const yyyy = date.getFullYear()

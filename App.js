@@ -15,8 +15,6 @@ import UserProfileView from './frontend/screens/profile.js'
 import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
 import TabBar from './frontend/nav.js'
 
-<<<<<<< HEAD
-=======
 class Notifications extends React.Component {
   render() {
     return (
@@ -34,7 +32,6 @@ class Notifications extends React.Component {
   }
 }
 
->>>>>>> 4ce2aa88b10804c5dccb45b6d8d843d1916b1416
 export default class App extends React.Component {
   constructor() {
     super()
@@ -88,9 +85,6 @@ export default class App extends React.Component {
             }
           },
           Phone: {
-<<<<<<< HEAD
-            screen: PhoneAuthScreen,
-=======
             screen: PhoneAuthScreen
           },
           Notifications: {
@@ -98,7 +92,6 @@ export default class App extends React.Component {
             navigationOptions: {
               animationEnabled: false
             }
->>>>>>> 4ce2aa88b10804c5dccb45b6d8d843d1916b1416
           },
         },
         {
@@ -116,17 +109,4 @@ export default class App extends React.Component {
   render() {
     return this.state.appContainer
   }
-<<<<<<< HEAD
-
-  // import React from 'react'
-  // import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
-
-  // export default class App extends React.Component{
-  //   render () {
-  //     return (
-  //       <PhoneAuthScreen/>
-  //     )
-  //   }
-=======
->>>>>>> 4ce2aa88b10804c5dccb45b6d8d843d1916b1416
 }

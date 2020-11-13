@@ -10,13 +10,8 @@ export default StyleSheet.create({
     alignSelf: 'center',
   },
   text: {
-<<<<<<< HEAD
-    fontFamily: 'CircularStd-Bold',
-    color: '#F25763',
-=======
     fontFamily: 'CircularStd-Medium',
     color: '#F15763',
->>>>>>> 4ce2aa88b10804c5dccb45b6d8d843d1916b1416
   },
   input: {
     fontSize: 20,
@@ -25,19 +20,11 @@ export default StyleSheet.create({
   },
   smallButton: {
     borderRadius: 45,
-<<<<<<< HEAD
-    borderColor: '#F25763',
-    borderWidth: 2,
-  },
-  smallButtonText: {
-    fontFamily: 'CircularStd-Bold',
-=======
     borderColor: '#F15763',
     borderWidth: 2,
   },
   smallButtonText: {
     fontFamily: 'CircularStd-Medium',
->>>>>>> 4ce2aa88b10804c5dccb45b6d8d843d1916b1416
     textAlign: 'center',
     fontSize: 17,
     paddingTop: '0.5%',
@@ -50,15 +37,9 @@ export default StyleSheet.create({
     fontSize: 45,
   },
   icons: {
-<<<<<<< HEAD
-    color: '#F25763',
-    fontSize: 27,
-    fontFamily: 'CircularStd-Bold',
-=======
     color: '#F15763',
     fontSize: 27,
     fontFamily: 'CircularStd-Medium',
->>>>>>> 4ce2aa88b10804c5dccb45b6d8d843d1916b1416
   },
   medButton: {
     borderRadius: 30,
@@ -66,11 +47,7 @@ export default StyleSheet.create({
     alignSelf: 'center',
   },
   medButtonText: {
-<<<<<<< HEAD
-    fontFamily: 'CircularStd-Bold',
-=======
     fontFamily: 'CircularStd-Medium',
->>>>>>> 4ce2aa88b10804c5dccb45b6d8d843d1916b1416
     fontSize: 20,
     textAlign: 'center',
   },
