@@ -69,8 +69,13 @@ export default class Search extends Component {
                 id: res.userList[user].id,
                 status: status
               }
+              if (person === undefined) {
+                this.setState({errorAlert: true})
+                return
+              }
               resultUsers.push(person);
             }
+            console.log(resultUsers)
             this.setState({data: resultUsers});
           })
           .catch(() => {}),
