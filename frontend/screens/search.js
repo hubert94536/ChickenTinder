@@ -26,10 +26,8 @@ AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 export default class Search extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       data: [],
-      // friends: this.props.navigation.state.params.allFriends,
       friends: [],
       errorAlert: false
     };
@@ -47,19 +45,6 @@ export default class Search extends Component {
     })
   }
 
-  // renderSeparator = () => {
-  //   return (
-  //     <View
-  //       style={{
-  //         height: 1,
-  //         width: '86%',
-  //         backgroundColor: '#CED0CE',
-  //         marginLeft: '14%',
-  //       }}
-  //     />
-  //   );
-  // };
-
   searchFilterFunction = text => {
     this.setState({
       value: text,
@@ -71,7 +56,6 @@ export default class Search extends Component {
         accountsApi
           .searchUsers(text)
           .then(res => {
-            // this.setState({data: res.userList});
             var resultUsers = []
             for (var user in res.userList) {
               var status = 'Add'
@@ -85,7 +69,7 @@ export default class Search extends Component {
                 id: res.userList[user].id,
                 status: status
               }
-=              resultUsers.push(person);
+              resultUsers.push(person);
             }
             this.setState({data: resultUsers});
           })
@@ -144,7 +128,6 @@ export default class Search extends Component {
             />
           )}
           keyExtractor={(item) => item.username}
-          // ItemSeparatorComponent={this.renderSeparator}
           ListHeaderComponent={this.renderHeader}
         />
         {this.state.errorAlert && (

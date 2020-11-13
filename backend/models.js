@@ -45,8 +45,6 @@ const Accounts = sequelize.define(
       unique: true,
     },
     photo: DataTypes.STRING,
-    inSession: DataTypes.BOOLEAN,
-    // password: DataTypes.STRING(20)
   },
   {
     indexes: [

@@ -2,270 +2,256 @@ const redis = require('redis')
 const { Accounts } = require('./models.js')
 const Yelp = require('./yelpQuery.js')
 
-const client = redis.createClient('redis://localhost:6379')
-// client.on('connect', () => {
-//   console.log("Redis")
-// })
-// client.on('error', err => {
-//   console.log('Something went wrong ' + err);
-//   });
+const redisClient = redis.createClient('redis://localhost:6379')
 
-var sessions = {} // store temporary sessions
-var clients = {} // associates username with client id
-var clientsIds = {} // associates client id with username
-var invites = {} // store invites
-var lastRoom = {} // store last room if user disconnected
-var restaurants = {} // caching of restaurants
+redisClient.on("connect", async () => {
+  console.log('1')
+  redisClient.send_command("JSON.SET", ['123', "path", '{"name":"Example"}'], (err, res) => { console.log(res) })
+  redisClient.send_command("JSON.GET", ['123', "path"], (err, res) => { console.log(res) })
+  console.log('2')
+})
+
 module.exports = (io) => {
   io.on('connection', (socket) => {
-    // replace old socket id with new one in both objects
-    let socketUser = socket.handshake.query.username
-    delete clientsIds[clients[socketUser]]
-    clients[socketUser] = socket.id
-    clientsIds[socket.id] = socketUser
+    // // replace old socket id with new one in both objects
+    // let socketUser = socket.handshake.query.username
+    // delete clientsIds[clients[socketUser]]
+    // clients[socketUser] = socket.id
+    // clientsIds[socket.id] = socketUser
 
-    // send invite if previously sent before user connected
-    if (socketUser in invites && invites[socketUser] in sessions) {
-      let sender = invites[socketUser]
-      io.to(clients[socketUser]).emit('invite', {
-        username: sender,
-        pic: sessions[sender].members[sender].pic,
-        name: sessions[sender].members[sender].name,
-      })
-    }
+    // // send invite if previously sent before user connected
+    // if (socketUser in invites && invites[socketUser] in sessions) {
+    //   let sender = invites[socketUser]
+    //   io.to(clients[socketUser]).emit('invite', {
+    //     username: sender,
+    //     pic: sessions[sender].members[sender].pic,
+    //     name: sessions[sender].members[sender].name,
+    //   })
+    // }
 
-    // disconnects user and removes them if in room
-    socket.on('disconnect', async () => {
-      try {
-        let username = clientsIds[socket.id]
-        if (username in lastRoom) {
-          await Accounts.update(
-            {
-              inSession: false,
-            },
-            {
-              where: { username: username },
-            },
-          )
-          let room = lastRoom[username]
-          socket.leave(room)
-          delete sessions[room].members[username]
-          // delete room if this is last member in room
-          if (Object.keys(sessions[room].members).length === 0) {
-            delete sessions[room]
-            delete lastRoom[username]
-          } else {
-            io.in(room).emit('update', sessions[room])
-          }
-        }
-      } catch (error) {
-        socket.emit('exception', error)
-      }
-    })
+    // // disconnects user and removes them if in room
+    // socket.on('disconnect', async () => {
+    //   try {
+    //     let username = clientsIds[socket.id]
+    //     if (username in lastRoom) {
+    //       let room = lastRoom[username]
+    //       socket.leave(room)
+    //       delete sessions[room].members[username]
+    //       // delete room if this is last member in room
+    //       if (Object.keys(sessions[room].members).length === 0) {
+    //         delete sessions[room]
+    //         delete lastRoom[username]
+    //       } else {
+    //         io.in(room).emit('update', sessions[room])
+    //       }
+    //     }
+    //   } catch (error) {
+    //     socket.emit('exception', error)
+    //   }
+    // })
 
     // creates session and return session info to host
     socket.on('createRoom', async (data) => {
-      try {
-        await Accounts.update(
-          {
-            inSession: true,
-          },
-          {
-            where: { username: data.host },
-          },
+      let hostId = data.id
+      let sessionId = null
+      let notUnique = true
+      while (notUnique) {
+        sessionId = Math.floor(100000 + Math.random() * 900000)
+        redisClient.send_command("JSON.GET", [sessionId, "sessions"],
+          (err, res) => {
+            if (err) {
+              socket.emit('exception', error.toString())
+            }
+            if (res) {
+              notUnique = false
+            }
+          }
         )
-        socket.join(data.host)
-        // initialize the session object
-        sessions[data.host] = {}
-        sessions[data.host].members = {}
-        sessions[data.host].host = data.host
-        sessions[data.host].members[data.host] = {}
-        sessions[data.host].members[data.host].pic = data.pic
-        sessions[data.host].members[data.host].filters = false
-        sessions[data.host].members[data.host].name = data.name
-        sessions[data.host].restaurants = {}
-        sessions[data.host].filters = {}
-        sessions[data.host].filters.categories = new Set()
-        lastRoom[data.host] = data.host
-        socket.emit('update', sessions[data.host])
-      } catch (error) {
-        socket.emit('exception', error.toString())
       }
+      // join socket room
+      socket.join(hostId)
+      // intialize session info
+      let session = {}
+      session[hostId] = {}
+      session[hostId].members = {}
+      session[hostId].members[hostId] = {}
+      session[hostId].members[hostId].username = data.username
+      session[hostId].members[hostId].name = data.name
+      session[hostId].members[hostId].photo = data.photo
+      session[hostId].members[hostId].filters = false
+      // initialize session restaurant info
+      // sessions[data.host].restaurants = {}
+      // sessions[data.host].filters = {}
+      // sessions[data.host].filters.categories = new Set()
+      // lastRoom[data.host] = data.host
+      redisClient.send_command("JSON.SET", [sessionId, "sessions", session],
+        (err, res) => {
+          if (err) {
+            socket.emit('exception', error.toString())
+          }
+        }
+      )
+      // emit created room to client
+      socket.emit('update', sessions)
     })
 
     // send invite with host info to join a room
-    socket.on('invite', async (data) => {
-      try {
-        let user = await Accounts.findOne({
-          where: { username: data.username },
-        })
-        // check if friend is in another group
-        if (user.inSession) {
-          socket.emit('unreachable', data.username)
-        } else {
-          invites[data.username] = data.host
-          io.to(clients[data.username]).emit('invite', {
-            username: data.host,
-            pic: sessions[data.host].members[data.host].pic,
-            name: sessions[data.host].members[data.host].name,
-          })
-        }
-      } catch (error) {
-        socket.emit('exception', error.toString())
-      }
-    })
+    //   socket.on('invite', async (data) => {
+    //     try {
+    //       let user = await Accounts.findOne({
+    //         where: { username: data.username },
+    //       })
+    //       // check if friend is in another group
+    //       if (user.inSession) {
+    //         socket.emit('unreachable', data.username)
+    //       } else {
+    //         invites[data.username] = data.host
+    //         io.to(clients[data.username]).emit('invite', {
+    //           username: data.host,
+    //           pic: sessions[data.host].members[data.host].pic,
+    //           name: sessions[data.host].members[data.host].name,
+    //         })
+    //       }
+    //     } catch (error) {
+    //       socket.emit('exception', error.toString())
+    //     }
+    //   })
 
-    // declines invite and remove from invites object
-    socket.on('decline', (data) => {
-      try {
-        delete invites[data.username]
-        io.to(clients[data.room]).emit('decline', data.username)
-      } catch (error) {
-        socket.emit('exception', error.toString())
-      }
-    })
+    //   // declines invite and remove from invites object
+    //   socket.on('decline', (data) => {
+    //     try {
+    //       delete invites[data.username]
+    //       io.to(clients[data.room]).emit('decline', data.username)
+    //     } catch (error) {
+    //       socket.emit('exception', error.toString())
+    //     }
+    //   })
 
-    // alerts everyone in room updated status
-    socket.on('joinRoom', async (data) => {
-      // include to check if room exists
-      if (data.room in sessions) {
-        try {
-          await Accounts.update(
-            {
-              inSession: true,
-            },
-            {
-              where: { username: data.username },
-            },
-          )
-          socket.join(data.room)
-          delete invites[data.username]
-          // initialize member in members object
-          sessions[data.room].members[data.username] = {}
-          sessions[data.room].members[data.username].filters = false
-          sessions[data.room].members[data.username].pic = data.pic
-          sessions[data.room].members[data.username].name = data.name
-          lastRoom[data.username] = data.room
-          io.in(data.room).emit('update', sessions[data.room])
-        } catch (error) {
-          socket.emit('exception', error.toString())
-        }
-      } else {
-        socket.emit('exception', 'status 404')
-      }
-    })
+    //   // alerts everyone in room updated status
+    //   socket.on('joinRoom', async (data) => {
+    //     // include to check if room exists
+    //     if (data.room in sessions) {
+    //       try {
+    //         socket.join(data.room)
+    //         delete invites[data.username]
+    //         // initialize member in members object
+    //         sessions[data.room].members[data.username] = {}
+    //         sessions[data.room].members[data.username].filters = false
+    //         sessions[data.room].members[data.username].pic = data.pic
+    //         sessions[data.room].members[data.username].name = data.name
+    //         lastRoom[data.username] = data.room
+    //         io.in(data.room).emit('update', sessions[data.room])
+    //       } catch (error) {
+    //         socket.emit('exception', error.toString())
+    //       }
+    //     } else {
+    //       socket.emit('exception', 'status 404')
+    //     }
+    //   })
 
-    // alerts to everyone user submitted filters & returns selected filters
-    socket.on('submitFilters', (data) => {
-      // merge to master list, send response back
-      try {
-        sessions[data.room].members[data.username].filters = true
-        io.in(data.room).emit('update', sessions[data.room])
-        // check if host
-        if (data.username === data.room) {
-          // setting filters
-          if (data.filters.price) {
-            sessions[data.room].filters.price = data.filters.price
-          }
-          if (data.filters.open_at) {
-            sessions[data.room].filters.open_at = data.filters.open_at
-          }
-          sessions[data.room].filters.radius = data.filters.radius
-          if (data.filters.location) {
-            sessions[data.room].filters.location = data.filters.location
-          } else {
-            sessions[data.room].filters.latitude = data.filters.latitude
-            sessions[data.room].filters.longitude = data.filters.longitude
-          }
-        }
-        // add categories to set
-        for (let category in data.filters.categories) {
-          sessions[data.room].filters.categories.add(data.filters.categories[category])
-        }
-      } catch (error) {
-        socket.emit('exception', error.toString())
-      }
-    })
+    //   // alerts to everyone user submitted filters & returns selected filters
+    //   socket.on('submitFilters', (data) => {
+    //     // merge to master list, send response back
+    //     try {
+    //       sessions[data.room].members[data.username].filters = true
+    //       io.in(data.room).emit('update', sessions[data.room])
+    //       // check if host
+    //       if (data.username === data.room) {
+    //         // setting filters
+    //         if (data.filters.price) {
+    //           sessions[data.room].filters.price = data.filters.price
+    //         }
+    //         if (data.filters.open_at) {
+    //           sessions[data.room].filters.open_at = data.filters.open_at
+    //         }
+    //         sessions[data.room].filters.radius = data.filters.radius
+    //         if (data.filters.location) {
+    //           sessions[data.room].filters.location = data.filters.location
+    //         } else {
+    //           sessions[data.room].filters.latitude = data.filters.latitude
+    //           sessions[data.room].filters.longitude = data.filters.longitude
+    //         }
+    //       }
+    //       // add categories to set
+    //       for (let category in data.filters.categories) {
+    //         sessions[data.room].filters.categories.add(data.filters.categories[category])
+    //       }
+    //     } catch (error) {
+    //       socket.emit('exception', error.toString())
+    //     }
+    //   })
 
-    // alert to all clients in room to start
-    socket.on('start', async (data) => {
-      try {
-        // transform categories set to string
-        sessions[data.room].filters.categories = Array.from(
-          sessions[data.room].filters.categories,
-        ).toString()
-        const restaurantList = await Yelp.getRestaurants(sessions[data.room].filters)
-        // store restaurant info in 'cache'
-        for (let res in restaurantList.businessList) {
-          restaurants[restaurantList.businessList[res].id] = restaurantList.businessList[res]
-        }
-        io.in(data.room).emit('start', restaurantList.businessList)
-      } catch (error) {
-        socket.emit('exception', error.toString())
-      }
-    })
+    //   // alert to all clients in room to start
+    //   socket.on('start', async (data) => {
+    //     try {
+    //       // transform categories set to string
+    //       sessions[data.room].filters.categories = Array.from(
+    //         sessions[data.room].filters.categories,
+    //       ).toString()
+    //       const restaurantList = await Yelp.getRestaurants(sessions[data.room].filters)
+    //       // store restaurant info in 'cache'
+    //       for (let res in restaurantList.businessList) {
+    //         restaurants[restaurantList.businessList[res].id] = restaurantList.businessList[res]
+    //       }
+    //       io.in(data.room).emit('start', restaurantList.businessList)
+    //     } catch (error) {
+    //       socket.emit('exception', error.toString())
+    //     }
+    //   })
 
-    socket.on('like', (data) => {
-      // add restaurant id to list + check for matches
-      try {
-        // increment restaurant count
-        sessions[data.room].restaurants[data.restaurant] =
-          (sessions[data.room].restaurants[data.restaurant] || 0) + 1
-        // check if count == group size => match
-        if (
-          sessions[data.room].restaurants[data.restaurant] ===
-          Object.keys(sessions[data.room].members).length
-        ) {
-          // return restaurant info from 'cache'
-          io.in(data.room).emit('match', { restaurant: restaurants[data.restaurant] })
-        }
-      } catch (error) {
-        socket.emit('exception', error.toString())
-      }
-    })
+    //   socket.on('like', (data) => {
+    //     // add restaurant id to list + check for matches
+    //     try {
+    //       // increment restaurant count
+    //       sessions[data.room].restaurants[data.restaurant] =
+    //         (sessions[data.room].restaurants[data.restaurant] || 0) + 1
+    //       // check if count == group size => match
+    //       if (
+    //         sessions[data.room].restaurants[data.restaurant] ===
+    //         Object.keys(sessions[data.room].members).length
+    //       ) {
+    //         // return restaurant info from 'cache'
+    //         io.in(data.room).emit('match', { restaurant: restaurants[data.restaurant] })
+    //       }
+    //     } catch (error) {
+    //       socket.emit('exception', error.toString())
+    //     }
+    //   })
 
-    // leaving a session
-    socket.on('leave', async (data) => {
-      try {
-        await Accounts.update(
-          {
-            inSession: false,
-          },
-          {
-            where: { username: data.username },
-          },
-        )
-        socket.leave(data.room)
-        delete sessions[data.room].members[data.username]
-        delete lastRoom[data.username]
-        // delete room if this is last member in room
-        if (Object.keys(sessions[data.room].members).length === 0) {
-          delete sessions[data.room]
-        } else {
-          io.in(data.room).emit('update', sessions[data.room])
-        }
-      } catch (error) {
-        console.log(error)
-        socket.emit('exception', error.toString())
-      }
-    })
+    //   // leaving a session
+    //   socket.on('leave', async (data) => {
+    //     try {
+    //       socket.leave(data.room)
+    //       delete sessions[data.room].members[data.username]
+    //       delete lastRoom[data.username]
+    //       // delete room if this is last member in room
+    //       if (Object.keys(sessions[data.room].members).length === 0) {
+    //         delete sessions[data.room]
+    //       } else {
+    //         io.in(data.room).emit('update', sessions[data.room])
+    //       }
+    //     } catch (error) {
+    //       console.log(error)
+    //       socket.emit('exception', error.toString())
+    //     }
+    //   })
 
-    // host can kick a user from room
-    socket.on('kick', (data) => {
-      try {
-        io.to(clients[data.username]).emit('kick', { username: data.username, room: data.room })
-      } catch (error) {
-        socket.emit('exception', error.toString())
-      }
-    })
+    //   // host can kick a user from room
+    //   socket.on('kick', (data) => {
+    //     try {
+    //       io.to(clients[data.username]).emit('kick', { username: data.username, room: data.room })
+    //     } catch (error) {
+    //       socket.emit('exception', error.toString())
+    //     }
+    //   })
 
-    // alert all users to leave room
-    socket.on('end', (data) => {
-      try {
-        io.in(data.room).emit('leave', data.room)
-      } catch (error) {
-        socket.emit('exception', error.toString())
-      }
-    })
+    //   // alert all users to leave room
+    //   socket.on('end', (data) => {
+    //     try {
+    //       io.in(data.room).emit('leave', data.room)
+    //     } catch (error) {
+    //       socket.emit('exception', error.toString())
+    //     }
+    //   })
   })
 }
