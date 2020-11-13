@@ -178,10 +178,6 @@ export default class Search extends Component {
   }
 }
 
-// Search.propTypes = {
-//   allFriends: PropTypes.array
-// }
-
 const styles = StyleSheet.create({
   topIcons: {
     marginLeft: '5%',

@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     margin: '4%',
   },
   icon2: {
-    color: hexBlack,
+    color: 'black',
     fontSize: 20,
     marginLeft: '1%',
   },
@@ -184,14 +184,14 @@ const styles = StyleSheet.create({
   },
   headertext2: {
     fontFamily: fontRegular,
-    color: hexBlack,
+    color: 'black',
     marginLeft: '4%',
     marginLeft: '7%',
     fontSize: 15,
   },
   headertext3: {
     fontFamily: font,
-    color: hexBlack,
+    color: 'black',
     fontSize: 15,
   },
 })

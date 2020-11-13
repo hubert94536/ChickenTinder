@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import Alert from '../modals/alert.js'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 
 // commented out during linting but hex is used in commented-out code below
 const hex = '#F25763'
@@ -53,7 +54,7 @@ export default class SearchCard extends React.Component {
 
   async deleteFriend() {
     friendsApi
-      .removeFriendship(this.state.id)
+      .removeFriendship(this.props.id)
       .then(() => {
         this.setState({ deleteFriend: false })
         var filteredArray = this.props.total.filter((item) => {
@@ -95,17 +96,18 @@ export default class SearchCard extends React.Component {
           </View>
         )}
         {this.state.requested === 'Add' && this.state.renderOption && (
-          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-            <Text style={[imgStyles.text, { color: 'black' }]}>Add Friend</Text>
-            <Icon
-              style={[imgStyles.icon, { fontSize: 25, margin: '8%', color: 'black' }]}
-              onPress={() => this.addFriend()}
-              name="plus-circle"
-            />
-          </View>
+          <TouchableHighlight underlayColor='white' onPress={() => this.addFriend()}>
+              <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
+              <Text style={[imgStyles.text, { color: 'black' }]}>Add Friend</Text>
+              <AntDesign
+                style={[imgStyles.icon, { fontSize: 25, margin: '8%', color: 'black' }]}
+                name="pluscircleo"
+              />
+            </View>
+          </TouchableHighlight>
         )}
         {this.state.requested === 'Accepted' && this.state.renderOption && (
-          <TouchableHighlight underlayColor='white' onPress={() => this.setState({ deleteFriend: true })}>
+          <TouchableHighlight underlayColor='white' onPress={() => this.setState({ deleteFriend: true, errorAlert: false })}>
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
               <Text style={[imgStyles.text]}>Friends</Text>
               <Icon style={[imgStyles.icon, { fontSize: 20, margin: '8%' }]} name="heart" />
@@ -120,9 +122,9 @@ export default class SearchCard extends React.Component {
               name="check-circle"
               onPress={() => this.acceptFriend()}
             />
-            <Icon
+            <AntDesign
               style={[imgStyles.icon, { fontSize: 25, margin: '3%', color: 'black' }]}
-              name="times-circle"
+              name='closecircleo'
               onPress={() => this.rejectFriend()}
             />
           </View>
@@ -134,16 +136,6 @@ export default class SearchCard extends React.Component {
             buttonText="Close"
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
-          />
-        )}
-        {this.state.deleteFriend && (
-          <Alert
-            title="Are you sure?"
-            body={'You are about to remove @' + this.props.username + ' as a friend'}
-            button
-            buttonText="Delete"
-            press={() => this.deleteFriend()}
-            cancel={() => this.setState({ deleteFriend: false })}
           />
         )}
         {this.state.deleteFriend && (
