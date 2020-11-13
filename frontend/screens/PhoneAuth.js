@@ -180,7 +180,6 @@ const styles = StyleSheet.create({
     width: '90%',
     borderColor: '#fff',
     borderWidth: 2,
-    borderWidth: 0,
     borderBottomWidth: 2,
     paddingLeft: 10,
     color: '#fff',
@@ -209,8 +208,8 @@ const styles = StyleSheet.create({
   },
 })
 
-PhoneAuthScreen.propTypes = {
-  navigation: PropTypes.bool,
-}
+// PhoneAuthScreen.propTypes = {
+//   navigation: PropTypes.bool,
+// }
 
 export default PhoneAuthScreen

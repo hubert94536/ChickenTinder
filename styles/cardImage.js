@@ -9,13 +9,13 @@ export default StyleSheet.create({
   },
   text: {
     fontFamily: 'CircularStd-Bold',
-    color: '#F25763',
+    color: '#F15763',
     fontSize: 15,
     alignSelf: 'center',
   },
   icon: {
     fontFamily: 'CircularStd-Bold',
-    color: '#F25763',
+    color: '#F15763',
     fontSize: 35,
     alignSelf: 'center',
   },
