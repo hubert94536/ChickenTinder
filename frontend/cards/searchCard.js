@@ -96,14 +96,15 @@ export default class SearchCard extends React.Component {
           </View>
         )}
         {this.state.requested === 'Add' && this.state.renderOption && (
-          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-            <Text style={[imgStyles.text, { color: 'black' }]}>Add Friend</Text>
-            <AntDesign
-              style={[imgStyles.icon, { fontSize: 25, margin: '8%', color: 'black' }]}
-              onPress={() => this.addFriend()}
-              name="pluscircleo"
-            />
-          </View>
+          <TouchableHighlight underlayColor='white' onPress={() => this.addFriend()}>
+              <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
+              <Text style={[imgStyles.text, { color: 'black' }]}>Add Friend</Text>
+              <AntDesign
+                style={[imgStyles.icon, { fontSize: 25, margin: '8%', color: 'black' }]}
+                name="pluscircleo"
+              />
+            </View>
+          </TouchableHighlight>
         )}
         {this.state.requested === 'Accepted' && this.state.renderOption && (
           <TouchableHighlight underlayColor='white' onPress={() => this.setState({ deleteFriend: true, errorAlert: false })}>
