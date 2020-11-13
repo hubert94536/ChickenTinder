@@ -1,13 +1,16 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import accountsApi from '../apis/accountsApi.js'
 import Alert from '../modals/alert.js'
 import friendsApi from '../apis/friendsApi.js'
-import Invite from '../modals/invite.js'
+import Join from '../modals/join.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
+import TabBar from '../nav.js'
+import Icon from 'react-native-vector-icons/FontAwesome'
+
 
 var img = ''
 var name = ''
@@ -19,6 +22,8 @@ AsyncStorage.getItem(NAME).then((res) => (name = res))
 AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 var myId = ''
 
+const width = Dimensions.get('window').width
+
 AsyncStorage.getItem(ID).then((res) => {
   myId = res
 })
@@ -28,9 +33,9 @@ class Home extends React.Component {
     super()
     this.state = {
       createPressed: false,
-      profilePressed: false,
+      joinPressed: false,
       searchPressed: false,
-      invite: false,
+      join: false,
       image: img,
       name: name,
       username: username,
@@ -47,10 +52,6 @@ class Home extends React.Component {
       this.setState({ invite: false })
       this.props.navigation.navigate('Group', res)
     })
-  }
-
-  closeInvite() {
-    this.setState({ invite: false })
   }
 
   createGroup() {
@@ -72,55 +73,71 @@ class Home extends React.Component {
     // friendsApi.acceptFriendRequest(2)
   }
 
-  async getFriends() {
-    // Pushing accepted friends or pending requests into this.state.friends
-    friendsApi
-      .getFriends()
-      .then((res) => {
-        var friendsMap = new Object()
-        for (var friend in res.friendList) {
-          friendsMap[res.friendList[friend].id] = res.friendList[friend].status
-        }
-        this.setState({ friends: friendsMap })
-        this.props.navigation.navigate('Search', {
-          allFriends: friendsMap,
-        })
-      })
-      .catch((err) => {
-        this.setState({ errorAlert: true })
-      })
-  }
+  // async getFriends() {
+  //   // Pushing accepted friends or pending requests into this.state.friends
+  //   friendsApi
+  //     .getFriends()
+  //     .then((res) => {
+  //       var friendsMap = new Object()
+  //       for (var friend in res.friendList) {
+  //         friendsMap[res.friendList[friend].id] = res.friendList[friend].status
+  //       }
+  //       this.setState({ friends: friendsMap })
+  //       this.props.navigation.navigate('Search', {
+  //         allFriends: friendsMap,
+  //       })
+  //     })
+  //     .catch((err) => {
+  //       this.setState({ errorAlert: true })
+  //     })
+  // }
 
   render() {
     return (
       <View
         style={{
           flex: 1,
-          backgroundColor: '#F25763',
-          justifyContent: 'center',
+          backgroundColor: 'white',
+          alignItems:'center',
+          justifyContent: 'space-evenly',
         }}
       >
+        <Text style={[screenStyles.text, screenStyles.title, {fontSize: 30}]}>Hungry? Chews wisely.</Text>
+        {/* dummy image */}
+        <Image source={{ uri: 'https://banner2.cleanpng.com/20181107/fhg/kisspng-computer-icons-location-map-united-states-of-ameri-5be33fd26a48d9.3500512415416196664353.jpg' }} 
+        style={{width: 200, height: 200,}}/> 
+        <View >
         <TouchableHighlight
           onShowUnderlay={() => this.setState({ createPressed: true })}
           onHideUnderlay={() => this.setState({ createPressed: false })}
           activeOpacity={1}
+<<<<<<< HEAD
           underlayColor="#fff"
           style={[screenStyles.bigButton, styles.button]}
+=======
+          underlayColor="white"
+          style={{backgroundColor: '#F15763', borderRadius: 40, width: width*0.5, height: 45, justifyContent:'center', alignSelf:'center', margin:'3%'}}
+>>>>>>> 4ce2aa88b10804c5dccb45b6d8d843d1916b1416
           onPress={() => this.createGroup()}
         >
           <Text
             style={[
               styles.buttonText,
+<<<<<<< HEAD
               this.state.createPressed ? { color: '#F25763' } : { color: 'white' },
+=======
+              this.state.createPressed ? { color: '#F15763' } : { color: 'white' },
+>>>>>>> 4ce2aa88b10804c5dccb45b6d8d843d1916b1416
             ]}
           >
             Create Group
           </Text>
         </TouchableHighlight>
         <TouchableHighlight
-          onShowUnderlay={() => this.setState({ profilePressed: true })}
-          onHideUnderlay={() => this.setState({ profilePressed: false })}
+          onShowUnderlay={() => this.setState({ joinPressed: true })}
+          onHideUnderlay={() => this.setState({ joinPressed: false })}
           activeOpacity={1}
+<<<<<<< HEAD
           underlayColor="#fff"
           style={[screenStyles.bigButton, styles.button]}
           onPress={() => this.props.navigation.navigate('Profile')}
@@ -132,17 +149,34 @@ class Home extends React.Component {
             ]}
           >
             My Profile
+=======
+          underlayColor='#F15763'
+          style={{backgroundColor: 'white', borderRadius: 40, width: width*0.5, height: 45, justifyContent:'center', alignSelf:'center', borderColor:'#F15763', borderWidth:2}}
+          onPress={() => this.setState({join: true})}
+        >
+          <Text style={[styles.buttonText, this.state.profilePressed ? {color: 'white'} : {color: '#F15763'}]}>
+            Join Group
+>>>>>>> 4ce2aa88b10804c5dccb45b6d8d843d1916b1416
           </Text>
         </TouchableHighlight>
-        {this.state.invite && (
-          <Invite
+        </View>
+        <TabBar 
+          goHome={() => this.props.navigation.navigate('Home')}
+          goSearch={() => this.props.navigation.navigate('Search')}
+          goNotifs={() => this.props.navigation.navigate('Notifications')}
+          goProfile={() => this.props.navigation.navigate('Profile')}
+          cur='Home'
+        />
+        {this.state.join && (
+          <Join
             image={this.state.inviteInfo.pic}
             username={this.state.inviteInfo.username}
             name={this.state.inviteInfo.name}
-            cancel={() => this.closeInvite()}
-            onPress={() => this.closeInvite()}
+            cancel={() => this.setState({ join: false })}
+            onPress={() => this.setState({ join: false })}
           />
         )}
+<<<<<<< HEAD
         <TouchableHighlight
           onShowUnderlay={() => this.setState({ searchPressed: true })}
           onHideUnderlay={() => this.setState({ searchPressed: false })}
@@ -162,6 +196,8 @@ class Home extends React.Component {
             Find Friends
           </Text>
         </TouchableHighlight>
+=======
+>>>>>>> 4ce2aa88b10804c5dccb45b6d8d843d1916b1416
         {this.state.errorAlert && (
           <Alert
             title="Error, please try again"
@@ -185,9 +221,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     textAlign: 'center',
-    fontFamily: 'CircularStd-Medium',
-    fontSize: 27,
-    fontWeight: 'bold',
+    fontFamily: 'CircularStd-Bold',
+    fontSize: 18,
   },
 })
 

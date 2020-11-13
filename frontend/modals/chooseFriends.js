@@ -1,6 +1,5 @@
 import React from 'react'
 import { Dimensions, FlatList, Modal, StyleSheet, Text, View } from 'react-native'
-//import Icon from 'react-native-vector-icons/FontAwesome'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { SearchBar } from 'react-native-elements'

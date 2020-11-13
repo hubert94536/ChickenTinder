@@ -1,7 +1,6 @@
 import React from 'react'
 import { Text, View, Image } from 'react-native'
 import { TouchableHighlight } from 'react-native-gesture-handler'
-//import Icon from 'react-native-vector-icons/FontAwesome'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'

@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import auth from '@react-native-firebase/auth'
+import PropTypes from 'prop-types'
 import Alert from '../modals/alert.js'
 
-const hex = '#F25763'
+const hex = '#F15763'
 const font = 'CircularStd-Bold'
 
 class PhoneAuthScreen extends Component {
@@ -180,6 +181,10 @@ const styles = StyleSheet.create({
     width: '90%',
     borderColor: '#fff',
     borderWidth: 2,
+<<<<<<< HEAD
+=======
+    borderWidth: 0,
+>>>>>>> 4ce2aa88b10804c5dccb45b6d8d843d1916b1416
     borderBottomWidth: 2,
     paddingLeft: 10,
     color: '#fff',
@@ -208,8 +213,14 @@ const styles = StyleSheet.create({
   },
 })
 
+<<<<<<< HEAD
 // PhoneAuthScreen.propTypes = {
 //   navigation: PropTypes.bool,
 // }
+=======
+PhoneAuthScreen.propTypes = {
+  navigation: PropTypes.object,
+}
+>>>>>>> 4ce2aa88b10804c5dccb45b6d8d843d1916b1416
 
 export default PhoneAuthScreen
