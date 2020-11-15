@@ -1,7 +1,9 @@
 import React from 'react'
-import { Dimensions, FlatList, Modal, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, FlatList, Modal, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import Clipboard from '@react-native-community/clipboard'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { SearchBar } from 'react-native-elements'
 import PropTypes from 'prop-types'
 import Alert from './alert.js'
@@ -11,7 +13,7 @@ import friendsApi from '../apis/friendsApi.js'
 const hex = '#F15763'
 const hexBlack = '#000000'
 const font = 'CircularStd-Bold'
-const fontRegular = 'CircularStd'
+const fontRegular = 'CircularStd-Medium'
 const height = Dimensions.get('window').height
 
 //  little pop up modal that is showed when you click choose friends in filters
@@ -23,7 +25,6 @@ export default class ChooseFriends extends React.Component {
       friends: '',
       search: '',
       errorAlert: false,
-      members: this.props.members,
     }
     this.getFriends()
   }
@@ -38,7 +39,7 @@ export default class ChooseFriends extends React.Component {
         for (var friend in res.friendList) {
           if (res.friendList[friend].status === 'Accepted') {
             if (
-              this.state.members.some(
+              this.props.members.some(
                 (member) => member.username === res.friendList[friend].username,
               )
             ) {
@@ -52,7 +53,12 @@ export default class ChooseFriends extends React.Component {
         }
         this.setState({ friends: pushFriends, data: pushFriends })
       })
-      .catch((err) => this.setState({ errorAlert: true }))
+      .catch(() => this.setState({ errorAlert: true }))
+  }
+
+  // copies the room code (dummy text for now)
+  copyToClipboard() {
+    Clipboard.setString('BADWOLF42')
   }
 
   //  closes the choose friends modal in filters
@@ -78,12 +84,18 @@ export default class ChooseFriends extends React.Component {
           <View style={styles.main}>
             <View style={styles.header}>
               <Text style={styles.headertext}>Friends</Text>
-              <AntDesign name="closecircleo" style={styles.icon} onPress={() => this.handlePress()} />
+              <AntDesign
+                name="closecircleo"
+                style={styles.icon}
+                onPress={() => this.handlePress()}
+              />
             </View>
             <View style={styles.header2}>
               <Text style={styles.headertext2}>Group PIN: </Text>
-              <Text style={styles.headertext3}>ABC123</Text>
-              <Ionicons name="copy-outline" style={styles.icon2} /* onPress={insert function to copy room code}*//>
+              <Text style={styles.headertext3}>BADWOLF42</Text>
+              <TouchableOpacity onPress={this.copyToClipboard}>
+                <Ionicons name="copy-outline" style={styles.icon2} />
+              </TouchableOpacity>
             </View>
             <SearchBar
               containerStyle={{
@@ -111,7 +123,7 @@ export default class ChooseFriends extends React.Component {
               round
             />
             <FlatList
-              style={{ marginLeft: '5%', marginRight: '5%', marginBottom: '10%' }}
+              style={{ marginLeft: '5%', marginRight: '5%', marginBottom: '2%' }}
               data={this.state.friends}
               renderItem={({ item }) => (
                 <ChooseCard
@@ -123,6 +135,7 @@ export default class ChooseFriends extends React.Component {
               )}
               keyExtractor={(item) => item.username}
             />
+            <MaterialIcons name="keyboard-arrow-down" style={styles.icon3} />
           </View>
         </View>
         {this.state.errorAlert && (
@@ -171,9 +184,15 @@ const styles = StyleSheet.create({
     margin: '4%',
   },
   icon2: {
-    color: 'black',
+    color: hexBlack,
     fontSize: 20,
-    marginLeft: '1%',
+    marginLeft: '7%',
+  },
+  icon3: {
+    color: hex,
+    fontSize: 35,
+    marginBottom: '5%',
+    alignSelf: 'center',
   },
   headertext: {
     fontFamily: font,
@@ -184,18 +203,18 @@ const styles = StyleSheet.create({
   },
   headertext2: {
     fontFamily: fontRegular,
-    color: 'black',
-    marginLeft: '4%',
+    color: hexBlack,
     marginLeft: '7%',
     fontSize: 15,
   },
   headertext3: {
     fontFamily: font,
-    color: 'black',
+    color: hexBlack,
     fontSize: 15,
   },
 })
 
 ChooseFriends.propTypes = {
+  members: PropTypes.array,
   press: PropTypes.func,
 }
