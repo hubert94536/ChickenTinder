@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, View, TouchableHighlight, Modal } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
 import { BlurView } from '@react-native-community/blur'
 import PropTypes from 'prop-types'
 import modalStyles from '../../styles/modalStyles.js'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
@@ -38,8 +38,8 @@ export default class Alert extends Component {
           <View style={modalStyles.modal}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               {this.props.button && (
-                <Icon
-                  name="times-circle"
+                <AntDesign
+                  name='closecircleo'
                   style={modalStyles.icon}
                   onPress={() => this.handleCancel()}
                 />
