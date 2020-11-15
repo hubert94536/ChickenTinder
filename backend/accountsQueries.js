@@ -65,6 +65,7 @@ const getAccountById = async (req, res) => {
 }
 
 // Update account by id
+// TODO: Transactions
 const updateAccount = async (req, res) => {
   try {
     const { id } = req.params
@@ -81,6 +82,7 @@ const updateAccount = async (req, res) => {
 }
 
 // Delete account by id
+// TODO: Delete their associated photo from S3 
 const deleteAccount = async (req, res) => {
   try {
     const { id } = req.params

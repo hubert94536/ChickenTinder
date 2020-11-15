@@ -3,6 +3,7 @@ const io = require('socket.io')()
 const bodyParser = require('body-parser')
 const accounts = require('./accountsQueries.js')
 const friends = require('./friendsQueries.js')
+const images = require('./images')
 const http = require('http')
 
 const app = express()
@@ -22,6 +23,9 @@ app.use(
 if (app.get('env') === 'development') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 }
+
+//image uploads
+app.route('/images').post(images.uploadHandler);
 
 // accounts table
 app.route('/accounts').get(accounts.getAllAccounts).post(accounts.createAccount)
