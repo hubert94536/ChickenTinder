@@ -5,15 +5,16 @@ import { createAppContainer } from 'react-navigation'
 import firebase from 'firebase'
 import Group from './frontend/screens/group.js'
 import Home from './frontend/screens/home.js'
-import Invite from './frontend/modals/invite.js'
+// import Invite from './frontend/modals/invite.js'
 import Login from './frontend/screens/login.js'
 import Match from './frontend/screens/match.js'
+import Notif from './frontend/screens/notif.js'
 import Round from './frontend/screens/round.js'
 import Search from './frontend/screens/search.js'
 import Username from './frontend/screens/username.js'
 import UserProfileView from './frontend/screens/profile.js'
 import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
-import Notif from "./frontend/screens/notif.js"
+import TabNavigator from './frontend/nav.js'
 
 export default class App extends React.Component {
   constructor() {
@@ -58,9 +59,6 @@ export default class App extends React.Component {
           Search: {
             screen: Search,
           },
-          Invite: {
-            screen: Invite,
-          },
           Phone: {
             screen: PhoneAuthScreen
           },
@@ -83,13 +81,13 @@ export default class App extends React.Component {
     return this.state.appContainer
   }
 
-  // import React from 'react'
-  // import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
+//   import React from 'react'
+//   import TabNavigator from './frontend/nav.js'
 
-  // export default class App extends React.Component{
-  //   render () {
-  //     return (
-  //       <PhoneAuthScreen/>
-  //     )
-  //   }
+// export default class App extends React.Component{
+//   render () {
+//     return (
+//         <TabNavigator style={{backgroundColor:'white'}}/>
+//     )
+//   }
 }

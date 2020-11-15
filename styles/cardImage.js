@@ -8,7 +8,7 @@ export default StyleSheet.create({
     margin: '3%',
   },
   text: {
-    fontFamily: 'CircularStd-Bold',
+    fontFamily: 'CircularStd-Medium',
     color: '#F25763',
     fontSize: 15,
     alignSelf: 'center',

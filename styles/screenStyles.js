@@ -11,7 +11,7 @@ export default StyleSheet.create({
   },
   text: {
     fontFamily: 'CircularStd-Bold',
-    color: '#F25763',
+    color: '#F15763',
   },
   input: {
     fontSize: 20,
@@ -20,7 +20,7 @@ export default StyleSheet.create({
   },
   smallButton: {
     borderRadius: 45,
-    borderColor: '#F25763',
+    borderColor: '#F15763',
     borderWidth: 2,
   },
   smallButtonText: {
@@ -37,7 +37,7 @@ export default StyleSheet.create({
     fontSize: 45,
   },
   icons: {
-    color: '#F25763',
+    color: '#F15763',
     fontSize: 27,
     fontFamily: 'CircularStd-Bold',
   },

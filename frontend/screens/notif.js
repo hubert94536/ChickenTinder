@@ -25,7 +25,7 @@ import modalStyles from '../../styles/modalStyles.js'
 import friendsApi from '../apis/friendsApi.js'
 import NotifCard from '../cards/notifCard.js'
 
-const hex = '#F25763'
+const hex = '#F15763'
 const font = 'CircularStd-Bold'
 var img = ''
 var name = ''
@@ -53,6 +53,8 @@ export default class Notif extends Component {
       image: img,
       friends: true,
       notifs: [],
+      activityNotifs: [],
+      requestNotifs: [],
       activity:true,
       visible: false,
       changeName: false,
@@ -76,12 +78,12 @@ export default class Notif extends Component {
     accountsApi.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
     accountsApi.createFBUser('Helen', 5, 'helenthemelon', 'helenw@gmail.com', 'sjdkf'),
     accountsApi.createFBUser('Kevin', 6, 'kevint', 'kevintang@gmail.com', 'sdfddf'),
-    console.log("My id:" + myId)
+    console.log("My id:" + myId),
     friendsApi.createFriendshipTest(myId, 2),
     friendsApi.createFriendshipTest(4, 2),
     friendsApi.createFriendshipTest(myId, 3),
-    friendsApi.createFriendshipTest(myId, 4)
-    friendsApi.createFriendshipTest(6, myId)
+    friendsApi.createFriendshipTest(myId, 4),
+    friendsApi.createFriendshipTest(6, myId),
     friendsApi.acceptFriendRequest(2)
   }
 
@@ -93,13 +95,22 @@ export default class Notif extends Component {
       {
         "name": "Hanna Co",
         "username": "hco",
-        "id": 3,
+        "id": "3",
+        "image": "kjkhkk",
+        "type": "Invite"
+      },
+      {
+        "name": "Francis Feng",
+        "username": "francis",
+        "id": "8",
+        "image": "sfdsds",
         "type": "Invite"
       },
       {
         "name": "Hubert Chen",
         "username": "hubesc",
-        "id": 5,
+        "id": "5",
+        "image": "sdfsdf",
         "type": "Request"
       },
     ]
@@ -114,44 +125,60 @@ export default class Notif extends Component {
 
   render() {
 
-    var notifs = []
+    var activityNotifs = []
+    var requestNotifs = []
     var notifList = this.state.notifs
     // Create all friend/request cards
     if (Array.isArray(notifList) && notifList.length) {
       for (var i = 0; i < notifList.length; i++) {
-        notifs.push(
-          <NotifCard
-            total={this.state.notifs}
-            name={notifList[i].name}
-            username={notifList[i].username}
-            id={notifList[i].id}
-            type={notifList[i].type}
-            key={i}
-            index={i}
-            press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
-          />,
-        )
+
+        if(notifList[i].type == "Request")
+        {
+          requestNotifs.push(
+            <NotifCard
+              total={this.state.notifs}
+              name={notifList[i].name}
+              username={notifList[i].username}
+              id={notifList[i].id}
+              image={notifList[i].image}
+              type={notifList[i].type}
+              key={i}
+              index={i}
+              press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
+            />,
+          )
+        }
+        else
+        {
+          activityNotifs.push(
+            <NotifCard
+              total={this.state.notifs}
+              name={notifList[i].name}
+              username={notifList[i].username}
+              id={notifList[i].id}
+              image={notifList[i].image}
+              type={notifList[i].type}
+              key={i}
+              index={i}
+              press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
+            />,
+          )
+        }
+        
       }
     }
     return (
       <View style={{ backgroundColor: 'white' }}>
         <View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Icon
-              name="chevron-left"
-              style={[screenStyles.icons, { margin: '5%' }]}
-              onPress={() => this.props.navigation.navigate('Home')}
-            />
-          </View>
           <Text style={[screenStyles.text, styles.NotifTitle]}>Notifications</Text>
           
           <View style={{ flexDirection: 'row' }}>
             <TouchableHighlight
               underlayColor="#fff"
               style={[
-                screenStyles.smallButton,
+                // screenStyles.smallButton,
                 this.state.activity ? { backgroundColor: hex } : { backgroundColor: 'white' },
-                { marginLeft: '5%' },
+                { marginLeft: '5%', flex: 0.5},
               ]}
               onPress={() => this.refs.swiper.scrollBy(-1)}
             >
@@ -168,9 +195,9 @@ export default class Notif extends Component {
             <TouchableHighlight
               underlayColor="#fff"
               style={[
-                screenStyles.smallButton,
+                // screenStyles.smallButton,
                 !this.state.activity ? { backgroundColor: hex } : { backgroundColor: 'white' },
-                { marginLeft: '5%'},
+                { marginHorizontal: '5%', flex: 0.5},
               ]}
               onPress={() => this.refs.swiper.scrollBy(1)}
             >
@@ -179,6 +206,7 @@ export default class Notif extends Component {
                   screenStyles.smallButtonText,
                   styles.selectedText,
                   !this.state.activity ? { color: 'white' } : { color: hex },
+
                 ]}
               >
                 Friend Requests
@@ -194,8 +222,9 @@ export default class Notif extends Component {
           >
             {/* <Friends isFriends /> */}
             {/* <View /> */}
-            <ScrollView style={{ flexDirection: 'column' }}>{notifs}</ScrollView>
-            <Friends isFriends={false} />
+            <ScrollView style={{ flexDirection: 'column' }}>{activityNotifs}</ScrollView>
+            <ScrollView style={{ flexDirection: 'column' }}>{requestNotifs}</ScrollView>
+            {/* <Friends isFriends={false} /> */}
           </Swiper>
         </View>
         {this.state.visible && (
@@ -214,9 +243,11 @@ export default class Notif extends Component {
 
 const styles = StyleSheet.create({
   NotifTitle: {
-    fontSize: 17,
+    fontSize: 30,
+    paddingTop: '5%',
     paddingLeft: '5%',
     paddingBottom: '5%',
+    alignSelf: 'center'
   },
   avatar: {
     width: 100,
