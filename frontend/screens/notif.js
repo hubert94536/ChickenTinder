@@ -24,6 +24,7 @@ import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import friendsApi from '../apis/friendsApi.js'
 import NotifCard from '../cards/notifCard.js'
+import TabBar from './frontend/nav.js'
 
 const hex = '#F15763'
 const font = 'CircularStd-Bold'
@@ -227,6 +228,13 @@ export default class Notif extends Component {
             {/* <Friends isFriends={false} /> */}
           </Swiper>
         </View>
+        <TabBar 
+          goHome={() => this.props.navigation.navigate('Home')}
+          goSearch={() => this.props.navigation.navigate('Search')}
+          goNotifs={() => this.props.navigation.navigate('Notifications')}
+          goProfile={() => this.props.navigation.navigate('Profile')}
+          cur='Notifs'
+        />
         {this.state.visible && (
           <BlurView
             blurType="light"

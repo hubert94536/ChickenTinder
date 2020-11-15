@@ -4,7 +4,7 @@ import auth from '@react-native-firebase/auth'
 import Alert from '../modals/alert.js'
 import PropTypes from 'prop-types'
 
-const hex = '#F25763'
+const hex = '#F15763'
 const font = 'CircularStd-Bold'
 
 class PhoneAuthScreen extends Component {
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
 })
 
 PhoneAuthScreen.propTypes = {
-  navigation: PropTypes.bool,
+  navigation: PropTypes.object,
 }
 
 export default PhoneAuthScreen

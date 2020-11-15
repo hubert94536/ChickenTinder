@@ -5,8 +5,8 @@ export default StyleSheet.create({
         position: 'absolute', top: 0, bottom: 0, left: 0, right: 0
     },
     icon: {
-        fontFamily:  'CircularStd-Bold',
-        color: '#F25763',
+        fontFamily:  'CircularStd-Medium',
+        color: '#F15763',
         marginTop: '5%',
         marginRight: '5%',
         fontSize: 30,
@@ -22,14 +22,14 @@ export default StyleSheet.create({
         margin: '50%'
     },
     text: {
-        fontFamily:  'CircularStd-Bold',
+        fontFamily:  'CircularStd-Medium',
         fontSize: 20,
         paddingTop: '5%',
         paddingBottom: '5%',
         textAlign: 'center',
     },
     button:{
-        borderColor: '#F25763',
+        borderColor: '#F15763',
         borderWidth: 2.5,
         borderRadius: 60,
         width: '50%',
