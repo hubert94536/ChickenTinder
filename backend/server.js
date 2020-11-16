@@ -1,5 +1,5 @@
 const express = require('express')
-const io = require('socket.io')()
+// const io = require('socket.io')()
 const bodyParser = require('body-parser')
 const accounts = require('./accountsQueries.js')
 const friends = require('./friendsQueries.js')
@@ -8,8 +8,8 @@ const http = require('http')
 
 const app = express()
 const server = http.createServer(app)
-io.attach(server)
-require('./socketEvents.js')(io)
+// io.attach(server)
+// require('./socketEvents.js')(io)
 
 var PORT = process.env.PORT || 5000
 
@@ -25,7 +25,7 @@ if (app.get('env') === 'development') {
 }
 
 //image uploads
-app.route('/images').post(images.uploadHandler);
+app.route('/images').post(images.uploadPhoto,images.uploadHandler);
 
 // accounts table
 app.route('/accounts').get(accounts.getAllAccounts).post(accounts.createAccount)

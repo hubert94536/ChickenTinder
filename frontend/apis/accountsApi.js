@@ -184,6 +184,10 @@ const checkPhoneNumber = async (phoneNumber) => {
     })
 }
 
+const uploadImage = async () => {
+  
+}
+
 export default {
   createFBUser,
   getAllUsers,
