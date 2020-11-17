@@ -25,7 +25,7 @@ if (app.get('env') === 'development') {
 }
 
 //image uploads
-app.route('/images').post(images.uploadPhoto,images.uploadHandler);
+app.route('/images').post(images.upload,images.uploadHandler);
 
 // accounts table
 app.route('/accounts').get(accounts.getAllAccounts).post(accounts.createAccount)

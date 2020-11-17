@@ -11,76 +11,127 @@ const s3 = new AWS.S3({
     region: 'us-west-1'
 });
 
-const upload = multer({
+// positively this code breaks all conventions known to mankind...
+const upload = (req, res, next) => multer({
     storage: multerS3({
       s3: s3,
       bucket: process.env.AWS_BUCKET,
       acl: 'public-read',
       contentType: multerS3.AUTO_CONTENT_TYPE,
       key: function (req, file, cb) {
-        // TODO: id will only be populated if sent first in the request... see if this is fixable
-        const uid = req.body.id;
-        console.log(1)
-        Accounts.findOne({ where: { id: uid } })
-            .then((user) => {
-                console.log(2)
-                if (!user) {
-                    req.error = new Error('user does not exist')
-                    cb(new Error('user does not exist'))
-                } else {
-                    req.user = user;
-                    const ext = (function(file){
-                        if (file.mimetype == "image/png") return ".png";
-                        if (file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") return ".jpg";
-                    })(file);
-                    console.log(3)
-                    cb(null, uid + ext);
-                }
-            })
-            .catch((error) => {
-                req.error = error;
-                cb(error);
-            });
+        // TODO: id must be supplied first in the request... see if this is fixable
+        try{
+            req.validContent = true;
+            const uid = req.body.id;
+            if (!uid) throw new Error('no id given');
+            console.log(1)
+            Accounts.findOne({ where: { id: uid } })
+                .then((user) => {
+                    console.log(2)
+                    if (!user) {
+                        throw new Error('user does not exist')
+                    } else {
+                        req.user = user;
+                        const ext = (function(file){
+                            if (file.mimetype == "image/png") return ".png";
+                            if (file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") return ".jpg";
+                        })(file);
+                        console.log(3)
+                        cb(null, uid + ext);
+                    }
+                })
+                .catch((error) => {
+                    return res.status(500).send(error.message);
+                });
+        } catch (error) {
+            return res.status(500).send(error.message)
+        }
       }
     }),
     fileFilter: (req, file, cb) => {
+        console.log('filter')
         if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
           cb(null, true);
         } else {
-          cb(null, false);
-          return cb(new Error('file not .png, .jpg or .jpeg'));
+          return res.status(500).send('invalid file format');
         }
       }
-});  
+}).single('avatar')(req, res, next);
 
-const uploadPhoto = upload.single('avatar');
+// const upload = multer({
+//     storage: multerS3({
+//       s3: s3,
+//       bucket: process.env.AWS_BUCKET,
+//       acl: 'public-read',
+//       contentType: multerS3.AUTO_CONTENT_TYPE,
+//       key: function (req, file, cb) {
+//         // TODO: id will only be populated if sent first in the request... see if this is fixable
+//         const uid = req.body.id;
+//         if (!uid) cb(new Error('no id given'));
+//         console.log(1)
+//         Accounts.findOne({ where: { id: uid } })
+//             .then((user) => {
+//                 console.log(2)
+//                 if (!user) {
+//                     cb(new Error('user does not exist'))
+//                 } else {
+//                     req.user = user;
+//                     const ext = (function(file){
+//                         if (file.mimetype == "image/png") return ".png";
+//                         if (file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") return ".jpg";
+//                     })(file);
+//                     console.log(3)
+//                     cb(null, uid + ext);
+//                 }
+//             })
+//             .catch((error) => {
+//                 cb(error);
+//             });
+//       }
+//     }),
+//     fileFilter: (req, file, cb) => {
+//         if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
+//           cb(null, true);
+//         } else {
+//           cb(null, false);
+//           return cb(new Error('file not .png, .jpg or .jpeg'));
+//         }
+//       }
+// });  
+
+// const uploadPhoto = upload.single('avatar');
+
+// const uploadPhoto = (req, res, next) => {
+//     upload.single('avatar')(req, res, function(error) {
+//         if (error) {
+//             req.error = error;
+//             // next();
+//         }
+//     });
+// }
 
 const uploadHandler = async (req, res) => {
     try{
-        // await uploadPhoto(req, res, function(error) {
-        //     if (error) req.error = error; // to handle errors outside of the block
-        // })
         console.log(4)
-        if (req.error) throw req.error;
+        if (!req.validContent) throw new Error ('invalid content');
+        if (!req.file) throw new Error('no file received');
+        if (!req.user) throw new Error('user does not exist');
         console.log(5)
-        if (req.user) {
-            console.log(6)
-            req.user.update({ photo: req.file.location })
-                .then((response) => { 
-                    console.log(7)
-                    console.log("Location: " + req.file.location);
-                    return res.status(200).send('Uploaded photo at ' + req.file.location ) })
-                .catch((error) => {
-                    console.log(8) 
-                    return res.status(500).send(error.message); } );
-        } else throw new Error('user does not exist');
+        req.user.update({ photo: req.file.location })
+            .then((response) => { 
+                console.log(6)
+                console.log("Location: " + req.file.location);
+                return res.status(200).send('Uploaded photo at ' + req.file.location ) })
+            .catch((error) => {
+                console.log(7) 
+                return res.status(500).send(error.message); } );
     } catch (error) {
+        console.log(8);
         return res.status(500).send(error.message)
     }
 }
 
 module.exports = {
     upload,
-    uploadPhoto,
     uploadHandler
 }
