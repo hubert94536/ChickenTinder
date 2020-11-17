@@ -1,12 +1,13 @@
 import React from 'react'
 import { Text, View, Image } from 'react-native'
 import { TouchableHighlight } from 'react-native-gesture-handler'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
+import imgStyles from '../../styles/cardImage.js'
 
-const hex = '#F25763'
 const font = 'CircularStd-Medium'
+const hex = '#F15763'
 
 //  cards for when you're choosing friends for your group
 export default class ChooseCard extends React.Component {
@@ -30,7 +31,7 @@ export default class ChooseCard extends React.Component {
           source={{
             uri: this.props.image,
           }}
-          style={{ borderRadius: 63, height: 60, width: 60, margin: '3%' }}
+          style={imgStyles.button}
         />
         <View
           style={{
@@ -39,57 +40,38 @@ export default class ChooseCard extends React.Component {
             flex: 1,
           }}
         >
-          <Text style={{ fontFamily: font, fontWeight: 'bold', fontSize: 15 }}>
-            {this.props.name}
-          </Text>
-          <Text style={{ fontFamily: font }}>@{this.props.username}</Text>
+<<<<<<< HEAD
+          <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
+          <Text style={{ fontFamily: font, color: hex }}>@{this.props.username}</Text>
         </View>
         {this.state.added && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-            <Text
-              style={{
-                fontFamily: font,
-                color: hex,
-                fontSize: 15,
-                alignSelf: 'center',
-              }}
-            >
-              Added
-            </Text>
-            <Icon
-              style={{
-                fontFamily: font,
-                color: hex,
-                fontSize: 35,
-                alignSelf: 'center',
-                margin: '8%',
-              }}
-              name="check-circle"
-            />
+            <Text style={[imgStyles.text, { color: '#6A6A6A', marginRight: '8%' }]}>Added!</Text>
+=======
+          <Text style={{ fontFamily: font, fontWeight: 'bold', fontSize: 15 }}>
+            {this.props.name}
+          </Text>
+          <Text style={{ fontFamily: font, color: hex, }}>@{this.props.username}</Text>
+        </View>
+        {this.state.added && (
+          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
+            <Text style={[imgStyles.text, {color: '#6A6A6A', marginRight: '8%',},]}>Added!</Text>
+>>>>>>> 21f90f553fa612fb7a9c51b9d4996e263351a25a
           </View>
         )}
         {!this.state.added && (
           <TouchableHighlight>
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-              <Text
-                style={{
-                  fontFamily: font,
-                  color: hex,
-                  fontSize: 15,
-                  alignSelf: 'center',
-                }}
-              >
-                Add
-              </Text>
-              <Icon
-                style={{
-                  fontFamily: font,
-                  color: hex,
-                  fontSize: 35,
-                  alignSelf: 'center',
-                  margin: '8%',
-                }}
-                name="plus-circle"
+<<<<<<< HEAD
+              <Text style={[imgStyles.text, { marginTop: '10%' }]}>Add</Text>
+              <AntDesign
+                style={[imgStyles.icon, { margin: '10%', marginTop: '20%', fontSize: 25 }]}
+=======
+              <Text style={[imgStyles.text, {marginTop: '10%'},]}>Add</Text>
+              <AntDesign
+                style={[imgStyles.icon, { margin: '10%', marginTop: '20%', fontSize: 25},]}
+>>>>>>> 21f90f553fa612fb7a9c51b9d4996e263351a25a
+                name="pluscircleo"
                 onPress={() => {
                   this.setState({ added: true })
                   this.sendInvite()

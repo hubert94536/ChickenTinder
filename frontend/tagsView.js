@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native'
 import PropTypes from 'prop-types'
 import BackgroundButton from './backgroundButton.js'
 
-const hex = '#F25763'
+const hex = '#F15763'
 
 export default class TagsView extends React.Component {
   constructor(props) {

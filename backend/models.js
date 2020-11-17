@@ -13,9 +13,7 @@ const config = {
     rejectUnauthorized: false,
   },
 }
-// const sequelize = new Sequelize(config)
-const sequelize = new Sequelize(process.env.HEROKU_POSTGRESQL_ONYX_URL)
-
+const sequelize = new Sequelize(config)
 const Accounts = sequelize.define(
   'accounts',
   {
@@ -23,7 +21,6 @@ const Accounts = sequelize.define(
       type: DataTypes.BIGINT,
       allowNull: false,
       unique: true,
-      autoIncrement: true,
       primaryKey: true,
     },
     name: {

@@ -1,5 +1,7 @@
 import React from 'react'
 import {
+  Dimensions,
+  Modal,
   PermissionsAndroid,
   ScrollView,
   StyleSheet,
@@ -9,8 +11,8 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
-import { BlurView } from '@react-native-community/blur'
 import DropDownPicker from 'react-native-dropdown-picker'
+import { BlurView } from '@react-native-community/blur'
 import Geolocation from 'react-native-geolocation-service'
 import PropTypes from 'prop-types'
 import Slider from '@react-native-community/slider'
@@ -18,53 +20,15 @@ import Alert from '../modals/alert.js'
 import ChooseFriends from '../modals/chooseFriends.js'
 import Socket from '../apis/socket.js'
 import TagsView from '../tagsView'
+import screenStyles from '../../styles/screenStyles.js'
+import modalStyles from '../../styles/modalStyles.js'
+import Icon from 'react-native-vector-icons/AntDesign'
+import SwitchButton from 'switch-button-react-native';
 
-const hex = '#F25763'
-const font = 'CircularStd-Bold'
+const hex = '#F15763'
+const font = 'CircularStd-Medium'
 
-//  need this for choosing the time
-const hours = [
-  { label: '0', value: 0 },
-  { label: '1', value: 1 },
-  { label: '2', value: 2 },
-  { label: '3', value: 3 },
-  { label: '4', value: 4 },
-  { label: '5', value: 5 },
-  { label: '6', value: 6 },
-  { label: '7', value: 7 },
-  { label: '8', value: 8 },
-  { label: '9', value: 9 },
-  { label: '10', value: 10 },
-  { label: '11', value: 11 },
-  { label: '12', value: 12 },
-  { label: '13', value: 13 },
-  { label: '14', value: 14 },
-  { label: '15', value: 15 },
-  { label: '16', value: 16 },
-  { label: '17', value: 17 },
-  { label: '18', value: 18 },
-  { label: '19', value: 19 },
-  { label: '20', value: 20 },
-  { label: '21', value: 21 },
-  { label: '22', value: 22 },
-  { label: '23', value: 23 },
-]
-
-//  need this for choosing the time
-const minutes = [
-  { label: '00', value: 0 },
-  { label: '05', value: 5 },
-  { label: '10', value: 10 },
-  { label: '15', value: 15 },
-  { label: '20', value: 20 },
-  { label: '25', value: 25 },
-  { label: '30', value: 30 },
-  { label: '35', value: 35 },
-  { label: '40', value: 40 },
-  { label: '45', value: 45 },
-  { label: '50', value: 50 },
-  { label: '55', value: 55 },
-]
+const height = Dimensions.get('window').height
 
 const tagsCuisine = [
   'American',
@@ -99,7 +63,7 @@ const requestLocationPermission = async () => {
         return false
       }
     })
-    .catch((err) => {
+    .catch(() => {
       this.setState({ errorAlert: true })
     })
 }
@@ -116,14 +80,19 @@ export default class FilterSelector extends React.Component {
       distance: 5,
       location: null,
       useLocation: false,
+      selectedHour: '',
+      selectedMinute: '',
       hour: date.getUTCHours(),
       minute: date.getUTCMinutes(),
+      timeMode: 'pm',
       lat: 0,
       long: 0,
       selectedCuisine: [],
       selectedPrice: [],
       selectedRestriction: [],
       // showing alerts and modals
+      invalidTime: false,
+      chooseTime: true,
       locationAlert: false,
       formatAlert: false,
       chooseFriends: false,
@@ -240,7 +209,6 @@ export default class FilterSelector extends React.Component {
   evaluateFilters() {
     var filters = {}
     //  convert to unix time
-    // const date = new Date();
     const dd = date.getDate()
     const mm = date.getMonth()
     const yyyy = date.getFullYear()
@@ -275,30 +243,63 @@ export default class FilterSelector extends React.Component {
     }
   }
 
+  evaluateTime() {
+    if(this.state.selectedMinute === '' || this.state.selectedHour === '') {
+      this.setState({invalidTime: true})
+    }
+    var hour = parseInt(this.state.selectedHour)
+    var min = parseInt(this.state.selectedMinute)
+    if (hour < 0 || hour > 12 || min < 0 || min > 59) {
+      this.setState({invalidTime: true})
+    }
+    else {
+      if(this.state.timeMode === 'pm') {
+        if(hour !== 12) {
+          hour = hour + 12
+        }
+      }
+      else if(this.state.timeMode === 'am') {
+        if (hour === 12) {
+          hour = 0
+        }
+      }
+      this.setState({hour: hour, minute: min, chooseTime: false})
+      console.log(hour + ':' + min)
+    }
+  }
+
   render() {
     return (
       <View style={styles.mainContainer}>
         <View style={styles.titleStyle}>
-          <Text style={styles.titleText}>
+          <Text style={[screenStyles.text, { fontSize: 28 }]}>
             {this.state.isHost ? 'Group Settings' : 'Set Your Filters'}
           </Text>
-          {this.state.isHost && <Text style={styles.titleSub}>(only visible to host)</Text>}
+          {this.state.isHost && (
+            <Text style={[screenStyles.text, styles.titleSub]}>(only visible to host)</Text>
+          )}
         </View>
         <ScrollView>
           {this.state.isHost && (
             <View style={{ margin: '5%' }}>
-              <Text style={styles.header}>Members</Text>
+              <Text style={[screenStyles.text, styles.header]}>Members</Text>
               <TouchableHighlight
                 onPress={() => this.setState({ chooseFriends: true })}
                 underlayColor={hex}
-                style={styles.touchableFriends}
+                style={[
+                  screenStyles.text,
+                  screenStyles.medButton,
+                  { borderColor: hex, marginTop: '5%' },
+                ]}
               >
-                <Text style={styles.touchableFriendsText}>Select from Friends</Text>
+                <Text style={[screenStyles.text, styles.touchableFriendsText]}>
+                  Select from Friends
+                </Text>
               </TouchableHighlight>
             </View>
           )}
           <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '2%' }}>
-            <Text style={styles.header}>Cuisines</Text>
+            <Text style={[screenStyles.text, styles.header]}>Cuisines</Text>
             <TagsView
               all={tagsCuisine}
               selected={this.state.selectedCuisine}
@@ -320,7 +321,7 @@ export default class FilterSelector extends React.Component {
                   justifyContent: 'space-between',
                 }}
               >
-                <Text style={styles.header}>Use Current Location:</Text>
+                <Text style={[screenStyles.text, styles.header]}>Use Current Location:</Text>
                 <Switch
                   thumbColor={hex}
                   trackColor={{ true: '#eba2a8' }}
@@ -347,7 +348,7 @@ export default class FilterSelector extends React.Component {
           {this.state.isHost && (
             <View style={{ margin: '5%' }}>
               <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.header}>Distance</Text>
+                <Text style={[screenStyles.text, styles.header]}>Distance</Text>
                 <Text
                   style={{
                     color: hex,
@@ -378,69 +379,12 @@ export default class FilterSelector extends React.Component {
           )}
           {this.state.isHost && (
             <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '2%' }}>
-              <Text style={styles.header}>Open at:</Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <DropDownPicker
-                  selectedLabelStyle={{
-                    color: hex,
-                    fontFamily: font,
-                    fontSize: 20,
-                    textAlign: 'right',
-                  }}
-                  arrowColor={hex}
-                  arrowSize={25}
-                  placeholder=" "
-                  items={hours}
-                  containerStyle={{ height: 40, width: '50%' }}
-                  style={{
-                    flexDirection: 'row-reverse',
-                    backgroundColor: 'white',
-                    borderWidth: 0,
-                  }}
-                  labelStyle={{
-                    color: hex,
-                    fontSize: 20,
-                    fontFamily: font,
-                  }}
-                  onChangeItem={(selection) => this.setState({ hour: selection.value })}
-                />
-                <Text
-                  style={{
-                    fontFamily: font,
-                    color: hex,
-                    fontSize: 25,
-                  }}
-                >
-                  :
-                </Text>
-                <DropDownPicker
-                  selectedLabelStyle={{
-                    color: hex,
-                    fontFamily: font,
-                    fontSize: 20,
-                  }}
-                  arrowColor={hex}
-                  arrowSize={25}
-                  placeholder=" "
-                  items={minutes}
-                  containerStyle={{ height: 40, width: '50%' }}
-                  style={{
-                    backgroundColor: 'white',
-                    borderWidth: 0,
-                  }}
-                  labelStyle={{
-                    color: hex,
-                    fontSize: 20,
-                    fontFamily: font,
-                  }}
-                  onChangeItem={(selection) => this.setState({ minute: selection.value })}
-                />
-              </View>
+              <Text style={[screenStyles.text, styles.header]}>Open at:</Text>
             </View>
           )}
           {this.state.isHost && (
             <View style={{ margin: '5%' }}>
-              <Text style={styles.header}>Price</Text>
+              <Text style={[screenStyles.text, styles.header]}>Price</Text>
               <TagsView
                 all={tagsPrice}
                 selected={this.state.selectedPrice}
@@ -450,7 +394,7 @@ export default class FilterSelector extends React.Component {
             </View>
           )}
           <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '1%' }}>
-            <Text style={styles.header}>Dietary Restrictions</Text>
+            <Text style={[screenStyles.text, styles.header]}>Dietary Restrictions</Text>
             <TagsView
               all={tagsDiet}
               selected={this.state.selectedRestriction}
@@ -461,17 +405,19 @@ export default class FilterSelector extends React.Component {
         </ScrollView>
         <TouchableHighlight
           underlayColor={hex}
-          style={styles.touchable}
+          style={[screenStyles.medButton, styles.touchable]}
           onPress={() => this.evaluateFilters()}
         >
-          <Text style={styles.nextTitle}>{this.state.isHost ? "Let's Go" : 'Submit Filters'}</Text>
+          <Text style={[screenStyles.text, styles.nextTitle]}>
+            {this.state.isHost ? "Let's Go" : 'Submit Filters'}
+          </Text>
         </TouchableHighlight>
         {(this.state.locationAlert || this.state.formatAlert || this.state.chooseFriends) && (
           <BlurView
             blurType="light"
             blurAmount={20}
             reducedTransparencyFallbackColor="white"
-            style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}
+            style={modalStyles.blur}
           />
         )}
         {this.state.locationAlert && (
@@ -509,6 +455,78 @@ export default class FilterSelector extends React.Component {
             press={() => this.setState({ chooseFriends: false })}
           />
         )}
+        {this.state.chooseTime && 
+          <BlurView
+            blurType='dark'
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        }
+          <Modal animationType="fade" transparent visible={this.state.chooseTime} >
+            <View style={[{
+              height: Dimensions.get('window').height * 0.30,
+              width: '75%',
+              marginTop: '50%',
+              backgroundColor: 'white',
+              elevation: 20, 
+              alignSelf:'center',
+              borderRadius: 10}]}
+            >
+              <Icon 
+                name='closecircleo'
+                style={[screenStyles.text, { fontSize: 18, flexDirection:'row', alignSelf:'flex-end', marginTop:'4%', marginRight: '4%' }]}
+                onPress={() => this.setState({chooseTime: false})}
+              />
+              <View style={{marginLeft:'5%'}}>
+                <Text style={[screenStyles.text, {fontSize: 17, marginBottom:'3%'}]}>Time</Text>
+                <Text style={[screenStyles.text, {color:'black'}]}>Set a time for your group to eat</Text>
+                <View style={{flexDirection:'row', alignItems:'center'}}>
+                  <TextInput
+                    style={[{fontSize: 17, color: '#9f9f9f', backgroundColor:'#E5E5E5', height: '80%', width:'17%', borderRadius:7, textAlign:'center',padding:'3%'}]}
+                    value={this.state.selectedHour}
+                    placeholder='12'
+                    onChangeText={(text) => this.setState({selectedHour: text, invalidTime: false})}
+                    keyboardType='numeric'
+                    />
+                  <Text style={[screenStyles.text, {fontSize: 20, marginRight:'2%', marginLeft:'2%'}]}>:</Text>
+                  <TextInput
+                    style={[{fontSize: 17, color: '#9f9f9f', backgroundColor:'#E5E5E5', height: '80%', width:'17%', borderRadius:7, textAlign:'center', padding:'3%', marginRight:'4%'}]}
+                    value={this.state.selectedMinute}
+                    placeholder='00'
+                    onChangeText={(text) => this.setState({selectedMinute: text, invalidTime: false})}
+                    keyboardType='numeric'
+                  />
+                  <SwitchButton
+                    onValueChange={(val) => this.setState({ timeMode: val })}
+                    text1 = 'pm'
+                    text2 = 'am'
+                    switchWidth={75}
+                    switchHeight={30}
+                    switchBorderColor={hex}
+                    btnBorderColor={hex}
+                    btnBackgroundColor={hex}
+                    fontColor={hex}
+                    activeFontColor='white'
+                  />
+                </View>
+                {this.state.invalidTime &&
+                  <View style={{flexDirection:'row', alignItems:'center', marginTop:'3%'}}>
+                    <Icon name='exclamationcircle' color={hex} style={{fontSize: 15, marginRight:'2%'}}/>
+                    <Text style={[screenStyles.text, {fontSize: 12}]}>Invalid time. Please try again</Text>
+                  </View>
+                }
+                {!this.state.invalidTime &&
+                  <View style={{flexDirection:'row', alignItems:'center', marginTop:'3%'}}>
+                    <Text style={[screenStyles.text, {fontSize: 12}]}> </Text>
+                  </View>
+                }
+                <TouchableHighlight style={{backgroundColor: hex, borderRadius: 30, alignSelf:'center', width:'40%', marginTop:'5%'}} onPress={() => this.evaluateTime()}>
+                  <Text style={[screenStyles.text, {color:'white', textAlign:'center', paddingTop:'5%', paddingBottom:'5%', fontSize:20}]}>Done</Text>
+                </TouchableHighlight>
+              </View>
+            </View>
+          </Modal>
       </View>
     )
   }
@@ -530,30 +548,13 @@ const styles = StyleSheet.create({
   titleStyle: {
     flexDirection: 'row',
     margin: '5%',
-    // alignItems: 'center',
-  },
-  titleText: {
-    fontFamily: font,
-    fontSize: 28,
-    color: hex,
   },
   titleSub: {
-    fontFamily: font,
-    color: hex,
     alignSelf: 'center',
     margin: '1%',
     marginTop: '2%',
   },
-  touchableFriends: {
-    borderWidth: 2,
-    borderRadius: 25,
-    borderColor: hex,
-    alignSelf: 'center',
-    marginTop: '5%',
-  },
   touchableFriendsText: {
-    color: hex,
-    fontFamily: font,
     fontSize: 18,
     alignSelf: 'center',
     paddingLeft: '3%',
@@ -563,25 +564,18 @@ const styles = StyleSheet.create({
   },
   header: {
     textAlign: 'left',
-    color: hex,
     fontSize: 25,
     margin: '1%',
-    fontFamily: font,
   },
   touchable: {
     width: '50%',
-    alignSelf: 'center',
     borderColor: hex,
-    borderWidth: 2,
-    borderRadius: 25,
     justifyContent: 'center',
     margin: '5%',
   },
   nextTitle: {
     textAlign: 'center',
-    color: hex,
     fontSize: 25,
-    fontFamily: font,
     paddingTop: '2%',
     paddingBottom: '2%',
   },

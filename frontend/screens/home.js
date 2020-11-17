@@ -1,12 +1,16 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Dimensions, Modal, Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import accountsApi from '../apis/accountsApi.js'
 import Alert from '../modals/alert.js'
 import friendsApi from '../apis/friendsApi.js'
-import Invite from '../modals/invite.js'
+import Join from '../modals/join.js'
 import socket from '../apis/socket.js'
+import screenStyles from '../../styles/screenStyles.js'
+import TabBar from '../nav.js'
+import Icon from 'react-native-vector-icons/AntDesign'
+import SwitchButton from 'switch-button-react-native';
 
 var img = ''
 var name = ''
@@ -18,6 +22,10 @@ AsyncStorage.getItem(NAME).then((res) => (name = res))
 AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 var myId = ''
 
+const width = Dimensions.get('window').width
+const height = Dimensions.get('window').height
+const hex = '#F15763'
+
 AsyncStorage.getItem(ID).then((res) => {
   myId = res
 })
@@ -27,9 +35,9 @@ class Home extends React.Component {
     super()
     this.state = {
       createPressed: false,
-      profilePressed: false,
+      joinPressed: false,
       searchPressed: false,
-      invite: false,
+      join: false,
       image: img,
       name: name,
       username: username,
@@ -46,10 +54,6 @@ class Home extends React.Component {
       this.setState({ invite: false })
       this.props.navigation.navigate('Group', res)
     })
-  }
-
-  closeInvite() {
-    this.setState({ invite: false })
   }
 
   createGroup() {
@@ -71,81 +75,86 @@ class Home extends React.Component {
     // friendsApi.acceptFriendRequest(2)
   }
 
-  async getFriends() {
-    // Pushing accepted friends or pending requests into this.state.friends
-    friendsApi
-      .getFriends()
-      .then((res) => {
-        var friendsMap = new Object()
-        for (var friend in res.friendList) {
-          friendsMap[res.friendList[friend].id] = res.friendList[friend].status
-        }
-        this.setState({ friends: friendsMap })
-        this.props.navigation.navigate('Search', {
-          allFriends: friendsMap,
-        })
-      })
-      .catch((err) => {
-        this.setState({ errorAlert: true })
-      })
-  }
+  // async getFriends() {
+  //   // Pushing accepted friends or pending requests into this.state.friends
+  //   friendsApi
+  //     .getFriends()
+  //     .then((res) => {
+  //       var friendsMap = new Object()
+  //       for (var friend in res.friendList) {
+  //         friendsMap[res.friendList[friend].id] = res.friendList[friend].status
+  //       }
+  //       this.setState({ friends: friendsMap })
+  //       this.props.navigation.navigate('Search', {
+  //         allFriends: friendsMap,
+  //       })
+  //     })
+  //     .catch((err) => {
+  //       this.setState({ errorAlert: true })
+  //     })
+  // }
 
   render() {
     return (
       <View
         style={{
           flex: 1,
-          backgroundColor: '#F25763',
-          justifyContent: 'center',
+          backgroundColor: 'white',
+          alignItems:'center',
+          justifyContent: 'space-evenly',
         }}
       >
+        <Text style={[screenStyles.text, screenStyles.title, {fontSize: 30}]}>Hungry? Chews wisely.</Text>
+        {/* dummy image */}
+        <Image source={{ uri: 'https://banner2.cleanpng.com/20181107/fhg/kisspng-computer-icons-location-map-united-states-of-ameri-5be33fd26a48d9.3500512415416196664353.jpg' }} 
+        style={{width: 200, height: 200,}}/> 
+        <View >
         <TouchableHighlight
           onShowUnderlay={() => this.setState({ createPressed: true })}
           onHideUnderlay={() => this.setState({ createPressed: false })}
           activeOpacity={1}
-          underlayColor="#fff"
-          style={styles.button}
+          underlayColor="white"
+          style={{backgroundColor: '#F15763', borderRadius: 40, width: width*0.5, height: 45, justifyContent:'center', alignSelf:'center', margin:'3%'}}
           onPress={() => this.createGroup()}
         >
-          <Text style={this.state.createPressed ? styles.yesPress : styles.noPress}>
+          <Text
+            style={[
+              styles.buttonText,
+              this.state.createPressed ? { color: '#F15763' } : { color: 'white' },
+            ]}
+          >
             Create Group
           </Text>
         </TouchableHighlight>
         <TouchableHighlight
-          onShowUnderlay={() => this.setState({ profilePressed: true })}
-          onHideUnderlay={() => this.setState({ profilePressed: false })}
+          onShowUnderlay={() => this.setState({ joinPressed: true })}
+          onHideUnderlay={() => this.setState({ joinPressed: false })}
           activeOpacity={1}
-          underlayColor="#fff"
-          style={styles.button}
-          onPress={() => this.props.navigation.navigate('Profile')}
+          underlayColor='#F15763'
+          style={{backgroundColor: 'white', borderRadius: 40, width: width*0.5, height: 45, justifyContent:'center', alignSelf:'center', borderColor:'#F15763', borderWidth:2}}
+          onPress={() => this.setState({join: true})}
         >
-          <Text style={this.state.profilePressed ? styles.yesPress : styles.noPress}>
-            My Profile
+          <Text style={[styles.buttonText, this.state.profilePressed ? {color: 'white'} : {color: '#F15763'}]}>
+            Join Group
           </Text>
         </TouchableHighlight>
-        {this.state.invite && (
-          <Invite
+        </View>
+        <TabBar 
+          goHome={() => this.props.navigation.navigate('Home')}
+          goSearch={() => this.props.navigation.navigate('Search')}
+          goNotifs={() => this.props.navigation.navigate('Notifications')}
+          goProfile={() => this.props.navigation.navigate('Profile')}
+          cur='Home'
+        />
+        {this.state.join && (
+          <Join
             image={this.state.inviteInfo.pic}
             username={this.state.inviteInfo.username}
             name={this.state.inviteInfo.name}
-            cancel={() => this.closeInvite()}
-            onPress={() => this.closeInvite()}
+            cancel={() => this.setState({ join: false })}
+            onPress={() => this.setState({ join: false })}
           />
         )}
-        <TouchableHighlight
-          onShowUnderlay={() => this.setState({ searchPressed: true })}
-          onHideUnderlay={() => this.setState({ searchPressed: false })}
-          activeOpacity={1}
-          underlayColor="#fff"
-          style={styles.button}
-          onPress={() => {
-            this.getFriends()
-          }}
-        >
-          <Text style={this.state.searchPressed ? styles.yesPress : styles.noPress}>
-            Find Friends
-          </Text>
-        </TouchableHighlight>
         {this.state.errorAlert && (
           <Alert
             title="Error, please try again"
@@ -162,29 +171,15 @@ class Home extends React.Component {
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 40,
-    borderColor: '#fff',
-    borderWidth: 2,
-    width: '65%',
     height: 65,
-    alignSelf: 'center',
     margin: '3%',
     flexDirection: 'column',
     justifyContent: 'center',
   },
-  yesPress: {
+  buttonText: {
     textAlign: 'center',
-    color: '#F25763',
-    fontFamily: 'CircularStd-Medium',
-    fontSize: 27,
-    fontWeight: 'bold',
-  },
-  noPress: {
-    textAlign: 'center',
-    color: '#fff',
-    fontFamily: 'CircularStd-Medium',
-    fontSize: 27,
-    fontWeight: 'bold',
+    fontFamily: 'CircularStd-Bold',
+    fontSize: 18,
   },
 })
 

@@ -1,14 +1,19 @@
 import React from 'react'
-import { Dimensions, FlatList, Modal, StyleSheet, Text, View } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import { Dimensions, FlatList, Modal, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import Clipboard from '@react-native-community/clipboard'
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { SearchBar } from 'react-native-elements'
 import PropTypes from 'prop-types'
 import Alert from './alert.js'
 import ChooseCard from '../cards/chooseCard.js'
 import friendsApi from '../apis/friendsApi.js'
 
-const hex = '#F25763'
+const hex = '#F15763'
+const hexBlack = '#000000'
 const font = 'CircularStd-Bold'
+const fontRegular = 'CircularStd-Medium'
 const height = Dimensions.get('window').height
 
 //  little pop up modal that is showed when you click choose friends in filters
@@ -20,7 +25,6 @@ export default class ChooseFriends extends React.Component {
       friends: '',
       search: '',
       errorAlert: false,
-      members: this.props.members,
     }
     this.getFriends()
   }
@@ -35,7 +39,7 @@ export default class ChooseFriends extends React.Component {
         for (var friend in res.friendList) {
           if (res.friendList[friend].status === 'Accepted') {
             if (
-              this.state.members.some(
+              this.props.members.some(
                 (member) => member.username === res.friendList[friend].username,
               )
             ) {
@@ -49,7 +53,12 @@ export default class ChooseFriends extends React.Component {
         }
         this.setState({ friends: pushFriends, data: pushFriends })
       })
-      .catch((err) => this.setState({ errorAlert: true }))
+      .catch(() => this.setState({ errorAlert: true }))
+  }
+
+  // copies the room code (dummy text for now)
+  copyToClipboard() {
+    Clipboard.setString('BADWOLF42')
   }
 
   //  closes the choose friends modal in filters
@@ -75,7 +84,18 @@ export default class ChooseFriends extends React.Component {
           <View style={styles.main}>
             <View style={styles.header}>
               <Text style={styles.headertext}>Friends</Text>
-              <Icon name="times-circle" style={styles.icon} onPress={() => this.handlePress()} />
+              <AntDesign
+                name="closecircleo"
+                style={styles.icon}
+                onPress={() => this.handlePress()}
+              />
+            </View>
+            <View style={styles.header2}>
+              <Text style={styles.headertext2}>Group PIN: </Text>
+              <Text style={styles.headertext3}>BADWOLF42</Text>
+              <TouchableOpacity onPress={this.copyToClipboard}>
+                <Ionicons name="copy-outline" style={styles.icon2} />
+              </TouchableOpacity>
             </View>
             <SearchBar
               containerStyle={{
@@ -89,21 +109,21 @@ export default class ChooseFriends extends React.Component {
               inputContainerStyle={{
                 height: 7,
                 width: '90%',
-                alignSelf: 'center',
+                marginLeft: '5%',
                 backgroundColor: '#ebecf0',
               }}
               inputStyle={{
-                fontFamily: font,
+                fontFamily: fontRegular,
                 fontSize: 15,
               }}
-              placeholder="Search by username"
+              placeholder="Search for friends"
               onChangeText={(text) => this.searchFilterFunction(text)}
               value={this.state.search}
               lightTheme
               round
             />
             <FlatList
-              style={{ marginLeft: '5%', marginRight: '5%', marginBottom: '10%' }}
+              style={{ marginLeft: '5%', marginRight: '5%', marginBottom: '2%' }}
               data={this.state.friends}
               renderItem={({ item }) => (
                 <ChooseCard
@@ -115,6 +135,7 @@ export default class ChooseFriends extends React.Component {
               )}
               keyExtractor={(item) => item.username}
             />
+            <MaterialIcons name="keyboard-arrow-down" style={styles.icon3} />
           </View>
         </View>
         {this.state.errorAlert && (
@@ -140,16 +161,21 @@ const styles = StyleSheet.create({
   },
   main: {
     flex: 1,
-    height: height * 0.9,
+    height: height * 0.8,
     backgroundColor: 'white',
     alignSelf: 'center',
-    borderRadius: 30,
+    borderRadius: 10,
     elevation: 20,
   },
   header: {
-    height: '10%',
+    height: '9%',
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  header2: {
+    height: '4.5%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
   },
   icon: {
     color: hex,
@@ -157,14 +183,38 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     margin: '4%',
   },
+  icon2: {
+    color: hexBlack,
+    fontSize: 20,
+    marginLeft: '7%',
+  },
+  icon3: {
+    color: hex,
+    fontSize: 35,
+    marginBottom: '5%',
+    alignSelf: 'center',
+  },
   headertext: {
     fontFamily: font,
     color: hex,
     margin: '4%',
-    fontSize: 20,
+    marginLeft: '7%',
+    fontSize: 25,
+  },
+  headertext2: {
+    fontFamily: fontRegular,
+    color: hexBlack,
+    marginLeft: '7%',
+    fontSize: 15,
+  },
+  headertext3: {
+    fontFamily: font,
+    color: hexBlack,
+    fontSize: 15,
   },
 })
 
 ChooseFriends.propTypes = {
+  members: PropTypes.array,
   press: PropTypes.func,
 }

@@ -13,15 +13,21 @@ import {
 import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Swiper from 'react-native-swiper'
 import Alert from '../modals/alert.js'
 import accountsApi from '../apis/accountsApi.js'
 import facebookService from '../apis/facebookService.js'
 import Friends from './friends.js'
+import screenStyles from '../../styles/screenStyles.js'
+import modalStyles from '../../styles/modalStyles.js'
+import TabBar from '../nav.js'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 
-const hex = '#F25763'
+const hex = '#F15763'
 const font = 'CircularStd-Medium'
+const height = Dimensions.get('window').height
+const width = Dimensions.get('window').width
 var img = ''
 var name = ''
 var username = ''
@@ -42,6 +48,7 @@ export default class UserProfileView extends Component {
       image: img,
       friends: true,
       visible: false,
+      edit: false,
       changeName: false,
       changeUser: false,
       // button appearance
@@ -145,75 +152,62 @@ export default class UserProfileView extends Component {
     this.setState({ logoutAlert: false })
   }
 
+  makeChanges() {
+    if(this.state.name !== this.state.nameValue) {
+      this.changeName()
+    }
+    if(this.state.username !== this.state.usernameValue) {
+      this.changeUsername()
+    }
+  }
+
   render() {
     return (
-      <View style={{ backgroundColor: 'white' }}>
-        <View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Icon
-              name="chevron-left"
-              style={styles.topIcons}
-              onPress={() => this.props.navigation.navigate('Home')}
-            />
-            <Icon
-              name="cog"
-              style={styles.topIcons}
-              onPress={() => this.setState({ visible: true })}
-            />
-          </View>
-          <Text style={styles.myProfile}>My Profile</Text>
-          <View style={styles.userInfo}>
+      <View style={{flex: 1, backgroundColor:'white'}}>
+        <View style={{ backgroundColor: 'white', height:'90%' }}>       
+          <View>
+            <View style={{ flexDirection: 'row', justifyContent:'flex-end'}}>
+              <Text style={[screenStyles.text, styles.myProfile]}>Profile</Text>
+              <Icon
+                name="cog-outline"
+                style={[screenStyles.icons, { margin: '5%', textAlign:'right'}]}
+                onPress={() => this.setState({ visible: true })}
+              />
+            </View>
             <Image
               source={{
                 uri: this.state.image,
               }}
               style={styles.avatar}
             />
-            <View style={{ fontFamily: font }}>
-              <Text style={{ fontSize: 28, fontWeight: 'bold' }}>{this.state.name}</Text>
-              <Text style={{ fontSize: 17 }}>{'@' + this.state.usernameValue}</Text>
-            </View>
-          </View>
-          <View style={{ flexDirection: 'row' }}>
-            <TouchableHighlight
-              underlayColor="#fff"
-              style={this.state.friends ? styles.selected : styles.unselected}
-              onPress={() => this.refs.swiper.scrollBy(-1)}
-            >
-              <Text style={this.state.friends ? styles.selectedText : styles.unselectedText}>
-                Friends
+            <View style={{alignItems:'center'}}>
+              <View style={{flexDirection:'row', alignItems:'center'}}>
+                <Text style={{ fontFamily: font, fontSize: 20, marginTop: '4%'}}>{this.state.name}</Text>
+                <Icon name='pencil-outline' style={{fontSize:20, marginTop: '4%', marginLeft: '2%'}} onPress={() => this.setState({edit: true})}/>
+              </View>
+              <Text style={{ fontFamily: font, fontSize: 13, color: hex }}>
+                {'@' + this.state.usernameValue}
               </Text>
-            </TouchableHighlight>
-            <TouchableHighlight
-              underlayColor="#fff"
-              style={!this.state.friends ? styles.selected : styles.unselected}
-              onPress={() => this.refs.swiper.scrollBy(1)}
-            >
-              <Text style={!this.state.friends ? styles.selectedText : styles.unselectedText}>
-                Requests
+            </View >
+              <Text style={{fontFamily:font, marginLeft:'7%', fontSize: 17}} >
+                Your Friends
               </Text>
-            </TouchableHighlight>
+              <Text style={[screenStyles.text, {marginLeft:'8%',}]} >
+                6 friends
+              </Text>
           </View>
+        <View style={{ height: '100%', marginTop: '0%' }}>
+          <Friends isFriends />
         </View>
-        <View style={{ height: '100%', marginTop: '5%' }}>
-          <Swiper
-            ref="swiper"
-            loop={false}
-            onIndexChanged={() => this.setState({ friends: !this.state.friends })}
-          >
-            <Friends isFriends />
-            <Friends isFriends={false} />
-          </Swiper>
-        </View>
-        {this.state.visible && (
+
+        {(this.state.visible || this.state.edit)&& (
           <BlurView
-            blurType="light"
-            blurAmount={20}
+            blurType='dark'
+            blurAmount={10}
             reducedTransparencyFallbackColor="white"
-            style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}
+            style={modalStyles.blur}
           />
         )}
-        {this.state.visible && (
           <Modal animationType="fade" visible={this.state.visible} transparent>
             <View style={styles.modal}>
               <View
@@ -223,19 +217,12 @@ export default class UserProfileView extends Component {
                   margin: '5%',
                 }}
               >
-                <Text
-                  style={{
-                    fontFamily: font,
-                    fontSize: 18,
-                    color: hex,
-                    alignSelf: 'center',
-                  }}
-                >
+                <Text style={[screenStyles.text, { fontSize: 18, alignSelf: 'center' }]}>
                   Settings
                 </Text>
-                <Icon
-                  name="times-circle"
-                  style={{ color: hex, fontFamily: font, fontSize: 30 }}
+                <AntDesign
+                  name="closecircleo"
+                  style={[screenStyles.text, { fontSize: 30 }]}
                   onPress={() =>
                     this.setState({
                       visible: false,
@@ -253,26 +240,27 @@ export default class UserProfileView extends Component {
                 <View>
                   <Text style={{ fontFamily: font, fontSize: 18 }}>Name:</Text>
                   <TextInput
-                    style={{
-                      fontFamily: font,
-                      color: hex,
-                      fontSize: 20,
-                      margin: 0,
-                      padding: 0,
-                    }}
+                    style={[screenStyles.text, screenStyles.input]}
                     value={this.state.nameValue}
                     onChangeText={(text) => this.setState({ nameValue: text })}
                   />
                 </View>
                 <TouchableHighlight
-                  style={styles.changeButtons}
+                  style={[
+                    screenStyles.smallButton,
+                    styles.changeButtons,
+                    this.state.changeName ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                  ]}
                   underlayColor={hex}
                   onShowUnderlay={() => this.setState({ changeName: true })}
                   onHideUnderlay={() => this.setState({ changeName: false })}
                   onPress={() => this.changeName()}
                 >
                   <Text
-                    style={this.state.changeName ? styles.changeTextSelected : styles.changeText}
+                    style={[
+                      screenStyles.smallButtonText,
+                      this.state.changeName ? { color: 'white' } : { color: hex },
+                    ]}
                   >
                     Change
                   </Text>
@@ -288,26 +276,27 @@ export default class UserProfileView extends Component {
                 <View>
                   <Text style={{ fontFamily: font, fontSize: 18 }}>Username:</Text>
                   <TextInput
-                    style={{
-                      fontFamily: font,
-                      color: hex,
-                      fontSize: 20,
-                      margin: 0,
-                      padding: 0,
-                    }}
+                    style={[screenStyles.text, screenStyles.input]}
                     value={this.state.usernameValue}
                     onChangeText={(text) => this.setState({ usernameValue: text })}
                   />
                 </View>
                 <TouchableHighlight
-                  style={styles.changeButtons}
+                  style={[
+                    screenStyles.smallButton,
+                    styles.changeButtons,
+                    this.state.changeUser ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                  ]}
                   underlayColor={hex}
                   onShowUnderlay={() => this.setState({ changeUser: true })}
                   onHideUnderlay={() => this.setState({ changeUser: false })}
                   onPress={() => this.changeUsername()}
                 >
                   <Text
-                    style={this.state.changeUser ? styles.changeTextSelected : styles.changeText}
+                    style={[
+                      screenStyles.smallButtonText,
+                      this.state.changeUser ? { color: 'white' } : { color: hex },
+                    ]}
                   >
                     Change
                   </Text>
@@ -324,18 +313,18 @@ export default class UserProfileView extends Component {
                   onShowUnderlay={() => this.setState({ delete: true })}
                   onHideUnderlay={() => this.setState({ delete: false })}
                   onPress={() => this.setState({ deleteAlert: true })}
-                  style={{
-                    alignSelf: 'center',
-                    borderWidth: 2,
-                    borderColor: hex,
-                    borderRadius: 50,
-                    width: '35%',
-                    marginRight: '5%',
-                    backgroundColor: this.state.delete ? hex : 'white',
-                    marginTop: '5%',
-                  }}
+                  style={[
+                    screenStyles.smallButton,
+                    styles.button,
+                    this.state.delete ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                  ]}
                 >
-                  <Text style={this.state.delete ? styles.changeTextSelected : styles.changeText}>
+                  <Text
+                    style={[
+                      screenStyles.smallButtonText,
+                      this.state.delete ? { color: 'white' } : { color: hex },
+                    ]}
+                  >
                     Delete
                   </Text>
                 </TouchableHighlight>
@@ -344,17 +333,18 @@ export default class UserProfileView extends Component {
                   onShowUnderlay={() => this.setState({ logout: true })}
                   onHideUnderlay={() => this.setState({ logout: false })}
                   onPress={() => this.setState({ logoutAlert: true })}
-                  style={{
-                    alignSelf: 'center',
-                    borderWidth: 2,
-                    borderColor: hex,
-                    borderRadius: 50,
-                    width: '35%',
-                    backgroundColor: this.state.logout ? hex : 'white',
-                    marginTop: '5%',
-                  }}
+                  style={[
+                    screenStyles.smallButton,
+                    styles.button,
+                    this.state.logout ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                  ]}
                 >
-                  <Text style={this.state.logout ? styles.changeTextSelected : styles.changeText}>
+                  <Text
+                    style={[
+                      screenStyles.smallButtonText,
+                      this.state.logout ? { color: 'white' } : { color: hex },
+                    ]}
+                  >
                     Logout
                   </Text>
                 </TouchableHighlight>
@@ -397,127 +387,83 @@ export default class UserProfileView extends Component {
                   />
                 )}
               </View>
-              {/* <View
-                style={{
-                  margin: '5%',
-                }}>
-                <Text style={{fontFamily: font, fontSize: 18}}>
-                  Friends List Display:
-                </Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    margin: '5%',
-                  }}>
-                  <TouchableHighlight
-                    underlayColor={hex}
-                    onShowUnderlay={() => this.setState({public: true})}
-                    style={{
-                      alignSelf: 'center',
-                      borderWidth: 2,
-                      borderColor: hex,
-                      borderRadius: 50,
-                      width: '35%',
-                      marginRight: '5%',
-                      backgroundColor: this.state.public ? hex : 'white',
-                    }}
-                    onPress={() => this.setState({public: true})}>
-                    <Text
-                      style={
-                        this.state.public
-                          ? styles.changeTextSelected
-                          : styles.changeText
-                      }>
-                      Public
-                    </Text>
-                  </TouchableHighlight>
-                  <TouchableHighlight
-                    underlayColor={hex}
-                    onShowUnderlay={() => this.setState({public: false})}
-                    style={{
-                      alignSelf: 'center',
-                      borderWidth: 2,
-                      borderColor: hex,
-                      borderRadius: 50,
-                      width: '35%',
-                      backgroundColor: this.state.public ? 'white' : hex,
-                    }}
-                    onPress={() => this.setState({public: false})}>
-                    <Text
-                      style={
-                        this.state.public
-                          ? styles.changeText
-                          : styles.changeTextSelected
-                      }>
-                      Private
-                    </Text>
-                  </TouchableHighlight>
-                </View>
-              </View> */}
             </View>
           </Modal>
-        )}
+        <Modal animationType="fade" transparent visible={this.state.edit}>
+          <View style={[{
+            height: Dimensions.get('window').height * 0.50,
+            width: '75%',
+            marginTop: '15%',
+            backgroundColor: 'white',
+            elevation: 20, 
+            alignSelf:'center',
+            borderRadius: 10}]}>
+            <AntDesign 
+              name='closecircleo'
+              style={[screenStyles.text, { fontSize: 18, flexDirection:'row', alignSelf:'flex-end', marginTop:'4%', marginRight: '4%' }]}
+              onPress={() => this.setState({edit: false})}
+              />
+            <View style={{textAlign: 'center', marginLeft:'10%', marginRight:'10%'}}>
+              <Text style={[screenStyles.text, {fontSize: 16}]}>Edit Profile</Text>
+              <Image style={{height: height*0.13, width: height*0.13, borderRadius: 60, alignSelf:'center'}} source={{
+              uri: this.state.image,
+                }}/>
+                <View style={{flexDirection:'row', justifyContent: 'center', marginBottom:'4%'}}>
+                  <Text style={[screenStyles.text, {marginRight: '5%'}]}>Upload</Text>
+                  <Text style={[screenStyles.text, {color:'black', marginLeft: '5%'}]}>Remove</Text>
+                </View>
+            <Text style={[screenStyles.text, {color:'black', marginBottom:'2%'}]}>Display name</Text>
+            <TextInput
+                    style={[screenStyles.text, screenStyles.input, {color: '#7d7d7d', fontSize: 15, borderBottomWidth: 1, marginBottom: '7%', borderColor: '#7d7d7d'}]}
+                    value={this.state.nameValue}
+                    onChangeText={(text) => this.setState({nameValue: text})}
+            />
+            <Text style={[screenStyles.text, {color:'black', marginBottom:'2%'}]}>Username</Text>
+            <TextInput
+                    style={[screenStyles.text, screenStyles.input, {color: '#7d7d7d', fontSize: 15, borderBottomWidth: 1, borderColor: '#7d7d7d'}]}
+                    value={this.state.usernameValue}
+                    onChangeText={(text) => this.setState({ usernameValue: text })}
+            />
+            </View>
+          <TouchableHighlight 
+            style={[screenStyles.medButton, {backgroundColor:hex, borderColor: hex, margin: '7%', width: '50%'}]}
+            onPress={() => this.makeChanges()}
+            underlayColor='white'
+            onShowUnderlay={() => this.setState({changeName: true})}
+            onHideUnderlay={() => this.setState({changeName: false})}
+            >
+            <Text  style={[screenStyles.smallButtonText, {padding:'10%'}, this.state.changeName ? {color:hex} : {color:'white'} ]}>Save Changes</Text>
+            </TouchableHighlight>
+          </View>
+        </Modal>
+        </View>
+          <TabBar 
+            goHome={() => this.props.navigation.navigate('Home')}
+            goSearch={() => this.props.navigation.navigate('Search')}
+            goNotifs={() => this.props.navigation.navigate('Notifications')}
+            goProfile={() => this.props.navigation.navigate('Profile')}
+            cur='Profile'
+          />
       </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  topIcons: {
-    color: hex,
-    fontSize: 27,
-    margin: '5%',
-  },
   myProfile: {
-    color: hex,
-    fontWeight: 'bold',
-    fontSize: 17,
-    paddingLeft: '5%',
-    fontFamily: font,
+    fontSize: 25,
+    alignSelf: 'center',
+    marginRight:'25%'
   },
   avatar: {
     width: 100,
     height: 100,
     borderRadius: 63,
     borderWidth: 4,
-    margin: '5%',
-  },
-  userInfo: { flexDirection: 'row', alignItems: 'center' },
-  selected: {
-    borderRadius: 40,
-    borderColor: hex,
-    borderWidth: 2,
-    marginLeft: '5%',
-    backgroundColor: hex,
-  },
-  unselected: {
-    borderRadius: 40,
-    borderColor: hex,
-    borderWidth: 2,
-    marginLeft: '5%',
-    backgroundColor: '#fff',
-  },
-  selectedText: {
-    fontFamily: font,
-    color: '#fff',
-    fontSize: 17,
-    paddingLeft: '3%',
-    paddingRight: '3%',
-    paddingTop: '0.5%',
-    paddingBottom: '0.5%',
-  },
-  unselectedText: {
-    fontFamily: font,
-    color: hex,
-    fontSize: 17,
-    paddingLeft: '3%',
-    paddingRight: '3%',
-    paddingTop: '0.5%',
-    paddingBottom: '0.5%',
+    alignSelf:'center'
   },
   modal: {
-    height: Dimensions.get('window').height * 0.45,
+    height: height * 0.45,
     width: '75%',
     margin: '3%',
     backgroundColor: 'white',
@@ -527,25 +473,12 @@ const styles = StyleSheet.create({
   },
   changeButtons: {
     alignSelf: 'center',
-    borderWidth: 2,
-    borderColor: hex,
-    borderRadius: 50,
     width: '35%',
   },
-  changeText: {
-    fontFamily: font,
-    color: hex,
-    textAlign: 'center',
-    fontSize: 17,
-    paddingTop: '2.5%',
-    paddingBottom: '2.5%',
-  },
-  changeTextSelected: {
-    fontFamily: font,
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 17,
-    paddingTop: '2.5%',
-    paddingBottom: '2.5%',
+  button: {
+    alignSelf: 'center',
+    width: '35%',
+    marginRight: '5%',
+    marginTop: '5%',
   },
 })

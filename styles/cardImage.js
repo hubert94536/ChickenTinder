@@ -1,0 +1,22 @@
+import { StyleSheet } from 'react-native'
+
+export default StyleSheet.create({
+  button: {
+    borderRadius: 63,
+    height: 45,
+    width: 45,
+    margin: '1%',
+  },
+  text: {
+    fontFamily: 'CircularStd-Medium',
+    color: '#F15763',
+    fontSize: 15,
+    alignSelf: 'center',
+  },
+  icon: {
+    fontFamily: 'CircularStd-Medium',
+    color: '#F15763',
+    fontSize: 35,
+    alignSelf: 'center',
+  },
+})

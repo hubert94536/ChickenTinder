@@ -1,82 +1,40 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import { createAppContainer } from 'react-navigation'
-import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
+import { Image, Modal, Dimensions, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
-class HomeScreen extends React.Component {
+const height = Dimensions.get('window').height
+
+const hex = '#F15763'
+
+export default class TabBar extends React.Component{
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Home Screen</Text>
-      </View>
+            <View style={styles.bar}>
+              <Icon name='location-arrow' style={{color: this.props.cur === 'Home' ? hex : '#8d8d8d', fontSize: 26}} onPress={() => this.props.goHome()}/>
+              <Icon name='search' style={{color: this.props.cur === 'Search' ? hex : '#8d8d8d', fontSize: 26}} onPress={() => this.props.goSearch()}/>
+              <Icon name='bullhorn' style={{color: this.props.cur === 'Notifs' ? hex : '#8d8d8d', fontSize: 26}}  onPress={() => this.props.goNotifs()}/>
+              <Icon name='user' style={{color: this.props.cur === 'Profile' ? hex : '#8d8d8d', fontSize: 26}}  onPress={() => this.props.goProfile()}/>
+            </View>
+
     )
   }
 }
-class ProfileScreen extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>Profile Screen</Text>
-      </View>
-    )
-  }
-}
-class SavedScreen extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>Saved Screen</Text>
-      </View>
-    )
-  }
-}
-class GroupsScreen extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>Group Screen</Text>
-      </View>
-    )
-  }
-}
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  bar:{
+    width:'95%',
+    marginBottom:'2%',
+    alignSelf:'center',
+    height: height*0.07, 
+    backgroundColor:'#fff2f2',
     justifyContent: 'center',
     alignItems: 'center',
-  },
+    borderRadius: 10,
+    elevation: 20,
+    borderWidth: 0,
+    position: 'absolute',
+    bottom: 0,
+    flexDirection:'row',
+    justifyContent:'space-evenly'
+  }
 })
-const TabNavigator = createMaterialBottomTabNavigator(
-  {
-    Home: {
-      screen: HomeScreen,
-      navigationOptions: {
-        tabBarLabel: 'Home',
-      },
-    },
-    Profile: {
-      screen: ProfileScreen,
-      navigationOptions: {
-        tabBarLabel: 'Profile',
-      },
-    },
-    Saved: {
-      screen: SavedScreen,
-      navigationOptions: {
-        tabBarLabel: 'Saved',
-      },
-    },
-    Groups: {
-      screen: GroupsScreen,
-      navigationOptions: {
-        tabBarLabel: 'Groups',
-      },
-    },
-  },
-  {
-    initialRouteName: 'Home',
-    barStyle: { backgroundColor: '#FB6767' },
-  },
-)
-
-export default createAppContainer(TabNavigator)

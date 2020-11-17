@@ -14,12 +14,33 @@ import PropTypes from 'prop-types';
 import accountsApi from '../apis/accountsApi.js';
 import SearchCard from '../cards/searchCard.js'
 import Alert from '../modals/alert.js'
+import screenStyles from '../../styles/screenStyles.js'
+import friendsApi from '../apis/friendsApi.js'
+import TabBar from '../nav.js'
 
-
-const hex = '#F25763'
+const hex = '#F15763'
 const font = 'CircularStd-Medium'
 var username = ''
 AsyncStorage.getItem(USERNAME).then((res) => (username = res))
+
+// async function getFriends() {
+//   // Pushing accepted friends or pending requests into this.state.friends
+//   friendsApi
+//     .getFriends()
+//     .then((res) => {
+//       var friendsMap = new Object()
+//       for (var friend in res.friendList) {
+//         friendsMap[res.friendList[friend].id] = res.friendList[friend].status
+//       }
+//       this.setState({ friends: friendsMap })
+//       this.props.navigation.navigate('Search', {
+//         allFriends: friendsMap,
+//       })
+//     })
+//     .catch((err) => {
+//       this.setState({ errorAlert: true })
+//     })
+// }
 
 export default class Search extends Component {
   constructor(props) {
@@ -27,23 +48,23 @@ export default class Search extends Component {
 
     this.state = {
       data: [],
-      friends: this.props.navigation.state.params.allFriends,
+      // friends: this.props.navigation.state.params.allFriends,
+      friends: [],
       errorAlert: false
     };
+    friendsApi
+    .getFriends()
+    .then((res) => {
+      var friendsMap = new Object()
+      for (var friend in res.friendList) {
+        friendsMap[res.friendList[friend].id] = res.friendList[friend].status
+      }
+      this.setState({ friends: friendsMap })
+    })
+    .catch((err) => {
+      this.setState({ errorAlert: true })
+    })
   }
-
-  renderSeparator = () => {
-    return (
-      <View
-        style={{
-          height: 1,
-          width: '86%',
-          backgroundColor: '#CED0CE',
-          marginLeft: '14%',
-        }}
-      />
-    );
-  };
 
   searchFilterFunction = text => {
     this.setState({
@@ -69,6 +90,10 @@ export default class Search extends Component {
                 image: res.userList[user].photo,
                 id: res.userList[user].id,
                 status: status
+              }
+              if (person === undefined) {
+                this.setState({errorAlert: true})
+                return
               }
               resultUsers.push(person);
             }
@@ -99,9 +124,9 @@ export default class Search extends Component {
       <SearchBar
         containerStyle={styles.container}
         inputContainerStyle={styles.inputContainer}
-        inputStyle={styles.input}
-        placeholder="Seach by username"
-        lightTheme={true}
+        inputStyle={[styles.input, {textAlignVertical:'center'}]}
+        placeholder='Search for friends'
+        lightTheme={true} 
         round={true}
         onChangeText={text => this.searchFilterFunction(text)}
         autoCorrect={false}
@@ -113,12 +138,7 @@ export default class Search extends Component {
   render() {
     return (
       <View style={{flex: 1, backgroundColor: 'white'}}>
-        <Icon
-          name="chevron-left"
-          style={styles.topIcons}
-          onPress={() => this.props.navigation.navigate('Home')}
-        />    
-        <Text style={styles.title}>Find New Friends!</Text>
+        <Text style={[screenStyles.icons, { marginTop: '10%', textAlign:'center' }]}>Find friends</Text>
         <FlatList
           data={this.state.data}
           renderItem={({item}) => (
@@ -134,7 +154,6 @@ export default class Search extends Component {
             />
           )}
           keyExtractor={(item) => item.username}
-          ItemSeparatorComponent={this.renderSeparator}
           ListHeaderComponent={this.renderHeader}
         />
         {this.state.errorAlert && (
@@ -146,34 +165,28 @@ export default class Search extends Component {
             cancel={() => this.setState({errorAlert: false})}
           />
         )}
+        <TabBar 
+          goHome={() => this.props.navigation.navigate('Home')}
+          goSearch={() => this.props.navigation.navigate('Search')}
+          goNotifs={() => this.props.navigation.navigate('Notifications')}
+          goProfile={() => this.props.navigation.navigate('Profile')}
+          cur='Search'
+        />
       </View>
     );
   }
 }
 
-Search.propTypes = {
-  allFriends: PropTypes.array
-}
-
 const styles = StyleSheet.create({
   topIcons: {
-    color: hex,
-    fontSize: 27,
     marginLeft: '5%',
     marginTop: '5%'
-  },
-  title: {
-    fontFamily: font,
-    fontSize: 40,
-    color: hex,
-    textAlign: 'center',
-    marginBottom: '4%'
   },
   container: {
     backgroundColor: 'white',
     borderBottomColor: 'transparent',
     borderTopColor: 'transparent',
-    width: '100%',
+    width: '95%',
     height: Dimensions.get('window').height * 0.08,
     alignSelf: 'center',
   },
@@ -181,10 +194,10 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height * 0.05,
     width: '90%',
     alignSelf: 'center',
-    backgroundColor: '#ebecf0',
+    backgroundColor: '#e7e7e7',
   },
   input: {
-    textAlignVertical: 'center',
+    textAlignVertical: 'bottom',
     fontFamily: font,
     fontSize: 18,
   },

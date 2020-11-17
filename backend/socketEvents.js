@@ -1,5 +1,15 @@
+const redis = require('redis')
 const { Accounts } = require('./models.js')
 const Yelp = require('./yelpQuery.js')
+
+const client = redis.createClient('redis://localhost:6379')
+// client.on('connect', () => {
+//   console.log("Redis")
+// })
+// client.on('error', err => {
+//   console.log('Something went wrong ' + err);
+//   });
+
 var sessions = {} // store temporary sessions
 var clients = {} // associates username with client id
 var clientsIds = {} // associates client id with username
