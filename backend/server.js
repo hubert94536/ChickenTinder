@@ -79,7 +79,7 @@ const accountByIdSchema = Joi.object().keys({
 app
   .route('/accounts/:id')
   .get(validateRoute.params(accountByIdSchema), accounts.getAccountById)
-  .put(checkUpdateAccountSchema, accounts.updateAccount)
+  .put(checkUpdateAccountSchema, validateRoute.params(accountByIdSchema), accounts.updateAccount)
   .delete(validateRoute.params(accountByIdSchema), accounts.deleteAccount)
 
 //Check that some prop to be updated is passed in
