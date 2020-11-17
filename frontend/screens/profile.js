@@ -4,7 +4,6 @@ import {
   Image,
   Keyboard,
   Modal,
-  RefreshControl,
   StyleSheet,
   Text,
   TextInput,
@@ -15,7 +14,6 @@ import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import Swiper from 'react-native-swiper'
 import Alert from '../modals/alert.js'
 import accountsApi from '../apis/accountsApi.js'
 import facebookService from '../apis/facebookService.js'
@@ -59,6 +57,8 @@ export default class UserProfileView extends Component {
       logoutAlert: false,
       deleteAlert: false,
       errorAlert: false,
+      // friends text
+      numFriends: 0,
     }
   }
 
@@ -162,6 +162,10 @@ export default class UserProfileView extends Component {
     }
   }
 
+  handleFriendsCount = (n) => {
+    this.setState({numFriends: n})
+  }
+
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -199,11 +203,21 @@ export default class UserProfileView extends Component {
                 {'@' + this.state.usernameValue}
               </Text>
             </View>
-            <Text style={{ fontFamily: font, marginLeft: '7%', fontSize: 17 }}>Your Friends</Text>
-            <Text style={[screenStyles.text, { marginLeft: '8%' }]}>6 friends</Text>
+            <Text
+              style={{
+                fontFamily: font,
+                marginTop: '5%',
+                marginLeft: '7%',
+                fontSize: 20,
+                fontWeight: 'bold',
+              }}
+            >
+              Your Friends
+            </Text>
+            <Text style={[screenStyles.text, { marginLeft: '7%', fontSize: 17 }]}>{this.state.numFriends + ' friends'}</Text>
           </View>
           <View style={{ height: '100%', marginTop: '0%' }}>
-            <Friends isFriends />
+            <Friends isFriends onFriendsChange={this.handleFriendsCount}/>
           </View>
 
           {(this.state.visible || this.state.edit) && (
