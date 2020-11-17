@@ -130,7 +130,8 @@ export default class Friends extends React.Component {
           }
         >
           <Text>
-            Pull down on this text to refresh (if no friends) - replace this with a graphic eventually
+            Pull down on this text to refresh (if no friends) - replace this with a graphic
+            eventually
           </Text>
           {friends}
         </ScrollView>
