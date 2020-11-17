@@ -189,13 +189,16 @@ export default class UserProfileView extends Component {
               style={styles.avatar}
             />
             <View style={{ alignItems: 'center' }}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <View
+                  style={{ width: 20, marginTop: '4%', marginLeft: '1%' }}
+                ></View>
                 <Text style={{ fontFamily: font, fontSize: 20, marginTop: '4%' }}>
                   {this.state.name}
                 </Text>
                 <Icon
                   name="pencil-outline"
-                  style={{ fontSize: 20, marginTop: '4%', marginLeft: '2%' }}
+                  style={{ fontSize: 20, marginTop: '4%', marginLeft: '1%' }}
                   onPress={() => this.setState({ edit: true })}
                 />
               </View>
@@ -475,6 +478,7 @@ export default class UserProfileView extends Component {
                   ]}
                   value={this.state.nameValue}
                   onChangeText={(text) => this.setState({ nameValue: text })}
+                  onSubmitEditing={() => this.makeChanges()}
                 />
                 <Text style={[screenStyles.text, { color: 'black', marginBottom: '2%' }]}>
                   Username
@@ -492,6 +496,7 @@ export default class UserProfileView extends Component {
                   ]}
                   value={this.state.usernameValue}
                   onChangeText={(text) => this.setState({ usernameValue: text })}
+                  onSubmitEditing={() => this.makeChanges()}
                 />
               </View>
               <TouchableHighlight
