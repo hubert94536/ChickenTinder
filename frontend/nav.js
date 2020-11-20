@@ -18,22 +18,22 @@ export default class TabBar extends React.Component {
         <Icon
           name="location-arrow"
           style={{ color: this.props.cur === 'Home' ? hex : '#8d8d8d', fontSize: 26 }}
-          onPress={() => this.props.goHome()}
+          onPress={this.props.goHome}
         />
         <Icon
           name="search"
           style={{ color: this.props.cur === 'Search' ? hex : '#8d8d8d', fontSize: 26 }}
-          onPress={() => this.props.goSearch()}
+          onPress={this.props.goSearch}
         />
         <Icon
           name="bullhorn"
           style={{ color: this.props.cur === 'Notifs' ? hex : '#8d8d8d', fontSize: 26 }}
-          onPress={() => this.props.goNotifs()}
+          onPress={this.props.goNotifs}
         />
         <Icon
           name="user"
           style={{ color: this.props.cur === 'Profile' ? hex : '#8d8d8d', fontSize: 26 }}
-          onPress={() => this.props.goProfile()}
+          onPress={this.props.goProfile}
         />
       </View>
     )
@@ -42,10 +42,10 @@ export default class TabBar extends React.Component {
 
 TabBar.propTypes = {
   cur: PropTypes.string,
-  goHome: PropTypes.function,
-  goSearch: PropTypes.function,
-  goNotifs: PropTypes.function,
-  goProfile: PropTypes.function,
+  goHome: PropTypes.func,
+  goSearch: PropTypes.func,
+  goNotifs: PropTypes.func,
+  goProfile: PropTypes.func,
 }
 
 

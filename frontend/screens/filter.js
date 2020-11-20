@@ -11,7 +11,6 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
-import DropDownPicker from 'react-native-dropdown-picker'
 import { BlurView } from '@react-native-community/blur'
 import Geolocation from 'react-native-geolocation-service'
 import PropTypes from 'prop-types'
@@ -27,8 +26,6 @@ import SwitchButton from 'switch-button-react-native'
 
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
-
-const height = Dimensions.get('window').height
 
 const tagsCuisine = [
   'American',
@@ -92,7 +89,7 @@ export default class FilterSelector extends React.Component {
       selectedRestriction: [],
       // showing alerts and modals
       invalidTime: false,
-      chooseTime: true,
+      chooseTime: false,
       locationAlert: false,
       formatAlert: false,
       chooseFriends: false,
@@ -606,6 +603,7 @@ FilterSelector.propTypes = {
   host: PropTypes.string,
   isHost: PropTypes.bool,
   press: PropTypes.func,
+  members: PropTypes.array,
 }
 
 const styles = StyleSheet.create({
