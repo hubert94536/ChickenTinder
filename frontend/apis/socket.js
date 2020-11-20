@@ -19,11 +19,11 @@ const connect = () => {
   })
 }
 // uncomment below if testing on local server
-// const connect = () => {
-//   socket = io('http://192.168.0.23:5000', {
-//     query: `username=${myUsername}`,
-//   })
-// }
+/* const connect = () => {
+   socket = io('http://192.168.0.23:5000', {
+     query: `username=${myUsername}`,
+   })
+} */
 
 const createRoom = () => {
   socket.emit('createRoom', { host: myUsername, pic: myPic, name: myName })

@@ -97,7 +97,6 @@ export default class Search extends Component {
               }
               resultUsers.push(person);
             }
-            console.log(resultUsers)
             this.setState({data: resultUsers});
           })
           .catch(() => {}),
