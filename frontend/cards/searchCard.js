@@ -67,7 +67,7 @@ export default class SearchCard extends React.Component {
 
   render() {
     return (
-      <View style={{ flexDirection: 'row', flex: 1, width: '85%', alignSelf: 'center' }}>
+      <View style={{ flexDirection: 'row', flex: 1, width: '85%', alignSelf:'center' }}>
         <Image
           source={{
             uri: this.props.image,
@@ -81,7 +81,9 @@ export default class SearchCard extends React.Component {
             flex: 1,
           }}
         >
-          <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
+          <Text style={{ fontFamily: font, fontSize: 15 }}>
+            {this.props.name}
+          </Text>
           <Text style={{ fontFamily: font, color: hex }}>{'@' + this.props.username}</Text>
         </View>
         {this.state.requested === 'Requested' && this.state.renderOption && (

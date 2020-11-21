@@ -6,7 +6,7 @@ const height = Dimensions.get('window').height
 
 const hex = '#F15763'
 
-export default class TabBar extends React.Component {
+export default class TabBar extends React.Component{
   render() {
     return (
             <View style={styles.bar}>
@@ -21,12 +21,12 @@ export default class TabBar extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  bar: {
-    width: '95%',
-    marginBottom: '2%',
-    alignSelf: 'center',
-    height: height * 0.07,
-    backgroundColor: '#fff2f2',
+  bar:{
+    width:'95%',
+    marginBottom:'2%',
+    alignSelf:'center',
+    height: height*0.07, 
+    backgroundColor:'#fff2f2',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     position: 'absolute',
     bottom: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-  },
+    flexDirection:'row',
+    justifyContent:'space-evenly'
+  }
 })

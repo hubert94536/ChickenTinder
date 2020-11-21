@@ -1,9 +1,17 @@
-import React, { Component } from 'react'
-import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native'
+import React, {Component} from 'react';
+import {
+  Dimensions,
+  FlatList,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 import { USERNAME } from 'react-native-dotenv'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import { SearchBar } from 'react-native-elements'
 import AsyncStorage from '@react-native-community/async-storage'
-import accountsApi from '../apis/accountsApi.js'
+import PropTypes from 'prop-types';
+import accountsApi from '../apis/accountsApi.js';
 import SearchCard from '../cards/searchCard.js'
 import Alert from '../modals/alert.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -36,65 +44,65 @@ AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 
 export default class Search extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       data: [],
       // friends: this.props.navigation.state.params.allFriends,
       friends: [],
-      errorAlert: false,
-    }
+      errorAlert: false
+    };
     friendsApi
-      .getFriends()
-      .then((res) => {
-        var friendsMap = new Object()
-        for (var friend in res.friendList) {
-          friendsMap[res.friendList[friend].id] = res.friendList[friend].status
-        }
-        this.setState({ friends: friendsMap })
-      })
-      .catch((err) => {
-        this.setState({ errorAlert: true })
-      })
+    .getFriends()
+    .then((res) => {
+      var friendsMap = new Object()
+      for (var friend in res.friendList) {
+        friendsMap[res.friendList[friend].id] = res.friendList[friend].status
+      }
+      this.setState({ friends: friendsMap })
+    })
+    .catch((err) => {
+      this.setState({ errorAlert: true })
+    })
   }
 
   searchFilterFunction = text => {
     this.setState({
       value: text,
-    })
+    });
 
-    clearTimeout(this.timeout) // clears the old timer
+    clearTimeout(this.timeout); // clears the old timer
     this.timeout = setTimeout(
       () =>
         accountsApi
           .searchUsers(text)
-          .then((res) => {
+          .then(res => {
             // this.setState({data: res.userList});
             var resultUsers = []
             for (var user in res.userList) {
               var status = 'Add'
               if (res.userList[user].id in this.state.friends) {
-                status = this.state.friends[res.userList[user].id]
+                status = this.state.friends[res.userList[user].id ]
               }
-              var person = ({
-                name: res.userList[user].name,
-                username: res.userList[user].username,
+              var person = {
+                name: res.userList[user].name ,
+                username: res.userList[user].username ,
                 image: res.userList[user].photo,
                 id: res.userList[user].id,
                 status: status
-              })
+              }
               if (person === undefined) {
                 this.setState({errorAlert: true})
                 return
               }
               resultUsers.push(person);
             }
-            this.setState({ data: resultUsers })
+            this.setState({data: resultUsers});
           })
           .catch(() => {}),
       100,
-    )
-  }
+    );
+  };
 
   async removeRequest(id, newArr, status) {
     if (!status) {
@@ -111,37 +119,35 @@ export default class Search extends Component {
     }
   }
 
-  renderHeader() {
+  renderHeader = () => {
     return (
       <SearchBar
         containerStyle={styles.container}
         inputContainerStyle={styles.inputContainer}
-        inputStyle={[styles.input, { textAlignVertical: 'center' }]}
-        placeholder="Search for friends"
-        lightTheme={true}
+        inputStyle={[styles.input, {textAlignVertical:'center'}]}
+        placeholder='Search for friends'
+        lightTheme={true} 
         round={true}
-        onChangeText={(text) => this.searchFilterFunction(text)}
+        onChangeText={text => this.searchFilterFunction(text)}
         autoCorrect={false}
         value={this.state.value}
       />
-    )
-  }
+    );
+  };
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
-        <Text style={[screenStyles.icons, { marginTop: '10%', textAlign: 'center' }]}>
-          Find friends
-        </Text>
+      <View style={{flex: 1, backgroundColor: 'white'}}>
+        <Text style={[screenStyles.icons, { marginTop: '10%', textAlign:'center' }]}>Find friends</Text>
         <FlatList
           data={this.state.data}
-          renderItem={({ item }) => (
+          renderItem={({item}) => (
             <SearchCard
               currentUser={username}
               name={item.name}
               username={item.username}
               image={item.photo}
-              id={item.id}
+              id = {item.id}
               requested={item.status}
               total={this.state.data}
               press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
@@ -155,26 +161,26 @@ export default class Search extends Component {
             title="Error, please try again"
             button
             buttonText="Close"
-            press={() => this.setState({ errorAlert: false })}
-            cancel={() => this.setState({ errorAlert: false })}
+            press={() => this.setState({errorAlert: false})}
+            cancel={() => this.setState({errorAlert: false})}
           />
         )}
-        <TabBar
+        <TabBar 
           goHome={() => this.props.navigation.navigate('Home')}
           goSearch={() => this.props.navigation.navigate('Search')}
           goNotifs={() => this.props.navigation.navigate('Notifications')}
           goProfile={() => this.props.navigation.navigate('Profile')}
-          cur="Search"
+          cur='Search'
         />
       </View>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
   topIcons: {
     marginLeft: '5%',
-    marginTop: '5%',
+    marginTop: '5%'
   },
   container: {
     backgroundColor: 'white',
@@ -195,4 +201,4 @@ const styles = StyleSheet.create({
     fontFamily: font,
     fontSize: 18,
   },
-})
+});

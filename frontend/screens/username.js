@@ -5,7 +5,6 @@ import AsyncStorage from '@react-native-community/async-storage'
 import Alert from '../modals/alert.js'
 import accountsApi from '../apis/accountsApi.js'
 import screenStyles from '../../styles/screenStyles.js'
-import PropTypes from 'prop-types'
 
 const hex = '#F15763'
 
@@ -77,7 +76,7 @@ class Username extends React.Component {
     return (
       <View style={styles.mainContainer}>
         <Text style={[screenStyles.text, screenStyles.title, styles.header]}>
-          {"'Chews' a username!"}
+          'Chews' a username!
         </Text>
         <View style={{ marginTop: '35%' }}>
           <TextInput
@@ -159,9 +158,5 @@ const styles = StyleSheet.create({
     borderColor: hex,
   },
 })
-
-Username.propTypes = {
-  navigation: PropTypes.bool,
-}
 
 export default Username

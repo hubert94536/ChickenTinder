@@ -60,7 +60,9 @@ export default class ProfileCard extends React.Component {
             flex: 1,
           }}
         >
-          <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
+          <Text style={{ fontFamily: font, fontSize: 15 }}>
+            {this.props.name}
+          </Text>
           <Text style={{ fontFamily: font }}>@{this.props.username}</Text>
         </View>
         {this.state.isFriend && (
