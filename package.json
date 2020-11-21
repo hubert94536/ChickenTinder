@@ -22,6 +22,7 @@
     "@fortawesome/react-native-fontawesome": "^0.2.5",
     "@react-native-community/async-storage": "^1.12.0",
     "@react-native-community/blur": "^3.6.0",
+    "@react-native-community/clipboard": "^1.5.1",
     "@react-native-community/geolocation": "^2.0.2",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/slider": "^3.0.3",
@@ -32,8 +33,10 @@
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
+    "express-joi-validation": "^5.0.0",
     "firebase": "^7.21.1",
     "http": "0.0.1-security",
+    "joi": "^17.3.0",
     "mock-async-storage": "^2.2.0",
     "npm": "^6.14.8",
     "patch-package": "^6.2.2",
@@ -69,7 +72,8 @@
     "sequelize": "^6.3.5",
     "serve": "^11.3.2",
     "socket.io": "^2.3.0",
-    "socket.io-client": "^2.3.0"
+    "socket.io-client": "^2.3.0",
+    "switch-button-react-native": "^1.0.3"
   },
   "devDependencies": {
     "@babel/core": "7.10.3",

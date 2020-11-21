@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Dimensions, Modal, Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import accountsApi from '../apis/accountsApi.js'
@@ -9,7 +9,12 @@ import Join from '../modals/join.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import TabBar from '../nav.js'
+<<<<<<< HEAD
 import Icon from 'react-native-vector-icons/FontAwesome'
+=======
+import Icon from 'react-native-vector-icons/AntDesign'
+import SwitchButton from 'switch-button-react-native';
+>>>>>>> cc2c3d5d891963e01c7469d1f3a17818c81af527
 
 var img = ''
 var name = ''
@@ -22,6 +27,8 @@ AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 var myId = ''
 
 const width = Dimensions.get('window').width
+const height = Dimensions.get('window').height
+const hex = '#F15763'
 
 AsyncStorage.getItem(ID).then((res) => {
   myId = res

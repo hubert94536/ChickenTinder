@@ -1,11 +1,16 @@
 import React from 'react'
+<<<<<<< HEAD
 import { Modal, Text, TouchableHighlight, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+=======
+import { Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+>>>>>>> cc2c3d5d891963e01c7469d1f3a17818c81af527
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import modalStyles from '../../styles/modalStyles.js'
 import { TextInput } from 'react-native-paper'
 import screenStyles from '../../styles/screenStyles.js'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 
 const hex = '#F15763'
 //  props are name, image url, and functions for cancel and go
@@ -44,8 +49,8 @@ export default class Join extends React.Component {
         <Modal transparent animationType="none">
           <View style={[modalStyles.modal, { flex: 0, height: 180, borderRadius: 15 }]}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-              <Icon
-                name="times-circle"
+              <AntDesign
+                name='closecircleo'
                 style={modalStyles.icon}
                 onPress={() => this.props.onPress()}
               />
