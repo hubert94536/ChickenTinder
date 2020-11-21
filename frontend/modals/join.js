@@ -1,10 +1,5 @@
 import React from 'react'
-<<<<<<< HEAD
-import { Modal, Text, TouchableHighlight, View } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
-=======
 import { Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
->>>>>>> cc2c3d5d891963e01c7469d1f3a17818c81af527
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import modalStyles from '../../styles/modalStyles.js'

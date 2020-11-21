@@ -9,12 +9,8 @@ import Join from '../modals/join.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import TabBar from '../nav.js'
-<<<<<<< HEAD
-import Icon from 'react-native-vector-icons/FontAwesome'
-=======
 import Icon from 'react-native-vector-icons/AntDesign'
 import SwitchButton from 'switch-button-react-native';
->>>>>>> cc2c3d5d891963e01c7469d1f3a17818c81af527
 
 var img = ''
 var name = ''

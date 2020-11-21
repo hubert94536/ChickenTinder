@@ -143,7 +143,7 @@ export default class UserProfileView extends Component {
         this.setState({ visible: false })
         this.props.navigation.navigate('Login')
       })
-      .catch(() => {
+      .catch((error) => {
         this.setState({ errorAlert: true })
       })
   }
@@ -245,117 +245,104 @@ export default class UserProfileView extends Component {
                     onChangeText={(text) => this.setState({ nameValue: text })}
                   />
                 </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    margin: '5%',
-                  }}
+                <TouchableHighlight
+                  style={[
+                    screenStyles.smallButton,
+                    styles.changeButtons,
+                    this.state.changeName ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                  ]}
+                  underlayColor={hex}
+                  onShowUnderlay={() => this.setState({ changeName: true })}
+                  onHideUnderlay={() => this.setState({ changeName: false })}
+                  onPress={() => this.changeName()}
                 >
-                  <View>
-                    <Text style={{ fontFamily: font, fontSize: 18 }}>Name:</Text>
-                    <TextInput
-                      style={[screenStyles.text, screenStyles.input]}
-                      value={this.state.nameValue}
-                      onChangeText={(text) => this.setState({ nameValue: text })}
-                    />
-                  </View>
-                  <TouchableHighlight
+                  <Text
                     style={[
-                      screenStyles.smallButton,
-                      styles.changeButtons,
-                      this.state.changeName
-                        ? { backgroundColor: hex }
-                        : { backgroundColor: 'white' },
+                      screenStyles.smallButtonText,
+                      this.state.changeName ? { color: 'white' } : { color: hex },
                     ]}
-                    underlayColor={hex}
-                    onShowUnderlay={() => this.setState({ changeName: true })}
-                    onHideUnderlay={() => this.setState({ changeName: false })}
-                    onPress={() => this.changeName()}
                   >
-                    <Text
-                      style={[
-                        screenStyles.smallButtonText,
-                        this.state.changeName ? { color: 'white' } : { color: hex },
-                      ]}
-                    >
-                      Change
-                    </Text>
-                  </TouchableHighlight>
+                    Change
+                  </Text>
+                </TouchableHighlight>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  margin: '5%',
+                }}
+              >
+                <View>
+                  <Text style={{ fontFamily: font, fontSize: 18 }}>Username:</Text>
+                  <TextInput
+                    style={[screenStyles.text, screenStyles.input]}
+                    value={this.state.usernameValue}
+                    onChangeText={(text) => this.setState({ usernameValue: text })}
+                  />
                 </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    margin: '5%',
-                  }}
+                <TouchableHighlight
+                  style={[
+                    screenStyles.smallButton,
+                    styles.changeButtons,
+                    this.state.changeUser ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                  ]}
+                  underlayColor={hex}
+                  onShowUnderlay={() => this.setState({ changeUser: true })}
+                  onHideUnderlay={() => this.setState({ changeUser: false })}
+                  onPress={() => this.changeUsername()}
                 >
-                  <View>
-                    <Text style={{ fontFamily: font, fontSize: 18 }}>Username:</Text>
-                    <TextInput
-                      style={[screenStyles.text, screenStyles.input]}
-                      value={this.state.usernameValue}
-                      onChangeText={(text) => this.setState({ usernameValue: text })}
-                    />
-                  </View>
-                  <TouchableHighlight
+                  <Text
                     style={[
-                      screenStyles.smallButton,
-                      styles.changeButtons,
-                      this.state.changeUser
-                        ? { backgroundColor: hex }
-                        : { backgroundColor: 'white' },
-                    ]}
-                    underlayColor={hex}
-                    onShowUnderlay={() => this.setState({ changeUser: true })}
-                    onHideUnderlay={() => this.setState({ changeUser: false })}
-                    onPress={() => this.changeUsername()}
-                  >
-                    <Text
-                      style={[
-                        screenStyles.smallButtonText,
-                        this.state.changeUser ? { color: 'white' } : { color: hex },
-                      ]}
-                    >
-                      Change
-                    </Text>
-                  </TouchableHighlight>
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <TouchableHighlight
-                    underlayColor={hex}
-                    onShowUnderlay={() => this.setState({ delete: true })}
-                    onHideUnderlay={() => this.setState({ delete: false })}
-                    onPress={() => this.setState({ deleteAlert: true })}
-                    style={[
-                      screenStyles.smallButton,
-                      styles.button,
-                      this.state.delete ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                      screenStyles.smallButtonText,
+                      this.state.changeUser ? { color: 'white' } : { color: hex },
                     ]}
                   >
-                    <Text
-                      style={[
-                        screenStyles.smallButtonText,
-                        this.state.delete ? { color: 'white' } : { color: hex },
-                      ]}
-                    >
-                      Delete
-                    </Text>
-                  </TouchableHighlight>
-                  <TouchableHighlight
-                    underlayColor={hex}
-                    onShowUnderlay={() => this.setState({ logout: true })}
-                    onHideUnderlay={() => this.setState({ logout: false })}
-                    onPress={() => this.setState({ logoutAlert: true })}
+                    Change
+                  </Text>
+                </TouchableHighlight>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                }}
+              >
+                <TouchableHighlight
+                  underlayColor={hex}
+                  onShowUnderlay={() => this.setState({ delete: true })}
+                  onHideUnderlay={() => this.setState({ delete: false })}
+                  onPress={() => this.setState({ deleteAlert: true })}
+                  style={[
+                    screenStyles.smallButton,
+                    styles.button,
+                    this.state.delete ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                  ]}
+                >
+                  <Text
                     style={[
-                      screenStyles.smallButton,
-                      styles.button,
-                      this.state.logout ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                      screenStyles.smallButtonText,
+                      this.state.delete ? { color: 'white' } : { color: hex },
+                    ]}
+                  >
+                    Delete
+                  </Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                  underlayColor={hex}
+                  onShowUnderlay={() => this.setState({ logout: true })}
+                  onHideUnderlay={() => this.setState({ logout: false })}
+                  onPress={() => this.setState({ logoutAlert: true })}
+                  style={[
+                    screenStyles.smallButton,
+                    styles.button,
+                    this.state.logout ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      screenStyles.smallButtonText,
+                      this.state.logout ? { color: 'white' } : { color: hex },
                     ]}
                   >
                     Logout
@@ -450,20 +437,16 @@ export default class UserProfileView extends Component {
           </View>
         </Modal>
         </View>
-        <TabBar
-          goHome={() => this.props.navigation.navigate('Home')}
-          goSearch={() => this.props.navigation.navigate('Search')}
-          goNotifs={() => this.props.navigation.navigate('Notifications')}
-          goProfile={() => this.props.navigation.navigate('Profile')}
-          cur="Profile"
-        />
+          <TabBar 
+            goHome={() => this.props.navigation.navigate('Home')}
+            goSearch={() => this.props.navigation.navigate('Search')}
+            goNotifs={() => this.props.navigation.navigate('Notifications')}
+            goProfile={() => this.props.navigation.navigate('Profile')}
+            cur='Profile'
+          />
       </View>
     )
   }
-}
-
-UserProfileView.propTypes = {
-  navigation: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

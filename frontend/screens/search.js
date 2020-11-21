@@ -58,24 +58,7 @@ export default class Search extends Component {
       })
   }
 
-<<<<<<< HEAD
-  // renderSeparator = () => {
-  //   return (
-  //     <View
-  //       style={{
-  //         height: 1,
-  //         width: '86%',
-  //         backgroundColor: '#CED0CE',
-  //         marginLeft: '14%',
-  //       }}
-  //     />
-  //   );
-  // };
-
-  searchFilterFunction(text) {
-=======
   searchFilterFunction = text => {
->>>>>>> cc2c3d5d891963e01c7469d1f3a17818c81af527
     this.setState({
       value: text,
     })
@@ -98,18 +81,13 @@ export default class Search extends Component {
                 username: res.userList[user].username,
                 image: res.userList[user].photo,
                 id: res.userList[user].id,
-<<<<<<< HEAD
-                status: status,
-              } = resultUsers.push(person))
-=======
                 status: status
-              }
+              })
               if (person === undefined) {
                 this.setState({errorAlert: true})
                 return
               }
               resultUsers.push(person);
->>>>>>> cc2c3d5d891963e01c7469d1f3a17818c81af527
             }
             this.setState({ data: resultUsers })
           })

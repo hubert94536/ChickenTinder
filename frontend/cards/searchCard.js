@@ -70,12 +70,7 @@ export default class SearchCard extends React.Component {
       <View style={{ flexDirection: 'row', flex: 1, width: '85%', alignSelf: 'center' }}>
         <Image
           source={{
-<<<<<<< HEAD
-            uri:
-              'https://d1kdq4z3qhht46.cloudfront.net/uploads/2019/08/Adventures_from_Moominvalley_1990_Moomintroll_TV.jpg',
-=======
             uri: this.props.image,
->>>>>>> cc2c3d5d891963e01c7469d1f3a17818c81af527
           }}
           style={imgStyles.button}
         />
