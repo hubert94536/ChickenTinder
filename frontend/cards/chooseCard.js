@@ -5,10 +5,10 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import imgStyles from '../../styles/cardImage.js'
-
+ 
 const font = 'CircularStd-Medium'
 const hex = '#F15763'
-
+ 
 //  cards for when you're choosing friends for your group
 export default class ChooseCard extends React.Component {
   constructor(props) {
@@ -18,12 +18,12 @@ export default class ChooseCard extends React.Component {
       pressed: false,
     }
   }
-
+ 
   sendInvite() {
     socket.sendInvite(this.props.username)
     this.setState({ added: true })
   }
-
+ 
   render() {
     return (
       <View style={{ flexDirection: 'row', flex: 1 }}>
@@ -40,37 +40,20 @@ export default class ChooseCard extends React.Component {
             flex: 1,
           }}
         >
-<<<<<<< HEAD
           <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
           <Text style={{ fontFamily: font, color: hex }}>@{this.props.username}</Text>
         </View>
         {this.state.added && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Text style={[imgStyles.text, { color: '#6A6A6A', marginRight: '8%' }]}>Added!</Text>
-=======
-          <Text style={{ fontFamily: font, fontWeight: 'bold', fontSize: 15 }}>
-            {this.props.name}
-          </Text>
-          <Text style={{ fontFamily: font, color: hex, }}>@{this.props.username}</Text>
-        </View>
-        {this.state.added && (
-          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-            <Text style={[imgStyles.text, {color: '#6A6A6A', marginRight: '8%',},]}>Added!</Text>
->>>>>>> 21f90f553fa612fb7a9c51b9d4996e263351a25a
           </View>
         )}
         {!this.state.added && (
           <TouchableHighlight>
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-<<<<<<< HEAD
               <Text style={[imgStyles.text, { marginTop: '10%' }]}>Add</Text>
               <AntDesign
                 style={[imgStyles.icon, { margin: '10%', marginTop: '20%', fontSize: 25 }]}
-=======
-              <Text style={[imgStyles.text, {marginTop: '10%'},]}>Add</Text>
-              <AntDesign
-                style={[imgStyles.icon, { margin: '10%', marginTop: '20%', fontSize: 25},]}
->>>>>>> 21f90f553fa612fb7a9c51b9d4996e263351a25a
                 name="pluscircleo"
                 onPress={() => {
                   this.setState({ added: true })
@@ -84,7 +67,7 @@ export default class ChooseCard extends React.Component {
     )
   }
 }
-
+ 
 ChooseCard.propTypes = {
   added: PropTypes.bool,
   username: PropTypes.string,
