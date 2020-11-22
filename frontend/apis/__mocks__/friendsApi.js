@@ -52,9 +52,7 @@ const getFriends = jest
       ],
     }),
   )
-  .mockImplementationOnce(async () =>
-    Promise.reject()
-  )
+  .mockImplementationOnce(async () => Promise.reject())
 
 // accept a friend request
 const acceptFriendRequest = jest
