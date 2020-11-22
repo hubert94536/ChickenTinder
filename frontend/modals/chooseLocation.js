@@ -66,12 +66,6 @@ export default class Location extends Component {
     return (
       <View>
         <Text />
-        <BlurView
-          blurType="light"
-          blurAmount={20}
-          reducedTransparencyFallbackColor="white"
-          style={modalStyles.blur}
-        />
         <Modal transparent animationType="none" visible={this.props.visible}>
           <View style={[modalStyles.modal, { height: height * 0.3 }]}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>

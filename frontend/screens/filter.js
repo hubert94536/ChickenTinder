@@ -414,7 +414,7 @@ export default class FilterSelector extends React.Component {
             {this.state.isHost ? "Let's Go" : 'Submit Filters'}
           </Text>
         </TouchableHighlight>
-        {(this.state.locationAlert || this.state.formatAlert || this.state.chooseFriends) && (
+        {(this.state.locationAlert || this.state.formatAlert || this.state.chooseFriends || this.state.chooseLocation) && (
           <BlurView
             blurType="light"
             blurAmount={20}
