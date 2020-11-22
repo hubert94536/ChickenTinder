@@ -5,10 +5,10 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import imgStyles from '../../styles/cardImage.js'
-
+ 
 const font = 'CircularStd-Medium'
 const hex = '#F15763'
-
+ 
 //  cards for when you're choosing friends for your group
 export default class ChooseCard extends React.Component {
   constructor(props) {
@@ -18,12 +18,12 @@ export default class ChooseCard extends React.Component {
       pressed: false,
     }
   }
-
+ 
   sendInvite() {
     socket.sendInvite(this.props.username)
     this.setState({ added: true })
   }
-
+ 
   render() {
     return (
       <View style={{ flexDirection: 'row', flex: 1 }}>
@@ -67,7 +67,7 @@ export default class ChooseCard extends React.Component {
     )
   }
 }
-
+ 
 ChooseCard.propTypes = {
   added: PropTypes.bool,
   username: PropTypes.string,
