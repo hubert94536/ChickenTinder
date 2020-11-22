@@ -14,7 +14,6 @@ import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import Swiper from 'react-native-swiper'
 import Alert from '../modals/alert.js'
 import accountsApi from '../apis/accountsApi.js'
 import facebookService from '../apis/facebookService.js'
@@ -27,7 +26,6 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
 const height = Dimensions.get('window').height
-const width = Dimensions.get('window').width
 var img = ''
 var name = ''
 var username = ''
@@ -143,7 +141,7 @@ export default class UserProfileView extends Component {
         this.setState({ visible: false })
         this.props.navigation.navigate('Login')
       })
-      .catch((error) => {
+      .catch(() => {
         this.setState({ errorAlert: true })
       })
   }
@@ -153,24 +151,24 @@ export default class UserProfileView extends Component {
   }
 
   makeChanges() {
-    if(this.state.name !== this.state.nameValue) {
+    if (this.state.name !== this.state.nameValue) {
       this.changeName()
     }
-    if(this.state.username !== this.state.usernameValue) {
+    if (this.state.username !== this.state.usernameValue) {
       this.changeUsername()
     }
   }
 
   render() {
     return (
-      <View style={{flex: 1, backgroundColor:'white'}}>
-        <View style={{ backgroundColor: 'white', height:'90%' }}>       
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
+        <View style={{ backgroundColor: 'white', height: '90%' }}>
           <View>
-            <View style={{ flexDirection: 'row', justifyContent:'flex-end'}}>
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               <Text style={[screenStyles.text, styles.myProfile]}>Profile</Text>
               <Icon
                 name="cog-outline"
-                style={[screenStyles.icons, { margin: '5%', textAlign:'right'}]}
+                style={[screenStyles.icons, { margin: '5%', textAlign: 'right' }]}
                 onPress={() => this.setState({ visible: true })}
               />
             </View>
@@ -180,34 +178,36 @@ export default class UserProfileView extends Component {
               }}
               style={styles.avatar}
             />
-            <View style={{alignItems:'center'}}>
-              <View style={{flexDirection:'row', alignItems:'center'}}>
-                <Text style={{ fontFamily: font, fontSize: 20, marginTop: '4%'}}>{this.state.name}</Text>
-                <Icon name='pencil-outline' style={{fontSize:20, marginTop: '4%', marginLeft: '2%'}} onPress={() => this.setState({edit: true})}/>
+            <View style={{ alignItems: 'center' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={{ fontFamily: font, fontSize: 20, marginTop: '4%' }}>
+                  {this.state.name}
+                </Text>
+                <Icon
+                  name="pencil-outline"
+                  style={{ fontSize: 20, marginTop: '4%', marginLeft: '2%' }}
+                  onPress={() => this.setState({ edit: true })}
+                />
               </View>
               <Text style={{ fontFamily: font, fontSize: 13, color: hex }}>
                 {'@' + this.state.usernameValue}
               </Text>
-            </View >
-              <Text style={{fontFamily:font, marginLeft:'7%', fontSize: 17}} >
-                Your Friends
-              </Text>
-              <Text style={[screenStyles.text, {marginLeft:'8%',}]} >
-                6 friends
-              </Text>
+            </View>
+            <Text style={{ fontFamily: font, marginLeft: '7%', fontSize: 17 }}>Your Friends</Text>
+            <Text style={[screenStyles.text, { marginLeft: '8%' }]}>6 friends</Text>
           </View>
-        <View style={{ height: '100%', marginTop: '0%' }}>
-          <Friends isFriends />
-        </View>
+          <View style={{ height: '100%', marginTop: '0%' }}>
+            <Friends isFriends />
+          </View>
 
-        {(this.state.visible || this.state.edit)&& (
-          <BlurView
-            blurType='dark'
-            blurAmount={10}
-            reducedTransparencyFallbackColor="white"
-            style={modalStyles.blur}
-          />
-        )}
+          {(this.state.visible || this.state.edit) && (
+            <BlurView
+              blurType="dark"
+              blurAmount={10}
+              reducedTransparencyFallbackColor="white"
+              style={modalStyles.blur}
+            />
+          )}
           <Modal animationType="fade" visible={this.state.visible} transparent>
             <View style={styles.modal}>
               <View
@@ -216,7 +216,18 @@ export default class UserProfileView extends Component {
                   justifyContent: 'space-between',
                 }}
               >
-                <Text style={[screenStyles.textBold, { fontSize: 20, marginLeft: '10%', marginTop: '10%', marginBottom: '5%', alignSelf: 'center' }]}>
+                <Text
+                  style={[
+                    screenStyles.textBold,
+                    {
+                      fontSize: 20,
+                      marginLeft: '10%',
+                      marginTop: '10%',
+                      marginBottom: '5%',
+                      alignSelf: 'center',
+                    },
+                  ]}
+                >
                   Settings
                 </Text>
                 <TouchableHighlight
@@ -228,7 +239,7 @@ export default class UserProfileView extends Component {
                     screenStyles.smallButton,
                     styles.button,
                     this.state.logout ? { backgroundColor: hex } : { backgroundColor: 'white' },
-                    {width: '28%', borderWidth: 1.5},
+                    { width: '28%', borderWidth: 1.5 },
                   ]}
                 >
                   <Text
@@ -252,7 +263,7 @@ export default class UserProfileView extends Component {
                 )}
                 <AntDesign
                   name="closecircleo"
-                  style={[screenStyles.text, {margin: '5%', fontSize: 25 }]}
+                  style={[screenStyles.text, { margin: '5%', fontSize: 25 }]}
                   onPress={() =>
                     this.setState({
                       visible: false,
@@ -266,18 +277,22 @@ export default class UserProfileView extends Component {
                   marginHorizontal: '10%',
                 }}
               >
-                <View >
+                <View>
                   <Text style={[{ fontFamily: font, fontSize: 18 }]}>Email</Text>
                   <TextInput
-                    style={[screenStyles.text, screenStyles.input, 
-                    {color: '#7d7d7d', 
-                    fontSize: 15, 
-                    alignSelf: 'stretch',
-                    borderBottomWidth: 1, 
-                    borderColor: '#7d7d7d',
-                    }]}
+                    style={[
+                      screenStyles.text,
+                      screenStyles.input,
+                      {
+                        color: '#7d7d7d',
+                        fontSize: 15,
+                        alignSelf: 'stretch',
+                        borderBottomWidth: 1,
+                        borderColor: '#7d7d7d',
+                      },
+                    ]}
                     value={'email@urMom.com'}
-                    onChangeText={(text) => this.setState({nameValue: text})}
+                    onChangeText={(text) => this.setState({ nameValue: text })}
                   />
                 </View>
               </View>
@@ -288,35 +303,43 @@ export default class UserProfileView extends Component {
                   marginHorizontal: '10%',
                 }}
               >
-                  <Text style={{ fontFamily: font, fontSize: 18 }}>Phone Number</Text>
-                  <TextInput
-                    style={[screenStyles.text, screenStyles.input, 
-                    {color: '#B2B2B2', 
-                    fontSize: 15, 
-                    alignSelf: 'stretch',
-                    backgroundColor: '#F2F2F2',
-                    borderWidth: 1, 
-                    borderColor: '#E0E0E0',
-                    borderRadius: 5,
-                    paddingHorizontal: 5,
-                    paddingVertical: 2,
-                    marginTop: '3%',
-                    }]}
-                    editable = {false}
-                    value={'+0 (770) 090-0461'}
-                    onChangeText={(text) => this.setState({nameValue: text})}
-                  />
+                <Text style={{ fontFamily: font, fontSize: 18 }}>Phone Number</Text>
+                <TextInput
+                  style={[
+                    screenStyles.text,
+                    screenStyles.input,
+                    {
+                      color: '#B2B2B2',
+                      fontSize: 15,
+                      alignSelf: 'stretch',
+                      backgroundColor: '#F2F2F2',
+                      borderWidth: 1,
+                      borderColor: '#E0E0E0',
+                      borderRadius: 5,
+                      paddingHorizontal: 5,
+                      paddingVertical: 2,
+                      marginTop: '3%',
+                    },
+                  ]}
+                  editable={false}
+                  value={'+0 (770) 090-0461'}
+                  onChangeText={(text) => this.setState({ nameValue: text })}
+                />
               </View>
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'center',
-                }}>
+                }}
+              >
                 <Text
                   onPress={() => this.setState({ deleteAlert: true })}
-                  style={[screenStyles.textBold, {fontSize: 18, color: 'black', marginRight: '35%'} ]}
+                  style={[
+                    screenStyles.textBold,
+                    { fontSize: 18, color: 'black', marginRight: '35%' },
+                  ]}
                 >
-                    Delete account...
+                  Delete account...
                 </Text>
                 {this.state.deleteAlert && (
                   <Alert
@@ -337,86 +360,159 @@ export default class UserProfileView extends Component {
                     cancel={() => this.closeError()}
                   />
                 )}
-                </View>
-              <View                
+              </View>
+              <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'center',
-                }}>
-                <TouchableHighlight 
-                  style={[screenStyles.medButton, 
-                  {
-                    backgroundColor:hex, 
-                    borderColor: hex, 
-                    marginTop: '7%',
-                    width: '50%'
-                    }]}
+                }}
+              >
+                <TouchableHighlight
+                  style={[
+                    screenStyles.medButton,
+                    {
+                      backgroundColor: hex,
+                      borderColor: hex,
+                      marginTop: '7%',
+                      width: '50%',
+                    },
+                  ]}
                   // dummy function for now, replace with function that updates email
-                  onPress={() => {return true}}
-                  underlayColor='white'
-                  onShowUnderlay={() => this.setState({changeName: true})}
-                  onHideUnderlay={() => this.setState({changeName: false})}
+                  onPress={() => {
+                    return true
+                  }}
+                  underlayColor="white"
+                  onShowUnderlay={() => this.setState({ changeName: true })}
+                  onHideUnderlay={() => this.setState({ changeName: false })}
+                >
+                  <Text
+                    style={[
+                      screenStyles.smallButtonText,
+                      { paddingTop: '5%', paddingBottom: '5%', fontSize: 19 },
+                      this.state.changeName ? { color: hex } : { color: 'white' },
+                    ]}
                   >
-                  <Text  style={[screenStyles.smallButtonText, {paddingTop:'5%', paddingBottom: '5%', fontSize: 19,}, this.state.changeName ? {color:hex} : {color:'white'} ]}>Save Changes</Text>
+                    Save Changes
+                  </Text>
                 </TouchableHighlight>
               </View>
             </View>
           </Modal>
-        <Modal animationType="fade" transparent visible={this.state.edit}>
-          <View style={[{
-            height: Dimensions.get('window').height * 0.50,
-            width: '75%',
-            marginTop: '15%',
-            backgroundColor: 'white',
-            elevation: 20, 
-            alignSelf:'center',
-            borderRadius: 10}]}>
-            <AntDesign 
-              name='closecircleo'
-              style={[screenStyles.text, { fontSize: 18, flexDirection:'row', alignSelf:'flex-end', marginTop:'4%', marginRight: '4%' }]}
-              onPress={() => this.setState({edit: false})}
-              />
-            <View style={{textAlign: 'center', marginLeft:'10%', marginRight:'10%'}}>
-              <Text style={[screenStyles.text, {fontSize: 16}]}>Edit Profile</Text>
-              <Image style={{height: height*0.13, width: height*0.13, borderRadius: 60, alignSelf:'center'}} source={{
-              uri: this.state.image,
-                }}/>
-                <View style={{flexDirection:'row', justifyContent: 'center', marginBottom:'4%'}}>
-                  <Text style={[screenStyles.text, {marginRight: '5%'}]}>Upload</Text>
-                  <Text style={[screenStyles.text, {color:'black', marginLeft: '5%'}]}>Remove</Text>
-                </View>
-            <Text style={[screenStyles.text, {color:'black', marginBottom:'2%'}]}>Display name</Text>
-            <TextInput
-                    style={[screenStyles.text, screenStyles.input, {color: '#7d7d7d', fontSize: 15, borderBottomWidth: 1, marginBottom: '7%', borderColor: '#7d7d7d'}]}
-                    value={this.state.nameValue}
-                    onChangeText={(text) => this.setState({nameValue: text})}
-            />
-            <Text style={[screenStyles.text, {color:'black', marginBottom:'2%'}]}>Username</Text>
-            <TextInput
-                    style={[screenStyles.text, screenStyles.input, {color: '#7d7d7d', fontSize: 15, borderBottomWidth: 1, borderColor: '#7d7d7d'}]}
-                    value={this.state.usernameValue}
-                    onChangeText={(text) => this.setState({ usernameValue: text })}
-            />
-            </View>
-          <TouchableHighlight 
-            style={[screenStyles.medButton, {backgroundColor:hex, borderColor: hex, margin: '7%', width: '50%'}]}
-            onPress={() => this.makeChanges()}
-            underlayColor='white'
-            onShowUnderlay={() => this.setState({changeName: true})}
-            onHideUnderlay={() => this.setState({changeName: false})}
+          <Modal animationType="fade" transparent visible={this.state.edit}>
+            <View
+              style={[
+                {
+                  height: Dimensions.get('window').height * 0.5,
+                  width: '75%',
+                  marginTop: '15%',
+                  backgroundColor: 'white',
+                  elevation: 20,
+                  alignSelf: 'center',
+                  borderRadius: 10,
+                },
+              ]}
             >
-            <Text  style={[screenStyles.smallButtonText, {padding:'10%'}, this.state.changeName ? {color:hex} : {color:'white'} ]}>Save Changes</Text>
-            </TouchableHighlight>
-          </View>
-        </Modal>
+              <AntDesign
+                name="closecircleo"
+                style={[
+                  screenStyles.text,
+                  {
+                    fontSize: 18,
+                    flexDirection: 'row',
+                    alignSelf: 'flex-end',
+                    marginTop: '4%',
+                    marginRight: '4%',
+                  },
+                ]}
+                onPress={() => this.setState({ edit: false })}
+              />
+              <View style={{ textAlign: 'center', marginLeft: '10%', marginRight: '10%' }}>
+                <Text style={[screenStyles.text, { fontSize: 16 }]}>Edit Profile</Text>
+                <Image
+                  style={{
+                    height: height * 0.13,
+                    width: height * 0.13,
+                    borderRadius: 60,
+                    alignSelf: 'center',
+                  }}
+                  source={{
+                    uri: this.state.image,
+                  }}
+                />
+                <View
+                  style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: '4%' }}
+                >
+                  <Text style={[screenStyles.text, { marginRight: '5%' }]}>Upload</Text>
+                  <Text style={[screenStyles.text, { color: 'black', marginLeft: '5%' }]}>
+                    Remove
+                  </Text>
+                </View>
+                <Text style={[screenStyles.text, { color: 'black', marginBottom: '2%' }]}>
+                  Display name
+                </Text>
+                <TextInput
+                  style={[
+                    screenStyles.text,
+                    screenStyles.input,
+                    {
+                      color: '#7d7d7d',
+                      fontSize: 15,
+                      borderBottomWidth: 1,
+                      marginBottom: '7%',
+                      borderColor: '#7d7d7d',
+                    },
+                  ]}
+                  value={this.state.nameValue}
+                  onChangeText={(text) => this.setState({ nameValue: text })}
+                />
+                <Text style={[screenStyles.text, { color: 'black', marginBottom: '2%' }]}>
+                  Username
+                </Text>
+                <TextInput
+                  style={[
+                    screenStyles.text,
+                    screenStyles.input,
+                    {
+                      color: '#7d7d7d',
+                      fontSize: 15,
+                      borderBottomWidth: 1,
+                      borderColor: '#7d7d7d',
+                    },
+                  ]}
+                  value={this.state.usernameValue}
+                  onChangeText={(text) => this.setState({ usernameValue: text })}
+                />
+              </View>
+              <TouchableHighlight
+                style={[
+                  screenStyles.medButton,
+                  { backgroundColor: hex, borderColor: hex, margin: '7%', width: '50%' },
+                ]}
+                onPress={() => this.makeChanges()}
+                underlayColor="white"
+                onShowUnderlay={() => this.setState({ changeName: true })}
+                onHideUnderlay={() => this.setState({ changeName: false })}
+              >
+                <Text
+                  style={[
+                    screenStyles.smallButtonText,
+                    { padding: '10%' },
+                    this.state.changeName ? { color: hex } : { color: 'white' },
+                  ]}
+                >
+                  Save Changes
+                </Text>
+              </TouchableHighlight>
+            </View>
+          </Modal>
         </View>
-          <TabBar 
-            goHome={() => this.props.navigation.navigate('Home')}
-            goSearch={() => this.props.navigation.navigate('Search')}
-            goNotifs={() => this.props.navigation.navigate('Notifications')}
-            goProfile={() => this.props.navigation.navigate('Profile')}
-            cur='Profile'
-          />
+        <TabBar
+          goHome={() => this.props.navigation.navigate('Home')}
+          goSearch={() => this.props.navigation.navigate('Search')}
+          goNotifs={() => this.props.navigation.navigate('Notifications')}
+          goProfile={() => this.props.navigation.navigate('Profile')}
+          cur="Profile"
+        />
       </View>
     )
   }
@@ -426,14 +522,14 @@ const styles = StyleSheet.create({
   myProfile: {
     fontSize: 25,
     alignSelf: 'center',
-    marginRight:'25%'
+    marginRight: '25%',
   },
   avatar: {
     width: 100,
     height: 100,
     borderRadius: 63,
     borderWidth: 4,
-    alignSelf:'center'
+    alignSelf: 'center',
   },
   modal: {
     height: height * 0.45,
