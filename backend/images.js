@@ -12,6 +12,8 @@ const s3 = new AWS.S3({
 });
 
 // positively this code breaks all conventions known to mankind...
+// Look into error handling middleware
+// https://expressjs.com/en/guide/error-handling.html
 const upload = (req, res, next) => multer({
     storage: multerS3({
       s3: s3,
@@ -55,7 +57,12 @@ const upload = (req, res, next) => multer({
         } else {
           return res.status(500).send('invalid file format');
         }
-      }
+    },
+    limits: {
+        fields: 1,
+        files: 1,
+        fileSize: 150*1024 // change later
+    }
 }).single('avatar')(req, res, next);
 
 // const upload = multer({
