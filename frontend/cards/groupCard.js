@@ -24,13 +24,15 @@ export default class GroupCard extends React.Component {
     return (
       <View>
         <View style={styles.card}>
-          <Image
-            source={{ uri: this.props.image }}
-            style={[
-              styles.image,
-              this.props.filters ? { borderColor: hex } : { borderColor: 'white' },
-            ]}
-          />
+          <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+            <Image
+              source={{ uri: this.props.image }}
+              style={[
+                styles.image,
+                this.props.filters ? { borderColor: hex } : { borderColor: '#F5F5F5' },
+              ]}
+            />
+          </View>
           {this.props.filters ? (
             <Icon
               name="check-circle"
@@ -38,23 +40,32 @@ export default class GroupCard extends React.Component {
                 color: hex,
                 fontSize: 20,
                 position: 'absolute',
-                marginLeft: '14%',
-                marginTop: '1%',
+                marginLeft: '31%',
+                marginTop: '5%',
+                backgroundColor: '#F5F5F5',
+                borderRadius: 30,
+                width: 13,
+                height: 13,
+                overflow: 'hidden',
               }}
             />
           ) : null}
           <View
             style={{
-              alignSelf: 'center',
               marginLeft: '3%',
-              flex: 1,
+              width: 200,
+              flexDirection: 'column',
+              justifyContent: 'center',
+              color: 'green',
             }}
           >
             <Text
               style={{
-                color: hex,
-                fontWeight: 'bold',
+                color: 'black',
+                fontWeight: 'normal',
                 fontFamily: font,
+                fontSize: 16,
+                width: 100,
               }}
             >
               {this.props.name}
@@ -62,7 +73,10 @@ export default class GroupCard extends React.Component {
             <Text
               style={{
                 color: hex,
+                fontWeight: 'normal',
                 fontFamily: font,
+                fontSize: 11,
+                width: 100,
               }}
             >
               {'@' + this.props.username}
@@ -106,25 +120,27 @@ GroupCard.propTypes = {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
-    borderRadius: 20,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 7,
     alignSelf: 'center',
-    width: '94%',
-    height: 90,
+    width: 170,
+    height: 70,
     padding: 0,
-    margin: 0,
-    marginTop: '3%',
+    margin: 5,
     flexDirection: 'row',
-    flex: 1,
+    flex: 0.5,
   },
   image: {
     borderRadius: 63,
-    height: Dimensions.get('window').height * 0.09,
-    width: Dimensions.get('window').height * 0.09,
+    height: Dimensions.get('window').height * 0.075,
+    width: Dimensions.get('window').height * 0.075,
     borderWidth: 3,
     borderColor: hex,
     alignSelf: 'flex-start',
-    marginTop: '3.5%',
-    marginLeft: '2.5%',
+    marginLeft: 7,
+  },
+  topText: {
+    color: '#000',
+
   },
 })

@@ -1,17 +1,29 @@
 import React from 'react'
-import { ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import { USERNAME } from 'react-native-dotenv'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Swiper from 'react-native-swiper'
+import DraggableView from 'react-native-draggable-view'
 import AsyncStorage from '@react-native-community/async-storage'
 import PropTypes from 'prop-types'
 import Alert from '../modals/alert.js'
 import GroupCard from '../cards/groupCard.js'
+import ChooseFriends from '../modals/chooseFriends.js'
 import FilterSelector from './filter.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 
-const hex = '#F15763' 
+const hex = '#F15763'
+const hexBlack = '#000000'
 const font = 'CircularStd-Medium'
 var memberList = []
 var myUsername = ''
@@ -26,8 +38,9 @@ export default class Group extends React.Component {
     const members = this.props.navigation.state.params.members
     this.state = {
       members: members,
-      host: this.props.navigation.state.params.host,
-      groupName: members[Object.keys(members)[0]].name.split(' ')[0],
+      // host: this.props.navigation.state.params.host,
+      host: 'nachenburger',
+      hostName: members[Object.keys(members)[0]],
       needFilters: Object.keys(members).filter((user) => !user.filters).length,
       start: false,
       username: myUsername,
@@ -108,18 +121,29 @@ export default class Group extends React.Component {
   updateMemberList() {
     memberList = []
     for (var user in this.state.members) {
-      memberList.push(
-        <GroupCard
-          name={this.state.members[user].name}
-          username={user}
-          image={this.state.members[user].pic}
-          filters={this.state.members[user].filters}
-          host={this.state.host}
-          isHost={this.state.host == this.state.username}
-          key={user}
-        />,
-      )
+      let a = {}
+      a.name = this.state.members[user].name
+      a.username = user
+      a.image = this.state.members[user].pic
+      a.filters = this.state.members[user].filters
+      a.host = this.state.host
+      a.isHost = this.state.host == this.state.username
+      a.key = user
+      a.f = false
+      memberList.push(a)
+      memberList.push(a)
+      memberList.push(a)
+      memberList.push(a)
+      memberList.push(a)
+      memberList.push(a)
+      memberList.push(a)
     }
+    let footer = {}
+    footer.f = true
+    memberList.push(footer)
+    console.log('\n\n\n\n\n\n=========================')
+    console.log(memberList)
+    console.log('=========================\n\n\n\n\n\n')
   }
 
   leaveGroup() {
@@ -145,6 +169,11 @@ export default class Group extends React.Component {
     this.setState({ filters: setFilters })
   }
 
+  _handleChooseFriendsPress() {
+    console.log('added')
+    // add code to close choose friend modal
+  }
+
   componentDidMount() {
     this._isMounted = true
   }
@@ -161,9 +190,13 @@ export default class Group extends React.Component {
           <View style={styles.top}>
             <View
               style={{
-                flexDirection: 'row',
+                alignSelf: 'center',
+                flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'space-between',
+                backgroundColor: hex,
+                width: '100%',
+                paddingBottom: 20,
               }}
             >
               <Text style={styles.groupTitle}>
@@ -171,85 +204,148 @@ export default class Group extends React.Component {
                   ? 'Your Group'
                   : `${this.state.groupName}'s Group`}
               </Text>
-              <TouchableHighlight
-                onShowUnderlay={() => this.setState({ leaveGroup: true })}
-                onHideUnderlay={() => this.setState({ leaveGroup: false })}
-                style={styles.leave}
-                onPress={() =>
-                  this.state.host === this.state.username
-                    ? this.setState({ endAlert: true })
-                    : this.setState({ leaveAlert: true })
-                }
-                underlayColor="white"
-              >
-                <Text
-                  style={[
-                    styles.leaveText,
-                    this.state.leaveGroup ? { color: hex } : { color: 'white' },
-                  ]}
+              <View style={styles.subheader}>
+                <Text style={styles.headertext2}>Group PIN: </Text>
+                <Text style={styles.headertext3}>BADWOLF42</Text>
+                <TouchableOpacity
+                  style={{ flexDirection: 'column', justifyContent: 'center', width: 15 }}
                 >
-                  {this.state.host === this.state.username ? 'End' : 'Leave'}
-                </Text>
-              </TouchableHighlight>
-            </View>
-            <View style={{ flexDirection: 'row' }}>
-              <Icon name="user" style={styles.icon} />
-              <Text
-                style={{
-                  color: '#fff',
-                  fontWeight: 'bold',
-                  fontFamily: font,
-                }}
-              >
-                {memberList.length}
-              </Text>
-              <Text style={styles.divider}>|</Text>
-              <Text style={styles.waiting}>
-                waiting for {this.state.needFilters} member filters
-              </Text>
+                  <Ionicons name="copy-outline" style={styles.icon2} />
+                </TouchableOpacity>
+              </View>
             </View>
             <View
               style={{
                 flexDirection: 'row',
                 margin: '4%',
-                justifyContent: 'flex-end',
+                justifyContent: 'center',
               }}
             >
               {this.state.swipe && (
-                <Text
+                <View
                   style={{
                     color: 'white',
                     fontFamily: font,
                     marginRight: '3%',
+                    height: 60,
+                    backgroundColor: hex,
+                    padding: 15,
+                    marginTop: -45,
+                    borderRadius: 15,
+                    flexDirection: 'column',
+                    justifyContent: 'flex-end',
+                    zIndex: -1,
                   }}
                 >
-                  {this.state.username === this.state.host
-                    ? 'Swipe for host menu'
-                    : 'Swipe for filters'}
-                </Text>
-              )}
-              {this.state.swipe && (
-                <Icon
-                  name="chevron-right"
-                  style={{
-                    color: 'white',
-                    fontFamily: font,
-                    fontSize: 16,
-                    marginTop: '0.75%',
-                  }}
-                  onPress={() => this.refs.swiper.scrollBy(1)}
-                />
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontFamily: font,
+                    }}
+                  >
+                    {this.state.username === this.state.host
+                      ? 'Pull down for host menu'
+                      : 'Pull down to set filters'}
+                  </Text>
+                </View>
               )}
             </View>
           </View>
-          <ScrollView style={styles.center}>{memberList}</ScrollView>
+          <FlatList
+            style={[styles.center]}
+            numColumns={2}
+            ListHeaderComponent={
+              <View style={{ flexDirection: 'row' }}>
+                <Icon name="user" style={[styles.icon, { color: '#F15763' }]} />
+                <Text
+                  style={{
+                    color: '#F15763',
+                    fontWeight: 'bold',
+                    fontFamily: font,
+                  }}
+                >
+                  {memberList.length - 1}
+                </Text>
+                <Text style={[styles.divider, { color: '#F15763' }]}>|</Text>
+                <Text style={[styles.waiting, { color: '#F15763' }]}>
+                  waiting for {this.state.needFilters} member filters
+                </Text>
+              </View>
+            }
+            ListHeaderComponentStyle={{
+              color: '#F15763',
+              marginBottom: 10,
+            }}
+            data={memberList}
+            initialNumToRender={8}
+            contentContainerStyle={styles.memberContainer}
+            renderItem={({ item }) => {
+              if (item.f) {
+                return (
+                  <View>
+                    <View
+                      style={{
+                        backgroundColor: '#DCDCDC',
+                        borderRadius: 7,
+                        alignSelf: 'center',
+                        width: 170,
+                        height: 35,
+                        padding: 0,
+                        margin: 5,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontWeight: 'bold',
+                          color: '#6A6A6A',
+                          textAlign: 'center',
+                          width: '100%',
+                          lineHeight: 36,
+                        }}
+                      >
+                        + Add Friends
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        width: 170,
+                        height: 30,
+                        padding: 0,
+                        margin: 5,
+                        display: 'none',
+                      }}
+                    >
+                      <Text>"""footer"""</Text>
+                    </View>
+                  </View>
+                )
+                // return <ChooseFriends members={memberList} press={this._handleChooseFriendsPress} />
+              } else {
+                return (
+                  <View>
+                    {console.log(JSON.stringify(item))}
+                    <GroupCard
+                      name={item.name}
+                      username={item.username}
+                      image={item.image}
+                      filters={item.filters}
+                      host={this.state.host}
+                      isHost={this.state.host == item.username}
+                      key={item.key}
+                    />
+                  </View>
+                )
+              }
+            }}
+            keyExtractor={(item, index) => index}
+          />
           <View style={styles.bottom}>
             <Text style={styles.bottomText}>
               When everyone has submitted filters, the round will begin!
             </Text>
             {this.state.host === this.state.username && (
               <TouchableHighlight
-                underlayColor="#fff"
+                underlayColor="#F15763"
                 activeOpacity={1}
                 onHideUnderlay={() => this.setState({ start: false })}
                 onShowUnderlay={() => this.setState({ start: true })}
@@ -257,7 +353,7 @@ export default class Group extends React.Component {
                 style={[
                   screenStyles.bigButton,
                   styles.bigButton,
-                  this.state.start ? { opacity: 1 } : { opacity: 0.5 },
+                  this.state.start ? { opacity: 0.75 } : { opacity: 1 },
                 ]}
               >
                 <Text style={styles.buttonText}>Start Round</Text>
@@ -268,12 +364,33 @@ export default class Group extends React.Component {
                 style={[
                   screenStyles.bigButton,
                   styles.bigButton,
-                  this.state.start ? { opacity: 1 } : { opacity: 0.5 },
+                  this.state.start ? { opacity: 0.75 } : { opacity: 1 },
                 ]}
               >
                 <Text style={styles.buttonText}>{this.state.start ? 'Ready!' : 'Waiting...'}</Text>
               </TouchableHighlight>
             )}
+            <TouchableHighlight
+              onShowUnderlay={() => this.setState({ leaveGroup: true })}
+              onHideUnderlay={() => this.setState({ leaveGroup: false })}
+              style={styles.leave}
+              onPress={() => {
+                console.log(this.state.members)
+                this.state.host === this.state.username
+                  ? this.setState({ endAlert: true })
+                  : this.setState({ leaveAlert: true })
+              }}
+              underlayColor="white"
+            >
+              <Text
+                style={[
+                  styles.leaveText,
+                  this.state.leaveGroup ? { color: hex } : { color: '#6A6A6A' },
+                ]}
+              >
+                {this.state.host === this.state.username ? 'Cancel Group' : 'Leave Group'}
+              </Text>
+            </TouchableHighlight>
           </View>
           {this.state.leaveAlert && (
             <Alert
@@ -316,23 +433,21 @@ const styles = StyleSheet.create({
   main: {
     flexDirection: 'column',
     flex: 1,
-    backgroundColor: hex,
-    color: '#fff',
+    backgroundColor: 'white',
+    color: '#aaa',
   },
   groupTitle: {
     color: '#fff',
-    fontSize: 25,
-    marginLeft: '5%',
-    marginTop: '5%',
+    fontSize: 30,
+    marginTop: '10%',
     fontWeight: 'bold',
     fontFamily: font,
+    alignSelf: 'center',
   },
   leave: {
-    marginRight: '2%',
-    marginTop: '6%',
+    alignSelf: 'center',
+    marginTop: '3%',
     borderRadius: 25,
-    borderWidth: 2.5,
-    borderColor: '#fff',
     width: '25%',
   },
   leaveText: {
@@ -343,20 +458,20 @@ const styles = StyleSheet.create({
     paddingBottom: '2%',
   },
   icon: {
-    color: '#fff',
+    color: '#aaa',
     marginLeft: '5%',
     marginTop: '2%',
     fontSize: 30,
   },
   divider: {
-    color: '#fff',
+    color: '#aaa',
     alignSelf: 'center',
     marginLeft: '3%',
     fontSize: 25,
     fontFamily: font,
   },
   waiting: {
-    color: '#fff',
+    color: '#aaa',
     marginLeft: '3%',
     alignSelf: 'center',
     fontFamily: font,
@@ -364,11 +479,12 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 25,
     borderWidth: 2.5,
-    borderColor: '#fff',
+    borderColor: '#aaa',
     paddingVertical: 7,
     paddingHorizontal: 12,
     width: '50%',
     alignSelf: 'center',
+    alignContent: 'center',
     marginTop: '3%',
   },
   buttonText: {
@@ -378,7 +494,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   bottomText: {
-    color: '#fff',
+    color: '#aaa',
     width: '50%',
     alignSelf: 'center',
     fontWeight: 'bold',
@@ -391,16 +507,47 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     width: '60%',
     marginTop: '3%',
+    backgroundColor: '#F15763',
   },
   top: {
+    backgroundColor: '#fff',
     flex: 0.38,
   },
   center: {
     flex: 0.6,
-    color: '#fff',
+    margin: 15,
+    marginLeft: 25,
+    marginRight: 25,
   },
   bottom: {
     flex: 0.45,
+    color: '#aaa',
+  },
+  memberContainer: {
+    width: '100%',
+  },
+  subheader: {
+    color: '#FFF',
+    marginTop: 5,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
+  headertext2: {
     color: '#fff',
+    fontSize: 15,
+    fontWeight: 'normal',
+    fontFamily: font,
+    alignSelf: 'center',
+  },
+  headertext3: {
+    color: '#ffffff',
+    fontFamily: font,
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+  icon2: {
+    color: '#fff',
+    fontSize: 15,
+    marginLeft: '7%',
   },
 })
