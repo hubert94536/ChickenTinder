@@ -40,37 +40,20 @@ export default class ChooseCard extends React.Component {
             flex: 1,
           }}
         >
-<<<<<<< HEAD
           <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
           <Text style={{ fontFamily: font, color: hex }}>@{this.props.username}</Text>
         </View>
         {this.state.added && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Text style={[imgStyles.text, { color: '#6A6A6A', marginRight: '8%' }]}>Added!</Text>
-=======
-          <Text style={{ fontFamily: font, fontWeight: 'bold', fontSize: 15 }}>
-            {this.props.name}
-          </Text>
-          <Text style={{ fontFamily: font, color: hex, }}>@{this.props.username}</Text>
-        </View>
-        {this.state.added && (
-          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-            <Text style={[imgStyles.text, {color: '#6A6A6A', marginRight: '8%',},]}>Added!</Text>
->>>>>>> 21f90f553fa612fb7a9c51b9d4996e263351a25a
           </View>
         )}
         {!this.state.added && (
           <TouchableHighlight>
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-<<<<<<< HEAD
               <Text style={[imgStyles.text, { marginTop: '10%' }]}>Add</Text>
               <AntDesign
                 style={[imgStyles.icon, { margin: '10%', marginTop: '20%', fontSize: 25 }]}
-=======
-              <Text style={[imgStyles.text, {marginTop: '10%'},]}>Add</Text>
-              <AntDesign
-                style={[imgStyles.icon, { margin: '10%', marginTop: '20%', fontSize: 25},]}
->>>>>>> 21f90f553fa612fb7a9c51b9d4996e263351a25a
                 name="pluscircleo"
                 onPress={() => {
                   this.setState({ added: true })

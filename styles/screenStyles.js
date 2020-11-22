@@ -13,6 +13,10 @@ export default StyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     color: '#F15763',
   },
+  textBold: {
+    fontFamily: 'CircularStd-Bold',
+    color: '#F15763',
+  },
   input: {
     fontSize: 20,
     margin: 0,
