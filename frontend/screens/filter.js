@@ -11,7 +11,6 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
-import DropDownPicker from 'react-native-dropdown-picker'
 import { BlurView } from '@react-native-community/blur'
 import Geolocation from 'react-native-geolocation-service'
 import PropTypes from 'prop-types'
@@ -20,15 +19,14 @@ import Alert from '../modals/alert.js'
 import ChooseFriends from '../modals/chooseFriends.js'
 import Socket from '../apis/socket.js'
 import TagsView from '../tagsView'
+import Location from '../modals/chooseLocation.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
-import SwitchButton from 'switch-button-react-native';
+import SwitchButton from 'switch-button-react-native'
 
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
-
-const height = Dimensions.get('window').height
 
 const tagsCuisine = [
   'American',
@@ -78,6 +76,7 @@ export default class FilterSelector extends React.Component {
       host: this.props.host,
       isHost: this.props.isHost,
       distance: 5,
+      zipcode: '',
       location: null,
       useLocation: false,
       selectedHour: '',
@@ -92,8 +91,9 @@ export default class FilterSelector extends React.Component {
       selectedRestriction: [],
       // showing alerts and modals
       invalidTime: false,
-      chooseTime: true,
+      chooseTime: false,
       locationAlert: false,
+      chooseLocation: false,
       formatAlert: false,
       chooseFriends: false,
       errorAlert: false,
@@ -244,28 +244,30 @@ export default class FilterSelector extends React.Component {
   }
 
   evaluateTime() {
-    if(this.state.selectedMinute === '' || this.state.selectedHour === '') {
-      this.setState({invalidTime: true})
+    if (this.state.selectedMinute === '' || this.state.selectedHour === '') {
+      this.setState({ invalidTime: true })
     }
     var hour = parseInt(this.state.selectedHour)
     var min = parseInt(this.state.selectedMinute)
     if (hour < 0 || hour > 12 || min < 0 || min > 59) {
-      this.setState({invalidTime: true})
-    }
-    else {
-      if(this.state.timeMode === 'pm') {
-        if(hour !== 12) {
+      this.setState({ invalidTime: true })
+    } else {
+      if (this.state.timeMode === 'pm') {
+        if (hour !== 12) {
           hour = hour + 12
         }
-      }
-      else if(this.state.timeMode === 'am') {
+      } else if (this.state.timeMode === 'am') {
         if (hour === 12) {
           hour = 0
         }
       }
-      this.setState({hour: hour, minute: min, chooseTime: false})
+      this.setState({ hour: hour, minute: min, chooseTime: false })
       console.log(hour + ':' + min)
     }
+  }
+
+  setLocation(zip) {
+    this.setState({ zipcode: zip, chooseLocation: false })
   }
 
   render() {
@@ -430,6 +432,13 @@ export default class FilterSelector extends React.Component {
             cancel={() => this.setState({ locationAlert: false })}
           />
         )}
+        {/* {this.state.chooseLocation && ( */}
+        <Location
+          visible={this.state.chooseLocation}
+          press={(zip) => this.setLocation(zip)}
+          cancel={() => this.setState({ chooseLocation: false })}
+        />
+        {/* )} */}
         {this.state.formatAlert && (
           <Alert
             title="Error"
@@ -455,78 +464,150 @@ export default class FilterSelector extends React.Component {
             press={() => this.setState({ chooseFriends: false })}
           />
         )}
-        {this.state.chooseTime && 
+        {this.state.chooseTime && (
           <BlurView
-            blurType='dark'
+            blurType="dark"
             blurAmount={10}
             reducedTransparencyFallbackColor="white"
             style={modalStyles.blur}
           />
-        }
-          <Modal animationType="fade" transparent visible={this.state.chooseTime} >
-            <View style={[{
-              height: Dimensions.get('window').height * 0.30,
-              width: '75%',
-              marginTop: '50%',
-              backgroundColor: 'white',
-              elevation: 20, 
-              alignSelf:'center',
-              borderRadius: 10}]}
-            >
-              <Icon 
-                name='closecircleo'
-                style={[screenStyles.text, { fontSize: 18, flexDirection:'row', alignSelf:'flex-end', marginTop:'4%', marginRight: '4%' }]}
-                onPress={() => this.setState({chooseTime: false})}
-              />
-              <View style={{marginLeft:'5%'}}>
-                <Text style={[screenStyles.text, {fontSize: 17, marginBottom:'3%'}]}>Time</Text>
-                <Text style={[screenStyles.text, {color:'black'}]}>Set a time for your group to eat</Text>
-                <View style={{flexDirection:'row', alignItems:'center'}}>
-                  <TextInput
-                    style={[{fontSize: 17, color: '#9f9f9f', backgroundColor:'#E5E5E5', height: '80%', width:'17%', borderRadius:7, textAlign:'center',padding:'3%'}]}
-                    value={this.state.selectedHour}
-                    placeholder='12'
-                    onChangeText={(text) => this.setState({selectedHour: text, invalidTime: false})}
-                    keyboardType='numeric'
-                    />
-                  <Text style={[screenStyles.text, {fontSize: 20, marginRight:'2%', marginLeft:'2%'}]}>:</Text>
-                  <TextInput
-                    style={[{fontSize: 17, color: '#9f9f9f', backgroundColor:'#E5E5E5', height: '80%', width:'17%', borderRadius:7, textAlign:'center', padding:'3%', marginRight:'4%'}]}
-                    value={this.state.selectedMinute}
-                    placeholder='00'
-                    onChangeText={(text) => this.setState({selectedMinute: text, invalidTime: false})}
-                    keyboardType='numeric'
-                  />
-                  <SwitchButton
-                    onValueChange={(val) => this.setState({ timeMode: val })}
-                    text1 = 'pm'
-                    text2 = 'am'
-                    switchWidth={75}
-                    switchHeight={30}
-                    switchBorderColor={hex}
-                    btnBorderColor={hex}
-                    btnBackgroundColor={hex}
-                    fontColor={hex}
-                    activeFontColor='white'
-                  />
-                </View>
-                {this.state.invalidTime &&
-                  <View style={{flexDirection:'row', alignItems:'center', marginTop:'3%'}}>
-                    <Icon name='exclamationcircle' color={hex} style={{fontSize: 15, marginRight:'2%'}}/>
-                    <Text style={[screenStyles.text, {fontSize: 12}]}>Invalid time. Please try again</Text>
-                  </View>
-                }
-                {!this.state.invalidTime &&
-                  <View style={{flexDirection:'row', alignItems:'center', marginTop:'3%'}}>
-                    <Text style={[screenStyles.text, {fontSize: 12}]}> </Text>
-                  </View>
-                }
-                <TouchableHighlight style={{backgroundColor: hex, borderRadius: 30, alignSelf:'center', width:'40%', marginTop:'5%'}} onPress={() => this.evaluateTime()}>
-                  <Text style={[screenStyles.text, {color:'white', textAlign:'center', paddingTop:'5%', paddingBottom:'5%', fontSize:20}]}>Done</Text>
-                </TouchableHighlight>
+        )}
+        <Modal animationType="fade" transparent visible={this.state.chooseTime}>
+          <View
+            style={[
+              {
+                height: Dimensions.get('window').height * 0.3,
+                width: '75%',
+                marginTop: '50%',
+                backgroundColor: 'white',
+                elevation: 20,
+                alignSelf: 'center',
+                borderRadius: 10,
+              },
+            ]}
+          >
+            <Icon
+              name="closecircleo"
+              style={[
+                screenStyles.text,
+                {
+                  fontSize: 18,
+                  flexDirection: 'row',
+                  alignSelf: 'flex-end',
+                  marginTop: '4%',
+                  marginRight: '4%',
+                },
+              ]}
+              onPress={() => this.setState({ chooseTime: false })}
+            />
+            <View style={{ marginLeft: '5%' }}>
+              <Text style={[screenStyles.text, { fontSize: 17, marginBottom: '3%' }]}>Time</Text>
+              <Text style={[screenStyles.text, { color: 'black' }]}>
+                Set a time for your group to eat
+              </Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <TextInput
+                  style={[
+                    {
+                      fontSize: 17,
+                      color: '#9f9f9f',
+                      backgroundColor: '#E5E5E5',
+                      height: '80%',
+                      width: '17%',
+                      borderRadius: 7,
+                      textAlign: 'center',
+                      padding: '3%',
+                    },
+                  ]}
+                  value={this.state.selectedHour}
+                  placeholder="12"
+                  onChangeText={(text) => this.setState({ selectedHour: text, invalidTime: false })}
+                  keyboardType="numeric"
+                />
+                <Text
+                  style={[screenStyles.text, { fontSize: 20, marginRight: '2%', marginLeft: '2%' }]}
+                >
+                  :
+                </Text>
+                <TextInput
+                  style={[
+                    {
+                      fontSize: 17,
+                      color: '#9f9f9f',
+                      backgroundColor: '#E5E5E5',
+                      height: '80%',
+                      width: '17%',
+                      borderRadius: 7,
+                      textAlign: 'center',
+                      padding: '3%',
+                      marginRight: '4%',
+                    },
+                  ]}
+                  value={this.state.selectedMinute}
+                  placeholder="00"
+                  onChangeText={(text) =>
+                    this.setState({ selectedMinute: text, invalidTime: false })
+                  }
+                  keyboardType="numeric"
+                />
+                <SwitchButton
+                  onValueChange={(val) => this.setState({ timeMode: val })}
+                  text1="pm"
+                  text2="am"
+                  switchWidth={75}
+                  switchHeight={30}
+                  switchBorderColor={hex}
+                  btnBorderColor={hex}
+                  btnBackgroundColor={hex}
+                  fontColor={hex}
+                  activeFontColor="white"
+                />
               </View>
+              {this.state.invalidTime && (
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: '3%' }}>
+                  <Icon
+                    name="exclamationcircle"
+                    color={hex}
+                    style={{ fontSize: 15, marginRight: '2%' }}
+                  />
+                  <Text style={[screenStyles.text, { fontSize: 12 }]}>
+                    Invalid time. Please try again
+                  </Text>
+                </View>
+              )}
+              {!this.state.invalidTime && (
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: '3%' }}>
+                  <Text style={[screenStyles.text, { fontSize: 12 }]}> </Text>
+                </View>
+              )}
+              <TouchableHighlight
+                style={{
+                  backgroundColor: hex,
+                  borderRadius: 30,
+                  alignSelf: 'center',
+                  width: '40%',
+                  marginTop: '5%',
+                }}
+                onPress={() => this.evaluateTime()}
+              >
+                <Text
+                  style={[
+                    screenStyles.text,
+                    {
+                      color: 'white',
+                      textAlign: 'center',
+                      paddingTop: '5%',
+                      paddingBottom: '5%',
+                      fontSize: 20,
+                    },
+                  ]}
+                >
+                  Done
+                </Text>
+              </TouchableHighlight>
             </View>
-          </Modal>
+          </View>
+        </Modal>
       </View>
     )
   }
@@ -536,6 +617,7 @@ FilterSelector.propTypes = {
   host: PropTypes.string,
   isHost: PropTypes.bool,
   press: PropTypes.func,
+  members: PropTypes.array,
 }
 
 const styles = StyleSheet.create({

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Image, Text, TouchableHighlight, View } from 'react-native'
+import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import Alert from '../modals/alert.js'
@@ -60,9 +61,7 @@ export default class ProfileCard extends React.Component {
             flex: 1,
           }}
         >
-          <Text style={{ fontFamily: font, fontSize: 15 }}>
-            {this.props.name}
-          </Text>
+          <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
           <Text style={{ fontFamily: font }}>@{this.props.username}</Text>
         </View>
         {this.state.isFriend && (
@@ -108,10 +107,12 @@ export default class ProfileCard extends React.Component {
         )}
         {this.state.deleteFriend && (
           <Alert
-            title="Are you sure?"
-            body={'You are about to remove @' + this.props.username + ' as a friend'}
-            button
-            buttonText="Delete"
+            title={'Unfriend ' + this.props.name}
+            body="If you change your mind, you'll have to send a friends request again."
+            buttonAff="Unfriend"
+            buttonNeg="Cancel"
+            height="28%"
+            twoButton
             press={() => this.deleteFriend()}
             cancel={() => this.setState({ deleteFriend: false })}
           />

@@ -181,7 +181,6 @@ const styles = StyleSheet.create({
     width: '90%',
     borderColor: '#fff',
     borderWidth: 2,
-    borderWidth: 0,
     borderBottomWidth: 2,
     paddingLeft: 10,
     color: '#fff',

@@ -169,9 +169,8 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderColor: '#000',
     width: '100%',
-    height: '90%',
+    height: '85%',
     elevation: 10,
-    marginTop: '2%',
   },
   image: {
     marginTop: '10%',
