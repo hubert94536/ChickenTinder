@@ -58,7 +58,7 @@ export default class ProfileCard extends React.Component {
           style={{
             alignSelf: 'center',
             marginLeft: '1%',
-            flex: 1,
+            flex: 0.8,
           }}
         >
           <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
@@ -84,25 +84,61 @@ export default class ProfileCard extends React.Component {
                 borderRadius: 30,
                 borderWidth: 2,
                 height: '30%',
-                width: '50%',
+                width: '55%',
                 marginLeft: '25%',
                 alignSelf: 'center',
+                flex: 0.5,
               }}
             >
-              <Text style={[imgStyles.text, { color: this.state.pressed ? 'white' : 'black' }]}>
-                Accept
+              <Text
+                style={[
+                  {
+                    color: this.state.pressed ? 'white' : 'black',
+                    fontFamily: font,
+                    alignSelf: 'center',
+                    fontSize: 12,
+                  },
+                ]}
+              >
+                Confirm
               </Text>
             </TouchableHighlight>
-            <Icon
-              style={[imgStyles.icon, { margin: '5%' }]}
-              name="times-circle"
+
+            <TouchableHighlight
+              underlayColor="black"
+              onHideUnderlay={() => this.setState({ pressed: false })}
+              onShowUnderlay={() => this.setState({ pressed: true })}
               onPress={() => {
                 var filteredArray = this.props.total.filter((item) => {
                   return item.username !== this.props.username
                 })
                 this.props.press(this.props.id, filteredArray, false)
               }}
-            />
+              style={{
+                borderColor: 'black',
+                borderRadius: 30,
+                borderWidth: 2,
+                height: '30%',
+                width: '50%',
+                marginLeft: '5%',
+                marginRight: '5%',
+                alignSelf: 'center',
+                flex: 0.5,
+              }}
+            >
+              <Text
+                style={[
+                  {
+                    color: this.state.pressed ? 'white' : 'black',
+                    fontFamily: font,
+                    alignSelf: 'center',
+                    fontSize: 12,
+                  },
+                ]}
+              >
+                Delete
+              </Text>
+            </TouchableHighlight>
           </View>
         )}
         {this.state.deleteFriend && (
