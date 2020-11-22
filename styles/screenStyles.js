@@ -10,11 +10,7 @@ export default StyleSheet.create({
     alignSelf: 'center',
   },
   text: {
-<<<<<<< HEAD
-    fontFamily: 'CircularStd-Bold',
-=======
     fontFamily: 'CircularStd-Medium',
->>>>>>> 21f90f553fa612fb7a9c51b9d4996e263351a25a
     color: '#F15763',
   },
   input: {

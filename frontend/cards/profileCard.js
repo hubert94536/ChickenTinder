@@ -46,7 +46,7 @@ export default class ProfileCard extends React.Component {
 
   render() {
     return (
-      <View style={{ flexDirection: 'row', flex: 1}}>
+      <View style={{ flexDirection: 'row', flex: 1 }}>
         <Image
           source={{
             uri: this.props.image,
@@ -60,9 +60,7 @@ export default class ProfileCard extends React.Component {
             flex: 0.8,
           }}
         >
-          <Text style={{ fontFamily: font, fontSize: 15 }}>
-            {this.props.name}
-          </Text>
+          <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
           <Text style={{ fontFamily: font }}>@{this.props.username}</Text>
         </View>
         {this.state.isFriend && (
@@ -88,10 +86,19 @@ export default class ProfileCard extends React.Component {
                 width: '55%',
                 marginLeft: '25%',
                 alignSelf: 'center',
-                flex: 0.5
+                flex: 0.5,
               }}
             >
-              <Text style={[ { color: this.state.pressed ? 'white' : 'black' , fontFamily:font, alignSelf: 'center', fontSize: 12}]}>
+              <Text
+                style={[
+                  {
+                    color: this.state.pressed ? 'white' : 'black',
+                    fontFamily: font,
+                    alignSelf: 'center',
+                    fontSize: 12,
+                  },
+                ]}
+              >
                 Confirm
               </Text>
             </TouchableHighlight>
@@ -115,10 +122,19 @@ export default class ProfileCard extends React.Component {
                 marginLeft: '5%',
                 marginRight: '5%',
                 alignSelf: 'center',
-                flex: 0.5
+                flex: 0.5,
               }}
             >
-              <Text style={[{ color: this.state.pressed ? 'white' : 'black' , fontFamily:font, alignSelf: 'center', fontSize: 12}]}>
+              <Text
+                style={[
+                  {
+                    color: this.state.pressed ? 'white' : 'black',
+                    fontFamily: font,
+                    alignSelf: 'center',
+                    fontSize: 12,
+                  },
+                ]}
+              >
                 Delete
               </Text>
             </TouchableHighlight>

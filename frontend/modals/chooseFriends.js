@@ -78,12 +78,19 @@ export default class ChooseFriends extends React.Component {
           <View style={styles.main}>
             <View style={styles.header}>
               <Text style={styles.headertext}>Friends</Text>
-              <AntDesign name="closecircleo" style={styles.icon} onPress={() => this.handlePress()} />
+              <AntDesign
+                name="closecircleo"
+                style={styles.icon}
+                onPress={() => this.handlePress()}
+              />
             </View>
             <View style={styles.header2}>
               <Text style={styles.headertext2}>Group PIN: </Text>
               <Text style={styles.headertext3}>ABC123</Text>
-              <Ionicons name="copy-outline" style={styles.icon2} /* onPress={insert function to copy room code}*//>
+              <Ionicons
+                name="copy-outline"
+                style={styles.icon2} /* onPress={insert function to copy room code}*/
+              />
             </View>
             <SearchBar
               containerStyle={{

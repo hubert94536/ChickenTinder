@@ -1,33 +1,19 @@
 import React, { Component } from 'react'
-import {
-  Dimensions,
-  Image,
-  Keyboard,
-  Modal,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableHighlight,
-  View,
-} from 'react-native'
+import { Dimensions, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
-import Icon from 'react-native-vector-icons/FontAwesome'
 import Swiper from 'react-native-swiper'
-import Alert from '../modals/alert.js'
+import PropTypes from 'prop-types'
 import accountsApi from '../apis/accountsApi.js'
-import facebookService from '../apis/facebookService.js'
-import Friends from './friends.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import friendsApi from '../apis/friendsApi.js'
 import NotifCard from '../cards/notifCard.js'
-import TabBar from './frontend/nav.js'
+import TabBar from '../nav.js'
+// import Swipeout from 'react-native-swipeout';
 
 const hex = '#F15763'
-const font = 'CircularStd-Bold'
 var img = ''
 var name = ''
 var username = ''
@@ -56,7 +42,7 @@ export default class Notif extends Component {
       notifs: [],
       activityNotifs: [],
       requestNotifs: [],
-      activity:true,
+      activity: true,
       visible: false,
       changeName: false,
       changeUser: false,
@@ -68,73 +54,67 @@ export default class Notif extends Component {
       deleteAlert: false,
       errorAlert: false,
     }
-  
   }
 
   componentDidMount() {
     // uncomment if testing friends/requests
-    this.getNotifs();
+    this.getNotifs()
     accountsApi.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
-    accountsApi.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
-    accountsApi.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
-    accountsApi.createFBUser('Helen', 5, 'helenthemelon', 'helenw@gmail.com', 'sjdkf'),
-    accountsApi.createFBUser('Kevin', 6, 'kevint', 'kevintang@gmail.com', 'sdfddf'),
-    console.log("My id:" + myId),
-    friendsApi.createFriendshipTest(myId, 2),
-    friendsApi.createFriendshipTest(4, 2),
-    friendsApi.createFriendshipTest(myId, 3),
-    friendsApi.createFriendshipTest(myId, 4),
-    friendsApi.createFriendshipTest(6, myId),
-    friendsApi.acceptFriendRequest(2)
+      accountsApi.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
+      accountsApi.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
+      accountsApi.createFBUser('Helen', 5, 'helenthemelon', 'helenw@gmail.com', 'sjdkf'),
+      accountsApi.createFBUser('Kevin', 6, 'kevint', 'kevintang@gmail.com', 'sdfddf'),
+      console.log('My id:' + myId),
+      friendsApi.createFriendshipTest(myId, 2),
+      friendsApi.createFriendshipTest(4, 2),
+      friendsApi.createFriendshipTest(myId, 3),
+      friendsApi.createFriendshipTest(myId, 4),
+      friendsApi.createFriendshipTest(6, myId),
+      friendsApi.acceptFriendRequest(2)
   }
 
-  
   async getNotifs() {
     // Pushing notifs into this.state.notif
     var pushNotifs = []
     let notifList = [
       {
-        "name": "Hanna Co",
-        "username": "hco",
-        "id": "3",
-        "image": "kjkhkk",
-        "type": "Invite"
+        name: 'Hanna Co',
+        username: 'hco',
+        id: '3',
+        image: 'kjkhkk',
+        type: 'Invite',
       },
       {
-        "name": "Francis Feng",
-        "username": "francis",
-        "id": "8",
-        "image": "sfdsds",
-        "type": "Invite"
+        name: 'Francis Feng',
+        username: 'francis',
+        id: '8',
+        image: 'sfdsds',
+        type: 'Invite',
       },
       {
-        "name": "Hubert Chen",
-        "username": "hubesc",
-        "id": "5",
-        "image": "sdfsdf",
-        "type": "Request"
+        name: 'Hubert Chen',
+        username: 'hubesc',
+        id: '5',
+        image: 'sdfsdf',
+        type: 'Request',
       },
     ]
-    
+
     console.log(notifList)
     for (var notif in notifList) {
       pushNotifs.push(notifList[notif])
     }
-    this.setState({notifs: pushNotifs})
+    this.setState({ notifs: pushNotifs })
   }
-  
 
   render() {
-
     var activityNotifs = []
     var requestNotifs = []
     var notifList = this.state.notifs
     // Create all friend/request cards
     if (Array.isArray(notifList) && notifList.length) {
       for (var i = 0; i < notifList.length; i++) {
-
-        if(notifList[i].type == "Request")
-        {
+        if (notifList[i].type == 'Request') {
           requestNotifs.push(
             <NotifCard
               total={this.state.notifs}
@@ -148,9 +128,7 @@ export default class Notif extends Component {
               press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
             />,
           )
-        }
-        else
-        {
+        } else {
           activityNotifs.push(
             <NotifCard
               total={this.state.notifs}
@@ -165,21 +143,22 @@ export default class Notif extends Component {
             />,
           )
         }
-        
       }
     }
     return (
-      <View style={{ backgroundColor: 'white' }}>
+      <View style={{ backgroundColor: 'white', flex: 1 }}>
         <View>
-          <Text style={[screenStyles.text, styles.NotifTitle]}>Notifications</Text>
-          
+          <Text style={[screenStyles.text, styles.NotifTitle, { fontFamily: 'CircularStd-Bold' }]}>
+            Notifications
+          </Text>
+
           <View style={{ flexDirection: 'row' }}>
             <TouchableHighlight
               underlayColor="#fff"
               style={[
                 // screenStyles.smallButton,
-                this.state.activity ? { backgroundColor: hex } : { backgroundColor: 'white' },
-                { marginLeft: '5%', flex: 0.5},
+                this.state.activity ? { borderBottomColor: hex } : { borderBottomColor: 'white' },
+                { marginLeft: '5%', flex: 0.5, borderBottomWidth: 2 },
               ]}
               onPress={() => this.refs.swiper.scrollBy(-1)}
             >
@@ -187,7 +166,8 @@ export default class Notif extends Component {
                 style={[
                   screenStyles.smallButtonText,
                   styles.selectedText,
-                  this.state.activity ? { color: 'white' } : { color: hex },
+                  // this.state.activity ? { color: 'white' } : { color: hex },
+                  { fontFamily: 'CircularStd-Bold' },
                 ]}
               >
                 Activity
@@ -197,8 +177,8 @@ export default class Notif extends Component {
               underlayColor="#fff"
               style={[
                 // screenStyles.smallButton,
-                !this.state.activity ? { backgroundColor: hex } : { backgroundColor: 'white' },
-                { marginHorizontal: '5%', flex: 0.5},
+                !this.state.activity ? { borderBottomColor: hex } : { borderBottomColor: 'white' },
+                { marginHorizontal: '5%', flex: 0.5, borderBottomWidth: 2 },
               ]}
               onPress={() => this.refs.swiper.scrollBy(1)}
             >
@@ -206,8 +186,7 @@ export default class Notif extends Component {
                 style={[
                   screenStyles.smallButtonText,
                   styles.selectedText,
-                  !this.state.activity ? { color: 'white' } : { color: hex },
-
+                  { fontFamily: 'CircularStd-Bold' },
                 ]}
               >
                 Friend Requests
@@ -228,13 +207,7 @@ export default class Notif extends Component {
             {/* <Friends isFriends={false} /> */}
           </Swiper>
         </View>
-        <TabBar 
-          goHome={() => this.props.navigation.navigate('Home')}
-          goSearch={() => this.props.navigation.navigate('Search')}
-          goNotifs={() => this.props.navigation.navigate('Notifications')}
-          goProfile={() => this.props.navigation.navigate('Profile')}
-          cur='Notifs'
-        />
+
         {this.state.visible && (
           <BlurView
             blurType="light"
@@ -243,10 +216,22 @@ export default class Notif extends Component {
             style={modalStyles.blur}
           />
         )}
-        
+        <TabBar
+          goHome={() => this.props.navigation.navigate('Home')}
+          goSearch={() => this.props.navigation.navigate('Search')}
+          goNotifs={() => this.props.navigation.navigate('Notifications')}
+          goProfile={() => this.props.navigation.navigate('Profile')}
+          cur="Notifs"
+        />
       </View>
     )
   }
+}
+
+Notif.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
 }
 
 const styles = StyleSheet.create({
@@ -255,7 +240,7 @@ const styles = StyleSheet.create({
     paddingTop: '5%',
     paddingLeft: '5%',
     paddingBottom: '5%',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   avatar: {
     width: 100,
