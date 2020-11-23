@@ -39,7 +39,7 @@ export default class Alert extends Component {
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               {this.props.button && (
                 <AntDesign
-                  name='closecircleo'
+                  name="closecircleo"
                   style={modalStyles.icon}
                   onPress={() => this.handleCancel()}
                 />

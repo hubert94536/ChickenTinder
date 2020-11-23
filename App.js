@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import { Text } from 'react-native'
 import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
 import { createAppContainer } from 'react-navigation'
 import firebase from 'firebase'
@@ -8,29 +8,30 @@ import Home from './frontend/screens/home.js'
 // import Invite from './frontend/modals/invite.js'
 import Login from './frontend/screens/login.js'
 import Match from './frontend/screens/match.js'
+import Notif from './frontend/screens/notif.js'
 import Round from './frontend/screens/round.js'
 import Search from './frontend/screens/search.js'
 import Username from './frontend/screens/username.js'
 import UserProfileView from './frontend/screens/profile.js'
 import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
-import TabBar from './frontend/nav.js'
+// import TabBar from './frontend/nav.js'
 
-class Notifications extends React.Component {
-  render() {
-    return (
-      <View style={{flex: 1,justifyContent: 'center', alignItems: 'center',}}>
-        <Text>Notifications</Text>
-        <TabBar 
-          goHome={() => this.props.navigation.navigate('Home')}
-          goSearch={() => this.props.navigation.navigate('Search')}
-          goNotifs={() => this.props.navigation.navigate('Notifications')}
-          goProfile={() => this.props.navigation.navigate('Profile')}
-          cur='Notifs'
-        />
-      </View>
-    )
-  }
-}
+// class Notifications extends React.Component {
+//   render() {
+//     return (
+//       <View style={{flex: 1,justifyContent: 'center', alignItems: 'center',}}>
+//         <Text>Notifications</Text>
+//         <TabBar
+//           goHome={() => this.props.navigation.navigate('Home')}
+//           goSearch={() => this.props.navigation.navigate('Search')}
+//           goNotifs={() => this.props.navigation.navigate('Notifications')}
+//           goProfile={() => this.props.navigation.navigate('Profile')}
+//           cur='Notifs'
+//         />
+//       </View>
+//     )
+//   }
+// }
 
 export default class App extends React.Component {
   constructor() {
@@ -54,8 +55,8 @@ export default class App extends React.Component {
           Home: {
             screen: Home,
             navigationOptions: {
-              animationEnabled: false
-            }
+              animationEnabled: false,
+            },
           },
           Login: {
             screen: Login,
@@ -66,8 +67,8 @@ export default class App extends React.Component {
           Profile: {
             screen: UserProfileView,
             navigationOptions: {
-              animationEnabled: false
-            }
+              animationEnabled: false,
+            },
           },
           Group: {
             screen: Group,
@@ -81,23 +82,23 @@ export default class App extends React.Component {
           Search: {
             screen: Search,
             navigationOptions: {
-              animationEnabled: false
-            }
+              animationEnabled: false,
+            },
           },
           Phone: {
-            screen: PhoneAuthScreen
+            screen: PhoneAuthScreen,
           },
           Notifications: {
-            screen: Notifications,
+            screen: Notif,
             navigationOptions: {
-              animationEnabled: false
-            }
+              animationEnabled: false,
+            },
           },
         },
         {
           initialRouteName: start,
           headerMode: 'none',
-          animationEnabled: false
+          animationEnabled: false,
         },
       )
       unsubscribe()
