@@ -26,7 +26,6 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
 const height = Dimensions.get('window').height
-const width = Dimensions.get('window').width
 var img = ''
 var name = ''
 var username = ''
@@ -144,7 +143,7 @@ export default class UserProfileView extends Component {
         this.setState({ visible: false })
         this.props.navigation.navigate('Login')
       })
-      .catch((error) => {
+      .catch(() => {
         this.setState({ errorAlert: true })
       })
   }
@@ -237,120 +236,22 @@ export default class UserProfileView extends Component {
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                  margin: '5%',
                 }}
               >
-                <Text style={[screenStyles.text, { fontSize: 18, alignSelf: 'center' }]}>
+                <Text
+                  style={[
+                    screenStyles.textBold,
+                    {
+                      fontSize: 20,
+                      marginLeft: '10%',
+                      marginTop: '10%',
+                      marginBottom: '5%',
+                      alignSelf: 'center',
+                    },
+                  ]}
+                >
                   Settings
                 </Text>
-                <AntDesign
-                  name="closecircleo"
-                  style={[screenStyles.text, { fontSize: 30 }]}
-                  onPress={() =>
-                    this.setState({
-                      visible: false,
-                    })
-                  }
-                />
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  margin: '5%',
-                }}
-              >
-                <View>
-                  <Text style={{ fontFamily: font, fontSize: 18 }}>Name:</Text>
-                  <TextInput
-                    style={[screenStyles.text, screenStyles.input]}
-                    value={this.state.nameValue}
-                    onChangeText={(text) => this.setState({ nameValue: text })}
-                  />
-                </View>
-                <TouchableHighlight
-                  style={[
-                    screenStyles.smallButton,
-                    styles.changeButtons,
-                    this.state.changeName ? { backgroundColor: hex } : { backgroundColor: 'white' },
-                  ]}
-                  underlayColor={hex}
-                  onShowUnderlay={() => this.setState({ changeName: true })}
-                  onHideUnderlay={() => this.setState({ changeName: false })}
-                  onPress={() => this.changeName()}
-                >
-                  <Text
-                    style={[
-                      screenStyles.smallButtonText,
-                      this.state.changeName ? { color: 'white' } : { color: hex },
-                    ]}
-                  >
-                    Change
-                  </Text>
-                </TouchableHighlight>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  margin: '5%',
-                }}
-              >
-                <View>
-                  <Text style={{ fontFamily: font, fontSize: 18 }}>Username:</Text>
-                  <TextInput
-                    style={[screenStyles.text, screenStyles.input]}
-                    value={this.state.usernameValue}
-                    onChangeText={(text) => this.setState({ usernameValue: text })}
-                  />
-                </View>
-                <TouchableHighlight
-                  style={[
-                    screenStyles.smallButton,
-                    styles.changeButtons,
-                    this.state.changeUser ? { backgroundColor: hex } : { backgroundColor: 'white' },
-                  ]}
-                  underlayColor={hex}
-                  onShowUnderlay={() => this.setState({ changeUser: true })}
-                  onHideUnderlay={() => this.setState({ changeUser: false })}
-                  onPress={() => this.changeUsername()}
-                >
-                  <Text
-                    style={[
-                      screenStyles.smallButtonText,
-                      this.state.changeUser ? { color: 'white' } : { color: hex },
-                    ]}
-                  >
-                    Change
-                  </Text>
-                </TouchableHighlight>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                }}
-              >
-                <TouchableHighlight
-                  underlayColor={hex}
-                  onShowUnderlay={() => this.setState({ delete: true })}
-                  onHideUnderlay={() => this.setState({ delete: false })}
-                  onPress={() => this.setState({ deleteAlert: true })}
-                  style={[
-                    screenStyles.smallButton,
-                    styles.button,
-                    this.state.delete ? { backgroundColor: hex } : { backgroundColor: 'white' },
-                  ]}
-                >
-                  <Text
-                    style={[
-                      screenStyles.smallButtonText,
-                      this.state.delete ? { color: 'white' } : { color: hex },
-                    ]}
-                  >
-                    Delete
-                  </Text>
-                </TouchableHighlight>
                 <TouchableHighlight
                   underlayColor={hex}
                   onShowUnderlay={() => this.setState({ logout: true })}
@@ -360,6 +261,7 @@ export default class UserProfileView extends Component {
                     screenStyles.smallButton,
                     styles.button,
                     this.state.logout ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                    { width: '28%', borderWidth: 1.5 },
                   ]}
                 >
                   <Text
@@ -371,24 +273,104 @@ export default class UserProfileView extends Component {
                     Logout
                   </Text>
                 </TouchableHighlight>
-                {this.state.deleteAlert && (
-                  <Alert
-                    title="Delete your account?"
-                    body="You will not be able to recover your information"
-                    button
-                    buttonText="Yes"
-                    press={() => this.handleDelete()}
-                    cancel={() => this.cancelDelete()}
-                  />
-                )}
                 {this.state.logoutAlert && (
                   <Alert
                     title="Log Out?"
-                    body="You will have to log back in"
+                    body="Are you sure you want to log out?"
                     button
-                    buttonText="Yes"
+                    buttonText="Logout"
                     press={() => this.handleLogout()}
                     cancel={() => this.cancelLogout()}
+                  />
+                )}
+                <AntDesign
+                  name="closecircleo"
+                  style={[screenStyles.text, { margin: '5%', fontSize: 25 }]}
+                  onPress={() =>
+                    this.setState({
+                      visible: false,
+                    })
+                  }
+                />
+              </View>
+              <View
+                style={{
+                  justifyContent: 'space-between',
+                  marginHorizontal: '10%',
+                }}
+              >
+                <View>
+                  <Text style={[{ fontFamily: font, fontSize: 18 }]}>Email</Text>
+                  <TextInput
+                    style={[
+                      screenStyles.text,
+                      screenStyles.input,
+                      {
+                        color: '#7d7d7d',
+                        fontSize: 15,
+                        alignSelf: 'stretch',
+                        borderBottomWidth: 1,
+                        borderColor: '#7d7d7d',
+                      },
+                    ]}
+                    value={'email@urMom.com'}
+                    onChangeText={(text) => this.setState({ nameValue: text })}
+                  />
+                </View>
+              </View>
+              <View
+                style={{
+                  justifyContent: 'space-between',
+                  marginVertical: '5%',
+                  marginHorizontal: '10%',
+                }}
+              >
+                <Text style={{ fontFamily: font, fontSize: 18 }}>Phone Number</Text>
+                <TextInput
+                  style={[
+                    screenStyles.text,
+                    screenStyles.input,
+                    {
+                      color: '#B2B2B2',
+                      fontSize: 15,
+                      alignSelf: 'stretch',
+                      backgroundColor: '#F2F2F2',
+                      borderWidth: 1,
+                      borderColor: '#E0E0E0',
+                      borderRadius: 5,
+                      paddingHorizontal: 5,
+                      paddingVertical: 2,
+                      marginTop: '3%',
+                    },
+                  ]}
+                  editable={false}
+                  value={'+0 (770) 090-0461'}
+                  onChangeText={(text) => this.setState({ nameValue: text })}
+                />
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                }}
+              >
+                <Text
+                  onPress={() => this.setState({ deleteAlert: true })}
+                  style={[
+                    screenStyles.textBold,
+                    { fontSize: 18, color: 'black', marginRight: '35%' },
+                  ]}
+                >
+                  Delete account...
+                </Text>
+                {this.state.deleteAlert && (
+                  <Alert
+                    title="Delete your account?"
+                    body="By deleting your account, you will lose all of your data"
+                    button
+                    buttonText="Delete"
+                    press={() => this.handleDelete()}
+                    cancel={() => this.cancelDelete()}
                   />
                 )}
                 {this.state.errorAlert && (
@@ -400,15 +382,41 @@ export default class UserProfileView extends Component {
                     cancel={() => this.closeError()}
                   />
                 )}
-                {this.state.takenAlert && (
-                  <Alert
-                    title="Username taken!"
-                    button
-                    buttonText="Close"
-                    press={() => this.closeTaken()}
-                    cancel={() => this.closeTaken()}
-                  />
-                )}
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                }}
+              >
+                <TouchableHighlight
+                  style={[
+                    screenStyles.medButton,
+                    {
+                      backgroundColor: hex,
+                      borderColor: hex,
+                      marginTop: '7%',
+                      width: '50%',
+                    },
+                  ]}
+                  // dummy function for now, replace with function that updates email
+                  onPress={() => {
+                    return true
+                  }}
+                  underlayColor="white"
+                  onShowUnderlay={() => this.setState({ changeName: true })}
+                  onHideUnderlay={() => this.setState({ changeName: false })}
+                >
+                  <Text
+                    style={[
+                      screenStyles.smallButtonText,
+                      { paddingTop: '5%', paddingBottom: '5%', fontSize: 19 },
+                      this.state.changeName ? { color: hex } : { color: 'white' },
+                    ]}
+                  >
+                    Save Changes
+                  </Text>
+                </TouchableHighlight>
               </View>
             </View>
           </Modal>
@@ -549,11 +557,11 @@ const styles = StyleSheet.create({
   },
   modal: {
     height: height * 0.45,
-    width: '75%',
-    margin: '3%',
+    width: '85%',
+    marginTop: '15%',
     backgroundColor: 'white',
-    alignSelf: 'flex-end',
-    borderRadius: 30,
+    alignSelf: 'center',
+    borderRadius: 15,
     elevation: 20,
   },
   changeButtons: {
