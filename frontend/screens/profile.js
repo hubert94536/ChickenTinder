@@ -56,6 +56,8 @@ export default class UserProfileView extends Component {
       logoutAlert: false,
       deleteAlert: false,
       errorAlert: false,
+      // friends text
+      numFriends: 0,
     }
   }
 
@@ -159,12 +161,19 @@ export default class UserProfileView extends Component {
     }
   }
 
+  handleFriendsCount = (n) => {
+    this.setState({numFriends: n})
+  }
+
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <View style={{ backgroundColor: 'white', height: '90%' }}>
           <View>
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <View
+                style={[screenStyles.icons, { width: 27, margin: '5%', textAlign: 'right' }]}
+              ></View>
               <Text style={[screenStyles.text, styles.myProfile]}>Profile</Text>
               <Icon
                 name="cog-outline"
@@ -179,13 +188,16 @@ export default class UserProfileView extends Component {
               style={styles.avatar}
             />
             <View style={{ alignItems: 'center' }}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <View
+                  style={{ width: 20, marginTop: '4%', marginLeft: '1%' }}
+                ></View>
                 <Text style={{ fontFamily: font, fontSize: 20, marginTop: '4%' }}>
                   {this.state.name}
                 </Text>
                 <Icon
                   name="pencil-outline"
-                  style={{ fontSize: 20, marginTop: '4%', marginLeft: '2%' }}
+                  style={{ fontSize: 20, marginTop: '4%', marginLeft: '1%' }}
                   onPress={() => this.setState({ edit: true })}
                 />
               </View>
@@ -193,11 +205,21 @@ export default class UserProfileView extends Component {
                 {'@' + this.state.usernameValue}
               </Text>
             </View>
-            <Text style={{ fontFamily: font, marginLeft: '7%', fontSize: 17 }}>Your Friends</Text>
-            <Text style={[screenStyles.text, { marginLeft: '8%' }]}>6 friends</Text>
+            <Text
+              style={{
+                fontFamily: font,
+                marginTop: '5%',
+                marginLeft: '7%',
+                fontSize: 20,
+                fontWeight: 'bold',
+              }}
+            >
+              Your Friends
+            </Text>
+            <Text style={[screenStyles.text, { marginLeft: '7%', fontSize: 17 }]}>{this.state.numFriends + ' friends'}</Text>
           </View>
           <View style={{ height: '100%', marginTop: '0%' }}>
-            <Friends isFriends />
+            <Friends isFriends onFriendsChange={this.handleFriendsCount}/>
           </View>
 
           {(this.state.visible || this.state.edit) && (
@@ -464,6 +486,7 @@ export default class UserProfileView extends Component {
                   ]}
                   value={this.state.nameValue}
                   onChangeText={(text) => this.setState({ nameValue: text })}
+                  onSubmitEditing={() => this.makeChanges()}
                 />
                 <Text style={[screenStyles.text, { color: 'black', marginBottom: '2%' }]}>
                   Username
@@ -481,6 +504,7 @@ export default class UserProfileView extends Component {
                   ]}
                   value={this.state.usernameValue}
                   onChangeText={(text) => this.setState({ usernameValue: text })}
+                  onSubmitEditing={() => this.makeChanges()}
                 />
               </View>
               <TouchableHighlight
@@ -522,7 +546,7 @@ const styles = StyleSheet.create({
   myProfile: {
     fontSize: 25,
     alignSelf: 'center',
-    marginRight: '25%',
+    marginRight: '0%',
   },
   avatar: {
     width: 100,
