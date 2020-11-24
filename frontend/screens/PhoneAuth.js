@@ -204,6 +204,7 @@ class PhoneAuthScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor:'#FFFFFF',
   },
   page: {
     flex: 1,
