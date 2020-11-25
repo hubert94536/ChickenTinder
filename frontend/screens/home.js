@@ -7,6 +7,8 @@ import Join from '../modals/join.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import TabBar from '../nav.js'
+import friendsApi from '../apis/friendsApi.js'
+import accountsApi from '../apis/accountsApi.js'
 
 var img = ''
 var name = ''
@@ -169,20 +171,18 @@ class Home extends React.Component {
           goProfile={() => this.props.navigation.navigate('Profile')}
           cur="Home"
         />
-        {this.state.join && (
           <Join
-            image={this.state.inviteInfo.pic}
+            visible={this.state.join}
             username={this.state.inviteInfo.username}
             name={this.state.inviteInfo.name}
             cancel={() => this.setState({ join: false })}
             onPress={() => this.setState({ join: false })}
           />
-        )}
         {this.state.errorAlert && (
           <Alert
             title="Error, please try again"
-            button
-            buttonText="Close"
+            buttonAff="Close"
+            height='20%'
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />

@@ -18,6 +18,7 @@ export default class Round extends React.Component {
       host: this.props.navigation.state.params.host,
       isHost: this.props.navigation.state.params.isHost,
       instr: true,
+      index: 1,
     }
     socket.getSocket().on('match', (data) => {
       this.props.navigation.navigate('Match', {
@@ -67,6 +68,7 @@ export default class Round extends React.Component {
             stackSize={3}
             disableBottomSwipe
             disableTopSwipe
+            onSwiped={() => this.setState({index: (this.state.index+1)})}
             onSwipedRight={(cardIndex) => this.likeRestaurant(this.state.results[cardIndex].id)}
             stackSeparation={0}
             backgroundColor="transparent"
@@ -99,7 +101,7 @@ export default class Round extends React.Component {
                 { textAlign: 'right', fontSize: 15, marginRight: '7%', marginTop: '7%' },
               ]}
             >
-              Restaurant 2/20
+              Restaurant {this.state.index}/{this.state.results.length}
             </Text>
           </Swiper>
         </View>
