@@ -61,14 +61,21 @@ export default class UserProfileView extends Component {
     }
   }
 
+  componentDidMount(){
+    AsyncStorage.getItem(USERNAME).then((res) => this.setState({ username: res }))
+    AsyncStorage.getItem(PHOTO).then((res) => this.setState({ image: res }))
+    AsyncStorage.getItem(NAME).then((res) => this.setState({ name: res }))
+  }
+
   // getting current user's info
   async changeName() {
     if (this.state.nameValue !== this.state.name) {
+      const name = this.state.nameValue
       return accountsApi
-        .updateName(this.state.nameValue)
+        .updateName(name)
         .then(() => {
           // update name locally
-          AsyncStorage.setItem(NAME, this.state.name)
+          AsyncStorage.setItem(NAME, name)
           this.setState({ name: this.state.nameValue })
           Keyboard.dismiss()
         })
@@ -157,6 +164,10 @@ export default class UserProfileView extends Component {
       this.changeName()
     }
     if (this.state.username !== this.state.usernameValue) {
+      if (this.state.usernameValue[0] === '@') {
+        var userTemp = this.state.usernameValue.slice(1)
+        this.setState({ usernameValue: userTemp })
+      }
       this.changeUsername()
     }
   }
@@ -216,12 +227,11 @@ export default class UserProfileView extends Component {
             >
               Your Friends
             </Text>
-            <Text style={[screenStyles.text, { marginLeft: '7%', fontSize: 17 }]}>{this.state.numFriends + ' friends'}</Text>
+            <Text style={[screenStyles.text, { marginLeft: '7%', fontSize: 17, fontFamily:'CircularStd-Medium' }]}>{this.state.numFriends + ' friends'}</Text>
           </View>
-          <View style={{ height: '100%', marginTop: '0%' }}>
+          <View style={{ height: '50%', marginTop: '0%' }}>
             <Friends isFriends onFriendsChange={this.handleFriendsCount}/>
           </View>
-
           {(this.state.visible || this.state.edit) && (
             <BlurView
               blurType="dark"
@@ -529,6 +539,51 @@ export default class UserProfileView extends Component {
               </TouchableHighlight>
             </View>
           </Modal>
+          {this.state.deleteAlert && (
+            <BlurView blurType="dark" blurAmount={10} reducedTransparencyFallbackColor="black" />
+          )}
+          {this.state.deleteAlert && (
+            <Alert
+              title="Delete account?"
+              body="By deleting your account, you will lose all of your data"
+              buttonAff="Delete"
+              buttonNeg="Go back"
+              twoButton
+              height="27%"
+              press={() => this.handleDelete()}
+              cancel={() => this.cancelDelete()}
+            />
+          )}
+          {this.state.logoutAlert && (
+            <Alert
+              title="Log out"
+              body="Are you sure you want to log out?"
+              buttonAff="Logout"
+              buttonNeg="Go back"
+              height="25%"
+              twoButton
+              press={() => this.handleLogout()}
+              cancel={() => this.cancelLogout()}
+            />
+          )}
+          {this.state.errorAlert && (
+            <Alert
+              title="Error, please try again"
+              buttonAff="Close"
+              height='20%'
+              press={() => this.setState({ errorAlert: false })}
+              cancel={() => this.setState({ errorAlert: false })}
+            />
+          )}
+          {this.state.takenAlert && (
+            <Alert
+              title="Username taken!"
+              buttonAff="Close"
+              height='20%'
+              press={() => this.closeTaken()}
+              cancel={() => this.closeTaken()}
+            />
+          )}
         </View>
         <TabBar
           goHome={() => this.props.navigation.navigate('Home')}

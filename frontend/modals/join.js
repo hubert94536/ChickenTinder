@@ -8,7 +8,6 @@ import screenStyles from '../../styles/screenStyles.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
 const hex = '#F15763'
-const font = 'CircularStd-Medium'
 //  props are name, image url, and functions for cancel and go
 // invite alert
 
@@ -42,7 +41,7 @@ export default class Join extends React.Component {
   render() {
     return (
       <View>
-        <Modal transparent animationType="none">
+        <Modal transparent animationType="none" visible={this.props.visible}>
           <View style={[modalStyles.modal, { flex: 0, height: 180, borderRadius: 15 }]}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               <AntDesign
@@ -123,12 +122,3 @@ Join.propTypes = {
   onPress: PropTypes.func,
   name: PropTypes.string,
 }
-
-const styles = StyleSheet.create({
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 63,
-    borderWidth: 4,
-  },
-})
