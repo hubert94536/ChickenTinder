@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Swiper from 'react-native-swiper'
 import PropTypes from 'prop-types'
+import Alert from '../modals/alert.js'
 import accountsApi from '../apis/accountsApi.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
@@ -53,6 +54,7 @@ export default class Notif extends Component {
       logoutAlert: false,
       deleteAlert: false,
       errorAlert: false,
+      deleteFriend: false,
     }
   }
 
@@ -126,6 +128,10 @@ export default class Notif extends Component {
               key={i}
               index={i}
               press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
+              showError={() => this.setState({errorAlert: true})}
+              removeError={() => this.setState({errorAlert: false})}
+              showDelete={() => this.setState({deleteFriend: true})}
+              removeDelete={() => this.setState({deleteFriend: false})}
             />,
           )
         } else {
@@ -140,6 +146,10 @@ export default class Notif extends Component {
               key={i}
               index={i}
               press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
+              showError={() => this.setState({errorAlert: true})}
+              removeError={() => this.setState({errorAlert: false})}
+              showDelete={() => this.setState({deleteFriend: true})}
+              removeDelete={() => this.setState({deleteFriend: false})}
             />,
           )
         }
@@ -208,12 +218,31 @@ export default class Notif extends Component {
           </Swiper>
         </View>
 
-        {this.state.visible && (
+        {(this.state.visible || this.state.errorAlert || this.state.deleteFriend) && (
           <BlurView
-            blurType="light"
-            blurAmount={20}
+            blurType="dark"
+            blurAmount={10}
             reducedTransparencyFallbackColor="white"
             style={modalStyles.blur}
+          />
+        )}
+        {this.state.deleteFriend && (
+          <Alert
+            title="Are you sure?"
+            body={'You are about to remove @' + this.props.username + ' as a friend'}
+            buttonAff="Delete"
+            height='25%'
+            press={() => this.deleteFriend()}
+            cancel={() => this.setState({ deleteFriend: false })}
+          />
+        )}
+        {this.state.errorAlert && (
+          <Alert
+            title="Error, please try again"
+            buttonAff="Close"
+            height='20%'
+            press={() => this.setState({ errorAlert: false })}
+            cancel={() => this.setState({ errorAlert: false })}
           />
         )}
         <TabBar
