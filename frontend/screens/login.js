@@ -1,13 +1,13 @@
 import React from 'react'
-import {Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import Alert from '../modals/alert.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import imgStyles from '../../styles/cardImage.js'
 import facebookService from '../apis/facebookService.js'
 import screenStyles from '../../styles/screenStyles.js'
+import PropTypes from 'prop-types'
 
 const hex = '#F15763'
-const font = 'CircularStd-Bold'
 
 export default class Login extends React.Component {
   constructor() {
@@ -41,58 +41,97 @@ export default class Login extends React.Component {
 
   render() {
     return (
-      <View style= {[{backgroundColor: 'white', flex: 1}]}>
-        
-        <Image source={require('../assets/images/logo2.png')} style = {{alignSelf: 'center', width: 200, height: 248, marginTop: '12%'}}/>
-        <Text style={[screenStyles.text, screenStyles.title, { fontFamily: 'CircularStd-Bold', fontSize: 30, marginTop: '2.5%' , marginBottom: '10%', fontWeight: 'bold'}]}>Let's Get Chews-ing!</Text>
+      <View style={[{ backgroundColor: 'white', flex: 1 }]}>
+        <Image
+          source={require('../assets/images/logo2.png')}
+          style={{ alignSelf: 'center', width: 200, height: 248, marginTop: '12%' }}
+        />
+        <Text
+          style={[
+            screenStyles.text,
+            screenStyles.title,
+            {
+              fontFamily: 'CircularStd-Bold',
+              fontSize: 30,
+              marginTop: '2.5%',
+              marginBottom: '10%',
+              fontWeight: 'bold',
+            },
+          ]}
+        >
+          Let's Get Chews-ing!
+        </Text>
         <TouchableHighlight
           onShowUnderlay={() => this.setState({ phonePressed: true })}
           onHideUnderlay={() => this.setState({ phonePressed: false })}
           activeOpacity={1}
           underlayColor={'white'}
           onPress={() => this.props.navigation.navigate('Phone')}
-          style={[screenStyles.medButton, styles.button, { borderColor: hex, backgroundColor:hex}]}
+          style={[
+            screenStyles.medButton,
+            styles.button,
+            { borderColor: hex, backgroundColor: hex },
+          ]}
         >
-
           <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-              <Icon style={[imgStyles.icon, { fontSize: 22, color: 'white',  marginRight: '5%' }]} name="phone" />
-              <Text
+            <Icon
+              style={[imgStyles.icon, { fontSize: 22, color: 'white', marginRight: '5%' }]}
+              name="phone"
+            />
+            <Text
               style={[
                 styles.buttonText,
-                this.state.phonePressed ? { color: hex} : { color: 'white' },
+                this.state.phonePressed ? { color: hex } : { color: 'white' },
               ]}
-              >
-                Login with Phone
-                </Text>
+            >
+              Login with Phone
+            </Text>
           </View>
-          
-
         </TouchableHighlight>
         <TouchableHighlight
           onShowUnderlay={() => this.setState({ pressed: true })}
           onHideUnderlay={() => this.setState({ pressed: false })}
           activeOpacity={1}
-          underlayColor='white'
+          underlayColor="white"
           onPress={() => this.login()}
-          style={[screenStyles.medButton, styles.button, {borderColor: '#3b5998', backgroundColor:'#3b5998' }]}
+          style={[
+            screenStyles.medButton,
+            styles.button,
+            { borderColor: '#3b5998', backgroundColor: '#3b5998' },
+          ]}
         >
           <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-              <Icon style={[imgStyles.icon, { fontSize: 22, color: 'white',  marginRight: '5%' }]} name="facebook-official" />
-              <Text
+            <Icon
+              style={[imgStyles.icon, { fontSize: 22, color: 'white', marginRight: '5%' }]}
+              name="facebook-official"
+            />
+            <Text
               style={[
                 styles.buttonText,
-                this.state.pressed ? { color: '#3b5998' } : { color: 'white'},
+                this.state.pressed ? { color: '#3b5998' } : { color: 'white' },
               ]}
-              >
-                Login with Facebook
-              </Text>
+            >
+              Login with Facebook
+            </Text>
           </View>
-          
         </TouchableHighlight>
 
-        <Text style={[screenStyles.text, { fontFamily: 'CircularStd-Book', alignSelf: 'center', marginHorizontal: '15%', marginTop: '7.5%',fontSize: 13, textAlign: 'center', lineHeight: 17}]}>
+        <Text
+          style={[
+            screenStyles.text,
+            {
+              fontFamily: 'CircularStd-Book',
+              alignSelf: 'center',
+              marginHorizontal: '15%',
+              marginTop: '7.5%',
+              fontSize: 13,
+              textAlign: 'center',
+              lineHeight: 17,
+            },
+          ]}
+        >
           By clicking log in, you agree with our Terms and Conditions.
-          </Text>
+        </Text>
 
         {this.state.alert && (
           <Alert
@@ -116,6 +155,12 @@ export default class Login extends React.Component {
       </View>
     )
   }
+}
+
+Login.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
 }
 
 const styles = StyleSheet.create({

@@ -1,5 +1,14 @@
 import React from 'react'
-import { Dimensions, Modal, Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
+import {
+  Dimensions,
+  Modal,
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  View,
+} from 'react-native'
 import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import accountsApi from '../apis/accountsApi.js'
@@ -10,7 +19,7 @@ import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import TabBar from '../nav.js'
 import Icon from 'react-native-vector-icons/AntDesign'
-import SwitchButton from 'switch-button-react-native';
+import SwitchButton from 'switch-button-react-native'
 
 var img = ''
 var name = ''

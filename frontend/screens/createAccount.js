@@ -1,19 +1,13 @@
 import React from 'react'
 import AsyncStorage from '@react-native-community/async-storage'
 import { EMAIL, NAME, PHOTO, USERNAME, ID, PHONE } from 'react-native-dotenv'
-import {Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import imgStyles from '../../styles/cardImage.js'
+import { Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import accountsApi from '../apis/accountsApi.js'
-import facebookService from '../apis/facebookService.js'
 import screenStyles from '../../styles/screenStyles.js'
+import PropTypes from 'prop-types'
 
 const hex = '#F15763'
-const textColor = '#6A6A6A';
-const font = 'CircularStd-Bold'
-var img = ''
-
-AsyncStorage.getItem(PHOTO).then((res) => (img = res))
+const textColor = '#6A6A6A'
 
 export default class createAccount extends React.Component {
   constructor() {
@@ -22,12 +16,12 @@ export default class createAccount extends React.Component {
       pressed: false,
       alert: false,
       errorAlert: false,
-      name: "",
-      username: "",
-      phone: "",
-      email: "",
+      name: '',
+      username: '',
+      phone: '',
+      email: '',
       id: 22,
-      photo: ""
+      photo: '',
     }
   }
 
@@ -38,10 +32,7 @@ export default class createAccount extends React.Component {
       email: await AsyncStorage.getItem(EMAIL),
       photo: await AsyncStorage.getItem(PHOTO),
       phone: await AsyncStorage.getItem(PHONE),
-
     })
-    accountsApi.deleteUser()
-    console.log(this.state.id)
   }
 
   //  checks whether or not the username can be set
@@ -80,67 +71,88 @@ export default class createAccount extends React.Component {
     this.props.navigation.navigate('Home')
   }
 
-  uploadPhoto()
-  {
-      console.log("upload photo")
+  uploadPhoto() {
+    console.log('upload photo')
   }
 
   render() {
     return (
-      <View style= {[{backgroundColor: 'white', flex: 1}]}>
-        <Text style={[screenStyles.text, screenStyles.title, { fontFamily: 'CircularStd-Bold', fontSize: 25, marginTop: '10%', marginBottom: '5%' , fontWeight: 'bold'}]}>Create Account</Text>
+      <View style={[{ backgroundColor: 'white', flex: 1 }]}>
+        <Text
+          style={[
+            screenStyles.text,
+            screenStyles.title,
+            {
+              fontFamily: 'CircularStd-Bold',
+              fontSize: 25,
+              marginTop: '10%',
+              marginBottom: '5%',
+              fontWeight: 'bold',
+            },
+          ]}
+        >
+          Create Account
+        </Text>
         <Text style={[styles.mediumText]}>Account Verified!</Text>
         <Text style={[styles.mediumText]}>Finish setting up your account</Text>
         <Image
-              source={{
-                uri: this.state.photo,
-              }}
-              style={styles.avatar}
-            />
-        <Text style={[styles.mediumText, {fontSize: 15, color: hex, fontWeight: 'bold', marginBottom: '5%'}]} onPress={() => this.uploadPhoto()}>Upload Profile Photo</Text>
+          source={{
+            uri: this.state.photo,
+          }}
+          style={styles.avatar}
+        />
+        <Text
+          style={[
+            styles.mediumText,
+            { fontSize: 15, color: hex, fontWeight: 'bold', marginBottom: '5%' },
+          ]}
+          onPress={() => this.uploadPhoto()}
+        >
+          Upload Profile Photo
+        </Text>
         <Text style={[styles.mediumText, styles.fieldName]}>Display Name</Text>
         <TextInput
-            style={[styles.fieldText]}
-            textAlign="left"
-            placeholder="Name"
-            onChangeText={(name) => {
-              this.setState({ name })
-            }}
-            value={this.state.name}
-          />
-        
+          style={[styles.fieldText]}
+          textAlign="left"
+          placeholder="Name"
+          onChangeText={(name) => {
+            this.setState({ name })
+          }}
+          value={this.state.name}
+        />
+
         <Text style={[styles.mediumText, styles.fieldName]}>Username</Text>
         <TextInput
-            style={[styles.fieldText]}
-            textAlign="left"
-            placeholder="@username"
-            onChangeText={(username) => {
-              this.setState({ username })
-            }}
-            value={this.state.username}
-          />
+          style={[styles.fieldText]}
+          textAlign="left"
+          placeholder="@username"
+          onChangeText={(username) => {
+            this.setState({ username })
+          }}
+          value={this.state.username}
+        />
 
         <Text style={[styles.mediumText, styles.fieldName]}>Phone Number</Text>
         <TextInput
-            style={[styles.fieldText]}
-            textAlign="left"
-            placeholder="(xxx)xxx-xxxx"
-            onChangeText={(phone) => {
-              this.setState({ phone })
-            }}
-            value={this.state.phone}
-          />
+          style={[styles.fieldText]}
+          textAlign="left"
+          placeholder="(xxx)xxx-xxxx"
+          onChangeText={(phone) => {
+            this.setState({ phone })
+          }}
+          value={this.state.phone}
+        />
 
         <Text style={[styles.mediumText, styles.fieldName]}>Email</Text>
         <TextInput
-            style={[styles.fieldText]}
-            textAlign="left"
-            placeholder="email@domain.com"
-            onChangeText={(email) => {
-              this.setState({ email })
-            }}
-            value={this.state.email}
-          />
+          style={[styles.fieldText]}
+          textAlign="left"
+          placeholder="email@domain.com"
+          onChangeText={(email) => {
+            this.setState({ email })
+          }}
+          value={this.state.email}
+        />
 
         <TouchableHighlight
           onShowUnderlay={() => this.setState({ finishPressed: true })}
@@ -148,28 +160,33 @@ export default class createAccount extends React.Component {
           activeOpacity={1}
           underlayColor={'white'}
           onPress={() => this.handleClick()}
-          style={[screenStyles.medButton, styles.button, { borderColor: hex, backgroundColor:hex}]}
+          style={[
+            screenStyles.medButton,
+            styles.button,
+            { borderColor: hex, backgroundColor: hex },
+          ]}
         >
-
           <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-              <Text
+            <Text
               style={[
                 styles.buttonText,
-                this.state.phonePressed ? { color: hex} : { color: 'white' },
+                this.state.phonePressed ? { color: hex } : { color: 'white' },
               ]}
-              >
-                Finish
-                </Text>
+            >
+              Finish
+            </Text>
           </View>
-          
-
         </TouchableHighlight>
-    
       </View>
     )
   }
 }
 
+createAccount.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
+}
 const styles = StyleSheet.create({
   button: {
     borderColor: '#3b5998',
@@ -187,31 +204,31 @@ const styles = StyleSheet.create({
   },
   mediumText: {
     fontFamily: 'CircularStd-Medium',
-    alignSelf: 'center', 
-    fontSize: 18.5, 
-    color: textColor
+    alignSelf: 'center',
+    fontSize: 18.5,
+    color: textColor,
   },
   fieldText: {
-    fontFamily: 'CircularStd-Book', 
-    fontSize: 18, 
+    fontFamily: 'CircularStd-Book',
+    fontSize: 18,
     color: textColor,
     marginHorizontal: '12%',
     marginBottom: '3%',
     paddingVertical: '1%',
     borderBottomColor: textColor,
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
   },
   fieldName: {
-    alignSelf: 'flex-start', 
+    alignSelf: 'flex-start',
     color: 'black',
-    marginLeft: '10%'
+    marginLeft: '10%',
   },
   avatar: {
     width: 100,
     height: 100,
     borderRadius: 63,
     borderWidth: 4,
-    alignSelf:'center',
-    margin: '1.5%'
-  }
+    alignSelf: 'center',
+    margin: '1.5%',
+  },
 })
