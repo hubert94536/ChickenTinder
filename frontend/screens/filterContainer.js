@@ -38,7 +38,8 @@ class DraggableView extends Component {
       initialUsedSpace: initialUsedSpace,
     }
 
-    this.open()
+    this.state.position.setValue(-1 * SCREEN_HEIGHT)
+    // this.open()
   }
 
   componentDidUpdate(nextProps) {
@@ -177,6 +178,7 @@ DraggableView.propTypes = {
   renderDrawerView: PropTypes.func,
   renderHeader: PropTypes.func,
   autoDrawerUp: PropTypes.bool,
+  initialDrawerSize: PropTypes.number,
 }
 
 DraggableView.defaultProps = {
