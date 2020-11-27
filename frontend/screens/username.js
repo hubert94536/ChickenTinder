@@ -113,17 +113,17 @@ class Username extends React.Component {
         {this.state.errorAlert && (
           <Alert
             title="Error, please try again"
-            button
-            buttonText="Close"
-            press={() => this.closeError()}
-            cancel={() => this.closeError()}
+            buttonAff="Close"
+            height='20%'
+            press={() => this.setState({ errorAlert: false })}
+            cancel={() => this.setState({ errorAlert: false })}
           />
         )}
         {this.state.takenAlert && (
           <Alert
             title="Username taken!"
-            button
-            buttonText="Close"
+            buttonAff="Close"
+            height='20%'
             press={() => this.closeTaken()}
             cancel={() => this.closeTaken()}
           />

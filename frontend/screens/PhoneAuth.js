@@ -2,10 +2,12 @@ import React, { Component } from 'react'
 import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import auth from '@react-native-firebase/auth'
 import Alert from '../modals/alert.js'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
 
 const hex = '#F15763'
 const font = 'CircularStd-Bold'
+const fontMed = 'CirularStd-Medium'
 
 class PhoneAuthScreen extends Component {
   constructor(props) {
@@ -91,14 +93,49 @@ class PhoneAuthScreen extends Component {
     )
   }
 
+  // Navigate to login
+  async handleBack() {
+    this.props.navigation.navigate('Login')
+  }
+
   render() {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: hex }]}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.page}>
+          <AntDesign
+            name="arrowleft"
+            style={{
+              fontSize: 30,
+              color: hex,
+              flexDirection: 'row',
+              alignSelf: 'flex-start',
+              marginTop: '5%',
+              marginLeft: '5%',
+            }}
+            onPress={() => {
+              this.handleBack()
+            }}
+          />
+          <View alignItems="center">
+            <Text style={{ fontFamily: font, fontSize: 30, color: hex }}>Enter your number</Text>
+            <Text
+              style={{
+                textAlign: 'center',
+                flexDirection: 'row',
+                fontFamily: fontMed,
+                fontSize: 20,
+                color: '#6A6A6A',
+                marginTop: '5%',
+                marginBottom: '40%',
+              }}
+            >
+              Enter your phone number for a text message verification code
+            </Text>
+          </View>
           <TextInput
-            style={styles.textInput}
+            style={[styles.textInput, { marginTop: '0%', marginBottom: '50%' }]}
             placeholder="Phone Number (+1 xxx xxx xxxx)"
-            placeholderTextColor="#eee"
+            placeholderTextColor="#6A6A6A"
             keyboardType="phone-pad"
             value={this.state.phone}
             onChangeText={(num) => {
@@ -121,11 +158,11 @@ class PhoneAuthScreen extends Component {
 
           {!this.state.confirmResult && (
             <TouchableOpacity
-              style={[styles.themeButton, { marginTop: 20 }]}
+              style={[styles.themeButton, { marginTop: 0, marginBottom: '10%' }]}
               onPress={() => this.handleSendCode()}
             >
               <Text style={styles.themeButtonTitle}>
-                {this.state.confirmResult ? 'Change Phone Number' : 'Send Code'}
+                {this.state.confirmResult ? 'Change Phone Number' : 'Submit'}
               </Text>
             </TouchableOpacity>
           )}
@@ -135,8 +172,8 @@ class PhoneAuthScreen extends Component {
         {this.state.errorAlert && (
           <Alert
             title="Error, please try again"
-            button
-            buttonText="Close"
+            buttonAff="Close"
+            height='20%'
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />
@@ -144,8 +181,8 @@ class PhoneAuthScreen extends Component {
         {this.state.invalidNumberAlert && (
           <Alert
             title="Invalid Phone Number"
-            button
-            buttonText="Close"
+            buttonAff="Close"
+            height='20%'
             press={() => this.setState({ invalidNumberAlert: false })}
             cancel={() => this.setState({ invalidNumberAlert: false })}
           />
@@ -153,8 +190,8 @@ class PhoneAuthScreen extends Component {
         {this.state.badCodeAlert && (
           <Alert
             title="Please enter a 6 digit OTP code."
-            button
-            buttonText="Close"
+            buttonAff="Close"
+            height='20%'
             press={() => this.setState({ badCodeAlert: false })}
             cancel={() => this.setState({ badCodeAlert: false })}
           />
@@ -167,24 +204,23 @@ class PhoneAuthScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: hex,
+    backgroundColor: '#FFFFFF',
   },
   page: {
     flex: 1,
     height: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
   },
   textInput: {
-    fontFamily: font,
+    fontFamily: fontMed,
     marginTop: 20,
     width: '90%',
-    borderColor: '#fff',
-    borderWidth: 2,
+    borderColor: '#A5A5A5',
     borderWidth: 0,
     borderBottomWidth: 2,
     paddingLeft: 10,
-    color: '#fff',
+    color: '#6A6A6A',
     fontSize: 20,
   },
   themeButton: {
@@ -193,15 +229,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: hex,
-    borderColor: '#fff',
+    borderColor: '#FFFFFF',
     borderWidth: 2,
     borderRadius: 30,
   },
   themeButtonTitle: {
-    fontFamily: font,
+    fontFamily: fontMed,
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
+    color: '#FFFFFF',
   },
   verificationView: {
     width: '100%',
