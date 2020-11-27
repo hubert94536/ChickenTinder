@@ -259,13 +259,18 @@ export default class FilterSelector extends React.Component {
   render() {
     return (
       <View style={styles.mainContainer}>
-        <View style={styles.titleStyle}>
-          <Text style={[screenStyles.text, { fontSize: 28, color: 'white', textAlign: 'center' }]}>
-            {this.state.isHost ? 'Group Settings' : 'Your Filters'}
-          </Text>
-        </View>
-        <ScrollView>
+        {/* Title */}
+        {this.state.isHost && (
+          <View style={styles.titleStyle}>
+            <Text
+              style={[screenStyles.text, { fontSize: 28, color: 'white', textAlign: 'center' }]}
+            >
+              Group Settings
+            </Text>
+          </View>
+        )}
 
+        <ScrollView>
           {/* TODO: Update Buttom Label */}
           {/* Majority Rule */}
           {this.state.isHost && (
@@ -461,6 +466,14 @@ export default class FilterSelector extends React.Component {
             </View>
           )}
 
+          <View style={styles.smallTitle}>
+            <Text
+              style={[screenStyles.text, { fontSize: 28, color: 'white', textAlign: 'center' }]}
+            >
+              Your Filters
+            </Text>
+          </View>
+
           {/* CUISINES */}
           <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '1%' }}>
             <Text style={[screenStyles.text, styles.header]}>Cuisines</Text>
@@ -577,6 +590,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     margin: '5%',
+  },
+  smallTitle: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: '3%',
   },
   titleSub: {
     color: 'white',
