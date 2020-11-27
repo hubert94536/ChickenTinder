@@ -22,6 +22,7 @@ import Socket from '../apis/socket.js'
 import TagsView from '../tagsView'
 import Location from '../modals/chooseLocation.js'
 import Time from '../modals/chooseTime.js'
+import Size from '../modals/chooseSize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
@@ -90,6 +91,8 @@ export default class FilterSelector extends React.Component {
       asap: true,
       lat: 0,
       long: 0,
+      size: 6,
+      majority: this.props.members.length,
       selectedCuisine: [],
       selectedPrice: [],
       selectedRestriction: [],
@@ -262,19 +265,21 @@ export default class FilterSelector extends React.Component {
           </Text>
         </View>
         <ScrollView>
+
+          {/* TODO: Update Buttom Label */}
           {/* Majority Rule */}
           {this.state.isHost && (
             <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '1%' }}>
               <View style={{ flexDirection: 'row' }}>
                 <Text style={[screenStyles.text, styles.header]}>Majority</Text>
-                <Text style={styles.subtext}>Max number of restaurants</Text>
+                <Text style={styles.subtext}>Members needed to get a match</Text>
               </View>
               <TagsView
                 all={tagsMajority}
                 selected={this.state.selectedMajority}
                 isExclusive={true}
                 onChange={(event) => {
-                  if (event === 'Custom: ') {
+                  if (event[0] === 'Custom: ') {
                     this.setState({ chooseMajority: true })
                   }
 
@@ -284,6 +289,7 @@ export default class FilterSelector extends React.Component {
             </View>
           )}
 
+          {/* TODO: Update Buttom Label */}
           {/* Round Size */}
           {this.state.isHost && (
             <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '1%' }}>
@@ -295,7 +301,13 @@ export default class FilterSelector extends React.Component {
                 all={tagsSizes}
                 selected={this.state.selectedSize}
                 isExclusive={true}
-                onChange={(event) => this.setState({ selectedSize: event })}
+                onChange={(event) => {
+                  if (event[0] === 'Custom: ') {
+                    this.setState({ chooseSize: true })
+                  }
+                  console.log(event)
+                  this.setState({ selectedSize: event })
+                }}
               />
             </View>
           )}
@@ -525,6 +537,22 @@ export default class FilterSelector extends React.Component {
           visible={this.state.chooseTime}
           cancel={() => this.setState({ chooseTime: false })}
           press={(hr, min) => this.setState({ hour: hr, minute: min, chooseTime: false })}
+        />
+        <Size
+          max={50}
+          title={'Round Size'}
+          subtext={'Choose the max number of restaurants to swipe through'}
+          visible={this.state.chooseSize}
+          cancel={() => this.setState({ chooseSize: false })}
+          press={(sz) => this.setState({ size: sz, chooseSize: false })}
+        />
+        <Size
+          max={this.props.members.length}
+          title={'Majority'}
+          subtext={'Choose the number of members needed to get a match'}
+          visible={this.state.chooseMajority}
+          cancel={() => this.setState({ chooseMajority: false })}
+          press={(sz) => this.setState({ majority: sz, chooseMajority: false })}
         />
       </View>
     )
