@@ -10,7 +10,6 @@ import modalStyles from '../../styles/modalStyles.js'
 
 const font = 'CircularStd-Medium'
 
-
 // Used to make refreshing indicator appear/disappear
 const sleep = (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds))
@@ -132,17 +131,13 @@ export default class Friends extends React.Component {
             />
           }
         >
-          <Text>
-            Pull down on this text to refresh (if no friends) - replace this with a graphic
-            eventually
-          </Text>
           {friends}
         </ScrollView>
         {this.state.errorAlert && (
           <Alert
             title="Error, please try again"
             buttonAff="Close"
-            height='20%'
+            height="20%"
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />

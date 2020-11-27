@@ -1,11 +1,7 @@
-// Modified from github.com/yaraht17/react-native-draggable-view/
+// Adapted from github.com/yaraht17/react-native-draggable-view/
 import React, { Component } from 'react'
-import { StyleSheet, Pressable, View, Animated, PanResponder, Dimensions, Text } from 'react-native'
+import { StyleSheet, View, Animated, PanResponder, Dimensions, } from 'react-native'
 import PropTypes from 'prop-types'
-
-const hex = '#F15763'
-const hexBlack = '#000000'
-const font = 'CircularStd-Medium'
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
 
@@ -13,7 +9,6 @@ class DraggableView extends Component {
   constructor(props) {
     super(props)
     const initialUsedSpace = Math.abs(this.props.initialDrawerSize)
-    const initialDrawerSize = SCREEN_HEIGHT * (1 - initialUsedSpace)
 
     const downPos = 0.0 // screen height - thingy size
     const upPos = -1 * SCREEN_HEIGHT
@@ -39,7 +34,6 @@ class DraggableView extends Component {
     }
 
     this.state.position.setValue(-1 * SCREEN_HEIGHT)
-    // this.open()
   }
 
   componentDidUpdate(nextProps) {
