@@ -67,7 +67,7 @@ export default class SearchCard extends React.Component {
 
   render() {
     return (
-      <View style={{ flexDirection: 'row', flex: 1, width: '85%', alignSelf:'center' }}>
+      <View style={{ flexDirection: 'row', flex: 1, width: '85%', alignSelf: 'center' }}>
         <Image
           source={{
             uri: this.props.image,
@@ -81,9 +81,7 @@ export default class SearchCard extends React.Component {
             flex: 1,
           }}
         >
-          <Text style={{ fontFamily: font, fontSize: 15 }}>
-            {this.props.name}
-          </Text>
+          <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
           <Text style={{ fontFamily: font, color: hex }}>{'@' + this.props.username}</Text>
         </View>
         {this.state.requested === 'Requested' && this.state.renderOption && (
@@ -96,8 +94,8 @@ export default class SearchCard extends React.Component {
           </View>
         )}
         {this.state.requested === 'Add' && this.state.renderOption && (
-          <TouchableHighlight underlayColor='white' onPress={() => this.addFriend()}>
-              <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
+          <TouchableHighlight underlayColor="white" onPress={() => this.addFriend()}>
+            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
               <Text style={[imgStyles.text, { color: 'black' }]}>Add Friend</Text>
               <AntDesign
                 style={[imgStyles.icon, { fontSize: 25, margin: '8%', color: 'black' }]}
@@ -107,7 +105,10 @@ export default class SearchCard extends React.Component {
           </TouchableHighlight>
         )}
         {this.state.requested === 'Accepted' && this.state.renderOption && (
-          <TouchableHighlight underlayColor='white' onPress={() => this.setState({ deleteFriend: true, errorAlert: false })}>
+          <TouchableHighlight
+            underlayColor="white"
+            onPress={() => this.setState({ deleteFriend: true, errorAlert: false })}
+          >
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
               <Text style={[imgStyles.text]}>Friends</Text>
               <Icon style={[imgStyles.icon, { fontSize: 20, margin: '8%' }]} name="heart" />
@@ -124,7 +125,7 @@ export default class SearchCard extends React.Component {
             />
             <AntDesign
               style={[imgStyles.icon, { fontSize: 25, margin: '3%', color: 'black' }]}
-              name='closecircleo'
+              name="closecircleo"
               onPress={() => this.rejectFriend()}
             />
           </View>
