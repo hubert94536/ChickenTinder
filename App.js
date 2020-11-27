@@ -14,6 +14,7 @@ import Search from './frontend/screens/search.js'
 import Username from './frontend/screens/username.js'
 import UserProfileView from './frontend/screens/profile.js'
 import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
+import createAccount from './frontend/screens/createAccount.js'
 // import TabBar from './frontend/nav.js'
 
 // class Notifications extends React.Component {
@@ -61,6 +62,9 @@ export default class App extends React.Component {
           Login: {
             screen: Login,
           },
+          createAccount: {
+            screen: createAccount,
+          },
           Username: {
             screen: Username,
           },
@@ -96,7 +100,7 @@ export default class App extends React.Component {
           },
         },
         {
-          initialRouteName: start,
+          initialRouteName: 'createAccount',
           headerMode: 'none',
           animationEnabled: false,
         },
