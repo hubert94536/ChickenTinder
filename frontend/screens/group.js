@@ -139,21 +139,6 @@ export default class Group extends React.Component {
       a.key = user
       a.f = false
       memberList.push(a)
-      memberList.push(a)
-      memberList.push(a)
-      memberList.push(a)
-      memberList.push(a)
-      memberList.push(a)
-      memberList.push(a)
-      memberList.push(a)
-      memberList.push(a)
-      memberList.push(a)
-      memberList.push(a)
-      memberList.push(a)
-      memberList.push(a)
-      memberList.push(a)
-      memberList.push(a)
-      memberList.push(a)
     }
     const footer = {}
     footer.f = true
@@ -286,7 +271,7 @@ export default class Group extends React.Component {
                         host={this.state.host}
                         isHost={this.state.host == item.username}
                         key={item.key}
-                        style={{ height: 170 }}
+                        style={{ width: 170 }}
                       />
                     )
                   }

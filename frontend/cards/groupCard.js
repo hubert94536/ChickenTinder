@@ -126,7 +126,6 @@ const styles = StyleSheet.create({
     padding: 0,
     margin: 5,
     flexDirection: 'row',
-    flex: 0.5,
   },
   image: {
     borderRadius: 63,
