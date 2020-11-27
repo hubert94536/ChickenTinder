@@ -1,12 +1,20 @@
 import React from 'react'
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native'
 import PropTypes from 'prop-types'
-import { SearchBar } from 'react-native-elements'
+import { SearchBar, Text } from 'react-native-elements'
+import { BlurView } from '@react-native-community/blur'
 import Alert from '../modals/alert.js'
 import ProfileCard from '../cards/profileCard.js'
 import friendsApi from '../apis/friendsApi.js'
+import modalStyles from '../../styles/modalStyles.js'
 
 const font = 'CircularStd-Medium'
+
+
+// Used to make refreshing indicator appear/disappear
+const sleep = (milliseconds) => {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds))
+}
 
 export default class Friends extends React.Component {
   constructor(props) {
@@ -17,6 +25,7 @@ export default class Friends extends React.Component {
       data: [], // array for friends
       friends: [], // array of Profile components
       isFriends: this.props.isFriends, // For rendering friends (true) or requests (false)
+      refreshing: false, // Are we currently refreshing the list?
     }
     this.getFriends()
   }
@@ -38,6 +47,9 @@ export default class Friends extends React.Component {
         this.setState({ friends: pushFriends, data: pushFriends })
       })
       .catch(() => this.setState({ errorAlert: true }))
+      .then(() => {
+        this.props.onFriendsChange(this.state.friends.length)
+      })
   }
 
   //  searches the users friends by username
@@ -67,6 +79,12 @@ export default class Friends extends React.Component {
     } else if (status) {
       this.setState({ friends: newArr })
     }
+  }
+
+  // Called on friends-list pulldown refresh
+  onRefresh() {
+    this.setState({ refreshing: true })
+    sleep(2000).then(this.getFriends().then(this.setState({ refreshing: false })))
   }
 
   render() {
@@ -104,13 +122,23 @@ export default class Friends extends React.Component {
             round
           />
         </View>
-        <ScrollView style={{ flexDirection: 'column' }}>{friends}</ScrollView>
+        <ScrollView
+          style={{ flexDirection: 'column' }}
+          alwaysBounceVertical="true"
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.onRefresh.bind(this)}
+            />
+          }
+        >
+          {friends}
+        </ScrollView>
         {this.state.errorAlert && (
           <Alert
-            title="Error!"
-            body="Please try again"
-            button
-            buttonText="Close"
+            title="Error, please try again"
+            buttonAff="Close"
+            height='20%'
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />
@@ -122,6 +150,7 @@ export default class Friends extends React.Component {
 
 Friends.propTypes = {
   isFriends: PropTypes.bool,
+  onFriendsChange: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
