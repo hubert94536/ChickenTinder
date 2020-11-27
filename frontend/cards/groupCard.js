@@ -141,6 +141,5 @@ const styles = StyleSheet.create({
   },
   topText: {
     color: '#000',
-
   },
 })

@@ -35,7 +35,7 @@ export default class ChooseFriends extends React.Component {
     friendsApi
       .getFriends()
       .then((res) => {
-        var pushFriends = []
+        let pushFriends = []
         for (var friend in res.friendList) {
           if (res.friendList[friend].status === 'Accepted') {
             if (
