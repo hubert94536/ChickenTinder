@@ -44,7 +44,7 @@ export default class Login extends React.Component {
       <View style= {[{backgroundColor: 'white', flex: 1}]}>
         
         <Image source={require('../assets/images/logo2.png')} style = {{alignSelf: 'center', width: 200, height: 248, marginTop: '12%'}}/>
-        <Text style={[screenStyles.text, screenStyles.title, { fontFamily: 'CircularStd-Bold', fontSize: 30, marginTop: '2.5%' , marginBottom: '8%', fontWeight: 'bold'}]}>Let's Get Chews-ing!</Text>
+        <Text style={[screenStyles.text, screenStyles.title, { fontFamily: 'CircularStd-Bold', fontSize: 30, marginTop: '2.5%' , marginBottom: '10%', fontWeight: 'bold'}]}>Let's Get Chews-ing!</Text>
         <TouchableHighlight
           onShowUnderlay={() => this.setState({ phonePressed: true })}
           onHideUnderlay={() => this.setState({ phonePressed: false })}
@@ -90,7 +90,7 @@ export default class Login extends React.Component {
           
         </TouchableHighlight>
 
-        <Text style={[screenStyles.text, { fontFamily: 'CircularStd-Book', alignSelf: 'center', marginHorizontal: '15%', marginTop: '7.5%',fontSize: 13, textAlign: 'center'}]}>
+        <Text style={[screenStyles.text, { fontFamily: 'CircularStd-Book', alignSelf: 'center', marginHorizontal: '15%', marginTop: '7.5%',fontSize: 13, textAlign: 'center', lineHeight: 17}]}>
           By clicking log in, you agree with our Terms and Conditions.
           </Text>
 
