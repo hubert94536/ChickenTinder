@@ -15,6 +15,7 @@ import { BlurView } from '@react-native-community/blur'
 import Geolocation from 'react-native-geolocation-service'
 import PropTypes from 'prop-types'
 import Slider from '@react-native-community/slider'
+import SliderText from 'react-native-slider-text'
 import Alert from '../modals/alert.js'
 import ChooseFriends from '../modals/chooseFriends.js'
 import Socket from '../apis/socket.js'
@@ -46,6 +47,10 @@ const tagsDiet = ['Vegan', 'Vegetarian']
 
 const tagsPrice = ['$', '$$', '$$$', '$$$$']
 
+const tagsSizes = ['20', '30', 'Custom: ']
+
+const tagsMajority = ['6', '10', 'All', 'Custom: ']
+
 //  requests the users permission
 const requestLocationPermission = async () => {
   PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
@@ -72,7 +77,7 @@ const date = new Date()
 export default class FilterSelector extends React.Component {
   constructor(props) {
     super(props)
-    let date = new Date()
+    const date = new Date()
     this.state = {
       host: this.props.host,
       isHost: this.props.isHost,
@@ -82,16 +87,21 @@ export default class FilterSelector extends React.Component {
       useLocation: false,
       hour: date.getUTCHours(),
       minute: date.getUTCMinutes(),
+      asap: true,
       lat: 0,
       long: 0,
       selectedCuisine: [],
       selectedPrice: [],
       selectedRestriction: [],
+      selectedSize: [],
+      selectedMajority: [],
       // showing alerts and modals
       chooseTime: false,
       locationAlert: false,
       chooseLocation: false,
       chooseFriends: false,
+      chooseMajority: false,
+      chooseSize: false,
       errorAlert: false,
     }
   }
@@ -116,8 +126,8 @@ export default class FilterSelector extends React.Component {
 
   //  pushes the 'subcategories' of each cusisine
   categorize(cat) {
-    var categories = []
-    for (var i = 0; i < cat.length; i++) {
+    const categories = []
+    for (let i = 0; i < cat.length; i++) {
       switch (cat[i]) {
         case 'American':
           categories.push('american')
@@ -203,7 +213,7 @@ export default class FilterSelector extends React.Component {
 
   //  formats the filters to call yelp api
   evaluateFilters() {
-    var filters = {}
+    const filters = {}
     //  convert to unix time
     const dd = date.getDate()
     const mm = date.getMonth()
@@ -213,7 +223,7 @@ export default class FilterSelector extends React.Component {
     filters.open_at = unix
     filters.price = this.state.selectedPrice.map((item) => item.length).toString()
     // puts the cuisine and restrictions into one array
-    var selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
+    const selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
     filters.categories = this.categorize(selections)
     filters.radius = this.state.distance * 1600
     //  making sure we have a valid location
@@ -247,60 +257,86 @@ export default class FilterSelector extends React.Component {
     return (
       <View style={styles.mainContainer}>
         <View style={styles.titleStyle}>
-          <Text style={[screenStyles.text, { fontSize: 28 }]}>
-            {this.state.isHost ? 'Group Settings' : 'Set Your Filters'}
+          <Text style={[screenStyles.text, { fontSize: 28, color: 'white', textAlign: 'center' }]}>
+            {this.state.isHost ? 'Group Settings' : 'Your Filters'}
           </Text>
-          {this.state.isHost && (
-            <Text style={[screenStyles.text, styles.titleSub]}>(only visible to host)</Text>
-          )}
         </View>
         <ScrollView>
+          {/* Majority Rule */}
           {this.state.isHost && (
-            <View style={{ margin: '5%' }}>
-              <Text style={[screenStyles.text, styles.header]}>Members</Text>
-              <TouchableHighlight
-                onPress={() => this.setState({ chooseFriends: true })}
-                underlayColor={hex}
-                style={[
-                  screenStyles.text,
-                  screenStyles.medButton,
-                  { borderColor: hex, marginTop: '5%' },
-                ]}
-              >
-                <Text style={[screenStyles.text, styles.touchableFriendsText]}>
-                  Select from Friends
-                </Text>
-              </TouchableHighlight>
+            <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '1%' }}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={[screenStyles.text, styles.header]}>Majority</Text>
+                <Text style={styles.subtext}>Max number of restaurants</Text>
+              </View>
+              <TagsView
+                all={tagsMajority}
+                selected={this.state.selectedMajority}
+                isExclusive={true}
+                onChange={(event) => {
+                  if (event === 'Custom: ') {
+                    this.setState({ chooseMajority: true })
+                  }
+
+                  this.setState({ selectedMajority: event })
+                }}
+              />
             </View>
           )}
-          <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '2%' }}>
-            <Text style={[screenStyles.text, styles.header]}>Cuisines</Text>
-            <TagsView
-              all={tagsCuisine}
-              selected={this.state.selectedCuisine}
-              isExclusive={false}
-              onChange={(event) => this.setState({ selectedCuisine: event })}
-            />
-          </View>
+
+          {/* Round Size */}
           {this.state.isHost && (
-            <View
-              style={{
-                marginLeft: '5%',
-                marginRight: '5%',
-                marginTop: '2%',
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Text style={[screenStyles.text, styles.header]}>Use Current Location:</Text>
+            <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '1%' }}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={[screenStyles.text, styles.header]}>Round Size</Text>
+                <Text style={styles.subtext}>Max number of restaurants</Text>
+              </View>
+              <TagsView
+                all={tagsSizes}
+                selected={this.state.selectedSize}
+                isExclusive={true}
+                onChange={(event) => this.setState({ selectedSize: event })}
+              />
+            </View>
+          )}
+
+          {/* DISTANCE */}
+          {this.state.isHost && (
+            <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '1%' }}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={[screenStyles.text, styles.header]}>Distance</Text>
+                <Text style={styles.subtext}>({this.state.distance} miles)</Text>
+                <TouchableHighlight
+                  underlayColor={'white'}
+                  onPress={() => this.setState({ chooseLocation: true })}
+                  style={[
+                    styles.subtext,
+                    {
+                      backgroundColor: hex,
+                      borderRadius: 20,
+                      borderWidth: 1,
+                      borderColor: 'white',
+                    },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontFamily: font,
+                      fontSize: 12,
+                      paddingLeft: 5,
+                      paddingRight: 5,
+                      paddingTop: 3,
+                      paddingBottom: 3,
+                    }}
+                  >
+                    Choose Location
+                  </Text>
+                </TouchableHighlight>
                 <Switch
-                  thumbColor={hex}
+                  thumbColor={'white'}
                   trackColor={{ true: '#eba2a8' }}
-                  style={{ marginTop: '1%' }}
+                  style={{ marginTop: '1%', marginLeft: '3%' }}
                   value={this.state.useLocation}
                   onValueChange={(val) => {
                     this.setState({
@@ -309,33 +345,6 @@ export default class FilterSelector extends React.Component {
                   }}
                 />
               </View>
-              <TextInput
-                placeholder={
-                  this.state.useLocation ? 'Using Current Location' : 'Enter City, State'
-                }
-                onChangeText={(text) => this.setState({ location: text })}
-                style={this.state.useLocation ? styles.inputDisabled : styles.inputEnabled}
-                //  To make TextInput enable/disable
-                editable={!this.state.useLocation}
-              />
-            </View>
-          )}
-          {this.state.isHost && (
-            <View style={{ margin: '5%' }}>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={[screenStyles.text, styles.header]}>Distance</Text>
-                <Text
-                  style={{
-                    color: hex,
-                    fontFamily: font,
-                    alignSelf: 'center',
-                    marginLeft: '1%',
-                    marginTop: '1%',
-                  }}
-                >
-                  ({this.state.distance} miles)
-                </Text>
-              </View>
               <Slider
                 style={{
                   width: '85%',
@@ -343,23 +352,24 @@ export default class FilterSelector extends React.Component {
                   alignSelf: 'center',
                 }}
                 minimumValue={5}
-                maximumValue={25}
+                maximumValue={50}
                 value={5}
                 step={0.5}
-                minimumTrackTintColor={hex}
-                thumbTintColor={hex}
+                minimumTrackTintColor={'white'}
+                maximumTrackTintColor={'white'}
+                thumbTintColor={'white'}
                 onValueChange={(value) => this.setState({ distance: value })}
               />
             </View>
           )}
+
+          {/* PRICE */}
           {this.state.isHost && (
-            <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '2%' }}>
-              <Text style={[screenStyles.text, styles.header]}>Open at:</Text>
-            </View>
-          )}
-          {this.state.isHost && (
-            <View style={{ margin: '5%' }}>
-              <Text style={[screenStyles.text, styles.header]}>Price</Text>
+            <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '1%' }}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={[screenStyles.text, styles.header]}>Price</Text>
+                <Text style={styles.subtext}>Select all that apply</Text>
+              </View>
               <TagsView
                 all={tagsPrice}
                 selected={this.state.selectedPrice}
@@ -368,6 +378,89 @@ export default class FilterSelector extends React.Component {
               />
             </View>
           )}
+
+          {/* TIME */}
+          {this.state.isHost && (
+            <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '1%' }}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={[screenStyles.text, styles.header]}>Time</Text>
+                <Text style={styles.subtext}>Select when to eat</Text>
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                <TouchableHighlight
+                  underlayColor={'white'}
+                  onPress={() => {
+                    const hr = date.getUTCHours()
+                    const min = date.getUTCMinutes()
+                    this.setState({ hour: hr, minute: min, asap: true })
+                  }}
+                  style={[
+                    styles.subtext,
+                    {
+                      borderRadius: 20,
+                      borderWidth: 1,
+                      borderColor: 'white',
+                      backgroundColor: this.state.asap ? 'white' : hex,
+                    },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: this.state.asap ? hex : 'white',
+                      fontFamily: font,
+                      fontSize: 15,
+                      paddingLeft: 7,
+                      paddingRight: 7,
+                      paddingTop: 3,
+                      paddingBottom: 3,
+                    }}
+                  >
+                    ASAP
+                  </Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                  underlayColor={'white'}
+                  onPress={() => this.setState({ chooseTime: true, asap: false })}
+                  style={[
+                    styles.subtext,
+                    {
+                      backgroundColor: this.state.asap ? hex : 'white',
+                      borderRadius: 20,
+                      borderWidth: 1,
+                      borderColor: 'white',
+                    },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: this.state.asap ? 'white' : hex,
+                      fontFamily: font,
+                      fontSize: 15,
+                      paddingLeft: 7,
+                      paddingRight: 7,
+                      paddingTop: 3,
+                      paddingBottom: 3,
+                    }}
+                  >
+                    Set Time
+                  </Text>
+                </TouchableHighlight>
+              </View>
+            </View>
+          )}
+
+          {/* CUISINES */}
+          <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '1%' }}>
+            <Text style={[screenStyles.text, styles.header]}>Cuisines</Text>
+            <TagsView
+              all={tagsCuisine}
+              selected={this.state.selectedCuisine}
+              isExclusive={false}
+              onChange={(event) => this.setState({ selectedCuisine: event })}
+            />
+          </View>
+
+          {/* DIETARY RESTRICTIONS */}
           <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '1%' }}>
             <Text style={[screenStyles.text, styles.header]}>Dietary Restrictions</Text>
             <TagsView
@@ -449,14 +542,16 @@ const styles = StyleSheet.create({
   //  Fullscreen
   mainContainer: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: hex,
     justifyContent: 'space-between',
   },
   titleStyle: {
     flexDirection: 'row',
+    justifyContent: 'center',
     margin: '5%',
   },
   titleSub: {
+    color: 'white',
     alignSelf: 'center',
     margin: '1%',
     marginTop: '2%',
@@ -471,16 +566,26 @@ const styles = StyleSheet.create({
   },
   header: {
     textAlign: 'left',
-    fontSize: 25,
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
     margin: '1%',
+  },
+  subtext: {
+    color: 'white',
+    fontFamily: font,
+    alignSelf: 'center',
+    marginLeft: '4%',
+    marginTop: '1%',
   },
   touchable: {
     width: '50%',
-    borderColor: hex,
+    borderColor: 'white',
     justifyContent: 'center',
     margin: '5%',
   },
   nextTitle: {
+    color: 'white',
     textAlign: 'center',
     fontSize: 25,
     paddingTop: '2%',
