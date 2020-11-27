@@ -144,6 +144,16 @@ export default class Group extends React.Component {
       memberList.push(a)
       memberList.push(a)
       memberList.push(a)
+      memberList.push(a)
+      memberList.push(a)
+      memberList.push(a)
+      memberList.push(a)
+      memberList.push(a)
+      memberList.push(a)
+      memberList.push(a)
+      memberList.push(a)
+      memberList.push(a)
+      memberList.push(a)
     }
     const footer = {}
     footer.f = true
@@ -268,18 +278,16 @@ export default class Group extends React.Component {
                     // return <ChooseFriends members={memberList} press={this._handleChooseFriendsPress} />
                   } else {
                     return (
-                      <View>
-                        {/* {console.log(JSON.stringify(item))} */}
-                        <GroupCard
-                          name={item.name}
-                          username={item.username}
-                          image={item.image}
-                          filters={item.filters}
-                          host={this.state.host}
-                          isHost={this.state.host == item.username}
-                          key={item.key}
-                        />
-                      </View>
+                      <GroupCard
+                        name={item.name}
+                        username={item.username}
+                        image={item.image}
+                        filters={item.filters}
+                        host={this.state.host}
+                        isHost={this.state.host == item.username}
+                        key={item.key}
+                        style={{ height: 170 }}
+                      />
                     )
                   }
                 }}
@@ -566,6 +574,7 @@ const styles = StyleSheet.create({
     color: '#aaa',
   },
   memberContainer: {
+    height: windowHeight * 0.5,
     width: '100%',
   },
   subheader: {

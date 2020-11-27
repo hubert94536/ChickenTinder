@@ -22,87 +22,85 @@ export default class GroupCard extends React.Component {
 
   render() {
     return (
-      <View>
-        <View style={styles.card}>
-          <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-            <Image
-              source={{ uri: this.props.image }}
-              style={[
-                styles.image,
-                this.props.filters ? { borderColor: hex } : { borderColor: '#F5F5F5' },
-              ]}
-            />
-          </View>
-          {this.props.filters ? (
-            <Icon
-              name="check-circle"
-              style={{
-                color: hex,
-                fontSize: 20,
-                position: 'absolute',
-                marginLeft: '31%',
-                marginTop: '5%',
-                backgroundColor: '#F5F5F5',
-                borderRadius: 30,
-                width: 13,
-                height: 13,
-                overflow: 'hidden',
-              }}
-            />
-          ) : null}
-          <View
+      <View style={styles.card}>
+        <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+          <Image
+            source={{ uri: this.props.image }}
+            style={[
+              styles.image,
+              this.props.filters ? { borderColor: hex } : { borderColor: '#F5F5F5' },
+            ]}
+          />
+        </View>
+        {this.props.filters ? (
+          <Icon
+            name="check-circle"
             style={{
-              marginLeft: '3%',
-              width: 200,
-              flexDirection: 'column',
-              justifyContent: 'center',
-              color: 'green',
+              color: hex,
+              fontSize: 20,
+              position: 'absolute',
+              marginLeft: '31%',
+              marginTop: '5%',
+              backgroundColor: '#F5F5F5',
+              borderRadius: 30,
+              width: 13,
+              height: 13,
+              overflow: 'hidden',
+            }}
+          />
+        ) : null}
+        <View
+          style={{
+            marginLeft: '3%',
+            width: 200,
+            flexDirection: 'column',
+            justifyContent: 'center',
+            color: 'green',
+          }}
+        >
+          <Text
+            style={{
+              color: 'black',
+              fontWeight: 'normal',
+              fontFamily: font,
+              fontSize: 14,
+              width: 100,
             }}
           >
-            <Text
-              style={{
-                color: 'black',
-                fontWeight: 'normal',
-                fontFamily: font,
-                fontSize: 14,
-                width: 100,
-              }}
-            >
-              {this.props.name}
-            </Text>
+            {this.props.name}
+          </Text>
+          <Text
+            style={{
+              color: hex,
+              fontWeight: 'normal',
+              fontFamily: font,
+              fontSize: 10,
+              width: 100,
+            }}
+          >
+            {'@' + this.props.username}
+          </Text>
+        </View>
+        <View style={{ flex: 1, flexDirection: 'row' }}>
+          {this.props.username !== this.props.host && this.isHost ? (
             <Text
               style={{
                 color: hex,
-                fontWeight: 'normal',
+                alignSelf: 'center',
                 fontFamily: font,
-                fontSize: 10,
-                width: 100,
+                marginLeft: '30%',
               }}
             >
-              {'@' + this.props.username}
+              Remove
             </Text>
-          </View>
-          <View style={{ flex: 1, flexDirection: 'row' }}>
-            {this.props.username !== this.props.host && this.isHost ? (
-              <Text
-                style={{
-                  color: hex,
-                  alignSelf: 'center',
-                  fontFamily: font,
-                  marginLeft: '30%',
-                }}
-              >
-                Remove
-              </Text>
-            ) : null}
-            {this.props.username !== this.props.host && this.isHost ? (
-              <Icon
-                name="times-circle"
-                style={[imgStyles.icon, { marginLeft: '5%' }]}
-                onPress={() => this.removeUser(this.props.username)}
-              />
-            ) : null}
-          </View>
+          ) : null}
+          {this.props.username !== this.props.host && this.isHost ? (
+            <Icon
+              name="times-circle"
+              style={[imgStyles.icon, { marginLeft: '5%' }]}
+              onPress={() => this.removeUser(this.props.username)}
+            />
+          ) : null}
         </View>
       </View>
     )
