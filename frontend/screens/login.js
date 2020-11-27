@@ -138,7 +138,7 @@ export default class Login extends React.Component {
             title='Open "Facebook?"'
             body="You will be directed to the Facebook app for account verification"
             twoButton
-            buttonText="Open"
+            buttonAff="Open"
             buttonNeg='Go Back'
             height='25%'
             press={() => this.handleClick()}
