@@ -20,7 +20,7 @@ export default class BackgroundButton extends React.Component {
         flexDirection: 'row',
         borderRadius: 14,
         borderColor: this.props.borderColor,
-        borderWidth: 2,
+        borderWidth: 1,
         backgroundColor: this.props.backgroundColor,
         height: 28,
         alignItems: 'center',
