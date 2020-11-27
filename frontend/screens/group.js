@@ -9,6 +9,7 @@ import {
   View,
   Dimensions,
 } from 'react-native'
+import { BlurView } from '@react-native-community/blur'
 import { USERNAME } from 'react-native-dotenv'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -23,6 +24,7 @@ import ChooseFriends from '../modals/chooseFriends.js'
 import FilterSelector from './filter.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
+import modalStyles from '../../styles/modalStyles.js'
 
 const hex = '#F15763'
 const hexBlack = '#000000'
@@ -54,6 +56,7 @@ export default class Group extends React.Component {
       endAlert: false,
       swipe: true,
       filters: {},
+      chooseFriends: false,
     }
     this.updateMemberList()
 
@@ -237,6 +240,7 @@ export default class Group extends React.Component {
                             padding: 0,
                             margin: 5,
                           }}
+                          onPress={() => this.setState({ chooseFriends: true })}
                         >
                           <Text
                             style={{
@@ -267,7 +271,7 @@ export default class Group extends React.Component {
                   } else {
                     return (
                       <View>
-                        {console.log(JSON.stringify(item))}
+                        {/* {console.log(JSON.stringify(item))} */}
                         <GroupCard
                           name={item.name}
                           username={item.username}
@@ -358,6 +362,19 @@ export default class Group extends React.Component {
                   cancel={() => this.cancelAlert()}
                 />
               )}
+              {this.state.chooseFriends && (
+                <BlurView
+                  blurType="dark"
+                  blurAmount={10}
+                  reducedTransparencyFallbackColor="white"
+                  style={modalStyles.blur}
+                />
+              )}
+              <ChooseFriends
+                visible={this.state.chooseFriends}
+                members={memberList}
+                press={() => this.setState({ chooseFriends: false })}
+              />
             </View>
           )}
           renderDrawerView={() => (
@@ -538,8 +555,6 @@ const styles = StyleSheet.create({
   top: {
     backgroundColor: '#fff',
     top: 0,
-    zIndex: 1,
-    elevation: 1,
   },
   center: {
     flex: 0.6,
