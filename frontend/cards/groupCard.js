@@ -64,7 +64,7 @@ export default class GroupCard extends React.Component {
                 color: 'black',
                 fontWeight: 'normal',
                 fontFamily: font,
-                fontSize: 16,
+                fontSize: 14,
                 width: 100,
               }}
             >
@@ -75,7 +75,7 @@ export default class GroupCard extends React.Component {
                 color: hex,
                 fontWeight: 'normal',
                 fontFamily: font,
-                fontSize: 11,
+                fontSize: 10,
                 width: 100,
               }}
             >

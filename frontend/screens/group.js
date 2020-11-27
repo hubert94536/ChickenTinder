@@ -144,7 +144,6 @@ export default class Group extends React.Component {
       memberList.push(a)
       memberList.push(a)
       memberList.push(a)
-      memberList.push(a)
     }
     const footer = {}
     footer.f = true
@@ -244,8 +243,7 @@ export default class Group extends React.Component {
                         >
                           <Text
                             style={{
-                              fontWeight: 'bold',
-                              color: '#6A6A6A',
+                              color: 'black',
                               textAlign: 'center',
                               width: '100%',
                               lineHeight: 36,
@@ -451,6 +449,7 @@ export default class Group extends React.Component {
                     style={{
                       color: 'white',
                       fontFamily: font,
+                      fontSize: 11,
                     }}
                   >
                     {this.state.username === this.state.host
