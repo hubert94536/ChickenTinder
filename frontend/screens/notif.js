@@ -128,10 +128,10 @@ export default class Notif extends Component {
               key={i}
               index={i}
               press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
-              showError={() => this.setState({errorAlert: true})}
-              removeError={() => this.setState({errorAlert: false})}
-              showDelete={() => this.setState({deleteFriend: true})}
-              removeDelete={() => this.setState({deleteFriend: false})}
+              showError={() => this.setState({ errorAlert: true })}
+              removeError={() => this.setState({ errorAlert: false })}
+              showDelete={() => this.setState({ deleteFriend: true })}
+              removeDelete={() => this.setState({ deleteFriend: false })}
             />,
           )
         } else {
@@ -146,10 +146,10 @@ export default class Notif extends Component {
               key={i}
               index={i}
               press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
-              showError={() => this.setState({errorAlert: true})}
-              removeError={() => this.setState({errorAlert: false})}
-              showDelete={() => this.setState({deleteFriend: true})}
-              removeDelete={() => this.setState({deleteFriend: false})}
+              showError={() => this.setState({ errorAlert: true })}
+              removeError={() => this.setState({ errorAlert: false })}
+              showDelete={() => this.setState({ deleteFriend: true })}
+              removeDelete={() => this.setState({ deleteFriend: false })}
             />,
           )
         }
@@ -231,7 +231,7 @@ export default class Notif extends Component {
             title="Are you sure?"
             body={'You are about to remove @' + this.props.username + ' as a friend'}
             buttonAff="Delete"
-            height='25%'
+            height="25%"
             press={() => this.deleteFriend()}
             cancel={() => this.setState({ deleteFriend: false })}
           />
@@ -240,7 +240,7 @@ export default class Notif extends Component {
           <Alert
             title="Error, please try again"
             buttonAff="Close"
-            height='20%'
+            height="20%"
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />

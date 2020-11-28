@@ -172,7 +172,7 @@ export default class UserProfileView extends Component {
     }
   }
 
-  handleFriendsCount = (n) => {
+  handleFriendsCount(n) {
     this.setState({numFriends: n})
   }
 

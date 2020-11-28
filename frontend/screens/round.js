@@ -68,7 +68,7 @@ export default class Round extends React.Component {
             stackSize={3}
             disableBottomSwipe
             disableTopSwipe
-            onSwiped={() => this.setState({index: (this.state.index+1)})}
+            onSwiped={() => this.setState({ index: this.state.index + 1 })}
             onSwipedRight={(cardIndex) => this.likeRestaurant(this.state.results[cardIndex].id)}
             stackSeparation={0}
             backgroundColor="transparent"

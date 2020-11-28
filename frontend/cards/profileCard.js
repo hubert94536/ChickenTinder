@@ -48,8 +48,17 @@ export default class ProfileCard extends React.Component {
 
   render() {
     return (
-      <View style={{ flexDirection: 'row', flex: 1, justifyContent:'space-between', marginRight:'5%', marginLeft:'5%', marginTop:'3%'}}>
-        <View style={{flexDirection:'row'}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          flex: 1,
+          justifyContent: 'space-between',
+          marginRight: '5%',
+          marginLeft: '5%',
+          marginTop: '3%',
+        }}
+      >
+        <View style={{ flexDirection: 'row' }}>
           <Image
             source={{
               uri: this.props.image,
@@ -59,18 +68,21 @@ export default class ProfileCard extends React.Component {
           <View
             style={{
               alignSelf: 'center',
-              marginLeft:'7%'
+              marginLeft: '7%',
             }}
           >
             <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
-            <Text style={{ fontFamily: font, color:hex }}>@{this.props.username}</Text>
+            <Text style={{ fontFamily: font, color: hex }}>@{this.props.username}</Text>
           </View>
         </View>
         {this.state.isFriend && (
           <TouchableHighlight onPress={() => this.setState({ deleteFriend: true })}>
-            <View style={{ flexDirection: 'row', flex: 1, alignItems:'center' }}>
-              <Text style={(imgStyles.text, { color: hex, marginRight:'5%'})}>Friends</Text>
-              <Icon style={(imgStyles.icon, { marginLeft: '5%', color: hex, fontSize: 18, })} name="heart" />
+            <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
+              <Text style={(imgStyles.text, { color: hex, marginRight: '5%' })}>Friends</Text>
+              <Icon
+                style={(imgStyles.icon, { marginLeft: '5%', color: hex, fontSize: 18 })}
+                name="heart"
+              />
             </View>
           </TouchableHighlight>
         )}
@@ -159,7 +171,7 @@ export default class ProfileCard extends React.Component {
           <Alert
             title="Error, please try again"
             buttonAff="Close"
-            height='20%'
+            height="20%"
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />
