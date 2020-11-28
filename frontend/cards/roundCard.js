@@ -13,7 +13,7 @@ import { faMapMarkerAlt, faUtensils } from '@fortawesome/free-solid-svg-icons'
 import { faStar } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import LinearGradient from 'react-native-linear-gradient';
+import LinearGradient from 'react-native-linear-gradient'
 import PropTypes from 'prop-types'
 
 const font = 'CircularStd-Medium'
@@ -87,51 +87,68 @@ export default class RoundCard extends React.Component {
     return transactions.map((item) => item.charAt(0).toUpperCase() + item.slice(1)).join(', ')
   }
 
-  evaluateCuisines(cuisines){
+  evaluateCuisines(cuisines) {
     return cuisines.map((item) => item.title).join(', ')
   }
 
   render() {
     return (
-        <ImageBackground source={this.getCuisine(this.props.card.categories[0].title)} style={[styles.card]}>
-          <View style={{marginLeft:'5%', justifyContent:'flex-end', flex: 1, marginBottom: '5%'}}>
-            <Text style={styles.title}>{this.props.card.name}</Text>
-            <View
+      <ImageBackground
+        source={this.getCuisine(this.props.card.categories[0].title)}
+        style={[styles.card]}
+      >
+        <View style={{ marginLeft: '5%', justifyContent: 'flex-end', flex: 1, marginBottom: '5%' }}>
+          <Text style={styles.title}>{this.props.card.name}</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginRight: '3%',
+              alignItems: 'center',
+            }}
+          >
+            <Image
+              source={this.getStarPath(this.props.card.rating)}
+              style={{ marginRight: '2%', justifyContent: 'center' }}
+            />
+            <Text
               style={{
-                flexDirection: 'row',
-                marginRight: '3%',
-                alignItems:'center'
+                alignSelf: 'center',
+                fontFamily: 'CircularStd-Book',
+                fontSize: 17,
+                color: 'white',
               }}
             >
-              <Image
-                source={this.getStarPath(this.props.card.rating)}
-                style={{ marginRight: '2%', justifyContent: 'center' }}
-              />
-              <Text style={{ alignSelf: 'center', fontFamily: 'CircularStd-Book', fontSize: 17, color:'white' }}>
-                {this.props.card.reviewCount} reviews
-              </Text>
-            </View>
-            <View style={[styles.info, {alignItems:'center'}]}>
-              <Text style={{ fontFamily: 'CircularStd-Book', color: 'white', fontSize:23 }}>
-                {this.props.card.price}  
-              </Text>
-              <Text style={{ marginLeft: '1%', fontFamily: 'CircularStd-Book', color: 'white', fontSize:18 }}>
+              {this.props.card.reviewCount} reviews
+            </Text>
+          </View>
+          <View style={[styles.info, { alignItems: 'center' }]}>
+            <Text style={{ fontFamily: 'CircularStd-Book', color: 'white', fontSize: 23 }}>
+              {this.props.card.price}
+            </Text>
+            <Text
+              style={{
+                marginLeft: '1%',
+                fontFamily: 'CircularStd-Book',
+                color: 'white',
+                fontSize: 18,
+              }}
+            >
               • {this.evaluateCuisines(this.props.card.categories)}
-              </Text>
-            </View>
-            <View style={styles.info}>
-              <FontAwesomeIcon icon={faMapMarkerAlt} style={styles.icon} />
-              <Text style={styles.infoText}>
-                {this.props.card.distance} miles away — {this.props.card.city}
-              </Text>
-            </View>
-            <View style={styles.info}>
-              <FontAwesomeIcon icon={faUtensils} style={styles.icon} />
-              <Text style={styles.infoText}>
-                {this.evaluateTransactions(this.props.card.transactions)}
-              </Text>
-            </View>
-            {/* <TouchableHighlight
+            </Text>
+          </View>
+          <View style={styles.info}>
+            <FontAwesomeIcon icon={faMapMarkerAlt} style={styles.icon} />
+            <Text style={styles.infoText}>
+              {this.props.card.distance} miles away — {this.props.card.city}
+            </Text>
+          </View>
+          <View style={styles.info}>
+            <FontAwesomeIcon icon={faUtensils} style={styles.icon} />
+            <Text style={styles.infoText}>
+              {this.evaluateTransactions(this.props.card.transactions)}
+            </Text>
+          </View>
+          {/* <TouchableHighlight
               underlayColor="black"
               onShowUnderlay={() => this.setState({ press: true })}
               onHideUnderlay={() => this.setState({ press: false })}
@@ -159,8 +176,8 @@ export default class RoundCard extends React.Component {
                 </Text>
               </View>
             </TouchableHighlight> */}
-          </View>
-        </ImageBackground>
+        </View>
+      </ImageBackground>
     )
   }
 }
@@ -176,10 +193,11 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderWidth: 0,
     borderColor: '#000',
-    width: '100%',
-    height: '85%',
+    // width: '100%',
+    // height: '85%',
+    aspectRatio: 5 / 7.5,
     elevation: 10,
-    overflow:'hidden'
+    overflow: 'hidden',
   },
   image: {
     marginTop: '10%',
@@ -190,26 +208,26 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: font,
-    color:'white',
+    color: 'white',
     fontSize: Dimensions.get('window').width * 0.08,
     textAlign: 'left',
     fontWeight: 'bold',
     margin: '3%',
     marginLeft: 0,
   },
-  info: { flexDirection: 'row', marginTop: '2%', alignItems:'center'},
+  info: { flexDirection: 'row', marginTop: '2%', alignItems: 'center' },
   infoText: {
     fontFamily: 'CircularStd-Book',
     fontSize: 20,
     alignSelf: 'center',
-    color:'white'
+    color: 'white',
   },
   icon: {
     alignSelf: 'center',
     fontFamily: font,
     fontSize: 20,
     marginRight: '2%',
-    color:'white'
+    color: 'white',
   },
   button: {
     borderRadius: 17,

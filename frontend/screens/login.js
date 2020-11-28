@@ -139,8 +139,8 @@ export default class Login extends React.Component {
             body="You will be directed to the Facebook app for account verification"
             twoButton
             buttonAff="Open"
-            buttonNeg='Go Back'
-            height='25%'
+            buttonNeg="Go Back"
+            height="25%"
             press={() => this.handleClick()}
             cancel={() => this.cancelClick()}
           />
@@ -149,7 +149,7 @@ export default class Login extends React.Component {
           <Alert
             title="Error, please try again"
             buttonAff="Close"
-            height='20%'
+            height="20%"
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />
