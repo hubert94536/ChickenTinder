@@ -137,7 +137,7 @@ export default class Round extends React.Component {
             <TouchableHighlight
               onPress={() => console.log('x')}
               underlayColor="transparent"
-              style={{ backgroundColor: 'white' }}
+              style={{ backgroundColor: 'transparent' }}
             >
               <Feather name="x" style={[screenStyles.text, { color: '#6A6A6A', fontSize: 45 }]} />
             </TouchableHighlight>
@@ -163,7 +163,7 @@ export default class Round extends React.Component {
             <TouchableHighlight
               onPress={() => console.log('heart')}
               underlayColor="transparent"
-              style={{ backgroundColor: 'white' }}
+              style={{ backgroundColor: 'transparent' }}
             >
               <Icon name="heart" style={[screenStyles.text, { fontSize: 35 }]} />
             </TouchableHighlight>

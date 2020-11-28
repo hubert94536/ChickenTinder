@@ -176,8 +176,9 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderWidth: 0,
     borderColor: '#000',
-    width: '100%',
-    height: '85%',
+    // width: '100%',
+    // height: '85%',
+    aspectRatio: 5/7.5,
     elevation: 10,
     overflow:'hidden'
   },
