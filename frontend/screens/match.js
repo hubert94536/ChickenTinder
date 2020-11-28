@@ -66,10 +66,14 @@ export default class Match extends React.Component {
     const { restaurant } = this.state
     return (
       <View style={styles.container}>
-        <Text style={[styles.general, { fontSize: 65, marginRight: '10%', marginLeft: '10%' }]}>
-          WeChews you!
-        </Text>
-        <Icon name="thumbs-up" style={[styles.general, { fontSize: 50 }]} />
+        <View style={styles.headerContainer} /*Header for header text and heart icon */>
+          <Text
+            style={[styles.general, { fontSize: 33, fontWeight: 'bold', marginHorizontal: '3%' }]}
+          >
+            WeChews you!
+          </Text>
+          <Icon name="heart" style={[styles.general, { fontSize: 35, paddingVertical: '1%' }]} />
+        </View>
         <Text style={[styles.general, { fontSize: 20 }]}>Your group has selected:</Text>
         <Text style={[styles.general, { fontSize: 30 }]}>{restaurant.name}</Text>
         <MapView
@@ -139,6 +143,14 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').width * 0.55,
     width: Dimensions.get('window').width * 0.55,
   },
+  /* Alignment for header text and icon on top of screen */
+  headerContainer: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'center',
+    padding: '1%',
+    paddingTop: '2%',
+  },
   /* For "Open on Yelp" button */
   yelpButton: {
     backgroundColor: hex,
@@ -149,6 +161,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderWidth: 2.5,
     borderColor: hex,
+    marginTop: '2%',
   },
   /* For "Call number" button */
   callButton: {
@@ -167,5 +180,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '55%',
     height: '4%',
+    marginBottom: '2%',
   },
 })
