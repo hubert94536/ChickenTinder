@@ -1,4 +1,3 @@
-import React from 'react'
 import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
@@ -48,7 +47,7 @@ export default StyleSheet.create({
   },
   medButtonText: {
     fontFamily: 'CircularStd-Medium',
-    fontSize: 15,
+    fontSize: 16,
     textAlign: 'center',
   },
 })

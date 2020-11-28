@@ -14,33 +14,26 @@ const font = 'CircularStd-Medium'
 export default class Match extends React.Component {
   constructor(props) {
     super(props)
-    var restaurant_JSON = {
-      id: 'E8RJkjfdcwgtyoPMjQ_Olg',
-      name: 'Four Barrel Coffee',
-      distance: 2.4,
-      reviewCount: 1738,
-      rating: 4,
-      price: '$',
-      phone: '+14152520800',
-      city: 'San Francisco',
-      latitude: 37.7670169511878,
-      longitude: -122.42184275,
-      url: 'https://www.yelp.com/biz/four-barrel-coffee-san-francisco',
-      transactions: ['pickup', 'delivery'],
-      categories: [
-        {
-          alias: 'coffee',
-          title: 'Coffee & Tea',
-        },
-      ],
-    }
-    var parseRestaurant = []
+
+    var parseRestaurant = [] //for testing purposes
     parseRestaurant['id'] = 'E8RJkjfdcwgtyoPMjQ_Olg'
     parseRestaurant['name'] = 'Four Barrel Coffee'
+    parseRestaurant['distance'] = 2.4
+    parseRestaurant['reviewCount'] = 1738
+    parseRestaurant['rating'] = 4
+    parseRestaurant['price'] = '$'
     parseRestaurant['phone'] = '+14152520800'
+    parseRestaurant['city'] = 'San Francisco'
     parseRestaurant['latitude'] = 37.7670169511878
     parseRestaurant['longitude'] = -122.42184275
     parseRestaurant['url'] = 'https://www.yelp.com/biz/four-barrel-coffee-san-francisco'
+    parseRestaurant['transactions'] = ['pickup', 'delivery']
+    parseRestaurant['categories'] = [
+      {
+        alias: 'coffee',
+        title: 'Coffee & Tea',
+      },
+    ]
 
     this.state = {
       // restaurant: this.props.navigation.state.params.restaurant,
@@ -67,34 +60,31 @@ export default class Match extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer} /*Header for header text and heart icon */>
-          <Text
-            style={[styles.general, { fontSize: 33, fontWeight: 'bold', marginHorizontal: '3%' }]}
-          >
+          <Text style={[styles.general, { fontSize: 33, marginHorizontal: '3%' }]}>
             WeChews you!
           </Text>
           <Icon name="heart" style={[styles.general, { fontSize: 35, paddingVertical: '1%' }]} />
         </View>
-        <Text style={[styles.general, { fontSize: 20 }]}>Your group has selected:</Text>
-        <Text style={[styles.general, { fontSize: 30 }]}>{restaurant.name}</Text>
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          style={styles.map}
-          region={{
-            //latitude: 37.7670169511878,
-            //longitude: -122.42184275,
-            latitude: restaurant.latitude,
-            longitude: restaurant.longitude,
-            latitudeDelta: 0.015,
-            longitudeDelta: 0.015,
-          }}
-        >
-          <Marker
-            coordinate={{
+        <View style={styles.restaurantCardContainer} /*Restaurant card*/>
+          <Text style={[styles.general, styles.restaurantNameText]}>{restaurant.name}</Text>
+          <MapView
+            provider={PROVIDER_GOOGLE}
+            style={styles.map}
+            region={{
               latitude: restaurant.latitude,
               longitude: restaurant.longitude,
+              latitudeDelta: 0.015,
+              longitudeDelta: 0.015,
             }}
-          />
-        </MapView>
+          >
+            <Marker
+              coordinate={{
+                latitude: restaurant.latitude,
+                longitude: restaurant.longitude,
+              }}
+            />
+          </MapView>
+        </View>
         <TouchableHighlight //Button to open restaurant on yelp
           underlayColor="white"
           style={styles.yelpButton}
@@ -138,18 +128,43 @@ const styles = StyleSheet.create({
     color: hex,
     textAlign: 'center',
   },
-  map: {
-    alignSelf: 'center',
-    height: Dimensions.get('window').width * 0.55,
-    width: Dimensions.get('window').width * 0.55,
-  },
   /* Alignment for header text and icon on top of screen */
   headerContainer: {
     flexDirection: 'row',
     alignContent: 'center',
     justifyContent: 'center',
     padding: '1%',
-    paddingTop: '2%',
+    paddingTop: '5%',
+  },
+  /* Container holding the restaurant details and map */
+  restaurantCardContainer: {
+    marginHorizontal: '9%',
+    padding: '2%',
+    borderRadius: 14, //roundness of border
+    height: '65%',
+    width: '82%',
+    backgroundColor: hex,
+  },
+  //Name of restaurant
+  restaurantNameText: {
+    color: 'white',
+    fontSize: 25,
+    textAlign: 'left',
+    padding: '3%',
+  },
+  //Small info text inside restaurant card
+  restaurantInfoText: {
+    color: 'white',
+    fontSize: 15,
+    textAlign: 'left',
+    padding: '2%',
+  },
+  //Styling for Google map for restaurant
+  map: {
+    alignSelf: 'center',
+    justifyContent: 'flex-end',
+    height: Dimensions.get('window').height * 0.4,
+    width: Dimensions.get('window').width * 0.82,
   },
   /* For "Open on Yelp" button */
   yelpButton: {
@@ -161,7 +176,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderWidth: 2.5,
     borderColor: hex,
-    marginTop: '2%',
+    marginTop: '3%',
   },
   /* For "Call number" button */
   callButton: {
@@ -174,12 +189,13 @@ const styles = StyleSheet.create({
     borderWidth: 2.5,
     borderColor: hex,
   },
+  /* Text for exit round link */
   exitRoundText: {
     color: '#6A6A6A',
     justifyContent: 'center',
     alignSelf: 'center',
     width: '55%',
     height: '4%',
-    marginBottom: '2%',
+    marginBottom: '4%',
   },
 })
