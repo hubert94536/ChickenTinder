@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Modal, Text, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import modalStyles from '../../styles/modalStyles.js'
@@ -121,4 +121,5 @@ Join.propTypes = {
   cancel: PropTypes.func,
   onPress: PropTypes.func,
   name: PropTypes.string,
+  visible: PropTypes.bool
 }

@@ -94,8 +94,16 @@ export default class Location extends Component {
               {this.state.zipValid && <Text style={{ textAlign: 'center' }}> </Text>}
               {!this.state.zipValid && (
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: '7.5%' }}>
-                  <AntDesign name="exclamationcircle" style={{ color: 'red', marginRight: '2%', fontSize: 15 }} />
-                  <Text style={[screenStyles.text, { textAlign: 'center', color: 'red', fontFamily: font }]}>
+                  <AntDesign
+                    name="exclamationcircle"
+                    style={{ color: 'red', marginRight: '2%', fontSize: 15 }}
+                  />
+                  <Text
+                    style={[
+                      screenStyles.text,
+                      { textAlign: 'center', color: 'red', fontFamily: font },
+                    ]}
+                  >
                     Invalid zip code
                   </Text>
                 </View>
@@ -139,7 +147,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 5,
     padding: '1%',
-    fontFamily: font
+    fontFamily: font,
   },
 })
 

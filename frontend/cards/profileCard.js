@@ -7,7 +7,7 @@ import Alert from '../modals/alert.js'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
 
-const font = 'CircularStd-Medium'
+const font = 'CircularStd-Book'
 const hex = '#F15763'
 
 export default class ProfileCard extends React.Component {
@@ -48,28 +48,41 @@ export default class ProfileCard extends React.Component {
 
   render() {
     return (
-      <View style={{ flexDirection: 'row', flex: 1, justifyContent:'flex-end' }}>
-        <Image
-          source={{
-            uri: this.props.image,
-          }}
-          style={imgStyles.button}
-        />
-        <View
-          style={{
-            alignSelf: 'center',
-            marginLeft: '1%',
-            flex: 0.8,
-          }}
-        >
-          <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
-          <Text style={{ fontFamily: font }}>@{this.props.username}</Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          flex: 1,
+          justifyContent: 'space-between',
+          marginRight: '5%',
+          marginLeft: '5%',
+          marginTop: '3%',
+        }}
+      >
+        <View style={{ flexDirection: 'row' }}>
+          <Image
+            source={{
+              uri: this.props.image,
+            }}
+            style={imgStyles.button}
+          />
+          <View
+            style={{
+              alignSelf: 'center',
+              marginLeft: '7%',
+            }}
+          >
+            <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
+            <Text style={{ fontFamily: font, color: hex }}>@{this.props.username}</Text>
+          </View>
         </View>
         {this.state.isFriend && (
           <TouchableHighlight onPress={() => this.setState({ deleteFriend: true })}>
-            <View style={{ flexDirection: 'row', flex: 1, alignItems:'center' }}>
-              <Text style={(imgStyles.text, { marginLeft: '25%', color: hex })}>Friends</Text>
-              <Icon style={(imgStyles.icon, { marginLeft: '5%', color: hex, fontSize: 18 })} name="heart" />
+            <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
+              <Text style={(imgStyles.text, { color: hex, marginRight: '5%' })}>Friends</Text>
+              <Icon
+                style={(imgStyles.icon, { marginLeft: '5%', color: hex, fontSize: 18 })}
+                name="heart"
+              />
             </View>
           </TouchableHighlight>
         )}
@@ -158,7 +171,7 @@ export default class ProfileCard extends React.Component {
           <Alert
             title="Error, please try again"
             buttonAff="Close"
-            height='20%'
+            height="20%"
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />

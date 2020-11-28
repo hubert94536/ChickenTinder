@@ -139,15 +139,15 @@ export default class ChooseFriends extends React.Component {
           </View>
         </View>
         {this.state.deleteFriend && (
-            <Alert
-              title="Are you sure?"
-              body={'You are about to remove @' + this.props.username + ' as a friend'}
-              buttonAff="Delete"
-              height='25%'
-              press={() => this.deleteFriend()}
-              cancel={() => this.setState({ deleteFriend: false })}
-            />
-          )}
+          <Alert
+            title="Are you sure?"
+            body={'You are about to remove @' + this.props.username + ' as a friend'}
+            buttonAff="Delete"
+            height="25%"
+            press={() => this.deleteFriend()}
+            cancel={() => this.setState({ deleteFriend: false })}
+          />
+        )}
       </Modal>
     )
   }
