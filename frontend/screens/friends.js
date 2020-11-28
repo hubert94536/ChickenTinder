@@ -37,6 +37,7 @@ const people = [
   },
 ]
 
+
 // Used to make refreshing indicator appear/disappear
 const sleep = (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds))
