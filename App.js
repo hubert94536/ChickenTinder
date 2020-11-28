@@ -45,7 +45,7 @@ export default class App extends React.Component {
     var start
     var unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user === null) {
-        start = 'Login'
+        start = 'Match'
       } else {
         start = 'Home'
       }

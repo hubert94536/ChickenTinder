@@ -48,7 +48,7 @@ export default StyleSheet.create({
   },
   medButtonText: {
     fontFamily: 'CircularStd-Medium',
-    fontSize: 20,
+    fontSize: 15,
     textAlign: 'center',
   },
 })
