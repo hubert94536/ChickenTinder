@@ -1,5 +1,7 @@
 import React from 'react'
 import {
+  Dimensions,
+  Modal,
   PermissionsAndroid,
   ScrollView,
   StyleSheet,
@@ -10,7 +12,6 @@ import {
   View,
 } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
-import DropDownPicker from 'react-native-dropdown-picker'
 import Geolocation from 'react-native-geolocation-service'
 import PropTypes from 'prop-types'
 import Slider from '@react-native-community/slider'
@@ -18,55 +19,14 @@ import Alert from '../modals/alert.js'
 import ChooseFriends from '../modals/chooseFriends.js'
 import Socket from '../apis/socket.js'
 import TagsView from '../tagsView'
+import Location from '../modals/chooseLocation.js'
+import Time from '../modals/chooseTime.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
+import Icon from 'react-native-vector-icons/AntDesign'
 
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
-
-//  need this for choosing the time
-const hours = [
-  { label: '0', value: 0 },
-  { label: '1', value: 1 },
-  { label: '2', value: 2 },
-  { label: '3', value: 3 },
-  { label: '4', value: 4 },
-  { label: '5', value: 5 },
-  { label: '6', value: 6 },
-  { label: '7', value: 7 },
-  { label: '8', value: 8 },
-  { label: '9', value: 9 },
-  { label: '10', value: 10 },
-  { label: '11', value: 11 },
-  { label: '12', value: 12 },
-  { label: '13', value: 13 },
-  { label: '14', value: 14 },
-  { label: '15', value: 15 },
-  { label: '16', value: 16 },
-  { label: '17', value: 17 },
-  { label: '18', value: 18 },
-  { label: '19', value: 19 },
-  { label: '20', value: 20 },
-  { label: '21', value: 21 },
-  { label: '22', value: 22 },
-  { label: '23', value: 23 },
-]
-
-//  need this for choosing the time
-const minutes = [
-  { label: '00', value: 0 },
-  { label: '05', value: 5 },
-  { label: '10', value: 10 },
-  { label: '15', value: 15 },
-  { label: '20', value: 20 },
-  { label: '25', value: 25 },
-  { label: '30', value: 30 },
-  { label: '35', value: 35 },
-  { label: '40', value: 40 },
-  { label: '45', value: 45 },
-  { label: '50', value: 50 },
-  { label: '55', value: 55 },
-]
 
 const tagsCuisine = [
   'American',
@@ -116,6 +76,7 @@ export default class FilterSelector extends React.Component {
       host: this.props.host,
       isHost: this.props.isHost,
       distance: 5,
+      zipcode: '',
       location: null,
       useLocation: false,
       hour: date.getUTCHours(),
@@ -126,8 +87,9 @@ export default class FilterSelector extends React.Component {
       selectedPrice: [],
       selectedRestriction: [],
       // showing alerts and modals
+      chooseTime: false,
       locationAlert: false,
-      formatAlert: false,
+      chooseLocation: false,
       chooseFriends: false,
       errorAlert: false,
     }
@@ -276,6 +238,10 @@ export default class FilterSelector extends React.Component {
     }
   }
 
+  setLocation(zip) {
+    this.setState({ zipcode: zip, chooseLocation: false })
+  }
+
   render() {
     return (
       <View style={styles.mainContainer}>
@@ -388,63 +354,6 @@ export default class FilterSelector extends React.Component {
           {this.state.isHost && (
             <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '2%' }}>
               <Text style={[screenStyles.text, styles.header]}>Open at:</Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <DropDownPicker
-                  selectedLabelStyle={{
-                    color: hex,
-                    fontFamily: font,
-                    fontSize: 20,
-                    textAlign: 'right',
-                  }}
-                  arrowColor={hex}
-                  arrowSize={25}
-                  placeholder=" "
-                  items={hours}
-                  containerStyle={{ height: 40, width: '50%' }}
-                  style={{
-                    flexDirection: 'row-reverse',
-                    backgroundColor: 'white',
-                    borderWidth: 0,
-                  }}
-                  labelStyle={{
-                    color: hex,
-                    fontSize: 20,
-                    fontFamily: font,
-                  }}
-                  onChangeItem={(selection) => this.setState({ hour: selection.value })}
-                />
-                <Text
-                  style={{
-                    fontFamily: font,
-                    color: hex,
-                    fontSize: 25,
-                  }}
-                >
-                  :
-                </Text>
-                <DropDownPicker
-                  selectedLabelStyle={{
-                    color: hex,
-                    fontFamily: font,
-                    fontSize: 20,
-                  }}
-                  arrowColor={hex}
-                  arrowSize={25}
-                  placeholder=" "
-                  items={minutes}
-                  containerStyle={{ height: 40, width: '50%' }}
-                  style={{
-                    backgroundColor: 'white',
-                    borderWidth: 0,
-                  }}
-                  labelStyle={{
-                    color: hex,
-                    fontSize: 20,
-                    fontFamily: font,
-                  }}
-                  onChangeItem={(selection) => this.setState({ minute: selection.value })}
-                />
-              </View>
             </View>
           )}
           {this.state.isHost && (
@@ -477,10 +386,14 @@ export default class FilterSelector extends React.Component {
             {this.state.isHost ? "Let's Go" : 'Submit Filters'}
           </Text>
         </TouchableHighlight>
-        {(this.state.locationAlert || this.state.formatAlert || this.state.chooseFriends) && (
+        {(this.state.locationAlert ||
+          this.state.errorAlert ||
+          this.state.chooseFriends ||
+          this.state.chooseLocation ||
+          this.state.chooseTime) && (
           <BlurView
-            blurType="light"
-            blurAmount={20}
+            blurType="dark"
+            blurAmount={10}
             reducedTransparencyFallbackColor="white"
             style={modalStyles.blur}
           />
@@ -489,37 +402,36 @@ export default class FilterSelector extends React.Component {
           <Alert
             title="Location Required"
             body="Your location is required to find nearby restuarants"
-            button
-            buttonText="Close"
+            buttonAff="Close"
+            height="23%"
             press={() => this.setState({ locationAlert: false })}
             cancel={() => this.setState({ locationAlert: false })}
           />
         )}
-        {this.state.formatAlert && (
-          <Alert
-            title="Error"
-            body="Make sure your location is in the correct format: City, State"
-            button
-            buttonText="Close"
-            press={() => this.setState({ formatAlert: false })}
-            cancel={() => this.setState({ formatAlert: false })}
-          />
-        )}
+        <Location
+          visible={this.state.chooseLocation}
+          press={(zip) => this.setLocation(zip)}
+          cancel={() => this.setState({ chooseLocation: false })}
+        />
         {this.state.errorAlert && (
           <Alert
             title="Error, please try again"
-            button
-            buttonText="Close"
+            buttonAff="Close"
+            height="20%"
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />
         )}
-        {this.state.chooseFriends && (
-          <ChooseFriends
-            members={this.props.members}
-            press={() => this.setState({ chooseFriends: false })}
-          />
-        )}
+        <ChooseFriends
+          visible={this.state.chooseFriends}
+          members={this.props.members}
+          press={() => this.setState({ chooseFriends: false })}
+        />
+        <Time
+          visible={this.state.chooseTime}
+          cancel={() => this.setState({ chooseTime: false })}
+          press={(hr, min) => this.setState({ hour: hr, minute: min, chooseTime: false })}
+        />
       </View>
     )
   }
@@ -529,6 +441,7 @@ FilterSelector.propTypes = {
   host: PropTypes.string,
   isHost: PropTypes.bool,
   press: PropTypes.func,
+  members: PropTypes.array,
 }
 
 const styles = StyleSheet.create({

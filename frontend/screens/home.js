@@ -2,13 +2,16 @@ import React from 'react'
 import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
-import accountsApi from '../apis/accountsApi.js'
 import Alert from '../modals/alert.js'
-import friendsApi from '../apis/friendsApi.js'
 import Join from '../modals/join.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import TabBar from '../nav.js'
+<<<<<<< HEAD
+=======
+import friendsApi from '../apis/friendsApi.js'
+import accountsApi from '../apis/accountsApi.js'
+>>>>>>> eba913259aa3bd98b1dd99a1145586158356bbff
 
 var img = ''
 var name = ''
@@ -150,21 +153,22 @@ class Home extends React.Component {
           goNotifs={() => this.props.navigation.navigate('Notifications')}
           goProfile={() => this.props.navigation.navigate('Profile')}
           cur="Home"
+<<<<<<< HEAD
+=======
         />
-        {this.state.join && (
-          <Join
-            image={this.state.inviteInfo.pic}
-            username={this.state.inviteInfo.username}
-            name={this.state.inviteInfo.name}
-            cancel={() => this.setState({ join: false })}
-            onPress={() => this.setState({ join: false })}
-          />
-        )}
+        <Join
+          visible={this.state.join}
+          username={this.state.inviteInfo.username}
+          name={this.state.inviteInfo.name}
+          cancel={() => this.setState({ join: false })}
+          onPress={() => this.setState({ join: false })}
+>>>>>>> eba913259aa3bd98b1dd99a1145586158356bbff
+        />
         {this.state.errorAlert && (
           <Alert
             title="Error, please try again"
-            button
-            buttonText="Close"
+            buttonAff="Close"
+            height="20%"
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />

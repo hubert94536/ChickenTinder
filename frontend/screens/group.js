@@ -279,8 +279,8 @@ export default class Group extends React.Component {
             <Alert
               title="Leave?"
               body="You will will not be able to return without invite"
-              button
-              buttonText="Yes"
+              buttonAff="Yes"
+              height="20%"
               press={() => this.leaveGroup()}
               cancel={() => this.cancelAlert()}
             />
@@ -289,8 +289,8 @@ export default class Group extends React.Component {
             <Alert
               title="End the session?"
               body="You will not be able to return"
-              button
-              buttonText="Yes"
+              buttonAff="Yes"
+              height="20%"
               press={() => this.endGroup()}
               cancel={() => this.cancelAlert()}
             />

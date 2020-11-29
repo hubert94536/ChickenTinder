@@ -41,7 +41,7 @@ const Accounts = sequelize.define(
       },
     },
     phone_number: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(15),
       unique: true,
     },
     photo: DataTypes.STRING,
@@ -96,8 +96,8 @@ const Notifications = sequelize.define(
 Notifications.belongsTo(Accounts, { foreignKey: 's_info', foreignKeyConstraint: true })
 Friends.belongsTo(Accounts, { foreignKey: 'f_info', foreignKeyConstraint: true })
 
-// sequelize.sync({ force: true }).then(() => {
-//   console.log('Friend model was synchronized successfully.')
-// })
+/*sequelize.sync({ force: true }).then(() => {
+  console.log('Friend model was synchronized successfully.')
+})*/
 
 module.exports = { Accounts, Friends, Notifications }

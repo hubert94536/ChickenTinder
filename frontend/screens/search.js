@@ -7,6 +7,7 @@ import {
   View
 } from 'react-native'
 import { USERNAME } from 'react-native-dotenv'
+import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { SearchBar } from 'react-native-elements'
 import AsyncStorage from '@react-native-community/async-storage'
@@ -29,7 +30,8 @@ export default class Search extends Component {
     this.state = {
       data: [],
       friends: [],
-      errorAlert: false
+      errorAlert: false,
+      deleteFriend: false,
     };
     friendsApi
     .getFriends()
@@ -75,7 +77,6 @@ export default class Search extends Component {
               }
               resultUsers.push(person);
             }
-            console.log(resultUsers)
             this.setState({data: resultUsers});
           })
           .catch(() => {}),
@@ -130,18 +131,39 @@ export default class Search extends Component {
               requested={item.status}
               total={this.state.data}
               press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
+              showError={() => this.setState({errorAlert: true})}
+              deleteError={() => this.setState({errorAlert: false})}
+              showDelete={() => this.setState({deleteFriend: true})}
+              deleteDelete={() => this.setState({deleteFriend: false})}
             />
           )}
           keyExtractor={(item) => item.username}
           ListHeaderComponent={this.renderHeader}
         />
+        {(this.state.errorAlert || this.state.deleteFriend) && (
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="black"
+          />
+        )}
         {this.state.errorAlert && (
           <Alert
             title="Error, please try again"
-            button
-            buttonText="Close"
-            press={() => this.setState({errorAlert: false})}
-            cancel={() => this.setState({errorAlert: false})}
+            buttonAff="Close"
+            height='20%'
+            press={() => this.setState({ errorAlert: false })}
+            cancel={() => this.setState({ errorAlert: false })}
+          />
+        )}
+        {this.state.deleteFriend && (
+          <Alert
+            title="Are you sure?"
+            body={'You are about to remove @' + this.props.username + ' as a friend'}
+            buttonAff="Delete"
+            height='25%'
+            press={() => this.deleteFriend()}
+            cancel={() => this.setState({ deleteFriend: false })}
           />
         )}
         <TabBar 
@@ -155,10 +177,6 @@ export default class Search extends Component {
     );
   }
 }
-
-// Search.propTypes = {
-//   allFriends: PropTypes.array
-// }
 
 const styles = StyleSheet.create({
   topIcons: {

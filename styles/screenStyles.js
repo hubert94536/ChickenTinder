@@ -1,4 +1,3 @@
-import React from 'react'
 import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
@@ -11,6 +10,10 @@ export default StyleSheet.create({
   },
   text: {
     fontFamily: 'CircularStd-Medium',
+    color: '#F15763',
+  },
+  textBold: {
+    fontFamily: 'CircularStd-Bold',
     color: '#F15763',
   },
   input: {
