@@ -95,7 +95,7 @@ export default class Match extends React.Component {
         <TouchableHighlight
           /* Button to call phone # */
           style={styles.callButton}
-          //TODO: onPress, call fx to call phone
+          onPress={() => Linking.openURL(`tel:${restaurant.phone}`)}
         >
           <Text style={[screenStyles.medButtonText, { color: hex }]}>Call: {restaurant.phone}</Text>
         </TouchableHighlight>
