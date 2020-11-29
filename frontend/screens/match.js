@@ -4,6 +4,8 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import screenStyles from '../../styles/screenStyles.js'
+import MatchCard from '../cards/matchCard.js'
+
 // commented out during linting but socket is used in commented-out code below
 //import socket from '../apis/socket.js'
 
@@ -15,7 +17,7 @@ export default class Match extends React.Component {
   constructor(props) {
     super(props)
 
-    var parseRestaurant = [] //for testing purposes
+    /*var parseRestaurant = [] //dummy restaurant for testing purposes
     parseRestaurant['id'] = 'E8RJkjfdcwgtyoPMjQ_Olg'
     parseRestaurant['name'] = 'Four Barrel Coffee'
     parseRestaurant['distance'] = 2.4
@@ -33,18 +35,20 @@ export default class Match extends React.Component {
         alias: 'coffee',
         title: 'Coffee & Tea',
       },
-    ]
+    ] */
 
     this.state = {
-      // restaurant: this.props.navigation.state.params.restaurant,
-      restaurant: parseRestaurant,
+      navigation: this.props.navigation,
+      restaurant: this.props.navigation.state.params.restaurant,
+      //restaurant: parseRestaurant,
       //host: this.props.host, only for socket testing
     }
   }
 
   endRound() {
     // socket.leaveRoom(this.props.host)
-    this.props.navigation.navigate('Home')
+    const { navigation } = this.state
+    navigation.navigate('Home')
   }
 
   componentDidMount() {
@@ -66,7 +70,7 @@ export default class Match extends React.Component {
           <Icon name="heart" style={[styles.general, { fontSize: 35, paddingVertical: '1%' }]} />
         </View>
         <View style={styles.restaurantCardContainer} /*Restaurant card*/>
-          <Text style={[styles.general, styles.restaurantNameText]}>{restaurant.name}</Text>
+          <MatchCard card={restaurant} />
           <MapView
             provider={PROVIDER_GOOGLE}
             style={styles.map}
@@ -143,14 +147,22 @@ const styles = StyleSheet.create({
     borderRadius: 14, //roundness of border
     height: '65%',
     width: '82%',
-    backgroundColor: hex,
+    //backgroundColor: hex, for testing
   },
-  //Name of restaurant
+  /*Name of restaurant
   restaurantNameText: {
     color: 'white',
     fontSize: 25,
     textAlign: 'left',
     padding: '3%',
+  },
+  //Styling for restaurant info card with info, image/gradient
+  restaurantInfoCard: {
+    alignSelf: 'center',
+    justifyContent: 'flex-start',
+    //height: '20%',
+    //width: '70%',
+    backgroundColor: 'grey',
   },
   //Small info text inside restaurant card
   restaurantInfoText: {
@@ -158,13 +170,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
     textAlign: 'left',
     padding: '2%',
-  },
+  }, */
   //Styling for Google map for restaurant
   map: {
     alignSelf: 'center',
     justifyContent: 'flex-end',
     height: Dimensions.get('window').height * 0.4,
     width: Dimensions.get('window').width * 0.82,
+    borderRadius: 14,
   },
   /* For "Open on Yelp" button */
   yelpButton: {
@@ -176,7 +189,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderWidth: 2.5,
     borderColor: hex,
-    marginTop: '3%',
+    marginTop: '8%',
   },
   /* For "Call number" button */
   callButton: {
