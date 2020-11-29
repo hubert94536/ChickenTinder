@@ -13,7 +13,6 @@ import { BlurView } from '@react-native-community/blur'
 import { USERNAME } from 'react-native-dotenv'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import Swiper from 'react-native-swiper'
 import AsyncStorage from '@react-native-community/async-storage'
 import PropTypes from 'prop-types'
 
@@ -29,7 +28,7 @@ import modalStyles from '../../styles/modalStyles.js'
 const hex = '#F15763'
 const hexBlack = '#000000'
 const font = 'CircularStd-Medium'
-let memberList = []
+let memberRenderList = []
 let myUsername = ''
 AsyncStorage.getItem(USERNAME).then((res) => {
   myUsername = res
@@ -127,7 +126,7 @@ export default class Group extends React.Component {
 
   // update user cards in group
   updateMemberList() {
-    memberList = []
+    memberRenderList = []
     for (const user in this.state.members) {
       const a = {}
       a.name = this.state.members[user].name
@@ -138,13 +137,22 @@ export default class Group extends React.Component {
       a.isHost = this.state.host == this.state.username
       a.key = user
       a.f = false
-      memberList.push(a)
+      memberRenderList.push(a)
+      memberRenderList.push(a)
+      memberRenderList.push(a)
+      memberRenderList.push(a)
+      memberRenderList.push(a)
+      memberRenderList.push(a)
+      memberRenderList.push(a)
+      memberRenderList.push(a)
+      memberRenderList.push(a)
+      memberRenderList.push(a)
     }
     const footer = {}
     footer.f = true
-    memberList.push(footer)
+    memberRenderList.push(footer)
     // console.log('\n\n\n\n\n\n=========================')
-    // console.log(memberList)
+    // console.log(memberRenderList)
     // console.log('=========================\n\n\n\n\n\n')
   }
 
@@ -166,7 +174,6 @@ export default class Group extends React.Component {
 
   // sets the filters, goes back to groups and stops user from going back to filters
   submitFilters(setFilters) {
-    this.refs.swiper.scrollBy(-1)
     this.setState({ swipe: false })
     this.setState({ filters: setFilters })
   }
@@ -205,7 +212,7 @@ export default class Group extends React.Component {
                         fontFamily: font,
                       }}
                     >
-                      {memberList.length - 1}
+                      {memberRenderList.length - 1}
                     </Text>
                     <Text style={[styles.divider, { color: '#F15763' }]}>|</Text>
                     <Text style={[styles.waiting, { color: '#F15763' }]}>
@@ -217,7 +224,7 @@ export default class Group extends React.Component {
                   color: '#F15763',
                   marginBottom: 10,
                 }}
-                data={memberList}
+                data={memberRenderList}
                 initialNumToRender={8}
                 contentContainerStyle={styles.memberContainer}
                 renderItem={({ item }) => {
@@ -260,7 +267,6 @@ export default class Group extends React.Component {
                         </View>
                       </View>
                     )
-                    // return <ChooseFriends members={memberList} press={this._handleChooseFriendsPress} />
                   } else {
                     return (
                       <GroupCard
@@ -363,7 +369,7 @@ export default class Group extends React.Component {
               )}
               <ChooseFriends
                 visible={this.state.chooseFriends}
-                members={memberList}
+                members={memberRenderList}
                 press={() => this.setState({ chooseFriends: false })}
               />
             </View>
@@ -378,7 +384,7 @@ export default class Group extends React.Component {
                     host={this.state.host}
                     isHost={this.state.host === this.state.username}
                     press={(setFilters) => this.submitFilters(setFilters)}
-                    members={memberList}
+                    members={memberRenderList}
                   />
                 </View>
               </View>

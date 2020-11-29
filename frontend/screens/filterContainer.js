@@ -81,7 +81,6 @@ class DraggableView extends Component {
     }).start()
 
     position.addListener((position) => {
-      // if (!this.center) return
       this.onUpdatePosition(position.value)
     })
   }
@@ -98,7 +97,6 @@ class DraggableView extends Component {
   }
 
   moveDrawerView(gestureState) {
-    //   if (!this.center) return
     // Grab "location" of dropdown
     const position = gestureState.moveY - SCREEN_HEIGHT * 1.1
     this.onUpdatePosition(position)
@@ -107,7 +105,7 @@ class DraggableView extends Component {
   moveFinished(gestureState) {
     const isGoingUp = gestureState.vy < 0
     const releaseLocation = gestureState.moveY - SCREEN_HEIGHT * 1.1
-    //   if (!this.center) return
+
     this.startAnimation(
       gestureState.vy,
       releaseLocation,
@@ -119,7 +117,7 @@ class DraggableView extends Component {
   }
 
   moveFinishedUpper() {
-    //   if (!this.center) return
+
     this.startAnimation(-10, 0, this.state.initialPositon, 0, this.state.finalPosition)
     this.props.onRelease && this.props.onRelease(true)
   }
@@ -151,8 +149,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   drawer: {
-    zIndex: 8,
-    elevation: 8,
+    zIndex: 7,
+    elevation: 7,
   },
   container: {
     width: '100%',
@@ -173,6 +171,8 @@ DraggableView.propTypes = {
   renderHeader: PropTypes.func,
   autoDrawerUp: PropTypes.bool,
   initialDrawerSize: PropTypes.number,
+  retractColor: PropTypes.string,
+  expandColor: PropTypes.string,
 }
 
 DraggableView.defaultProps = {

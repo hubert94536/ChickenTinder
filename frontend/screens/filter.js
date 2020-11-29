@@ -19,10 +19,13 @@ import SliderText from 'react-native-slider-text'
 import Alert from '../modals/alert.js'
 import ChooseFriends from '../modals/chooseFriends.js'
 import Socket from '../apis/socket.js'
-import TagsView from '../tagsView'
+import TagsView from '../tagsView.js'
+import DynamicTags from '../tagsViewGenerator.js'
+import BackgroundButton from '../backgroundButton.js'
 import Location from '../modals/chooseLocation.js'
 import Time from '../modals/chooseTime.js'
 import Size from '../modals/chooseSize.js'
+import Majority from '../modals/chooseMajority.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
@@ -30,6 +33,11 @@ import SwitchButton from 'switch-button-react-native'
 
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
+
+const BACKGROUND_COLOR = '#F15763'
+const BORDER_COLOR = 'white'
+const TEXT_COLOR = 'white'
+const ACCENT_COLOr = '#F15763'
 
 const tagsCuisine = [
   'American',
@@ -48,7 +56,7 @@ const tagsDiet = ['Vegan', 'Vegetarian']
 
 const tagsPrice = ['$', '$$', '$$$', '$$$$']
 
-const tagsSizes = ['20', '30', 'Custom: ']
+const tagsSizes = [10, 20, 30]
 
 const tagsMajority = ['6', '10', 'All', 'Custom: ']
 
@@ -91,7 +99,7 @@ export default class FilterSelector extends React.Component {
       asap: true,
       lat: 0,
       long: 0,
-      size: 6,
+      size: 10,
       majority: this.props.members.length,
       selectedCuisine: [],
       selectedPrice: [],
@@ -279,16 +287,32 @@ export default class FilterSelector extends React.Component {
                 <Text style={[screenStyles.text, styles.header]}>Majority</Text>
                 <Text style={styles.subtext}>Members needed to get a match</Text>
               </View>
-              <TagsView
+              <DynamicTags
                 all={tagsMajority}
                 selected={this.state.selectedMajority}
+                selectedNum={this.state.majority}
                 isExclusive={true}
                 onChange={(event) => {
                   if (event[0] === 'Custom: ') {
                     this.setState({ chooseMajority: true })
-                  }
+                  } else if (event[0] === 'All') {
+                    this.setState({ majority: this.props.members.length })
+                  } else {
+                    this.setState({ majority: parseInt(event) })
 
+                    console.log(this.state.majority)
+                    console.log(this.state.majority)
+                    console.log(this.state.majority)
+                    console.log(this.state.majority)
+                    console.log(this.state.majority)
+                    console.log(this.state.majority)
+                    console.log(this.state.majority)
+                    console.log(this.state.majority)
+                    console.log(this.state.majority)
+                    console.log(this.state.majority)
+                  }
                   this.setState({ selectedMajority: event })
+                  
                 }}
               />
             </View>
@@ -310,8 +334,7 @@ export default class FilterSelector extends React.Component {
                   if (event[0] === 'Custom: ') {
                     this.setState({ chooseSize: true })
                   }
-                  console.log(event)
-                  this.setState({ selectedSize: event })
+                  this.setState({ selectedSize: event, size: event[0] })
                 }}
               />
             </View>
@@ -329,10 +352,10 @@ export default class FilterSelector extends React.Component {
                   style={[
                     styles.subtext,
                     {
-                      backgroundColor: hex,
+                      backgroundColor: BACKGROUND_COLOR,
                       borderRadius: 20,
                       borderWidth: 1,
-                      borderColor: 'white',
+                      borderColor: BORDER_COLOR,
                     },
                   ]}
                 >
@@ -403,38 +426,25 @@ export default class FilterSelector extends React.Component {
                 <Text style={[screenStyles.text, styles.header]}>Time</Text>
                 <Text style={styles.subtext}>Select when to eat</Text>
               </View>
-              <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                <TouchableHighlight
-                  underlayColor={'white'}
+              <View style={styles.buttonContainer}>
+                <BackgroundButton
+                  backgroundColor={BACKGROUND_COLOR}
+                  textColor={TEXT_COLOR}
+                  borderColor={BORDER_COLOR}
                   onPress={() => {
                     const hr = date.getUTCHours()
                     const min = date.getUTCMinutes()
                     this.setState({ hour: hr, minute: min, asap: true })
                   }}
-                  style={[
-                    styles.subtext,
-                    {
-                      borderRadius: 20,
-                      borderWidth: 1,
-                      borderColor: 'white',
-                      backgroundColor: this.state.asap ? 'white' : hex,
-                    },
-                  ]}
-                >
-                  <Text
-                    style={{
-                      color: this.state.asap ? hex : 'white',
-                      fontFamily: font,
-                      fontSize: 15,
-                      paddingLeft: 7,
-                      paddingRight: 7,
-                      paddingTop: 3,
-                      paddingBottom: 3,
-                    }}
-                  >
-                    ASAP
-                  </Text>
-                </TouchableHighlight>
+                  title={'ASAP'}
+                />
+                <BackgroundButton
+                  backgroundColor={this.state.asap ? BACKGROUND_COLOR : BORDER_COLOR}
+                  textColor={this.state.asap ? BORDER_COLOR : BACKGROUND_COLOR}
+                  borderColor={BORDER_COLOR}
+                  onPress={() => this.setState({ chooseTime: true, asap: false })}
+                  title={'Set Time'}
+                />
                 <TouchableHighlight
                   underlayColor={'white'}
                   onPress={() => this.setState({ chooseTime: true, asap: false })}
@@ -496,27 +506,18 @@ export default class FilterSelector extends React.Component {
             />
           </View>
         </ScrollView>
-        <TouchableHighlight
-          underlayColor={hex}
-          style={[screenStyles.medButton, styles.touchable]}
-          onPress={() => this.evaluateFilters()}
-        >
-          <Text style={[screenStyles.text, styles.nextTitle]}>
-            {this.state.isHost ? "Let's Go" : 'Submit Filters'}
-          </Text>
-        </TouchableHighlight>
         {(this.state.locationAlert ||
           this.state.errorAlert ||
           this.state.chooseFriends ||
           this.state.chooseLocation ||
           this.state.chooseTime) && (
-          <BlurView
-            blurType="dark"
-            blurAmount={10}
-            reducedTransparencyFallbackColor="white"
-            style={modalStyles.blur}
-          />
-        )}
+            <BlurView
+              blurType="dark"
+              blurAmount={10}
+              reducedTransparencyFallbackColor="white"
+              style={modalStyles.blur}
+            />
+          )}
         {this.state.locationAlert && (
           <Alert
             title="Location Required"
@@ -565,7 +566,10 @@ export default class FilterSelector extends React.Component {
           subtext={'Choose the number of members needed to get a match'}
           visible={this.state.chooseMajority}
           cancel={() => this.setState({ chooseMajority: false })}
-          press={(sz) => this.setState({ majority: sz, chooseMajority: false })}
+          press={(sz) => {
+            console.log(sz)
+            this.setState({ majority: sz, chooseMajority: false })
+          }}
         />
       </View>
     )
@@ -589,12 +593,13 @@ const styles = StyleSheet.create({
   titleStyle: {
     flexDirection: 'row',
     justifyContent: 'center',
-    margin: '5%',
+    marginTop: '3%',
+    marginBottom: '1%',
   },
   smallTitle: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: '3%',
+    marginTop: '2%',
   },
   titleSub: {
     color: 'white',
@@ -643,5 +648,11 @@ const styles = StyleSheet.create({
   },
   inputDisabled: {
     backgroundColor: 'white',
+  },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingVertical: 5,
   },
 })
