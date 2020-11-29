@@ -120,7 +120,7 @@ export default class createAccount extends React.Component {
         {this.state.photo == null && (
             <Image
               source={this.state.defImg}
-              style={styles.avatar}
+              style={screenStyles.avatar}
               />
               )}
             
@@ -129,7 +129,7 @@ export default class createAccount extends React.Component {
               source={{
                 uri: this.state.photo,
               }}
-              style={styles.avatar}
+              style={screenStyles.avatar}
               />
               )}
         <Text
@@ -192,15 +192,14 @@ export default class createAccount extends React.Component {
           underlayColor={'white'}
           onPress={() => this.handleClick()}
           style={[
-            screenStyles.medButton,
+            screenStyles.longButton,
             styles.button,
-            { borderColor: hex, backgroundColor: hex },
           ]}
         >
           <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
             <Text
               style={[
-                styles.buttonText,
+                screenStyles.longButtonText,
                 this.state.phonePressed ? { color: hex } : { color: 'white' },
               ]}
             >
@@ -220,18 +219,10 @@ createAccount.propTypes = {
 }
 const styles = StyleSheet.create({
   button: {
-    borderColor: '#3b5998',
-    paddingVertical: 5,
-    paddingHorizontal: 12,
+    borderColor: hex, 
+    backgroundColor: hex ,
     width: '20%',
     marginTop: '3%',
-  },
-
-  buttonText: {
-    alignSelf: 'center',
-    fontFamily: 'CircularStd-Book',
-    fontSize: 18,
-    fontWeight: 'normal',
   },
   mediumText: {
     fontFamily: 'CircularStd-Medium',
@@ -254,12 +245,5 @@ const styles = StyleSheet.create({
     color: 'black',
     marginLeft: '10%',
   },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 63,
-    borderWidth: 4,
-    alignSelf: 'center',
-    margin: '1.5%',
-  },
+  
 })

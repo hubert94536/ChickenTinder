@@ -258,7 +258,7 @@ export default class UserProfileView extends Component {
             {this.state.image == null && (
             <Image
               source={this.state.defImg}
-              style={styles.avatar}
+              style={screenStyles.avatar}
               />
               )}
             
@@ -267,7 +267,7 @@ export default class UserProfileView extends Component {
               source={{
                 uri: this.state.image,
               }}
-              style={styles.avatar}
+              style={screenStyles.avatar}
               />
               )}
 
@@ -700,13 +700,6 @@ const styles = StyleSheet.create({
     fontSize: 25,
     alignSelf: 'center',
     marginRight: '0%',
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 63,
-    borderWidth: 4,
-    alignSelf: 'center',
   },
   modal: {
     height: height * 0.45,
