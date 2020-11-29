@@ -45,7 +45,7 @@ export default class Group extends React.Component {
     this.state = {
       members: members,
       // host: this.props.navigation.state.params.host,
-      host: 'nachenburger',
+      host: 'nachenburgsaer',
       hostName: members[Object.keys(members)[0]],
       needFilters: Object.keys(members).filter((user) => !user.filters).length,
       start: false,
@@ -146,7 +146,6 @@ export default class Group extends React.Component {
       memberRenderList.push(a)
       memberRenderList.push(a)
       memberRenderList.push(a)
-      memberRenderList.push(a)
     }
     const footer = {}
     footer.f = true
@@ -199,33 +198,33 @@ export default class Group extends React.Component {
           initialDrawerSize={0.2}
           renderContainerView={() => (
             <View style={styles.main}>
+              <View style={[styles.center, { flexDirection: 'row' }]}>
+                <Icon name="user" style={[styles.icon, { color: '#F15763' }]} />
+                <Text
+                  style={{
+                    color: '#F15763',
+                    fontWeight: 'bold',
+                    fontFamily: font,
+                  }}
+                >
+                  {memberRenderList.length - 1}
+                </Text>
+                <Text style={[styles.divider, { color: '#F15763' }]}>|</Text>
+                <Text style={[styles.waiting, { color: '#F15763' }]}>
+                  waiting for {this.state.needFilters} member filters
+                </Text>
+              </View>
               <FlatList
-                style={[styles.center, { marginTop: 10 }]}
+                style={[styles.center, { marginTop: 0, height: windowHeight * 0.5 }]}
                 numColumns={2}
-                ListHeaderComponent={
-                  <View style={{ flexDirection: 'row' }}>
-                    <Icon name="user" style={[styles.icon, { color: '#F15763' }]} />
-                    <Text
-                      style={{
-                        color: '#F15763',
-                        fontWeight: 'bold',
-                        fontFamily: font,
-                      }}
-                    >
-                      {memberRenderList.length - 1}
-                    </Text>
-                    <Text style={[styles.divider, { color: '#F15763' }]}>|</Text>
-                    <Text style={[styles.waiting, { color: '#F15763' }]}>
-                      waiting for {this.state.needFilters} member filters
-                    </Text>
-                  </View>
-                }
+                // ListHeaderComponent={
+
+                // }
                 ListHeaderComponentStyle={{
                   color: '#F15763',
                   marginBottom: 10,
                 }}
                 data={memberRenderList}
-                initialNumToRender={8}
                 contentContainerStyle={styles.memberContainer}
                 renderItem={({ item }) => {
                   if (item.f) {
@@ -404,7 +403,7 @@ export default class Group extends React.Component {
                   <Text style={styles.groupTitle}>
                     {this.state.host === this.state.username
                       ? 'Your Group'
-                      : `${this.state.groupName}'s Group`}
+                      : `${this.state.host}'s Group`}
                   </Text>
                   <View style={styles.subheader}>
                     <Text style={styles.headertext2}>Group PIN: </Text>
@@ -494,7 +493,7 @@ const styles = StyleSheet.create({
   leaveText: {
     fontFamily: font,
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 16,
     paddingTop: '2%',
     paddingBottom: '2%',
   },
@@ -521,9 +520,9 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     borderWidth: 2.5,
     borderColor: '#aaa',
-    paddingVertical: 7,
-    paddingHorizontal: 12,
-    width: '50%',
+    paddingVertical: 5,
+    paddingHorizontal: 8,
+    width: '30%',
     alignSelf: 'center',
     alignContent: 'center',
     marginTop: '3%',
@@ -531,7 +530,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     alignSelf: 'center',
-    fontSize: 30,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   bottomText: {
@@ -539,14 +538,13 @@ const styles = StyleSheet.create({
     width: '50%',
     alignSelf: 'center',
     fontWeight: 'bold',
-    marginTop: '3%',
     textAlign: 'center',
     fontFamily: font,
   },
   bigButton: {
-    paddingVertical: 13,
-    paddingHorizontal: 12,
-    width: '60%',
+    paddingVertical: 10,
+    paddingHorizontal: 4,
+    width: '50%',
     marginTop: '3%',
     backgroundColor: '#F15763',
   },
@@ -565,7 +563,6 @@ const styles = StyleSheet.create({
     color: '#aaa',
   },
   memberContainer: {
-    height: windowHeight * 0.5,
     width: '100%',
   },
   subheader: {
