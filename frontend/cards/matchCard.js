@@ -79,7 +79,7 @@ export default class MatchCard extends React.Component {
 
     return (
       <ImageBackground source={this.getCuisine(card.categories[0].title)} style={[styles.card]}>
-        <View style={{ marginLeft: '5%', justifyContent: 'flex-end', flex: 1, marginBottom: '5%' }}>
+        <View style={{ marginLeft: '5%', justifyContent: 'center', flex: 1, marginBottom: '4%' }}>
           <Text style={styles.title}>{card.name}</Text>
           <View
             style={{
@@ -156,7 +156,6 @@ const styles = StyleSheet.create({
     fontSize: Dimensions.get('window').width * 0.08,
     textAlign: 'left',
     fontWeight: 'bold',
-    marginBottom: '3%',
     margin: '3%',
     marginLeft: 0,
   },

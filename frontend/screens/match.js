@@ -17,7 +17,7 @@ export default class Match extends React.Component {
   constructor(props) {
     super(props)
 
-    /*var parseRestaurant = [] //dummy restaurant for testing purposes
+    var parseRestaurant = [] //dummy restaurant for testing purposes
     parseRestaurant['id'] = 'E8RJkjfdcwgtyoPMjQ_Olg'
     parseRestaurant['name'] = 'Four Barrel Coffee'
     parseRestaurant['distance'] = 2.4
@@ -35,12 +35,12 @@ export default class Match extends React.Component {
         alias: 'coffee',
         title: 'Coffee & Tea',
       },
-    ] */
+    ]
 
     this.state = {
       navigation: this.props.navigation,
-      restaurant: this.props.navigation.state.params.restaurant,
-      //restaurant: parseRestaurant,
+      //restaurant: this.props.navigation.state.params.restaurant,
+      restaurant: parseRestaurant,
       //host: this.props.host, only for socket testing
     }
   }
@@ -115,9 +115,14 @@ export default class Match extends React.Component {
 }
 
 Match.propTypes = {
-  restaurant: PropTypes.array,
+  //navig should contain navigate fx + state, which contains params which contains the necessary restaurant arr
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        restaurant: PropTypes.array.isRequired,
+      }),
+    }),
   }),
 }
 
