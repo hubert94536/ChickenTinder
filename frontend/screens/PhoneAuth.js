@@ -173,7 +173,7 @@ class PhoneAuthScreen extends Component {
           <Alert
             title="Error, please try again"
             buttonAff="Close"
-            height='20%'
+            height="20%"
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />
@@ -182,7 +182,7 @@ class PhoneAuthScreen extends Component {
           <Alert
             title="Invalid Phone Number"
             buttonAff="Close"
-            height='20%'
+            height="20%"
             press={() => this.setState({ invalidNumberAlert: false })}
             cancel={() => this.setState({ invalidNumberAlert: false })}
           />
@@ -191,7 +191,7 @@ class PhoneAuthScreen extends Component {
           <Alert
             title="Please enter a 6 digit OTP code."
             buttonAff="Close"
-            height='20%'
+            height="20%"
             press={() => this.setState({ badCodeAlert: false })}
             cancel={() => this.setState({ badCodeAlert: false })}
           />

@@ -506,6 +506,15 @@ export default class FilterSelector extends React.Component {
             />
           </View>
         </ScrollView>
+        {/* <TouchableHighlight
+          underlayColor={hex}
+          style={[screenStyles.medButton, styles.touchable]}
+          onPress={() => this.evaluateFilters()}
+        >
+          <Text style={[screenStyles.text, styles.nextTitle]}>
+            {this.state.isHost ? "Let's Go" : 'Submit Filters'}
+          </Text>
+        </TouchableHighlight> */}
         {(this.state.locationAlert ||
           this.state.errorAlert ||
           this.state.chooseFriends ||

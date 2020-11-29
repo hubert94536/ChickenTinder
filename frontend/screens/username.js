@@ -114,7 +114,7 @@ class Username extends React.Component {
           <Alert
             title="Error, please try again"
             buttonAff="Close"
-            height='20%'
+            height="20%"
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />
@@ -123,7 +123,7 @@ class Username extends React.Component {
           <Alert
             title="Username taken!"
             buttonAff="Close"
-            height='20%'
+            height="20%"
             press={() => this.closeTaken()}
             cancel={() => this.closeTaken()}
           />

@@ -3,6 +3,7 @@ import { Text } from 'react-native'
 import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
 import { createAppContainer } from 'react-navigation'
 import firebase from 'firebase'
+import createAccount from './frontend/screens/createAccount.js'
 import Group from './frontend/screens/group.js'
 import Home from './frontend/screens/home.js'
 import Invite from './frontend/modals/invite.js'
@@ -42,6 +43,9 @@ export default class App extends React.Component {
           },
           Login: {
             screen: Login,
+          },
+          createAccount: {
+            screen: createAccount,
           },
           Username: {
             screen: Username,

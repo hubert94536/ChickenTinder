@@ -1,11 +1,13 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import Alert from '../modals/alert.js'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import imgStyles from '../../styles/cardImage.js'
 import facebookService from '../apis/facebookService.js'
 import screenStyles from '../../styles/screenStyles.js'
+import PropTypes from 'prop-types'
 
 const hex = '#F15763'
-const font = 'CircularStd-Bold'
 
 export default class Login extends React.Component {
   constructor() {
@@ -39,52 +41,106 @@ export default class Login extends React.Component {
 
   render() {
     return (
-      <View>
-        <Text style={[screenStyles.text, screenStyles.title, { marginTop: '40%' }]}>Welcome!</Text>
-        <Text style={[screenStyles.text, screenStyles.medButtonText]}>Let's get goin'.</Text>
+      <View style={[{ backgroundColor: 'white', flex: 1 }]}>
+        <Image
+          source={require('../assets/images/logo2.png')}
+          style={{ alignSelf: 'center', width: 200, height: 248, marginTop: '12%' }}
+        />
+        <Text
+          style={[
+            screenStyles.text,
+            screenStyles.title,
+            {
+              fontFamily: 'CircularStd-Bold',
+              fontSize: 30,
+              marginTop: '2.5%',
+              marginBottom: '10%',
+              fontWeight: 'bold',
+            },
+          ]}
+        >
+          Let's Get Chews-ing!
+        </Text>
         <TouchableHighlight
           onShowUnderlay={() => this.setState({ phonePressed: true })}
           onHideUnderlay={() => this.setState({ phonePressed: false })}
           activeOpacity={1}
-          underlayColor={hex}
+          underlayColor={'white'}
           onPress={() => this.props.navigation.navigate('Phone')}
-          style={[screenStyles.medButton, styles.button, { borderColor: hex }]}
+          style={[
+            screenStyles.medButton,
+            styles.button,
+            { borderColor: hex, backgroundColor: hex },
+          ]}
         >
-          <Text
-            style={[
-              styles.buttonText,
-              this.state.phonePressed ? { color: 'white' } : { color: hex },
-            ]}
-          >
-            Phone Number Login
-          </Text>
+          <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+            <Icon
+              style={[imgStyles.icon, { fontSize: 22, color: 'white', marginRight: '5%' }]}
+              name="phone"
+            />
+            <Text
+              style={[
+                styles.buttonText,
+                this.state.phonePressed ? { color: hex } : { color: 'white' },
+              ]}
+            >
+              Login with Phone
+            </Text>
+          </View>
         </TouchableHighlight>
         <TouchableHighlight
           onShowUnderlay={() => this.setState({ pressed: true })}
           onHideUnderlay={() => this.setState({ pressed: false })}
           activeOpacity={1}
-          underlayColor="#3b5998"
+          underlayColor="white"
           onPress={() => this.login()}
-          style={[screenStyles.medButton, styles.button]}
+          style={[
+            screenStyles.medButton,
+            styles.button,
+            { borderColor: '#3b5998', backgroundColor: '#3b5998' },
+          ]}
         >
-          <Text
-            style={[
-              styles.buttonText,
-              this.state.pressed ? { color: 'white' } : { color: '#3b5998' },
-            ]}
-          >
-            {/* <Icon name="facebook" style={{fontSize: 20}} /> */}
-            Log in with Facebook
-          </Text>
+          <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+            <Icon
+              style={[imgStyles.icon, { fontSize: 22, color: 'white', marginRight: '5%' }]}
+              name="facebook-official"
+            />
+            <Text
+              style={[
+                styles.buttonText,
+                this.state.pressed ? { color: '#3b5998' } : { color: 'white' },
+              ]}
+            >
+              Login with Facebook
+            </Text>
+          </View>
         </TouchableHighlight>
+
+        <Text
+          style={[
+            screenStyles.text,
+            {
+              fontFamily: 'CircularStd-Book',
+              alignSelf: 'center',
+              marginHorizontal: '15%',
+              marginTop: '7.5%',
+              fontSize: 13,
+              textAlign: 'center',
+              lineHeight: 17,
+            },
+          ]}
+        >
+          By clicking log in, you agree with our Terms and Conditions.
+        </Text>
+
         {this.state.alert && (
           <Alert
             title='Open "Facebook?"'
             body="You will be directed to the Facebook app for account verification"
             twoButton
-            buttonText="Open"
-            buttonNeg='Go Back'
-            height='25%'
+            buttonAff="Open"
+            buttonNeg="Go Back"
+            height="25%"
             press={() => this.handleClick()}
             cancel={() => this.cancelClick()}
           />
@@ -93,7 +149,7 @@ export default class Login extends React.Component {
           <Alert
             title="Error, please try again"
             buttonAff="Close"
-            height='20%'
+            height="20%"
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />
@@ -103,18 +159,24 @@ export default class Login extends React.Component {
   }
 }
 
+Login.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
+}
+
 const styles = StyleSheet.create({
   button: {
     borderColor: '#3b5998',
-    paddingVertical: 10,
+    paddingVertical: 5,
     paddingHorizontal: 12,
     width: '70%',
-    marginTop: '10%',
+    marginTop: '7%',
   },
   buttonText: {
     alignSelf: 'center',
-    fontFamily: font,
-    fontSize: 17,
-    fontWeight: 'bold',
+    fontFamily: 'CircularStd-Book',
+    fontSize: 18,
+    fontWeight: 'normal',
   },
 })

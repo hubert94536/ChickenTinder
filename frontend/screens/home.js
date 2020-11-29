@@ -182,18 +182,18 @@ class Home extends React.Component {
           goProfile={() => this.props.navigation.navigate('Profile')}
           cur="Home"
         />
-          <Join
-            visible={this.state.join}
-            username={this.state.inviteInfo.username}
-            name={this.state.inviteInfo.name}
-            cancel={() => this.setState({ join: false })}
-            onPress={() => this.setState({ join: false })}
-          />
+        <Join
+          visible={this.state.join}
+          username={this.state.inviteInfo.username}
+          name={this.state.inviteInfo.name}
+          cancel={() => this.setState({ join: false })}
+          onPress={() => this.setState({ join: false })}
+        />
         {this.state.errorAlert && (
           <Alert
             title="Error, please try again"
             buttonAff="Close"
-            height='20%'
+            height="20%"
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />
