@@ -138,10 +138,8 @@ const styles = StyleSheet.create({
   // Sizing is now based on aspect ratio
   card: {
     backgroundColor: 'lightgray',
-    borderTopRightRadius: 12,
-    borderTopLeftRadius: 12,
-    borderWidth: 0,
-    borderColor: '#000',
+    borderTopRightRadius: 14,
+    borderTopLeftRadius: 14,
     aspectRatio: 14.5 / 8, //height/width ratio
     elevation: 10,
     overflow: 'hidden',

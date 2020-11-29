@@ -71,23 +71,25 @@ export default class Match extends React.Component {
         </View>
         <View style={styles.restaurantCardContainer} /*Restaurant card*/>
           <MatchCard card={restaurant} />
-          <MapView
-            provider={PROVIDER_GOOGLE}
-            style={styles.map}
-            region={{
-              latitude: restaurant.latitude,
-              longitude: restaurant.longitude,
-              latitudeDelta: 0.015,
-              longitudeDelta: 0.015,
-            }}
-          >
-            <Marker
-              coordinate={{
+          <View style={styles.mapContainer}>
+            <MapView
+              provider={PROVIDER_GOOGLE}
+              style={styles.map}
+              region={{
                 latitude: restaurant.latitude,
                 longitude: restaurant.longitude,
+                latitudeDelta: 0.015,
+                longitudeDelta: 0.015,
               }}
-            />
-          </MapView>
+            >
+              <Marker
+                coordinate={{
+                  latitude: restaurant.latitude,
+                  longitude: restaurant.longitude,
+                }}
+              />
+            </MapView>
+          </View>
         </View>
         <TouchableHighlight //Button to open restaurant on yelp
           underlayColor="white"
@@ -154,6 +156,22 @@ const styles = StyleSheet.create({
     width: '82%',
     //backgroundColor: hex, for testing
   },
+  //To give the Google Map rounded bottom edges
+  mapContainer: {
+    borderBottomLeftRadius: 14,
+    borderBottomRightRadius: 14,
+    overflow: 'hidden', //hides map overflow
+    alignSelf: 'center',
+    justifyContent: 'flex-end',
+    height: Dimensions.get('window').height * 0.4,
+    width: Dimensions.get('window').width * 0.82,
+  },
+  map: {
+    alignSelf: 'center',
+    justifyContent: 'flex-end',
+    height: Dimensions.get('window').height * 0.4,
+    width: Dimensions.get('window').width * 0.82,
+  },
   /*Name of restaurant
   restaurantNameText: {
     color: 'white',
@@ -177,13 +195,6 @@ const styles = StyleSheet.create({
     padding: '2%',
   }, */
   //Styling for Google map for restaurant
-  map: {
-    alignSelf: 'center',
-    justifyContent: 'flex-end',
-    height: Dimensions.get('window').height * 0.4,
-    width: Dimensions.get('window').width * 0.82,
-    borderRadius: 14,
-  },
   /* For "Open on Yelp" button */
   yelpButton: {
     backgroundColor: hex,
