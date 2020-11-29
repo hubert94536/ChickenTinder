@@ -1,10 +1,12 @@
 import React from 'react'
 import AsyncStorage from '@react-native-community/async-storage'
-import { EMAIL, NAME, PHOTO, USERNAME, ID, PHONE } from 'react-native-dotenv'
+import { EMAIL, NAME, PHOTO, USERNAME, ID, PHONE, DEFPHOTO } from 'react-native-dotenv'
 import { Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import accountsApi from '../apis/accountsApi.js'
 import screenStyles from '../../styles/screenStyles.js'
 import PropTypes from 'prop-types'
+import ImagePicker from 'react-native-image-crop-picker';
+import defImages from '../assets/images/foodImages.js'
 
 const hex = '#F15763'
 const textColor = '#6A6A6A'
@@ -21,18 +23,27 @@ export default class createAccount extends React.Component {
       phone: '',
       email: '',
       id: 22,
-      photo: '',
+      photo: null,
+      defImg: '',
+      defImgInd: 0,
     }
   }
 
   async componentDidMount() {
+    accountsApi.deleteUser()
+
+    var index = Math.floor(Math.random() *defImages.length)
     this.setState({
       name: await AsyncStorage.getItem(NAME),
       id: await AsyncStorage.getItem(ID),
       email: await AsyncStorage.getItem(EMAIL),
-      photo: await AsyncStorage.getItem(PHOTO),
+      // photo: await AsyncStorage.getItem(PHOTO),
       phone: await AsyncStorage.getItem(PHONE),
+      defImg: defImages[index],
+      defImgInd:index
     })
+    AsyncStorage.setItem(DEFPHOTO, this.state.defImgInd.toString() )
+    
   }
 
   //  checks whether or not the username can be set
@@ -46,6 +57,8 @@ export default class createAccount extends React.Component {
         AsyncStorage.setItem(EMAIL, this.state.email)
         // AsyncStorage.setItem(ID, this.state.id)
         AsyncStorage.setItem(PHONE, this.state.phone)
+        AsyncStorage.setItem(DEFPHOTO, this.state.defImgInd.toString() )
+        
         return accountsApi
           .createFBUser(
             this.state.name,
@@ -72,6 +85,14 @@ export default class createAccount extends React.Component {
   }
 
   uploadPhoto() {
+    ImagePicker.openPicker({
+      width: 400,
+      height: 400,
+      cropping: true
+    }).then(image => {
+      //do something with the image﻿
+      this.setState({photo: image.path})
+    });
     console.log('upload photo')
   }
 
@@ -95,12 +116,22 @@ export default class createAccount extends React.Component {
         </Text>
         <Text style={[styles.mediumText]}>Account Verified!</Text>
         <Text style={[styles.mediumText]}>Finish setting up your account</Text>
-        <Image
-          source={{
-            uri: this.state.photo,
-          }}
-          style={styles.avatar}
-        />
+
+        {this.state.photo == null && (
+            <Image
+              source={this.state.defImg}
+              style={styles.avatar}
+              />
+              )}
+            
+        {this.state.photo != null && (
+            <Image
+              source={{
+                uri: this.state.photo,
+              }}
+              style={styles.avatar}
+              />
+              )}
         <Text
           style={[
             styles.mediumText,

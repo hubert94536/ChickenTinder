@@ -386,7 +386,11 @@ export default class FilterSelector extends React.Component {
             {this.state.isHost ? "Let's Go" : 'Submit Filters'}
           </Text>
         </TouchableHighlight>
-        {(this.state.locationAlert || this.state.errorAlert || this.state.chooseFriends || this.state.chooseLocation || this.state.chooseTime) && (
+        {(this.state.locationAlert ||
+          this.state.errorAlert ||
+          this.state.chooseFriends ||
+          this.state.chooseLocation ||
+          this.state.chooseTime) && (
           <BlurView
             blurType="dark"
             blurAmount={10}
@@ -399,7 +403,7 @@ export default class FilterSelector extends React.Component {
             title="Location Required"
             body="Your location is required to find nearby restuarants"
             buttonAff="Close"
-            height='23%'
+            height="23%"
             press={() => this.setState({ locationAlert: false })}
             cancel={() => this.setState({ locationAlert: false })}
           />
@@ -413,7 +417,7 @@ export default class FilterSelector extends React.Component {
           <Alert
             title="Error, please try again"
             buttonAff="Close"
-            height='20%'
+            height="20%"
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />
@@ -424,9 +428,9 @@ export default class FilterSelector extends React.Component {
           press={() => this.setState({ chooseFriends: false })}
         />
         <Time
-        visible={this.state.chooseTime}
-        cancel={() => this.setState({ chooseTime: false })}
-        press={(hr, min) => this.setState({hour: hr, minute: min, chooseTime: false})}
+          visible={this.state.chooseTime}
+          cancel={() => this.setState({ chooseTime: false })}
+          press={(hr, min) => this.setState({ hour: hr, minute: min, chooseTime: false })}
         />
       </View>
     )
