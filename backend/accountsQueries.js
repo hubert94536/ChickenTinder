@@ -126,13 +126,30 @@ const checkPhoneNumber = async (req, res) => {
   }
 }
 
+// Check if email exists
+const checkEmail = async (req, res) => {
+  try {
+    const { email } = req.params
+    const user = await Accounts.findOne({
+      where: { email: email },
+    })
+    if (user) {
+      return res.status(404).send('Email unavailable')
+    }
+    return res.status(200).send('Email available')
+  } catch (error) {
+    return res.status(500).send(error.message)
+  }
+}
+
 module.exports = {
-  createAccount,
-  getAllAccounts,
-  getAccountById,
-  updateAccount,
-  deleteAccount,
-  checkUsername,
+  checkEmail,
   checkPhoneNumber,
+  checkUsername,
+  createAccount,
+  deleteAccount,
+  getAccountById,
+  getAllAccounts,
   searchAccounts,
+  updateAccount,
 }

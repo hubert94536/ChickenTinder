@@ -1,8 +1,14 @@
 const redis = require('redis')
 const { promisify } = require('util')
+const Accounts = require('./accountsQueries')
 const Yelp = require('./yelpQuery.js')
 
 const redisClient = redis.createClient('redis://localhost:6379')
+// const redisClient = redis.createClient({
+//   host: 'redis-14649.c1.us-west-2-2.ec2.cloud.redislabs.com',
+//   port: 14649,
+//   password: '7qAgdWUUSTLkCW6AlxORPxVZAlO3alzq'
+// })
 const hgetAll = promisify(redisClient.hgetall).bind(redisClient)
 const sendCommand = promisify(redisClient.send_command).bind(redisClient)
 
@@ -21,7 +27,6 @@ getTop3 = (restaurants) => {
       value = tempVal
       key = tempKey
     }
-
     if (value >= arrVal[1]) {
       tempVal = arrVal[1]
       tempKey = arrKey[1]
@@ -30,7 +35,6 @@ getTop3 = (restaurants) => {
       value = tempVal
       key = tempKey
     }
-
     if (value >= arrVal[2]) {
       tempVal = arrVal[2]
       tempKey = arrKey[2]
@@ -40,11 +44,13 @@ getTop3 = (restaurants) => {
   }
   let top3 = {}
   top3.choices = []
+  // push sorted array into top choices
   for (let i = 0; i < 3; i++) {
     if (arrKey[i] != '') {
       top3.choices.push(arrKey[i])
     }
   }
+  // pick a random number (0-3) to select restaurant
   top3.random = Math.floor(Math.random() * top3.choices.length)
   return top3
 }
@@ -52,6 +58,7 @@ getTop3 = (restaurants) => {
 module.exports = (io) => {
   io.on('connection', async (socket) => {
     try {
+      // TODO get notifications
       // update user with new socket id and info
       let id = socket.handshake.query.id
       redisClient.hmset(`users:${id}`, 'client', socket.id)
@@ -61,16 +68,6 @@ module.exports = (io) => {
       socket.emit('exception', err.toString())
       console.log(err)
     }
-
-    // // send invite if previously sent before user connected
-    // if (socketUser in invites && invites[socketUser] in sessions) {
-    //   let sender = invites[socketUser]
-    //   io.to(clients[socketUser]).emit('invite', {
-    //     username: sender,
-    //     pic: sessions[sender].members[sender].pic,
-    //     name: sessions[sender].members[sender].name,
-    //   })
-    // }
 
     // disconnects user and removes them if in room
     socket.on('disconnect', async () => {
@@ -165,38 +162,39 @@ module.exports = (io) => {
         console.log(err)
       }
     })
-
+    // TODO create notif in db
     // send invite with host info to join a room
-    //   socket.on('invite', async (data) => {
-    //     try {
-    //       let user = await Accounts.findOne({
-    //         where: { username: data.username },
-    //       })
-    //       // check if friend is in another group
-    //       if (user.inSession) {
-    //         socket.emit('unreachable', data.username)
-    //       } else {
-    //         invites[data.username] = data.host
-    //         io.to(clients[data.username]).emit('invite', {
-    //           username: data.host,
-    //           pic: sessions[data.host].members[data.host].pic,
-    //           name: sessions[data.host].members[data.host].name,
-    //         })
-    //       }
-    //     } catch (error) {
-    //       socket.emit('exception', error.toString())
-    //     }
-    //   })
+    socket.on('invite', async (data) => {
+      try {
+        let user = await hgetAll(`users:${data.receiver}`)
+        io.to(user.client).emit('invite', {
+          id: data.id,
+          username: data.username,
+          photo: data.photo,
+          name: data.name,
+          code: data.code
+        })
+      } catch (error) {
+        socket.emit('exception', error.toString())
+      }
+    })
 
-    //   // declines invite and remove from invites object
-    //   socket.on('decline', (data) => {
-    //     try {
-    //       delete invites[data.username]
-    //       io.to(clients[data.room]).emit('decline', data.username)
-    //     } catch (error) {
-    //       socket.emit('exception', error.toString())
-    //     }
-    //   })
+    // TODO create notif in db
+    // send invite with host info to join a room
+    socket.on('invite', async (data) => {
+      try {
+        let user = await hgetAll(`users:${data.receiver}`)
+        io.to(user.client).emit('invite', {
+          id: data.id,
+          username: data.username,
+          photo: data.photo,
+          name: data.name,
+          code: data.code
+        })
+      } catch (error) {
+        socket.emit('exception', error.toString())
+      }
+    })
 
     // updates room when someone joins
     socket.on('joinRoom', async (data) => {
@@ -216,8 +214,6 @@ module.exports = (io) => {
           await sendCommand('JSON.SET', [data.code, '.', JSON.stringify(session)])
           redisClient.hmset(`clients:${socket.id}`, 'room', data.code)
           socket.join(data.code)
-          // TODO
-          // delete invites[data.username]
           io.in(data.code).emit('update', session)
         } else {
           socket.send('Room does not exist :(')

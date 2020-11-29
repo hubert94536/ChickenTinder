@@ -9,8 +9,8 @@ const createFriends = async (req, res) => {
     const main = req.body.params.main
     const friend = req.body.params.friend
     await Friends.bulkCreate([
-      { m_id: main, status: 'Requested', f_id: friend, f_info: friend, include: [Accounts] },
-      { m_id: friend, status: 'Pending Request', f_id: main, f_info: main, include: [Accounts] },
+      { m_id: main, status: 0, f_id: friend, f_info: friend, include: [Accounts] },
+      { m_id: friend, status: 1, f_id: main, f_info: main, include: [Accounts] },
     ])
     return res.status(201).send('Friend requested')
   } catch (error) {
@@ -42,7 +42,7 @@ const acceptRequest = async (req, res) => {
     const main = req.params.user
     const friend = req.params.friend
     const mainAccount = await Friends.update(
-      { status: 'Accepted' },
+      { status: 2 },
       {
         where: {
           [Op.and]: [{ m_id: main }, { f_id: friend }],
@@ -50,7 +50,7 @@ const acceptRequest = async (req, res) => {
       },
     )
     const friendAccount = await Friends.update(
-      { status: 'Accepted' },
+      { status: 2 },
       {
         where: {
           [Op.and]: [{ m_id: friend }, { f_id: main }],

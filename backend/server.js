@@ -1,9 +1,10 @@
-const express = require('express')
-const io = require('socket.io')()
 const bodyParser = require('body-parser')
+const express = require('express')
+const http = require('http')
+const io = require('socket.io')()
 const accounts = require('./accountsQueries.js')
 const friends = require('./friendsQueries.js')
-const http = require('http')
+const notifications = require('./notificationsQueries.js')
 
 const app = express()
 const server = http.createServer(app)
@@ -38,10 +39,17 @@ app.route('/username/:username').get(accounts.checkUsername)
 
 app.route('/phoneNumber/:phone_number').get(accounts.checkPhoneNumber)
 
+app.route('/email/:email').get(accounts.checkEmail)
+
 // friendships table
 app.route('/friendships').post(friends.createFriends)
 
 app.route('/friendships/friends/:user').get(friends.getFriends)
+
+// notifications table
+app.route('/notifications/user/:id').get(notifications.getNotifs)
+
+app.route('/notifications/:id').delete(notifications.deleteNotif)
 
 app
   .route('/friendships/friends/:user/:friend')

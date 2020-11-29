@@ -18,6 +18,11 @@ describe('socket with Redis', () => {
     })
     // Set up Redis client and promisfy Redis client
     redisClient = redis.createClient('redis://localhost:6379')
+    // redisClient = redis.createClient({
+    //   host: 'redis-14649.c1.us-west-2-2.ec2.cloud.redislabs.com',
+    //   port: 14649,
+    //   password: '7qAgdWUUSTLkCW6AlxORPxVZAlO3alzq'
+    // })
     hgetAll = promisify(redisClient.hgetall).bind(redisClient)
     sendCommand = promisify(redisClient.send_command).bind(redisClient)
     socket.on('connect', function () {
