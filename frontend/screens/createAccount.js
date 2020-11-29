@@ -30,7 +30,7 @@ export default class createAccount extends React.Component {
   }
 
   async componentDidMount() {
-    accountsApi.deleteUser()
+    // accountsApi.deleteUser()
 
     var index = Math.floor(Math.random() *defImages.length)
     this.setState({
