@@ -84,7 +84,8 @@ app
 
 //Check that some prop to be updated is passed in
 function checkUpdateAccountSchema(req, res, next) {
-  const updateAccountSchema = joi.object()
+  const updateAccountSchema = joi
+    .object()
     .keys({
       id: joi.number().positive().unsafe(), //ids are BigInts, which can be outside of the safe range
       name: joi.string(),
@@ -115,7 +116,8 @@ app.route('/email/:email').get(accounts.checkEmail)
 // friendships table
 app.route('/friendships').post(checkCreateFriendsSchema, friends.createFriends)
 function checkCreateFriendsSchema(req, res, next) {
-  const createFriendsSchema = joi.object()
+  const createFriendsSchema = joi
+    .object()
     .keys({
       main: joi.number().integer().positive().unsafe().required(),
       friend: joi.number().integer().positive().unsafe().required(),
@@ -127,9 +129,7 @@ function checkCreateFriendsSchema(req, res, next) {
 const getFriendsSchema = joi.object().keys({
   user: joi.number().positive().unsafe().required(),
 })
-app
-  .route('/friendships/:user')
-  .get(validateRoute.params(getFriendsSchema), friends.getFriends)
+app.route('/friendships/:user').get(validateRoute.params(getFriendsSchema), friends.getFriends)
 
 const friendshipSchema = joi.object().keys({
   user: joi.number().positive().unsafe().required(),

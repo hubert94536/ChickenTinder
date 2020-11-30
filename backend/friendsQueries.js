@@ -32,15 +32,15 @@ const acceptRequest = async (req, res) => {
         {
           where: {
             [Op.and]: [{ receiver_id: main }, { sender_id: friend }, { type: 'pending' }],
-          }
-        }
+          },
+        },
       )
       // create notification to friend for accepted friend request
       await Notifications.create({
         receiver_id: friend,
         type: 'accepted',
         sender_id: main,
-        include: [Accounts]
+        include: [Accounts],
       })
       return res.status(200).send('Friendship accepted')
     }
@@ -65,7 +65,7 @@ const createFriends = async (req, res) => {
       receiver_id: friend,
       type: 'pending',
       sender_id: main,
-      include: [Accounts]
+      include: [Accounts],
     })
     return res.status(201).send('Friend requested')
   } catch (error) {

@@ -9,7 +9,7 @@ const createNotif = async (rid, type, content, sid) => {
       type: type,
       content: content,
       sender_id: sid,
-      include: [Accounts]
+      include: [Accounts],
     })
     return Promise.resolve(201)
   } catch (error) {
@@ -22,7 +22,7 @@ const deleteNotif = async (req, res) => {
   try {
     const id = req.params.id
     const destroyed = await Notifications.destroy({
-      where: { id: id }
+      where: { id: id },
     })
     if (destroyed) {
       return res.status(204).send('Notification deleted')
@@ -55,9 +55,12 @@ const getNotifs = async (req, res) => {
 // Update notif by id
 const updateNotif = async (id, type) => {
   try {
-    const updated = await Notifications.update({ type: type }, {
-      where: { id: id },
-    })
+    const updated = await Notifications.update(
+      { type: type },
+      {
+        where: { id: id },
+      },
+    )
     if (updated) {
       return Promise.resolve(200)
     }
@@ -67,11 +70,9 @@ const updateNotif = async (id, type) => {
   }
 }
 
-
-
 module.exports = {
   createNotif,
   deleteNotif,
   getNotifs,
-  updateNotif
+  updateNotif,
 }

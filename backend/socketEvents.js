@@ -1,19 +1,9 @@
-const redis = require('redis')
-const { promisify } = require('util')
-const Notifs = require('./notifcationsQueries')
+const { hgetAll, sendCommand, redisClient } = require('./config.js')
+const Notifs = require('./notificationsQueries.js')
 const Yelp = require('./yelpQuery.js')
 
-const redisClient = redis.createClient('redis://localhost:6379')
-// const redisClient = redis.createClient({
-//   host: 'redis-14649.c1.us-west-2-2.ec2.cloud.redislabs.com',
-//   port: 14649,
-//   password: '7qAgdWUUSTLkCW6AlxORPxVZAlO3alzq'
-// })
-const hgetAll = promisify(redisClient.hgetall).bind(redisClient)
-const sendCommand = promisify(redisClient.send_command).bind(redisClient)
-
 // gets top 3 liked restaurants for a session
-getTop3 = (restaurants) => {
+const getTop3 = (restaurants) => {
   let arrKey = ['', '', '']
   let arrVal = [0, 0, 0]
   for (let [key, value] of Object.entries(restaurants)) {
@@ -168,13 +158,13 @@ module.exports = (io) => {
       try {
         let user = await hgetAll(`users:${data.receiver}`)
         await Notifs.createNotif(data.receiver, 'invite', data.code, data.id)
-        // io.to(user.client).emit('invite', {
-        //   id: data.id,
-        //   username: data.username,
-        //   photo: data.photo,
-        //   name: data.name,
-        //   code: data.code
-        // })
+        io.to(user.client).emit('invite', {
+          id: data.id,
+          username: data.username,
+          photo: data.photo,
+          name: data.name,
+          code: data.code,
+        })
       } catch (error) {
         socket.emit('exception', error.toString())
       }
@@ -215,7 +205,7 @@ module.exports = (io) => {
         sendCommand('JSON.STRAPPEND', [
           `filters:${data.code}`,
           'categories',
-          JSON.stringify(data.filters.categories),
+          JSON.stringify(data.categories),
         ])
         // retrieve session info
         let session = await sendCommand('JSON.GET', [data.code])
@@ -250,13 +240,15 @@ module.exports = (io) => {
           filters.latitude = data.filters.latitude
           filters.longitude = data.filters.longitude
         }
+        if (data.filters.limit) {
+          filters.limit = data.filters.limit
+        }
         filters.categories += data.filters.categories
         const resList = await Yelp.getRestaurants(filters)
         // clear filters for getting restaurants and replace with group logistics
         filters = {}
         filters.majority = data.filters.majority
         filters.groupSize = data.filters.groupSize
-        filters.limit = data.filters.limit
         filters.finished = []
         // initialize container to keep track of restaurant likes
         filters.restaurants = {}

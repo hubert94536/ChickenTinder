@@ -15,29 +15,29 @@ const notificationsApi = axios.create({
 
 // gets a users friends/requests
 const getNotifs = async () => {
-    return notificationsApi
-      .get(`/notifications/user/${myId}`)
-      .then((res) => {
-        return {
-          status: res.status,
-          notifs: res.data.notifs.map(function (notif) {
-            // returns individual user info
-            return {
-              id: notif.id,
-              type: notif.type,
-              updatedAt: notif.updatedAt,
-              sender: notif.sender_id,
-              senderUsername: notif.account.username,
-              senderPhoto: notif.account.photo,
-              senderName: notif.account.name
-            }
-          }),
-        }
-      })
-      .catch((error) => {
-        throw error.response.status
-      })
-  }
+  return notificationsApi
+    .get(`/notifications/user/${myId}`)
+    .then((res) => {
+      return {
+        status: res.status,
+        notifs: res.data.notifs.map(function (notif) {
+          // returns individual user info
+          return {
+            id: notif.id,
+            type: notif.type,
+            updatedAt: notif.updatedAt,
+            sender: notif.sender_id,
+            senderUsername: notif.account.username,
+            senderPhoto: notif.account.photo,
+            senderName: notif.account.name,
+          }
+        }),
+      }
+    })
+    .catch((error) => {
+      throw error.response.status
+    })
+}
 
 // remove a notification
 const removeNotif = async (id) => {

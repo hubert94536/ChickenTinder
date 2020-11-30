@@ -113,8 +113,8 @@ describe('socket with Redis', () => {
           session = await sendCommand('JSON.GET', [code])
           expect(session).toBe(null)
           // session's filters should also be deleted
-          filters = await sendCommand('JSON.GET', [`filters:${code}`])
-          expect(filters).toBe(null)
+          let storedFilters = await sendCommand('JSON.GET', [`filters:${code}`])
+          expect(storedFilters).toBe(null)
           // session's restaurant list should also be deleted
           let res = await sendCommand('JSON.GET', [`res:${code}`])
           expect(res).toBe(null)
@@ -233,9 +233,7 @@ describe('socket with Redis', () => {
         socket.emit('submitFilters', {
           code: code,
           id: '123',
-          filters: {
-            categories: 'chinese,newamerican',
-          },
+          categories: 'chinese,newamerican',
         })
       }
     })

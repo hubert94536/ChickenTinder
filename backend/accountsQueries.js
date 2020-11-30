@@ -1,5 +1,5 @@
 const { Accounts } = require('./models.js')
-const { Sequelize } = require('sequelize')
+const { Op } = require('sequelize')
 
 // Get all accounts
 const getAllAccounts = async (req, res) => {
@@ -18,7 +18,7 @@ const searchAccounts = async (req, res) => {
     const users = await Accounts.findAndCountAll({
       limit: 100,
       where: {
-        username: { [Op.iLike]: `${text}%` }
+        username: { [Op.iLike]: `${text}%` },
       },
       attributes: ['id', 'name', 'username', 'phone_number'],
     })
