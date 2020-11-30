@@ -118,7 +118,6 @@ module.exports = (io) => {
     socket.on('createRoom', async (data) => {
       try {
         let host = data.id
-        host = host.toString()
         let code = null
         let notUnique = true
         // create new 6 digit code while the random one generated isn't unique
@@ -133,7 +132,7 @@ module.exports = (io) => {
         // intialize session info
         let session = {}
         session.host = host
-        session.code = code.toString()
+        session.code = code
         session.members = {}
         session.members[host] = {}
         session.members[host].name = data.name
@@ -186,7 +185,7 @@ module.exports = (io) => {
           member.username = data.username
           member.photo = data.photo
           member.filters = false
-          session.members[data.id.toString()] = member
+          session.members[data.id] = member
           // update session info with member
           await sendCommand('JSON.SET', [data.code, '.', JSON.stringify(session)])
           redisClient.hmset(`clients:${socket.id}`, 'room', data.code)
@@ -214,7 +213,7 @@ module.exports = (io) => {
         let session = await sendCommand('JSON.GET', [data.code])
         session = JSON.parse(session)
         // update member who submitted filters
-        session.members[data.id.toString()].filters = true
+        session.members[data.id].filters = true
         await sendCommand('JSON.SET', [data.code, '.', JSON.stringify(session)])
         io.in(data.code).emit('update', session)
       } catch (err) {
