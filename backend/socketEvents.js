@@ -1,6 +1,6 @@
 const redis = require('redis')
 const { promisify } = require('util')
-const Accounts = require('./accountsQueries')
+const Notifs = require('./notifcationsQueries')
 const Yelp = require('./yelpQuery.js')
 
 const redisClient = redis.createClient('redis://localhost:6379')
@@ -162,35 +162,19 @@ module.exports = (io) => {
         console.log(err)
       }
     })
-    // TODO create notif in db
+    // TODO create notif in db and update
     // send invite with host info to join a room
     socket.on('invite', async (data) => {
       try {
         let user = await hgetAll(`users:${data.receiver}`)
-        io.to(user.client).emit('invite', {
-          id: data.id,
-          username: data.username,
-          photo: data.photo,
-          name: data.name,
-          code: data.code
-        })
-      } catch (error) {
-        socket.emit('exception', error.toString())
-      }
-    })
-
-    // TODO create notif in db
-    // send invite with host info to join a room
-    socket.on('invite', async (data) => {
-      try {
-        let user = await hgetAll(`users:${data.receiver}`)
-        io.to(user.client).emit('invite', {
-          id: data.id,
-          username: data.username,
-          photo: data.photo,
-          name: data.name,
-          code: data.code
-        })
+        await Notifs.createNotif(data.receiver, 'invite', data.code, data.id)
+        // io.to(user.client).emit('invite', {
+        //   id: data.id,
+        //   username: data.username,
+        //   photo: data.photo,
+        //   name: data.name,
+        //   code: data.code
+        // })
       } catch (error) {
         socket.emit('exception', error.toString())
       }

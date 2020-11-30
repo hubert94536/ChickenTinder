@@ -18,11 +18,7 @@ const searchAccounts = async (req, res) => {
     const users = await Accounts.findAndCountAll({
       limit: 100,
       where: {
-        username: Sequelize.where(
-          Sequelize.fn('LOWER', Sequelize.col('username')),
-          'LIKE',
-          text + '%',
-        ),
+        username: { [Op.iLike]: `${text}%` }
       },
       attributes: ['id', 'name', 'username', 'phone_number'],
     })
@@ -41,7 +37,6 @@ const createAccount = async (req, res) => {
       username: req.body.params.username,
       email: req.body.params.email,
       photo: req.body.params.photo,
-      inSession: false,
       phone_number: req.body.params.phone_number,
     })
     return res.status(201).send('Account created')

@@ -7,11 +7,8 @@ import Join from '../modals/join.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import TabBar from '../nav.js'
-<<<<<<< HEAD
-=======
 import friendsApi from '../apis/friendsApi.js'
 import accountsApi from '../apis/accountsApi.js'
->>>>>>> eba913259aa3bd98b1dd99a1145586158356bbff
 
 var img = ''
 var name = ''
@@ -153,8 +150,6 @@ class Home extends React.Component {
           goNotifs={() => this.props.navigation.navigate('Notifications')}
           goProfile={() => this.props.navigation.navigate('Profile')}
           cur="Home"
-<<<<<<< HEAD
-=======
         />
         <Join
           visible={this.state.join}
@@ -162,7 +157,6 @@ class Home extends React.Component {
           name={this.state.inviteInfo.name}
           cancel={() => this.setState({ join: false })}
           onPress={() => this.setState({ join: false })}
->>>>>>> eba913259aa3bd98b1dd99a1145586158356bbff
         />
         {this.state.errorAlert && (
           <Alert

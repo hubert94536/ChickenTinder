@@ -50,19 +50,14 @@ const Accounts = sequelize.define(
 
 const Friends = sequelize.define(
   'friends', {
-  m_id: {
+  main_id: {
     type: DataTypes.BIGINT,
     allowNull: false,
     primaryKey: true,
   },
   status: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false,
-  },
-  f_id: {
-    type: DataTypes.BIGINT,
-    allowNull: false,
-    primaryKey: true,
   },
 })
 
@@ -75,29 +70,25 @@ const Notifications = sequelize.define(
       primaryKey: true,
       autoIncrement: true
     },
-    r_id: {
+    receiver_id: {
       type: DataTypes.BIGINT,
       allowNull: false,
     },
     type: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     content: {
       type: DataTypes.STRING(20),
     },
-    s_id: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-    },
   }
 )
 
-Notifications.belongsTo(Accounts, { foreignKey: 's_info', foreignKeyConstraint: true })
-Friends.belongsTo(Accounts, { foreignKey: 'f_info', foreignKeyConstraint: true })
+Notifications.belongsTo(Accounts, { foreignKey: 'sender_id', foreignKeyConstraint: true })
+Friends.belongsTo(Accounts, { foreignKey: 'friend_id', foreignKeyConstraint: true })
 
-/*sequelize.sync({ force: true }).then(() => {
-  console.log('Friend model was synchronized successfully.')
-})*/
+// sequelize.sync({ force: true }).then(() => {
+//   console.log('Friend model was synchronized successfully.')
+// })
 
 module.exports = { Accounts, Friends, Notifications }

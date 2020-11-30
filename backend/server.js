@@ -128,7 +128,7 @@ const getFriendsSchema = joi.object().keys({
   user: joi.number().positive().unsafe().required(),
 })
 app
-  .route('/friendships/friends/:user')
+  .route('/friendships/:user')
   .get(validateRoute.params(getFriendsSchema), friends.getFriends)
 
 const friendshipSchema = joi.object().keys({
@@ -136,7 +136,7 @@ const friendshipSchema = joi.object().keys({
   friend: joi.number().positive().unsafe().required(),
 })
 app
-  .route('/friendships/friends/:user/:friend')
+  .route('/friendships/:user/:friend')
   .delete(validateRoute.params(friendshipSchema), friends.deleteFriendship)
   .put(validateRoute.params(friendshipSchema), friends.acceptRequest)
 

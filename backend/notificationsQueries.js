@@ -1,26 +1,22 @@
 const { Accounts, Notifications } = require('./models')
-const { Sequelize } = require('sequelize')
 var attributes = ['username', 'photo', 'name']
 
-// Get all user notifications
-const getNotifs = async (req, res) => {
+// Creates notification
+const createNotif = async (rid, type, content, sid) => {
   try {
-    const id = req.params.id
-    const notifs = await Notifications.findAll({
-      where: { r_id: id },
-      include: [
-        {
-          model: Accounts,
-          attributes: attributes,
-        },
-      ],
+    await Notifications.create({
+      receiver_id: rid,
+      type: type,
+      content: content,
+      sender_id: sid,
+      include: [Accounts]
     })
-    return res.status(200).json({ notifs })
+    return Promise.resolve(201)
   } catch (error) {
-    return res.status(500).send(error.message)
+    return Promise.reject(500)
   }
 }
-s
+
 // Delete a notification
 const deleteNotif = async (req, res) => {
   try {
@@ -32,6 +28,25 @@ const deleteNotif = async (req, res) => {
       return res.status(204).send('Notification deleted')
     }
     return res.status(404).send('Notification not found')
+  } catch (error) {
+    return res.status(500).send(error.message)
+  }
+}
+
+// Get all user notifications
+const getNotifs = async (req, res) => {
+  try {
+    const id = req.params.id
+    const notifs = await Notifications.findAll({
+      where: { receiver_id: id },
+      include: [
+        {
+          model: Accounts,
+          attributes: attributes,
+        },
+      ],
+    })
+    return res.status(200).json({ notifs })
   } catch (error) {
     return res.status(500).send(error.message)
   }
@@ -52,26 +67,11 @@ const updateNotif = async (id, type) => {
   }
 }
 
-// Creates notification
-const createNotif = async (rid, type, content, sid) => {
-  try {
-    await Notifications.create({
-      r_id: rid,
-      type: type,
-      content: content,
-      s_id: sid,
-      s_info: sid,
-      include: [Accounts]
-    })
-    return Promise.resolve(201)
-  } catch (error) {
-    return Promise.reject(500)
-  }
-}
+
 
 module.exports = {
   createNotif,
+  deleteNotif,
   getNotifs,
-  updateNotif,
-  deleteNotif
+  updateNotif
 }
