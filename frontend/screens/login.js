@@ -68,9 +68,8 @@ export default class Login extends React.Component {
           underlayColor={'white'}
           onPress={() => this.props.navigation.navigate('Phone')}
           style={[
-            screenStyles.medButton,
-            styles.button,
-            { borderColor: hex, backgroundColor: hex },
+            screenStyles.longButton,
+            { borderColor: hex, backgroundColor: hex, marginTop: '7%' },
           ]}
         >
           <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
@@ -80,7 +79,7 @@ export default class Login extends React.Component {
             />
             <Text
               style={[
-                styles.buttonText,
+                screenStyles.longButtonText,
                 this.state.phonePressed ? { color: hex } : { color: 'white' },
               ]}
             >
@@ -95,9 +94,8 @@ export default class Login extends React.Component {
           underlayColor="white"
           onPress={() => this.login()}
           style={[
-            screenStyles.medButton,
-            styles.button,
-            { borderColor: '#3b5998', backgroundColor: '#3b5998' },
+            screenStyles.longButton,
+            { borderColor: '#3b5998', backgroundColor: '#3b5998', marginTop: '7%' },
           ]}
         >
           <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
@@ -107,7 +105,7 @@ export default class Login extends React.Component {
             />
             <Text
               style={[
-                styles.buttonText,
+                screenStyles.longButtonText,
                 this.state.pressed ? { color: '#3b5998' } : { color: 'white' },
               ]}
             >
@@ -165,18 +163,4 @@ Login.propTypes = {
   }).isRequired,
 }
 
-const styles = StyleSheet.create({
-  button: {
-    borderColor: '#3b5998',
-    paddingVertical: 5,
-    paddingHorizontal: 12,
-    width: '70%',
-    marginTop: '7%',
-  },
-  buttonText: {
-    alignSelf: 'center',
-    fontFamily: 'CircularStd-Book',
-    fontSize: 18,
-    fontWeight: 'normal',
-  },
-})
+
