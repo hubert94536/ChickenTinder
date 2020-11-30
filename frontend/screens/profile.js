@@ -10,7 +10,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
-import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
+import { NAME, PHOTO, USERNAME, DEFPHOTO } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -22,11 +22,14 @@ import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import TabBar from '../nav.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import ImagePicker from 'react-native-image-crop-picker';
+import defImages from '../assets/images/foodImages.js'
+
 
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
 const height = Dimensions.get('window').height
-var img = ''
+var img = null
 var name = ''
 var username = ''
 
@@ -44,6 +47,7 @@ export default class UserProfileView extends Component {
       username: username,
       usernameValue: username,
       image: img,
+      oldImage: img,
       friends: true,
       visible: false,
       edit: false,
@@ -58,13 +62,22 @@ export default class UserProfileView extends Component {
       errorAlert: false,
       // friends text
       numFriends: 0,
+      defImg: '',
+      
     }
   }
 
   componentDidMount(){
+    var defImgUrl = ''
     AsyncStorage.getItem(USERNAME).then((res) => this.setState({ username: res }))
     AsyncStorage.getItem(PHOTO).then((res) => this.setState({ image: res }))
-    AsyncStorage.getItem(NAME).then((res) => this.setState({ name: res }))
+    AsyncStorage.getItem(PHOTO).then((res) => this.setState({ oldImage: res }))
+    AsyncStorage.getItem(DEFPHOTO).then((res) => this.setState({ defImg: defImages[parseInt(res)] }))
+    AsyncStorage.getItem(DEFPHOTO).then((res) => console.log(res))
+    AsyncStorage.getItem(NAME).then((res) => this.setState({ name: res, nameValue: res }))
+    console.log("default")
+    // console.log(this.state.defImgInd)
+    
   }
 
   // getting current user's info
@@ -170,10 +183,58 @@ export default class UserProfileView extends Component {
       }
       this.changeUsername()
     }
+    this.savePhoto()
   }
 
   handleFriendsCount(n) {
     this.setState({numFriends: n})
+  }
+
+  uploadPhoto() {
+    ImagePicker.openPicker({
+      width: 400,
+      height: 400,
+      cropping: true
+    }).then(image => {
+      //do something with the image﻿
+      this.setState({oldImage: this.state.image})
+      this.setState({image: image.path})
+      AsyncStorage.setItem(PHOTO, this.state.image)
+    });
+  }
+
+  removePhoto() {
+    this.setState({image: null})
+    AsyncStorage.setItem(PHOTO, this.state.image)
+  }
+
+  dontSave()
+  {
+    this.setState({ edit: false })
+    if(this.state.oldImage != this.state.image)
+    {
+      this.setState({image: this.state.oldImage})
+      AsyncStorage.setItem(PHOTO, this.state.image)
+    }
+  }
+
+  savePhoto()
+  {
+    this.setState({ edit: false })
+    if(this.state.oldImage != this.state.image)
+    {
+      this.setState({oldImage: this.state.image})
+      AsyncStorage.setItem(PHOTO, this.state.image)
+    }
+  }
+
+  editProfile()
+  {
+    this.setState({ 
+      edit: true, 
+      nameValue: this.state.name,
+      username: this.state.username,
+      changeName: false})
   }
 
   render() {
@@ -192,12 +253,24 @@ export default class UserProfileView extends Component {
                 onPress={() => this.setState({ visible: true })}
               />
             </View>
+            
+            
+            {this.state.image == null && (
+            <Image
+              source={this.state.defImg}
+              style={screenStyles.avatar}
+              />
+              )}
+            
+            {this.state.image != null && (
             <Image
               source={{
                 uri: this.state.image,
               }}
-              style={styles.avatar}
-            />
+              style={screenStyles.avatar}
+              />
+              )}
+
             <View style={{ alignItems: 'center' }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
               <View
@@ -209,11 +282,11 @@ export default class UserProfileView extends Component {
                 <Icon
                   name="pencil-outline"
                   style={{ fontSize: 20, marginTop: '4%', marginLeft: '1%' }}
-                  onPress={() => this.setState({ edit: true })}
+                  onPress={() => this.editProfile()}
                 />
               </View>
               <Text style={{ fontFamily: font, fontSize: 13, color: hex }}>
-                {'@' + this.state.usernameValue}
+                {'@' + this.state.username}
               </Text>
             </View>
             <Text
@@ -414,8 +487,8 @@ export default class UserProfileView extends Component {
                     return true
                   }}
                   underlayColor="white"
-                  onShowUnderlay={() => this.setState({ changeName: true })}
-                  onHideUnderlay={() => this.setState({ changeName: false })}
+                  onShowUnderlay={() => this.setState({ changeName: true})}
+                  onHideUnderlay={() => this.setState({ changeName: false})}
                 >
                   <Text
                     style={[
@@ -456,26 +529,51 @@ export default class UserProfileView extends Component {
                     marginRight: '4%',
                   },
                 ]}
-                onPress={() => this.setState({ edit: false })}
+                onPress={() => this.dontSave()}
               />
               <View style={{ textAlign: 'center', marginLeft: '10%', marginRight: '10%' }}>
                 <Text style={[screenStyles.text, { fontSize: 16 }]}>Edit Profile</Text>
+            
+                
+                {this.state.image == null && (
                 <Image
+                  
                   style={{
                     height: height * 0.13,
                     width: height * 0.13,
                     borderRadius: 60,
                     alignSelf: 'center',
                   }}
+                  source={this.state.defImg}
+                  />
+                  )}
+                  
+                {this.state.image != null && (
+                <Image
                   source={{
                     uri: this.state.image,
                   }}
-                />
+                  style={{
+                    height: height * 0.13,
+                    width: height * 0.13,
+                    borderRadius: 60,
+                    alignSelf: 'center',
+                  }}
+                  />
+                  )}
+
+                
                 <View
                   style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: '4%' }}
                 >
-                  <Text style={[screenStyles.text, { marginRight: '5%' }]}>Upload</Text>
-                  <Text style={[screenStyles.text, { color: 'black', marginLeft: '5%' }]}>
+                  <Text 
+                    style={[screenStyles.text, { marginRight: '5%' }]}
+                    onPress={() => this.uploadPhoto()}>
+                      Upload</Text>
+                  <Text 
+                    style={[screenStyles.text, { color: 'black', marginLeft: '5%' }]}
+                    onPress={() => this.removePhoto()}
+                  >
                     Remove
                   </Text>
                 </View>
@@ -496,7 +594,7 @@ export default class UserProfileView extends Component {
                   ]}
                   value={this.state.nameValue}
                   onChangeText={(text) => this.setState({ nameValue: text })}
-                  onSubmitEditing={() => this.makeChanges()}
+                  // onSubmitEditing={() => this.makeChanges()}
                 />
                 <Text style={[screenStyles.text, { color: 'black', marginBottom: '2%' }]}>
                   Username
@@ -514,7 +612,7 @@ export default class UserProfileView extends Component {
                   ]}
                   value={this.state.usernameValue}
                   onChangeText={(text) => this.setState({ usernameValue: text })}
-                  onSubmitEditing={() => this.makeChanges()}
+                  // onSubmitEditing={() => this.makeChanges()}
                 />
               </View>
               <TouchableHighlight
@@ -602,13 +700,6 @@ const styles = StyleSheet.create({
     fontSize: 25,
     alignSelf: 'center',
     marginRight: '0%',
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 63,
-    borderWidth: 4,
-    alignSelf: 'center',
   },
   modal: {
     height: height * 0.45,
