@@ -10,7 +10,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
-import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
+import { NAME, PHOTO, USERNAME, DEFPHOTO } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -22,11 +22,14 @@ import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import TabBar from '../nav.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import ImagePicker from 'react-native-image-crop-picker';
+import defImages from '../assets/images/foodImages.js'
+
 
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
 const height = Dimensions.get('window').height
-var img = ''
+var img = null
 var name = ''
 var username = ''
 
@@ -44,6 +47,7 @@ export default class UserProfileView extends Component {
       username: username,
       usernameValue: username,
       image: img,
+      oldImage: img,
       friends: true,
       visible: false,
       edit: false,
@@ -58,17 +62,33 @@ export default class UserProfileView extends Component {
       errorAlert: false,
       // friends text
       numFriends: 0,
+      defImg: '',
+      
     }
+  }
+
+  componentDidMount(){
+    var defImgUrl = ''
+    AsyncStorage.getItem(USERNAME).then((res) => this.setState({ username: res }))
+    AsyncStorage.getItem(PHOTO).then((res) => this.setState({ image: res }))
+    AsyncStorage.getItem(PHOTO).then((res) => this.setState({ oldImage: res }))
+    AsyncStorage.getItem(DEFPHOTO).then((res) => this.setState({ defImg: defImages[parseInt(res)] }))
+    AsyncStorage.getItem(DEFPHOTO).then((res) => console.log(res))
+    AsyncStorage.getItem(NAME).then((res) => this.setState({ name: res, nameValue: res }))
+    console.log("default")
+    // console.log(this.state.defImgInd)
+    
   }
 
   // getting current user's info
   async changeName() {
     if (this.state.nameValue !== this.state.name) {
+      const name = this.state.nameValue
       return accountsApi
-        .updateName(this.state.nameValue)
+        .updateName(name)
         .then(() => {
           // update name locally
-          AsyncStorage.setItem(NAME, this.state.name)
+          AsyncStorage.setItem(NAME, name)
           this.setState({ name: this.state.nameValue })
           Keyboard.dismiss()
         })
@@ -157,12 +177,64 @@ export default class UserProfileView extends Component {
       this.changeName()
     }
     if (this.state.username !== this.state.usernameValue) {
+      if (this.state.usernameValue[0] === '@') {
+        var userTemp = this.state.usernameValue.slice(1)
+        this.setState({ usernameValue: userTemp })
+      }
       this.changeUsername()
+    }
+    this.savePhoto()
+  }
+
+  handleFriendsCount(n) {
+    this.setState({numFriends: n})
+  }
+
+  uploadPhoto() {
+    ImagePicker.openPicker({
+      width: 400,
+      height: 400,
+      cropping: true
+    }).then(image => {
+      //do something with the image﻿
+      this.setState({oldImage: this.state.image})
+      this.setState({image: image.path})
+      AsyncStorage.setItem(PHOTO, this.state.image)
+    });
+  }
+
+  removePhoto() {
+    this.setState({image: null})
+    AsyncStorage.setItem(PHOTO, this.state.image)
+  }
+
+  dontSave()
+  {
+    this.setState({ edit: false })
+    if(this.state.oldImage != this.state.image)
+    {
+      this.setState({image: this.state.oldImage})
+      AsyncStorage.setItem(PHOTO, this.state.image)
     }
   }
 
-  handleFriendsCount = (n) => {
-    this.setState({numFriends: n})
+  savePhoto()
+  {
+    this.setState({ edit: false })
+    if(this.state.oldImage != this.state.image)
+    {
+      this.setState({oldImage: this.state.image})
+      AsyncStorage.setItem(PHOTO, this.state.image)
+    }
+  }
+
+  editProfile()
+  {
+    this.setState({ 
+      edit: true, 
+      nameValue: this.state.name,
+      username: this.state.username,
+      changeName: false})
   }
 
   render() {
@@ -170,6 +242,91 @@ export default class UserProfileView extends Component {
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <View style={{ backgroundColor: 'white', height: '90%' }}>
           <View>
+<<<<<<< HEAD
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+              {/* <Icon
+              name="chevron-left"
+              style={[screenStyles.icons, { margin: '5%' }]}
+              onPress={() => this.props.navigation.navigate('Home')}
+            /> */}
+              <Icon
+                name="cog"
+                style={[screenStyles.icons, { margin: '5%' }]}
+                onPress={() => this.setState({ visible: true })}
+              />
+            </View>
+            <Text style={[screenStyles.text, styles.myProfile]}>My Profile</Text>
+            <View style={styles.userInfo}>
+              <Image
+                source={{
+                  uri: this.state.image,
+                }}
+                style={styles.avatar}
+              />
+              <View>
+                <Text style={{ fontFamily: font, fontSize: 28 }}>{this.state.name}</Text>
+                <Text style={{ fontFamily: font, fontSize: 17 }}>
+                  {'@' + this.state.usernameValue}
+                </Text>
+              </View>
+            </View>
+            <View style={{ flexDirection: 'row' }}>
+              <TouchableHighlight
+                underlayColor="#fff"
+                style={[
+                  screenStyles.smallButton,
+                  this.state.friends ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                  { marginLeft: '5%' },
+                ]}
+                onPress={() => this.refs.swiper.scrollBy(-1)}
+              >
+                <Text
+                  style={[
+                    screenStyles.smallButtonText,
+                    styles.selectedText,
+                    this.state.friends ? { color: 'white' } : { color: hex },
+                  ]}
+                >
+                  Friends
+                </Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                underlayColor="#fff"
+                style={[
+                  screenStyles.smallButton,
+                  !this.state.friends ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                  { marginLeft: '5%' },
+                ]}
+                onPress={() => this.refs.swiper.scrollBy(1)}
+              >
+                <Text
+                  style={[
+                    screenStyles.smallButtonText,
+                    styles.selectedText,
+                    !this.state.friends ? { color: 'white' } : { color: hex },
+                  ]}
+                >
+                  Requests
+                </Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+          <View style={{ height: '100%', marginTop: '5%' }}>
+            <Swiper
+              ref="swiper"
+              loop={false}
+              onIndexChanged={() => this.setState({ friends: !this.state.friends })}
+            >
+              <Friends isFriends />
+              <Friends isFriends={false} />
+            </Swiper>
+          </View>
+
+          {this.state.visible && (
+            <BlurView
+              blurType="light"
+              blurAmount={20}
+=======
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <View
                 style={[screenStyles.icons, { width: 27, margin: '5%', textAlign: 'right' }]}
@@ -181,12 +338,24 @@ export default class UserProfileView extends Component {
                 onPress={() => this.setState({ visible: true })}
               />
             </View>
+            
+            
+            {this.state.image == null && (
+            <Image
+              source={this.state.defImg}
+              style={screenStyles.avatar}
+              />
+              )}
+            
+            {this.state.image != null && (
             <Image
               source={{
                 uri: this.state.image,
               }}
-              style={styles.avatar}
-            />
+              style={screenStyles.avatar}
+              />
+              )}
+
             <View style={{ alignItems: 'center' }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
               <View
@@ -198,11 +367,11 @@ export default class UserProfileView extends Component {
                 <Icon
                   name="pencil-outline"
                   style={{ fontSize: 20, marginTop: '4%', marginLeft: '1%' }}
-                  onPress={() => this.setState({ edit: true })}
+                  onPress={() => this.editProfile()}
                 />
               </View>
               <Text style={{ fontFamily: font, fontSize: 13, color: hex }}>
-                {'@' + this.state.usernameValue}
+                {'@' + this.state.username}
               </Text>
             </View>
             <Text
@@ -216,20 +385,207 @@ export default class UserProfileView extends Component {
             >
               Your Friends
             </Text>
-            <Text style={[screenStyles.text, { marginLeft: '7%', fontSize: 17 }]}>{this.state.numFriends + ' friends'}</Text>
+            <Text style={[screenStyles.text, { marginLeft: '7%', fontSize: 17, fontFamily:'CircularStd-Medium' }]}>{this.state.numFriends + ' friends'}</Text>
           </View>
-          <View style={{ height: '100%', marginTop: '0%' }}>
+          <View style={{ height: '50%', marginTop: '0%' }}>
             <Friends isFriends onFriendsChange={this.handleFriendsCount}/>
           </View>
-
           {(this.state.visible || this.state.edit) && (
             <BlurView
               blurType="dark"
               blurAmount={10}
+>>>>>>> eba913259aa3bd98b1dd99a1145586158356bbff
               reducedTransparencyFallbackColor="white"
               style={modalStyles.blur}
             />
           )}
+<<<<<<< HEAD
+          {this.state.visible && (
+            <Modal animationType="fade" visible={this.state.visible} transparent>
+              <View style={styles.modal}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    margin: '5%',
+                  }}
+                >
+                  <Text style={[screenStyles.text, { fontSize: 18, alignSelf: 'center' }]}>
+                    Settings
+                  </Text>
+                  <Icon
+                    name="times-circle"
+                    style={[screenStyles.text, { fontSize: 30 }]}
+                    onPress={() =>
+                      this.setState({
+                        visible: false,
+                      })
+                    }
+                  />
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    margin: '5%',
+                  }}
+                >
+                  <View>
+                    <Text style={{ fontFamily: font, fontSize: 18 }}>Name:</Text>
+                    <TextInput
+                      style={[screenStyles.text, screenStyles.input]}
+                      value={this.state.nameValue}
+                      onChangeText={(text) => this.setState({ nameValue: text })}
+                    />
+                  </View>
+                  <TouchableHighlight
+                    style={[
+                      screenStyles.smallButton,
+                      styles.changeButtons,
+                      this.state.changeName
+                        ? { backgroundColor: hex }
+                        : { backgroundColor: 'white' },
+                    ]}
+                    underlayColor={hex}
+                    onShowUnderlay={() => this.setState({ changeName: true })}
+                    onHideUnderlay={() => this.setState({ changeName: false })}
+                    onPress={() => this.changeName()}
+                  >
+                    <Text
+                      style={[
+                        screenStyles.smallButtonText,
+                        this.state.changeName ? { color: 'white' } : { color: hex },
+                      ]}
+                    >
+                      Change
+                    </Text>
+                  </TouchableHighlight>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    margin: '5%',
+                  }}
+                >
+                  <View>
+                    <Text style={{ fontFamily: font, fontSize: 18 }}>Username:</Text>
+                    <TextInput
+                      style={[screenStyles.text, screenStyles.input]}
+                      value={this.state.usernameValue}
+                      onChangeText={(text) => this.setState({ usernameValue: text })}
+                    />
+                  </View>
+                  <TouchableHighlight
+                    style={[
+                      screenStyles.smallButton,
+                      styles.changeButtons,
+                      this.state.changeUser
+                        ? { backgroundColor: hex }
+                        : { backgroundColor: 'white' },
+                    ]}
+                    underlayColor={hex}
+                    onShowUnderlay={() => this.setState({ changeUser: true })}
+                    onHideUnderlay={() => this.setState({ changeUser: false })}
+                    onPress={() => this.changeUsername()}
+                  >
+                    <Text
+                      style={[
+                        screenStyles.smallButtonText,
+                        this.state.changeUser ? { color: 'white' } : { color: hex },
+                      ]}
+                    >
+                      Change
+                    </Text>
+                  </TouchableHighlight>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <TouchableHighlight
+                    underlayColor={hex}
+                    onShowUnderlay={() => this.setState({ delete: true })}
+                    onHideUnderlay={() => this.setState({ delete: false })}
+                    onPress={() => this.setState({ deleteAlert: true })}
+                    style={[
+                      screenStyles.smallButton,
+                      styles.button,
+                      this.state.delete ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        screenStyles.smallButtonText,
+                        this.state.delete ? { color: 'white' } : { color: hex },
+                      ]}
+                    >
+                      Delete
+                    </Text>
+                  </TouchableHighlight>
+                  <TouchableHighlight
+                    underlayColor={hex}
+                    onShowUnderlay={() => this.setState({ logout: true })}
+                    onHideUnderlay={() => this.setState({ logout: false })}
+                    onPress={() => this.setState({ logoutAlert: true })}
+                    style={[
+                      screenStyles.smallButton,
+                      styles.button,
+                      this.state.logout ? { backgroundColor: hex } : { backgroundColor: 'white' },
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        screenStyles.smallButtonText,
+                        this.state.logout ? { color: 'white' } : { color: hex },
+                      ]}
+                    >
+                      Logout
+                    </Text>
+                  </TouchableHighlight>
+                  {this.state.deleteAlert && (
+                    <Alert
+                      title="Delete your account?"
+                      body="You will not be able to recover your information"
+                      button
+                      buttonText="Yes"
+                      press={() => this.handleDelete()}
+                      cancel={() => this.cancelDelete()}
+                    />
+                  )}
+                  {this.state.logoutAlert && (
+                    <Alert
+                      title="Log Out?"
+                      body="You will have to log back in"
+                      button
+                      buttonText="Yes"
+                      press={() => this.handleLogout()}
+                      cancel={() => this.cancelLogout()}
+                    />
+                  )}
+                  {this.state.errorAlert && (
+                    <Alert
+                      title="Error, please try again"
+                      button
+                      buttonText="Close"
+                      press={() => this.closeError()}
+                      cancel={() => this.closeError()}
+                    />
+                  )}
+                  {this.state.takenAlert && (
+                    <Alert
+                      title="Username taken!"
+                      button
+                      buttonText="Close"
+                      press={() => this.closeTaken()}
+                      cancel={() => this.closeTaken()}
+                    />
+                  )}
+                </View>
+                {/* <View
+=======
           <Modal animationType="fade" visible={this.state.visible} transparent>
             <View style={styles.modal}>
               <View
@@ -384,6 +740,7 @@ export default class UserProfileView extends Component {
                 )}
               </View>
               <View
+>>>>>>> eba913259aa3bd98b1dd99a1145586158356bbff
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'center',
@@ -404,8 +761,8 @@ export default class UserProfileView extends Component {
                     return true
                   }}
                   underlayColor="white"
-                  onShowUnderlay={() => this.setState({ changeName: true })}
-                  onHideUnderlay={() => this.setState({ changeName: false })}
+                  onShowUnderlay={() => this.setState({ changeName: true})}
+                  onHideUnderlay={() => this.setState({ changeName: false})}
                 >
                   <Text
                     style={[
@@ -446,29 +803,59 @@ export default class UserProfileView extends Component {
                     marginRight: '4%',
                   },
                 ]}
-                onPress={() => this.setState({ edit: false })}
+                onPress={() => this.dontSave()}
               />
               <View style={{ textAlign: 'center', marginLeft: '10%', marginRight: '10%' }}>
                 <Text style={[screenStyles.text, { fontSize: 16 }]}>Edit Profile</Text>
+            
+                
+                {this.state.image == null && (
                 <Image
+                  
                   style={{
                     height: height * 0.13,
                     width: height * 0.13,
                     borderRadius: 60,
                     alignSelf: 'center',
                   }}
+                  source={this.state.defImg}
+                  />
+                  )}
+                  
+                {this.state.image != null && (
+                <Image
                   source={{
                     uri: this.state.image,
                   }}
-                />
+                  style={{
+                    height: height * 0.13,
+                    width: height * 0.13,
+                    borderRadius: 60,
+                    alignSelf: 'center',
+                  }}
+                  />
+                  )}
+
+                
                 <View
                   style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: '4%' }}
                 >
-                  <Text style={[screenStyles.text, { marginRight: '5%' }]}>Upload</Text>
-                  <Text style={[screenStyles.text, { color: 'black', marginLeft: '5%' }]}>
+                  <Text 
+                    style={[screenStyles.text, { marginRight: '5%' }]}
+                    onPress={() => this.uploadPhoto()}>
+                      Upload</Text>
+                  <Text 
+                    style={[screenStyles.text, { color: 'black', marginLeft: '5%' }]}
+                    onPress={() => this.removePhoto()}
+                  >
                     Remove
                   </Text>
                 </View>
+<<<<<<< HEAD
+              </View> */}
+              </View>
+            </Modal>
+=======
                 <Text style={[screenStyles.text, { color: 'black', marginBottom: '2%' }]}>
                   Display name
                 </Text>
@@ -486,7 +873,7 @@ export default class UserProfileView extends Component {
                   ]}
                   value={this.state.nameValue}
                   onChangeText={(text) => this.setState({ nameValue: text })}
-                  onSubmitEditing={() => this.makeChanges()}
+                  // onSubmitEditing={() => this.makeChanges()}
                 />
                 <Text style={[screenStyles.text, { color: 'black', marginBottom: '2%' }]}>
                   Username
@@ -504,7 +891,7 @@ export default class UserProfileView extends Component {
                   ]}
                   value={this.state.usernameValue}
                   onChangeText={(text) => this.setState({ usernameValue: text })}
-                  onSubmitEditing={() => this.makeChanges()}
+                  // onSubmitEditing={() => this.makeChanges()}
                 />
               </View>
               <TouchableHighlight
@@ -529,6 +916,52 @@ export default class UserProfileView extends Component {
               </TouchableHighlight>
             </View>
           </Modal>
+          {this.state.deleteAlert && (
+            <BlurView blurType="dark" blurAmount={10} reducedTransparencyFallbackColor="black" />
+          )}
+          {this.state.deleteAlert && (
+            <Alert
+              title="Delete account?"
+              body="By deleting your account, you will lose all of your data"
+              buttonAff="Delete"
+              buttonNeg="Go back"
+              twoButton
+              height="27%"
+              press={() => this.handleDelete()}
+              cancel={() => this.cancelDelete()}
+            />
+          )}
+          {this.state.logoutAlert && (
+            <Alert
+              title="Log out"
+              body="Are you sure you want to log out?"
+              buttonAff="Logout"
+              buttonNeg="Go back"
+              height="25%"
+              twoButton
+              press={() => this.handleLogout()}
+              cancel={() => this.cancelLogout()}
+            />
+          )}
+          {this.state.errorAlert && (
+            <Alert
+              title="Error, please try again"
+              buttonAff="Close"
+              height='20%'
+              press={() => this.setState({ errorAlert: false })}
+              cancel={() => this.setState({ errorAlert: false })}
+            />
+          )}
+          {this.state.takenAlert && (
+            <Alert
+              title="Username taken!"
+              buttonAff="Close"
+              height='20%'
+              press={() => this.closeTaken()}
+              cancel={() => this.closeTaken()}
+            />
+>>>>>>> eba913259aa3bd98b1dd99a1145586158356bbff
+          )}
         </View>
         <TabBar
           goHome={() => this.props.navigation.navigate('Home')}
@@ -547,13 +980,6 @@ const styles = StyleSheet.create({
     fontSize: 25,
     alignSelf: 'center',
     marginRight: '0%',
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 63,
-    borderWidth: 4,
-    alignSelf: 'center',
   },
   modal: {
     height: height * 0.45,
