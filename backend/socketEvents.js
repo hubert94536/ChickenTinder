@@ -34,13 +34,15 @@ const getTop3 = (restaurants) => {
   }
   let top3 = {}
   top3.choices = []
+  top3.likes = []
   // push sorted array into top choices
   for (let i = 0; i < 3; i++) {
     if (arrKey[i] != '') {
       top3.choices.push(arrKey[i])
+      top3.likes.push(arrVal[i])
     }
   }
-  // pick a random number (0-3) to select restaurant
+  // pick a random number (0-2) to select restaurant
   top3.random = Math.floor(Math.random() * top3.choices.length)
   return top3
 }
