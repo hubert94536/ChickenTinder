@@ -13,8 +13,9 @@ import Search from './frontend/screens/search.js'
 import Username from './frontend/screens/username.js'
 import UserProfileView from './frontend/screens/profile.js'
 import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
-import TabBar from './frontend/nav.js'
 import Loading from './frontend/screens/loading.js'
+import TabBar from './frontend/nav.js'
+
 
 class Notifications extends React.Component {
   render() {

@@ -79,7 +79,7 @@ export default class ChooseFriends extends React.Component {
 
   render() {
     return (
-      <Modal animationType="none" transparent>
+      <Modal animationType="none" transparent visible={this.props.visible}>
         <View style={styles.container}>
           <View style={styles.main}>
             <View style={styles.header}>
@@ -138,13 +138,14 @@ export default class ChooseFriends extends React.Component {
             <MaterialIcons name="keyboard-arrow-down" style={styles.icon3} />
           </View>
         </View>
-        {this.state.errorAlert && (
+        {this.state.deleteFriend && (
           <Alert
-            title="Error, please try again"
-            button
-            buttonText="Close"
-            press={() => this.setState({ errorAlert: false })}
-            cancel={() => this.setState({ errorAlert: false })}
+            title="Are you sure?"
+            body={'You are about to remove @' + this.props.username + ' as a friend'}
+            buttonAff="Delete"
+            height="25%"
+            press={() => this.deleteFriend()}
+            cancel={() => this.setState({ deleteFriend: false })}
           />
         )}
       </Modal>
