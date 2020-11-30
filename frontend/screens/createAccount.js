@@ -5,7 +5,7 @@ import { Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 're
 import accountsApi from '../apis/accountsApi.js'
 import screenStyles from '../../styles/screenStyles.js'
 import PropTypes from 'prop-types'
-import ImagePicker from 'react-native-image-crop-picker';
+import ImagePicker from 'react-native-image-crop-picker'
 import defImages from '../assets/images/foodImages.js'
 
 const hex = '#F15763'
@@ -32,7 +32,7 @@ export default class createAccount extends React.Component {
   async componentDidMount() {
     // accountsApi.deleteUser()
 
-    var index = Math.floor(Math.random() *defImages.length)
+    var index = Math.floor(Math.random() * defImages.length)
     this.setState({
       name: await AsyncStorage.getItem(NAME),
       id: await AsyncStorage.getItem(ID),
@@ -40,10 +40,9 @@ export default class createAccount extends React.Component {
       // photo: await AsyncStorage.getItem(PHOTO),
       phone: await AsyncStorage.getItem(PHONE),
       defImg: defImages[index],
-      defImgInd:index
+      defImgInd: index,
     })
-    AsyncStorage.setItem(DEFPHOTO, this.state.defImgInd.toString() )
-    
+    AsyncStorage.setItem(DEFPHOTO, this.state.defImgInd.toString())
   }
 
   //  checks whether or not the username can be set
@@ -57,8 +56,8 @@ export default class createAccount extends React.Component {
         AsyncStorage.setItem(EMAIL, this.state.email)
         // AsyncStorage.setItem(ID, this.state.id)
         AsyncStorage.setItem(PHONE, this.state.phone)
-        AsyncStorage.setItem(DEFPHOTO, this.state.defImgInd.toString() )
-        
+        AsyncStorage.setItem(DEFPHOTO, this.state.defImgInd.toString())
+
         return accountsApi
           .createFBUser(
             this.state.name,
@@ -88,11 +87,11 @@ export default class createAccount extends React.Component {
     ImagePicker.openPicker({
       width: 400,
       height: 400,
-      cropping: true
-    }).then(image => {
-      //do something with the image﻿
-      this.setState({photo: image.path})
-    });
+      cropping: true,
+    }).then((image) => {
+      //do something with the image
+      this.setState({ photo: image.path })
+    })
     console.log('upload photo')
   }
 
@@ -118,20 +117,17 @@ export default class createAccount extends React.Component {
         <Text style={[styles.mediumText]}>Finish setting up your account</Text>
 
         {this.state.photo == null && (
-            <Image
-              source={this.state.defImg}
-              style={screenStyles.avatar}
-              />
-              )}
-            
+          <Image source={this.state.defImg} style={screenStyles.avatar} />
+        )}
+
         {this.state.photo != null && (
-            <Image
-              source={{
-                uri: this.state.photo,
-              }}
-              style={screenStyles.avatar}
-              />
-              )}
+          <Image
+            source={{
+              uri: this.state.photo,
+            }}
+            style={screenStyles.avatar}
+          />
+        )}
         <Text
           style={[
             styles.mediumText,
@@ -191,10 +187,7 @@ export default class createAccount extends React.Component {
           activeOpacity={1}
           underlayColor={'white'}
           onPress={() => this.handleClick()}
-          style={[
-            screenStyles.longButton,
-            styles.button,
-          ]}
+          style={[screenStyles.longButton, styles.button]}
         >
           <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
             <Text
@@ -219,8 +212,8 @@ createAccount.propTypes = {
 }
 const styles = StyleSheet.create({
   button: {
-    borderColor: hex, 
-    backgroundColor: hex ,
+    borderColor: hex,
+    backgroundColor: hex,
     width: '20%',
     marginTop: '3%',
   },
@@ -245,5 +238,4 @@ const styles = StyleSheet.create({
     color: 'black',
     marginLeft: '10%',
   },
-  
 })

@@ -41,7 +41,11 @@ export default class Join extends React.Component {
   render() {
     return (
       <View>
+<<<<<<< HEAD
+        <Modal transparent animationType="none">
+=======
         <Modal transparent animationType="none" visible={this.props.visible}>
+>>>>>>> eba913259aa3bd98b1dd99a1145586158356bbff
           <View style={[modalStyles.modal, { flex: 0, height: 180, borderRadius: 15 }]}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               <AntDesign
