@@ -100,6 +100,11 @@ const finishedRound = (code) => {
   socket.emit('final', { code: code, id: myId })
 }
 
+// randomize the restaurant chosen
+const randomize = (code) => {
+  socket.emit('choose', { code: code })
+}
+
 const getSocket = () => {
   return socket
 }
@@ -117,4 +122,5 @@ export default {
   submitFilters,
   likeRestaurant,
   getSocket,
+  randomize
 }
