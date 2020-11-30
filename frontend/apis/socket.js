@@ -69,11 +69,6 @@ const kickUser = (id) => {
   socket.emit('kick', { id: id })
 }
 
-// ends session after receiving match
-const endSession = (code) => {
-  socket.emit('end', { code: code })
-}
-
 // host starts a session
 // filters needs: radius, group size, majority, location or latitude/longitude
 // filters options: price, open_at, categories, limit
@@ -118,7 +113,6 @@ export default {
   leaveRoom,
   kickUser,
   startSession,
-  endSession,
   submitFilters,
   likeRestaurant,
   getSocket,
