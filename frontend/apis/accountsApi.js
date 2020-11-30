@@ -9,8 +9,8 @@ AsyncStorage.getItem(ID).then((res) => {
 })
 
 const accountsApi = axios.create({
-  baseURL: 'https://wechews.herokuapp.com',
-  // baseURL: 'http://192.168.0.23:5000'
+  // baseURL: 'https://wechews.herokuapp.com',
+  baseURL: 'http://192.168.0.23:5000'
 })
 
 // creates user and returns id
@@ -184,8 +184,16 @@ const checkPhoneNumber = async (phoneNumber) => {
     })
 }
 
-const uploadImage = async () => {
-  
+// checks email and returns status
+const checkEmail = async (email) => {
+  return accountsApi
+    .get(`/email/${email}`)
+    .then((res) => {
+      return res.status
+    })
+    .catch((error) => {
+      throw error.response.status
+    })
 }
 
 export default {
@@ -200,4 +208,5 @@ export default {
   checkUsername,
   checkPhoneNumber,
   searchUsers,
+  checkEmail
 }

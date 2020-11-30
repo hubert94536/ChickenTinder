@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, View, TouchableHighlight, Modal } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
 import { BlurView } from '@react-native-community/blur'
 import PropTypes from 'prop-types'
 import modalStyles from '../../styles/modalStyles.js'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
@@ -11,7 +11,10 @@ const font = 'CircularStd-Medium'
 export default class Alert extends Component {
   constructor(props) {
     super(props)
-    this.state = { pressed: false }
+    this.state = {
+      affPressed: false,
+      negPressed: false,
+    }
   }
 
   // function called when main button is pressed
@@ -35,15 +38,13 @@ export default class Alert extends Component {
           style={modalStyles.blur}
         />
         <Modal transparent animationType="none">
-          <View style={modalStyles.modal}>
+          <View style={[modalStyles.modal, { height: this.props.height }]}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-              {this.props.button && (
-                <Icon
-                  name="times-circle"
-                  style={modalStyles.icon}
-                  onPress={() => this.handleCancel()}
-                />
-              )}
+              <AntDesign
+                name="closecircleo"
+                style={modalStyles.icon}
+                onPress={() => this.handleCancel()}
+              />
             </View>
             <View
               style={{
@@ -52,28 +53,46 @@ export default class Alert extends Component {
                 justifyContent: 'space-evenly',
               }}
             >
-              <View>
+              <View style={{ marginLeft: '10%', marginRight: '10%' }}>
                 <Text style={styles.title}>{this.props.title}</Text>
                 <Text style={styles.body}>{this.props.body}</Text>
               </View>
-              {this.props.button && (
+              <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                 <TouchableHighlight
                   underlayColor={hex}
-                  onHideUnderlay={() => this.setState({ pressed: false })}
-                  onShowUnderlay={() => this.setState({ pressed: true })}
+                  onHideUnderlay={() => this.setState({ affPressed: false })}
+                  onShowUnderlay={() => this.setState({ affPressed: true })}
                   onPress={() => this.handlePress()}
                   style={[modalStyles.button, { marginBottom: '3%' }]}
                 >
                   <Text
                     style={[
                       modalStyles.text,
-                      this.state.pressed ? { color: 'white' } : { color: hex },
+                      this.state.affPressed ? { color: 'white' } : { color: hex },
                     ]}
                   >
-                    {this.props.buttonText}
+                    {this.props.buttonAff}
                   </Text>
                 </TouchableHighlight>
-              )}
+                {this.props.twoButton && (
+                  <TouchableHighlight
+                    underlayColor={'white'}
+                    onHideUnderlay={() => this.setState({ negPressed: false })}
+                    onShowUnderlay={() => this.setState({ negPressed: true })}
+                    onPress={() => this.handleCancel()}
+                    style={[modalStyles.button, { marginBottom: '3%', backgroundColor: hex }]}
+                  >
+                    <Text
+                      style={[
+                        modalStyles.text,
+                        this.state.negPressed ? { color: hex } : { color: 'white' },
+                      ]}
+                    >
+                      {this.props.buttonNeg}
+                    </Text>
+                  </TouchableHighlight>
+                )}
+              </View>
             </View>
           </View>
         </Modal>
@@ -85,26 +104,25 @@ export default class Alert extends Component {
 Alert.propTypes = {
   press: PropTypes.func,
   cancel: PropTypes.func,
-  button: PropTypes.bool,
+  twoButton: PropTypes.bool,
   title: PropTypes.string,
   body: PropTypes.string,
+  height: PropTypes.string,
+  buttonAff: PropTypes.string,
+  buttonNeg: PropTypes.string,
 }
 
 const styles = StyleSheet.create({
   title: {
     fontFamily: font,
+    fontWeight: 'bold',
     color: hex,
-    fontSize: 30,
+    fontSize: 20,
     marginBottom: '3%',
-    textAlign: 'center',
-    marginRight: '2%',
-    marginLeft: '2%',
   },
   body: {
     fontFamily: font,
-    color: hex,
-    fontSize: 17,
-    marginBottom: '5%',
-    textAlign: 'center',
+    fontSize: 15,
+    marginLeft: '2%',
   },
 })

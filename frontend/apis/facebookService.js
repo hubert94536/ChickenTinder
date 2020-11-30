@@ -58,7 +58,7 @@ const loginWithFacebook = async () => {
           return 'Home'
         })
       }
-      return 'Username'
+      return 'createAccount'
     })
     .catch((error) => {
       //  Account linking will be needed with email/phone_number login

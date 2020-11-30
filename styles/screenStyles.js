@@ -1,4 +1,3 @@
-import React from 'react'
 import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
@@ -11,6 +10,10 @@ export default StyleSheet.create({
   },
   text: {
     fontFamily: 'CircularStd-Medium',
+    color: '#F15763',
+  },
+  textBold: {
+    fontFamily: 'CircularStd-Bold',
     color: '#F15763',
   },
   input: {
@@ -50,5 +53,30 @@ export default StyleSheet.create({
     fontFamily: 'CircularStd-Medium',
     fontSize: 20,
     textAlign: 'center',
+  },
+
+  longButton: {
+    borderRadius: 30,
+    borderWidth: 2.5,
+    alignSelf: 'center',
+    paddingVertical: 5,
+    paddingHorizontal: 12,
+    width: '70%',
+  },
+
+  longButtonText: {
+    alignSelf: 'center',
+    fontFamily: 'CircularStd-Book',
+    fontSize: 18,
+    fontWeight: 'normal',
+  },
+
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 63,
+    borderWidth: 4,
+    alignSelf: 'center',
+    margin: '1.5%',
   },
 })
