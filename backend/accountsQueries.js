@@ -20,7 +20,7 @@ const searchAccounts = async (req, res) => {
       where: {
         username: { [Op.iLike]: `${text}%` },
       },
-      attributes: ['id', 'name', 'username', 'phone_number'],
+      attributes: ['id', 'name', 'username', 'photo'],
     })
     return res.status(200).json({ users })
   } catch (error) {
@@ -33,7 +33,7 @@ const createAccount = async (req, res) => {
   try {
     await Accounts.create({
       id: req.body.params.id,
-      name: req.body.params.name,
+      name: req.byody.params.name,
       username: req.body.params.username,
       email: req.body.params.email,
       photo: req.body.params.photo,
