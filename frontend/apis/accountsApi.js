@@ -184,6 +184,18 @@ const checkPhoneNumber = async (phoneNumber) => {
     })
 }
 
+// checks email and returns status
+const checkEmail = async (email) => {
+  return accountsApi
+    .get(`/email/${email}`)
+    .then((res) => {
+      return res.status
+    })
+    .catch((error) => {
+      throw error.response.status
+    })
+}
+
 export default {
   createFBUser,
   getAllUsers,
@@ -196,4 +208,5 @@ export default {
   checkUsername,
   checkPhoneNumber,
   searchUsers,
+  checkEmail
 }

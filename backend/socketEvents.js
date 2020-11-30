@@ -320,11 +320,6 @@ module.exports = (io) => {
       }
     })
 
-    // alert all users to leave room
-    socket.on('end', (data) => {
-      io.in(data.code).emit('leave')
-    })
-
     // lets server know user is done swiping, send top 3 matches if everyone's finished
     socket.on('final', async (data) => {
       try {
