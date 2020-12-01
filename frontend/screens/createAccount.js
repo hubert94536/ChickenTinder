@@ -73,9 +73,7 @@ export default class createAccount extends React.Component {
             this.props.navigation.navigate('Home')
           })
       })
-      .then(() => {
-        return uploadApi.uploadPhoto(this.state.photoData)
-      })
+      .then(() => uploadApi.uploadPhoto(this.state.photoData))
       .catch((error) => {
         if (error === 404) {
           this.setState({ takenAlert: true })
@@ -95,8 +93,6 @@ export default class createAccount extends React.Component {
       height: 150,
       cropping: true,
     }).then((image) => {
-      // do something with the image
-      console.log(image);
       this.setState({ 
         photo: image.path, 
         photoData: {
