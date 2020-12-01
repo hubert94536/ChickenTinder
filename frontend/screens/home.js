@@ -42,7 +42,6 @@ class Home extends React.Component {
       errorAlert: false,
     }
     socket.connect()
-    // socket.getSocket().on('reconnectRoom', res => console.log(res))
     socket.getSocket().on('invite', (res) => {
       this.setState({ invite: true, inviteInfo: res })
     })
@@ -70,25 +69,6 @@ class Home extends React.Component {
     // friendsApi.createFriendshipTest(myId, 4)
     // friendsApi.acceptFriendRequest(2)
   }
-
-  // async getFriends() {
-  //   // Pushing accepted friends or pending requests into this.state.friends
-  //   friendsApi
-  //     .getFriends()
-  //     .then((res) => {
-  //       var friendsMap = new Object()
-  //       for (var friend in res.friendList) {
-  //         friendsMap[res.friendList[friend].id] = res.friendList[friend].status
-  //       }
-  //       this.setState({ friends: friendsMap })
-  //       this.props.navigation.navigate('Search', {
-  //         allFriends: friendsMap,
-  //       })
-  //     })
-  //     .catch((err) => {
-  //       this.setState({ errorAlert: true })
-  //     })
-  // }
 
   render() {
     return (

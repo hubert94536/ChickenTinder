@@ -29,7 +29,8 @@ const config = {
   storageBucket: FIREBASE_STORAGE_BUCKET, // Storage
 }
 
-Firebase.initializeApp(config)
+if (!Firebase.apps.length) Firebase.initializeApp(config);
+
 const loginWithFacebook = async () => {
   // Attempt a login using the Facebook login dialog asking for default permissions.
   return LoginManager.logInWithPermissions(['public_profile', 'email'])

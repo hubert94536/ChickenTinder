@@ -79,6 +79,9 @@ export default StyleSheet.create({
     alignSelf: 'center',
     margin: '1.5%',
   },
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 645dfcdb40832f39e79d40eff9ee4f57b32e8235
 })

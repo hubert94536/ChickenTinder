@@ -162,5 +162,8 @@ Login.propTypes = {
     navigate: PropTypes.func.isRequired,
   }).isRequired,
 }
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 645dfcdb40832f39e79d40eff9ee4f57b32e8235

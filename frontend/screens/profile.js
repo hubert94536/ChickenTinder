@@ -358,10 +358,12 @@ export default class UserProfileView extends Component {
                 </TouchableHighlight>
                 {this.state.logoutAlert && (
                   <Alert
-                    title="Log Out?"
+                    title="Log out"
                     body="Are you sure you want to log out?"
-                    button
-                    buttonText="Logout"
+                    buttonAff="Logout"
+                    buttonNeg="Go back"
+                    height="25%"
+                    twoButton
                     press={() => this.handleLogout()}
                     cancel={() => this.cancelLogout()}
                   />
@@ -652,7 +654,7 @@ export default class UserProfileView extends Component {
               cancel={() => this.cancelDelete()}
             />
           )}
-          {this.state.logoutAlert && (
+          {/* {this.state.logoutAlert && (
             <Alert
               title="Log out"
               body="Are you sure you want to log out?"
@@ -663,7 +665,7 @@ export default class UserProfileView extends Component {
               press={() => this.handleLogout()}
               cancel={() => this.cancelLogout()}
             />
-          )}
+          )} */}
           {this.state.errorAlert && (
             <Alert
               title="Error, please try again"
