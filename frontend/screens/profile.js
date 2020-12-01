@@ -212,7 +212,7 @@ export default class UserProfileView extends Component {
 
   removePhoto() {
     this.setState({image: null})
-    // delete from AWS
+    // TODO: delete from AWS
     AsyncStorage.setItem(PHOTO, this.state.image)
   }
 
