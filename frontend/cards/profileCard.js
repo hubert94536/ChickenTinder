@@ -1,12 +1,14 @@
 import React from 'react'
 import { Image, Text, TouchableHighlight, View } from 'react-native'
+import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import Alert from '../modals/alert.js'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
 
-const font = 'CircularStd-Medium'
+const font = 'CircularStd-Book'
+const hex = '#F15763'
 
 export default class ProfileCard extends React.Component {
   constructor(props) {
@@ -46,28 +48,41 @@ export default class ProfileCard extends React.Component {
 
   render() {
     return (
-      <View style={{ flexDirection: 'row', flex: 1 }}>
-        <Image
-          source={{
-            uri: this.props.image,
-          }}
-          style={imgStyles.button}
-        />
-        <View
-          style={{
-            alignSelf: 'center',
-            marginLeft: '1%',
-            flex: 0.8,
-          }}
-        >
-          <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
-          <Text style={{ fontFamily: font }}>@{this.props.username}</Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          flex: 1,
+          justifyContent: 'space-between',
+          marginRight: '5%',
+          marginLeft: '5%',
+          marginTop: '3%',
+        }}
+      >
+        <View style={{ flexDirection: 'row' }}>
+          <Image
+            source={{
+              uri: this.props.image,
+            }}
+            style={imgStyles.button}
+          />
+          <View
+            style={{
+              alignSelf: 'center',
+              marginLeft: '7%',
+            }}
+          >
+            <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
+            <Text style={{ fontFamily: font, color: hex }}>@{this.props.username}</Text>
+          </View>
         </View>
         {this.state.isFriend && (
           <TouchableHighlight onPress={() => this.setState({ deleteFriend: true })}>
-            <View style={{ flexDirection: 'row', flex: 1 }}>
-              <Text style={(imgStyles.text, { marginLeft: '25%' })}>Friends</Text>
-              <Icon style={(imgStyles.icon, { marginLeft: '5%' })} name="check-circle" />
+            <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
+              <Text style={(imgStyles.text, { color: hex, marginRight: '5%' })}>Friends</Text>
+              <Icon
+                style={(imgStyles.icon, { marginLeft: '5%', color: hex, fontSize: 18 })}
+                name="heart"
+              />
             </View>
           </TouchableHighlight>
         )}
@@ -142,10 +157,12 @@ export default class ProfileCard extends React.Component {
         )}
         {this.state.deleteFriend && (
           <Alert
-            title="Are you sure?"
-            body={'You are about to remove @' + this.props.username + ' as a friend'}
-            button
-            buttonText="Delete"
+            title={'Unfriend ' + this.props.name}
+            body="If you change your mind, you'll have to send a friends request again."
+            buttonAff="Unfriend"
+            buttonNeg="Cancel"
+            height="28%"
+            twoButton
             press={() => this.deleteFriend()}
             cancel={() => this.setState({ deleteFriend: false })}
           />
@@ -153,8 +170,8 @@ export default class ProfileCard extends React.Component {
         {this.state.errorAlert && (
           <Alert
             title="Error, please try again"
-            button
-            buttonText="Close"
+            buttonAff="Close"
+            height="20%"
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />

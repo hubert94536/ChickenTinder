@@ -29,7 +29,8 @@ const config = {
   storageBucket: FIREBASE_STORAGE_BUCKET, // Storage
 }
 
-Firebase.initializeApp(config)
+if (!Firebase.apps.length) Firebase.initializeApp(config);
+
 const loginWithFacebook = async () => {
   // Attempt a login using the Facebook login dialog asking for default permissions.
   return LoginManager.logInWithPermissions(['public_profile', 'email'])
@@ -46,19 +47,21 @@ const loginWithFacebook = async () => {
     })
     .then((currentUser) => {
       // Set user's info locally
-      AsyncStorage.setItem(UID, Firebase.auth().currentUser.uid)
-      AsyncStorage.setItem(NAME, currentUser.additionalUserInfo.profile.name)
-      AsyncStorage.setItem(ID, currentUser.additionalUserInfo.profile.id)
-      AsyncStorage.setItem(EMAIL, currentUser.additionalUserInfo.profile.email)
-      AsyncStorage.setItem(PHOTO, currentUser.user.photoURL)
+      AsyncStorage.multiSet(
+        [[UID, Firebase.auth().currentUser.uid],
+        [NAME, currentUser.additionalUserInfo.profile.name],
+        [ID, currentUser.additionalUserInfo.profile.id],
+        [EMAIL, currentUser.additionalUserInfo.profile.email]]
+      )
+      
       // Get username from database if not new user
       if (!currentUser.additionalUserInfo.isNewUser) {
         return accountsApi.getUser(currentUser.additionalUserInfo.profile.id).then((res) => {
-          AsyncStorage.setItem(USERNAME, res.username)
+          AsyncStorage.multiSet([[USERNAME, res.username], [PHOTO, res.photo]])
           return 'Home'
         })
       }
-      return 'Username'
+      return 'createAccount'
     })
     .catch((error) => {
       //  Account linking will be needed with email/phone_number login
@@ -74,6 +77,7 @@ const loginWithFacebook = async () => {
 // }
 
 // Log out of Firebase and Facebook
+// TODO: Update with new async storage items
 const logoutWithFacebook = async () => {
   Firebase.auth()
     .signOut()

@@ -1,7 +1,7 @@
 import React from 'react'
 import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native'
 import PropTypes from 'prop-types'
-import { SearchBar, Text } from 'react-native-elements'
+import { SearchBar } from 'react-native-elements'
 import Alert from '../modals/alert.js'
 import ProfileCard from '../cards/profileCard.js'
 import friendsApi from '../apis/friendsApi.js'
@@ -133,10 +133,9 @@ export default class Friends extends React.Component {
         </ScrollView>
         {this.state.errorAlert && (
           <Alert
-            title="Error!"
-            body="Please try again"
-            button
-            buttonText="Close"
+            title="Error, please try again"
+            buttonAff="Close"
+            height="20%"
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />

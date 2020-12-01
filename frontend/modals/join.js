@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Modal, Text, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import modalStyles from '../../styles/modalStyles.js'
@@ -8,7 +8,6 @@ import screenStyles from '../../styles/screenStyles.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
 const hex = '#F15763'
-const font = 'CircularStd-Medium'
 //  props are name, image url, and functions for cancel and go
 // invite alert
 
@@ -42,7 +41,7 @@ export default class Join extends React.Component {
   render() {
     return (
       <View>
-        <Modal transparent animationType="none">
+        <Modal transparent animationType="none" visible={this.props.visible}>
           <View style={[modalStyles.modal, { flex: 0, height: 180, borderRadius: 15 }]}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               <AntDesign
@@ -122,13 +121,5 @@ Join.propTypes = {
   cancel: PropTypes.func,
   onPress: PropTypes.func,
   name: PropTypes.string,
+  visible: PropTypes.bool
 }
-
-const styles = StyleSheet.create({
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 63,
-    borderWidth: 4,
-  },
-})

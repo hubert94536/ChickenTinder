@@ -1,16 +1,14 @@
 import React from 'react'
-import { Dimensions, Modal, Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
+import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
-import accountsApi from '../apis/accountsApi.js'
 import Alert from '../modals/alert.js'
-import friendsApi from '../apis/friendsApi.js'
 import Join from '../modals/join.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import TabBar from '../nav.js'
-import Icon from 'react-native-vector-icons/AntDesign'
-import SwitchButton from 'switch-button-react-native';
+import friendsApi from '../apis/friendsApi.js'
+import accountsApi from '../apis/accountsApi.js'
 
 var img = ''
 var name = ''
@@ -23,8 +21,6 @@ AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 var myId = ''
 
 const width = Dimensions.get('window').width
-const height = Dimensions.get('window').height
-const hex = '#F15763'
 
 AsyncStorage.getItem(ID).then((res) => {
   myId = res
@@ -46,7 +42,6 @@ class Home extends React.Component {
       errorAlert: false,
     }
     socket.connect()
-    // socket.getSocket().on('reconnectRoom', res => console.log(res))
     socket.getSocket().on('invite', (res) => {
       this.setState({ invite: true, inviteInfo: res })
     })
@@ -74,25 +69,6 @@ class Home extends React.Component {
     // friendsApi.createFriendshipTest(myId, 4)
     // friendsApi.acceptFriendRequest(2)
   }
-
-  // async getFriends() {
-  //   // Pushing accepted friends or pending requests into this.state.friends
-  //   friendsApi
-  //     .getFriends()
-  //     .then((res) => {
-  //       var friendsMap = new Object()
-  //       for (var friend in res.friendList) {
-  //         friendsMap[res.friendList[friend].id] = res.friendList[friend].status
-  //       }
-  //       this.setState({ friends: friendsMap })
-  //       this.props.navigation.navigate('Search', {
-  //         allFriends: friendsMap,
-  //       })
-  //     })
-  //     .catch((err) => {
-  //       this.setState({ errorAlert: true })
-  //     })
-  // }
 
   render() {
     return (
@@ -175,20 +151,18 @@ class Home extends React.Component {
           goProfile={() => this.props.navigation.navigate('Profile')}
           cur="Home"
         />
-        {this.state.join && (
-          <Join
-            image={this.state.inviteInfo.pic}
-            username={this.state.inviteInfo.username}
-            name={this.state.inviteInfo.name}
-            cancel={() => this.setState({ join: false })}
-            onPress={() => this.setState({ join: false })}
-          />
-        )}
+        <Join
+          visible={this.state.join}
+          username={this.state.inviteInfo.username}
+          name={this.state.inviteInfo.name}
+          cancel={() => this.setState({ join: false })}
+          onPress={() => this.setState({ join: false })}
+        />
         {this.state.errorAlert && (
           <Alert
             title="Error, please try again"
-            button
-            buttonText="Close"
+            buttonAff="Close"
+            height="20%"
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />

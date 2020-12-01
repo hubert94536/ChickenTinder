@@ -82,7 +82,6 @@ import React from 'react'
 import { Image, Text, TouchableHighlight, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
-import Alert from '../modals/alert.js'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
 import Swipeout from 'react-native-swipeout'
@@ -97,8 +96,6 @@ export default class NotifCard extends React.Component {
       id: this.props.id,
       confirmPressed: false,
       deletePressed: false,
-      errorAlert: false,
-      deleteFriend: false,
     }
   }
 
@@ -109,7 +106,7 @@ export default class NotifCard extends React.Component {
       .then(() => {
         this.setState({ isFriend: true })
       })
-      .catch(() => this.setState({ errorAlert: true }))
+      .catch(() => this.props.showError())
   }
 
   // delete friend and modify view
@@ -117,13 +114,13 @@ export default class NotifCard extends React.Component {
     friendsApi
       .removeFriendship(this.state.id)
       .then(() => {
-        this.setState({ deleteFriend: false })
+        this.props.removeDelete()
         var filteredArray = this.props.total.filter((item) => {
           return item.username !== this.props.username
         })
         this.props.press(this.props.id, filteredArray, true)
       })
-      .catch(() => this.setState({ errorAlert: true }))
+      .catch(() => this.props.showError())
   }
 
   render() {
@@ -250,25 +247,6 @@ export default class NotifCard extends React.Component {
                 </Text>
               </TouchableHighlight>
             </View>
-          )}
-          {this.state.deleteFriend && (
-            <Alert
-              title="Are you sure?"
-              body={'You are about to remove @' + this.props.username + ' as a friend'}
-              button
-              buttonText="Delete"
-              press={() => this.deleteFriend()}
-              cancel={() => this.setState({ deleteFriend: false })}
-            />
-          )}
-          {this.state.errorAlert && (
-            <Alert
-              title="Error, please try again"
-              button
-              buttonText="Close"
-              press={() => this.setState({ errorAlert: false })}
-              cancel={() => this.setState({ errorAlert: false })}
-            />
           )}
         </View>
       </Swipeout>
