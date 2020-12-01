@@ -48,24 +48,6 @@ export default class ProfileCard extends React.Component {
 
   render() {
     return (
-<<<<<<< HEAD
-      <View style={{ flexDirection: 'row', flex: 1 }}>
-        <Image
-          source={{
-            uri: this.props.image,
-          }}
-          style={imgStyles.button}
-        />
-        <View
-          style={{
-            alignSelf: 'center',
-            marginLeft: '1%',
-            flex: 1,
-          }}
-        >
-          <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
-          <Text style={{ fontFamily: font }}>@{this.props.username}</Text>
-=======
       <View
         style={{
           flexDirection: 'row',
@@ -92,7 +74,6 @@ export default class ProfileCard extends React.Component {
             <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
             <Text style={{ fontFamily: font, color: hex }}>@{this.props.username}</Text>
           </View>
->>>>>>> eba913259aa3bd98b1dd99a1145586158356bbff
         </View>
         {this.state.isFriend && (
           <TouchableHighlight onPress={() => this.setState({ deleteFriend: true })}>

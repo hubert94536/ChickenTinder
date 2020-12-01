@@ -5,12 +5,15 @@ const http = require('http')
 const io = require('socket.io')()
 const accounts = require('./accountsQueries.js')
 const friends = require('./friendsQueries.js')
+const images = require('./images')
 const notifications = require('./notificationsQueries.js')
 
 const app = express()
 const server = http.createServer(app)
-io.attach(server)
-require('./socketEvents.js')(io)
+
+// io.attach(server)
+// require('./socketEvents.js')(io)
+
 //  For validating param passed through route
 const validateRoute = require('express-joi-validation').createValidator({})
 
@@ -27,6 +30,9 @@ app.use(
 if (app.get('env') === 'development') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 }
+
+//image uploads
+app.route('/images').post(images.upload, images.uploadHandler);
 
 //General helper function for validating schema
 function validateRequest(req, next, schema) {
