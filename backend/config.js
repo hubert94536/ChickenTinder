@@ -29,14 +29,14 @@ const sequelize = new Sequelize(config)
 //       console.log('hi')
 //     })
 //   })
-// const redisClient = redis.createClient('redis://localhost:6379')
-// const redisClient = redis.createClient({
-//   host: process.env.REDIS_HOST,
-//   port: process.env.REDIS_PORT,
-//   password: process.env.REDIS_PASSWORD,
-// })
-// const hgetAll = promisify(redisClient.hgetall).bind(redisClient)
-// const sendCommand = promisify(redisClient.send_command).bind(redisClient)
+const redisClient = redis.createClient('redis://localhost:6379')
+const redisClient = redis.createClient({
+  host: process.env.REDIS_HOST,
+  port: process.env.REDIS_PORT,
+  password: process.env.REDIS_PASSWORD,
+})
+const hgetAll = promisify(redisClient.hgetall).bind(redisClient)
+const sendCommand = promisify(redisClient.send_command).bind(redisClient)
 
-module.exports = { sequelize }
-// module.exports = { sequelize, hgetAll, sendCommand, redisClient }
+// module.exports = { sequelize }
+module.exports = { sequelize, hgetAll, sendCommand, redisClient }
