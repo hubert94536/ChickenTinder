@@ -24,7 +24,7 @@ export default class createAccount extends React.Component {
       phone: '',
       email: '',
       id: 22,
-      photo: null,
+      photo: '',
       defImg: '',
       defImgInd: 0,
     }
@@ -69,12 +69,10 @@ export default class createAccount extends React.Component {
             this.state.email,
             this.state.photo,
           )
-          .then(() => {
-            this.props.navigation.navigate('Home')
-          })
       })
+      .then(() => uploadApi.uploadPhoto(this.state.photoData))
       .then(() => {
-        return uploadApi.uploadPhoto(this.state.photoData)
+        this.props.navigation.navigate('Home')
       })
       .catch((error) => {
         if (error === 404) {
@@ -95,8 +93,6 @@ export default class createAccount extends React.Component {
       height: 150,
       cropping: true,
     }).then((image) => {
-      // do something with the image
-      console.log(image);
       this.setState({ 
         photo: image.path, 
         photoData: {
@@ -130,18 +126,17 @@ export default class createAccount extends React.Component {
         <Text style={[styles.mediumText]}>Account Verified!</Text>
         <Text style={[styles.mediumText]}>Finish setting up your account</Text>
 
-        {this.state.photo == null && (
-          <Image source={this.state.defImg} style={screenStyles.avatar} />
-        )}
-
-        {this.state.photo != null && (
+        {this.state.photo ? 
           <Image
             source={{
               uri: this.state.photo,
             }}
             style={screenStyles.avatar}
           />
-        )}
+        : 
+          <Image source={this.state.defImg} style={screenStyles.avatar} />
+        }
+
         <Text
           style={[
             styles.mediumText,
