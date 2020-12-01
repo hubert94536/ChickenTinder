@@ -11,8 +11,8 @@ const notifications = require('./notificationsQueries.js')
 const app = express()
 const server = http.createServer(app)
 
-// io.attach(server)
-// require('./socketEvents.js')(io)
+io.attach(server)
+require('./socketEvents.js')(io)
 
 //  For validating param passed through route
 const validateRoute = require('express-joi-validation').createValidator({})

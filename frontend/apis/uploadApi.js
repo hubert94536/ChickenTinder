@@ -9,8 +9,8 @@ AsyncStorage.getItem(ID).then((res) => {
 })
 
 const uploadApi = axios.create({
-  // baseURL: 'https://wechews.herokuapp.com',
-  baseURL: 'http://172.16.0.10:5000'
+  baseURL: 'https://wechews.herokuapp.com',
+  // baseURL: 'http://172.16.0.10:5000'
 })
 
 /**
