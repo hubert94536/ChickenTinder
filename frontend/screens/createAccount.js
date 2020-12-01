@@ -7,6 +7,7 @@ import screenStyles from '../../styles/screenStyles.js'
 import PropTypes from 'prop-types'
 import ImagePicker from 'react-native-image-crop-picker'
 import defImages from '../assets/images/foodImages.js'
+import uploadApi from '../apis/uploadApi.js'
 
 const hex = '#F15763'
 const textColor = '#6A6A6A'
@@ -47,6 +48,8 @@ export default class createAccount extends React.Component {
 
   //  checks whether or not the username can be set
   handleClick() {
+    console.log("finish");
+    console.log(this.state);
     accountsApi
       .checkUsername(this.state.username)
       .then(() => {
@@ -70,6 +73,9 @@ export default class createAccount extends React.Component {
             this.props.navigation.navigate('Home')
           })
       })
+      .then(() => {
+        return uploadApi.uploadPhoto(this.state.photoData)
+      })
       .catch((error) => {
         if (error === 404) {
           this.setState({ takenAlert: true })
@@ -85,12 +91,20 @@ export default class createAccount extends React.Component {
 
   uploadPhoto() {
     ImagePicker.openPicker({
-      width: 400,
-      height: 400,
+      width: 150,
+      height: 150,
       cropping: true,
     }).then((image) => {
-      //do something with the image
-      this.setState({ photo: image.path })
+      // do something with the image
+      console.log(image);
+      this.setState({ 
+        photo: image.path, 
+        photoData: {
+          uri: image.path,
+          type: image.mime,
+          name: "avatar"
+        }
+       })
     })
     console.log('upload photo')
   }
@@ -176,7 +190,7 @@ export default class createAccount extends React.Component {
           textAlign="left"
           placeholder="email@domain.com"
           onChangeText={(email) => {
-            this.setState({ email })
+            this.setState({ email: email })
           }}
           value={this.state.email}
         />

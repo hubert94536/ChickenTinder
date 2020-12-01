@@ -22,7 +22,7 @@ const connect = () => {
 }
 // uncomment below if testing on local server
 /* const connect = () => {
-   socket = io('http://192.168.0.23:5000', {
+   socket = io('http://172.16.0.10:5000', {
      query: `username=${myUsername}`,
    })
 } */
