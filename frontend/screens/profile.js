@@ -264,21 +264,19 @@ export default class UserProfileView extends Component {
             </View>
             
             
-            {this.state.image == null && (
-            <Image
-              source={this.state.defImg}
-              style={screenStyles.avatar}
+            {this.state.image ?  
+              <Image
+                source={{
+                  uri: this.state.image,
+                  }}
+                style={screenStyles.avatar}
+              /> 
+              :
+              <Image
+                source={this.state.defImg}
+                style={screenStyles.avatar}
               />
-              )}
-            
-            {this.state.image != null && (
-            <Image
-              source={{
-                uri: this.state.image,
-              }}
-              style={screenStyles.avatar}
-              />
-              )}
+            }
 
             <View style={{ alignItems: 'center' }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -312,7 +310,7 @@ export default class UserProfileView extends Component {
             <Text style={[screenStyles.text, { marginLeft: '7%', fontSize: 17, fontFamily:'CircularStd-Medium' }]}>{this.state.numFriends + ' friends'}</Text>
           </View>
           <View style={{ height: '50%', marginTop: '0%' }}>
-            <Friends isFriends onFriendsChange={this.handleFriendsCount}/>
+            <Friends isFriends onFriendsChange={() => this.handleFriendsCount}/>
           </View>
           {(this.state.visible || this.state.edit) && (
             <BlurView
