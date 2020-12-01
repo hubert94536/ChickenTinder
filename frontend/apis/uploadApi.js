@@ -10,7 +10,7 @@ AsyncStorage.getItem(ID).then((res) => {
 
 const uploadApi = axios.create({
   // baseURL: 'https://wechews.herokuapp.com',
-  baseURL: 'http://192.168.0.23:5000'
+  baseURL: 'http://172.16.0.10:5000'
 })
 
 /**
@@ -23,6 +23,7 @@ const uploadApi = axios.create({
  * from image-resizer: uri: res.uri, name: res.name 
  */
 const uploadPhoto = async (photo) => {
+    console.log('uploadApi');
     const config = {
         headers: {
             Accept: "application/json",
@@ -33,10 +34,34 @@ const uploadPhoto = async (photo) => {
     data.append('id', myId);
     data.append('avatar', photo);
 
+    console.log(data);
+    console.log(photo);
+
+    // return uploadApi.get('/accounts')
+    //       .then((res) => {
+    //         console.log(res)
+    //       })
+
+    // const uploadUrl = 'http://172.16.0.10:5000/images'
+    // return fetch(uploadUrl, {
+    //   method: 'post',
+    //   body: data
+    // })
+    //   .then((res) => res.json())
+    //   .then((res) => console.log(res));
+
     return uploadApi
         .post('/images', data, config)
-        .then((res) => { return res.status })
-        .catch((error) => { throw error.response.status })
+        .then((res) => {
+          console.log("upload success")
+          console.log(res) 
+          return res.status
+         })
+        .catch((error) => {
+          console.log("upload error")
+          console.log(error); 
+          throw error.response.status
+         })
 }
 
 export default {

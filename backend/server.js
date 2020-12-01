@@ -9,8 +9,8 @@ const images = require('./images')
 const notifications = require('./notificationsQueries.js')
 
 const app = express()
+const server = http.createServer(app)
 
-// const server = http.createServer(app)
 // io.attach(server)
 // require('./socketEvents.js')(io)
 
@@ -32,7 +32,7 @@ if (app.get('env') === 'development') {
 }
 
 //image uploads
-app.route('/images').post(images.upload,images.uploadHandler);
+app.route('/images').post(images.upload, images.uploadHandler);
 
 //General helper function for validating schema
 function validateRequest(req, next, schema) {

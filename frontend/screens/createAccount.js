@@ -48,6 +48,8 @@ export default class createAccount extends React.Component {
 
   //  checks whether or not the username can be set
   handleClick() {
+    console.log("finish");
+    console.log(this.state);
     accountsApi
       .checkUsername(this.state.username)
       .then(() => {
@@ -71,6 +73,9 @@ export default class createAccount extends React.Component {
             this.props.navigation.navigate('Home')
           })
       })
+      .then(() => {
+        return uploadApi.uploadPhoto(this.state.photoData)
+      })
       .catch((error) => {
         if (error === 404) {
           this.setState({ takenAlert: true })
@@ -91,12 +96,15 @@ export default class createAccount extends React.Component {
       cropping: true,
     }).then((image) => {
       // do something with the image
-      uploadApi.uploadPhoto({
-        uri: image.path,
-        type: image.mime,
-        name: "avatar"
-      })
-      // this.setState({ photo: image.path })
+      console.log(image);
+      this.setState({ 
+        photo: image.path, 
+        photoData: {
+          uri: image.path,
+          type: image.mime,
+          name: "avatar"
+        }
+       })
     })
     console.log('upload photo')
   }
@@ -182,7 +190,7 @@ export default class createAccount extends React.Component {
           textAlign="left"
           placeholder="email@domain.com"
           onChangeText={(email) => {
-            this.setState({ email })
+            this.setState({ email: email })
           }}
           value={this.state.email}
         />

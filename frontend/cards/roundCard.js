@@ -64,21 +64,21 @@ export default class RoundCard extends React.Component {
       case 'European':
         return require('../assets/images/european.png')
       case 'Indian':
-        return require('../assets/images/Indian.png')
+        return require('../assets/images/indian.png')
       case 'Italian':
-        return require('../assets/images/Italian.png')
+        return require('../assets/images/italian.png')
       case 'Japanese':
-        return require('../assets/images/Japanese.png')
+        return require('../assets/images/japanese.png')
       case 'Korean':
-        return require('../assets/images/Korean.png')
+        return require('../assets/images/korean.png')
       case 'Mediterranean':
         return require('../assets/images/mediterranean.png')
       case 'Mexican':
-        return require('../assets/images/Mexican.png')
+        return require('../assets/images/mexican.png')
       case 'Middle Eastern':
         return require('../assets/images/middleEastern.png')
       case 'Thai':
-        return require('../assets/images/Thai.png')
+        return require('../assets/images/thai.png')
     }
   }
 
