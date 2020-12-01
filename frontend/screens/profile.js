@@ -24,7 +24,7 @@ import TabBar from '../nav.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import ImagePicker from 'react-native-image-crop-picker';
 import defImages from '../assets/images/foodImages.js'
-
+import uploadApi from '../apis/uploadApi.js'
 
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
@@ -196,15 +196,23 @@ export default class UserProfileView extends Component {
       height: 400,
       cropping: true
     }).then(image => {
-      //do something with the image﻿
-      this.setState({oldImage: this.state.image})
-      this.setState({image: image.path})
+      this.setState({
+        imageData: {
+          uri: image.path,
+          type: image.mime,
+          name: "avatar"
+        }, 
+        oldImage: this.state.image,
+        image: image.path
+      })
+      console.log(this.state.oldImage);
       AsyncStorage.setItem(PHOTO, this.state.image)
     });
   }
 
   removePhoto() {
     this.setState({image: null})
+    // TODO: delete from AWS
     AsyncStorage.setItem(PHOTO, this.state.image)
   }
 
@@ -225,6 +233,7 @@ export default class UserProfileView extends Component {
     {
       this.setState({oldImage: this.state.image})
       AsyncStorage.setItem(PHOTO, this.state.image)
+      uploadApi.uploadPhoto(this.state.imageData);
     }
   }
 
@@ -655,16 +664,16 @@ export default class UserProfileView extends Component {
             />
           )}
           {/* {this.state.logoutAlert && (
-            <Alert
-              title="Log out"
-              body="Are you sure you want to log out?"
-              buttonAff="Logout"
-              buttonNeg="Go back"
-              height="25%"
-              twoButton
-              press={() => this.handleLogout()}
-              cancel={() => this.cancelLogout()}
-            />
+            // <Alert
+            //   title="Log out"
+            //   body="Are you sure you want to log out?"
+            //   buttonAff="Logout"
+            //   buttonNeg="Go back"
+            //   height="25%"
+            //   twoButton
+            //   press={() => this.handleLogout()}
+            //   cancel={() => this.cancelLogout()}
+            // />
           )} */}
           {this.state.errorAlert && (
             <Alert
