@@ -10,7 +10,7 @@ AsyncStorage.getItem(ID).then((res) => {
 
 const notificationsApi = axios.create({
   baseURL: 'https://wechews.herokuapp.com',
-  //baseURL: 'http://192.168.0.23:5000'
+  // baseURL: 'http://172.16.0.10:5000'
 })
 
 // gets a users friends/requests

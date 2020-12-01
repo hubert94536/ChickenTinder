@@ -38,4 +38,5 @@ const redisClient = redis.createClient({
 const hgetAll = promisify(redisClient.hgetall).bind(redisClient)
 const sendCommand = promisify(redisClient.send_command).bind(redisClient)
 
+// module.exports = { sequelize }
 module.exports = { sequelize, hgetAll, sendCommand, redisClient }

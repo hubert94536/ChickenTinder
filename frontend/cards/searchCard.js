@@ -68,12 +68,7 @@ export default class SearchCard extends React.Component {
       <View style={{ flexDirection: 'row', flex: 1, width: '85%', alignSelf: 'center' }}>
         <Image
           source={{
-<<<<<<< HEAD
-            uri:
-              'https://d1kdq4z3qhht46.cloudfront.net/uploads/2019/08/Adventures_from_Moominvalley_1990_Moomintroll_TV.jpg',
-=======
             uri: this.props.image,
->>>>>>> eba913259aa3bd98b1dd99a1145586158356bbff
           }}
           style={imgStyles.button}
         />
@@ -110,14 +105,10 @@ export default class SearchCard extends React.Component {
         {this.state.requested === 'Accepted' && this.state.renderOption && (
           <TouchableHighlight
             underlayColor="white"
-<<<<<<< HEAD
-            onPress={() => this.setState({ deleteFriend: true })}
-=======
             onPress={() => {
               this.props.showDelete()
               this.props.deleteError()
             }}
->>>>>>> eba913259aa3bd98b1dd99a1145586158356bbff
           >
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
               <Text style={[imgStyles.text]}>Friends</Text>

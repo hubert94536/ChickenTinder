@@ -10,11 +10,12 @@ AsyncStorage.getItem(ID).then((res) => {
 
 const accountsApi = axios.create({
   baseURL: 'https://wechews.herokuapp.com',
-  //baseURL: 'http://192.168.0.23:5000'
+  // baseURL: 'http://172.16.0.10:5000'
 })
 
 // creates user and returns id
 const createFBUser = async (name, id, username, email, photo) => {
+  console.log("create")
   return accountsApi
     .post('/accounts', {
       params: {
@@ -162,6 +163,7 @@ const updateUser = async (req) => {
 
 // checks username and returns status
 const checkUsername = async (username) => {
+  console.log("check")
   return accountsApi
     .get(`/username/${username}`)
     .then((res) => {
