@@ -24,7 +24,7 @@ export default class createAccount extends React.Component {
       phone: '',
       email: '',
       id: 22,
-      photo: null,
+      photo: '',
       defImg: '',
       defImgInd: 0,
     }
@@ -126,18 +126,16 @@ export default class createAccount extends React.Component {
         <Text style={[styles.mediumText]}>Account Verified!</Text>
         <Text style={[styles.mediumText]}>Finish setting up your account</Text>
 
-        {this.state.photo == null && (
-          <Image source={this.state.defImg} style={screenStyles.avatar} />
-        )}
-
-        {this.state.photo != null && (
+        {this.state.photo ? 
           <Image
             source={{
               uri: this.state.photo,
             }}
             style={screenStyles.avatar}
           />
-        )}
+        : 
+          <Image source={this.state.defImg} style={screenStyles.avatar} />
+        }
         <Text
           style={[
             styles.mediumText,
