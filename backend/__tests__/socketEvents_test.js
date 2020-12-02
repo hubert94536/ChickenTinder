@@ -228,7 +228,7 @@ describe('socket with Redis', () => {
         socket.emit('submit', {
           code: code,
           id: '123',
-            categories: 'chinese,newamerican',
+          categories: 'chinese,newamerican',
         })
       }
     })
