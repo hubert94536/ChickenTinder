@@ -95,7 +95,11 @@ module.exports = (io) => {
               if (index >= 0) {
                 delete filters.finished[index]
               }
-              await sendCommand('JSON.SET', [`filters:${client.room}`, '.', JSON.stringify(filters)])
+              await sendCommand('JSON.SET', [
+                `filters:${client.room}`,
+                '.',
+                JSON.stringify(filters),
+              ])
               // if the removed user was last person to finish, get top 3 restaurants and emit
               if (filters.finished.length === parseInt(filters.groupSize)) {
                 let top3 = getTop3(filters.restaurants)

@@ -2,7 +2,7 @@ import 'react-native'
 import { render, fireEvent, cleanup } from '@testing-library/react-native'
 import Renderer from 'react-test-renderer'
 import Search from '../screens/search'
-import MockAsyncStorage from 'mock-async-storage';
+import MockAsyncStorage from 'mock-async-storage'
 import React from 'react'
 
 import { AsyncStorage } from 'react-native'
@@ -13,8 +13,6 @@ const mock = () => {
 }
 
 mock()
-
-
 
 jest.mock('../apis/friendsApi')
 jest.mock('../apis/accountsApi.js')
@@ -28,7 +26,7 @@ test('renders search for nothing correctly', () => {
 
 test('snapshot for search', () => {
   const create = Renderer.create(<Search />).getInstance()
-  const { getByText, getByPlaceholderText, toJSON} = render(<Search />) 
+  const { getByText, getByPlaceholderText, toJSON } = render(<Search />)
   // Test typing generates cards
   fireEvent.changeText(getByPlaceholderText('Search for friends'), 'John')
   expect(getByText('j0hn'))
@@ -40,7 +38,7 @@ test('snapshot for search', () => {
 test('snapshot for search, no results', () => {
   const create = Renderer.create(<Search />).getInstance()
   const tree = render(<Search />)
-  const { getByPlaceholderText, toJson} = render(<Search />)
+  const { getByPlaceholderText, toJson } = render(<Search />)
   // Test for search that generates nothing
   fireEvent.changeText(getByPlaceholderText('Search for friends'), 'Harbinger')
   expect(tree.toJSON()).toMatchSnapshot()
@@ -66,7 +64,7 @@ test('snapshot for search, no results', () => {
 
 // test('status click if friends, failing case', () => {
 //   // test if error alert renders
-  
+
 //   // clicking on cancel closes pop up
 // })
 
@@ -75,4 +73,3 @@ test('snapshot for search, no results', () => {
 
 //   // clicking on confirm calls Api function + closes pop up
 // })
-

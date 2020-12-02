@@ -16,18 +16,17 @@ import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
 import Loading from './frontend/screens/loading.js'
 import TabBar from './frontend/nav.js'
 
-
 class Notifications extends React.Component {
   render() {
     return (
-      <View style={{flex: 1,justifyContent: 'center', alignItems: 'center',}}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>Notifications</Text>
-        <TabBar 
+        <TabBar
           goHome={() => this.props.navigation.navigate('Home')}
           goSearch={() => this.props.navigation.navigate('Search')}
           goNotifs={() => this.props.navigation.navigate('Notifications')}
           goProfile={() => this.props.navigation.navigate('Profile')}
-          cur='Notifs'
+          cur="Notifs"
         />
       </View>
     )
@@ -56,8 +55,8 @@ export default class App extends React.Component {
           Home: {
             screen: Home,
             navigationOptions: {
-              animationEnabled: false
-            }
+              animationEnabled: false,
+            },
           },
           Login: {
             screen: Login,
@@ -68,8 +67,8 @@ export default class App extends React.Component {
           Profile: {
             screen: UserProfileView,
             navigationOptions: {
-              animationEnabled: false
-            }
+              animationEnabled: false,
+            },
           },
           Group: {
             screen: Group,
@@ -83,17 +82,17 @@ export default class App extends React.Component {
           Search: {
             screen: Search,
             navigationOptions: {
-              animationEnabled: false
-            }
+              animationEnabled: false,
+            },
           },
           Phone: {
-            screen: PhoneAuthScreen
+            screen: PhoneAuthScreen,
           },
           Notifications: {
             screen: Notifications,
             navigationOptions: {
-              animationEnabled: false
-            }
+              animationEnabled: false,
+            },
           },
           Loading: {
             screen: Loading,
@@ -102,7 +101,7 @@ export default class App extends React.Component {
         {
           initialRouteName: start,
           headerMode: 'none',
-          animationEnabled: false
+          animationEnabled: false,
         },
       )
       unsubscribe()
