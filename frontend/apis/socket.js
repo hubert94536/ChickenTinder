@@ -49,7 +49,7 @@ const sendInvite = (receiver, code) => {
 }
 
 const joinRoom = (code) => {
-  socket.emit('join room', {
+  socket.emit('join', {
     id: myId,
     name: myName,
     username: myUsername,
