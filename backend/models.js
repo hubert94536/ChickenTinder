@@ -68,19 +68,20 @@ Notifications.belongsTo(Accounts, { foreignKey: 'sender_id', foreignKeyConstrain
 Friends.belongsTo(Accounts, { foreignKey: 'friend_id', foreignKeyConstraint: true })
 
 // sequelize.sync({ force: true }).then(() => {
-//   // sequelize.query('CREATE OR REPLACE FUNCTION notify_insert()' +
-//   //   ' RETURNS trigger AS $$' +
-//   //   ' DECLARE' +
-//   //   ' BEGIN' +
-//   //   ' PERFORM pg_notify(\'notifications\', row_to_json(NEW)::text);' +
-//   //   ' RETURN NEW;' +
-//   //   ' END;' +
-//   //   ' $$ LANGUAGE plpgsql;'
-//   // )
-//   // sequelize.query('CREATE TRIGGER notify_insert' +
-//   //   ' AFTER INSERT ON notifications' +
-//   //   ' FOR EACH ROW' +
-//   //   ' EXECUTE PROCEDURE notify_insert();')
+//   sequelize.query('CREATE OR REPLACE FUNCTION notify_insert()' +
+//     ' RETURNS trigger AS $$' +
+//     ' DECLARE' +
+//     ' BEGIN' +
+//     ' PERFORM pg_notify(\'notifications\', row_to_json(NEW ::text);' +
+//     ' RETURN NEW;' +
+//     ' END;' +
+//     ' $$ LANGUAGE plpgsql;'
+//   )
+
+//   sequelize.query('CREATE TRIGGER notify_insert' +
+//     ' AFTER INSERT ON notifications' +
+//     ' FOR EACH ROW' +
+//     ' EXECUTE PROCEDURE notify_insert();')
 // })
 
 module.exports = { Accounts, Friends, Notifications }

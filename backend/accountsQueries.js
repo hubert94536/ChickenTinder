@@ -20,7 +20,7 @@ const searchAccounts = async (req, res) => {
       where: {
         username: { [Op.iLike]: `${text}%` },
       },
-      attributes: ['id', 'name', 'username', 'phone_number'],
+      attributes: ['id', 'name', 'username', 'photo'],
     })
     return res.status(200).json({ users })
   } catch (error) {
