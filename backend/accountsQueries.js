@@ -33,7 +33,7 @@ const createAccount = async (req, res) => {
   try {
     await Accounts.create({
       id: req.body.params.id,
-      name: req.byody.params.name,
+      name: req.body.params.name,
       username: req.body.params.username,
       email: req.body.params.email,
       photo: req.body.params.photo,
