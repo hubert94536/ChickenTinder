@@ -109,6 +109,9 @@
     "util": "^0.12.3"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "setupFiles": [
+      "./setup-tests.js"
+    ]
   }
 }

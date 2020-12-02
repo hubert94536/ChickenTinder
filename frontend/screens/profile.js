@@ -24,7 +24,7 @@ import TabBar from '../nav.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import ImagePicker from 'react-native-image-crop-picker';
 import defImages from '../assets/images/foodImages.js'
-
+import uploadApi from '../apis/uploadApi.js'
 
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
@@ -196,15 +196,23 @@ export default class UserProfileView extends Component {
       height: 400,
       cropping: true
     }).then(image => {
-      //do something with the image﻿
-      this.setState({oldImage: this.state.image})
-      this.setState({image: image.path})
+      this.setState({
+        imageData: {
+          uri: image.path,
+          type: image.mime,
+          name: "avatar"
+        }, 
+        oldImage: this.state.image,
+        image: image.path
+      })
+      console.log(this.state.oldImage);
       AsyncStorage.setItem(PHOTO, this.state.image)
     });
   }
 
   removePhoto() {
     this.setState({image: null})
+    // TODO: delete from AWS
     AsyncStorage.setItem(PHOTO, this.state.image)
   }
 
@@ -225,6 +233,7 @@ export default class UserProfileView extends Component {
     {
       this.setState({oldImage: this.state.image})
       AsyncStorage.setItem(PHOTO, this.state.image)
+      uploadApi.uploadPhoto(this.state.imageData);
     }
   }
 
@@ -255,21 +264,19 @@ export default class UserProfileView extends Component {
             </View>
             
             
-            {this.state.image == null && (
-            <Image
-              source={this.state.defImg}
-              style={screenStyles.avatar}
+            {this.state.image ?  
+              <Image
+                source={{
+                  uri: this.state.image,
+                  }}
+                style={screenStyles.avatar}
+              /> 
+              :
+              <Image
+                source={this.state.defImg}
+                style={screenStyles.avatar}
               />
-              )}
-            
-            {this.state.image != null && (
-            <Image
-              source={{
-                uri: this.state.image,
-              }}
-              style={screenStyles.avatar}
-              />
-              )}
+            }
 
             <View style={{ alignItems: 'center' }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -303,7 +310,7 @@ export default class UserProfileView extends Component {
             <Text style={[screenStyles.text, { marginLeft: '7%', fontSize: 17, fontFamily:'CircularStd-Medium' }]}>{this.state.numFriends + ' friends'}</Text>
           </View>
           <View style={{ height: '50%', marginTop: '0%' }}>
-            <Friends isFriends onFriendsChange={this.handleFriendsCount}/>
+            <Friends isFriends onFriendsChange={() => this.handleFriendsCount}/>
           </View>
           {(this.state.visible || this.state.edit) && (
             <BlurView
@@ -655,16 +662,16 @@ export default class UserProfileView extends Component {
             />
           )}
           {/* {this.state.logoutAlert && (
-            <Alert
-              title="Log out"
-              body="Are you sure you want to log out?"
-              buttonAff="Logout"
-              buttonNeg="Go back"
-              height="25%"
-              twoButton
-              press={() => this.handleLogout()}
-              cancel={() => this.cancelLogout()}
-            />
+            // <Alert
+            //   title="Log out"
+            //   body="Are you sure you want to log out?"
+            //   buttonAff="Logout"
+            //   buttonNeg="Go back"
+            //   height="25%"
+            //   twoButton
+            //   press={() => this.handleLogout()}
+            //   cancel={() => this.cancelLogout()}
+            // />
           )} */}
           {this.state.errorAlert && (
             <Alert

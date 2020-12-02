@@ -23,6 +23,7 @@ const uploadApi = axios.create({
  * from image-resizer: uri: res.uri, name: res.name 
  */
 const uploadPhoto = async (photo) => {
+    if (!photo) return; 
     console.log('uploadApi');
     const config = {
         headers: {
