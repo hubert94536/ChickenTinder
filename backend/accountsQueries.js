@@ -20,7 +20,7 @@ const searchAccounts = async (req, res) => {
       where: {
         username: { [Op.iLike]: `${text}%` },
       },
-      attributes: ['id', 'name', 'username', 'phone_number'],
+      attributes: ['id', 'name', 'username', 'photo'],
     })
     return res.status(200).json({ users })
   } catch (error) {
@@ -77,7 +77,7 @@ const updateAccount = async (req, res) => {
 }
 
 // Delete account by id
-// TODO: Delete their associated photo from S3 
+// TODO: Delete their associated photo from S3
 const deleteAccount = async (req, res) => {
   try {
     const { id } = req.params

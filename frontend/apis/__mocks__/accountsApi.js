@@ -59,7 +59,9 @@ const getAllUsers = jest
 // mock function calls 5
 const searchUsers = jest
   .fn((text) => Promise.reject({ status: 500 })) // Fail
-  .mockImplementationOnce((text) => // Pass
+  .mockImplementationOnce((
+    text, // Pass
+  ) =>
     Promise.resolve({
       status: 200,
       count: 5,

@@ -24,7 +24,7 @@ export default class Loading extends React.Component {
             Round done!
           </Text>
           <Image
-          source={require('../assets/images/logo1.png')}
+          source={require('../assets/images/logo2.png')}
           style={{ alignSelf: 'center', width: 200, height: 248 }}
           />
           <Text style={[styles.general, { color: 'black' }]}>Hang tight while others finish swiping and a match is found!</Text>

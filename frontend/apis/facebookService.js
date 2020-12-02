@@ -29,7 +29,7 @@ const config = {
   storageBucket: FIREBASE_STORAGE_BUCKET, // Storage
 }
 
-if (!Firebase.apps.length) Firebase.initializeApp(config);
+if (!Firebase.apps.length) Firebase.initializeApp(config)
 
 const loginWithFacebook = async () => {
   // Attempt a login using the Facebook login dialog asking for default permissions.
@@ -47,17 +47,20 @@ const loginWithFacebook = async () => {
     })
     .then((currentUser) => {
       // Set user's info locally
-      AsyncStorage.multiSet(
-        [[UID, Firebase.auth().currentUser.uid],
+      AsyncStorage.multiSet([
+        [UID, Firebase.auth().currentUser.uid],
         [NAME, currentUser.additionalUserInfo.profile.name],
         [ID, currentUser.additionalUserInfo.profile.id],
-        [EMAIL, currentUser.additionalUserInfo.profile.email]]
-      )
-      
+        [EMAIL, currentUser.additionalUserInfo.profile.email],
+      ])
+
       // Get username from database if not new user
       if (!currentUser.additionalUserInfo.isNewUser) {
         return accountsApi.getUser(currentUser.additionalUserInfo.profile.id).then((res) => {
-          AsyncStorage.multiSet([[USERNAME, res.username], [PHOTO, res.photo]])
+          AsyncStorage.multiSet([
+            [USERNAME, res.username],
+            [PHOTO, res.photo],
+          ])
           return 'Home'
         })
       }
