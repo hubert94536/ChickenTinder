@@ -1,0 +1,1072 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders search for nothing correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "white",
+      "flex": 1,
+    }
+  }
+>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#F15763",
+          "fontFamily": "CircularStd-Medium",
+          "fontSize": 27,
+        },
+        Object {
+          "marginTop": "10%",
+          "textAlign": "center",
+        },
+      ]
+    }
+  >
+    Find friends
+  </Text>
+  <RCTScrollView
+    ListHeaderComponent={[Function]}
+    data={Array []}
+    disableVirtualization={false}
+    getItem={[Function]}
+    getItemCount={[Function]}
+    horizontal={false}
+    initialNumToRender={10}
+    keyExtractor={[Function]}
+    maxToRenderPerBatch={10}
+    onContentSizeChange={[Function]}
+    onEndReachedThreshold={2}
+    onLayout={[Function]}
+    onMomentumScrollEnd={[Function]}
+    onScroll={[Function]}
+    onScrollBeginDrag={[Function]}
+    onScrollEndDrag={[Function]}
+    removeClippedSubviews={false}
+    renderItem={[Function]}
+    scrollEventThrottle={50}
+    stickyHeaderIndices={Array []}
+    updateCellsBatchingPeriod={50}
+    viewabilityConfigCallbackPairs={Array []}
+    windowSize={21}
+  >
+    <View>
+      <View
+        onLayout={[Function]}
+      >
+        <View
+          style={
+            Object {
+              "alignSelf": "center",
+              "backgroundColor": "white",
+              "borderBottomColor": "transparent",
+              "borderBottomWidth": 1,
+              "borderTopColor": "transparent",
+              "borderTopWidth": 1,
+              "height": 106.72,
+              "padding": 8,
+              "width": "95%",
+            }
+          }
+        >
+          <View
+            style={
+              Object {
+                "paddingHorizontal": 0,
+                "width": "100%",
+              }
+            }
+          >
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "alignSelf": "center",
+                  "backgroundColor": "#e7e7e7",
+                  "borderBottomWidth": 0,
+                  "borderColor": "#86939e",
+                  "borderRadius": 15,
+                  "flexDirection": "row",
+                  "height": 66.7,
+                  "minHeight": 30,
+                  "overflow": "hidden",
+                  "transform": Array [
+                    Object {
+                      "translateX": 0,
+                    },
+                  ],
+                  "width": "90%",
+                }
+              }
+            >
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "height": 40,
+                    "justifyContent": "center",
+                    "marginLeft": 8,
+                    "marginVertical": 4,
+                    "paddingRight": 4,
+                  }
+                }
+              >
+                <View
+                  style={
+                    Object {
+                      "overflow": "hidden",
+                    }
+                  }
+                >
+                  <View>
+                    <View
+                      style={
+                        Object {
+                          "alignItems": "center",
+                          "backgroundColor": "transparent",
+                          "justifyContent": "center",
+                        }
+                      }
+                    >
+                      <Text
+                        allowFontScaling={false}
+                        style={
+                          Array [
+                            Object {
+                              "color": "#86939e",
+                              "fontSize": 18,
+                            },
+                            Object {
+                              "backgroundColor": "transparent",
+                            },
+                            Object {
+                              "fontFamily": "Material Icons",
+                              "fontStyle": "normal",
+                              "fontWeight": "normal",
+                            },
+                            Object {},
+                          ]
+                        }
+                        testID="iconIcon"
+                      >
+                        
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+              <TextInput
+                allowFontScaling={true}
+                autoCorrect={false}
+                editable={true}
+                onBlur={[Function]}
+                onChangeText={[Function]}
+                onFocus={[Function]}
+                placeholder="Search for friends"
+                placeholderTextColor="#86939e"
+                platform="default"
+                rejectResponderTermination={true}
+                style={
+                  Object {
+                    "alignSelf": "center",
+                    "color": "#86939e",
+                    "flex": 1,
+                    "fontFamily": "CircularStd-Medium",
+                    "fontSize": 18,
+                    "marginLeft": 10,
+                    "minHeight": 40,
+                    "textAlignVertical": "center",
+                  }
+                }
+                testID="searchInput"
+                underlineColorAndroid="transparent"
+                value=""
+              />
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "height": 40,
+                    "justifyContent": "center",
+                    "marginRight": 8,
+                    "marginVertical": 4,
+                    "paddingRight": 4,
+                  }
+                }
+              >
+                <View
+                  style={
+                    Object {
+                      "flexDirection": "row",
+                    }
+                  }
+                />
+              </View>
+            </View>
+            <Text
+              style={
+                Object {
+                  "color": "#ff190c",
+                  "fontSize": 12,
+                  "height": 0,
+                  "margin": 0,
+                  "padding": 0,
+                }
+              }
+            />
+          </View>
+        </View>
+      </View>
+    </View>
+  </RCTScrollView>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "backgroundColor": "#fff2f2",
+        "borderRadius": 10,
+        "borderWidth": 0,
+        "bottom": 0,
+        "elevation": 20,
+        "flexDirection": "row",
+        "height": 93.38000000000001,
+        "justifyContent": "space-evenly",
+        "marginBottom": "2%",
+        "position": "absolute",
+        "width": "95%",
+      }
+    }
+  >
+    <Text
+      allowFontScaling={false}
+      onPress={[Function]}
+      style={
+        Array [
+          Object {
+            "color": undefined,
+            "fontSize": 12,
+          },
+          Object {
+            "color": "#8d8d8d",
+            "fontSize": 26,
+          },
+          Object {
+            "fontFamily": "FontAwesome",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+    <Text
+      allowFontScaling={false}
+      onPress={[Function]}
+      style={
+        Array [
+          Object {
+            "color": undefined,
+            "fontSize": 12,
+          },
+          Object {
+            "color": "#F15763",
+            "fontSize": 26,
+          },
+          Object {
+            "fontFamily": "FontAwesome",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+    <Text
+      allowFontScaling={false}
+      onPress={[Function]}
+      style={
+        Array [
+          Object {
+            "color": undefined,
+            "fontSize": 12,
+          },
+          Object {
+            "color": "#8d8d8d",
+            "fontSize": 26,
+          },
+          Object {
+            "fontFamily": "FontAwesome",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+    <Text
+      allowFontScaling={false}
+      onPress={[Function]}
+      style={
+        Array [
+          Object {
+            "color": undefined,
+            "fontSize": 12,
+          },
+          Object {
+            "color": "#8d8d8d",
+            "fontSize": 26,
+          },
+          Object {
+            "fontFamily": "FontAwesome",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`snapshot for search 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "white",
+      "flex": 1,
+    }
+  }
+>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#F15763",
+          "fontFamily": "CircularStd-Medium",
+          "fontSize": 27,
+        },
+        Object {
+          "marginTop": "10%",
+          "textAlign": "center",
+        },
+      ]
+    }
+  >
+    Find friends
+  </Text>
+  <RCTScrollView
+    ListHeaderComponent={[Function]}
+    data={Array []}
+    disableVirtualization={false}
+    getItem={[Function]}
+    getItemCount={[Function]}
+    horizontal={false}
+    initialNumToRender={10}
+    keyExtractor={[Function]}
+    maxToRenderPerBatch={10}
+    onContentSizeChange={[Function]}
+    onEndReachedThreshold={2}
+    onLayout={[Function]}
+    onMomentumScrollEnd={[Function]}
+    onScroll={[Function]}
+    onScrollBeginDrag={[Function]}
+    onScrollEndDrag={[Function]}
+    removeClippedSubviews={false}
+    renderItem={[Function]}
+    scrollEventThrottle={50}
+    stickyHeaderIndices={Array []}
+    updateCellsBatchingPeriod={50}
+    viewabilityConfigCallbackPairs={Array []}
+    windowSize={21}
+  >
+    <View>
+      <View
+        onLayout={[Function]}
+      >
+        <View
+          style={
+            Object {
+              "alignSelf": "center",
+              "backgroundColor": "white",
+              "borderBottomColor": "transparent",
+              "borderBottomWidth": 1,
+              "borderTopColor": "transparent",
+              "borderTopWidth": 1,
+              "height": 106.72,
+              "padding": 8,
+              "width": "95%",
+            }
+          }
+        >
+          <View
+            style={
+              Object {
+                "paddingHorizontal": 0,
+                "width": "100%",
+              }
+            }
+          >
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "alignSelf": "center",
+                  "backgroundColor": "#e7e7e7",
+                  "borderBottomWidth": 0,
+                  "borderColor": "#86939e",
+                  "borderRadius": 15,
+                  "flexDirection": "row",
+                  "height": 66.7,
+                  "minHeight": 30,
+                  "overflow": "hidden",
+                  "transform": Array [
+                    Object {
+                      "translateX": 0,
+                    },
+                  ],
+                  "width": "90%",
+                }
+              }
+            >
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "height": 40,
+                    "justifyContent": "center",
+                    "marginLeft": 8,
+                    "marginVertical": 4,
+                    "paddingRight": 4,
+                  }
+                }
+              >
+                <View
+                  style={
+                    Object {
+                      "overflow": "hidden",
+                    }
+                  }
+                >
+                  <View>
+                    <View
+                      style={
+                        Object {
+                          "alignItems": "center",
+                          "backgroundColor": "transparent",
+                          "justifyContent": "center",
+                        }
+                      }
+                    >
+                      <Text
+                        allowFontScaling={false}
+                        style={
+                          Array [
+                            Object {
+                              "color": "#86939e",
+                              "fontSize": 18,
+                            },
+                            Object {
+                              "backgroundColor": "transparent",
+                            },
+                            Object {
+                              "fontFamily": "Material Icons",
+                              "fontStyle": "normal",
+                              "fontWeight": "normal",
+                            },
+                            Object {},
+                          ]
+                        }
+                        testID="iconIcon"
+                      >
+                        
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+              <TextInput
+                allowFontScaling={true}
+                autoCorrect={false}
+                editable={true}
+                onBlur={[Function]}
+                onChangeText={[Function]}
+                onFocus={[Function]}
+                placeholder="Search for friends"
+                placeholderTextColor="#86939e"
+                platform="default"
+                rejectResponderTermination={true}
+                style={
+                  Object {
+                    "alignSelf": "center",
+                    "color": "#86939e",
+                    "flex": 1,
+                    "fontFamily": "CircularStd-Medium",
+                    "fontSize": 18,
+                    "marginLeft": 10,
+                    "minHeight": 40,
+                    "textAlignVertical": "center",
+                  }
+                }
+                testID="searchInput"
+                underlineColorAndroid="transparent"
+                value="John"
+              />
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "height": 40,
+                    "justifyContent": "center",
+                    "marginRight": 8,
+                    "marginVertical": 4,
+                    "paddingRight": 4,
+                  }
+                }
+              >
+                <View
+                  style={
+                    Object {
+                      "flexDirection": "row",
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      Object {
+                        "overflow": "hidden",
+                      }
+                    }
+                  >
+                    <View
+                      accessible={true}
+                      focusable={true}
+                      onClick={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                    >
+                      <View
+                        style={
+                          Object {
+                            "alignItems": "center",
+                            "backgroundColor": "transparent",
+                            "justifyContent": "center",
+                          }
+                        }
+                      >
+                        <Text
+                          allowFontScaling={false}
+                          style={
+                            Array [
+                              Object {
+                                "color": "#86939e",
+                                "fontSize": 18,
+                              },
+                              Object {
+                                "backgroundColor": "transparent",
+                              },
+                              Object {
+                                "fontFamily": "Material Icons",
+                                "fontStyle": "normal",
+                                "fontWeight": "normal",
+                              },
+                              Object {},
+                            ]
+                          }
+                          testID="iconIcon"
+                        >
+                          
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </View>
+            <Text
+              style={
+                Object {
+                  "color": "#ff190c",
+                  "fontSize": 12,
+                  "height": 0,
+                  "margin": 0,
+                  "padding": 0,
+                }
+              }
+            />
+          </View>
+        </View>
+      </View>
+    </View>
+  </RCTScrollView>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "backgroundColor": "#fff2f2",
+        "borderRadius": 10,
+        "borderWidth": 0,
+        "bottom": 0,
+        "elevation": 20,
+        "flexDirection": "row",
+        "height": 93.38000000000001,
+        "justifyContent": "space-evenly",
+        "marginBottom": "2%",
+        "position": "absolute",
+        "width": "95%",
+      }
+    }
+  >
+    <Text
+      allowFontScaling={false}
+      onPress={[Function]}
+      style={
+        Array [
+          Object {
+            "color": undefined,
+            "fontSize": 12,
+          },
+          Object {
+            "color": "#8d8d8d",
+            "fontSize": 26,
+          },
+          Object {
+            "fontFamily": "FontAwesome",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+    <Text
+      allowFontScaling={false}
+      onPress={[Function]}
+      style={
+        Array [
+          Object {
+            "color": undefined,
+            "fontSize": 12,
+          },
+          Object {
+            "color": "#F15763",
+            "fontSize": 26,
+          },
+          Object {
+            "fontFamily": "FontAwesome",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+    <Text
+      allowFontScaling={false}
+      onPress={[Function]}
+      style={
+        Array [
+          Object {
+            "color": undefined,
+            "fontSize": 12,
+          },
+          Object {
+            "color": "#8d8d8d",
+            "fontSize": 26,
+          },
+          Object {
+            "fontFamily": "FontAwesome",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+    <Text
+      allowFontScaling={false}
+      onPress={[Function]}
+      style={
+        Array [
+          Object {
+            "color": undefined,
+            "fontSize": 12,
+          },
+          Object {
+            "color": "#8d8d8d",
+            "fontSize": 26,
+          },
+          Object {
+            "fontFamily": "FontAwesome",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`snapshot for search, no results 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "white",
+      "flex": 1,
+    }
+  }
+>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#F15763",
+          "fontFamily": "CircularStd-Medium",
+          "fontSize": 27,
+        },
+        Object {
+          "marginTop": "10%",
+          "textAlign": "center",
+        },
+      ]
+    }
+  >
+    Find friends
+  </Text>
+  <RCTScrollView
+    ListHeaderComponent={[Function]}
+    data={Array []}
+    disableVirtualization={false}
+    getItem={[Function]}
+    getItemCount={[Function]}
+    horizontal={false}
+    initialNumToRender={10}
+    keyExtractor={[Function]}
+    maxToRenderPerBatch={10}
+    onContentSizeChange={[Function]}
+    onEndReachedThreshold={2}
+    onLayout={[Function]}
+    onMomentumScrollEnd={[Function]}
+    onScroll={[Function]}
+    onScrollBeginDrag={[Function]}
+    onScrollEndDrag={[Function]}
+    removeClippedSubviews={false}
+    renderItem={[Function]}
+    scrollEventThrottle={50}
+    stickyHeaderIndices={Array []}
+    updateCellsBatchingPeriod={50}
+    viewabilityConfigCallbackPairs={Array []}
+    windowSize={21}
+  >
+    <View>
+      <View
+        onLayout={[Function]}
+      >
+        <View
+          style={
+            Object {
+              "alignSelf": "center",
+              "backgroundColor": "white",
+              "borderBottomColor": "transparent",
+              "borderBottomWidth": 1,
+              "borderTopColor": "transparent",
+              "borderTopWidth": 1,
+              "height": 106.72,
+              "padding": 8,
+              "width": "95%",
+            }
+          }
+        >
+          <View
+            style={
+              Object {
+                "paddingHorizontal": 0,
+                "width": "100%",
+              }
+            }
+          >
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "alignSelf": "center",
+                  "backgroundColor": "#e7e7e7",
+                  "borderBottomWidth": 0,
+                  "borderColor": "#86939e",
+                  "borderRadius": 15,
+                  "flexDirection": "row",
+                  "height": 66.7,
+                  "minHeight": 30,
+                  "overflow": "hidden",
+                  "transform": Array [
+                    Object {
+                      "translateX": 0,
+                    },
+                  ],
+                  "width": "90%",
+                }
+              }
+            >
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "height": 40,
+                    "justifyContent": "center",
+                    "marginLeft": 8,
+                    "marginVertical": 4,
+                    "paddingRight": 4,
+                  }
+                }
+              >
+                <View
+                  style={
+                    Object {
+                      "overflow": "hidden",
+                    }
+                  }
+                >
+                  <View>
+                    <View
+                      style={
+                        Object {
+                          "alignItems": "center",
+                          "backgroundColor": "transparent",
+                          "justifyContent": "center",
+                        }
+                      }
+                    >
+                      <Text
+                        allowFontScaling={false}
+                        style={
+                          Array [
+                            Object {
+                              "color": "#86939e",
+                              "fontSize": 18,
+                            },
+                            Object {
+                              "backgroundColor": "transparent",
+                            },
+                            Object {
+                              "fontFamily": "Material Icons",
+                              "fontStyle": "normal",
+                              "fontWeight": "normal",
+                            },
+                            Object {},
+                          ]
+                        }
+                        testID="iconIcon"
+                      >
+                        
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+              <TextInput
+                allowFontScaling={true}
+                autoCorrect={false}
+                editable={true}
+                onBlur={[Function]}
+                onChangeText={[Function]}
+                onFocus={[Function]}
+                placeholder="Search for friends"
+                placeholderTextColor="#86939e"
+                platform="default"
+                rejectResponderTermination={true}
+                style={
+                  Object {
+                    "alignSelf": "center",
+                    "color": "#86939e",
+                    "flex": 1,
+                    "fontFamily": "CircularStd-Medium",
+                    "fontSize": 18,
+                    "marginLeft": 10,
+                    "minHeight": 40,
+                    "textAlignVertical": "center",
+                  }
+                }
+                testID="searchInput"
+                underlineColorAndroid="transparent"
+                value=""
+              />
+              <View
+                style={
+                  Object {
+                    "alignItems": "center",
+                    "height": 40,
+                    "justifyContent": "center",
+                    "marginRight": 8,
+                    "marginVertical": 4,
+                    "paddingRight": 4,
+                  }
+                }
+              >
+                <View
+                  style={
+                    Object {
+                      "flexDirection": "row",
+                    }
+                  }
+                />
+              </View>
+            </View>
+            <Text
+              style={
+                Object {
+                  "color": "#ff190c",
+                  "fontSize": 12,
+                  "height": 0,
+                  "margin": 0,
+                  "padding": 0,
+                }
+              }
+            />
+          </View>
+        </View>
+      </View>
+    </View>
+  </RCTScrollView>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "backgroundColor": "#fff2f2",
+        "borderRadius": 10,
+        "borderWidth": 0,
+        "bottom": 0,
+        "elevation": 20,
+        "flexDirection": "row",
+        "height": 93.38000000000001,
+        "justifyContent": "space-evenly",
+        "marginBottom": "2%",
+        "position": "absolute",
+        "width": "95%",
+      }
+    }
+  >
+    <Text
+      allowFontScaling={false}
+      onPress={[Function]}
+      style={
+        Array [
+          Object {
+            "color": undefined,
+            "fontSize": 12,
+          },
+          Object {
+            "color": "#8d8d8d",
+            "fontSize": 26,
+          },
+          Object {
+            "fontFamily": "FontAwesome",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+    <Text
+      allowFontScaling={false}
+      onPress={[Function]}
+      style={
+        Array [
+          Object {
+            "color": undefined,
+            "fontSize": 12,
+          },
+          Object {
+            "color": "#F15763",
+            "fontSize": 26,
+          },
+          Object {
+            "fontFamily": "FontAwesome",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+    <Text
+      allowFontScaling={false}
+      onPress={[Function]}
+      style={
+        Array [
+          Object {
+            "color": undefined,
+            "fontSize": 12,
+          },
+          Object {
+            "color": "#8d8d8d",
+            "fontSize": 26,
+          },
+          Object {
+            "fontFamily": "FontAwesome",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+    <Text
+      allowFontScaling={false}
+      onPress={[Function]}
+      style={
+        Array [
+          Object {
+            "color": undefined,
+            "fontSize": 12,
+          },
+          Object {
+            "color": "#8d8d8d",
+            "fontSize": 26,
+          },
+          Object {
+            "fontFamily": "FontAwesome",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+  </View>
+</View>
+`;
