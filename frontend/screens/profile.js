@@ -29,11 +29,7 @@ import uploadApi from '../apis/uploadApi.js'
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
 const height = Dimensions.get('window').height
-<<<<<<< HEAD
-var img = ''
-=======
 var img = null
->>>>>>> 47acb3404958af7567d2e5489d095ae5ba01331d
 var name = ''
 var username = ''
 
@@ -371,19 +367,12 @@ export default class UserProfileView extends Component {
                 </TouchableHighlight>
                 {this.state.logoutAlert && (
                   <Alert
-<<<<<<< HEAD
-                    title="Log Out?"
-                    body="Are you sure you want to log out?"
-                    button
-                    buttonText="Logout"
-=======
                     title="Log out"
                     body="Are you sure you want to log out?"
                     buttonAff="Logout"
                     buttonNeg="Go back"
                     height="25%"
                     twoButton
->>>>>>> 47acb3404958af7567d2e5489d095ae5ba01331d
                     press={() => this.handleLogout()}
                     cancel={() => this.cancelLogout()}
                   />
@@ -509,13 +498,8 @@ export default class UserProfileView extends Component {
                     return true
                   }}
                   underlayColor="white"
-<<<<<<< HEAD
-                  onShowUnderlay={() => this.setState({ changeName: true })}
-                  onHideUnderlay={() => this.setState({ changeName: false })}
-=======
                   onShowUnderlay={() => this.setState({ changeName: true})}
                   onHideUnderlay={() => this.setState({ changeName: false})}
->>>>>>> 47acb3404958af7567d2e5489d095ae5ba01331d
                 >
                   <Text
                     style={[
