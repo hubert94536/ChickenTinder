@@ -1,7 +1,6 @@
 const pg = require('pg')
 const { promisify } = require('util')
 const redis = require('redis')
-
 const { Sequelize } = require('sequelize')
 
 // configuration for database
@@ -26,8 +25,9 @@ const sequelize = new Sequelize(config)
 //         console.log(err)
 //     }
 //     client.on('notification', (msg) => {
-//       console.log('hi')
+//       console.log(JSON.parse(msg.payload))
 //     })
+//     client.query('LISTEN notifications')
 //   })
 // const redisClient = redis.createClient('redis://localhost:6379')
 const redisClient = redis.createClient({

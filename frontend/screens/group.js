@@ -11,7 +11,7 @@ import FilterSelector from './filter.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 
-const hex = '#F15763'
+const hex = '#F15763' 
 const font = 'CircularStd-Medium'
 var memberList = []
 var myUsername = ''
