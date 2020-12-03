@@ -22,9 +22,9 @@ import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import TabBar from '../nav.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import ImagePicker from 'react-native-image-crop-picker';
+import ImagePicker from 'react-native-image-crop-picker'
 import defImages from '../assets/images/foodImages.js'
-
+import uploadApi from '../apis/uploadApi.js'
 
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
@@ -63,21 +63,21 @@ export default class UserProfileView extends Component {
       // friends text
       numFriends: 0,
       defImg: '',
-      
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     var defImgUrl = ''
     AsyncStorage.getItem(USERNAME).then((res) => this.setState({ username: res }))
     AsyncStorage.getItem(PHOTO).then((res) => this.setState({ image: res }))
     AsyncStorage.getItem(PHOTO).then((res) => this.setState({ oldImage: res }))
-    AsyncStorage.getItem(DEFPHOTO).then((res) => this.setState({ defImg: defImages[parseInt(res)] }))
+    AsyncStorage.getItem(DEFPHOTO).then((res) =>
+      this.setState({ defImg: defImages[parseInt(res)] }),
+    )
     AsyncStorage.getItem(DEFPHOTO).then((res) => console.log(res))
     AsyncStorage.getItem(NAME).then((res) => this.setState({ name: res, nameValue: res }))
-    console.log("default")
+    console.log('default')
     // console.log(this.state.defImgInd)
-    
   }
 
   // getting current user's info
@@ -187,54 +187,59 @@ export default class UserProfileView extends Component {
   }
 
   handleFriendsCount(n) {
-    this.setState({numFriends: n})
+    this.setState({ numFriends: n })
   }
 
   uploadPhoto() {
     ImagePicker.openPicker({
       width: 400,
       height: 400,
-      cropping: true
-    }).then(image => {
-      //do something with the image﻿
-      this.setState({oldImage: this.state.image})
-      this.setState({image: image.path})
+      cropping: true,
+    }).then((image) => {
+      this.setState({
+        imageData: {
+          uri: image.path,
+          type: image.mime,
+          name: 'avatar',
+        },
+        oldImage: this.state.image,
+        image: image.path,
+      })
+      console.log(this.state.oldImage)
       AsyncStorage.setItem(PHOTO, this.state.image)
-    });
+    })
   }
 
   removePhoto() {
-    this.setState({image: null})
+    this.setState({ image: null })
+    // TODO: delete from AWS
     AsyncStorage.setItem(PHOTO, this.state.image)
   }
 
-  dontSave()
-  {
+  dontSave() {
     this.setState({ edit: false })
-    if(this.state.oldImage != this.state.image)
-    {
-      this.setState({image: this.state.oldImage})
+    if (this.state.oldImage != this.state.image) {
+      this.setState({ image: this.state.oldImage })
       AsyncStorage.setItem(PHOTO, this.state.image)
     }
   }
 
-  savePhoto()
-  {
+  savePhoto() {
     this.setState({ edit: false })
-    if(this.state.oldImage != this.state.image)
-    {
-      this.setState({oldImage: this.state.image})
+    if (this.state.oldImage != this.state.image) {
+      this.setState({ oldImage: this.state.image })
       AsyncStorage.setItem(PHOTO, this.state.image)
+      uploadApi.uploadPhoto(this.state.imageData)
     }
   }
 
-  editProfile()
-  {
-    this.setState({ 
-      edit: true, 
+  editProfile() {
+    this.setState({
+      edit: true,
       nameValue: this.state.name,
       username: this.state.username,
-      changeName: false})
+      changeName: false,
+    })
   }
 
   render() {
@@ -253,29 +258,27 @@ export default class UserProfileView extends Component {
                 onPress={() => this.setState({ visible: true })}
               />
             </View>
-            
-            
-            {this.state.image == null && (
-            <Image
-              source={this.state.defImg}
-              style={screenStyles.avatar}
+
+            {this.state.image ? (
+              <Image
+                source={{
+                  uri: this.state.image,
+                }}
+                style={screenStyles.avatar}
               />
-              )}
-            
-            {this.state.image != null && (
-            <Image
-              source={{
-                uri: this.state.image,
-              }}
-              style={screenStyles.avatar}
-              />
-              )}
+            ) : (
+              <Image source={this.state.defImg} style={screenStyles.avatar} />
+            )}
 
             <View style={{ alignItems: 'center' }}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
               <View
-                  style={{ width: 20, marginTop: '4%', marginLeft: '1%' }}
-                ></View>
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <View style={{ width: 20, marginTop: '4%', marginLeft: '1%' }}></View>
                 <Text style={{ fontFamily: font, fontSize: 20, marginTop: '4%' }}>
                   {this.state.name}
                 </Text>
@@ -300,10 +303,17 @@ export default class UserProfileView extends Component {
             >
               Your Friends
             </Text>
-            <Text style={[screenStyles.text, { marginLeft: '7%', fontSize: 17, fontFamily:'CircularStd-Medium' }]}>{this.state.numFriends + ' friends'}</Text>
+            <Text
+              style={[
+                screenStyles.text,
+                { marginLeft: '7%', fontSize: 17, fontFamily: 'CircularStd-Medium' },
+              ]}
+            >
+              {this.state.numFriends + ' friends'}
+            </Text>
           </View>
           <View style={{ height: '50%', marginTop: '0%' }}>
-            <Friends isFriends onFriendsChange={this.handleFriendsCount}/>
+            <Friends isFriends onFriendsChange={() => this.handleFriendsCount} />
           </View>
           {(this.state.visible || this.state.edit) && (
             <BlurView
@@ -358,10 +368,12 @@ export default class UserProfileView extends Component {
                 </TouchableHighlight>
                 {this.state.logoutAlert && (
                   <Alert
-                    title="Log Out?"
+                    title="Log out"
                     body="Are you sure you want to log out?"
-                    button
-                    buttonText="Logout"
+                    buttonAff="Logout"
+                    buttonNeg="Go back"
+                    height="25%"
+                    twoButton
                     press={() => this.handleLogout()}
                     cancel={() => this.cancelLogout()}
                   />
@@ -487,8 +499,8 @@ export default class UserProfileView extends Component {
                     return true
                   }}
                   underlayColor="white"
-                  onShowUnderlay={() => this.setState({ changeName: true})}
-                  onHideUnderlay={() => this.setState({ changeName: false})}
+                  onShowUnderlay={() => this.setState({ changeName: true })}
+                  onHideUnderlay={() => this.setState({ changeName: false })}
                 >
                   <Text
                     style={[
@@ -533,44 +545,43 @@ export default class UserProfileView extends Component {
               />
               <View style={{ textAlign: 'center', marginLeft: '10%', marginRight: '10%' }}>
                 <Text style={[screenStyles.text, { fontSize: 16 }]}>Edit Profile</Text>
-            
-                
-                {this.state.image == null && (
-                <Image
-                  
-                  style={{
-                    height: height * 0.13,
-                    width: height * 0.13,
-                    borderRadius: 60,
-                    alignSelf: 'center',
-                  }}
-                  source={this.state.defImg}
-                  />
-                  )}
-                  
-                {this.state.image != null && (
-                <Image
-                  source={{
-                    uri: this.state.image,
-                  }}
-                  style={{
-                    height: height * 0.13,
-                    width: height * 0.13,
-                    borderRadius: 60,
-                    alignSelf: 'center',
-                  }}
-                  />
-                  )}
 
-                
+                {this.state.image == null && (
+                  <Image
+                    style={{
+                      height: height * 0.13,
+                      width: height * 0.13,
+                      borderRadius: 60,
+                      alignSelf: 'center',
+                    }}
+                    source={this.state.defImg}
+                  />
+                )}
+
+                {this.state.image != null && (
+                  <Image
+                    source={{
+                      uri: this.state.image,
+                    }}
+                    style={{
+                      height: height * 0.13,
+                      width: height * 0.13,
+                      borderRadius: 60,
+                      alignSelf: 'center',
+                    }}
+                  />
+                )}
+
                 <View
                   style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: '4%' }}
                 >
-                  <Text 
+                  <Text
                     style={[screenStyles.text, { marginRight: '5%' }]}
-                    onPress={() => this.uploadPhoto()}>
-                      Upload</Text>
-                  <Text 
+                    onPress={() => this.uploadPhoto()}
+                  >
+                    Upload
+                  </Text>
+                  <Text
                     style={[screenStyles.text, { color: 'black', marginLeft: '5%' }]}
                     onPress={() => this.removePhoto()}
                   >
@@ -652,23 +663,23 @@ export default class UserProfileView extends Component {
               cancel={() => this.cancelDelete()}
             />
           )}
-          {this.state.logoutAlert && (
-            <Alert
-              title="Log out"
-              body="Are you sure you want to log out?"
-              buttonAff="Logout"
-              buttonNeg="Go back"
-              height="25%"
-              twoButton
-              press={() => this.handleLogout()}
-              cancel={() => this.cancelLogout()}
-            />
-          )}
+          {/* {this.state.logoutAlert && (
+            // <Alert
+            //   title="Log out"
+            //   body="Are you sure you want to log out?"
+            //   buttonAff="Logout"
+            //   buttonNeg="Go back"
+            //   height="25%"
+            //   twoButton
+            //   press={() => this.handleLogout()}
+            //   cancel={() => this.cancelLogout()}
+            // />
+          )} */}
           {this.state.errorAlert && (
             <Alert
               title="Error, please try again"
               buttonAff="Close"
-              height='20%'
+              height="20%"
               press={() => this.setState({ errorAlert: false })}
               cancel={() => this.setState({ errorAlert: false })}
             />
@@ -677,7 +688,7 @@ export default class UserProfileView extends Component {
             <Alert
               title="Username taken!"
               buttonAff="Close"
-              height='20%'
+              height="20%"
               press={() => this.closeTaken()}
               cancel={() => this.closeTaken()}
             />

@@ -79,6 +79,4 @@ export default StyleSheet.create({
     alignSelf: 'center',
     margin: '1.5%',
   },
-
-
 })

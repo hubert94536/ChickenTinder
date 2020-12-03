@@ -24,32 +24,11 @@ const font = 'CircularStd-Medium'
 var username = ''
 AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 
-// async function getFriends() {
-//   // Pushing accepted friends or pending requests into this.state.friends
-//   friendsApi
-//     .getFriends()
-//     .then((res) => {
-//       var friendsMap = new Object()
-//       for (var friend in res.friendList) {
-//         friendsMap[res.friendList[friend].id] = res.friendList[friend].status
-//       }
-//       this.setState({ friends: friendsMap })
-//       this.props.navigation.navigate('Search', {
-//         allFriends: friendsMap,
-//       })
-//     })
-//     .catch((err) => {
-//       this.setState({ errorAlert: true })
-//     })
-// }
-
 export default class Search extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       data: [],
-      // friends: this.props.navigation.state.params.allFriends,
       friends: [],
       errorAlert: false,
       deleteFriend: false,
@@ -63,7 +42,7 @@ export default class Search extends Component {
       }
       this.setState({ friends: friendsMap })
     })
-    .catch((err) => {
+    .catch(() => {
       this.setState({ errorAlert: true })
     })
   }
@@ -79,7 +58,6 @@ export default class Search extends Component {
         accountsApi
           .searchUsers(text)
           .then(res => {
-            // this.setState({data: res.userList});
             var resultUsers = []
             for (var user in res.userList) {
               var status = 'Add'

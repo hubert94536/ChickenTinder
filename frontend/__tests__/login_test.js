@@ -13,7 +13,7 @@ test('renders login page correctly', () => {
   expect(tree.toJSON()).toMatchSnapshot()
 })
 
-test('renders login with Facebook alert', async () => {
+test('renders login with Facebook alert', () => {
   const create = Renderer.create(<Login />).getInstance()
   const { getByText, toJSON } = render(<Login />)
   // Test Facebook Login button opens alert

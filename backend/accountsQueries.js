@@ -1,5 +1,5 @@
 const { Accounts } = require('./models.js')
-const { Sequelize } = require('sequelize')
+const { Op } = require('sequelize')
 
 // Get all accounts
 const getAllAccounts = async (req, res) => {
@@ -18,13 +18,9 @@ const searchAccounts = async (req, res) => {
     const users = await Accounts.findAndCountAll({
       limit: 100,
       where: {
-        username: Sequelize.where(
-          Sequelize.fn('LOWER', Sequelize.col('username')),
-          'LIKE',
-          text + '%',
-        ),
+        username: { [Op.iLike]: `${text}%` },
       },
-      attributes: ['id', 'name', 'username', 'phone_number'],
+      attributes: ['id', 'name', 'username', 'photo'],
     })
     return res.status(200).json({ users })
   } catch (error) {
@@ -41,7 +37,6 @@ const createAccount = async (req, res) => {
       username: req.body.params.username,
       email: req.body.params.email,
       photo: req.body.params.photo,
-      inSession: false,
       phone_number: req.body.params.phone_number,
     })
     return res.status(201).send('Account created')
@@ -65,6 +60,7 @@ const getAccountById = async (req, res) => {
 }
 
 // Update account by id
+// TODO: Transactions
 const updateAccount = async (req, res) => {
   try {
     const { id } = req.params
@@ -81,6 +77,7 @@ const updateAccount = async (req, res) => {
 }
 
 // Delete account by id
+// TODO: Delete their associated photo from S3
 const deleteAccount = async (req, res) => {
   try {
     const { id } = req.params
@@ -126,13 +123,30 @@ const checkPhoneNumber = async (req, res) => {
   }
 }
 
+// Check if email exists
+const checkEmail = async (req, res) => {
+  try {
+    const { email } = req.params
+    const user = await Accounts.findOne({
+      where: { email: email },
+    })
+    if (user) {
+      return res.status(404).send('Email unavailable')
+    }
+    return res.status(200).send('Email available')
+  } catch (error) {
+    return res.status(500).send(error.message)
+  }
+}
+
 module.exports = {
-  createAccount,
-  getAllAccounts,
-  getAccountById,
-  updateAccount,
-  deleteAccount,
-  checkUsername,
+  checkEmail,
   checkPhoneNumber,
+  checkUsername,
+  createAccount,
+  deleteAccount,
+  getAccountById,
+  getAllAccounts,
   searchAccounts,
+  updateAccount,
 }
