@@ -19,8 +19,6 @@ export default class SearchCard extends React.Component {
       // for button display
       requested: this.props.requested,
       pressed: false,
-      errorAlert: false,
-      deleteFriend: false,
       renderOption: this.props.currentUser !== this.props.username,
     }
   }
@@ -31,7 +29,7 @@ export default class SearchCard extends React.Component {
       .then(() => {
         this.setState({ requested: 'Accepted' })
       })
-      .catch(() => this.setState({ errorAlert: true }))
+      .catch(() => this.props.showError())
   }
 
   async addFriend() {
@@ -40,7 +38,7 @@ export default class SearchCard extends React.Component {
       .then(() => {
         this.setState({ requested: 'Requested' })
       })
-      .catch(() => this.setState({ errorAlert: true }))
+      .catch(() => this.props.showError())
   }
 
   async rejectFriend() {
@@ -49,25 +47,25 @@ export default class SearchCard extends React.Component {
       .then(() => {
         this.setState({ requested: 'Add' })
       })
-      .catch(() => this.setState({ errorAlert: true }))
+      .catch(() => this.props.showError())
   }
 
   async deleteFriend() {
     friendsApi
       .removeFriendship(this.props.id)
       .then(() => {
-        this.setState({ deleteFriend: false })
+        this.props.showDelete()
         var filteredArray = this.props.total.filter((item) => {
           return item.username !== this.props.username
         })
         this.props.press(this.props.id, filteredArray, true)
       })
-      .catch(() => this.setState({ errorAlert: true }))
+      .catch(() => this.props.showError())
   }
 
   render() {
     return (
-      <View style={{ flexDirection: 'row', flex: 1, width: '85%', alignSelf:'center' }}>
+      <View style={{ flexDirection: 'row', flex: 1, width: '85%', alignSelf: 'center' }}>
         <Image
           source={{
             uri: this.props.image,
@@ -81,9 +79,7 @@ export default class SearchCard extends React.Component {
             flex: 1,
           }}
         >
-          <Text style={{ fontFamily: font, fontSize: 15 }}>
-            {this.props.name}
-          </Text>
+          <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
           <Text style={{ fontFamily: font, color: hex }}>{'@' + this.props.username}</Text>
         </View>
         {this.state.requested === 'Requested' && this.state.renderOption && (
@@ -96,8 +92,8 @@ export default class SearchCard extends React.Component {
           </View>
         )}
         {this.state.requested === 'Add' && this.state.renderOption && (
-          <TouchableHighlight underlayColor='white' onPress={() => this.addFriend()}>
-              <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
+          <TouchableHighlight underlayColor="white" onPress={() => this.addFriend()}>
+            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
               <Text style={[imgStyles.text, { color: 'black' }]}>Add Friend</Text>
               <AntDesign
                 style={[imgStyles.icon, { fontSize: 25, margin: '8%', color: 'black' }]}
@@ -107,7 +103,13 @@ export default class SearchCard extends React.Component {
           </TouchableHighlight>
         )}
         {this.state.requested === 'Accepted' && this.state.renderOption && (
-          <TouchableHighlight underlayColor='white' onPress={() => this.setState({ deleteFriend: true, errorAlert: false })}>
+          <TouchableHighlight
+            underlayColor="white"
+            onPress={() => {
+              this.props.showDelete()
+              this.props.deleteError()
+            }}
+          >
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
               <Text style={[imgStyles.text]}>Friends</Text>
               <Icon style={[imgStyles.icon, { fontSize: 20, margin: '8%' }]} name="heart" />
@@ -124,29 +126,10 @@ export default class SearchCard extends React.Component {
             />
             <AntDesign
               style={[imgStyles.icon, { fontSize: 25, margin: '3%', color: 'black' }]}
-              name='closecircleo'
+              name="closecircleo"
               onPress={() => this.rejectFriend()}
             />
           </View>
-        )}
-        {this.state.errorAlert && (
-          <Alert
-            title="Error, please try again"
-            button
-            buttonText="Close"
-            press={() => this.setState({ errorAlert: false })}
-            cancel={() => this.setState({ errorAlert: false })}
-          />
-        )}
-        {this.state.deleteFriend && (
-          <Alert
-            title="Are you sure?"
-            body={'You are about to remove @' + this.props.username + ' as a friend'}
-            button
-            buttonText="Delete"
-            press={() => this.deleteFriend()}
-            cancel={() => this.setState({ deleteFriend: false })}
-          />
         )}
       </View>
     )
