@@ -26,7 +26,7 @@ import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 
 const hex = '#F15763'
-const hexBlack = '#000000'
+
 const font = 'CircularStd-Medium'
 let memberRenderList = []
 let myUsername = ''
