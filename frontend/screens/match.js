@@ -4,8 +4,10 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import screenStyles from '../../styles/screenStyles.js'
+import MatchCard from '../cards/MatchCard.js'
+
 // commented out during linting but socket is used in commented-out code below
-//import socket from '../apis/socket.js'
+import socket from '../apis/socket.js'
 
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
@@ -14,15 +16,18 @@ const font = 'CircularStd-Medium'
 export default class Match extends React.Component {
   constructor(props) {
     super(props)
+
     this.state = {
+      navigation: this.props.navigation,
       restaurant: this.props.navigation.state.params.restaurant,
       host: this.props.host,
     }
   }
 
   endRound() {
-    // socket.leaveRoom(this.props.host)
-    this.props.navigation.navigate('Home')
+    const { navigation, host } = this.state
+    navigation.navigate('Home')
+    socket.leaveRoom(host)
   }
 
   componentDidMount() {
@@ -34,85 +39,144 @@ export default class Match extends React.Component {
   }
 
   render() {
+    const { restaurant } = this.state
     return (
       <View style={styles.container}>
-        <Text style={[styles.general, { fontSize: 65, marginRight: '10%', marginLeft: '10%' }]}>
-          It's A Match!
-        </Text>
-        <Icon name="thumbs-up" style={[styles.general, { fontSize: 50 }]} />
-        <Text style={[styles.general, { fontSize: 20 }]}>Your group has selected:</Text>
-        <Text style={[styles.general, { fontSize: 30 }]}>{this.state.restaurant.name}</Text>
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          style={styles.map}
-          region={{
-            latitude: this.state.restaurant.latitude,
-            longitude: this.state.restaurant.longitude,
-            latitudeDelta: 0.015,
-            longitudeDelta: 0.015,
-          }}
-        >
-          <Marker
-            coordinate={{
-              latitude: this.state.restaurant.latitude,
-              longitude: this.state.restaurant.longitude,
-            }}
-          />
-        </MapView>
-        <TouchableHighlight
+        <View style={styles.headerContainer} /*Header for header text and heart icon */>
+          <Text style={[screenStyles.textBold, { fontSize: 33, marginHorizontal: '3%' }]}>
+            WeChews you!
+          </Text>
+          <Icon name="heart" style={[styles.general, { fontSize: 35, paddingVertical: '1%' }]} />
+        </View>
+        <View style={styles.restaurantCardContainer} /*Restaurant card*/>
+          <MatchCard card={restaurant} />
+          <View style={styles.mapContainer}>
+            <MapView
+              provider={PROVIDER_GOOGLE}
+              style={styles.map}
+              region={{
+                latitude: restaurant.latitude,
+                longitude: restaurant.longitude,
+                latitudeDelta: 0.015,
+                longitudeDelta: 0.015,
+              }}
+            >
+              <Marker
+                coordinate={{
+                  latitude: restaurant.latitude,
+                  longitude: restaurant.longitude,
+                }}
+              />
+            </MapView>
+          </View>
+        </View>
+        <TouchableHighlight //Button to open restaurant on yelp
           underlayColor="white"
-          style={[screenStyles.medButton, { borderColor: 'white', width: '45%' }]}
+          style={[screenStyles.bigButton, styles.yelpButton]}
+          onPress={() => Linking.openURL(restaurant.url)}
+        >
+          <Text style={[screenStyles.bigButtonText, { color: 'white' }]}>Open on Yelp</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          /* Button to call phone # */
+          style={[screenStyles.bigButton, styles.callButton]}
+          onPress={() => Linking.openURL(`tel:${restaurant.phone}`)}
+        >
+          <Text style={[screenStyles.bigButtonText, { color: hex }]}>Call: {restaurant.phone}</Text>
+        </TouchableHighlight>
+        <Text /* Link to exit round */
+          style={[screenStyles.bigButtonText, styles.exitRoundText]}
           onPress={() => this.endRound()}
         >
-          <Text
-            style={[styles.endText, screenStyles.medButtonText, { color: 'white', padding: '6%' }]}
-          >
-            End Round
-          </Text>
-        </TouchableHighlight>
-        <TouchableHighlight
-          style={[screenStyles.medButton, styles.yelpButton]}
-          onPress={() => Linking.openURL(this.state.restaurant.url)}
-        >
-          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <Icon name="yelp" style={{ color: 'red', fontSize: 20, alignSelf: 'center' }} />
-            <Text style={styles.yelpText}>Go To Yelp</Text>
-          </View>
-        </TouchableHighlight>
+          Exit Round
+        </Text>
       </View>
     )
   }
 }
 
 Match.propTypes = {
-  restaurant: PropTypes.array,
+  host: PropTypes.string,
+  //navig should contain navigate fx + state, which contains params which contains the necessary restaurant arr
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func,
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        restaurant: PropTypes.array.isRequired,
+      }),
+    }),
+  }),
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: hex,
+    backgroundColor: 'white',
     justifyContent: 'space-evenly',
   },
   general: {
     fontFamily: font,
-    color: 'white',
+    color: hex,
     textAlign: 'center',
+  },
+  /* Alignment for header text and icon on top of screen */
+  headerContainer: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'center',
+    padding: '1%',
+    paddingTop: '5%',
+  },
+  /* Container holding the restaurant details and map */
+  restaurantCardContainer: {
+    marginHorizontal: '9%',
+    padding: '2%',
+    borderRadius: 14, //roundness of border
+    height: '65%',
+    width: '82%',
+    //backgroundColor: hex, for testing
+  },
+  //To give the Google Map rounded bottom edges
+  mapContainer: {
+    borderBottomLeftRadius: 14,
+    borderBottomRightRadius: 14,
+    overflow: 'hidden', //hides map overflow
+    alignSelf: 'center',
+    justifyContent: 'flex-end',
+    height: Dimensions.get('window').height * 0.4,
+    width: Dimensions.get('window').width * 0.82,
   },
   map: {
     alignSelf: 'center',
-    height: Dimensions.get('window').width * 0.55,
-    width: Dimensions.get('window').width * 0.55,
+    justifyContent: 'flex-end',
+    height: Dimensions.get('window').height * 0.4,
+    width: Dimensions.get('window').width * 0.82,
   },
+  //Styling for Google map for restaurant
+  /* For "Open on Yelp" button */
   yelpButton: {
-    backgroundColor: 'white',
-    width: '30%',
-    height: '5%',
-    borderColor: 'white',
+    backgroundColor: hex,
+    height: '4%',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    borderColor: hex,
+    marginTop: '8%',
   },
-  yelpText: {
-    fontFamily: font,
-    textAlign: 'center',
-    padding: '5%',
+  /* For "Call number" button */
+  callButton: {
+    backgroundColor: 'white',
+    height: '4%',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    borderColor: hex,
+  },
+  /* Text for exit round link */
+  exitRoundText: {
+    color: '#6A6A6A',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    width: '65%',
+    height: '4%',
+    marginBottom: '4%',
   },
 })
