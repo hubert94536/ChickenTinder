@@ -10,7 +10,7 @@ AsyncStorage.getItem(ID).then((res) => {
 
 const friendsApi = axios.create({
   baseURL: 'https://wechews.herokuapp.com',
-  //baseURL: 'http://192.168.0.23:5000'
+  // baseURL: 'http://172.16.0.10:5000'
 })
 
 // creates friendship
@@ -49,14 +49,14 @@ const createFriendship = async (friend) => {
 // gets a users friends/requests
 const getFriends = async () => {
   return friendsApi
-    .get(`/friendships/friends/${myId}`)
+    .get(`/friendships/${myId}`)
     .then((res) => {
       return {
         status: res.status,
         friendList: res.data.friends.map(function (friends) {
           // returns individual user info
           return {
-            id: friends.f_id,
+            id: friends.friend_id,
             name: friends.account.name,
             photo: friends.account.photo,
             username: friends.account.username,
@@ -73,7 +73,7 @@ const getFriends = async () => {
 // accept a friend request
 const acceptFriendRequest = async (friend) => {
   return friendsApi
-    .put(`/friendships/friends/${myId}/${friend}`)
+    .put(`/friendships/${myId}/${friend}`)
     .then((res) => {
       return res.status
     })
@@ -85,7 +85,7 @@ const acceptFriendRequest = async (friend) => {
 // remove a friendship
 const removeFriendship = async (friend) => {
   return friendsApi
-    .delete(`/friendships/friends/${myId}/${friend}`)
+    .delete(`/friendships/${myId}/${friend}`)
     .then((res) => {
       return res.status
     })

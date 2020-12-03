@@ -16,7 +16,6 @@ const getRestaurants = (req) => {
       // returns business info from Yelp
       .then((res) => {
         return {
-          total: res.data.total,
           businessList: res.data.businesses.map((business) => {
             return {
               id: business.id,
@@ -37,7 +36,7 @@ const getRestaurants = (req) => {
         }
       })
       .catch((error) => {
-        console.log(error.response)
+        console.log(error)
         throw error
       })
   )

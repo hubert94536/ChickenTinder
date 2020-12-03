@@ -121,5 +121,5 @@ Join.propTypes = {
   cancel: PropTypes.func,
   onPress: PropTypes.func,
   name: PropTypes.string,
-  visible: PropTypes.bool
+  visible: PropTypes.bool,
 }

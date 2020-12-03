@@ -1,70 +1,103 @@
-import { USERNAME, NAME, PHOTO } from 'react-native-dotenv'
+import { USERNAME, NAME, PHOTO, ID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import io from 'socket.io-client'
 
 var myUsername = ''
-var myPic = ''
+var myPhoto = ''
 var myName = ''
+var myId = ''
 var socket = null
 
-AsyncStorage.multiGet([USERNAME, NAME, PHOTO]).then((res) => {
+AsyncStorage.multiGet([USERNAME, NAME, PHOTO, ID]).then((res) => {
   myUsername = res[0][1]
   myName = res[1][1]
-  myPic = res[2][1]
+  myPhoto = res[2][1]
+  myId = res[3][1]
 })
 
 const connect = () => {
   socket = io('https://wechews.herokuapp.com', {
-    query: `username=${myUsername}`,
+    query: `id=${myId}`,
   })
 }
 // uncomment below if testing on local server
 /* const connect = () => {
-   socket = io('http://192.168.0.23:5000', {
+   socket = io('http://172.16.0.10:5000', {
      query: `username=${myUsername}`,
    })
 } */
 
 const createRoom = () => {
-  socket.emit('createRoom', { host: myUsername, pic: myPic, name: myName })
+  socket.emit('create', {
+    id: myId,
+    name: myName,
+    username: myUsername,
+    photo: myPhoto,
+  })
 }
 
-const sendInvite = (username) => {
-  socket.emit('invite', { username: username, host: myUsername })
+// sends invite to an id
+const sendInvite = (receiver, code) => {
+  socket.emit('invite', {
+    id: myId,
+    name: myName,
+    username: myUsername,
+    photo: myPhoto,
+    receiver: receiver,
+    code: code,
+  })
 }
 
-const declineInvite = (room) => {
-  socket.emit('decline', { username: myUsername, room: room })
+const joinRoom = (code) => {
+  socket.emit('join', {
+    id: myId,
+    name: myName,
+    username: myUsername,
+    photo: myPhoto,
+    code: code,
+  })
 }
 
-const joinRoom = (room) => {
-  socket.emit('joinRoom', { username: myUsername, pic: myPic, room: room, name: myName })
+const leaveRoom = (code) => {
+  socket.emit('leave', {
+    code: code,
+    id: myId,
+  })
 }
 
-const leaveRoom = (room) => {
-  socket.emit('leave', { username: myUsername, room: room })
+const kickUser = (id) => {
+  socket.emit('kick', { id: id })
 }
 
-const kickUser = (username) => {
-  socket.emit('kick', { username: username, room: myUsername })
+// host starts a session
+// filters needs: radius, group size, majority, location or latitude/longitude
+// filters options: price, open_at, categories, limit
+const startSession = (code, filters) => {
+  socket.emit('start', { code: code, filters: filters })
 }
 
-const endSession = () => {
-  socket.emit('end', { room: myUsername })
+// submit categories array (append a ',' at end)
+const submitFilters = (code, categories) => {
+  socket.emit('submit', {
+    code: code,
+    categories: categories,
+    id: myId,
+  })
 }
 
-const startSession = () => {
-  socket.emit('start', { room: myUsername })
+// pass restaurant id for a like
+const likeRestaurant = (code, resId) => {
+  socket.emit('like', { code: code, resId: resId })
 }
 
-// past filters object & room username
-const submitFilters = (filters, room) => {
-  socket.emit('submitFilters', { username: myUsername, filters: filters, room: room })
+// let everyone know you are done swiping
+const finishedRound = (code) => {
+  socket.emit('finished', { code: code, id: myId })
 }
 
-// pass restaurant id
-const likeRestaurant = (room, restaurant) => {
-  socket.emit('like', { room: room, restaurant: restaurant })
+// randomize the restaurant chosen
+const randomize = (code) => {
+  socket.emit('randomize', { code: code })
 }
 
 const getSocket = () => {
@@ -76,12 +109,12 @@ export default {
   createRoom,
   joinRoom,
   sendInvite,
-  declineInvite,
+  finishedRound,
   leaveRoom,
   kickUser,
   startSession,
-  endSession,
   submitFilters,
   likeRestaurant,
   getSocket,
+  randomize,
 }
