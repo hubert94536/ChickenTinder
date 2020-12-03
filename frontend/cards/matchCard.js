@@ -1,7 +1,7 @@
-import React from 'react'
-import { Dimensions, ImageBackground, Image, StyleSheet, Text, View } from 'react-native'
 import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import React from 'react'
+import { Dimensions, ImageBackground, Image, StyleSheet, Text, View } from 'react-native'
 import PropTypes from 'prop-types'
 
 const font = 'CircularStd-Medium'
