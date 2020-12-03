@@ -4,10 +4,10 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import screenStyles from '../../styles/screenStyles.js'
-import MatchCard from '../cards/matchCard.js'
+import MatchCard from '../cards/MatchCard.js'
 
 // commented out during linting but socket is used in commented-out code below
-//import socket from '../apis/socket.js'
+import socket from '../apis/socket.js'
 
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
@@ -17,38 +17,17 @@ export default class Match extends React.Component {
   constructor(props) {
     super(props)
 
-    var parseRestaurant = [] //dummy restaurant for testing purposes
-    parseRestaurant['id'] = 'E8RJkjfdcwgtyoPMjQ_Olg'
-    parseRestaurant['name'] = 'Four Barrel Coffee'
-    parseRestaurant['distance'] = 2.4
-    parseRestaurant['reviewCount'] = 1738
-    parseRestaurant['rating'] = 4
-    parseRestaurant['price'] = '$'
-    parseRestaurant['phone'] = '+14152520800'
-    parseRestaurant['city'] = 'San Francisco'
-    parseRestaurant['latitude'] = 37.7670169511878
-    parseRestaurant['longitude'] = -122.42184275
-    parseRestaurant['url'] = 'https://www.yelp.com/biz/four-barrel-coffee-san-francisco'
-    parseRestaurant['transactions'] = ['pickup', 'delivery']
-    parseRestaurant['categories'] = [
-      {
-        alias: 'coffee',
-        title: 'Coffee & Tea',
-      },
-    ]
-
     this.state = {
       navigation: this.props.navigation,
-      //restaurant: this.props.navigation.state.params.restaurant,
-      restaurant: parseRestaurant,
-      //host: this.props.host, only for socket testing
+      restaurant: this.props.navigation.state.params.restaurant,
+      host: this.props.host,
     }
   }
 
   endRound() {
-    // socket.leaveRoom(this.props.host)
-    const { navigation } = this.state
+    const { navigation, host } = this.state
     navigation.navigate('Home')
+    socket.leaveRoom(host)
   }
 
   componentDidMount() {
@@ -64,7 +43,7 @@ export default class Match extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer} /*Header for header text and heart icon */>
-          <Text style={[styles.general, { fontSize: 33, marginHorizontal: '3%' }]}>
+          <Text style={[screenStyles.textBold, { fontSize: 33, marginHorizontal: '3%' }]}>
             WeChews you!
           </Text>
           <Icon name="heart" style={[styles.general, { fontSize: 35, paddingVertical: '1%' }]} />
@@ -93,20 +72,20 @@ export default class Match extends React.Component {
         </View>
         <TouchableHighlight //Button to open restaurant on yelp
           underlayColor="white"
-          style={styles.yelpButton}
+          style={[screenStyles.bigButton, styles.yelpButton]}
           onPress={() => Linking.openURL(restaurant.url)}
         >
-          <Text style={[screenStyles.medButtonText, { color: 'white' }]}>Open on Yelp</Text>
+          <Text style={[screenStyles.bigButtonText, { color: 'white' }]}>Open on Yelp</Text>
         </TouchableHighlight>
         <TouchableHighlight
           /* Button to call phone # */
-          style={styles.callButton}
+          style={[screenStyles.bigButton, styles.callButton]}
           onPress={() => Linking.openURL(`tel:${restaurant.phone}`)}
         >
-          <Text style={[screenStyles.medButtonText, { color: hex }]}>Call: {restaurant.phone}</Text>
+          <Text style={[screenStyles.bigButtonText, { color: hex }]}>Call: {restaurant.phone}</Text>
         </TouchableHighlight>
         <Text /* Link to exit round */
-          style={[screenStyles.medButtonText, styles.exitRoundText]}
+          style={[screenStyles.bigButtonText, styles.exitRoundText]}
           onPress={() => this.endRound()}
         >
           Exit Round
@@ -117,6 +96,7 @@ export default class Match extends React.Component {
 }
 
 Match.propTypes = {
+  host: PropTypes.string,
   //navig should contain navigate fx + state, which contains params which contains the necessary restaurant arr
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
@@ -172,50 +152,22 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height * 0.4,
     width: Dimensions.get('window').width * 0.82,
   },
-  /*Name of restaurant
-  restaurantNameText: {
-    color: 'white',
-    fontSize: 25,
-    textAlign: 'left',
-    padding: '3%',
-  },
-  //Styling for restaurant info card with info, image/gradient
-  restaurantInfoCard: {
-    alignSelf: 'center',
-    justifyContent: 'flex-start',
-    //height: '20%',
-    //width: '70%',
-    backgroundColor: 'grey',
-  },
-  //Small info text inside restaurant card
-  restaurantInfoText: {
-    color: 'white',
-    fontSize: 15,
-    textAlign: 'left',
-    padding: '2%',
-  }, */
   //Styling for Google map for restaurant
   /* For "Open on Yelp" button */
   yelpButton: {
     backgroundColor: hex,
-    width: '55%',
     height: '4%',
     justifyContent: 'center',
     alignSelf: 'center',
-    borderRadius: 30,
-    borderWidth: 2.5,
     borderColor: hex,
     marginTop: '8%',
   },
   /* For "Call number" button */
   callButton: {
     backgroundColor: 'white',
-    width: '55%',
     height: '4%',
     justifyContent: 'center',
     alignSelf: 'center',
-    borderRadius: 30,
-    borderWidth: 2.5,
     borderColor: hex,
   },
   /* Text for exit round link */
@@ -223,7 +175,7 @@ const styles = StyleSheet.create({
     color: '#6A6A6A',
     justifyContent: 'center',
     alignSelf: 'center',
-    width: '55%',
+    width: '65%',
     height: '4%',
     marginBottom: '4%',
   },

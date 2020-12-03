@@ -8,6 +8,11 @@ export default StyleSheet.create({
     width: '65%',
     alignSelf: 'center',
   },
+  bigButtonText: {
+    fontFamily: 'CircularStd-Book',
+    fontSize: 16,
+    textAlign: 'center',
+  },
   text: {
     fontFamily: 'CircularStd-Medium',
     color: '#F15763',

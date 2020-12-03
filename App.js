@@ -8,7 +8,7 @@ import Group from './frontend/screens/group.js'
 import Home from './frontend/screens/home.js'
 import Invite from './frontend/modals/invite.js'
 import Login from './frontend/screens/login.js'
-import Match from './frontend/screens/match.js'
+import Match from './frontend/screens/Match.js'
 import Notif from './frontend/screens/notif.js'
 import Round from './frontend/screens/round.js'
 import Search from './frontend/screens/search.js'
@@ -29,7 +29,7 @@ export default class App extends React.Component {
     var start
     var unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user === null) {
-        start = 'Match'
+        start = 'Login'
       } else {
         start = 'Home'
       }
