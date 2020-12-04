@@ -60,7 +60,7 @@ module.exports = (io) => {
       socket.emit('exception', err.toString())
       console.log(err)
     }
-
+    //TODO: modify
     // disconnects user and removes them if in room
     socket.on('disconnect', async () => {
       try {
@@ -95,7 +95,11 @@ module.exports = (io) => {
               if (index >= 0) {
                 delete filters.finished[index]
               }
-              await sendCommand('JSON.SET', [`filters:${client.room}`, '.', JSON.stringify(filters)])
+              await sendCommand('JSON.SET', [
+                `filters:${client.room}`,
+                '.',
+                JSON.stringify(filters),
+              ])
               // if the removed user was last person to finish, get top 3 restaurants and emit
               if (filters.finished.length === parseInt(filters.groupSize)) {
                 let top3 = getTop3(filters.restaurants)
@@ -185,7 +189,7 @@ module.exports = (io) => {
           member.filters = false
           session.members[data.id] = member
           // update session info with member
-          await sendCommand('JSON.SET', [data.code, '.', JSON.stringify(session)])
+          await sendCommand('JSON.SET', [data.code, `.members['${data.id}']`, JSON.stringify(member)])
           redisClient.hmset(`clients:${socket.id}`, 'room', data.code)
           socket.join(data.code)
           io.in(data.code).emit('update', session)
@@ -212,14 +216,14 @@ module.exports = (io) => {
         session = JSON.parse(session)
         // update member who submitted filters
         session.members[data.id].filters = true
-        await sendCommand('JSON.SET', [data.code, '.', JSON.stringify(session)])
+        await sendCommand('JSON.SET', [data.code, `.members['${data.id}'].filters`, true])
         io.in(data.code).emit('update', session)
       } catch (err) {
         socket.emit('exception', err.toString())
         console.log(err)
       }
     })
-
+    //TODO modify
     // alert to all clients in room to start
     socket.on('start', async (data) => {
       try {
@@ -259,7 +263,7 @@ module.exports = (io) => {
         console.log(err)
       }
     })
-
+    //TODO modify
     // add restaurant id to list + check for matches
     socket.on('like', async (data) => {
       try {
@@ -272,7 +276,7 @@ module.exports = (io) => {
         } else {
           filters.restaurants[data.resId] = 1
         }
-        await sendCommand('JSON.SET', [`filters:${data.code}`, '.', JSON.stringify(filters)])
+        await sendCommand('JSON.SET', [`filters:${data.code}`, `.restaurants['${data.resId}']`, filters.restaurants[data.resId]])
         // check if # likes = majority => match
         if (filters.restaurants[data.resId] === parseInt(filters.majority)) {
           // return restaurant info from cache
@@ -299,10 +303,12 @@ module.exports = (io) => {
           sendCommand('JSON.DEL', [data.code])
           sendCommand('JSON.DEL', [`filters:${data.code}`])
         } else {
-          await sendCommand('JSON.SET', [data.code, '.', JSON.stringify(session)])
+          // await sendCommand('JSON.SET', [data.code, '.', JSON.stringify(session)])
+          await sendCommand('JSON.DEL', [data.code, `.members['${data.id}']`])
           // retreive a session's filters
           let filters = await sendCommand('JSON.GET', [`filters:${data.code}`])
           filters = JSON.parse(filters)
+         // console.log(filters)
           // check if the room is in a round (majority is only set when round starts)
           if (filters.majority) {
             filters.majority -= 1
@@ -313,6 +319,10 @@ module.exports = (io) => {
               delete filters.finished[index]
             }
             await sendCommand('JSON.SET', [`filters:${data.code}`, '.', JSON.stringify(filters)])
+          //  await sendCommand('JSON.NUMINCRBY', [`filters:${data.code}`, '.majority', -1])
+          //  await sendCommand('JSON.NUMINCRBY', [`filters:${data.code}`, '.groupSize', -1])
+            let filters = await sendCommand('JSON.GET', [`filters:${data.code}`])
+          //  console.log(filters)
             // if the removed user was last person to finish, get top 3 restaurants and emit
             if (filters.finished.length === parseInt(filters.groupSize)) {
               let top3 = getTop3(filters.restaurants)

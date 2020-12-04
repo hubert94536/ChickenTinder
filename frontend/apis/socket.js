@@ -116,5 +116,5 @@ export default {
   submitFilters,
   likeRestaurant,
   getSocket,
-  randomize
+  randomize,
 }

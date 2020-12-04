@@ -125,7 +125,7 @@ describe('socket with Redis', () => {
   })
 
   it('joins room correctly', async (done) => {
-    // expect.assertions(5)
+    expect.assertions(5)
     // create room
     socket.emit('create', {
       name: 'test',
@@ -228,7 +228,7 @@ describe('socket with Redis', () => {
         socket.emit('submit', {
           code: code,
           id: '123',
-            categories: 'chinese,newamerican',
+          categories: 'chinese,newamerican',
         })
       }
     })

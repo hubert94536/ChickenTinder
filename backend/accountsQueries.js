@@ -77,7 +77,7 @@ const updateAccount = async (req, res) => {
 }
 
 // Delete account by id
-// TODO: Delete their associated photo from S3 
+// TODO: Delete their associated photo from S3
 const deleteAccount = async (req, res) => {
   try {
     const { id } = req.params

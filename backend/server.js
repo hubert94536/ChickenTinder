@@ -32,7 +32,7 @@ if (app.get('env') === 'development') {
 }
 
 //image uploads
-app.route('/images').post(images.upload, images.uploadHandler);
+app.route('/images').post(images.upload, images.uploadHandler)
 
 //General helper function for validating schema
 function validateRequest(req, next, schema) {
@@ -64,7 +64,7 @@ function checkCreateAccountsSchema(req, res, next) {
     name: joi.string().required(),
     username: joi.string().required(),
     email: joi.string().email().required(),
-    photo: joi.string().allow("", null).required(),
+    photo: joi.string().allow('', null).required(),
     phone_number: joi.string().min(7).max(15),
   })
   validateRequest(req, next, createAccountsSchema)
