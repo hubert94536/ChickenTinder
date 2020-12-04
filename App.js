@@ -100,8 +100,8 @@ export default class App extends React.Component {
             screen: Loading,
           },
           CreateAccount: {
-            screen: CreateAccount
-          }
+            screen: CreateAccount,
+          },
         },
         {
           initialRouteName: start,

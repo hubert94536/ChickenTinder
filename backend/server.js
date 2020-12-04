@@ -64,7 +64,7 @@ function checkCreateAccountsSchema(req, res, next) {
     name: joi.string().required(),
     username: joi.string().required(),
     email: joi.string().email().required(),
-    photo: joi.string().allow("", null).required(),
+    photo: joi.string().allow('', null).required(),
     phone_number: joi.string().min(7).max(15),
   })
   validateRequest(req, next, createAccountsSchema)
