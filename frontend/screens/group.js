@@ -44,9 +44,8 @@ export default class Group extends React.Component {
     const members = this.props.navigation.state.params.members
     this.state = {
       members: members,
-      // host: this.props.navigation.state.params.host,
-      host: 'nachenburgsaer',
-      hostName: members[Object.keys(members)[0]],
+      host: this.props.navigation.state.params.host,
+      hostName: members[this.props.navigation.state.params.host].username,
       needFilters: Object.keys(members).filter((user) => !user.filters).length,
       start: false,
       username: myUsername,
@@ -68,6 +67,7 @@ export default class Group extends React.Component {
     socket.getSocket().on('update', (res) => {
       if (this._isMounted) {
         this.setState({ members: res.members })
+        console.log(res)
         const count = this.countNeedFilters(res.members)
         this.setState({ needFilters: count })
         if (!count) {
@@ -138,14 +138,6 @@ export default class Group extends React.Component {
       a.key = user
       a.f = false
       memberRenderList.push(a)
-      memberRenderList.push(a)
-      memberRenderList.push(a)
-      memberRenderList.push(a)
-      memberRenderList.push(a)
-      memberRenderList.push(a)
-      memberRenderList.push(a)
-      memberRenderList.push(a)
-      memberRenderList.push(a)
     }
     const footer = {}
     footer.f = true
@@ -195,7 +187,7 @@ export default class Group extends React.Component {
     return (
       <View style={{ backgroundColor: '#FFF' }}>
         <DraggableView
-          initialDrawerSize={0.2}
+          initialDrawerPos={100}
           renderContainerView={() => (
             <View style={styles.main}>
               <View style={[styles.center, { flexDirection: 'row' }]}>
@@ -382,7 +374,7 @@ export default class Group extends React.Component {
                   <FilterSelector
                     host={this.state.host}
                     isHost={this.state.host === this.state.username}
-                    press={(setFilters) => this.submitFilters(setFilters)}
+                    handleUpdate={(setFilters) => this.submitFilters(setFilters)}
                     members={memberRenderList}
                   />
                 </View>

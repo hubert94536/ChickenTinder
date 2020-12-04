@@ -37,7 +37,7 @@ const font = 'CircularStd-Medium'
 const BACKGROUND_COLOR = '#F15763'
 const BORDER_COLOR = 'white'
 const TEXT_COLOR = 'white'
-const ACCENT_COLOr = '#F15763'
+const ACCENT_COLOR = '#F15763'
 
 const tagsCuisine = [
   'American',
@@ -219,7 +219,7 @@ export default class FilterSelector extends React.Component {
 
   // this will pass the filters to the groups page
   handlePress(setFilters) {
-    this.props.press(setFilters)
+    this.props.handleUpdate(setFilters)
   }
 
   //  formats the filters to call yelp api
@@ -312,7 +312,6 @@ export default class FilterSelector extends React.Component {
                     console.log(this.state.majority)
                   }
                   this.setState({ selectedMajority: event })
-                  
                 }}
               />
             </View>
@@ -520,13 +519,13 @@ export default class FilterSelector extends React.Component {
           this.state.chooseFriends ||
           this.state.chooseLocation ||
           this.state.chooseTime) && (
-            <BlurView
-              blurType="dark"
-              blurAmount={10}
-              reducedTransparencyFallbackColor="white"
-              style={modalStyles.blur}
-            />
-          )}
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
         {this.state.locationAlert && (
           <Alert
             title="Location Required"
@@ -588,7 +587,7 @@ export default class FilterSelector extends React.Component {
 FilterSelector.propTypes = {
   host: PropTypes.string,
   isHost: PropTypes.bool,
-  press: PropTypes.func,
+  handleUpdate: PropTypes.func,
   members: PropTypes.array,
 }
 
