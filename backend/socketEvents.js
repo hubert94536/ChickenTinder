@@ -190,7 +190,11 @@ module.exports = (io) => {
           member.filters = false
           session.members[data.id] = member
           // update session info with member
-          await sendCommand('JSON.SET', [data.code, `.members['${data.id}']`, JSON.stringify(member)])
+          await sendCommand('JSON.SET', [
+            data.code,
+            `.members['${data.id}']`,
+            JSON.stringify(member),
+          ])
           redisClient.hmset(`clients:${socket.id}`, 'room', data.code)
           socket.join(data.code)
           io.in(data.code).emit('update', session)
@@ -223,7 +227,7 @@ module.exports = (io) => {
         console.log(err)
       }
     })
-    
+
     // alert to all clients in room to start
     socket.on('start', async (data) => {
       try {
@@ -257,7 +261,7 @@ module.exports = (io) => {
         // initialize container to keep track of restaurant likes
         filters.restaurants = {}
         for (let res in resList.businessList) {
-          filters.restaurants[resList.businessList[res].id] = 0;
+          filters.restaurants[resList.businessList[res].id] = 0
         }
         await sendCommand('JSON.SET', [`filters:${data.code}`, '.', JSON.stringify(filters)])
         io.in(data.code).emit('start', resList.businessList)
@@ -271,7 +275,11 @@ module.exports = (io) => {
     socket.on('like', async (data) => {
       try {
         // increment restaurant count
-        await sendCommand('JSON.NUMINCRBY', [`filters:${data.code}`, `.restaurants['${data.resId}']`, 1])
+        await sendCommand('JSON.NUMINCRBY', [
+          `filters:${data.code}`,
+          `.restaurants['${data.resId}']`,
+          1,
+        ])
         let filters = await sendCommand('JSON.GET', [`filters:${data.code}`])
         filters = JSON.parse(filters)
         // check if # likes = majority => match

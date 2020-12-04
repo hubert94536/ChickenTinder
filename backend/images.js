@@ -1,4 +1,3 @@
-const { Sequelize } = require('sequelize')
 const { Accounts } = require('./models.js')
 const AWS = require('aws-sdk')
 const multer = require('multer')
@@ -124,24 +123,13 @@ const upload = (req, res, next) =>
 
 const uploadHandler = async (req, res) => {
   try {
-    console.log(4)
     if (!req.validContent) throw new Error('invalid content')
     if (!req.file) throw new Error('no file received')
     if (!req.user) throw new Error('user does not exist')
-    console.log(5)
-    req.user
-      .update({ photo: req.file.location })
-      .then((response) => {
-        console.log(6)
-        console.log('Location: ' + req.file.location)
-        return res.status(200).send('Uploaded photo at ' + req.file.location)
-      })
-      .catch((error) => {
-        console.log(7)
-        return res.status(500).send(error.message)
-      })
+    await req.user.update({ photo: req.file.location })
+    return res.status(200).send('Uploaded photo at ' + req.file.location)
   } catch (error) {
-    console.log(8)
+    console.log(error)
     return res.status(500).send(error.message)
   }
 }
