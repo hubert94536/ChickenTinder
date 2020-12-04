@@ -3,8 +3,8 @@
 
 // creates user and returns id
 const createFBUser = jest
-  .fn((name, id, username, email, photo) => Promise.reject(500)) // Fail (default)
-  .mockImplementationOnce((name, id, username, email, photo) => Promise.resolve(200)) // Pass (first call)
+  .fn(() => Promise.reject(500)) // Fail (default)
+  .mockImplementationOnce(() => Promise.resolve(200)) // Pass (first call)
 
 // gets list of users
 const getAllUsers = jest
@@ -58,10 +58,9 @@ const getAllUsers = jest
 // gets first 100 account usernames/names starting with text input
 // mock function calls 5
 const searchUsers = jest
-  .fn((text) => Promise.reject({ status: 500 })) // Fail
-  .mockImplementationOnce((
-    text, // Pass
-  ) =>
+  .fn(() => Promise.reject({ status: 500 })) // Fail
+  .mockImplementationOnce(() =>
+    // Pass
     Promise.resolve({
       status: 200,
       count: 5,
@@ -113,8 +112,8 @@ const deleteUser = jest
 
 // gets user by id and returns user info
 const getUser = jest
-  .fn((id) => Promise.reject({ status: 500 })) // Fail
-  .mockImplementationOnce((id) =>
+  .fn(() => Promise.reject({ status: 500 })) // Fail
+  .mockImplementationOnce(() =>
     // Pass
     Promise.resolve({
       // Pass
@@ -130,38 +129,38 @@ const getUser = jest
 
 // update email and returns status
 const updateEmail = jest
-  .fn((info) => Promise.reject(500)) // Fail
-  .mockImplementationOnce((info) => Promise.resolve(200)) // Pass
+  .fn(() => Promise.reject(500)) // Fail
+  .mockImplementationOnce(() => Promise.resolve(200)) // Pass
 
 // update username and returns status
 const updateUsername = jest
-  .fn((info) => Promise.reject(500)) // Fail
-  .mockImplementationOnce((info) => Promise.resolve(200)) // Pass
+  .fn(() => Promise.reject(500)) // Fail
+  .mockImplementationOnce(() => Promise.resolve(200)) // Pass
 
 // update username and returns status
 const updateName = jest
-  .fn((info) => Promise.reject(500)) // Fail
-  .mockImplementationOnce((info) => Promise.resolve(200)) // Fail
+  .fn(() => Promise.reject(500)) // Fail
+  .mockImplementationOnce(() => Promise.resolve(200)) // Fail
 
 // update user name and returns status
 const updatePhoneNumber = jest
-  .fn((info) => Promise.reject(500)) // Fail
-  .mockImplementationOnce((info) => Promise.resolve(200)) // Pass
+  .fn(() => Promise.reject(500)) // Fail
+  .mockImplementationOnce(() => Promise.resolve(200)) // Pass
 
 // updates user and returns status
 const updateUser = jest
-  .fn((req) => Promise.reject(500)) // Fail
-  .mockImplementationOnce((req) => Promise.resolve(200)) // Pass
+  .fn(() => Promise.reject(500)) // Fail
+  .mockImplementationOnce(() => Promise.resolve(200)) // Pass
 
 // checks username and returns status
 const checkUsername = jest
-  .fn((username) => Promise.reject(500)) // Fail
-  .mockImplementationOnce((username) => Promise.resolve(200)) // Pass
+  .fn(() => Promise.reject(500)) // Fail
+  .mockImplementationOnce(() => Promise.resolve(200)) // Pass
 
 // checks phone number and returns status
 const checkPhoneNumber = jest
-  .fn((phoneNumber) => Promise.reject(500)) // Fail
-  .mockImplementationOnce((phoneNumber) => Promise.resolve(200)) // Pass
+  .fn(() => Promise.reject(500)) // Fail
+  .mockImplementationOnce(() => Promise.resolve(200)) // Pass
 
 export default {
   createFBUser,
@@ -172,6 +171,7 @@ export default {
   updateUsername,
   updateName,
   updatePhoneNumber,
+  updateUser,
   checkUsername,
   checkPhoneNumber,
   searchUsers,

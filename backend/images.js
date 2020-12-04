@@ -20,38 +20,30 @@ const upload = (req, res, next) =>
       bucket: process.env.AWS_BUCKET,
       acl: 'public-read',
       contentType: multerS3.AUTO_CONTENT_TYPE,
-      key: function (req, file, cb) {
+      key: async function (req, file, cb) {
         // TODO: id must be supplied first in the request... see if this is fixable
         try {
           req.validContent = true
           const uid = req.body.id
           if (!uid) throw new Error('no id given')
-          console.log(1)
-          Accounts.findOne({ where: { id: uid } })
-            .then((user) => {
-              console.log(2)
-              if (!user) {
-                throw new Error('user does not exist')
-              } else {
-                req.user = user
-                const ext = (function (file) {
-                  if (file.mimetype == 'image/png') return '.png'
-                  if (file.mimetype == 'image/jpg' || file.mimetype == 'image/jpeg') return '.jpg'
-                })(file)
-                console.log(3)
-                cb(null, uid + ext)
-              }
-            })
-            .catch((error) => {
-              return res.status(500).send(error.message)
-            })
+          let user = await Accounts.findOne({ where: { id: uid } })
+          if (!user) {
+            throw new Error('user does not exist')
+          } else {
+            req.user = user
+            const ext = (function (file) {
+              if (file.mimetype == 'image/png') return '.png'
+              if (file.mimetype == 'image/jpg' || file.mimetype == 'image/jpeg') return '.jpg'
+            })(file)
+            cb(null, uid + ext)
+          }
         } catch (error) {
+          console.log(error)
           return res.status(500).send(error.message)
         }
       },
     }),
     fileFilter: (req, file, cb) => {
-      console.log('filter')
       if (
         file.mimetype == 'image/png' ||
         file.mimetype == 'image/jpg' ||
@@ -59,7 +51,7 @@ const upload = (req, res, next) =>
       ) {
         cb(null, true)
       } else {
-        return res.status(500).send('invalid file format')
+        return res.status(400).send('invalid file format')
       }
     },
     limits: {
