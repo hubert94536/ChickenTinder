@@ -7,7 +7,7 @@ import Group from './frontend/screens/group.js'
 import Home from './frontend/screens/home.js'
 // import Invite from './frontend/modals/invite.js'
 import Login from './frontend/screens/login.js'
-import Match from './frontend/screens/Match.js'
+import Match from './frontend/screens/match.js'
 import Notif from './frontend/screens/notif.js'
 import Round from './frontend/screens/round.js'
 import Search from './frontend/screens/search.js'
@@ -16,6 +16,7 @@ import UserProfileView from './frontend/screens/profile.js'
 import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
 import Loading from './frontend/screens/loading.js'
 import TabBar from './frontend/nav.js'
+import CreateAccount from './frontend/screens/createAccount.js'
 
 class Notifications extends React.Component {
   render() {
@@ -97,6 +98,9 @@ export default class App extends React.Component {
           },
           Loading: {
             screen: Loading,
+          },
+          CreateAccount: {
+            screen: CreateAccount,
           },
         },
         {

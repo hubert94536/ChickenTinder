@@ -30,6 +30,7 @@ const sequelize = new Sequelize(config)
 //     client.query('LISTEN notifications')
 //   })
 // const redisClient = redis.createClient('redis://localhost:6379')
+
 const redisClient = redis.createClient({
   host: process.env.REDIS_HOST,
   port: process.env.REDIS_PORT,
@@ -37,6 +38,6 @@ const redisClient = redis.createClient({
 })
 const hgetAll = promisify(redisClient.hgetall).bind(redisClient)
 const sendCommand = promisify(redisClient.send_command).bind(redisClient)
+const hmset = promisify(redisClient.hmset).bind(redisClient)
 
-// module.exports = { sequelize }
-module.exports = { sequelize, hgetAll, sendCommand, redisClient }
+module.exports = { sequelize, hgetAll, sendCommand, redisClient, hmset }

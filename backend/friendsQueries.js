@@ -46,6 +46,7 @@ const acceptRequest = async (req, res) => {
     }
     return res.status(404).send('Friendship not found')
   } catch (error) {
+    console.log(error)
     return res.status(500).send(error.message)
   }
 }
@@ -69,6 +70,7 @@ const createFriends = async (req, res) => {
     })
     return res.status(201).send('Friend requested')
   } catch (error) {
+    console.log(error)
     return res.status(500).json({ error: error.message })
   }
 }
@@ -92,6 +94,7 @@ const deleteFriendship = async (req, res) => {
     }
     return res.status(404).send('Friendship not found')
   } catch (error) {
+    console.log(error)
     return res.status(500).send(error.message)
   }
 }
