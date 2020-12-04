@@ -201,27 +201,25 @@ describe('socket with Redis', () => {
     })
     let sentFilters = false
 
-    socket.on('update', (session) => {
+    socket.on('update', async (session) => {
       // only check for filters after submitting filters
       let code = session.code
       if (sentFilters) {
         // member's filters should be updated to true in session
         expect(session.members['123'].filters).toBe(true)
-        setTimeout(async () => {
-          try {
-            // session should be correctly stored in Redis
-            session = await sendCommand('JSON.GET', [code])
-            session = JSON.parse(session)
-            expect(session.members['123'].filters).toBe(true)
-            // filters should be correctly stored in Redis
-            let filters = await sendCommand('JSON.GET', [`filters:${code}`])
-            filters = JSON.parse(filters)
-            expect(filters.categories).toBe('chinese,newamerican')
-            done()
-          } catch (err) {
-            done(err)
-          }
-        }, 50)
+        try {
+          // session should be correctly stored in Redis
+          session = await sendCommand('JSON.GET', [code])
+          session = JSON.parse(session)
+          expect(session.members['123'].filters).toBe(true)
+          // filters should be correctly stored in Redis
+          let filters = await sendCommand('JSON.GET', [`filters:${code}`])
+          filters = JSON.parse(filters)
+          expect(filters.categories).toBe('chinese,newamerican')
+          done()
+        } catch (err) {
+          done(err)
+        }
       } else {
         // submit filters after creating room
         sentFilters = true
@@ -272,12 +270,10 @@ describe('socket with Redis', () => {
         code: code,
         resId: resList[0].id,
       })
-      setTimeout(() => {
-        socket.emit('like', {
-          code: code,
-          resId: resList[0].id,
-        })
-      }, 10)
+      socket.emit('like', {
+        code: code,
+        resId: resList[0].id,
+      })
     })
 
     // should receive id in restaurant match
@@ -347,9 +343,7 @@ describe('socket with Redis', () => {
       // let server know user is done swiping
       await sendCommand('JSON.SET', [`filters:${session.code}`, '.', JSON.stringify(filters)])
       socket.emit('finished', { id: 123, code: session.code })
-      setTimeout(() => {
-        socket.emit('finished', { id: 456, code: session.code })
-      }, 10)
+      socket.emit('finished', { id: 456, code: session.code })
     })
 
     socket.on('top 3', (data) => {
