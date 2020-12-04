@@ -458,9 +458,12 @@ export default class UserProfileView extends Component {
                 >
                   Delete account...
                 </Text>
-                {this.state.deleteAlert && ([
-                  <BlurView blurType="dark" blurAmount={10} reducedTransparencyFallbackColor="black" />
-                ,
+                {this.state.deleteAlert && [
+                  <BlurView
+                    blurType="dark"
+                    blurAmount={10}
+                    reducedTransparencyFallbackColor="black"
+                  />,
                   <Alert
                     title="Delete account?"
                     body="By deleting your account, you will lose all of your data"
@@ -470,8 +473,8 @@ export default class UserProfileView extends Component {
                     height="27%"
                     press={() => this.handleDelete()}
                     cancel={() => this.cancelDelete()}
-                  />
-                ])}
+                  />,
+                ]}
                 {this.state.errorAlert && (
                   <Alert
                     title="Error, please try again"
