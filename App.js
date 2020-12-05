@@ -4,7 +4,7 @@ import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
 import { createAppContainer } from 'react-navigation'
 import firebase from 'firebase'
 import Group from './frontend/screens/group.js'
-import Home from './frontend/screens/home.js'
+import Home from './frontend/screens/Home.js'
 // import Invite from './frontend/modals/invite.js'
 import Login from './frontend/screens/login.js'
 import Match from './frontend/screens/Match.js'
