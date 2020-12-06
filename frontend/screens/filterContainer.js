@@ -25,6 +25,7 @@ class DraggableView extends Component {
 
     this._panGesture = PanResponder.create({
       onMoveShouldSetPanResponder: (evt, gestureState) => {
+        console.log('filterContainer.js: tryGrant')
         return (
           Math.abs(gestureState.dy) > Math.abs(gestureState.dx) && Math.abs(gestureState.dy) > 1
         )
@@ -56,14 +57,14 @@ class DraggableView extends Component {
             useNativeDriver: 'false',
           }).start()
         } else if (goingDown) {
-          console.log('goingDown')
+          console.log('filterContainer.js: goingDown')
           this.setState({ currState: false })
           Animated.spring(this.state.position, {
             toValue: this.state.openPosition,
             useNativeDriver: 'false',
           }).start()
         } else if (!goingUp && !goingDown) {
-          console.log('bounce')
+          console.log('filterContainer.js: bounce')
           Animated.spring(this.state.position, {
             toValue: this.state.currentState ? this.state.closedPosition : this.state.openPosition,
             useNativeDriver: 'false',
@@ -79,20 +80,20 @@ class DraggableView extends Component {
     const header = this.props.renderHeader()
 
     return (
-      <View style={styles.viewport}>
-        <View>{header}</View>
+      <View
+        style={[
+          styles.viewport,
+          {
+            top: this.props.offset,
+          },
+        ]}
+      >
         <Animated.View
           style={[
             {
               translateY: this.state.position.interpolate({
-                inputRange: [
-                  -this.state.objectHeight * 1.1 + this.props.offset,
-                  0 + this.props.offset,
-                ],
-                outputRange: [
-                  -this.state.objectHeight * 1.1 + this.props.offset,
-                  0 + this.props.offset,
-                ],
+                inputRange: [-this.state.objectHeight * 1.1, 0],
+                outputRange: [-this.state.objectHeight * 1.1, 0],
                 extrapolate: 'clamp',
               }),
               perspective: 1000,
@@ -101,7 +102,7 @@ class DraggableView extends Component {
           ]}
           {...this._panGesture.panHandlers}
         >
-          <View>{drawerView}</View>
+          <View {...this._panGesture.panHandlers}>{drawerView}</View>
         </Animated.View>
         <View style={styles.container}>{containerView}</View>
       </View>
@@ -116,26 +117,16 @@ const styles = StyleSheet.create({
   drawer: {
     zIndex: 1,
     elevation: 1,
+    height: '100%',
     // display: 'none',
   },
   container: {
     width: '100%',
     position: 'absolute',
-    top: 150,
+    top: 0,
     backgroundColor: 'blue',
     zIndex: 0,
     elevation: 0,
-  },
-  header: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    width: '100%',
-    height: 200,
-    zIndex: 3,
-    elevation: 3,
-    backgroundColor: 'yellow',
   },
 })
 
