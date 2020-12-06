@@ -25,7 +25,7 @@ class DraggableView extends Component {
 
     this._panGesture = PanResponder.create({
       onMoveShouldSetPanResponder: (evt, gestureState) => {
-        console.log('filterContainer.js: tryGrant')
+        // console.log('filterContainer.js: tryGesture')
         return (
           Math.abs(gestureState.dy) > Math.abs(gestureState.dx) && Math.abs(gestureState.dy) > 1
         )
@@ -57,14 +57,14 @@ class DraggableView extends Component {
             useNativeDriver: 'false',
           }).start()
         } else if (goingDown) {
-          console.log('filterContainer.js: goingDown')
+          // console.log('filterContainer.js: goingDown')
           this.setState({ currState: false })
           Animated.spring(this.state.position, {
             toValue: this.state.openPosition,
             useNativeDriver: 'false',
           }).start()
         } else if (!goingUp && !goingDown) {
-          console.log('filterContainer.js: bounce')
+          // console.log('filterContainer.js: bounce')
           Animated.spring(this.state.position, {
             toValue: this.state.currentState ? this.state.closedPosition : this.state.openPosition,
             useNativeDriver: 'false',
