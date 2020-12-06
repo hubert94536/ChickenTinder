@@ -11,15 +11,14 @@ import {
 } from 'react-native'
 import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
+import PropTypes from 'prop-types'
+// import friendsApi from '../apis/friendsApi.js'
+// import accountsApi from '../apis/accountsApi.js'
+import socket from '../apis/socket.js'
 import Alert from '../modals/alert.js'
 import Join from '../modals/join.js'
-import socket from '../apis/socket.js'
-import screenStyles from '../../styles/screenStyles.js'
 import TabBar from '../nav.js'
-import Icon from 'react-native-vector-icons/AntDesign'
-import SwitchButton from 'switch-button-react-native'
-import friendsApi from '../apis/friendsApi.js'
-import accountsApi from '../apis/accountsApi.js'
+import screenStyles from '../../styles/screenStyles.js'
 
 var img = ''
 var name = ''
@@ -53,9 +52,6 @@ class Home extends React.Component {
       errorAlert: false,
     }
     socket.connect()
-    socket.getSocket().on('invite', (res) => {
-      this.setState({ invite: true, inviteInfo: res })
-    })
     socket.getSocket().on('update', (res) => {
       this.setState({ invite: false })
       this.props.navigation.navigate('Group', res)
@@ -94,7 +90,7 @@ class Home extends React.Component {
         <Text style={[screenStyles.text, screenStyles.title, { fontSize: 30 }]}>
           Hungry? Chews wisely.
         </Text>
-        {/* dummy image */}
+        {/* dummy image below */}
         <Image
           source={{
             uri:
@@ -183,6 +179,11 @@ class Home extends React.Component {
   }
 }
 
+Home.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func,
+  }),
+}
 const styles = StyleSheet.create({
   button: {
     height: 65,

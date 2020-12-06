@@ -2,10 +2,10 @@ import React from 'react'
 import { Modal, Text, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
-import modalStyles from '../../styles/modalStyles.js'
 import { TextInput } from 'react-native-paper'
-import screenStyles from '../../styles/screenStyles.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import modalStyles from '../../styles/modalStyles.js'
+import screenStyles from '../../styles/screenStyles.js'
 
 const hex = '#F15763'
 //  props are name, image url, and functions for cancel and go
@@ -23,12 +23,14 @@ export default class Join extends React.Component {
   }
 
   handleAccept() {
-    socket.joinRoom(this.props.username)
+    const { code } = this.state
+    socket.joinRoom(code)
     this.props.cancel()
   }
 
   handleCancel() {
-    socket.declineInvite(this.props.username)
+    const { username } = this.props
+    socket.declineInvite(username)
     this.props.cancel()
   }
 
