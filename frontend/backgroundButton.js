@@ -1,6 +1,7 @@
 import React from 'react'
 import { TouchableOpacity, View, Text, StyleSheet } from 'react-native'
 // import R from 'res/R'
+import PropTypes from 'prop-types'
 
 export default class BackgroundButton extends React.Component {
   render() {
@@ -44,4 +45,12 @@ export default class BackgroundButton extends React.Component {
       },
     })
   }
+}
+
+BackgroundButton.propTypes = {
+  onPress: PropTypes.func,
+  title: PropTypes.string,
+  borderColor: PropTypes.string,
+  backgroundColor: PropTypes.string,
+  textColor: PropTypes.string,
 }
