@@ -51,48 +51,25 @@ class DraggableView extends Component {
         const goingDown = gestureState.dy > 0 && gestureState.vy > 0
         if (goingUp) {
           this.setState({ currState: true })
-          console.log('goingUp')
-          const dest = this.state.topPosition //-this.state.objectHeight
           Animated.spring(this.state.position, {
-            toValue: dest,
+            toValue: this.state.topPosition,
             useNativeDriver: 'false',
           }).start()
         } else if (goingDown) {
           console.log('goingDown')
           this.setState({ currState: false })
-          const dest = this.state.downPosition // this.state.objectHeight
-          Animated.spring(
-            this.state.position,
-            {
-              toValue: dest,
+          Animated.spring(this.state.position, {
+              toValue: this.state.downPosition,
               useNativeDriver: 'false',
-            }, // Back to zero
+            },
           ).start()
         } else if (!goingUp && !goingDown) {
           console.log('bounce')
-
-          if (this.state.currentState == true) {
-            // currently up
-            console.log('bounceup')
-            Animated.spring(this.state.position, {
-              toValue: this.state.topPosition,
-              useNativeDriver: 'false',
-            }).start()
-          } else {
-            console.log('bouncedown')
-            Animated.spring(
-              this.state.position,
-              {
-                toValue: this.state.downPosition,
-                useNativeDriver: 'false',
-              }, // Back to zero
-            ).start()
-          }
+          Animated.spring(this.state.position, {
+            toValue: this.state.currentState ? this.state.topPosition : this.state.downPosition,
+            useNativeDriver: 'false',
+          }).start()
         }
-
-        const destination = gestureState.dy > 0 ? this.state.downPosition : this.state.topPosition
-        const destState = gestureState.dy > 0 ? false : true
-        this.setState({ currentState: destState })
       },
     })
   }
