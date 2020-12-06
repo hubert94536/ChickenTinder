@@ -16,8 +16,7 @@ class DraggableView extends Component {
     // const downPos = -0.0 * SCREEN_HEIGHT // screen height - thingy size
 
     this.state = {
-      moveInitPosition: 0,
-      position: new Animated.ValueXY(0, this.props.initialDrawerPos),
+      position: new Animated.Value(0, this.props.initialDrawerPos),
       drawerPosition: new Animated.Value(0),
       topPosition: upPos,
       downPosition: downPos,
@@ -26,8 +25,8 @@ class DraggableView extends Component {
       objectHeight: SCREEN_HEIGHT,
     }
 
-    this.state.position.y.setOffset(0)
-    this.state.position.y.setValue(upPos)
+    this.state.position.setOffset(0)
+    this.state.position.setValue(upPos)
 
     this._panGesture = PanResponder.create({
       onMoveShouldSetPanResponder: (evt, gestureState) => {
@@ -36,24 +35,23 @@ class DraggableView extends Component {
         )
       },
       onPanResponderGrant: (evt, gestureState) => {
-        this.setState({ moveInitPosition: this.state.position.__getValue() })
         if (this.state.currState == true) {
           // is currently top - hidden
-          this.state.position.y.setOffset(-this.state.objectHeight)
+          this.state.position.setOffset(-this.state.objectHeight)
         } else {
           // is currently bottom - shown
           console.log('currbot')
-          this.state.position.y.setOffset(0)
+          this.state.position.setOffset(0)
         }
       },
       onPanResponderMove: Animated.event([
         null,
         {
-          dy: this.state.position.y,
+          dy: this.state.position,
         },
       ]),
       onPanResponderRelease: (evt, gestureState) => {
-        this.state.position.y.flattenOffset()
+        this.state.position.flattenOffset()
         const goingUp = gestureState.dy < 0 && gestureState.vy < 0
         const goingDown = gestureState.dy > 0 && gestureState.vy > 0
         if (goingUp) {
@@ -61,7 +59,7 @@ class DraggableView extends Component {
           console.log('goingUp')
           const dest = this.state.topPosition //-this.state.objectHeight
           Animated.spring(
-            this.state.position.y, // Auto-multiplexed
+            this.state.position, // Auto-multiplexed
             {
               toValue: dest,
               useNativeDriver: 'false',
@@ -72,7 +70,7 @@ class DraggableView extends Component {
           this.setState({ currState: false })
           const dest = this.state.downPosition // this.state.objectHeight
           Animated.spring(
-            this.state.position.y, // Auto-multiplexed
+            this.state.position, // Auto-multiplexed
             {
               toValue: dest,
               useNativeDriver: 'false',
@@ -83,12 +81,12 @@ class DraggableView extends Component {
           if (this.state.currentState == true) {
             // currently up
             console.log('bounceup')
-            this.position.y.setOffset(-this.state.objectHeight)
+            this.position.setOffset(-this.state.objectHeight)
           } else {
             console.log('bouncedown')
-            // this.position.y.setOffset(0)
+            // this.position.setOffset(0)
             // Animated.spring(
-            //   this.state.position.y,
+            //   this.state.position,
             //   {
             //     toValue: 0,
             //     useNativeDriver: 'false',
@@ -107,7 +105,7 @@ class DraggableView extends Component {
         //     useNativeDriver: 'false',
         //   }, // Back to zero
         // ).start()
-        // this.state.position.y.setOffset(0)
+        // this.state.position.setOffset(0)
       },
       // onPanResponderRelease: (evt, gestureState) => {
       //   this.setState({ moveInitPosition: 0 })
@@ -128,7 +126,7 @@ class DraggableView extends Component {
         <Animated.View
           style={[
             {
-              translateY: this.state.position.y.interpolate({
+              translateY: this.state.position.interpolate({
                 inputRange: [-this.state.objectHeight * 1.1, 0],
                 outputRange: [-this.state.objectHeight * 1.1, 0],
                 extrapolate: 'clamp',
