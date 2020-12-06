@@ -37,8 +37,14 @@ class DraggableView extends Component {
       },
       onPanResponderGrant: (evt, gestureState) => {
         this.setState({ moveInitPosition: this.state.position.__getValue() })
-        // console.log(this.state.currentState === true ? this.state.objectHeight : 0)
-        // this.state.position.y.setOffset(this.state.currentState ? -this.state.objectHeight : 0)
+        if (this.state.currState == true) {
+          // is currently top - hidden
+          this.state.position.y.setOffset(-this.state.objectHeight)
+        } else {
+          // is currently bottom - shown
+          console.log('currbot')
+          this.state.position.y.setOffset(0)
+        }
       },
       onPanResponderMove: Animated.event([
         null,
@@ -47,11 +53,13 @@ class DraggableView extends Component {
         },
       ]),
       onPanResponderRelease: (evt, gestureState) => {
+        this.state.position.y.flattenOffset()
         const goingUp = gestureState.dy < 0 && gestureState.vy < 0
         const goingDown = gestureState.dy > 0 && gestureState.vy > 0
         if (goingUp) {
+          this.setState({ currState: true })
           console.log('goingUp')
-          const dest = -this.state.objectHeight // this.state.topPosition
+          const dest = this.state.topPosition //-this.state.objectHeight
           Animated.spring(
             this.state.position.y, // Auto-multiplexed
             {
@@ -59,20 +67,22 @@ class DraggableView extends Component {
               useNativeDriver: 'false',
             }, // Back to zero
           ).start(() => {
-            this.state.position.y.setOffset(-this.state.objectHeight)
-            Animated.spring(
-              this.state.position.y, // Auto-multiplexed
-              {
-                toValue: 0,
-                useNativeDriver: 'false',
-              }, // Back to zero
-            ).start(() => {
-              // this.state.position.y.setValue(this.state.topPosition)
-            })
+            // this.state.position.y.setOffset(-this.state.objectHeight)
+            // this.state.position.y.setValue(0)
+            // Animated.spring(
+            //   this.state.position.y, // Auto-multiplexed
+            //   {
+            //     toValue: 0,
+            //     useNativeDriver: 'false',
+            //   }, // Back to zero
+            // ).start(() => {
+            //   // 
+            // })
           })
         } else if (goingDown) {
           console.log('goingDown')
-          const dest = this.state.objectHeight
+          this.setState({ currState: false })
+          const dest = this.state.downPosition // this.state.objectHeight
           Animated.spring(
             this.state.position.y, // Auto-multiplexed
             {
@@ -185,7 +195,11 @@ class DraggableView extends Component {
         <Animated.View
           style={[
             {
-              translateY: this.state.position.y,
+              translateY: this.state.position.y.interpolate({
+                inputRange: [-this.state.objectHeight, 0],
+                outputRange: [-this.state.objectHeight, 0],
+                extrapolate: 'clamp',
+              }),
               perspective: 1000,
             },
             styles.drawer,
