@@ -27,7 +27,6 @@ import modalStyles from '../../styles/modalStyles.js'
 
 const hex = '#F15763'
 
-const hex = '#F15763'
 const font = 'CircularStd-Medium'
 let memberRenderList = []
 let myUsername = ''

@@ -21,12 +21,13 @@ class DraggableView extends Component {
       drawerPosition: new Animated.Value(0),
       topPosition: upPos,
       downPosition: downPos,
-      currentState: true, // true = top, false = down
+      prevState: true, // true = top, false = down
+      currState: true, // true = top, false = down
       objectHeight: SCREEN_HEIGHT,
     }
 
     this.state.position.y.setOffset(0)
-    this.state.position.y.setValue(downPos)
+    this.state.position.y.setValue(upPos)
 
     this._panGesture = PanResponder.create({
       onMoveShouldSetPanResponder: (evt, gestureState) => {
@@ -46,16 +47,71 @@ class DraggableView extends Component {
         },
       ]),
       onPanResponderRelease: (evt, gestureState) => {
+        const goingUp = gestureState.dy < 0 && gestureState.vy < 0
+        const goingDown = gestureState.dy > 0 && gestureState.vy > 0
+        if (goingUp) {
+          console.log('goingUp')
+          const dest = -this.state.objectHeight // this.state.topPosition
+          Animated.spring(
+            this.state.position.y, // Auto-multiplexed
+            {
+              toValue: dest,
+              useNativeDriver: 'false',
+            }, // Back to zero
+          ).start(() => {
+            this.state.position.y.setOffset(-this.state.objectHeight)
+            Animated.spring(
+              this.state.position.y, // Auto-multiplexed
+              {
+                toValue: 0,
+                useNativeDriver: 'false',
+              }, // Back to zero
+            ).start(() => {
+              // this.state.position.y.setValue(this.state.topPosition)
+            })
+          })
+        } else if (goingDown) {
+          console.log('goingDown')
+          const dest = this.state.objectHeight
+          Animated.spring(
+            this.state.position.y, // Auto-multiplexed
+            {
+              toValue: dest,
+              useNativeDriver: 'false',
+            }, // Back to zero
+          ).start(() => {
+            this.state.position.y.setOffset(0)
+            // this.state.position.y.setValue(this.state.topPosition)
+          })
+        } else if (!goingUp && !goingDown) {
+          console.log('bounce')
+          if (this.state.currentState == true) {
+            // currently up
+            console.log('bounceup')
+            this.position.y.setOffset(-this.state.objectHeight)
+          } else {
+            console.log('bouncedown')
+            // this.position.y.setOffset(0)
+            // Animated.spring(
+            //   this.state.position.y,
+            //   {
+            //     toValue: 0,
+            //     useNativeDriver: 'false',
+            //   }, // Back to zero
+            // ).start()
+          }
+        }
+
         const destination = gestureState.dy > 0 ? this.state.downPosition : this.state.topPosition
         const destState = gestureState.dy > 0 ? false : true
         this.setState({ currentState: destState })
-        Animated.spring(
-          this.state.position, // Auto-multiplexed
-          {
-            toValue: { x: 0, y: destination },
-            useNativeDriver: 'false',
-          }, // Back to zero
-        ).start()
+        // Animated.spring(
+        //   this.state.position, // Auto-multiplexed
+        //   {
+        //     toValue: { x: 0, y: destination },
+        //     useNativeDriver: 'false',
+        //   }, // Back to zero
+        // ).start()
         // this.state.position.y.setOffset(0)
       },
       // onPanResponderRelease: (evt, gestureState) => {
@@ -66,6 +122,10 @@ class DraggableView extends Component {
   }
   componentDidUpdate() {
     // console.log(this.state.moveInitPosition)
+  }
+
+  bounce() {
+    console.log('FilterContainer.js - bounce!')
   }
 
   // open() {
@@ -125,7 +185,8 @@ class DraggableView extends Component {
         <Animated.View
           style={[
             {
-              top: Animated.add(this.state.position, this.state.currentState ? 0 : SCREEN_HEIGHT),
+              translateY: this.state.position.y,
+              perspective: 1000,
             },
             styles.drawer,
           ]}
