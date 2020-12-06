@@ -9,7 +9,7 @@ class DraggableView extends Component {
   constructor(props) {
     super(props)
 
-    const upPos = -1 * SCREEN_HEIGHT
+    const upPos = -1 * this.props.objectHeight
     const downPos = 0.0 // screen height - thingy size
 
     this.state = {
@@ -17,7 +17,7 @@ class DraggableView extends Component {
       closedPosition: upPos,
       openPosition: downPos,
       currState: true, // true = top, false = down
-      objectHeight: SCREEN_HEIGHT,
+      objectHeight: this.props.objectHeight,
     }
 
     this.state.position.setOffset(0)
@@ -80,6 +80,7 @@ class DraggableView extends Component {
 
     return (
       <View style={styles.viewport}>
+        <View>{header}</View>
         <Animated.View
           style={[
             {
@@ -94,10 +95,7 @@ class DraggableView extends Component {
           ]}
           {...this._panGesture.panHandlers}
         >
-          <View {...this._panGesture.panHandlers}>
-            {drawerView}
-            {header}
-          </View>
+          <View>{drawerView}</View>
         </Animated.View>
         <View style={styles.container}>{containerView}</View>
       </View>
@@ -110,15 +108,28 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   drawer: {
-    zIndex: 7,
-    elevation: 7,
+    zIndex: 1,
+    elevation: 1,
+    // display: 'none',
   },
   container: {
     width: '100%',
     position: 'absolute',
     top: 150,
     backgroundColor: 'blue',
-    zIndex: 1,
+    zIndex: 0,
+    elevation: 0,
+  },
+  header: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    width: '100%',
+    height: 200,
+    zIndex: 3,
+    elevation: 3,
+    backgroundColor: 'yellow',
   },
 })
 
@@ -136,7 +147,7 @@ DraggableView.propTypes = {
 DraggableView.defaultProps = {
   initialDrawerPos: 0,
   finalDrawerPos: 0,
-  objectHeight: 300,
+  objectHeight: 600,
   onRelease: () => {},
   renderContainerView: () => {},
   renderDrawerView: () => {},

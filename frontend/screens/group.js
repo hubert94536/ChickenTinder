@@ -55,6 +55,8 @@ export default class Group extends React.Component {
       swipe: true,
       filters: {},
       chooseFriends: false,
+      setFilters: null,
+      code: null,
     }
     this.updateMemberList()
 
@@ -66,8 +68,8 @@ export default class Group extends React.Component {
     // listens for group updates
     socket.getSocket().on('update', (res) => {
       if (this._isMounted) {
-        this.setState({ members: res.members })
-        console.log(res)
+        console.log('socket "update": ' + res)
+        this.setState({ members: res.members, host: res.host, code: res.code })
         const count = this.countNeedFilters(res.members)
         this.setState({ needFilters: count })
         if (!count) {
@@ -163,6 +165,11 @@ export default class Group extends React.Component {
       : this.setState({ leaveAlert: false })
   }
 
+  // temporarily sets filters in our state
+  holdFilters(setFilters) {
+    this.setState({ filters: setFilters })
+  }
+
   // sets the filters, goes back to groups and stops user from going back to filters
   submitFilters(setFilters) {
     this.setState({ swipe: false })
@@ -182,11 +189,51 @@ export default class Group extends React.Component {
     this._isMounted = false
   }
 
+  firstName(str) {
+    const first_sp = str.indexOf(' ')
+    return str.substr(0, first_sp)
+  }
+
   render() {
     this.updateMemberList()
     return (
       <View style={{ backgroundColor: '#FFF' }}>
+        <View style={[styles.top, styles.floating]}>
+          <View
+            style={{
+              alignSelf: 'center',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              backgroundColor: hex,
+              height: 120,
+              width: '100%',
+              paddingBottom: 20,
+            }}
+          >
+            <Text style={styles.groupTitle}>
+              {this.state.host === this.state.username
+                ? 'Your Group'
+                : `${this.firstName(this.state.members[this.state.host].name)}'s Group`}
+            </Text>
+            <View style={styles.subheader}>
+              <Text style={styles.headertext2}>Group PIN: </Text>
+              <Text style={styles.headertext3}>BADWOLF42</Text>
+              <TouchableOpacity
+                style={{
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  width: 15,
+                  height: 15,
+                }}
+              >
+                <Ionicons name="copy-outline" style={styles.icon2} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
         <DraggableView
+          style={styles.drawer}
           initialDrawerPos={100}
           renderContainerView={() => (
             <View style={styles.main}>
@@ -262,7 +309,7 @@ export default class Group extends React.Component {
                     return (
                       <GroupCard
                         name={item.name}
-                        username={item.username}
+                        username={this.state.members[item.username].username}
                         image={item.image}
                         filters={item.filters}
                         host={this.state.host}
@@ -365,16 +412,15 @@ export default class Group extends React.Component {
               />
             </View>
           )}
+          objectHeight={300}
           renderDrawerView={() => (
             <View>
               <View>
-                <View
-                  style={{ width: windowWidth, height: windowHeight, backgroundColor: 'green' }}
-                >
+                <View style={{ width: windowWidth, height: 300 }}>
                   <FilterSelector
                     host={this.state.host}
                     isHost={this.state.host === this.state.username}
-                    handleUpdate={(setFilters) => this.submitFilters(setFilters)}
+                    handleUpdate={(setFilters) => this.holdFilters(setFilters)}
                     members={memberRenderList}
                   />
                 </View>
@@ -391,27 +437,7 @@ export default class Group extends React.Component {
                     width: '100%',
                     paddingBottom: 20,
                   }}
-                >
-                  <Text style={styles.groupTitle}>
-                    {this.state.host === this.state.username
-                      ? 'Your Group'
-                      : `${this.state.host}'s Group`}
-                  </Text>
-                  <View style={styles.subheader}>
-                    <Text style={styles.headertext2}>Group PIN: </Text>
-                    <Text style={styles.headertext3}>BADWOLF42</Text>
-                    <TouchableOpacity
-                      style={{
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        width: 15,
-                        height: 15,
-                      }}
-                    >
-                      <Ionicons name="copy-outline" style={styles.icon2} />
-                    </TouchableOpacity>
-                  </View>
-                </View>
+                ></View>
               </View>
               <View
                 style={{
@@ -425,14 +451,14 @@ export default class Group extends React.Component {
                     color: 'white',
                     fontFamily: font,
                     marginRight: '3%',
-                    height: 60,
+                    height: 70,
                     backgroundColor: hex,
                     padding: 15,
                     marginTop: -45,
                     borderRadius: 15,
                     flexDirection: 'column',
                     justifyContent: 'flex-end',
-                    zIndex: -1,
+                    zIndex: 4,
                   }}
                 >
                   <Text
@@ -581,4 +607,17 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginLeft: '7%',
   },
+  drawer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
+  floating: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    zIndex: 20,
+    elevation: 20,
+  }
 })
