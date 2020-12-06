@@ -77,10 +77,7 @@ class DraggableView extends Component {
               toValue: dest,
               useNativeDriver: 'false',
             }, // Back to zero
-          ).start(() => {
-            this.state.position.y.setOffset(0)
-            // this.state.position.y.setValue(this.state.topPosition)
-          })
+          ).start()
         } else if (!goingUp && !goingDown) {
           console.log('bounce')
           if (this.state.currentState == true) {
