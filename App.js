@@ -16,6 +16,7 @@ import UserProfileView from './frontend/screens/profile.js'
 import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
 import Loading from './frontend/screens/loading.js'
 import TabBar from './frontend/nav.js'
+import CreateAccount from './frontend/screens/createAccount.js'
 
 class Notifications extends React.Component {
   render() {
@@ -97,6 +98,9 @@ export default class App extends React.Component {
           },
           Loading: {
             screen: Loading,
+          },
+          CreateAccount: {
+            screen: CreateAccount,
           },
         },
         {
