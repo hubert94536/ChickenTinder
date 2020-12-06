@@ -1,4 +1,3 @@
-// Adapted from github.com/yaraht17/react-native-draggable-view/
 import React, { Component } from 'react'
 import { StyleSheet, View, Animated, PanResponder, Dimensions } from 'react-native'
 import PropTypes from 'prop-types'
@@ -36,7 +35,7 @@ class DraggableView extends Component {
           this.state.position.setOffset(-this.state.objectHeight)
         } else {
           // is currently bottom - shown
-          console.log('currbot')
+          // console.log('filterContainer.js: currbot')
           this.state.position.setOffset(0)
         }
       },
@@ -124,7 +123,7 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     top: 0,
-    backgroundColor: 'blue',
+    backgroundColor: 'white',
     zIndex: 0,
     elevation: 0,
   },
@@ -134,9 +133,9 @@ DraggableView.propTypes = {
   initialDrawerPos: PropTypes.number,
   finalDrawerPos: PropTypes.number,
   objectHeight: PropTypes.number,
-  onTopReached: PropTypes.func,
-  onRelease: PropTypes.func,
   offset: PropTypes.number,
+  onOpen: PropTypes.func,
+  onClose: PropTypes.func,
   renderContainerView: PropTypes.func,
   renderDrawerView: PropTypes.func,
   renderHeader: PropTypes.func,
@@ -147,7 +146,8 @@ DraggableView.defaultProps = {
   finalDrawerPos: 0,
   objectHeight: 600,
   offset: 0,
-  onRelease: () => {},
+  onOpen: () => {},
+  onClose: () => {},
   renderContainerView: () => {},
   renderDrawerView: () => {},
   renderHeader: () => {},
