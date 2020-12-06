@@ -38,6 +38,49 @@ AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 AsyncStorage.getItem(PHOTO).then((res) => (img = res))
 AsyncStorage.getItem(NAME).then((res) => (name = res))
 
+//=========================Testing Code=========================================
+import { ID } from 'react-native-dotenv'
+import friendsApi from '../apis/friendsApi.js'
+
+var myId = ''
+AsyncStorage.getItem(ID).then((res) => {
+  myId = res
+})
+
+const dummyFriends = () => {
+        // uncomment if testing friends/requests
+      //this.getNotifs();
+      accountsApi.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
+      accountsApi.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
+      accountsApi.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
+      accountsApi.createFBUser('Helen', 5, 'helenthemelon', 'helenw@gmail.com', 'sjdkf'),
+      accountsApi.createFBUser('Kevin', 6, 'kevint', 'kevintang@gmail.com', 'sdfddf'),
+      accountsApi.createFBUser('David', 7, 'das', 'das@gmail.com', 'fhgdgffgad'),
+      accountsApi.createFBUser('Jeff', 8, 'jeffwinger', 'jeffw@gmail.com', 'sdfaadddf'),
+      accountsApi.createFBUser('Annie', 9, 'anniee', 'anniee@gmail.com', 'sdfgfsdddf'),
+      accountsApi.createFBUser('Britta', 10, 'theworst', 'brittap@gmail.com', 'sdfhgjddf'),
+      console.log("My id:" + myId),
+      friendsApi.createFriendshipTest(myId, 2),
+      friendsApi.createFriendshipTest(4, 2),
+      friendsApi.createFriendshipTest(myId, 3),
+      friendsApi.createFriendshipTest(myId, 4),
+      friendsApi.createFriendshipTest(6, myId),
+      friendsApi.createFriendshipTest(7, myId),
+      friendsApi.createFriendshipTest(8, myId),
+      friendsApi.createFriendshipTest(9, myId),
+      friendsApi.createFriendshipTest(10, myId),
+      friendsApi.acceptFriendRequest(2)
+      friendsApi.acceptFriendRequest(3)
+      friendsApi.acceptFriendRequest(4)
+      friendsApi.acceptFriendRequest(5)
+      friendsApi.acceptFriendRequest(6)
+      friendsApi.acceptFriendRequest(7)
+      friendsApi.acceptFriendRequest(8)
+      friendsApi.acceptFriendRequest(9)
+      friendsApi.acceptFriendRequest(10)
+}
+//==============================================================================
+
 export default class UserProfileView extends Component {
   constructor(props) {
     super(props)
@@ -67,6 +110,7 @@ export default class UserProfileView extends Component {
   }
 
   componentDidMount() {
+    //dummyFriends();
     var defImgUrl = ''
     AsyncStorage.getItem(USERNAME).then((res) => this.setState({ username: res }))
     AsyncStorage.getItem(PHOTO).then((res) => this.setState({ image: res }))
@@ -101,6 +145,33 @@ export default class UserProfileView extends Component {
         })
     }
   }
+
+  //  Display name not saving after log out (WIP)
+  // // getting current user's info
+  // async changeName() {
+  //   if (this.state.nameValue !== this.state.name) {
+  //     const name = this.state.nameValue
+  //     return accountsApi
+  //       .updateName(name)
+  //       .then(() => {
+  //         // update name locally
+  //         return accountsApi.updateName(name).then(() => {
+  //           AsyncStorage.setItem(NAME, name)
+  //           this.setState({ name: this.state.nameValue })
+  //           Keyboard.dismiss()
+  //         })
+  //       })
+  //       .catch((error) => {
+  //         if (error === 404) {
+  //           this.setState({ takenAlert: true })
+  //         } else {
+  //           this.setState({ errorAlert: true })
+  //         }
+  //         this.setState({ nameValue: this.state.name })
+  //         Keyboard.dismiss()
+  //       })
+  //   }
+  // }
 
   async changeUsername() {
     if (this.state.username !== this.state.usernameValue) {
