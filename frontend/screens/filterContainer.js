@@ -85,8 +85,14 @@ class DraggableView extends Component {
           style={[
             {
               translateY: this.state.position.interpolate({
-                inputRange: [-this.state.objectHeight * 1.1, 0],
-                outputRange: [-this.state.objectHeight * 1.1, 0],
+                inputRange: [
+                  -this.state.objectHeight * 1.1 + this.props.offset,
+                  0 + this.props.offset,
+                ],
+                outputRange: [
+                  -this.state.objectHeight * 1.1 + this.props.offset,
+                  0 + this.props.offset,
+                ],
                 extrapolate: 'clamp',
               }),
               perspective: 1000,
@@ -139,6 +145,7 @@ DraggableView.propTypes = {
   objectHeight: PropTypes.number,
   onTopReached: PropTypes.func,
   onRelease: PropTypes.func,
+  offset: PropTypes.number,
   renderContainerView: PropTypes.func,
   renderDrawerView: PropTypes.func,
   renderHeader: PropTypes.func,
@@ -148,6 +155,7 @@ DraggableView.defaultProps = {
   initialDrawerPos: 0,
   finalDrawerPos: 0,
   objectHeight: 600,
+  offset: 0,
   onRelease: () => {},
   renderContainerView: () => {},
   renderDrawerView: () => {},
