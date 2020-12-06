@@ -15,7 +15,7 @@ const accountsApi = axios.create({
 
 // creates user and returns id
 const createFBUser = async (name, id, username, email, photo) => {
-  console.log("create")
+  console.log('create')
   return accountsApi
     .post('/accounts', {
       params: {
@@ -163,7 +163,7 @@ const updateUser = async (req) => {
 
 // checks username and returns status
 const checkUsername = async (username) => {
-  console.log("check")
+  console.log('check')
   return accountsApi
     .get(`/username/${username}`)
     .then((res) => {
@@ -210,5 +210,5 @@ export default {
   checkUsername,
   checkPhoneNumber,
   searchUsers,
-  checkEmail
+  checkEmail,
 }

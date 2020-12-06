@@ -48,8 +48,8 @@ export default class createAccount extends React.Component {
 
   //  checks whether or not the username can be set
   handleClick() {
-    console.log("finish");
-    console.log(this.state);
+    console.log('finish')
+    console.log(this.state)
     accountsApi
       .checkUsername(this.state.username)
       .then(() => {
@@ -61,19 +61,18 @@ export default class createAccount extends React.Component {
         AsyncStorage.setItem(PHONE, this.state.phone)
         AsyncStorage.setItem(DEFPHOTO, this.state.defImgInd.toString())
 
-        return accountsApi
-          .createFBUser(
-            this.state.name,
-            this.state.id,
-            this.state.username,
-            this.state.email,
-            this.state.photo,
-          )
-          .then(() => {
-            this.props.navigation.navigate('Home')
-          })
+        return accountsApi.createFBUser(
+          this.state.name,
+          this.state.id,
+          this.state.username,
+          this.state.email,
+          this.state.photo,
+        )
       })
       .then(() => uploadApi.uploadPhoto(this.state.photoData))
+      .then(() => {
+        this.props.navigation.navigate('Home')
+      })
       .catch((error) => {
         if (error === 404) {
           this.setState({ takenAlert: true })
@@ -93,14 +92,14 @@ export default class createAccount extends React.Component {
       height: 150,
       cropping: true,
     }).then((image) => {
-      this.setState({ 
-        photo: image.path, 
+      this.setState({
+        photo: image.path,
         photoData: {
           uri: image.path,
           type: image.mime,
-          name: "avatar"
-        }
-       })
+          name: 'avatar',
+        },
+      })
     })
     console.log('upload photo')
   }
@@ -126,16 +125,17 @@ export default class createAccount extends React.Component {
         <Text style={[styles.mediumText]}>Account Verified!</Text>
         <Text style={[styles.mediumText]}>Finish setting up your account</Text>
 
-        {this.state.photo ? 
+        {this.state.photo ? (
           <Image
             source={{
               uri: this.state.photo,
             }}
             style={screenStyles.avatar}
           />
-        : 
+        ) : (
           <Image source={this.state.defImg} style={screenStyles.avatar} />
-        }
+        )}
+
         <Text
           style={[
             styles.mediumText,

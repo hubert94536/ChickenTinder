@@ -28,7 +28,7 @@ const connect = () => {
 } */
 
 const createRoom = () => {
-  socket.emit('createRoom', {
+  socket.emit('create', {
     id: myId,
     name: myName,
     username: myUsername,
@@ -49,7 +49,7 @@ const sendInvite = (receiver, code) => {
 }
 
 const joinRoom = (code) => {
-  socket.emit('joinRoom', {
+  socket.emit('join', {
     id: myId,
     name: myName,
     username: myUsername,
@@ -78,7 +78,7 @@ const startSession = (code, filters) => {
 
 // submit categories array (append a ',' at end)
 const submitFilters = (code, categories) => {
-  socket.emit('submitFilters', {
+  socket.emit('submit', {
     code: code,
     categories: categories,
     id: myId,
@@ -92,12 +92,12 @@ const likeRestaurant = (code, resId) => {
 
 // let everyone know you are done swiping
 const finishedRound = (code) => {
-  socket.emit('final', { code: code, id: myId })
+  socket.emit('finished', { code: code, id: myId })
 }
 
 // randomize the restaurant chosen
 const randomize = (code) => {
-  socket.emit('choose', { code: code })
+  socket.emit('randomize', { code: code })
 }
 
 const getSocket = () => {
@@ -116,5 +116,5 @@ export default {
   submitFilters,
   likeRestaurant,
   getSocket,
-  randomize
+  randomize,
 }

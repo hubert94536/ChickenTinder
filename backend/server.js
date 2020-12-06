@@ -1,8 +1,8 @@
 const bodyParser = require('body-parser')
 const express = require('express')
-const joi = require('joi')
 const http = require('http')
 const io = require('socket.io')()
+const joi = require('joi')
 const accounts = require('./accountsQueries.js')
 const friends = require('./friendsQueries.js')
 const images = require('./images')
@@ -32,7 +32,7 @@ if (app.get('env') === 'development') {
 }
 
 //image uploads
-app.route('/images').post(images.upload, images.uploadHandler);
+app.route('/images').post(images.upload, images.uploadHandler)
 
 //General helper function for validating schema
 function validateRequest(req, next, schema) {
@@ -64,7 +64,7 @@ function checkCreateAccountsSchema(req, res, next) {
     name: joi.string().required(),
     username: joi.string().required(),
     email: joi.string().email().required(),
-    photo: joi.string().required(),
+    photo: joi.string().allow('', null).required(),
     phone_number: joi.string().min(7).max(15),
   })
   validateRequest(req, next, createAccountsSchema)
