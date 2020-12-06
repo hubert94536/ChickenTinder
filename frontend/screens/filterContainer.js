@@ -14,8 +14,8 @@ class DraggableView extends Component {
 
     this.state = {
       position: new Animated.Value(0, this.props.initialDrawerPos),
-      topPosition: upPos,
-      downPosition: downPos,
+      closedPosition: upPos,
+      openPosition: downPos,
       currState: true, // true = top, false = down
       objectHeight: SCREEN_HEIGHT,
     }
@@ -52,21 +52,20 @@ class DraggableView extends Component {
         if (goingUp) {
           this.setState({ currState: true })
           Animated.spring(this.state.position, {
-            toValue: this.state.topPosition,
+            toValue: this.state.closedPosition,
             useNativeDriver: 'false',
           }).start()
         } else if (goingDown) {
           console.log('goingDown')
           this.setState({ currState: false })
           Animated.spring(this.state.position, {
-              toValue: this.state.downPosition,
-              useNativeDriver: 'false',
-            },
-          ).start()
+            toValue: this.state.openPosition,
+            useNativeDriver: 'false',
+          }).start()
         } else if (!goingUp && !goingDown) {
           console.log('bounce')
           Animated.spring(this.state.position, {
-            toValue: this.state.currentState ? this.state.topPosition : this.state.downPosition,
+            toValue: this.state.currentState ? this.state.closedPosition : this.state.openPosition,
             useNativeDriver: 'false',
           }).start()
         }
