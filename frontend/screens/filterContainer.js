@@ -18,6 +18,7 @@ class DraggableView extends Component {
     this.state = {
       moveInitPosition: 0,
       position: new Animated.ValueXY(0, this.props.initialDrawerPos),
+      drawerPosition: new Animated.Value(0),
       topPosition: upPos,
       downPosition: downPos,
       currentState: true, // true = top, false = down
@@ -35,8 +36,8 @@ class DraggableView extends Component {
       },
       onPanResponderGrant: (evt, gestureState) => {
         this.setState({ moveInitPosition: this.state.position.__getValue() })
-        console.log(this.state.currentState === true ? this.state.objectHeight : 0)
-        this.state.position.y.setOffset(this.state.currentState ? -this.state.objectHeight : 0)
+        // console.log(this.state.currentState === true ? this.state.objectHeight : 0)
+        // this.state.position.y.setOffset(this.state.currentState ? -this.state.objectHeight : 0)
       },
       onPanResponderMove: Animated.event([
         null,
@@ -55,7 +56,7 @@ class DraggableView extends Component {
             useNativeDriver: 'false',
           }, // Back to zero
         ).start()
-        this.state.position.y.setOffset(0)
+        // this.state.position.y.setOffset(0)
       },
       // onPanResponderRelease: (evt, gestureState) => {
       //   this.setState({ moveInitPosition: 0 })
@@ -117,10 +118,17 @@ class DraggableView extends Component {
     const drawerView = this.props.renderDrawerView()
     const header = this.props.renderHeader()
 
+    // this.state.position.getTranslateTransform()
+
     return (
       <View style={styles.viewport}>
         <Animated.View
-          style={[this.state.position.getTranslateTransform(), styles.drawer]}
+          style={[
+            {
+              top: Animated.add(this.state.position, this.state.currentState ? 0 : SCREEN_HEIGHT),
+            },
+            styles.drawer,
+          ]}
           {...this._panGesture.panHandlers}
         >
           <View {...this._panGesture.panHandlers}>
