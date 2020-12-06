@@ -12,15 +12,10 @@ class DraggableView extends Component {
     const upPos = -1 * SCREEN_HEIGHT
     const downPos = 0.0 // screen height - thingy size
 
-    // const upPos = 0.0 * SCREEN_HEIGHT
-    // const downPos = -0.0 * SCREEN_HEIGHT // screen height - thingy size
-
     this.state = {
       position: new Animated.Value(0, this.props.initialDrawerPos),
-      drawerPosition: new Animated.Value(0),
       topPosition: upPos,
       downPosition: downPos,
-      prevState: true, // true = top, false = down
       currState: true, // true = top, false = down
       objectHeight: SCREEN_HEIGHT,
     }
@@ -58,19 +53,16 @@ class DraggableView extends Component {
           this.setState({ currState: true })
           console.log('goingUp')
           const dest = this.state.topPosition //-this.state.objectHeight
-          Animated.spring(
-            this.state.position, // Auto-multiplexed
-            {
-              toValue: dest,
-              useNativeDriver: 'false',
-            }, // Back to zero
-          ).start()
+          Animated.spring(this.state.position, {
+            toValue: dest,
+            useNativeDriver: 'false',
+          }).start()
         } else if (goingDown) {
           console.log('goingDown')
           this.setState({ currState: false })
           const dest = this.state.downPosition // this.state.objectHeight
           Animated.spring(
-            this.state.position, // Auto-multiplexed
+            this.state.position,
             {
               toValue: dest,
               useNativeDriver: 'false',
@@ -78,39 +70,30 @@ class DraggableView extends Component {
           ).start()
         } else if (!goingUp && !goingDown) {
           console.log('bounce')
+
           if (this.state.currentState == true) {
             // currently up
             console.log('bounceup')
-            this.position.setOffset(-this.state.objectHeight)
+            Animated.spring(this.state.position, {
+              toValue: this.state.topPosition,
+              useNativeDriver: 'false',
+            }).start()
           } else {
             console.log('bouncedown')
-            // this.position.setOffset(0)
-            // Animated.spring(
-            //   this.state.position,
-            //   {
-            //     toValue: 0,
-            //     useNativeDriver: 'false',
-            //   }, // Back to zero
-            // ).start()
+            Animated.spring(
+              this.state.position,
+              {
+                toValue: this.state.downPosition,
+                useNativeDriver: 'false',
+              }, // Back to zero
+            ).start()
           }
         }
 
         const destination = gestureState.dy > 0 ? this.state.downPosition : this.state.topPosition
         const destState = gestureState.dy > 0 ? false : true
         this.setState({ currentState: destState })
-        // Animated.spring(
-        //   this.state.position, // Auto-multiplexed
-        //   {
-        //     toValue: { x: 0, y: destination },
-        //     useNativeDriver: 'false',
-        //   }, // Back to zero
-        // ).start()
-        // this.state.position.setOffset(0)
       },
-      // onPanResponderRelease: (evt, gestureState) => {
-      //   this.setState({ moveInitPosition: 0 })
-      //   this.moveFinished(gestureState)
-      // },
     })
   }
 
@@ -118,8 +101,6 @@ class DraggableView extends Component {
     const containerView = this.props.renderContainerView()
     const drawerView = this.props.renderDrawerView()
     const header = this.props.renderHeader()
-
-    // this.state.position.getTranslateTransform()
 
     return (
       <View style={styles.viewport}>
