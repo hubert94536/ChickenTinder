@@ -66,19 +66,7 @@ class DraggableView extends Component {
               toValue: dest,
               useNativeDriver: 'false',
             }, // Back to zero
-          ).start(() => {
-            // this.state.position.y.setOffset(-this.state.objectHeight)
-            // this.state.position.y.setValue(0)
-            // Animated.spring(
-            //   this.state.position.y, // Auto-multiplexed
-            //   {
-            //     toValue: 0,
-            //     useNativeDriver: 'false',
-            //   }, // Back to zero
-            // ).start(() => {
-            //   // 
-            // })
-          })
+          ).start()
         } else if (goingDown) {
           console.log('goingDown')
           this.setState({ currState: false })
@@ -130,58 +118,6 @@ class DraggableView extends Component {
       // },
     })
   }
-  componentDidUpdate() {
-    // console.log(this.state.moveInitPosition)
-  }
-
-  bounce() {
-    console.log('FilterContainer.js - bounce!')
-  }
-
-  // open() {
-  //   this.startAnimation(this.state.position, this.state.downPos, -100)
-  //   this.props.onRelease && this.props.onRelease(true) // only add this line if you need to detect if the drawer is up or
-  // }
-
-  // close() {
-  //   this.startAnimation(this.state.position, this.state.upPos, 100)
-  //   this.props.onRelease && this.props.onRelease(true) // only add this line if you need to detect if the drawer is up or
-  // }
-
-  // startAnimation = (startPosition, endPosition, velocityY) => {
-  //   const position = new Animated.Value(startPosition)
-  //   position.removeAllListeners()
-
-  //   Animated.timing(position, {
-  //     toValue: endPosition,
-  //     tension: 30,
-  //     friction: 0,
-  //     velocity: velocityY,
-  //     useNativeDriver: 'false',
-  //   }).start()
-
-  //   position.addListener((position) => {
-  //     this.onUpdatePosition(position.value)
-  //   })
-  // }
-
-  // onUpdatePosition(position) {
-  //   position = position + 50
-  //   this.state.position.y.setValue(position)
-
-  //   if (position === this.state.initialPosition) {
-  //     this.props.onTopReached()
-  //   }
-  // }
-
-  // moveFinished(gestureState) {
-  //   const goingUp = gestureState.vy < 0
-  //   const destination = goingUp ? this.state.topPosition : this.state.downPosition
-  //   const fingerReleaseLocation = gestureState.dy + this.state.moveInitPosition
-
-  //   this.startAnimation(fingerReleaseLocation, destination, gestureState.vy)
-  //   this.props.onRelease(goingUp)
-  // }
 
   render() {
     const containerView = this.props.renderContainerView()
@@ -196,8 +132,8 @@ class DraggableView extends Component {
           style={[
             {
               translateY: this.state.position.y.interpolate({
-                inputRange: [-this.state.objectHeight, 0],
-                outputRange: [-this.state.objectHeight, 0],
+                inputRange: [-this.state.objectHeight * 1.1, 0],
+                outputRange: [-this.state.objectHeight * 1.1, 0],
                 extrapolate: 'clamp',
               }),
               perspective: 1000,
