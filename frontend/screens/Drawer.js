@@ -96,6 +96,8 @@ class Drawer extends Component {
                 extrapolate: 'clamp',
               }),
               perspective: 1000,
+              height: '83%',
+              // backgroundColor: 'blue',
             },
             styles.drawer,
           ]}
@@ -116,7 +118,6 @@ const styles = StyleSheet.create({
   drawer: {
     zIndex: 1,
     elevation: 1,
-    height: '100%',
     // display: 'none',
   },
   container: {
