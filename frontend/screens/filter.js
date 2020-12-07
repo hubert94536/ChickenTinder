@@ -15,7 +15,6 @@ import { BlurView } from '@react-native-community/blur'
 import Geolocation from 'react-native-geolocation-service'
 import PropTypes from 'prop-types'
 import Slider from '@react-native-community/slider'
-import SliderText from 'react-native-slider-text'
 import Alert from '../modals/alert.js'
 import ChooseFriends from '../modals/chooseFriends.js'
 import Socket from '../apis/socket.js'
@@ -34,9 +33,9 @@ import SwitchButton from 'switch-button-react-native'
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
 
-const BACKGROUND_COLOR = '#F15763'
-const BORDER_COLOR = 'white'
-const TEXT_COLOR = 'white'
+const BACKGROUND_COLOR = 'white'
+const BORDER_COLOR = '#F15763'
+const TEXT_COLOR = '#F15763'
 const ACCENT_COLOR = '#F15763'
 
 const tagsCuisine = [
@@ -360,7 +359,7 @@ export default class FilterSelector extends React.Component {
                 >
                   <Text
                     style={{
-                      color: 'white',
+                      color: TEXT_COLOR,
                       fontFamily: font,
                       fontSize: 12,
                       paddingLeft: 5,
@@ -394,9 +393,9 @@ export default class FilterSelector extends React.Component {
                 maximumValue={50}
                 value={5}
                 step={0.5}
-                minimumTrackTintColor={'white'}
-                maximumTrackTintColor={'white'}
-                thumbTintColor={'white'}
+                minimumTrackTintColor={TEXT_COLOR}
+                maximumTrackTintColor={TEXT_COLOR}
+                thumbTintColor={TEXT_COLOR}
                 onValueChange={(value) => this.setState({ distance: value })}
               />
             </View>
@@ -444,40 +443,13 @@ export default class FilterSelector extends React.Component {
                   onPress={() => this.setState({ chooseTime: true, asap: false })}
                   title={'Set Time'}
                 />
-                <TouchableHighlight
-                  underlayColor={'white'}
-                  onPress={() => this.setState({ chooseTime: true, asap: false })}
-                  style={[
-                    styles.subtext,
-                    {
-                      backgroundColor: this.state.asap ? hex : 'white',
-                      borderRadius: 20,
-                      borderWidth: 1,
-                      borderColor: 'white',
-                    },
-                  ]}
-                >
-                  <Text
-                    style={{
-                      color: this.state.asap ? 'white' : hex,
-                      fontFamily: font,
-                      fontSize: 15,
-                      paddingLeft: 7,
-                      paddingRight: 7,
-                      paddingTop: 3,
-                      paddingBottom: 3,
-                    }}
-                  >
-                    Set Time
-                  </Text>
-                </TouchableHighlight>
               </View>
             </View>
           )}
 
           <View style={styles.smallTitle}>
             <Text
-              style={[screenStyles.text, { fontSize: 28, color: 'white', textAlign: 'center' }]}
+              style={[screenStyles.text, { fontSize: 28, color: TEXT_COLOR, textAlign: 'center' }]}
             >
               Your Filters
             </Text>
@@ -595,7 +567,7 @@ const styles = StyleSheet.create({
   //  Fullscreen
   mainContainer: {
     flex: 1,
-    backgroundColor: hex,
+    backgroundColor: BACKGROUND_COLOR,
     justifyContent: 'space-between',
   },
   titleStyle: {
@@ -610,7 +582,7 @@ const styles = StyleSheet.create({
     marginTop: '2%',
   },
   titleSub: {
-    color: 'white',
+    color: TEXT_COLOR,
     alignSelf: 'center',
     margin: '1%',
     marginTop: '2%',
@@ -625,13 +597,13 @@ const styles = StyleSheet.create({
   },
   header: {
     textAlign: 'left',
-    color: 'white',
+    color: TEXT_COLOR,
     fontSize: 20,
     fontWeight: 'bold',
     margin: '1%',
   },
   subtext: {
-    color: 'white',
+    color: TEXT_COLOR,
     fontFamily: font,
     alignSelf: 'center',
     marginLeft: '4%',
@@ -639,23 +611,23 @@ const styles = StyleSheet.create({
   },
   touchable: {
     width: '50%',
-    borderColor: 'white',
+    borderColor: BORDER_COLOR,
     justifyContent: 'center',
     margin: '5%',
   },
   nextTitle: {
-    color: 'white',
+    color: TEXT_COLOR,
     textAlign: 'center',
     fontSize: 25,
     paddingTop: '2%',
     paddingBottom: '2%',
   },
   inputEnabled: {
-    backgroundColor: 'white',
+    backgroundColor: BACKGROUND_COLOR,
     borderColor: 'black',
   },
   inputDisabled: {
-    backgroundColor: 'white',
+    backgroundColor: BACKGROUND_COLOR,
   },
   buttonContainer: {
     flex: 1,

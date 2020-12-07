@@ -1,7 +1,6 @@
 import React from 'react'
 import {
   FlatList,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableHighlight,
@@ -16,7 +15,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import AsyncStorage from '@react-native-community/async-storage'
 import PropTypes from 'prop-types'
 
-import DraggableView from './filterContainer.js'
+import Drawer from './Drawer.js'
 import Alert from '../modals/alert.js'
 import GroupCard from '../cards/groupCard.js'
 import ChooseFriends from '../modals/chooseFriends.js'
@@ -218,7 +217,7 @@ export default class Group extends React.Component {
             </Text>
             <View style={styles.subheader}>
               <Text style={styles.headertext2}>Group PIN: </Text>
-              <Text style={styles.headertext3}>BADWOLF42</Text>
+              <Text style={styles.headertext3}>{this.state.code}</Text>
               <TouchableOpacity
                 style={{
                   flexDirection: 'column',
@@ -232,7 +231,7 @@ export default class Group extends React.Component {
             </View>
           </View>
         </View>
-        <DraggableView
+        <Drawer
           style={styles.drawer}
           initialDrawerPos={100}
           renderContainerView={() => (
@@ -412,32 +411,27 @@ export default class Group extends React.Component {
               />
             </View>
           )}
-          objectHeight={300}
+          objectHeight={400}
+          offset={120}
           renderDrawerView={() => (
             <View>
               <View>
-                <View style={{ width: windowWidth, height: 300 }}>
+                <View
+                  style={{
+                    width: windowWidth,
+                    height: 400,
+                    zIndex: 3,
+                    borderColor: '#F15763',
+                    borderWidth: 1,
+                  }}
+                >
                   <FilterSelector
                     host={this.state.host}
-                    isHost={this.state.host === this.state.username}
+                    isHost={this.state.members[this.state.host].username === this.state.username}
                     handleUpdate={(setFilters) => this.holdFilters(setFilters)}
                     members={memberRenderList}
                   />
                 </View>
-              </View>
-              <View style={styles.top}>
-                <View
-                  style={{
-                    alignSelf: 'center',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    backgroundColor: hex,
-                    height: 120,
-                    width: '100%',
-                    paddingBottom: 20,
-                  }}
-                ></View>
               </View>
               <View
                 style={{
@@ -452,18 +446,20 @@ export default class Group extends React.Component {
                     fontFamily: font,
                     marginRight: '3%',
                     height: 70,
-                    backgroundColor: hex,
+                    backgroundColor: 'white',
                     padding: 15,
                     marginTop: -45,
                     borderRadius: 15,
+                    borderColor: '#F15763',
+                    borderWidth: 1,
                     flexDirection: 'column',
                     justifyContent: 'flex-end',
-                    zIndex: 4,
+                    zIndex: 2,
                   }}
                 >
                   <Text
                     style={{
-                      color: 'white',
+                      color: '#F15763',
                       fontFamily: font,
                       fontSize: 11,
                     }}
@@ -489,6 +485,7 @@ Group.propTypes = {
 
 const styles = StyleSheet.create({
   main: {
+    marginTop: 35,
     flexDirection: 'column',
     flex: 1,
     backgroundColor: 'white',
