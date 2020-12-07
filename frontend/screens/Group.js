@@ -42,20 +42,25 @@ export default class Group extends React.Component {
     this._isMounted = false
     const members = this.props.navigation.state.params.members
     this.state = {
+      myUsername: myUsername,
+
+      // Group data
       members: members,
       host: this.props.navigation.state.params.host,
       hostName: members[this.props.navigation.state.params.host].username,
       needFilters: Object.keys(members).filter((user) => !user.filters).length,
-      start: false,
-      username: myUsername,
-      // show/hide the alerts
+
+      filters: {},
+      setFilters: null,
+      code: this.props.navigation.state.params.code,
+
+      // UI state
+      canStart: false,
+
+      // Modal visibility vars
       leaveAlert: false,
       endAlert: false,
-      swipe: true,
-      filters: {},
       chooseFriends: false,
-      setFilters: null,
-      code: null,
     }
     this.updateMemberList()
 
@@ -68,12 +73,12 @@ export default class Group extends React.Component {
     socket.getSocket().on('update', (res) => {
       console.log('group.js: Update')
       if (this._isMounted) {
-        console.log('socket "update": ' + res)
+        console.log('socket "update": ' + JSON.stringify(res))
         this.setState({ members: res.members, host: res.host, code: res.code })
         const count = this.countNeedFilters(res.members)
         this.setState({ needFilters: count })
         if (!count) {
-          this.setState({ start: true })
+          this.setState({ canStart: true })
         }
       }
     })
@@ -83,7 +88,7 @@ export default class Group extends React.Component {
         this.props.navigation.navigate('Round', {
           results: restaurants,
           host: this.state.host,
-          isHost: this.state.host === this.state.username,
+          isHost: this.state.host === this.state.myUsername,
         })
       } else {
         console.log('no restaurants found')
@@ -136,7 +141,7 @@ export default class Group extends React.Component {
       a.image = this.state.members[user].pic
       a.filters = this.state.members[user].filters
       a.host = this.state.host
-      a.isHost = this.state.host == this.state.username
+      a.isHost = this.state.host == this.state.myUsername
       a.key = user
       a.f = false
       memberRenderList.push(a)
@@ -160,7 +165,7 @@ export default class Group extends React.Component {
 
   // shows proper alert based on if user is host
   cancelAlert() {
-    this.state.host === this.state.username
+    this.state.host === this.state.myUsername
       ? this.setState({ endAlert: false })
       : this.setState({ leaveAlert: false })
   }
@@ -172,7 +177,6 @@ export default class Group extends React.Component {
 
   // sets the filters, goes back to groups and stops user from going back to filters
   submitFilters(setFilters) {
-    this.setState({ swipe: false })
     this.setState({ filters: setFilters })
   }
 
@@ -182,11 +186,15 @@ export default class Group extends React.Component {
   }
 
   componentDidMount() {
-    this._isMounted = true
+    console.log('Group - DidMount')
+    console.log(JSON.stringify(this.props.navigation.state.params))
+    this.setState({ _isMounted: true }, () => console.log(this._isMounted))
   }
 
   componentWillUnmount() {
-    this._isMounted = false
+    console.log('Group - WillUnmount')
+    this.setState({ _isMounted: false })
+    // Todo - potentially add leave group?
   }
 
   firstName(str) {
@@ -212,13 +220,13 @@ export default class Group extends React.Component {
             }}
           >
             <Text style={styles.groupTitle}>
-              {this.state.host === this.state.username
+              {this.state.host === this.state.myUsername
                 ? 'Your Group'
                 : `${this.firstName(this.state.members[this.state.host].name)}'s Group`}
             </Text>
             <View style={styles.subheader}>
               <Text style={styles.headertext2}>Group PIN: </Text>
-              <Text style={styles.headertext3}>{this.state.code}</Text>
+              <Text style={styles.headertext3}>{this.state.code + ' '}</Text>
               <TouchableOpacity
                 style={{
                   flexDirection: 'column',
@@ -226,6 +234,7 @@ export default class Group extends React.Component {
                   width: 15,
                   height: 15,
                 }}
+                // TODO: add copy to clipboard/share functionality
               >
                 <Ionicons name="copy-outline" style={styles.icon2} />
               </TouchableOpacity>
@@ -279,7 +288,11 @@ export default class Group extends React.Component {
                             padding: 0,
                             margin: 5,
                           }}
-                          onPress={() => this.setState({ chooseFriends: true })}
+                          onPress={() =>
+                            this.setState({ chooseFriends: true }, () =>
+                              console.log('group.js: chooseFriends = ' + this.state.chooseFriends),
+                            )
+                          }
                         >
                           <Text
                             style={{
@@ -326,32 +339,32 @@ export default class Group extends React.Component {
                 <Text style={styles.bottomText}>
                   When everyone has submitted filters, the round will begin!
                 </Text>
-                {this.state.host === this.state.username && (
+                {this.state.host === this.state.myUsername && (
                   <TouchableHighlight
                     underlayColor="#F15763"
                     activeOpacity={1}
-                    onHideUnderlay={() => this.setState({ start: false })}
-                    onShowUnderlay={() => this.setState({ start: true })}
+                    onHideUnderlay={() => this.setState({ canStart: false })}
+                    onShowUnderlay={() => this.setState({ canStart: true })}
                     onPress={() => this.start()}
                     style={[
                       screenStyles.bigButton,
                       styles.bigButton,
-                      this.state.start ? { opacity: 0.75 } : { opacity: 1 },
+                      this.state.canStart ? { opacity: 0.75 } : { opacity: 1 },
                     ]}
                   >
                     <Text style={styles.buttonText}>Start Round</Text>
                   </TouchableHighlight>
                 )}
-                {this.state.host !== this.state.username && (
+                {this.state.host !== this.state.myUsername && (
                   <TouchableHighlight
                     style={[
                       screenStyles.bigButton,
                       styles.bigButton,
-                      this.state.start ? { opacity: 0.75 } : { opacity: 1 },
+                      this.state.canStart ? { opacity: 0.75 } : { opacity: 1 },
                     ]}
                   >
                     <Text style={styles.buttonText}>
-                      {this.state.start ? 'Ready!' : 'Waiting...'}
+                      {this.state.canStart ? 'Ready!' : 'Waiting...'}
                     </Text>
                   </TouchableHighlight>
                 )}
@@ -361,7 +374,7 @@ export default class Group extends React.Component {
                   style={styles.leave}
                   onPress={() => {
                     console.log(this.state.members)
-                    this.state.host === this.state.username
+                    this.state.host === this.state.myUsername
                       ? this.setState({ endAlert: true })
                       : this.setState({ leaveAlert: true })
                   }}
@@ -373,7 +386,7 @@ export default class Group extends React.Component {
                       this.state.leaveGroup ? { color: hex } : { color: '#6A6A6A' },
                     ]}
                   >
-                    {this.state.host === this.state.username ? 'Cancel Group' : 'Leave Group'}
+                    {this.state.host === this.state.myUsername ? 'Cancel Group' : 'Leave Group'}
                   </Text>
                 </TouchableHighlight>
               </View>
@@ -428,7 +441,7 @@ export default class Group extends React.Component {
                 >
                   <FilterSelector
                     host={this.state.host}
-                    isHost={this.state.members[this.state.host].username === this.state.username}
+                    isHost={this.state.members[this.state.host].username === this.state.myUsername}
                     handleUpdate={(setFilters) => this.holdFilters(setFilters)}
                     members={memberRenderList}
                   />
@@ -465,7 +478,7 @@ export default class Group extends React.Component {
                       fontSize: 11,
                     }}
                   >
-                    {this.state.username === this.state.host
+                    {this.state.myUsername === this.state.host
                       ? 'Pull down for host menu'
                       : 'Pull down to set filters'}
                   </Text>
@@ -617,5 +630,5 @@ const styles = StyleSheet.create({
     width: '100%',
     zIndex: 20,
     elevation: 20,
-  }
+  },
 })

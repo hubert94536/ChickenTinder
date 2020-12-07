@@ -3,7 +3,7 @@ import { Text, View } from 'react-native'
 import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
 import { createAppContainer } from 'react-navigation'
 import firebase from 'firebase'
-import Group from './frontend/screens/group.js'
+import Group from './frontend/screens/Group.js'
 import Home from './frontend/screens/Home.js'
 // import Invite from './frontend/modals/invite.js'
 import Login from './frontend/screens/login.js'
