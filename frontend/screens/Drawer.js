@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
 
-class DraggableView extends Component {
+class Drawer extends Component {
   constructor(props) {
     super(props)
 
@@ -39,12 +39,15 @@ class DraggableView extends Component {
           this.state.position.setOffset(0)
         }
       },
-      onPanResponderMove: Animated.event([
-        null,
-        {
-          dy: this.state.position,
-        },
-      ]),
+      onPanResponderMove: Animated.event(
+        [
+          null,
+          {
+            dy: this.state.position,
+          },
+        ],
+        { useNativeDriver: false },
+      ),
       onPanResponderRelease: (evt, gestureState) => {
         this.state.position.flattenOffset()
         const goingUp = gestureState.dy < 0 && gestureState.vy < 0
@@ -129,7 +132,7 @@ const styles = StyleSheet.create({
   },
 })
 
-DraggableView.propTypes = {
+Drawer.propTypes = {
   initialDrawerPos: PropTypes.number,
   finalDrawerPos: PropTypes.number,
   objectHeight: PropTypes.number,
@@ -141,7 +144,7 @@ DraggableView.propTypes = {
   renderHeader: PropTypes.func,
 }
 
-DraggableView.defaultProps = {
+Drawer.defaultProps = {
   initialDrawerPos: 0,
   finalDrawerPos: 0,
   objectHeight: 600,
@@ -153,4 +156,4 @@ DraggableView.defaultProps = {
   renderHeader: () => {},
 }
 
-export default DraggableView
+export default Drawer
