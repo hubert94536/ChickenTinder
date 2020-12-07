@@ -31,11 +31,8 @@ class Drawer extends Component {
       },
       onPanResponderGrant: (evt, gestureState) => {
         if (this.state.currState == true) {
-          // is currently top - hidden
           this.state.position.setOffset(-this.state.objectHeight)
         } else {
-          // is currently bottom - shown
-          // console.log('filterContainer.js: currbot')
           this.state.position.setOffset(0)
         }
       },
