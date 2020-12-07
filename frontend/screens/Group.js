@@ -66,6 +66,7 @@ export default class Group extends React.Component {
 
     // listens for group updates
     socket.getSocket().on('update', (res) => {
+      console.log('group.js: Update')
       if (this._isMounted) {
         console.log('socket "update": ' + res)
         this.setState({ members: res.members, host: res.host, code: res.code })
