@@ -24,7 +24,7 @@ class Drawer extends Component {
 
     this._panGesture = PanResponder.create({
       onMoveShouldSetPanResponder: (evt, gestureState) => {
-        // console.log('filterContainer.js: tryGesture')
+        console.log('filterContainer.js: tryGesture' + gestureState.moveY)
         return (
           Math.abs(gestureState.dy) > Math.abs(gestureState.dx) && Math.abs(gestureState.dy) > 1
         )
@@ -84,27 +84,29 @@ class Drawer extends Component {
           styles.viewport,
           {
             top: this.props.offset,
+            height: '100%',
           },
         ]}
       >
-        <Animated.View
-          style={[
-            {
-              translateY: this.state.position.interpolate({
-                inputRange: [-this.state.objectHeight * 1.1, 0],
-                outputRange: [-this.state.objectHeight * 1.1, 0],
-                extrapolate: 'clamp',
-              }),
-              perspective: 1000,
-              height: '83%',
-              // backgroundColor: 'blue',
-            },
-            styles.drawer,
-          ]}
-          {...this._panGesture.panHandlers}
-        >
-          <View {...this._panGesture.panHandlers}>{drawerView}</View>
-        </Animated.View>
+        <View style={{ height: this.props.objectHeight + 40 }} {...this._panGesture.panHandlers}>
+          <Animated.View
+            style={[
+              {
+                translateY: this.state.position.interpolate({
+                  inputRange: [-this.state.objectHeight * 1.1, 0],
+                  outputRange: [-this.state.objectHeight * 1.1, 0],
+                  extrapolate: 'clamp',
+                }),
+                perspective: 1000,
+                height: '100%',
+              },
+              styles.drawer,
+            ]}
+            {...this._panGesture.panHandlers}
+          >
+            {drawerView}
+          </Animated.View>
+        </View>
         <View style={styles.container}>{containerView}</View>
       </View>
     )
