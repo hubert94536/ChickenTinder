@@ -46,6 +46,20 @@ const loginWithFacebook = async () => {
       return Firebase.auth().signInWithCredential(credential)
     })
     .then((currentUser) => {
+      // Get info from database if not new user
+      if (!currentUser.additionalUserInfo.isNewUser) {
+        return accountsApi.getUser(currentUser.additionalUserInfo.profile.id).then((res) => {
+          AsyncStorage.multiSet([
+            [USERNAME, res.username],
+            [PHOTO, res.photo],
+            [NAME, res.name],
+            [EMAIL, res.email],
+            [ID, res.id],
+            [PHONE, res.phone_number],
+          ])
+          return 'Home'
+        })
+      }
       // Set user's info locally
       AsyncStorage.multiSet([
         [UID, Firebase.auth().currentUser.uid],
@@ -53,17 +67,6 @@ const loginWithFacebook = async () => {
         [ID, currentUser.additionalUserInfo.profile.id],
         [EMAIL, currentUser.additionalUserInfo.profile.email],
       ])
-
-      // Get username from database if not new user
-      if (!currentUser.additionalUserInfo.isNewUser) {
-        return accountsApi.getUser(currentUser.additionalUserInfo.profile.id).then((res) => {
-          AsyncStorage.multiSet([
-            [USERNAME, res.username],
-            [PHOTO, res.photo],
-          ])
-          return 'Home'
-        })
-      }
       return 'CreateAccount'
     })
     .catch((error) => {

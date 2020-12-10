@@ -33,8 +33,9 @@ export default class Friends extends React.Component {
     friendsApi
       .getFriends()
       .then((res) => {
+        console.log('friends.js res' + res.friendList[0].name)
         var pushFriends = []
-        var friendOrRequest = this.state.isFriends ? 'Accepted' : 'Pending Request'
+        var friendOrRequest = this.state.isFriends ? 'friends' : 'pending'
         for (var friend in res.friendList) {
           if (res.friendList[friend].status === friendOrRequest) {
             pushFriends.push(res.friendList[friend])
