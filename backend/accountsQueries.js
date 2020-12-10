@@ -1,4 +1,4 @@
-const { Accounts } = require('./models.js')
+const { Accounts, Friends } = require('./models.js')
 const { Op } = require('sequelize')
 
 // Get all accounts
@@ -85,6 +85,11 @@ const updateAccount = async (req, res) => {
 const deleteAccount = async (req, res) => {
   try {
     const { id } = req.params
+    await Friends.destroy({
+      where: {
+        main_id: id,
+      },
+    })
     const deleted = await Accounts.destroy({
       where: { id: id },
     })
