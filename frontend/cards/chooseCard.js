@@ -43,19 +43,19 @@ export default class ChooseCard extends React.Component {
           <Text style={{ fontFamily: font, fontWeight: 'bold', fontSize: 15 }}>
             {this.props.name}
           </Text>
-          <Text style={{ fontFamily: font, color: hex, }}>@{this.props.username}</Text>
+          <Text style={{ fontFamily: font, color: hex }}>@{this.props.username}</Text>
         </View>
         {this.state.added && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-            <Text style={[imgStyles.text, {color: '#6A6A6A', marginRight: '8%',},]}>Added!</Text>
+            <Text style={[imgStyles.text, { color: '#6A6A6A', marginRight: '8%' }]}>Added!</Text>
           </View>
         )}
         {!this.state.added && (
           <TouchableHighlight>
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-              <Text style={[imgStyles.text, {marginTop: '10%'},]}>Add</Text>
+              <Text style={[imgStyles.text, { marginTop: '10%' }]}>Add</Text>
               <AntDesign
-                style={[imgStyles.icon, { margin: '10%', marginTop: '20%', fontSize: 25},]}
+                style={[imgStyles.icon, { margin: '10%', marginTop: '20%', fontSize: 25 }]}
                 name="pluscircleo"
                 onPress={() => {
                   this.setState({ added: true })
