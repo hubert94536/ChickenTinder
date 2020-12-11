@@ -51,8 +51,8 @@ export default class Group extends React.Component {
       members: members,
 
       host: this.props.navigation.state.params.host,
-      // hostName: members[this.props.navigation.state.params.host].username,
-      hostName: "NOT YOU",
+      hostName: members[this.props.navigation.state.params.host].username,
+      // hostName: "NOT YOU",
       needFilters: Object.keys(members).filter((user) => !user.filters).length,
 
       filters: {},
