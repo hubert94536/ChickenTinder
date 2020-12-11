@@ -113,6 +113,10 @@ Alert.propTypes = {
   visible: PropTypes.bool,
 }
 
+Alert.defaultProps = {
+  visible: true,
+}
+
 const styles = StyleSheet.create({
   title: {
     fontFamily: font,
