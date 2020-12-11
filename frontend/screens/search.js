@@ -60,7 +60,7 @@ export default class Search extends Component {
           .then(res => {
             var resultUsers = []
             for (var user in res.userList) {
-              var status = 'Add'
+              var status = 'add'
               if (res.userList[user].id in this.state.friends) {
                 status = this.state.friends[res.userList[user].id ]
               }

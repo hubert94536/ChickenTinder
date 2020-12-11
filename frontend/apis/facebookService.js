@@ -11,6 +11,7 @@ import {
   UID,
   EMAIL,
   PHOTO,
+  PHONE,
 } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import FBSDK from 'react-native-fbsdk'
@@ -55,7 +56,7 @@ const loginWithFacebook = async () => {
             [NAME, res.name],
             [EMAIL, res.email],
             [ID, res.id],
-            [PHONE, res.phone_number],
+            [PHONE, ''],
           ])
           return 'Home'
         })
@@ -111,7 +112,7 @@ const deleteUser = async () => {
           .currentUser.reauthenticateWithCredential(credential)
           .then(() => {
             Firebase.auth().currentUser.delete()
-            AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO])
+            AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO, PHONE])
           })
       })
     })
