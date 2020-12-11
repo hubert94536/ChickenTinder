@@ -2,8 +2,6 @@ const { Accounts } = require('./models.js')
 const AWS = require('aws-sdk')
 const multer = require('multer')
 const multerS3 = require('multer-s3')
-const { Sequelize } = require('sequelize')
-const { Accounts } = require('./models.js')
 
 const s3 = new AWS.S3({
   apiVersion: '2006-03-01',

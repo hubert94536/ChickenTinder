@@ -10,7 +10,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
-import { NAME, PHOTO, USERNAME, DEFPHOTO } from 'react-native-dotenv'
+import { NAME, PHOTO, USERNAME, DEFPHOTO, EMAIL } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -32,11 +32,72 @@ const height = Dimensions.get('window').height
 var img = null
 var name = ''
 var username = ''
+var email = ''
 
 //  gets user info
 AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 AsyncStorage.getItem(PHOTO).then((res) => (img = res))
 AsyncStorage.getItem(NAME).then((res) => (name = res))
+AsyncStorage.getItem(EMAIL).then((res) => (email = res))
+//=========================Testing Code=========================================
+import { ID } from 'react-native-dotenv'
+import friendsApi from '../apis/friendsApi.js'
+
+var myId = ''
+AsyncStorage.getItem(ID).then((res) => {
+  myId = res
+})
+
+const dummyFriends = () => {
+        // uncomment if testing friends/requests
+      //this.getNotifs();
+      // accountsApi.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
+      // accountsApi.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
+      // accountsApi.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
+      // accountsApi.createFBUser('Helen', 5, 'helenthemelon', 'helenw@gmail.com', 'sjdkf'),
+      // accountsApi.createFBUser('Kevin', 6, 'kevint', 'kevintang@gmail.com', 'sdfddf'),
+      // accountsApi.createFBUser('David', 7, 'das', 'das@gmail.com', 'fhgdgffgad'),
+      // accountsApi.createFBUser('Jeff', 8, 'jeffwinger', 'jeffw@gmail.com', 'sdfaadddf'),
+      // accountsApi.createFBUser('Annie', 9, 'anniee', 'anniee@gmail.com', 'sdfgfsdddf'),
+      // accountsApi.createFBUser('Britta', 10, 'theworst', 'brittap@gmail.com', 'sdfhgjddf'),
+      
+      // accountsApi.createFBUser('Ice Cream', 30, 'icecream', 'icecream@gmail.com', 'hjgkjgkjg')
+      // accountsApi.createFBUser('Sundae', 31, 'sundae', 'sundae@gmail.com', 'sfhkslfs')
+      // accountsApi.createFBUser('Float', 32, 'float', 'float@gmail.com', 'ksflsfsf')
+
+      // console.log("My id:" + myId),
+      // friendsApi.createFriendshipTest(1288355614841173, myId)
+      // .then((res) => {
+      //   console.log('this is the response: ' + res)
+      // })
+      // .catch((err)=>{
+      //   console.log(err)
+      // }),
+
+      friendsApi.createFriendshipTest(myId, 31)
+      
+      friendsApi.createFriendshipTest(32, myId)
+      
+
+      // friendsApi.createFriendshipTest(3, myId),
+      // friendsApi.createFriendshipTest(4, myId),
+      // friendsApi.createFriendshipTest(5, myId),
+      // friendsApi.createFriendshipTest(6, myId),
+      // friendsApi.createFriendshipTest(7, myId),
+      // friendsApi.createFriendshipTest(8, myId),
+      // friendsApi.createFriendshipTest(9, myId),
+      // friendsApi.createFriendshipTest(10, myId),
+      // friendsApi.acceptFriendRequest(1288355614841173)
+      // friendsApi.acceptFriendRequest(3)
+      // friendsApi.acceptFriendRequest(4)
+      // friendsApi.acceptFriendRequest(5)
+      // friendsApi.acceptFriendRequest(6)
+      // friendsApi.acceptFriendRequest(7)
+      // friendsApi.acceptFriendRequest(8)
+      // friendsApi.acceptFriendRequest(9)
+      // friendsApi.acceptFriendRequest(10)
+}
+//==============================================================================
 
 export default class UserProfileView extends Component {
   constructor(props) {
@@ -64,20 +125,12 @@ export default class UserProfileView extends Component {
       numFriends: 0,
       defImg: '',
     }
-  }
-
-  componentDidMount() {
-    var defImgUrl = ''
     AsyncStorage.getItem(USERNAME).then((res) => this.setState({ username: res }))
-    AsyncStorage.getItem(PHOTO).then((res) => this.setState({ image: res }))
-    AsyncStorage.getItem(PHOTO).then((res) => this.setState({ oldImage: res }))
+    AsyncStorage.getItem(PHOTO).then((res) => this.setState({ image: res, oldImage: res }))
     AsyncStorage.getItem(DEFPHOTO).then((res) =>
       this.setState({ defImg: defImages[parseInt(res)] }),
     )
-    AsyncStorage.getItem(DEFPHOTO).then((res) => console.log(res))
     AsyncStorage.getItem(NAME).then((res) => this.setState({ name: res, nameValue: res }))
-    console.log('default')
-    // console.log(this.state.defImgInd)
   }
 
   // getting current user's info
@@ -88,6 +141,7 @@ export default class UserProfileView extends Component {
         .updateName(name)
         .then(() => {
           // update name locally
+          console.log(name)
           AsyncStorage.setItem(NAME, name)
           this.setState({ name: this.state.nameValue })
           Keyboard.dismiss()
@@ -345,7 +399,8 @@ export default class UserProfileView extends Component {
                 >
                   Settings
                 </Text>
-                <TouchableHighlight
+                {/* old log out button */}
+                {/* <TouchableHighlight
                   underlayColor={hex}
                   onShowUnderlay={() => this.setState({ logout: true })}
                   onHideUnderlay={() => this.setState({ logout: false })}
@@ -377,7 +432,7 @@ export default class UserProfileView extends Component {
                     press={() => this.handleLogout()}
                     cancel={() => this.cancelLogout()}
                   />
-                )}
+                )} */}
                 <AntDesign
                   name="closecircleo"
                   style={[screenStyles.text, { margin: '5%', fontSize: 25 }]}
@@ -401,14 +456,20 @@ export default class UserProfileView extends Component {
                       screenStyles.text,
                       screenStyles.input,
                       {
-                        color: '#7d7d7d',
-                        fontSize: 15,
+                        color: '#B2B2B2',
+                        fontSize: 17,
                         alignSelf: 'stretch',
-                        borderBottomWidth: 1,
-                        borderColor: '#7d7d7d',
+                        backgroundColor: '#F2F2F2',
+                        borderWidth: 1,
+                        borderColor: '#E0E0E0',
+                        borderRadius: 5,
+                        paddingHorizontal: 5,
+                        paddingVertical: 2,
+                        marginTop: '3%',
                       },
                     ]}
-                    value={'email@urMom.com'}
+                    editable={false}
+                    value={email}
                     onChangeText={(text) => this.setState({ nameValue: text })}
                   />
                 </View>
@@ -498,27 +559,39 @@ export default class UserProfileView extends Component {
                       backgroundColor: hex,
                       borderColor: hex,
                       marginTop: '7%',
-                      width: '50%',
+                      width: '40%',
                     },
                   ]}
-                  // dummy function for now, replace with function that updates email
                   onPress={() => {
                     return true
                   }}
                   underlayColor="white"
-                  onShowUnderlay={() => this.setState({ changeName: true })}
-                  onHideUnderlay={() => this.setState({ changeName: false })}
+                  onShowUnderlay={() => this.setState({ logout: true })}
+                  onHideUnderlay={() => this.setState({ logout: false })}
+                  onPress={() => this.setState({ logoutAlert: true })}
                 >
                   <Text
                     style={[
                       screenStyles.smallButtonText,
                       { paddingTop: '5%', paddingBottom: '5%', fontSize: 19 },
-                      this.state.changeName ? { color: hex } : { color: 'white' },
+                      this.state.logout ? { color: hex } : { color: 'white' },
                     ]}
                   >
-                    Save Changes
+                    Logout
                   </Text>
                 </TouchableHighlight>
+                {this.state.logoutAlert && (
+                  <Alert
+                    title="Log out"
+                    body="Are you sure you want to log out?"
+                    buttonAff="Logout"
+                    buttonNeg="Go back"
+                    height="25%"
+                    twoButton
+                    press={() => this.handleLogout()}
+                    cancel={() => this.cancelLogout()}
+                  />
+                )}
               </View>
             </View>
           </Modal>
@@ -610,6 +683,10 @@ export default class UserProfileView extends Component {
                       borderColor: '#7d7d7d',
                     },
                   ]}
+                  underlineColorAndroid="transparent"
+                  spellCheck={false}
+                  autoCorrect={false}
+                  keyboardType="visible-password"
                   value={this.state.nameValue}
                   onChangeText={(text) => this.setState({ nameValue: text })}
                   // onSubmitEditing={() => this.makeChanges()}
@@ -628,6 +705,10 @@ export default class UserProfileView extends Component {
                       borderColor: '#7d7d7d',
                     },
                   ]}
+                  underlineColorAndroid="transparent"
+                  spellCheck={false}
+                  autoCorrect={false}
+                  keyboardType="visible-password"
                   value={this.state.usernameValue}
                   onChangeText={(text) => this.setState({ usernameValue: text })}
                   // onSubmitEditing={() => this.makeChanges()}
