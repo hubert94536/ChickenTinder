@@ -399,7 +399,8 @@ export default class UserProfileView extends Component {
                 >
                   Settings
                 </Text>
-                <TouchableHighlight
+                {/* old log out button */}
+                {/* <TouchableHighlight
                   underlayColor={hex}
                   onShowUnderlay={() => this.setState({ logout: true })}
                   onHideUnderlay={() => this.setState({ logout: false })}
@@ -431,7 +432,7 @@ export default class UserProfileView extends Component {
                     press={() => this.handleLogout()}
                     cancel={() => this.cancelLogout()}
                   />
-                )}
+                )} */}
                 <AntDesign
                   name="closecircleo"
                   style={[screenStyles.text, { margin: '5%', fontSize: 25 }]}
@@ -455,13 +456,19 @@ export default class UserProfileView extends Component {
                       screenStyles.text,
                       screenStyles.input,
                       {
-                        color: '#7d7d7d',
-                        fontSize: 15,
+                        color: '#B2B2B2',
+                        fontSize: 17,
                         alignSelf: 'stretch',
-                        borderBottomWidth: 1,
-                        borderColor: '#7d7d7d',
+                        backgroundColor: '#F2F2F2',
+                        borderWidth: 1,
+                        borderColor: '#E0E0E0',
+                        borderRadius: 5,
+                        paddingHorizontal: 5,
+                        paddingVertical: 2,
+                        marginTop: '3%',
                       },
                     ]}
+                    editable={false}
                     value={email}
                     onChangeText={(text) => this.setState({ nameValue: text })}
                   />
@@ -552,27 +559,39 @@ export default class UserProfileView extends Component {
                       backgroundColor: hex,
                       borderColor: hex,
                       marginTop: '7%',
-                      width: '50%',
+                      width: '40%',
                     },
                   ]}
-                  // dummy function for now, replace with function that updates email
                   onPress={() => {
                     return true
                   }}
                   underlayColor="white"
-                  onShowUnderlay={() => this.setState({ changeName: true })}
-                  onHideUnderlay={() => this.setState({ changeName: false })}
+                  onShowUnderlay={() => this.setState({ logout: true })}
+                  onHideUnderlay={() => this.setState({ logout: false })}
+                  onPress={() => this.setState({ logoutAlert: true })}
                 >
                   <Text
                     style={[
                       screenStyles.smallButtonText,
                       { paddingTop: '5%', paddingBottom: '5%', fontSize: 19 },
-                      this.state.changeName ? { color: hex } : { color: 'white' },
+                      this.state.logout ? { color: hex } : { color: 'white' },
                     ]}
                   >
-                    Save Changes
+                    Logout
                   </Text>
                 </TouchableHighlight>
+                {this.state.logoutAlert && (
+                  <Alert
+                    title="Log out"
+                    body="Are you sure you want to log out?"
+                    buttonAff="Logout"
+                    buttonNeg="Go back"
+                    height="25%"
+                    twoButton
+                    press={() => this.handleLogout()}
+                    cancel={() => this.cancelLogout()}
+                  />
+                )}
               </View>
             </View>
           </Modal>
