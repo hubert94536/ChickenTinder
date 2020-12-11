@@ -244,22 +244,28 @@ export default class FilterSelector extends React.Component {
     filters.price = this.state.selectedPrice.map((item) => item.length).toString()
     // puts the cuisine and restrictions into one array
     const selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
-    filters.categories = this.categorize(selections)
+    filters.categories = this.categorize(selections).toString()
     filters.radius = this.state.distance * 1600
+    filters.majority = this.state.majority
+    filters.groupSize = this.props.members.length
+    filters.limit = this.state.selectedSize[0]
     //  making sure we have a valid location
-    if (this.state.useLocation) {
+
+    
+    if (this.props.isHost && this.state.location === null && this.state.useLocation === false) {
+      this.setState({ locationAlert: true })
+    } else if (this.state.useLocation) {
       filters.latitude = this.state.lat
       filters.longitude = this.state.long
-      Socket.submitFilters(this.props.host, filters)
+      // Socket.submitFilters(this.props.host, filters)
+      console.log('filter.js:' + JSON.stringify(filters))
+      this.handlePress(filters) else {
+      filters.location = this.state.location
+      // Socket.submitFilters(this.props.host, filters)
       this.handlePress(filters)
+    }
     } else {
-      if (this.props.isHost && this.state.location === null && this.state.useLocation === false) {
-        this.setState({ locationAlert: true })
-      } else {
-        filters.location = this.state.location
-        Socket.submitFilters(this.props.host, filters)
-        this.handlePress(filters)
-      }
+
       // else if (true) {
       // this.setState({formatAlert: true});
       // console.log('format problems');

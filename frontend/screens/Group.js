@@ -87,11 +87,13 @@ export default class Group extends React.Component {
     })
 
     socket.getSocket().on('start', (restaurants) => {
+      // console.log('group.js: ' + JSON.stringify(restaurants))
       if (restaurants.length > 0) {
         this.props.navigation.navigate('Round', {
           results: restaurants,
           host: this.state.host,
-          isHost: this.state.host === this.state.myUsername,
+          isHost: this.state.hostName === this.state.myUsername,
+          code: this.state.code,
         })
       } else {
         console.log('no restaurants found')
