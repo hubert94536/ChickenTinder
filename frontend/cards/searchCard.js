@@ -2,7 +2,6 @@ import React from 'react'
 import { Image, Text, View, TouchableHighlight } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
-import Alert from '../modals/alert.js'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -27,7 +26,7 @@ export default class SearchCard extends React.Component {
     friendsApi
       .acceptFriendRequest(this.props.id)
       .then(() => {
-        this.setState({ requested: 'Accepted' })
+        this.setState({ requested: 'friends' })
       })
       .catch(() => this.props.showError())
   }
@@ -36,7 +35,7 @@ export default class SearchCard extends React.Component {
     friendsApi
       .createFriendship(this.props.id)
       .then(() => {
-        this.setState({ requested: 'Requested' })
+        this.setState({ requested: 'requested' })
       })
       .catch(() => this.props.showError())
   }
@@ -45,7 +44,7 @@ export default class SearchCard extends React.Component {
     friendsApi
       .removeFriendship(this.props.id)
       .then(() => {
-        this.setState({ requested: 'Add' })
+        this.setState({ requested: 'add' })
       })
       .catch(() => this.props.showError())
   }
@@ -82,7 +81,7 @@ export default class SearchCard extends React.Component {
           <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
           <Text style={{ fontFamily: font, color: hex }}>{'@' + this.props.username}</Text>
         </View>
-        {this.state.requested === 'Requested' && this.state.renderOption && (
+        {this.state.requested === 'requested' && this.state.renderOption && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Text style={[imgStyles.text, { color: '#777777' }]}>Request Sent</Text>
             <Icon
@@ -91,7 +90,7 @@ export default class SearchCard extends React.Component {
             />
           </View>
         )}
-        {this.state.requested === 'Add' && this.state.renderOption && (
+        {this.state.requested === 'add' && this.state.renderOption && (
           <TouchableHighlight underlayColor="white" onPress={() => this.addFriend()}>
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
               <Text style={[imgStyles.text, { color: 'black' }]}>Add Friend</Text>
@@ -102,7 +101,7 @@ export default class SearchCard extends React.Component {
             </View>
           </TouchableHighlight>
         )}
-        {this.state.requested === 'Accepted' && this.state.renderOption && (
+        {this.state.requested === 'friends' && this.state.renderOption && (
           <TouchableHighlight
             underlayColor="white"
             onPress={() => {
@@ -116,7 +115,7 @@ export default class SearchCard extends React.Component {
             </View>
           </TouchableHighlight>
         )}
-        {this.state.requested === 'Pending Request' && this.state.renderOption && (
+        {this.state.requested === 'pending' && this.state.renderOption && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Text style={[imgStyles.text, { color: 'black' }]}>Pending Request</Text>
             <Icon
