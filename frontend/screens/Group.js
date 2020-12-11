@@ -139,9 +139,8 @@ export default class Group extends React.Component {
 
   // pings server to fetch restaurants, start session
   start() {
+    // this.filterRef.current.setState({ locationAlert: true })
     this.filterRef.current.startSession()
-    console.log('Group.js setfilters: ' + JSON.stringify(this.state.setFilters))
-    console.log('Group.js members: ' + JSON.stringify(this.state.members))
   }
 
   // update user cards in group

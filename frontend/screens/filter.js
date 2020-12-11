@@ -92,7 +92,7 @@ export default class FilterSelector extends React.Component {
       distance: 5,
       zipcode: '',
       location: null,
-      useLocation: false,
+      useCurrentLocation: false,
       hour: date.getUTCHours(),
       minute: date.getUTCMinutes(),
       asap: true,
@@ -251,9 +251,9 @@ export default class FilterSelector extends React.Component {
     //  making sure we have a valid location
 
 
-    if (this.state.location === null && this.state.useLocation === false) {
+    if (this.state.location === null && this.state.useCurrentLocation === false) {
       this.setState({ locationAlert: true })
-    } else if (this.state.useLocation) {
+    } else if (this.state.useCurrentLocation) {
       filters.latitude = this.state.lat
       filters.longitude = this.state.long
       console.log('filter.js:' + JSON.stringify(filters))
@@ -269,7 +269,13 @@ export default class FilterSelector extends React.Component {
   }
 
   startSession() {
-    this.evaluateFilters()
+    if (this.state.useCurrentLocation === false && this.state.location === null) {
+      this.setState({ locationAlert: true })
+      
+      console.log('filter.js startSession')
+    } else if (this.state.majority && this.state.distance) {
+      this.evaluateFilters()
+    }
   }
 
   submitUserFilters() {
@@ -313,6 +319,7 @@ export default class FilterSelector extends React.Component {
             </View>
           </View>
         )}
+        {!this.props.isHost && (
         <View style={
           styles.titleContainer,
           {
@@ -330,7 +337,7 @@ export default class FilterSelector extends React.Component {
             Your Filters
               </Text>
         </View>
-
+        )}
         <Swiper
           loop={false}
           showsPagination={this.props.isHost}
@@ -359,7 +366,7 @@ export default class FilterSelector extends React.Component {
                     } else if (event[0] === 'All') {
                       this.setState({ majority: this.props.members.length })
                     } else {
-                      this.setState({ majority: parseInt(event) })
+                      this.setState({ majority: parseInt(event[0]) })
                       console.log(this.state.majority)
                     }
                     this.setState({ selectedMajority: event })
@@ -424,10 +431,10 @@ export default class FilterSelector extends React.Component {
                     thumbColor={'white'}
                     trackColor={{ true: '#eba2a8' }}
                     style={{ marginTop: '1%', marginLeft: '3%' }}
-                    value={this.state.useLocation}
+                    value={this.state.useCurrentLocation}
                     onValueChange={(val) => {
                       this.setState({
-                        useLocation: val,
+                        useCurrentLocation: val,
                       })
                     }}
                   />
@@ -527,9 +534,7 @@ export default class FilterSelector extends React.Component {
           this.state.chooseLocation ||
           this.state.chooseMajority ||
           this.state.chooseSize ||
-          this.state.chooseTime ||
-          this.state.errorAlert ||
-          this.state.locationAlert) && (
+          this.state.chooseTime) && (
             <BlurView
               blurType="dark"
               blurAmount={10}
@@ -545,6 +550,7 @@ export default class FilterSelector extends React.Component {
             height="23%"
             press={() => this.setState({ locationAlert: false })}
             cancel={() => this.setState({ locationAlert: false })}
+            visible={this.state.locationAlert}
           />
         )}
         {this.state.errorAlert && (
@@ -554,6 +560,7 @@ export default class FilterSelector extends React.Component {
             height="20%"
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
+            visible={this.state.errorAlert}
           />
         )}
 
