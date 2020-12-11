@@ -51,7 +51,8 @@ export default class Group extends React.Component {
       members: members,
 
       host: this.props.navigation.state.params.host,
-      hostName: members[this.props.navigation.state.params.host].username,
+      // hostName: members[this.props.navigation.state.params.host].username,
+      hostName: "NOT YOU",
       needFilters: Object.keys(members).filter((user) => !user.filters).length,
 
       filters: {},
@@ -59,6 +60,7 @@ export default class Group extends React.Component {
 
       // UI state
       canStart: false,
+      userSubmitted: false,
 
       // Modal visibility vars
       leaveAlert: false,
@@ -118,6 +120,10 @@ export default class Group extends React.Component {
         console.log(error)
       }
     })
+  }
+
+  setUserSubmit() {
+    this.setState({ userSubmitted: true })
   }
 
   // counts number of users who haven't submitted filters
@@ -340,8 +346,6 @@ export default class Group extends React.Component {
                   <TouchableHighlight
                     underlayColor="#F15763"
                     activeOpacity={1}
-                    onHideUnderlay={() => this.setState({ canStart: false })}
-                    onShowUnderlay={() => this.setState({ canStart: true })}
                     onPress={() => this.start()}
                     style={[
                       screenStyles.bigButton,
@@ -349,6 +353,7 @@ export default class Group extends React.Component {
                       this.state.canStart ? { opacity: 0.75 } : { opacity: 1 },
                     ]}
                   >
+                    {/* TODO: Change text if required options have not been set */}
                     <Text style={styles.buttonText}>Start Round</Text>
                   </TouchableHighlight>
                 )}
@@ -357,14 +362,14 @@ export default class Group extends React.Component {
                     style={[
                       screenStyles.bigButton,
                       styles.bigButton,
-                      this.state.canStart ? { opacity: 0.75 } : { opacity: 1 },
+                      !this.state.userSubmitted ? { opacity: 0.75 } : { opacity: 1 },
                     ]}
                     onPress={() => {
-                      this.filterRef.current.forceUpdate()
+                      this.filterRef.current.submitUserFilters()
                     }}
                   >
                     <Text style={styles.buttonText}>
-                      {this.state.canStart ? 'Submit Filters' : 'Waiting...'}
+                      {!this.state.userSubmitted ? 'Submit Filters' : 'Waiting...'}
                     </Text>
                   </TouchableHighlight>
                 )}
@@ -443,7 +448,7 @@ export default class Group extends React.Component {
                   <FilterSelector
                     host={this.state.host}
                     isHost={this.state.hostName == this.state.myUsername}
-                    handleUpdate={(setFilters) => {}}
+                    handleUpdate={() => this.setUserSubmit()}
                     members={memberList}
                     ref={this.filterRef}
                     code={this.state.code}

@@ -224,7 +224,6 @@ export default class FilterSelector extends React.Component {
 
   // this will pass the filters to the groups page
   handlePress(setFilters) {
-    // this.props.handleUpdate(setFilters)
     if (this.props.isHost) {
       Socket.startSession(this.props.code, setFilters)
       console.log("startSession")
@@ -251,27 +250,17 @@ export default class FilterSelector extends React.Component {
     filters.limit = this.state.selectedSize[0]
     //  making sure we have a valid location
 
-    
-    if (this.props.isHost && this.state.location === null && this.state.useLocation === false) {
+
+    if (this.state.location === null && this.state.useLocation === false) {
       this.setState({ locationAlert: true })
     } else if (this.state.useLocation) {
       filters.latitude = this.state.lat
       filters.longitude = this.state.long
-      // Socket.submitFilters(this.props.host, filters)
       console.log('filter.js:' + JSON.stringify(filters))
-      this.handlePress(filters) else {
-      filters.location = this.state.location
-      // Socket.submitFilters(this.props.host, filters)
       this.handlePress(filters)
-    }
     } else {
-
-      // else if (true) {
-      // this.setState({formatAlert: true});
-      // console.log('format problems');
-      // //if location is null and useLocation is false for HOST -> create alert location is required,
-      // //check body that it's in format (city, state) if not send alert too
-      // }
+      filters.location = this.state.location
+      this.handlePress(filters)
     }
   }
 
@@ -283,50 +272,79 @@ export default class FilterSelector extends React.Component {
     this.evaluateFilters()
   }
 
+  submitUserFilters() {
+    const filters = {}
+    // puts the cuisine and restrictions into one array
+    const selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
+    filters.categories = this.categorize(selections).toString()
+    filters.categories += ','
+    Socket.submitFilters(this.props.code, filters.categories)
+    this.props.handleUpdate()
+  }
+
   render() {
     return (
       <View style={styles.mainContainer}>
-        <View style={styles.titles}>
-          {/* Title */}
-          {this.props.isHost && (
+
+        {/* Title */}
+        {this.props.isHost && (
+          <View style={styles.titles}>
             <View style={styles.titleContainer}>
               <Text
                 style={[
                   screenStyles.text,
                   styles.filterHeader,
-                  {textAlign: 'center', color: this.state.swiperIndex == 0 ? TEXT_COLOR : 'gainsboro'},
+                  { textAlign: 'center', color: this.state.swiperIndex == 0 ? TEXT_COLOR : 'gainsboro' },
                 ]}
               >
                 Group Settings
                 </Text>
             </View>
-          )}
-          <View style={styles.titleContainer, {}}>
+            <View style={styles.titleContainer, {}}>
               <Text
                 style={[
                   screenStyles.text,
                   styles.filterHeader,
-                  {textAlign: 'center', color: this.state.swiperIndex == 1 ? TEXT_COLOR : 'gainsboro'}
+                  { textAlign: 'center', color: this.state.swiperIndex == 1 ? TEXT_COLOR : 'gainsboro' }
                 ]}
               >
                 Your Filters
               </Text>
+            </View>
           </View>
+        )}
+        <View style={
+          styles.titleContainer,
+          {
+            flexDiretion: 'row',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }
+        }>
+          <Text
+            style={[
+              screenStyles.text,
+              styles.filterHeader,
+            ]}
+          >
+            Your Filters
+              </Text>
         </View>
+
         <Swiper
           loop={false}
           showsPagination={this.props.isHost}
           activeDotColor={ACCENT_COLOR}
           paginationStyle={{ bottom: -10 }}
-          onIndexChanged={(index) => this.setState({swiperIndex: index})}
+          onIndexChanged={(index) => this.setState({ swiperIndex: index })}
           disableScrollViewPanResponder={true}
         >
           {this.props.isHost && (
-          <View style={styles.swiperContainer}>
-            {/* TODO: Update Buttom Label */}
-            {/* Majority Rule */}
+            <View style={styles.swiperContainer}>
+              {/* TODO: Update Buttom Label */}
+              {/* Majority Rule */}
               <View style={styles.filterGroupContainer}>
-                <View style={{ flexDirection: 'row'}}>
+                <View style={{ flexDirection: 'row' }}>
                   <Text style={[screenStyles.text, styles.filterTitleText]}>Majority</Text>
                   <Text style={styles.filterSubtext}>Members (out of {this.props.members.length}) needed to get a match</Text>
                 </View>
@@ -348,10 +366,10 @@ export default class FilterSelector extends React.Component {
                   }}
                 />
               </View>
-            
 
-            {/* TODO: Update Buttom Label */}
-            {/* Round Size */}
+
+              {/* TODO: Update Buttom Label */}
+              {/* Round Size */}
               <View style={styles.filterGroupContainer}>
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={[screenStyles.text, styles.filterTitleText]}>Round Size</Text>
@@ -370,7 +388,7 @@ export default class FilterSelector extends React.Component {
                 />
               </View>
 
-            {/* DISTANCE */}
+              {/* DISTANCE */}
               <View style={styles.filterGroupContainer}>
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={[screenStyles.text, styles.filterTitleText]}>Distance</Text>
@@ -430,8 +448,8 @@ export default class FilterSelector extends React.Component {
                   onValueChange={(value) => this.setState({ distance: value })}
                 />
               </View>
-              
-            {/* PRICE */}
+
+              {/* PRICE */}
               <View style={styles.filterGroupContainer}>
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={[screenStyles.text, styles.filterTitleText]}>Price</Text>
@@ -445,7 +463,7 @@ export default class FilterSelector extends React.Component {
                 />
               </View>
 
-            {/* TIME */}
+              {/* TIME */}
               <View style={styles.filterGroupContainer}>
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={[screenStyles.text, styles.filterTitleText]}>Time</Text>
@@ -472,14 +490,14 @@ export default class FilterSelector extends React.Component {
                   />
                 </View>
               </View>
-          </View>
+            </View>
           )}
           <View style={styles.swiperContainer}>
             {/* CUISINES */}
             <View style={styles.filterGroupContainer}>
               <View style={{ flexDirection: 'row' }}>
-                  <Text style={[screenStyles.text, styles.filterTitleText]}>Cuisines</Text>
-                  <Text style={styles.filterSubtext}>Select all that apply</Text>
+                <Text style={[screenStyles.text, styles.filterTitleText]}>Cuisines</Text>
+                <Text style={styles.filterSubtext}>Select all that apply</Text>
               </View>
               <TagsView
                 all={tagsCuisine}
@@ -491,9 +509,9 @@ export default class FilterSelector extends React.Component {
 
             {/* DIETARY RESTRICTIONS */}
             <View style={styles.filterGroupContainer}>
-            <View style={{ flexDirection: 'row' }}>
-                  <Text style={[screenStyles.text, styles.filterTitleText]}>Dietary Restrictions</Text>
-                  <Text style={styles.filterSubtext}>Select all that apply</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={[screenStyles.text, styles.filterTitleText]}>Dietary Restrictions</Text>
+                <Text style={styles.filterSubtext}>Select all that apply</Text>
               </View>
               <TagsView
                 all={tagsDiet}
@@ -504,15 +522,6 @@ export default class FilterSelector extends React.Component {
             </View>
           </View>
         </Swiper>
-        {/* <TouchableHighlight
-          underlayColor={hex}
-          style={[screenStyles.medButton, styles.touchable]}
-          onPress={() => this.evaluateFilters()}
-        >
-          <Text style={[screenStyles.text, styles.nextTitle]}>
-            {this.props.isHost ? "Let's Go" : 'Submit Filters'}
-          </Text>
-        </TouchableHighlight> */}
         {/* ------------------------------------------ALERTS------------------------------------------ */}
         {(this.state.chooseFriends ||
           this.state.chooseLocation ||
@@ -593,6 +602,7 @@ FilterSelector.propTypes = {
   isHost: PropTypes.bool,
   handleUpdate: PropTypes.func,
   members: PropTypes.array,
+  code: PropTypes.code,
 }
 
 const styles = StyleSheet.create({
