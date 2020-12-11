@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React from 'react'
 import {
   Dimensions,
@@ -15,6 +16,7 @@ import { BlurView } from '@react-native-community/blur'
 import Geolocation from 'react-native-geolocation-service'
 import PropTypes from 'prop-types'
 import Slider from '@react-native-community/slider'
+import Swiper from 'react-native-swiper'
 import Alert from '../modals/alert.js'
 import ChooseFriends from '../modals/chooseFriends.js'
 import Socket from '../apis/socket.js'
@@ -30,7 +32,6 @@ import modalStyles from '../../styles/modalStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
 import SwitchButton from 'switch-button-react-native'
 
-const hex = '#F15763'
 const font = 'CircularStd-Medium'
 
 const BACKGROUND_COLOR = 'white'
@@ -87,8 +88,7 @@ export default class FilterSelector extends React.Component {
     super(props)
     const date = new Date()
     this.state = {
-      host: this.props.host,
-      isHost: this.props.isHost,
+      // Filters
       distance: 5,
       zipcode: '',
       location: null,
@@ -105,14 +105,20 @@ export default class FilterSelector extends React.Component {
       selectedRestriction: [],
       selectedSize: [],
       selectedMajority: [],
-      // showing alerts and modals
-      chooseTime: false,
-      locationAlert: false,
-      chooseLocation: false,
+
+      // MODALS
       chooseFriends: false,
+      chooseLocation: false,
       chooseMajority: false,
       chooseSize: false,
+      chooseTime: false,
+
+      // ALERTS
       errorAlert: false,
+      locationAlert: false,
+
+      // SWIPER
+      swiperIndex: 0,
     }
   }
 
@@ -218,7 +224,11 @@ export default class FilterSelector extends React.Component {
 
   // this will pass the filters to the groups page
   handlePress(setFilters) {
-    this.props.handleUpdate(setFilters)
+    // this.props.handleUpdate(setFilters)
+    if (this.props.isHost) {
+      Socket.startSession(this.props.code, setFilters)
+      console.log("startSession")
+    }
   }
 
   //  formats the filters to call yelp api
@@ -240,14 +250,14 @@ export default class FilterSelector extends React.Component {
     if (this.state.useLocation) {
       filters.latitude = this.state.lat
       filters.longitude = this.state.long
-      Socket.submitFilters(filters, this.state.host)
+      Socket.submitFilters(this.props.host, filters)
       this.handlePress(filters)
     } else {
-      if (this.state.isHost && this.state.location === null && this.state.useLocation === false) {
+      if (this.props.isHost && this.state.location === null && this.state.useLocation === false) {
         this.setState({ locationAlert: true })
       } else {
         filters.location = this.state.location
-        Socket.submitFilters(filters, this.state.host)
+        Socket.submitFilters(this.props.host, filters)
         this.handlePress(filters)
       }
       // else if (true) {
@@ -263,241 +273,255 @@ export default class FilterSelector extends React.Component {
     this.setState({ zipcode: zip, chooseLocation: false })
   }
 
+  startSession() {
+    this.evaluateFilters()
+  }
+
   render() {
     return (
       <View style={styles.mainContainer}>
-        {/* Title */}
-        {this.state.isHost && (
-          <View style={styles.titleStyle}>
-            <Text
-              style={[screenStyles.text, { fontSize: 28, color: 'white', textAlign: 'center' }]}
-            >
-              Group Settings
-            </Text>
+        <View style={styles.titles}>
+          {/* Title */}
+          {this.props.isHost && (
+            <View style={styles.titleContainer}>
+              <Text
+                style={[
+                  screenStyles.text,
+                  styles.filterHeader,
+                  {textAlign: 'center', color: this.state.swiperIndex == 0 ? TEXT_COLOR : 'gainsboro'},
+                ]}
+              >
+                Group Settings
+                </Text>
+            </View>
+          )}
+          <View style={styles.titleContainer, {}}>
+              <Text
+                style={[
+                  screenStyles.text,
+                  styles.filterHeader,
+                  {textAlign: 'center', color: this.state.swiperIndex == 1 ? TEXT_COLOR : 'gainsboro'}
+                ]}
+              >
+                Your Filters
+              </Text>
           </View>
-        )}
-
-        <ScrollView>
-          {/* TODO: Update Buttom Label */}
-          {/* Majority Rule */}
-          {this.state.isHost && (
-            <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '1%' }}>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={[screenStyles.text, styles.header]}>Majority</Text>
-                <Text style={styles.subtext}>Members needed to get a match</Text>
+        </View>
+        <Swiper
+          loop={false}
+          showsPagination={this.props.isHost}
+          activeDotColor={ACCENT_COLOR}
+          paginationStyle={{ bottom: -10 }}
+          onIndexChanged={(index) => this.setState({swiperIndex: index})}
+          disableScrollViewPanResponder={true}
+        >
+          {this.props.isHost && (
+          <View style={styles.swiperContainer}>
+            {/* TODO: Update Buttom Label */}
+            {/* Majority Rule */}
+              <View style={styles.filterGroupContainer}>
+                <View style={{ flexDirection: 'row'}}>
+                  <Text style={[screenStyles.text, styles.filterTitleText]}>Majority</Text>
+                  <Text style={styles.filterSubtext}>Members (out of {this.props.members.length}) needed to get a match</Text>
+                </View>
+                <DynamicTags
+                  all={tagsMajority}
+                  selected={this.state.selectedMajority}
+                  selectedNum={this.state.majority}
+                  isExclusive={true}
+                  onChange={(event) => {
+                    if (event[0] === 'Custom: ') {
+                      this.setState({ chooseMajority: true })
+                    } else if (event[0] === 'All') {
+                      this.setState({ majority: this.props.members.length })
+                    } else {
+                      this.setState({ majority: parseInt(event) })
+                      console.log(this.state.majority)
+                    }
+                    this.setState({ selectedMajority: event })
+                  }}
+                />
               </View>
-              <DynamicTags
-                all={tagsMajority}
-                selected={this.state.selectedMajority}
-                selectedNum={this.state.majority}
-                isExclusive={true}
-                onChange={(event) => {
-                  if (event[0] === 'Custom: ') {
-                    this.setState({ chooseMajority: true })
-                  } else if (event[0] === 'All') {
-                    this.setState({ majority: this.props.members.length })
-                  } else {
-                    this.setState({ majority: parseInt(event) })
+            
 
-                    console.log(this.state.majority)
-                    console.log(this.state.majority)
-                    console.log(this.state.majority)
-                    console.log(this.state.majority)
-                    console.log(this.state.majority)
-                    console.log(this.state.majority)
-                    console.log(this.state.majority)
-                    console.log(this.state.majority)
-                    console.log(this.state.majority)
-                    console.log(this.state.majority)
-                  }
-                  this.setState({ selectedMajority: event })
-                }}
-              />
-            </View>
-          )}
-
-          {/* TODO: Update Buttom Label */}
-          {/* Round Size */}
-          {this.state.isHost && (
-            <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '1%' }}>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={[screenStyles.text, styles.header]}>Round Size</Text>
-                <Text style={styles.subtext}>Max number of restaurants</Text>
+            {/* TODO: Update Buttom Label */}
+            {/* Round Size */}
+              <View style={styles.filterGroupContainer}>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={[screenStyles.text, styles.filterTitleText]}>Round Size</Text>
+                  <Text style={styles.filterSubtext}>Max number of restaurants</Text>
+                </View>
+                <TagsView
+                  all={tagsSizes}
+                  selected={this.state.selectedSize}
+                  isExclusive={true}
+                  onChange={(event) => {
+                    if (event[0] === 'Custom: ') {
+                      this.setState({ chooseSize: true })
+                    }
+                    this.setState({ selectedSize: event, size: event[0] })
+                  }}
+                />
               </View>
-              <TagsView
-                all={tagsSizes}
-                selected={this.state.selectedSize}
-                isExclusive={true}
-                onChange={(event) => {
-                  if (event[0] === 'Custom: ') {
-                    this.setState({ chooseSize: true })
-                  }
-                  this.setState({ selectedSize: event, size: event[0] })
-                }}
-              />
-            </View>
-          )}
 
-          {/* DISTANCE */}
-          {this.state.isHost && (
-            <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '1%' }}>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={[screenStyles.text, styles.header]}>Distance</Text>
-                <Text style={styles.subtext}>({this.state.distance} miles)</Text>
-                <TouchableHighlight
-                  underlayColor={'white'}
-                  onPress={() => this.setState({ chooseLocation: true })}
-                  style={[
-                    styles.subtext,
-                    {
-                      backgroundColor: BACKGROUND_COLOR,
-                      borderRadius: 20,
-                      borderWidth: 1,
-                      borderColor: BORDER_COLOR,
-                    },
-                  ]}
-                >
-                  <Text
-                    style={{
-                      color: TEXT_COLOR,
-                      fontFamily: font,
-                      fontSize: 12,
-                      paddingLeft: 5,
-                      paddingRight: 5,
-                      paddingTop: 3,
-                      paddingBottom: 3,
-                    }}
+            {/* DISTANCE */}
+              <View style={styles.filterGroupContainer}>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={[screenStyles.text, styles.filterTitleText]}>Distance</Text>
+                  <Text style={styles.filterSubtext}>({this.state.distance} miles)</Text>
+                  <TouchableHighlight
+                    underlayColor={'white'}
+                    onPress={() => this.setState({ chooseLocation: true })}
+                    style={[
+                      styles.filterSubtext,
+                      {
+                        backgroundColor: BACKGROUND_COLOR,
+                        borderRadius: 20,
+                        borderWidth: 1,
+                        borderColor: BORDER_COLOR,
+                      },
+                    ]}
                   >
-                    Choose Location
-                  </Text>
-                </TouchableHighlight>
-                <Switch
-                  thumbColor={'white'}
-                  trackColor={{ true: '#eba2a8' }}
-                  style={{ marginTop: '1%', marginLeft: '3%' }}
-                  value={this.state.useLocation}
-                  onValueChange={(val) => {
-                    this.setState({
-                      useLocation: val,
-                    })
+                    <Text
+                      style={{
+                        color: TEXT_COLOR,
+                        fontFamily: font,
+                        fontSize: 12,
+                        paddingLeft: 5,
+                        paddingRight: 5,
+                        paddingTop: 3,
+                        paddingBottom: 3,
+                      }}
+                    >
+                      Choose Location
+                    </Text>
+                  </TouchableHighlight>
+                  <Switch
+                    thumbColor={'white'}
+                    trackColor={{ true: '#eba2a8' }}
+                    style={{ marginTop: '1%', marginLeft: '3%' }}
+                    value={this.state.useLocation}
+                    onValueChange={(val) => {
+                      this.setState({
+                        useLocation: val,
+                      })
+                    }}
+                  />
+                </View>
+                <Slider
+                  style={{
+                    width: '85%',
+                    height: 30,
+                    alignSelf: 'center',
                   }}
+                  minimumValue={5}
+                  maximumValue={50}
+                  value={5}
+                  step={0.5}
+                  minimumTrackTintColor={TEXT_COLOR}
+                  maximumTrackTintColor={TEXT_COLOR}
+                  thumbTintColor={TEXT_COLOR}
+                  onValueChange={(value) => this.setState({ distance: value })}
                 />
               </View>
-              <Slider
-                style={{
-                  width: '85%',
-                  height: 30,
-                  alignSelf: 'center',
-                }}
-                minimumValue={5}
-                maximumValue={50}
-                value={5}
-                step={0.5}
-                minimumTrackTintColor={TEXT_COLOR}
-                maximumTrackTintColor={TEXT_COLOR}
-                thumbTintColor={TEXT_COLOR}
-                onValueChange={(value) => this.setState({ distance: value })}
-              />
-            </View>
-          )}
+              
+            {/* PRICE */}
+              <View style={styles.filterGroupContainer}>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={[screenStyles.text, styles.filterTitleText]}>Price</Text>
+                  <Text style={styles.filterSubtext}>Select all that apply</Text>
+                </View>
+                <TagsView
+                  all={tagsPrice}
+                  selected={this.state.selectedPrice}
+                  isExclusive={false}
+                  onChange={(event) => this.setState({ selectedPrice: event })}
+                />
+              </View>
 
-          {/* PRICE */}
-          {this.state.isHost && (
-            <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '1%' }}>
+            {/* TIME */}
+              <View style={styles.filterGroupContainer}>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={[screenStyles.text, styles.filterTitleText]}>Time</Text>
+                  <Text style={styles.filterSubtext}>Select when to eat</Text>
+                </View>
+                <View style={styles.buttonContainer}>
+                  <BackgroundButton
+                    backgroundColor={BACKGROUND_COLOR}
+                    textColor={TEXT_COLOR}
+                    borderColor={BORDER_COLOR}
+                    onPress={() => {
+                      const hr = date.getUTCHours()
+                      const min = date.getUTCMinutes()
+                      this.setState({ hour: hr, minute: min, asap: true })
+                    }}
+                    title={'ASAP'}
+                  />
+                  <BackgroundButton
+                    backgroundColor={this.state.asap ? BACKGROUND_COLOR : BORDER_COLOR}
+                    textColor={this.state.asap ? BORDER_COLOR : BACKGROUND_COLOR}
+                    borderColor={BORDER_COLOR}
+                    onPress={() => this.setState({ chooseTime: true, asap: false })}
+                    title={'Set Time'}
+                  />
+                </View>
+              </View>
+          </View>
+          )}
+          <View style={styles.swiperContainer}>
+            {/* CUISINES */}
+            <View style={styles.filterGroupContainer}>
               <View style={{ flexDirection: 'row' }}>
-                <Text style={[screenStyles.text, styles.header]}>Price</Text>
-                <Text style={styles.subtext}>Select all that apply</Text>
+                  <Text style={[screenStyles.text, styles.filterTitleText]}>Cuisines</Text>
+                  <Text style={styles.filterSubtext}>Select all that apply</Text>
               </View>
               <TagsView
-                all={tagsPrice}
-                selected={this.state.selectedPrice}
+                all={tagsCuisine}
+                selected={this.state.selectedCuisine}
                 isExclusive={false}
-                onChange={(event) => this.setState({ selectedPrice: event })}
+                onChange={(event) => this.setState({ selectedCuisine: event })}
               />
             </View>
-          )}
 
-          {/* TIME */}
-          {this.state.isHost && (
-            <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '1%' }}>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={[screenStyles.text, styles.header]}>Time</Text>
-                <Text style={styles.subtext}>Select when to eat</Text>
+            {/* DIETARY RESTRICTIONS */}
+            <View style={styles.filterGroupContainer}>
+            <View style={{ flexDirection: 'row' }}>
+                  <Text style={[screenStyles.text, styles.filterTitleText]}>Dietary Restrictions</Text>
+                  <Text style={styles.filterSubtext}>Select all that apply</Text>
               </View>
-              <View style={styles.buttonContainer}>
-                <BackgroundButton
-                  backgroundColor={BACKGROUND_COLOR}
-                  textColor={TEXT_COLOR}
-                  borderColor={BORDER_COLOR}
-                  onPress={() => {
-                    const hr = date.getUTCHours()
-                    const min = date.getUTCMinutes()
-                    this.setState({ hour: hr, minute: min, asap: true })
-                  }}
-                  title={'ASAP'}
-                />
-                <BackgroundButton
-                  backgroundColor={this.state.asap ? BACKGROUND_COLOR : BORDER_COLOR}
-                  textColor={this.state.asap ? BORDER_COLOR : BACKGROUND_COLOR}
-                  borderColor={BORDER_COLOR}
-                  onPress={() => this.setState({ chooseTime: true, asap: false })}
-                  title={'Set Time'}
-                />
-              </View>
+              <TagsView
+                all={tagsDiet}
+                selected={this.state.selectedRestriction}
+                isExclusive={false}
+                onChange={(event) => this.setState({ selectedRestriction: event })}
+              />
             </View>
-          )}
-
-          <View style={styles.smallTitle}>
-            <Text
-              style={[screenStyles.text, { fontSize: 28, color: TEXT_COLOR, textAlign: 'center' }]}
-            >
-              Your Filters
-            </Text>
           </View>
-
-          {/* CUISINES */}
-          <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '1%' }}>
-            <Text style={[screenStyles.text, styles.header]}>Cuisines</Text>
-            <TagsView
-              all={tagsCuisine}
-              selected={this.state.selectedCuisine}
-              isExclusive={false}
-              onChange={(event) => this.setState({ selectedCuisine: event })}
-            />
-          </View>
-
-          {/* DIETARY RESTRICTIONS */}
-          <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '1%' }}>
-            <Text style={[screenStyles.text, styles.header]}>Dietary Restrictions</Text>
-            <TagsView
-              all={tagsDiet}
-              selected={this.state.selectedRestriction}
-              isExclusive={false}
-              onChange={(event) => this.setState({ selectedRestriction: event })}
-            />
-          </View>
-        </ScrollView>
+        </Swiper>
         {/* <TouchableHighlight
           underlayColor={hex}
           style={[screenStyles.medButton, styles.touchable]}
           onPress={() => this.evaluateFilters()}
         >
           <Text style={[screenStyles.text, styles.nextTitle]}>
-            {this.state.isHost ? "Let's Go" : 'Submit Filters'}
+            {this.props.isHost ? "Let's Go" : 'Submit Filters'}
           </Text>
         </TouchableHighlight> */}
-        {(this.state.locationAlert ||
-          this.state.errorAlert ||
-          this.state.chooseFriends ||
+        {/* ------------------------------------------ALERTS------------------------------------------ */}
+        {(this.state.chooseFriends ||
           this.state.chooseLocation ||
-          this.state.chooseTime) && (
-          <BlurView
-            blurType="dark"
-            blurAmount={10}
-            reducedTransparencyFallbackColor="white"
-            style={modalStyles.blur}
-          />
-        )}
+          this.state.chooseMajority ||
+          this.state.chooseSize ||
+          this.state.chooseTime ||
+          this.state.errorAlert ||
+          this.state.locationAlert) && (
+            <BlurView
+              blurType="dark"
+              blurAmount={10}
+              reducedTransparencyFallbackColor="white"
+              style={modalStyles.blur}
+            />
+          )}
         {this.state.locationAlert && (
           <Alert
             title="Location Required"
@@ -508,11 +532,6 @@ export default class FilterSelector extends React.Component {
             cancel={() => this.setState({ locationAlert: false })}
           />
         )}
-        <Location
-          visible={this.state.chooseLocation}
-          press={(zip) => this.setLocation(zip)}
-          cancel={() => this.setState({ chooseLocation: false })}
-        />
         {this.state.errorAlert && (
           <Alert
             title="Error, please try again"
@@ -522,6 +541,8 @@ export default class FilterSelector extends React.Component {
             cancel={() => this.setState({ errorAlert: false })}
           />
         )}
+
+        {/* ------------------------------------------MODALS------------------------------------------ */}
         <ChooseFriends
           visible={this.state.chooseFriends}
           members={this.props.members}
@@ -535,7 +556,7 @@ export default class FilterSelector extends React.Component {
         <Size
           max={50}
           title={'Round Size'}
-          subtext={'Choose the max number of restaurants to swipe through'}
+          filterSubtext={'Choose the max number of restaurants to swipe through'}
           visible={this.state.chooseSize}
           cancel={() => this.setState({ chooseSize: false })}
           press={(sz) => this.setState({ size: sz, chooseSize: false })}
@@ -543,13 +564,18 @@ export default class FilterSelector extends React.Component {
         <Size
           max={this.props.members.length}
           title={'Majority'}
-          subtext={'Choose the number of members needed to get a match'}
+          filterSubtext={'Choose the number of members needed to get a match'}
           visible={this.state.chooseMajority}
           cancel={() => this.setState({ chooseMajority: false })}
           press={(sz) => {
             console.log(sz)
             this.setState({ majority: sz, chooseMajority: false })
           }}
+        />
+        <Location
+          visible={this.state.chooseLocation}
+          press={(zip) => this.setLocation(zip)}
+          cancel={() => this.setState({ chooseLocation: false })}
         />
       </View>
     )
@@ -564,36 +590,55 @@ FilterSelector.propTypes = {
 }
 
 const styles = StyleSheet.create({
-  //  Fullscreen
+  // Containers
   mainContainer: {
     flex: 1,
+    height: '100%',
     backgroundColor: BACKGROUND_COLOR,
     justifyContent: 'space-between',
   },
-  titleStyle: {
+  titles: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginLeft: '5%',
+    marginRight: '5%',
+  },
+  titleContainer: {
     marginTop: '3%',
     marginBottom: '1%',
   },
-  smallTitle: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: '2%',
+  swiperContainer: {
+    flex: 1,
+    height: '100%',
+    backgroundColor: BACKGROUND_COLOR,
+    justifyContent: 'flex-start',
   },
-  titleSub: {
+  filterGroupContainer: {
+    marginLeft: '5%',
+    marginRight: '5%',
+    flex: 1,
+    justifyContent: 'flex-start',
+  },
+  filterHeader: {
+    fontSize: 26,
+    fontWeight: 'bold',
     color: TEXT_COLOR,
-    alignSelf: 'center',
-    margin: '1%',
-    marginTop: '2%',
+    textAlign: 'center',
   },
-  touchableFriendsText: {
-    fontSize: 18,
+  filterTitleText: {
+    fontSize: 20,
+    color: TEXT_COLOR,
+    textAlign: 'center',
+  },
+  filterSubtext: {
+    color: TEXT_COLOR,
+    fontSize: 12,
+    fontFamily: font,
+    fontWeight: '100',
     alignSelf: 'center',
-    paddingLeft: '3%',
-    paddingRight: '3%',
-    paddingTop: '2%',
-    paddingBottom: '2%',
+    marginLeft: '4%',
+    marginTop: '1%',
   },
   header: {
     textAlign: 'left',
@@ -602,33 +647,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     margin: '1%',
   },
-  subtext: {
-    color: TEXT_COLOR,
-    fontFamily: font,
-    alignSelf: 'center',
-    marginLeft: '4%',
-    marginTop: '1%',
-  },
   touchable: {
     width: '50%',
     borderColor: BORDER_COLOR,
     justifyContent: 'center',
     margin: '5%',
   },
-  nextTitle: {
-    color: TEXT_COLOR,
-    textAlign: 'center',
-    fontSize: 25,
-    paddingTop: '2%',
-    paddingBottom: '2%',
-  },
-  inputEnabled: {
-    backgroundColor: BACKGROUND_COLOR,
-    borderColor: 'black',
-  },
-  inputDisabled: {
-    backgroundColor: BACKGROUND_COLOR,
-  },
+  // nextTitle: {
+  //   color: TEXT_COLOR,
+  //   textAlign: 'center',
+  //   fontSize: 25,
+  //   paddingTop: '2%',
+  //   paddingBottom: '2%',
+  // },
   buttonContainer: {
     flex: 1,
     flexDirection: 'row',
