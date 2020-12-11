@@ -32,6 +32,7 @@ export default class Search extends Component {
       friends: [],
       errorAlert: false,
       deleteFriend: false,
+      deleteFriendName: '',
     };
     friendsApi
     .getFriends()
@@ -133,7 +134,7 @@ export default class Search extends Component {
               press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
               showError={() => this.setState({errorAlert: true})}
               deleteError={() => this.setState({errorAlert: false})}
-              showDelete={() => this.setState({deleteFriend: true})}
+              showDelete={() => this.setState({deleteFriend: true, deleteFriendName:item.username})}
               deleteDelete={() => this.setState({deleteFriend: false})}
             />
           )}
@@ -159,7 +160,7 @@ export default class Search extends Component {
         {this.state.deleteFriend && (
           <Alert
             title="Are you sure?"
-            body={'You are about to remove @' + this.props.username + ' as a friend'}
+            body={'You are about to remove @' + this.state.deleteFriendName + ' as a friend'}
             buttonAff="Delete"
             height='25%'
             press={() => this.deleteFriend()}
