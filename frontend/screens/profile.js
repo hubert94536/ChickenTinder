@@ -664,6 +664,10 @@ export default class UserProfileView extends Component {
                       borderColor: '#7d7d7d',
                     },
                   ]}
+                  underlineColorAndroid="transparent"
+                  spellCheck={false}
+                  autoCorrect={false}
+                  keyboardType="visible-password"
                   value={this.state.nameValue}
                   onChangeText={(text) => this.setState({ nameValue: text })}
                   // onSubmitEditing={() => this.makeChanges()}
@@ -682,6 +686,10 @@ export default class UserProfileView extends Component {
                       borderColor: '#7d7d7d',
                     },
                   ]}
+                  underlineColorAndroid="transparent"
+                  spellCheck={false}
+                  autoCorrect={false}
+                  keyboardType="visible-password"
                   value={this.state.usernameValue}
                   onChangeText={(text) => this.setState({ usernameValue: text })}
                   // onSubmitEditing={() => this.makeChanges()}
