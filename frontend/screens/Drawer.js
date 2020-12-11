@@ -24,7 +24,7 @@ class Drawer extends Component {
 
     this._panGesture = PanResponder.create({
       onMoveShouldSetPanResponder: (evt, gestureState) => {
-        console.log('filterContainer.js: tryGesture' + gestureState.moveY)
+        // console.log('Drawer.js: tryGesture' + gestureState.moveY)
         return (
           Math.abs(gestureState.dy) > Math.abs(gestureState.dx) && Math.abs(gestureState.dy) > 1
         )
