@@ -3,9 +3,11 @@ import { StyleSheet, View } from 'react-native'
 import PropTypes from 'prop-types'
 import BackgroundButton from './backgroundButton.js'
 
+// Used to generate tags for Majority chooser based on number of members in current group
+
 const hex = '#F15763'
 
-export default class TagsView extends React.Component {
+export default class DynamicTags extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -58,6 +60,7 @@ export default class TagsView extends React.Component {
       const backgroundColor = on ? 'white' : hex
       const textColor = on ? hex : 'white'
       const borderColor = on ? 'white' : 'white'
+      const text = tag == 'Custom: ' ? 'Custom: ' + this.props.selectedNum : tag
       return (
         <BackgroundButton
           backgroundColor={backgroundColor}
@@ -68,18 +71,11 @@ export default class TagsView extends React.Component {
           }}
           key={i}
           showImage={on}
-          title={tag}
+          title={text}
         />
       )
     })
   }
-}
-
-TagsView.propTypes = {
-  selected: PropTypes.array,
-  onChange: PropTypes.func,
-  isExclusive: PropTypes.bool,
-  all: PropTypes.array,
 }
 
 const styles = StyleSheet.create({
@@ -90,3 +86,12 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
 })
+
+DynamicTags.propTypes = {
+  selected: PropTypes.array,
+  onChange: PropTypes.func,
+  isExclusive: PropTypes.bool,
+  all: PropTypes.array,
+  nMembers: PropTypes.number,
+  selectedNum: PropTypes.number,
+}
