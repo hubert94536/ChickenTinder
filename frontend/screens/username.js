@@ -76,7 +76,7 @@ class Username extends React.Component {
     return (
       <View style={styles.mainContainer}>
         <Text style={[screenStyles.text, screenStyles.title, styles.header]}>
-          'Chews' a username!
+          &aposChews&apos a username!
         </Text>
         <View style={{ marginTop: '35%' }}>
           <TextInput
