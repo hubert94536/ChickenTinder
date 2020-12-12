@@ -34,9 +34,7 @@ export default class Loading extends React.Component {
 
 Loading.propTypes = {
   restaurant: PropTypes.array,
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired,
-  }).isRequired,
+  navigation: PropTypes.object,
 }
 
 const styles = StyleSheet.create({

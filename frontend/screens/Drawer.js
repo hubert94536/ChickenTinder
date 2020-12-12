@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Animated, PanResponder, Dimensions } from 'react-native'
+import { StyleSheet, View, Animated, PanResponder } from 'react-native'
 import PropTypes from 'prop-types'
 
-const SCREEN_HEIGHT = Dimensions.get('window').height
 
 class Drawer extends Component {
   constructor(props) {
@@ -29,7 +28,7 @@ class Drawer extends Component {
           Math.abs(gestureState.dy) > Math.abs(gestureState.dx) && Math.abs(gestureState.dy) > 1
         )
       },
-      onPanResponderGrant: (evt, gestureState) => {
+      onPanResponderGrant: () => {
         if (this.state.currState == true) {
           this.state.position.setOffset(-this.state.objectHeight)
         } else {
@@ -76,7 +75,6 @@ class Drawer extends Component {
   render() {
     const containerView = this.props.renderContainerView()
     const drawerView = this.props.renderDrawerView()
-    const header = this.props.renderHeader()
 
     return (
       <View
@@ -141,7 +139,6 @@ Drawer.propTypes = {
   onClose: PropTypes.func,
   renderContainerView: PropTypes.func,
   renderDrawerView: PropTypes.func,
-  renderHeader: PropTypes.func,
 }
 
 Drawer.defaultProps = {
@@ -153,7 +150,6 @@ Drawer.defaultProps = {
   onClose: () => {},
   renderContainerView: () => {},
   renderDrawerView: () => {},
-  renderHeader: () => {},
 }
 
 export default Drawer

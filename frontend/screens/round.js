@@ -180,6 +180,7 @@ Round.propTypes = {
   host: PropTypes.string,
   isHost: PropTypes.bool,
   code: PropTypes.number,
+  navigation: PropTypes.object,
 }
 
 const styles = StyleSheet.create({
