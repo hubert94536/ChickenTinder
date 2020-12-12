@@ -31,8 +31,6 @@ export default class createAccount extends React.Component {
   }
 
   async componentDidMount() {
-    // accountsApi.deleteUser()
-
     var index = Math.floor(Math.random() * defImages.length)
     this.setState({
       name: await AsyncStorage.getItem(NAME),
@@ -48,8 +46,6 @@ export default class createAccount extends React.Component {
 
   //  checks whether or not the username can be set
   handleClick() {
-    console.log('finish')
-    console.log(this.state)
     accountsApi
       .checkUsername(this.state.username)
       .then(() => {
@@ -91,17 +87,21 @@ export default class createAccount extends React.Component {
       width: 150,
       height: 150,
       cropping: true,
-    }).then((image) => {
-      this.setState({
-        photo: image.path,
-        photoData: {
-          uri: image.path,
-          type: image.mime,
-          name: 'avatar',
-        },
-      })
     })
-    console.log('upload photo')
+      .then((image) => {
+        this.setState({
+          photo: image.path,
+          photoData: {
+            uri: image.path,
+            type: image.mime,
+            name: 'avatar',
+          },
+        })
+      })
+      .catch((error) => {
+        // handle this later on
+        console.log(error)
+      })
   }
 
   render() {
@@ -149,7 +149,6 @@ export default class createAccount extends React.Component {
         <TextInput
           style={[styles.fieldText]}
           textAlign="left"
-          placeholder="Name"
           onChangeText={(name) => {
             this.setState({ name })
           }}
@@ -160,7 +159,6 @@ export default class createAccount extends React.Component {
         <TextInput
           style={[styles.fieldText]}
           textAlign="left"
-          placeholder="@username"
           onChangeText={(username) => {
             this.setState({ username })
           }}
@@ -171,7 +169,6 @@ export default class createAccount extends React.Component {
         <TextInput
           style={[styles.fieldText]}
           textAlign="left"
-          placeholder="(xxx)xxx-xxxx"
           onChangeText={(phone) => {
             this.setState({ phone })
           }}
@@ -182,7 +179,6 @@ export default class createAccount extends React.Component {
         <TextInput
           style={[styles.fieldText]}
           textAlign="left"
-          placeholder="email@domain.com"
           onChangeText={(email) => {
             this.setState({ email: email })
           }}
