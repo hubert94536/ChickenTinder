@@ -458,7 +458,7 @@ export default class Group extends React.Component {
                   justifyContent: 'center',
                 }}
               >
-              <View
+                <View
                   style={{
                     color: 'white',
                     fontFamily: font,
@@ -497,6 +497,7 @@ export default class Group extends React.Component {
 }
 
 Group.propTypes = {
+  navigation: PropTypes.object,
   members: PropTypes.array,
   host: PropTypes.string,
 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react'
 import { Text, View } from 'react-native'
 import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
@@ -17,6 +18,7 @@ import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
 import Loading from './frontend/screens/loading.js'
 import TabBar from './frontend/nav.js'
 import CreateAccount from './frontend/screens/createAccount.js'
+import PropTypes from 'prop-types'
 
 class Notifications extends React.Component {
   render() {
@@ -33,6 +35,10 @@ class Notifications extends React.Component {
       </View>
     )
   }
+}
+
+Notifications.propTypes = {
+  navigation: PropTypes.object,
 }
 
 export default class App extends React.Component {

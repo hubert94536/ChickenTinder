@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import Alert from '../modals/alert.js'
 import accountsApi from '../apis/accountsApi.js'
 import screenStyles from '../../styles/screenStyles.js'
+import PropTypes from 'prop-types'
 
 const hex = '#F15763'
 
@@ -131,6 +132,10 @@ class Username extends React.Component {
       </View>
     )
   }
+}
+
+Username.propTypes = {
+  navigation: PropTypes.object,
 }
 
 const styles = StyleSheet.create({
