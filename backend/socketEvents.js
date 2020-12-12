@@ -60,7 +60,7 @@ module.exports = (io) => {
       socket.emit('exception', err.toString())
       console.log(err)
     }
-
+    //TODO: modify
     // disconnects user and removes them if in room
     socket.on('disconnect', async () => {
       try {
@@ -73,40 +73,41 @@ module.exports = (io) => {
           let session = await sendCommand('JSON.GET', [client.room])
           session = JSON.parse(session)
           // check if user was in a room and room still active
-          socket.leave(client.room)
-          delete session.members[client.id]
-          // delete room and its filters if this is last member in room
-          if (Object.keys(session.members).length === 0) {
-            sendCommand('JSON.DEL', [client.room])
-            sendCommand('JSON.DEL', [`filters:${client.room}`])
-          }
-          // update session with removed user and reduce majority in filters
-          else {
-            await sendCommand('JSON.SET', [client.room, '.', JSON.stringify(session)])
-            // retreive a session's filters
-            let filters = await sendCommand('JSON.GET', [`filters:${client.room}`])
-            filters = JSON.parse(filters)
-            // check if the room is in a round (majority is only set when round starts)
-            if (filters.majority) {
-              filters.majority -= 1
-              filters.groupSize -= 1
-              // delete user from finished list if finished
-              let index = filters.finished.indexOf(client.id)
-              if (index >= 0) {
-                delete filters.finished[index]
+          if (session) {
+            socket.leave(client.room)
+            delete session.members[client.id]
+            // delete room and its filters if this is last member in room
+            if (Object.keys(session.members).length === 0) {
+              sendCommand('JSON.DEL', [client.room])
+              sendCommand('JSON.DEL', [`filters:${client.room}`])
+            }
+            // update session with removed user and reduce majority in filters
+            else {
+              await sendCommand('JSON.DEL', [client.room, `.members['${client.id}']`])
+              // retreive a session's filters
+              let filters = await sendCommand('JSON.GET', [`filters:${client.room}`])
+              filters = JSON.parse(filters)
+              // check if the room is in a round (majority is only set when round starts)
+              if (filters.majority) {
+                // reduce majority and group size by 1
+                filters.majority -= 1
+                filters.groupSize -= 1
+                await sendCommand('JSON.NUMINCRBY', [`filters:${client.room}`, '.majority', -1])
+                await sendCommand('JSON.NUMINCRBY', [`filters:${client.room}`, '.groupSize', -1])
+                // delete user from finished list if finished
+                let index = filters.finished.indexOf(client.id)
+                if (index >= 0) {
+                  delete filters.finished[index]
+                }
+                // if the removed user was last person to finish, get top 3 restaurants and emit
+                if (filters.finished.length === filters.groupSize) {
+                  let top3 = getTop3(filters.restaurants)
+                  io.in(client.room).emit('final', top3)
+                }
+              } else {
+                // Room is still in groups page and receives updated room
+                io.in(client.room).emit('update', session)
               }
-              await sendCommand('JSON.SET', [
-                `filters:${client.room}`,
-                '.',
-                JSON.stringify(filters),
-              ])
-              // if the removed user was last person to finish, get top 3 restaurants and emit
-              if (filters.finished.length === parseInt(filters.groupSize)) {
-                let top3 = getTop3(filters.restaurants)
-                io.in(client.room).emit('final', top3)
-              }
-            } else {
-              io.in(client.room).emit('update', session)
             }
           }
         }
@@ -189,7 +190,11 @@ module.exports = (io) => {
           member.filters = false
           session.members[data.id] = member
           // update session info with member
-          await sendCommand('JSON.SET', [data.code, '.', JSON.stringify(session)])
+          await sendCommand('JSON.SET', [
+            data.code,
+            `.members['${data.id}']`,
+            JSON.stringify(member),
+          ])
           redisClient.hmset(`clients:${socket.id}`, 'room', data.code)
           socket.join(data.code)
           io.in(data.code).emit('update', session)
@@ -211,12 +216,11 @@ module.exports = (io) => {
           'categories',
           JSON.stringify(data.categories),
         ])
+        // update member who submitted filters
+        await sendCommand('JSON.SET', [data.code, `.members['${data.id}'].filters`, true])
         // retrieve session info
         let session = await sendCommand('JSON.GET', [data.code])
         session = JSON.parse(session)
-        // update member who submitted filters
-        session.members[data.id].filters = true
-        await sendCommand('JSON.SET', [data.code, '.', JSON.stringify(session)])
         io.in(data.code).emit('update', session)
       } catch (err) {
         socket.emit('exception', err.toString())
@@ -256,6 +260,9 @@ module.exports = (io) => {
         filters.finished = []
         // initialize container to keep track of restaurant likes
         filters.restaurants = {}
+        for (let res in resList.businessList) {
+          filters.restaurants[resList.businessList[res].id] = 0
+        }
         await sendCommand('JSON.SET', [`filters:${data.code}`, '.', JSON.stringify(filters)])
         io.in(data.code).emit('start', resList.businessList)
       } catch (err) {
@@ -267,18 +274,16 @@ module.exports = (io) => {
     // add restaurant id to list + check for matches
     socket.on('like', async (data) => {
       try {
-        // retreive session's filters
+        // increment restaurant count
+        await sendCommand('JSON.NUMINCRBY', [
+          `filters:${data.code}`,
+          `.restaurants['${data.resId}']`,
+          1,
+        ])
         let filters = await sendCommand('JSON.GET', [`filters:${data.code}`])
         filters = JSON.parse(filters)
-        // increment restaurant count
-        if (filters.restaurants[data.resId]) {
-          filters.restaurants[data.resId] = parseInt(filters.restaurants[data.resId]) + 1
-        } else {
-          filters.restaurants[data.resId] = 1
-        }
-        await sendCommand('JSON.SET', [`filters:${data.code}`, '.', JSON.stringify(filters)])
         // check if # likes = majority => match
-        if (filters.restaurants[data.resId] === parseInt(filters.majority)) {
+        if (filters.restaurants[data.resId] === filters.majority) {
           // return restaurant info from cache
           io.in(data.code).emit('match', data.resId)
         }
@@ -292,33 +297,35 @@ module.exports = (io) => {
     socket.on('leave', async (data) => {
       try {
         socket.leave(data.code)
-        // retreive session
+        // delete room associated to the user's socket id
+        redisClient.hdel(`clients:${socket.id}`, 'room')
+        // retreive session information
         let session = await sendCommand('JSON.GET', [data.code])
         session = JSON.parse(session)
         delete session.members[data.id]
-        // delete room associated to the user's socket id
-        redisClient.hdel(`clients:${socket.id}`, 'room')
         // delete room and its filters if last member in room
         if (Object.keys(session.members).length === 0) {
           sendCommand('JSON.DEL', [data.code])
           sendCommand('JSON.DEL', [`filters:${data.code}`])
         } else {
-          await sendCommand('JSON.SET', [data.code, '.', JSON.stringify(session)])
+          await sendCommand('JSON.DEL', [data.code, `.members['${data.id}']`])
           // retreive a session's filters
           let filters = await sendCommand('JSON.GET', [`filters:${data.code}`])
           filters = JSON.parse(filters)
           // check if the room is in a round (majority is only set when round starts)
           if (filters.majority) {
+            // reduce majority and group size by 1
             filters.majority -= 1
             filters.groupSize -= 1
+            await sendCommand('JSON.NUMINCRBY', [`filters:${data.code}`, '.majority', -1])
+            await sendCommand('JSON.NUMINCRBY', [`filters:${data.code}`, '.groupSize', -1])
             // delete user from finished list if finished
             let index = filters.finished.indexOf(data.id)
             if (index >= 0) {
               delete filters.finished[index]
             }
-            await sendCommand('JSON.SET', [`filters:${data.code}`, '.', JSON.stringify(filters)])
             // if the removed user was last person to finish, get top 3 restaurants and emit
-            if (filters.finished.length === parseInt(filters.groupSize)) {
+            if (filters.finished.length === filters.groupSize) {
               let top3 = getTop3(filters.restaurants)
               io.in(data.code).emit('final', top3)
             }
@@ -353,7 +360,7 @@ module.exports = (io) => {
         let filters = await sendCommand('JSON.GET', [`filters:${data.code}`])
         filters = JSON.parse(filters)
         // if everyone in room is finished swiping, get the top 3 restaurants and emit
-        if (filters.finished.length === parseInt(filters.groupSize)) {
+        if (filters.finished.length === filters.groupSize) {
           let top3 = getTop3(filters.restaurants)
           io.in(data.code).emit('top 3', top3)
         }
@@ -364,7 +371,7 @@ module.exports = (io) => {
     })
 
     // alert all users to choose random pick
-    socket.on('randomize', async (data) => {
+    socket.on('randomize', (data) => {
       io.in(data.code).emit('choose')
     })
   })

@@ -1,6 +1,5 @@
 import React from 'react'
 import { Image, Text, TouchableHighlight, View } from 'react-native'
-import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import Alert from '../modals/alert.js'

@@ -11,6 +11,7 @@ import {
   UID,
   EMAIL,
   PHOTO,
+  PHONE,
 } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import FBSDK from 'react-native-fbsdk'
@@ -46,6 +47,20 @@ const loginWithFacebook = async () => {
       return Firebase.auth().signInWithCredential(credential)
     })
     .then((currentUser) => {
+      // Get info from database if not new user
+      if (!currentUser.additionalUserInfo.isNewUser) {
+        return accountsApi.getUser(currentUser.additionalUserInfo.profile.id).then((res) => {
+          AsyncStorage.multiSet([
+            [USERNAME, res.username],
+            [PHOTO, res.photo],
+            [NAME, res.name],
+            [EMAIL, res.email],
+            [ID, res.id],
+            [PHONE, ''],
+          ])
+          return 'Home'
+        })
+      }
       // Set user's info locally
       AsyncStorage.multiSet([
         [UID, Firebase.auth().currentUser.uid],
@@ -53,18 +68,7 @@ const loginWithFacebook = async () => {
         [ID, currentUser.additionalUserInfo.profile.id],
         [EMAIL, currentUser.additionalUserInfo.profile.email],
       ])
-
-      // Get username from database if not new user
-      if (!currentUser.additionalUserInfo.isNewUser) {
-        return accountsApi.getUser(currentUser.additionalUserInfo.profile.id).then((res) => {
-          AsyncStorage.multiSet([
-            [USERNAME, res.username],
-            [PHOTO, res.photo],
-          ])
-          return 'Home'
-        })
-      }
-      return 'createAccount'
+      return 'CreateAccount'
     })
     .catch((error) => {
       //  Account linking will be needed with email/phone_number login
@@ -108,7 +112,7 @@ const deleteUser = async () => {
           .currentUser.reauthenticateWithCredential(credential)
           .then(() => {
             Firebase.auth().currentUser.delete()
-            AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO])
+            AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO, PHONE])
           })
       })
     })

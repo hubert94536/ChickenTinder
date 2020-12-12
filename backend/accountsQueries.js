@@ -1,4 +1,4 @@
-const { Accounts } = require('./models.js')
+const { Accounts, Friends, Notifications } = require('./models.js')
 const { Op } = require('sequelize')
 
 // Get all accounts
@@ -18,12 +18,20 @@ const searchAccounts = async (req, res) => {
     const users = await Accounts.findAndCountAll({
       limit: 100,
       where: {
-        username: { [Op.iLike]: `${text}%` },
+        [Op.or]: [
+          {
+            username: { [Op.iLike]: `%${text}%` },
+          },
+          {
+            name: { [Op.iLike]: `%${text}%` },
+          },
+        ],
       },
       attributes: ['id', 'name', 'username', 'photo'],
     })
     return res.status(200).json({ users })
   } catch (error) {
+    console.log(error)
     return res.status(500).send(error.message)
   }
 }
@@ -41,6 +49,7 @@ const createAccount = async (req, res) => {
     })
     return res.status(201).send('Account created')
   } catch (error) {
+    console.log(error)
     return res.status(500).json({ error: error.message })
   }
 }
@@ -55,6 +64,7 @@ const getAccountById = async (req, res) => {
     }
     return res.status(404).send('User with the specified ID does not exists')
   } catch (error) {
+    console.log(error)
     return res.status(500).send(error.message)
   }
 }
@@ -72,6 +82,7 @@ const updateAccount = async (req, res) => {
     }
     return res.status(404).send('User with the specified ID does not exists')
   } catch (error) {
+    console.log(error)
     return res.status(500).send(error.message)
   }
 }
@@ -81,6 +92,30 @@ const updateAccount = async (req, res) => {
 const deleteAccount = async (req, res) => {
   try {
     const { id } = req.params
+    await Friends.destroy({
+      where: {
+        [Op.or]: [
+          {
+            main_id: id,
+          },
+          {
+            friend_id: id,
+          },
+        ],
+      },
+    })
+    await Notifications.destroy({
+      where: {
+        [Op.or]: [
+          {
+            receiver_id: id,
+          },
+          {
+            sender_id: id,
+          },
+        ],
+      },
+    })
     const deleted = await Accounts.destroy({
       where: { id: id },
     })
@@ -89,6 +124,7 @@ const deleteAccount = async (req, res) => {
     }
     return res.status(404).send('User with the specified ID does not exists')
   } catch (error) {
+    console.log(error)
     return res.status(500).send(error.message)
   }
 }
@@ -103,6 +139,7 @@ const checkUsername = async (req, res) => {
     }
     return res.status(200).send('Username available')
   } catch (error) {
+    console.log(error)
     return res.status(500).send(error.message)
   }
 }
@@ -119,6 +156,7 @@ const checkPhoneNumber = async (req, res) => {
     }
     return res.status(200).send('Phone number available')
   } catch (error) {
+    console.log(error)
     return res.status(500).send(error.message)
   }
 }
@@ -135,6 +173,7 @@ const checkEmail = async (req, res) => {
     }
     return res.status(200).send('Email available')
   } catch (error) {
+    console.log(error)
     return res.status(500).send(error.message)
   }
 }
