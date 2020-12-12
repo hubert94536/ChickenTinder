@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { StyleSheet, View, Animated, PanResponder } from 'react-native'
 import PropTypes from 'prop-types'
 
-
 class Drawer extends Component {
   constructor(props) {
     super(props)
