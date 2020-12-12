@@ -70,6 +70,7 @@ export default class MatchCard extends React.Component {
       case 'Chinese':
         return require('../assets/images/matchcard/ChineseDimSum.png')
       case 'Coffee':
+      case 'Coffee & Tea':
       case 'Tea':
       case 'Cafe':
         return require('../assets/images/matchcard/CoffeeTeaCafes.png')
