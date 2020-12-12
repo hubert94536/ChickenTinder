@@ -58,7 +58,7 @@ export default class ChooseFriends extends React.Component {
 
   // copies the room code (dummy text for now)
   copyToClipboard() {
-    Clipboard.setString(this.props.code)
+    Clipboard.setString(this.props.code.toString())
   }
 
   //  closes the choose friends modal in filters
@@ -93,7 +93,7 @@ export default class ChooseFriends extends React.Component {
             <View style={styles.header2}>
               <Text style={styles.headertext2}>Group PIN: </Text>
               <Text style={styles.headertext3}>{this.props.code}</Text>
-              <TouchableOpacity onPress={this.copyToClipboard}>
+              <TouchableOpacity onPress={() => this.copyToClipboard()}>
                 <Ionicons name="copy-outline" style={styles.icon2} />
               </TouchableOpacity>
             </View>
