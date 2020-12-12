@@ -9,6 +9,7 @@ import {
   Dimensions,
 } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
+import Clipboard from '@react-native-community/clipboard'
 import { USERNAME } from 'react-native-dotenv'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -207,6 +208,10 @@ export default class Group extends React.Component {
     return str.substr(0, first_sp)
   }
 
+  copyToClipboard() {
+    Clipboard.setString(this.state.code.toString())
+  }
+
   render() {
     this.updateMemberList()
     return (
@@ -239,9 +244,9 @@ export default class Group extends React.Component {
                   width: 15,
                   height: 15,
                 }}
-                // TODO: add copy to clipboard/share functionality
+                onPress={() => this.copyToClipboard()}
               >
-                <Ionicons name="copy-outline" style={styles.icon2} />
+                <Ionicons name="copy-outline" style={styles.copyIcon} />
               </TouchableOpacity>
             </View>
           </View>
@@ -419,7 +424,7 @@ export default class Group extends React.Component {
                 />
               )}
               <ChooseFriends
-                code={this.state.code}
+                code={this.props.navigation.state.params.code}
                 visible={this.state.chooseFriends}
                 members={memberList}
                 press={() => this.setState({ chooseFriends: false })}
@@ -619,7 +624,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 15,
   },
-  icon2: {
+  copyIcon: {
     color: '#fff',
     fontSize: 15,
     marginLeft: '7%',
