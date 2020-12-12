@@ -48,7 +48,7 @@ export default class Search extends Component {
     })
   }
 
-  searchFilterFunction = text => {
+  searchFilterFunction() {
     this.setState({
       value: text,
     });
@@ -100,7 +100,7 @@ export default class Search extends Component {
     }
   }
 
-  renderHeader = () => {
+  renderHeader() {
     return (
       <SearchBar
         containerStyle={styles.container}
@@ -127,7 +127,7 @@ export default class Search extends Component {
               currentUser={username}
               name={item.name}
               username={item.username}
-              image={item.photo}
+              image={item.image}
               id = {item.id}
               requested={item.status}
               total={this.state.data}
