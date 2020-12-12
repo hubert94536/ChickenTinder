@@ -76,9 +76,9 @@ export default class Group extends React.Component {
 
     // listens for group updates
     socket.getSocket().on('update', (res) => {
-      console.log('group.js: Update')
+      // console.log('group.js: Update')
       if (this._isMounted) {
-        console.log('socket "update": ' + JSON.stringify(res))
+        // console.log('socket "update": ' + JSON.stringify(res))
         this.setState({ members: res.members, host: res.host, code: res.code })
         const count = this.countNeedFilters(res.members)
         this.setState({ needFilters: count })
@@ -98,7 +98,7 @@ export default class Group extends React.Component {
           code: this.state.code,
         })
       } else {
-        console.log('no restaurants found')
+        console.log('group.js: no restaurants found')
         // need to handle no restaurants returned
       }
     })
@@ -191,13 +191,13 @@ export default class Group extends React.Component {
   // }
 
   componentDidMount() {
-    console.log('Group - DidMount')
-    console.log('Group.js: nav params ' + JSON.stringify(this.props.navigation.state.params))
+    // console.log('Group - DidMount')
+    // console.log('Group.js: nav params ' + JSON.stringify(this.props.navigation.state.params))
     this.setState({ _isMounted: true })
   }
 
   componentWillUnmount() {
-    console.log('Group - WillUnmount')
+    // console.log('Group - WillUnmount')
     this.setState({ _isMounted: false })
     // Todo - potentially add leave group?
   }
@@ -275,7 +275,7 @@ export default class Group extends React.Component {
                   marginBottom: 10,
                 }}
                 data={memberRenderList}
-                contentContainerStyle={styles. iner}
+                contentContainerStyle={styles.memberContainer}
                 renderItem={({ item }) => {
                   if (item.f) {
                     return (
@@ -290,11 +290,7 @@ export default class Group extends React.Component {
                             padding: 0,
                             margin: 5,
                           }}
-                          onPress={() =>
-                            this.setState({ chooseFriends: true }, () =>
-                              console.log('group.js: chooseFriends = ' + this.state.chooseFriends),
-                            )
-                          }
+                          onPress={() => this.setState({ chooseFriends: true })}
                         >
                           <Text
                             style={{
@@ -377,7 +373,7 @@ export default class Group extends React.Component {
                   onHideUnderlay={() => this.setState({ leaveGroup: false })}
                   style={styles.leave}
                   onPress={() => {
-                    console.log(this.state.members)
+                    // console.log(this.state.members)
                     this.state.hostName === this.state.myUsername
                       ? this.setState({ endAlert: true })
                       : this.setState({ leaveAlert: true })
@@ -423,6 +419,7 @@ export default class Group extends React.Component {
                 />
               )}
               <ChooseFriends
+                code={this.state.code}
                 visible={this.state.chooseFriends}
                 members={memberList}
                 press={() => this.setState({ chooseFriends: false })}

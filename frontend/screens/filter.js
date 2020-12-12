@@ -1,14 +1,10 @@
 /* eslint-disable prettier/prettier */
 import React from 'react'
 import {
-  Dimensions,
-  Modal,
   PermissionsAndroid,
-  ScrollView,
   StyleSheet,
   Switch,
   Text,
-  TextInput,
   TouchableHighlight,
   View,
 } from 'react-native'
@@ -26,11 +22,8 @@ import BackgroundButton from '../backgroundButton.js'
 import Location from '../modals/chooseLocation.js'
 import Time from '../modals/chooseTime.js'
 import Size from '../modals/chooseSize.js'
-import Majority from '../modals/chooseMajority.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
-import Icon from 'react-native-vector-icons/AntDesign'
-import SwitchButton from 'switch-button-react-native'
 
 const font = 'CircularStd-Medium'
 
@@ -226,7 +219,7 @@ export default class FilterSelector extends React.Component {
   handlePress(setFilters) {
     if (this.props.isHost) {
       Socket.startSession(this.props.code, setFilters)
-      console.log("startSession")
+      // console.log("startSession")
     }
   }
 
@@ -256,7 +249,7 @@ export default class FilterSelector extends React.Component {
     } else if (this.state.useCurrentLocation) {
       filters.latitude = this.state.lat
       filters.longitude = this.state.long
-      console.log('filter.js:' + JSON.stringify(filters))
+      // console.log('filter.js:' + JSON.stringify(filters))
       this.handlePress(filters)
     } else {
       filters.location = this.state.location
@@ -272,7 +265,7 @@ export default class FilterSelector extends React.Component {
     if (this.state.useCurrentLocation === false && this.state.location === null) {
       this.setState({ locationAlert: true })
       
-      console.log('filter.js startSession')
+      // console.log('filter.js startSession')
     } else if (this.state.majority && this.state.distance) {
       this.evaluateFilters()
     }
@@ -367,7 +360,7 @@ export default class FilterSelector extends React.Component {
                       this.setState({ majority: this.props.members.length })
                     } else {
                       this.setState({ majority: parseInt(event[0]) })
-                      console.log(this.state.majority)
+                      // console.log(this.state.majority)
                     }
                     this.setState({ selectedMajority: event })
                   }}
@@ -590,7 +583,7 @@ export default class FilterSelector extends React.Component {
           visible={this.state.chooseMajority}
           cancel={() => this.setState({ chooseMajority: false })}
           press={(sz) => {
-            console.log(sz)
+            // console.log(sz)
             this.setState({ majority: sz, chooseMajority: false })
           }}
         />
@@ -609,7 +602,7 @@ FilterSelector.propTypes = {
   isHost: PropTypes.bool,
   handleUpdate: PropTypes.func,
   members: PropTypes.array,
-  code: PropTypes.code,
+  code: PropTypes.number,
 }
 
 const styles = StyleSheet.create({
