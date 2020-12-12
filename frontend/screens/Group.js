@@ -275,7 +275,7 @@ export default class Group extends React.Component {
                   marginBottom: 10,
                 }}
                 data={memberRenderList}
-                contentContainerStyle={styles. iner}
+                contentContainerStyle={styles.iner}
                 renderItem={({ item }) => {
                   if (item.f) {
                     return (
@@ -461,7 +461,7 @@ export default class Group extends React.Component {
                   justifyContent: 'center',
                 }}
               >
-              <View
+                <View
                   style={{
                     color: 'white',
                     fontFamily: font,
