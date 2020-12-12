@@ -33,11 +33,12 @@ export default class Round extends React.Component {
   }
 
   likeRestaurant(resId) {
-    socket.likeRestaurant(this.state.host, resId)
+    socket.likeRestaurant(this.props.navigation.state.params.code, resId)
   }
 
   componentDidMount() {
     this._isMounted = true
+    // console.log('round.js ' + JSON.stringify(this.state.results))
   }
 
   componentWillUnmount() {
@@ -178,6 +179,7 @@ Round.propTypes = {
   results: PropTypes.array,
   host: PropTypes.string,
   isHost: PropTypes.bool,
+  code: PropTypes.number,
 }
 
 const styles = StyleSheet.create({

@@ -1,5 +1,14 @@
 import React from 'react'
-import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import {
+  Dimensions,
+  Modal,
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  View,
+} from 'react-native'
 import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import PropTypes from 'prop-types'
