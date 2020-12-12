@@ -24,7 +24,6 @@ const uploadApi = axios.create({
  */
 const uploadPhoto = async (photo) => {
   if (!photo) return
-  console.log('uploadApi')
   const config = {
     headers: {
       Accept: 'application/json',
@@ -34,10 +33,6 @@ const uploadPhoto = async (photo) => {
   const data = new FormData()
   data.append('id', myId)
   data.append('avatar', photo)
-
-  console.log(data)
-  console.log(photo)
-
   // return uploadApi.get('/accounts')
   //       .then((res) => {
   //         console.log(res)
@@ -54,13 +49,9 @@ const uploadPhoto = async (photo) => {
   return uploadApi
     .post('/images', data, config)
     .then((res) => {
-      console.log('upload success')
-      console.log(res)
       return res.status
     })
     .catch((error) => {
-      console.log('upload error')
-      console.log(error)
       throw error.response.status
     })
 }
