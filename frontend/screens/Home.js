@@ -1,14 +1,6 @@
+/* eslint-disable no-unused-vars */
 import React from 'react'
-import {
-  Dimensions,
-  Modal,
-  Image,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableHighlight,
-  View,
-} from 'react-native'
+import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import PropTypes from 'prop-types'
@@ -28,9 +20,10 @@ var username = ''
 AsyncStorage.getItem(PHOTO).then((res) => (img = res))
 AsyncStorage.getItem(NAME).then((res) => (name = res))
 AsyncStorage.getItem(USERNAME).then((res) => (username = res))
-var myId = ''
 
 const width = Dimensions.get('window').width
+
+var myId = ''
 
 AsyncStorage.getItem(ID).then((res) => {
   myId = res

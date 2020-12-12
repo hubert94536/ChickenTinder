@@ -25,6 +25,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import ImagePicker from 'react-native-image-crop-picker'
 import defImages from '../assets/images/foodImages.js'
 import uploadApi from '../apis/uploadApi.js'
+import PropTypes from 'prop-types'
 
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
@@ -559,9 +560,6 @@ export default class UserProfileView extends Component {
                       width: '40%',
                     },
                   ]}
-                  onPress={() => {
-                    return true
-                  }}
                   underlayColor="white"
                   onShowUnderlay={() => this.setState({ logout: true })}
                   onHideUnderlay={() => this.setState({ logout: false })}
@@ -789,6 +787,10 @@ export default class UserProfileView extends Component {
       </View>
     )
   }
+}
+
+UserProfileView.propTypes = {
+  navigation: PropTypes.object,
 }
 
 const styles = StyleSheet.create({
