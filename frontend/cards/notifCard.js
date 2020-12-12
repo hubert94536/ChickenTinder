@@ -79,7 +79,7 @@
 // }
 
 import React from 'react'
-import { Image, Text, TouchableHighlight, View } from 'react-native'
+import { Image, Text, TouchableHighlight, View, TouchableWithoutFeedback } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import friendsApi from '../apis/friendsApi.js'
@@ -96,6 +96,7 @@ export default class NotifCard extends React.Component {
       id: this.props.id,
       confirmPressed: false,
       deletePressed: false,
+      trash: false,
     }
   }
 
@@ -123,18 +124,31 @@ export default class NotifCard extends React.Component {
       .catch(() => this.props.showError())
   }
 
+  handleHold()
+  {
+    this.setState({trash: true})
+    console.log("held")
+  }
+
+  handleClick()
+  {
+
+  }
+
+  pressTrash()
+  {
+    this.setState({trash: false})
+    console.log("Trash")
+
+  }
+
+
+
   render() {
-    let swipeBtns = [
-      {
-        text: 'Delete',
-        backgroundColor: 'red',
-        underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-        onPress: () => {},
-      },
-    ]
 
     return (
-      <Swipeout right={swipeBtns} autoClose="true" backgroundColor="transparent">
+      <TouchableWithoutFeedback
+      onPress={() => this.handleHold()}>
         <View
           style={{
             flexDirection: 'row',
@@ -145,6 +159,7 @@ export default class NotifCard extends React.Component {
             borderRadius: 5,
             paddingVertical: '1.5%',
           }}
+          
         >
           <Image
             source={{
@@ -159,26 +174,33 @@ export default class NotifCard extends React.Component {
               flex: 0.9,
             }}
           >
-            {this.props.type == 'Invite' && (
+            {this.props.type == 'invited' && (
               <Text style={{ fontFamily: font, fontSize: 15 }}>
                 {this.props.name} has invited you to a group!
               </Text>
             )}
 
-            {this.props.type == 'Request' && (
+            {this.props.type == 'requested' && (
               <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
             )}
 
             <Text style={{ fontFamily: font, color: '#F15763' }}>@{this.props.username}</Text>
           </View>
 
-          {this.props.type == 'Invite' && (
+          {this.props.type == 'invited' && !this.state.trash &&(
             <View style={{ flexDirection: 'row', marginLeft: '3%' }}>
-              <Icon style={[imgStyles.icon, { fontSize: 20 }]} name="chevron-right" />
+              <Icon style={[imgStyles.icon, { fontSize: 20, }]} name="chevron-right" />
             </View>
           )}
 
-          {this.props.type == 'Request' && (
+          {this.props.type == 'invited' && this.state.trash &&(
+            <View style={{ flexDirection: 'row', marginLeft: '3%', backgroundColor: '#C82020', width: '15%', justifyContent: 'center', borderRadius: 10,}}>
+              <Icon style={[imgStyles.icon, { fontSize: 20, color: 'white' }]} name="trash" 
+              onPress={() => this.pressTrash()}/>
+            </View>
+          )}
+
+          {this.props.type == 'requested' && (
             <View style={{ flex: 1, flexDirection: 'row' }}>
               <TouchableHighlight
                 underlayColor="#E5E5E5"
@@ -249,7 +271,8 @@ export default class NotifCard extends React.Component {
             </View>
           )}
         </View>
-      </Swipeout>
+        </TouchableWithoutFeedback>
+      
     )
   }
 }
