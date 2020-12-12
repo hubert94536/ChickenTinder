@@ -47,7 +47,7 @@ export default class Search extends Component {
     })
   }
 
-  searchFilterFunction (= (text) =>) {
+  searchFilterFunction = (text) => {
     this.setState({
       value: text,
     });
