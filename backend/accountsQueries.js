@@ -1,4 +1,4 @@
-const { Accounts, Friends } = require('./models.js')
+const { Accounts, Friends, Notifications } = require('./models.js')
 const { Op } = require('sequelize')
 
 // Get all accounts
@@ -100,6 +100,18 @@ const deleteAccount = async (req, res) => {
           },
           {
             friend_id: id,
+          },
+        ],
+      },
+    })
+    await Notifications.destroy({
+      where: {
+        [Op.or]: [
+          {
+            receiver_id: id,
+          },
+          {
+            sender_id: id,
           },
         ],
       },
