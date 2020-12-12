@@ -264,7 +264,6 @@ export default class FilterSelector extends React.Component {
   startSession() {
     if (this.state.useCurrentLocation === false && this.state.location === null) {
       this.setState({ locationAlert: true })
-      
       // console.log('filter.js startSession')
     } else if (this.state.majority && this.state.distance) {
       this.evaluateFilters()

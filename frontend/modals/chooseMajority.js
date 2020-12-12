@@ -17,7 +17,6 @@ export default class Majority extends React.Component {
 
   // function called when main button is pressed
   handlePress(size) {
-    f
     this.props.press(size)
   }
 

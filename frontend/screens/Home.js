@@ -24,6 +24,7 @@ AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 const width = Dimensions.get('window').width
 
 var myId = ''
+
 AsyncStorage.getItem(ID).then((res) => {
   myId = res
 })

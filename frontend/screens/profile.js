@@ -141,7 +141,6 @@ export default class UserProfileView extends Component {
         .updateName(name)
         .then(() => {
           // update name locally
-          console.log(name)
           AsyncStorage.setItem(NAME, name)
           this.setState({ name: this.state.nameValue })
           Keyboard.dismiss()
@@ -259,7 +258,6 @@ export default class UserProfileView extends Component {
         oldImage: this.state.image,
         image: image.path,
       })
-      console.log(this.state.oldImage)
       AsyncStorage.setItem(PHOTO, this.state.image)
     })
   }

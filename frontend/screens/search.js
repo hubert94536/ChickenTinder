@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 import { USERNAME } from 'react-native-dotenv'
 import { BlurView } from '@react-native-community/blur'
-import Icon from 'react-native-vector-icons/FontAwesome'
 import { SearchBar } from 'react-native-elements'
 import AsyncStorage from '@react-native-community/async-storage'
 import PropTypes from 'prop-types';
@@ -19,7 +18,6 @@ import screenStyles from '../../styles/screenStyles.js'
 import friendsApi from '../apis/friendsApi.js'
 import TabBar from '../nav.js'
 
-const hex = '#F15763'
 const font = 'CircularStd-Medium'
 var username = ''
 AsyncStorage.getItem(USERNAME).then((res) => (username = res))
@@ -33,6 +31,7 @@ export default class Search extends Component {
       errorAlert: false,
       deleteFriend: false,
       deleteFriendName: '',
+      value: ''
     };
     friendsApi
     .getFriends()
@@ -48,7 +47,7 @@ export default class Search extends Component {
     })
   }
 
-  searchFilterFunction = text => {
+  searchFilterFunction = (text) => {
     this.setState({
       value: text,
     });
@@ -127,7 +126,7 @@ export default class Search extends Component {
               currentUser={username}
               name={item.name}
               username={item.username}
-              image={item.photo}
+              image={item.image}
               id = {item.id}
               requested={item.status}
               total={this.state.data}
