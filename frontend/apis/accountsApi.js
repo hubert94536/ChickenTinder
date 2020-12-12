@@ -63,7 +63,6 @@ const searchUsers = async (text) => {
     .get(`/accounts/search/${text}`)
     .then((res) => {
       return {
-        status: res.status,
         count: res.data.users.count,
         userList: res.data.users.rows.map(function (users) {
           // returns individual user info
