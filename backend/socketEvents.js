@@ -371,7 +371,7 @@ module.exports = (io) => {
     })
 
     // alert all users to choose random pick
-    socket.on('randomize', async (data) => {
+    socket.on('randomize', (data) => {
       io.in(data.code).emit('choose')
     })
   })
