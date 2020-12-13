@@ -80,6 +80,7 @@ export default class Group extends React.Component {
         if (!count) {
           this.setState({ canStart: true })
         }
+        this.updateMemberList()
       }
     })
 
