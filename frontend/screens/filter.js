@@ -133,18 +133,24 @@ export default class FilterSelector extends React.Component {
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
       )
     }
+    this.updateMajorityTags()
   }
 
   componentDidUpdate() {
+    this.updateMajorityTags()
+  }
+
+  updateMajorityTags() {
     let size = this.props.members.length
     let half = Math.ceil(size * 0.5)
     let twoThirds = Math.ceil(size * 0.66)
     tagsMajority =[]
     tagsMajority.push(half)
     if (twoThirds != half) tagsMajority.push(twoThirds)
-    tagsMajority.push('All')
+    if (size != twoThirds) tagsMajority.push('All')
     tagsMajority.push('Custom: ')
   }
+
 
   //  pushes the 'subcategories' of each cusisine
   categorize(cat) {
