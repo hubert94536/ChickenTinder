@@ -138,7 +138,7 @@ export default class UserProfileView extends Component {
     if (this.state.nameValue !== this.state.name) {
       const name = this.state.nameValue
       return accountsApi
-        .updateName(name)
+        .updateName(id, name)
         .then(() => {
           // update name locally
           AsyncStorage.setItem(NAME, name)
@@ -162,7 +162,7 @@ export default class UserProfileView extends Component {
         .checkUsername(user)
         .then(() => {
           // update username locally
-          return accountsApi.updateUsername(user).then(() => {
+          return accountsApi.updateUsername(id, user).then(() => {
             AsyncStorage.setItem(USERNAME, user)
             this.setState({ username: this.state.usernameValue })
             Keyboard.dismiss()
@@ -182,7 +182,7 @@ export default class UserProfileView extends Component {
 
   async handleDelete() {
     facebookService
-      .deleteUser()
+      .deleteUser(id)
       .then(() => {
         // close settings and navigate to Login
         this.setState({ visible: false })
@@ -365,7 +365,7 @@ export default class UserProfileView extends Component {
             </Text>
           </View>
           <View style={{ height: '50%', marginTop: '0%' }}>
-            <Friends isFriends onFriendsChange={() => this.handleFriendsCount} />
+            <Friends isFriends onFriendsChange={(n) => this.handleFriendsCount(n)} />
           </View>
           {(this.state.visible || this.state.edit) && (
             <BlurView
