@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Image, Text, TouchableHighlight, View } from 'react-native'
 import Alert from '../modals/alert.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import imgStyles from '../../styles/cardImage.js'
@@ -59,7 +59,7 @@ export default class Login extends React.Component {
             },
           ]}
         >
-          Let's Get Chews-ing!
+          Let&apos;s Get Chews-ing!
         </Text>
         <TouchableHighlight
           onShowUnderlay={() => this.setState({ phonePressed: true })}

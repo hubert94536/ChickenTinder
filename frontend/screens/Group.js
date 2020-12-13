@@ -9,6 +9,7 @@ import {
   Dimensions,
 } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
+import Clipboard from '@react-native-community/clipboard'
 import { USERNAME } from 'react-native-dotenv'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -76,9 +77,9 @@ export default class Group extends React.Component {
 
     // listens for group updates
     socket.getSocket().on('update', (res) => {
-      console.log('group.js: Update')
+      // console.log('group.js: Update')
       if (this._isMounted) {
-        console.log('socket "update": ' + JSON.stringify(res))
+        // console.log('socket "update": ' + JSON.stringify(res))
         this.setState({ members: res.members, host: res.host, code: res.code })
         const count = this.countNeedFilters(res.members)
         this.setState({ needFilters: count })
@@ -98,7 +99,7 @@ export default class Group extends React.Component {
           code: this.state.code,
         })
       } else {
-        console.log('no restaurants found')
+        console.log('group.js: no restaurants found')
         // need to handle no restaurants returned
       }
     })
@@ -191,13 +192,13 @@ export default class Group extends React.Component {
   // }
 
   componentDidMount() {
-    console.log('Group - DidMount')
-    console.log('Group.js: nav params ' + JSON.stringify(this.props.navigation.state.params))
+    // console.log('Group - DidMount')
+    // console.log('Group.js: nav params ' + JSON.stringify(this.props.navigation.state.params))
     this.setState({ _isMounted: true })
   }
 
   componentWillUnmount() {
-    console.log('Group - WillUnmount')
+    // console.log('Group - WillUnmount')
     this.setState({ _isMounted: false })
     // Todo - potentially add leave group?
   }
@@ -205,6 +206,10 @@ export default class Group extends React.Component {
   firstName(str) {
     const first_sp = str.indexOf(' ')
     return str.substr(0, first_sp)
+  }
+
+  copyToClipboard() {
+    Clipboard.setString(this.state.code.toString())
   }
 
   render() {
@@ -239,9 +244,9 @@ export default class Group extends React.Component {
                   width: 15,
                   height: 15,
                 }}
-                // TODO: add copy to clipboard/share functionality
+                onPress={() => this.copyToClipboard()}
               >
-                <Ionicons name="copy-outline" style={styles.icon2} />
+                <Ionicons name="copy-outline" style={styles.copyIcon} />
               </TouchableOpacity>
             </View>
           </View>
@@ -275,7 +280,7 @@ export default class Group extends React.Component {
                   marginBottom: 10,
                 }}
                 data={memberRenderList}
-                contentContainerStyle={styles.iner}
+                contentContainerStyle={styles.memberContainer}
                 renderItem={({ item }) => {
                   if (item.f) {
                     return (
@@ -290,11 +295,7 @@ export default class Group extends React.Component {
                             padding: 0,
                             margin: 5,
                           }}
-                          onPress={() =>
-                            this.setState({ chooseFriends: true }, () =>
-                              console.log('group.js: chooseFriends = ' + this.state.chooseFriends),
-                            )
-                          }
+                          onPress={() => this.setState({ chooseFriends: true })}
                         >
                           <Text
                             style={{
@@ -377,7 +378,7 @@ export default class Group extends React.Component {
                   onHideUnderlay={() => this.setState({ leaveGroup: false })}
                   style={styles.leave}
                   onPress={() => {
-                    console.log(this.state.members)
+                    // console.log(this.state.members)
                     this.state.hostName === this.state.myUsername
                       ? this.setState({ endAlert: true })
                       : this.setState({ leaveAlert: true })
@@ -423,6 +424,7 @@ export default class Group extends React.Component {
                 />
               )}
               <ChooseFriends
+                code={this.props.navigation.state.params.code}
                 visible={this.state.chooseFriends}
                 members={memberList}
                 press={() => this.setState({ chooseFriends: false })}
@@ -500,6 +502,7 @@ export default class Group extends React.Component {
 }
 
 Group.propTypes = {
+  navigation: PropTypes.object,
   members: PropTypes.array,
   host: PropTypes.string,
 }
@@ -621,7 +624,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 15,
   },
-  icon2: {
+  copyIcon: {
     color: '#fff',
     fontSize: 15,
     marginLeft: '7%',
