@@ -141,7 +141,7 @@ export default class FilterSelector extends React.Component {
     let twoThirds = Math.ceil(size * 0.66)
     tagsMajority =[]
     tagsMajority.push(half)
-    if (twoThirds != half) tagsMajority.append(twoThirds)
+    if (twoThirds != half) tagsMajority.push(twoThirds)
     tagsMajority.push('All')
     tagsMajority.push('Custom: ')
   }
