@@ -23,6 +23,7 @@ export default class Join extends React.Component {
   }
 
   handleAccept() {
+    this.setState({ pressed: false })
     const { code } = this.state
     socket.joinRoom(code)
     this.props.cancel()
@@ -88,12 +89,7 @@ export default class Join extends React.Component {
                   onPress={() => this.handleAccept()}
                   style={modalStyles.button}
                 >
-                  <Text
-                    style={[
-                      modalStyles.text,
-                      this.state.pressed ? { color: 'white' } : { color: hex },
-                    ]}
-                  >
+                  <Text style={[modalStyles.text, { color: this.state.pressed ? 'white' : hex }]}>
                     Join Group
                   </Text>
                 </TouchableHighlight>
