@@ -22,6 +22,7 @@ import BackgroundButton from '../backgroundButton.js'
 import Location from '../modals/chooseLocation.js'
 import Time from '../modals/chooseTime.js'
 import Size from '../modals/chooseSize.js'
+import Majority from '../modals/chooseMajority.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 
@@ -249,7 +250,7 @@ export default class FilterSelector extends React.Component {
     } else if (this.state.useCurrentLocation) {
       filters.latitude = this.state.lat
       filters.longitude = this.state.long
-      // console.log('filter.js:' + JSON.stringify(filters))
+      console.log('filter.js:' + JSON.stringify(filters))
       this.handlePress(filters)
     } else {
       filters.location = this.state.location
@@ -264,9 +265,9 @@ export default class FilterSelector extends React.Component {
   startSession() {
     if (this.state.useCurrentLocation === false && this.state.location === null) {
       this.setState({ locationAlert: true })
-      // console.log('filter.js startSession')
     } else if (this.state.majority && this.state.distance) {
       this.evaluateFilters()
+      console.log('filter.js startSession')
     }
   }
 
@@ -575,7 +576,7 @@ export default class FilterSelector extends React.Component {
           cancel={() => this.setState({ chooseSize: false })}
           press={(sz) => this.setState({ size: sz, chooseSize: false })}
         />
-        <Size
+        <Majority
           max={this.props.members.length}
           title={'Majority'}
           filterSubtext={'Choose the number of members needed to get a match'}

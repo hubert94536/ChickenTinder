@@ -15,7 +15,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import AsyncStorage from '@react-native-community/async-storage'
 import PropTypes from 'prop-types'
-
 import Drawer from './Drawer.js'
 import Alert from '../modals/alert.js'
 import GroupCard from '../cards/groupCard.js'
@@ -77,9 +76,9 @@ export default class Group extends React.Component {
 
     // listens for group updates
     socket.getSocket().on('update', (res) => {
-      // console.log('group.js: Update')
+      console.log('group.js: Update')
       if (this._isMounted) {
-        // console.log('socket "update": ' + JSON.stringify(res))
+        console.log('socket "update": ' + JSON.stringify(res))
         this.setState({ members: res.members, host: res.host, code: res.code })
         const count = this.countNeedFilters(res.members)
         this.setState({ needFilters: count })
@@ -326,7 +325,7 @@ export default class Group extends React.Component {
                       <GroupCard
                         name={item.name}
                         username={item.username}
-                        image={item.photo}
+                        image={item.photo == '' ? 'https://via.placeholder.com/150' : item.photo}
                         filters={item.filters}
                         host={this.state.host}
                         isHost={this.state.hostName == item.username}
