@@ -10,7 +10,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
-import { NAME, PHOTO, USERNAME, DEFPHOTO, EMAIL } from 'react-native-dotenv'
+import { ID, NAME, PHOTO, USERNAME, DEFPHOTO, EMAIL } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -30,26 +30,19 @@ import PropTypes from 'prop-types'
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
 const height = Dimensions.get('window').height
-var img = null
-var name = ''
-var username = ''
 var email = ''
+var id = ''
 
-//  gets user info
-AsyncStorage.getItem(USERNAME).then((res) => (username = res))
-AsyncStorage.getItem(PHOTO).then((res) => (img = res))
-AsyncStorage.getItem(NAME).then((res) => (name = res))
-AsyncStorage.getItem(EMAIL).then((res) => (email = res))
 //=========================Testing Code=========================================
-import { ID } from 'react-native-dotenv'
-import friendsApi from '../apis/friendsApi.js'
+// import { ID } from 'react-native-dotenv'
+// import friendsApi from '../apis/friendsApi.js'
 
-var myId = ''
-AsyncStorage.getItem(ID).then((res) => {
-  myId = res
-})
+// var myId = ''
+// AsyncStorage.getItem(ID).then((res) => {
+//   myId = res
+// })
 
-const dummyFriends = () => {
+// const dummyFriends = () => {
   // uncomment if testing friends/requests
   //this.getNotifs();
   // accountsApi.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
@@ -75,9 +68,9 @@ const dummyFriends = () => {
   //   console.log(err)
   // }),
 
-  friendsApi.createFriendshipTest(myId, 31)
+  // friendsApi.createFriendshipTest(myId, 31)
 
-  friendsApi.createFriendshipTest(32, myId)
+  // friendsApi.createFriendshipTest(32, myId)
 
   // friendsApi.createFriendshipTest(3, myId),
   // friendsApi.createFriendshipTest(4, myId),
@@ -96,19 +89,19 @@ const dummyFriends = () => {
   // friendsApi.acceptFriendRequest(8)
   // friendsApi.acceptFriendRequest(9)
   // friendsApi.acceptFriendRequest(10)
-}
+// }
 //==============================================================================
 
 export default class UserProfileView extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      name: name,
-      nameValue: name,
-      username: username,
-      usernameValue: username,
-      image: img,
-      oldImage: img,
+      name: '',
+      nameValue: '',
+      username: '',
+      usernameValue: '',
+      image: '',
+      oldImage: '',
       friends: true,
       visible: false,
       edit: false,
@@ -125,12 +118,19 @@ export default class UserProfileView extends Component {
       numFriends: 0,
       defImg: '',
     }
-    AsyncStorage.getItem(USERNAME).then((res) => this.setState({ username: res }))
-    AsyncStorage.getItem(PHOTO).then((res) => this.setState({ image: res, oldImage: res }))
-    AsyncStorage.getItem(DEFPHOTO).then((res) =>
-      this.setState({ defImg: defImages[parseInt(res)] }),
-    )
-    AsyncStorage.getItem(NAME).then((res) => this.setState({ name: res, nameValue: res }))
+    AsyncStorage.multiGet([DEFPHOTO, EMAIL, ID, NAME, PHOTO, USERNAME]).then((res) => {
+      email = res[1][1]
+      id = res[2][1]
+      this.setState({ 
+        defImg: defImages[parseInt(res[0][1])],
+        name: res[3][1],
+        nameValue: res[3][1],
+        image: res[4][1],
+        oldImage: res[4][1],
+        username: res[5][1],
+        usernameValue: [5][1]
+      })
+    })
   }
 
   // getting current user's info
