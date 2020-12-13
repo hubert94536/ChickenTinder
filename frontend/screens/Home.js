@@ -43,7 +43,6 @@ class Home extends React.Component {
         this.props.navigation.navigate('Group', res)
       })
     })
-
   }
 
   createGroup() {
