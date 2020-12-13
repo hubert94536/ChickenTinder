@@ -217,6 +217,7 @@ export default class FilterSelector extends React.Component {
 
   // this will pass the filters to the groups page
   handlePress(setFilters) {
+    console.log(setFilters)
     if (this.props.isHost) {
       Socket.startSession(this.props.code, setFilters)
       // console.log("startSession")
