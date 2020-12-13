@@ -17,7 +17,7 @@ test('renders login with Facebook alert', () => {
   const create = Renderer.create(<Login />).getInstance()
   const { getByText, toJSON } = render(<Login />)
   // Test Facebook Login button opens alert
-  fireEvent.press(getByText('Log in with Facebook'))
+  fireEvent.press(getByText('Login with Facebook'))
   expect(getByText('Open "Facebook?"'))
   // Test cancel button closes alert
   fireEvent.press(getByText(''))

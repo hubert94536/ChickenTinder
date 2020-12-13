@@ -4,19 +4,9 @@ import Renderer from 'react-test-renderer'
 import Search from '../screens/search'
 import React from 'react'
 import AsyncStorage from '@react-native-community/async-storage'
-import MockAsyncStorage from 'mock-async-storage'
-
-const mock = () => {
-  const mockImpl = new MockAsyncStorage()
-  jest.mock('AsyncStorage', () => mockImpl)
-}
-
-mock()
 
 jest.mock('../apis/friendsApi')
 jest.mock('../apis/accountsApi.js')
-
-//afterEach(cleanup)
 
 it('Mock Async Storage working', async () => {
   await AsyncStorage.setItem('myKey', 'myValue')
@@ -34,7 +24,8 @@ test('snapshot for search', () => {
   const { getByText, getByPlaceholderText, toJSON } = render(<Search />)
   // Test typing generates cards
   fireEvent.changeText(getByPlaceholderText('Search for friends'), 'John')
-  expect(getByText('j0hn'))
+  expect(getByText('John'))
+  expect(toJSON()).toMatchSnapshot()
   // Test cards remain after deleting
   fireEvent.changeText(getByPlaceholderText('Search for friends'), '')
   expect(getByText('@j0hn'))

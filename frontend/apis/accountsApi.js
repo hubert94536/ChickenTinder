@@ -63,7 +63,6 @@ const searchUsers = async (text) => {
     .get(`/accounts/search/${text}`)
     .then((res) => {
       return {
-        status: res.status,
         count: res.data.users.count,
         userList: res.data.users.rows.map(function (users) {
           // returns individual user info
@@ -99,7 +98,6 @@ const getUser = async (id) => {
     .get(`/accounts/${id}`)
     .then((res) => {
       return {
-        status: res.status,
         username: res.data.user.username,
         email: res.data.user.email,
         phone_number: res.data.user.phone_number,
