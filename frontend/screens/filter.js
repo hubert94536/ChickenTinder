@@ -276,7 +276,9 @@ export default class FilterSelector extends React.Component {
     // puts the cuisine and restrictions into one array
     const selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
     filters.categories = this.categorize(selections).toString()
-    filters.categories += ','
+    if(filters.categories != '')
+      filters.categories += ','
+    console.log('userfilters: ' + JSON.stringify(filters.categories))
     Socket.submitFilters(this.props.code, filters.categories)
     this.props.handleUpdate()
   }
