@@ -10,7 +10,6 @@ import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Tooltip from 'react-native-walkthrough-tooltip'
 import getCuisine from '../assets/cards/foodImages.js'
-import getMatchImage from '../assets/matchcard/matchImages.js'
 
 export default class Round extends React.Component {
   constructor(props) {
@@ -36,10 +35,11 @@ export default class Round extends React.Component {
         host: this.state.host,
       })
     })
+    var modified = []
     for (var i = 0; i < this.state.results.length; i++) {
-      this.state.results[i].image = getCuisine(this.state.results[i].categories)
-      this.state.results[i].matchImage = getMatchImage(this.state.results[i].categories)
+      modified[i] = getCuisine(this.state.results[i])
     }
+    this.setState({ results: modified })
   }
 
   likeRestaurant(resId) {
@@ -48,7 +48,6 @@ export default class Round extends React.Component {
 
   componentDidMount() {
     this._isMounted = true
-    console.log(this.state.results)
     // console.log('round.js ' + JSON.stringify(this.state.results))
   }
 
@@ -94,7 +93,9 @@ export default class Round extends React.Component {
                 })
               }
             }}
-            onSwipedRight={(cardIndex) => this.likeRestaurant(this.state.results[cardIndex].id)}
+            onSwipedRight={(cardIndex) => {
+              this.likeRestaurant(this.state.results[cardIndex].id)
+            }}
             stackSeparation={0}
             backgroundColor="transparent"
             animateOverlayLabelsOpacity
@@ -194,7 +195,7 @@ export default class Round extends React.Component {
             <TouchableHighlight
               onPress={() => this.deck.swipeRight()}
               underlayColor="transparent"
-              style={{ backgroundColor: 'transparent' }}
+              style={{ backgroundColor: 'transparent', marginTop: '1%' }}
             >
               <Icon name="heart" style={[screenStyles.text, { fontSize: 35 }]} />
             </TouchableHighlight>

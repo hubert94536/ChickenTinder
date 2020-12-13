@@ -13,7 +13,6 @@ import FA from 'react-native-vector-icons/FontAwesome'
 import Ion from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
-import getCuisine from '../assets/images/foodImages.js'
 import getStarPath from '../assets/stars/star.js'
 import screenStyles from '../../styles/screenStyles.js'
 
@@ -100,7 +99,7 @@ export default class TopThree extends React.Component {
           >
             <View style={{ flex: 1, justifyContent: 'space-between' }}>
               <ImageBackground
-                source={getCuisine(this.state.restaurants[0].categories)}
+                source={this.state.restaurants[0].topImage}
                 style={[
                   this.state.first ? styles.imageSelected : styles.imageUnselected,
                   { alignSelf: 'center' },
@@ -167,7 +166,7 @@ export default class TopThree extends React.Component {
           >
             <View style={{ flex: 1, justifyContent: 'space-between' }}>
               <ImageBackground
-                source={getCuisine(this.state.restaurants[1].categories)}
+                source={this.state.restaurants[1].topImage}
                 style={[
                   this.state.second ? styles.imageSelected : styles.imageUnselected,
                   { alignSelf: 'center' },
@@ -234,7 +233,7 @@ export default class TopThree extends React.Component {
           >
             <View style={{ flex: 1, justifyContent: 'space-between' }}>
               <ImageBackground
-                source={getCuisine(this.state.restaurants[2].categories)}
+                source={this.state.restaurants[2].topImage}
                 style={[
                   this.state.third ? styles.imageSelected : styles.imageUnselected,
                   { alignSelf: 'center' },
