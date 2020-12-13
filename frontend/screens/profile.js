@@ -69,7 +69,7 @@ export default class UserProfileView extends Component {
         image: res[4][1],
         oldImage: res[4][1],
         username: res[5][1],
-        usernameValue: [5][1],
+        usernameValue: res[5][1],
       })
     })
   }
