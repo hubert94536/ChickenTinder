@@ -15,7 +15,6 @@ const accountsApi = axios.create({
 
 // creates user and returns id
 const createFBUser = async (name, id, username, email, photo) => {
-  console.log('create')
   return accountsApi
     .post('/accounts', {
       params: {

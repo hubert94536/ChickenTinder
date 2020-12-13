@@ -1,15 +1,17 @@
 import React from 'react'
 import { Image, Text, View, TouchableHighlight } from 'react-native'
+import { ID } from 'react-native-dotenv'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
+import AsyncStorage from '@react-native-community/async-storage'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
-import AntDesign from 'react-native-vector-icons/AntDesign'
 
 // commented out during linting but hex is used in commented-out code below
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
-
+var id = ''
 // cards for the search for friends screen
 export default class SearchCard extends React.Component {
   constructor(props) {
@@ -20,11 +22,14 @@ export default class SearchCard extends React.Component {
       pressed: false,
       renderOption: this.props.currentUser !== this.props.username,
     }
+    AsyncStorage.getItem(ID).then((res) => {
+      id = res
+    })
   }
 
   async acceptFriend() {
     friendsApi
-      .acceptFriendRequest(this.props.id)
+      .acceptFriendRequest(id, this.props.id)
       .then(() => {
         this.setState({ requested: 'friends' })
       })
@@ -33,7 +38,7 @@ export default class SearchCard extends React.Component {
 
   async addFriend() {
     friendsApi
-      .createFriendship(this.props.id)
+      .createFriendship(id, this.props.id)
       .then(() => {
         this.setState({ requested: 'requested' })
       })
@@ -42,7 +47,7 @@ export default class SearchCard extends React.Component {
 
   async rejectFriend() {
     friendsApi
-      .removeFriendship(this.props.id)
+      .removeFriendship(id, this.props.id)
       .then(() => {
         this.setState({ requested: 'add' })
       })
@@ -51,7 +56,7 @@ export default class SearchCard extends React.Component {
 
   async deleteFriend() {
     friendsApi
-      .removeFriendship(this.props.id)
+      .removeFriendship(id, this.props.id)
       .then(() => {
         this.props.showDelete()
         var filteredArray = this.props.total.filter((item) => {
