@@ -49,54 +49,54 @@ AsyncStorage.getItem(ID).then((res) => {
   myId = res
 })
 
-const dummyFriends = () => {
-  // uncomment if testing friends/requests
-  //this.getNotifs();
-  // accountsApi.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
-  // accountsApi.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
-  // accountsApi.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
-  // accountsApi.createFBUser('Helen', 5, 'helenthemelon', 'helenw@gmail.com', 'sjdkf'),
-  // accountsApi.createFBUser('Kevin', 6, 'kevint', 'kevintang@gmail.com', 'sdfddf'),
-  // accountsApi.createFBUser('David', 7, 'das', 'das@gmail.com', 'fhgdgffgad'),
-  // accountsApi.createFBUser('Jeff', 8, 'jeffwinger', 'jeffw@gmail.com', 'sdfaadddf'),
-  // accountsApi.createFBUser('Annie', 9, 'anniee', 'anniee@gmail.com', 'sdfgfsdddf'),
-  // accountsApi.createFBUser('Britta', 10, 'theworst', 'brittap@gmail.com', 'sdfhgjddf'),
+// const dummyFriends = () => {
+// uncomment if testing friends/requests
+//this.getNotifs();
+// accountsApi.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
+// accountsApi.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
+// accountsApi.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
+// accountsApi.createFBUser('Helen', 5, 'helenthemelon', 'helenw@gmail.com', 'sjdkf'),
+// accountsApi.createFBUser('Kevin', 6, 'kevint', 'kevintang@gmail.com', 'sdfddf'),
+// accountsApi.createFBUser('David', 7, 'das', 'das@gmail.com', 'fhgdgffgad'),
+// accountsApi.createFBUser('Jeff', 8, 'jeffwinger', 'jeffw@gmail.com', 'sdfaadddf'),
+// accountsApi.createFBUser('Annie', 9, 'anniee', 'anniee@gmail.com', 'sdfgfsdddf'),
+// accountsApi.createFBUser('Britta', 10, 'theworst', 'brittap@gmail.com', 'sdfhgjddf'),
 
-  // accountsApi.createFBUser('Ice Cream', 30, 'icecream', 'icecream@gmail.com', 'hjgkjgkjg')
-  // accountsApi.createFBUser('Sundae', 31, 'sundae', 'sundae@gmail.com', 'sfhkslfs')
-  // accountsApi.createFBUser('Float', 32, 'float', 'float@gmail.com', 'ksflsfsf')
+// accountsApi.createFBUser('Ice Cream', 30, 'icecream', 'icecream@gmail.com', 'hjgkjgkjg')
+// accountsApi.createFBUser('Sundae', 31, 'sundae', 'sundae@gmail.com', 'sfhkslfs')
+// accountsApi.createFBUser('Float', 32, 'float', 'float@gmail.com', 'ksflsfsf')
 
-  // console.log("My id:" + myId),
-  // friendsApi.createFriendshipTest(1288355614841173, myId)
-  // .then((res) => {
-  //   console.log('this is the response: ' + res)
-  // })
-  // .catch((err)=>{
-  //   console.log(err)
-  // }),
+// console.log("My id:" + myId),
+// friendsApi.createFriendshipTest(1288355614841173, myId)
+// .then((res) => {
+//   console.log('this is the response: ' + res)
+// })
+// .catch((err)=>{
+//   console.log(err)
+// }),
 
-  friendsApi.createFriendshipTest(myId, 31)
+// friendsApi.createFriendshipTest(myId, 31)
 
-  friendsApi.createFriendshipTest(32, myId)
+// friendsApi.createFriendshipTest(32, myId)
 
-  // friendsApi.createFriendshipTest(3, myId),
-  // friendsApi.createFriendshipTest(4, myId),
-  // friendsApi.createFriendshipTest(5, myId),
-  // friendsApi.createFriendshipTest(6, myId),
-  // friendsApi.createFriendshipTest(7, myId),
-  // friendsApi.createFriendshipTest(8, myId),
-  // friendsApi.createFriendshipTest(9, myId),
-  // friendsApi.createFriendshipTest(10, myId),
-  // friendsApi.acceptFriendRequest(1288355614841173)
-  // friendsApi.acceptFriendRequest(3)
-  // friendsApi.acceptFriendRequest(4)
-  // friendsApi.acceptFriendRequest(5)
-  // friendsApi.acceptFriendRequest(6)
-  // friendsApi.acceptFriendRequest(7)
-  // friendsApi.acceptFriendRequest(8)
-  // friendsApi.acceptFriendRequest(9)
-  // friendsApi.acceptFriendRequest(10)
-}
+// friendsApi.createFriendshipTest(3, myId),
+// friendsApi.createFriendshipTest(4, myId),
+// friendsApi.createFriendshipTest(5, myId),
+// friendsApi.createFriendshipTest(6, myId),
+// friendsApi.createFriendshipTest(7, myId),
+// friendsApi.createFriendshipTest(8, myId),
+// friendsApi.createFriendshipTest(9, myId),
+// friendsApi.createFriendshipTest(10, myId),
+// friendsApi.acceptFriendRequest(1288355614841173)
+// friendsApi.acceptFriendRequest(3)
+// friendsApi.acceptFriendRequest(4)
+// friendsApi.acceptFriendRequest(5)
+// friendsApi.acceptFriendRequest(6)
+// friendsApi.acceptFriendRequest(7)
+// friendsApi.acceptFriendRequest(8)
+// friendsApi.acceptFriendRequest(9)
+// friendsApi.acceptFriendRequest(10)
+// }
 //==============================================================================
 
 export default class UserProfileView extends Component {
