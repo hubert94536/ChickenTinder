@@ -18,6 +18,7 @@ var photo = ''
 var username = ''
 
 const width = Dimensions.get('window').width
+const height = Dimensions.get('window').height
 
 class Home extends React.Component {
   constructor() {
@@ -78,11 +79,8 @@ class Home extends React.Component {
         </Text>
         {/* dummy image below */}
         <Image
-          source={{
-            uri:
-              'https://banner2.cleanpng.com/20181107/fhg/kisspng-computer-icons-location-map-united-states-of-ameri-5be33fd26a48d9.3500512415416196664353.jpg',
-          }}
-          style={{ width: 200, height: 200 }}
+          source={require('../assets/Icon_Transparent.png')}
+          style={{ width: height*0.3, height: height*0.3 }}
         />
         <View>
           <TouchableHighlight
