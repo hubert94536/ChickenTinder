@@ -40,7 +40,13 @@ class Home extends React.Component {
       socket.connect(id, name, photo, username)
       socket.getSocket().on('update', (res) => {
         this.setState({ invite: false })
-        this.props.navigation.navigate('Group', res)
+        this.props.navigation.navigate('Group', {
+          response: res,
+          id: id,
+          name: name,
+          photo: photo,
+          username: username,
+        })
       })
     })
   }
@@ -80,7 +86,7 @@ class Home extends React.Component {
         {/* dummy image below */}
         <Image
           source={require('../assets/Icon_Transparent.png')}
-          style={{ width: height*0.3, height: height*0.3 }}
+          style={{ width: height * 0.3, height: height * 0.3 }}
         />
         <View>
           <TouchableHighlight
