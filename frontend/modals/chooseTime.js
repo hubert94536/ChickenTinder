@@ -102,7 +102,7 @@ export default class Time extends React.Component {
                 ]}
                 value={this.state.selectedHour}
                 placeholder="12"
-                placeholderTextColor='#9f9f9f'
+                placeholderTextColor="#9f9f9f"
                 onChangeText={(text) => this.setState({ selectedHour: text, invalidTime: false })}
                 keyboardType="numeric"
               />
@@ -127,7 +127,7 @@ export default class Time extends React.Component {
                 ]}
                 value={this.state.selectedMinute}
                 placeholder="00"
-                placeholderTextColor='#9f9f9f'
+                placeholderTextColor="#9f9f9f"
                 onChangeText={(text) => this.setState({ selectedMinute: text, invalidTime: false })}
                 keyboardType="numeric"
               />
