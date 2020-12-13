@@ -13,7 +13,6 @@ import Clipboard from '@react-native-community/clipboard'
 import { USERNAME } from 'react-native-dotenv'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import AsyncStorage from '@react-native-community/async-storage'
 import PropTypes from 'prop-types'
 import Drawer from './Drawer.js'
 import Alert from '../modals/alert.js'
@@ -216,14 +215,6 @@ export default class Group extends React.Component {
     this.updateMemberList()
     return (
       <View style={{ backgroundColor: '#FFF' }}>
-        {this.state.blur && (
-          <BlurView
-            blurType="dark"
-            blurAmount={5}
-            reducedTransparencyFallbackColor="white"
-            style={modalStyles.blur}
-          />
-        )}
         <View style={[styles.top, styles.floating]}>
           <View
             style={{
@@ -506,6 +497,14 @@ export default class Group extends React.Component {
             </View>
           )}
         />
+        {this.state.blur && (
+          <BlurView
+            blurType="dark"
+            blurAmount={5}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
       </View>
     )
   }

@@ -72,6 +72,7 @@ const requestLocationPermission = async () => {
     })
     .catch(() => {
       this.setState({ errorAlert: true })
+      this.props.setBlur(true)
     })
 }
 
@@ -247,6 +248,7 @@ export default class FilterSelector extends React.Component {
 
     if (this.state.location === null && this.state.useCurrentLocation === false) {
       this.setState({ locationAlert: true })
+      this.props.setBlur(true)
     } else if (this.state.useCurrentLocation) {
       filters.latitude = this.state.lat
       filters.longitude = this.state.long
@@ -358,6 +360,7 @@ export default class FilterSelector extends React.Component {
                   onChange={(event) => {
                     if (event[0] === 'Custom: ') {
                       this.setState({ chooseMajority: true })
+                      this.props.setBlur(true)
                     } else if (event[0] === 'All') {
                       this.setState({ majority: this.props.members.length })
                     } else {
@@ -384,6 +387,7 @@ export default class FilterSelector extends React.Component {
                   onChange={(event) => {
                     if (event[0] === 'Custom: ') {
                       this.setState({ chooseSize: true })
+                      this.props.setBlur(true)
                     }
                     this.setState({ selectedSize: event, size: event[0] })
                   }}
@@ -397,7 +401,10 @@ export default class FilterSelector extends React.Component {
                   <Text style={styles.filterSubtext}>({this.state.distance} miles)</Text>
                   <TouchableHighlight
                     underlayColor={'white'}
-                    onPress={() => this.setState({ chooseLocation: true })}
+                    onPress={() => {
+                      this.setState({ chooseLocation: true })
+                      this.props.setBlur(true)    
+                    }}
                     style={[
                       styles.filterSubtext,
                       {
@@ -487,7 +494,10 @@ export default class FilterSelector extends React.Component {
                     backgroundColor={this.state.asap ? BACKGROUND_COLOR : BORDER_COLOR}
                     textColor={this.state.asap ? BORDER_COLOR : BACKGROUND_COLOR}
                     borderColor={BORDER_COLOR}
-                    onPress={() => this.setState({ chooseTime: true, asap: false })}
+                    onPress={() => { 
+                      this.setState({ chooseTime: true, asap: false })
+                      this.props.setBlur(true)
+                    }}
                     title={'Set Time'}
                   />
                 </View>
@@ -525,7 +535,7 @@ export default class FilterSelector extends React.Component {
           </View>
         </Swiper>
         {/* ------------------------------------------ALERTS------------------------------------------ */}
-        {(this.state.chooseFriends ||
+        {/* {(this.state.chooseFriends ||
           this.state.chooseLocation ||
           this.state.chooseMajority ||
           this.state.chooseSize ||
@@ -536,15 +546,21 @@ export default class FilterSelector extends React.Component {
               reducedTransparencyFallbackColor="white"
               style={modalStyles.blur}
             />
-          )}
+          )} */}
         {this.state.locationAlert && (
           <Alert
             title="Location Required"
             body="Your location is required to find nearby restuarants"
             buttonAff="Close"
             height="23%"
-            press={() => this.setState({ locationAlert: false })}
-            cancel={() => this.setState({ locationAlert: false })}
+            press={() => {
+              this.setState({ locationAlert: false })
+              this.props.setBlur(false)
+            }}
+            cancel={() => {
+              this.setState({ locationAlert: false })
+              this.props.setBlur(false)
+            }}
             visible={this.state.locationAlert}
           />
         )}
@@ -553,8 +569,14 @@ export default class FilterSelector extends React.Component {
             title="Error, please try again"
             buttonAff="Close"
             height="20%"
-            press={() => this.setState({ errorAlert: false })}
-            cancel={() => this.setState({ errorAlert: false })}
+            press={() => {
+              this.setState({ errorAlert: false })
+              this.props.setBlur(false)
+            }}
+            cancel={() => {
+              this.setState({ errorAlert: false })
+              this.props.setBlur(false)
+            }}
             visible={this.state.errorAlert}
           />
         )}
@@ -563,12 +585,18 @@ export default class FilterSelector extends React.Component {
         <ChooseFriends
           visible={this.state.chooseFriends}
           members={this.props.members}
-          press={() => this.setState({ chooseFriends: false })}
+          press={() => {
+            this.setState({ chooseFriends: false })
+            this.props.setBlur(false)
+          }}
         />
         <Time
           visible={this.state.chooseTime}
           cancel={() => this.setState({ chooseTime: false })}
-          press={(hr, min) => this.setState({ hour: hr, minute: min, chooseTime: false })}
+          press={(hr, min) => {
+            this.setState({ hour: hr, minute: min, chooseTime: false })
+            this.props.setBlur(false)
+          }}
         />
         <Size
           max={50}
@@ -576,7 +604,10 @@ export default class FilterSelector extends React.Component {
           filterSubtext={'Choose the max number of restaurants to swipe through'}
           visible={this.state.chooseSize}
           cancel={() => this.setState({ chooseSize: false })}
-          press={(sz) => this.setState({ size: sz, chooseSize: false })}
+          press={(sz) => {
+            this.setState({ size: sz, chooseSize: false })
+            this.props.setBlur(false)
+          }}
         />
         <Majority
           max={this.props.members.length}
@@ -587,12 +618,16 @@ export default class FilterSelector extends React.Component {
           press={(sz) => {
             // console.log(sz)
             this.setState({ majority: sz, chooseMajority: false })
+            this.props.setBlur(false)
           }}
         />
         <Location
           visible={this.state.chooseLocation}
           press={(zip) => this.setLocation(zip)}
-          cancel={() => this.setState({ chooseLocation: false })}
+          cancel={() => {
+            this.setState({ chooseLocation: false })
+            this.props.setBlur(false)
+          }}
         />
       </View>
     )
@@ -603,6 +638,7 @@ FilterSelector.propTypes = {
   host: PropTypes.string,
   isHost: PropTypes.bool,
   handleUpdate: PropTypes.func,
+  setBlur: PropTypes.func,
   members: PropTypes.array,
   code: PropTypes.number,
 }
