@@ -13,19 +13,19 @@ export default class Loading extends React.Component {
       restaurant: this.props.navigation.state.params.restaurant,
       host: this.props.navigation.state.params.host,
     }
-    // socket.getSocket().on('top3', (res) => {
-    //   var restaurants = []
-    //   for (var i = 0; i < 3; i++) {
-    //     for (var j = 0; j < this.state.restaurant.length; j++) {
-    //       if (this.state.restaurant[j].id === res.choices[i]) {
-    //         restaurants[i] = this.state.restaurant[j]
-    //         restaurants[i].likes = res.likes[i]
-    //         break
-    //       }
-    //     }
-    //   }
-    //   this.props.navigation.navigate('TopThree', { top: restaurants, random: res.random, host: this.state.host })
-    // })
+    socket.getSocket().on('top3', (res) => {
+      var restaurants = []
+      for (var i = 0; i < 3; i++) {
+        for (var j = 0; j < this.state.restaurant.length; j++) {
+          if (this.state.restaurant[j].id === res.choices[i]) {
+            restaurants[i] = this.state.restaurant[j]
+            restaurants[i].likes = res.likes[i]
+            break
+          }
+        }
+      }
+      this.props.navigation.navigate('TopThree', { top: restaurants, random: res.random, host: this.state.host })
+    })
   }
 
   render() {
