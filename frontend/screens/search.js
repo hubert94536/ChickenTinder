@@ -32,17 +32,17 @@ export default class Search extends Component {
       id = res[0][1]
       username = res[1][1]
       friendsApi
-      .getFriends(id)
-      .then((res) => {
-        var friendsMap = new Object()
-        for (var friend in res.friendList) {
-          friendsMap[res.friendList[friend].id] = res.friendList[friend].status
-        }
-        this.setState({ friends: friendsMap })
-      })
-      .catch(() => {
-        this.setState({ errorAlert: true })
-      })
+        .getFriends(id)
+        .then((res) => {
+          var friendsMap = new Object()
+          for (var friend in res.friendList) {
+            friendsMap[res.friendList[friend].id] = res.friendList[friend].status
+          }
+          this.setState({ friends: friendsMap })
+        })
+        .catch(() => {
+          this.setState({ errorAlert: true })
+        })
     })
   }
 
@@ -175,6 +175,10 @@ export default class Search extends Component {
       </View>
     )
   }
+}
+
+Search.propTypes = {
+  navigation: PropTypes.object,
 }
 
 const styles = StyleSheet.create({
