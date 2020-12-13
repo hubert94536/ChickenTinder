@@ -140,10 +140,10 @@ export default class FilterSelector extends React.Component {
     let half = Math.ceil(size * 0.5)
     let twoThirds = Math.ceil(size * 0.66)
     tagsMajority =[]
-    tagsMajority.append(half)
+    tagsMajority.push(half)
     if (twoThirds != half) tagsMajority.append(twoThirds)
-    tagsMajority.append('All')
-    tagsMajority.append('Custom: ')
+    tagsMajority.push('All')
+    tagsMajority.push('Custom: ')
   }
 
   //  pushes the 'subcategories' of each cusisine
