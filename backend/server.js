@@ -94,9 +94,19 @@ app
   )
 
 // notifications table
-app.route('/notifications/user/:id').get(notifications.getNotifs)
+app
+  .route('/notifications/user/:id')
+  .get(
+    schemaValidation.validateRoute.params(schemaValidation.notifsSchema),
+    notifications.getNotifs,
+  )
 
-app.route('/notifications/:id').delete(notifications.deleteNotif)
+app
+  .route('/notifications/:id')
+  .delete(
+    schemaValidation.validateRoute.params(schemaValidation.notifsSchema),
+    notifications.deleteNotif,
+  )
 
 server.listen(PORT, () => {
   console.log(`App running on port ${PORT}.`)

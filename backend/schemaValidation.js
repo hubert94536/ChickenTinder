@@ -88,6 +88,12 @@ function checkCreateFriendsSchema(req, res, next) {
   validateRequest(req, next, createFriendsSchema)
 }
 
+//Notification schema
+//Check that number id is passed in for notifications GET and DELETE
+const notifsSchema = joi.object().keys({
+  id: joi.number().positive().unsafe().required(),
+})
+
 module.exports = {
   validateRoute,
   validateRequest,
@@ -100,4 +106,5 @@ module.exports = {
   getFriendsSchema,
   friendshipSchema,
   checkCreateFriendsSchema,
+  notifsSchema,
 }
