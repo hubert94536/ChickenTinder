@@ -92,6 +92,7 @@ export default class RoundCard extends React.Component {
   }
 
   render() {
+    // console.log('roundCard: ' + JSON.stringify(this.props.card.categories))
     return (
       <ImageBackground
         source={this.getCuisine(this.props.card.categories[0].title)}

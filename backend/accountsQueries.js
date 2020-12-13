@@ -1,4 +1,4 @@
-const { Accounts } = require('./models.js')
+const { Accounts, Friends, Notifications } = require('./models.js')
 const { Op } = require('sequelize')
 
 // Get all accounts
@@ -18,7 +18,14 @@ const searchAccounts = async (req, res) => {
     const users = await Accounts.findAndCountAll({
       limit: 100,
       where: {
-        username: { [Op.iLike]: `${text}%` },
+        [Op.or]: [
+          {
+            username: { [Op.iLike]: `%${text}%` },
+          },
+          {
+            name: { [Op.iLike]: `%${text}%` },
+          },
+        ],
       },
       attributes: ['id', 'name', 'username', 'photo'],
     })
@@ -85,6 +92,30 @@ const updateAccount = async (req, res) => {
 const deleteAccount = async (req, res) => {
   try {
     const { id } = req.params
+    await Friends.destroy({
+      where: {
+        [Op.or]: [
+          {
+            main_id: id,
+          },
+          {
+            friend_id: id,
+          },
+        ],
+      },
+    })
+    await Notifications.destroy({
+      where: {
+        [Op.or]: [
+          {
+            receiver_id: id,
+          },
+          {
+            sender_id: id,
+          },
+        ],
+      },
+    })
     const deleted = await Accounts.destroy({
       where: { id: id },
     })

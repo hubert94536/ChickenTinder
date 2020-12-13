@@ -3,24 +3,21 @@ import { Dimensions, Modal, Text, TextInput, TouchableHighlight, View } from 're
 import PropTypes from 'prop-types'
 import screenStyles from '../../styles/screenStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
-import SwitchButton from 'switch-button-react-native'
 
 const hex = '#F15763'
 
-export default class Time extends React.Component {
+export default class Size extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedHour: '',
-      selectedMinute: '',
-      invalidTime: false,
-      timeMode: 'pm',
+      selectedSize: '',
+      invalidSize: false,
     }
   }
 
   // function called when main button is pressed
-  handlePress(hr, min) {
-    this.props.press(hr, min)
+  handlePress(size) {
+    this.props.press(size)
   }
 
   //  function called when 'x' is pressed
@@ -28,26 +25,19 @@ export default class Time extends React.Component {
     this.props.cancel()
   }
 
-  evaluateTime() {
-    if (this.state.selectedMinute === '' || this.state.selectedHour === '') {
-      this.setState({ invalidTime: true })
+  evaluateSize() {
+    if (this.state.selectedSize === '') {
+      this.setState({ invalidSize: true })
     }
-    var hour = parseInt(this.state.selectedHour)
-    var min = parseInt(this.state.selectedMinute)
-    if (hour < 0 || hour > 12 || min < 0 || min > 59) {
-      this.setState({ invalidTime: true })
+    let s = parseInt(this.state.selectedSize)
+
+    console.log(this.props.max)
+
+    // Adjust min/max round lengths
+    if (s < 1 || s > this.props.max) {
+      this.setState({ invalidSize: true })
     } else {
-      if (this.state.timeMode === 'pm') {
-        if (hour !== 12) {
-          hour = hour + 12
-        }
-      } else if (this.state.timeMode === 'am') {
-        if (hour === 12) {
-          hour = 0
-        }
-      }
-      this.handlePress(hour, min)
-      console.log(hour + ':' + min)
+      this.handlePress(s)
     }
   }
 
@@ -82,10 +72,10 @@ export default class Time extends React.Component {
             onPress={() => this.handleCancel()}
           />
           <View style={{ marginLeft: '5%' }}>
-            <Text style={[screenStyles.text, { fontSize: 17, marginBottom: '3%' }]}>Time</Text>
-            <Text style={[screenStyles.text, { color: 'black' }]}>
-              Set a time for your group to eat
+            <Text style={[screenStyles.text, { fontSize: 17, marginBottom: '3%' }]}>
+              {this.props.title}
             </Text>
+            <Text style={[screenStyles.text, { color: 'black' }]}>{this.props.subtext}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <TextInput
                 style={[
@@ -100,49 +90,12 @@ export default class Time extends React.Component {
                     padding: '3%',
                   },
                 ]}
-                value={this.state.selectedHour}
-                placeholder="12"
-                onChangeText={(text) => this.setState({ selectedHour: text, invalidTime: false })}
+                value={this.state.selectedSize}
+                onChangeText={(text) => this.setState({ selectedSize: text, invalidSize: false })}
                 keyboardType="numeric"
-              />
-              <Text
-                style={[screenStyles.text, { fontSize: 20, marginRight: '2%', marginLeft: '2%' }]}
-              >
-                :
-              </Text>
-              <TextInput
-                style={[
-                  {
-                    fontSize: 17,
-                    color: '#9f9f9f',
-                    backgroundColor: '#E5E5E5',
-                    height: '80%',
-                    width: '17%',
-                    borderRadius: 7,
-                    textAlign: 'center',
-                    padding: '3%',
-                    marginRight: '4%',
-                  },
-                ]}
-                value={this.state.selectedMinute}
-                placeholder="00"
-                onChangeText={(text) => this.setState({ selectedMinute: text, invalidTime: false })}
-                keyboardType="numeric"
-              />
-              <SwitchButton
-                onValueChange={(val) => this.setState({ timeMode: val })}
-                text1="pm"
-                text2="am"
-                switchWidth={75}
-                switchHeight={30}
-                switchBorderColor={hex}
-                btnBorderColor={hex}
-                btnBackgroundColor={hex}
-                fontColor={hex}
-                activeFontColor="white"
               />
             </View>
-            {this.state.invalidTime && (
+            {this.state.invalidSize && (
               <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: '3%' }}>
                 <Icon
                   name="exclamationcircle"
@@ -150,11 +103,11 @@ export default class Time extends React.Component {
                   style={{ fontSize: 15, marginRight: '2%' }}
                 />
                 <Text style={[screenStyles.text, { fontSize: 12 }]}>
-                  Invalid time. Please try again
+                  Invalid {this.props.title.toLowerCase()}. Please try again
                 </Text>
               </View>
             )}
-            {!this.state.invalidTime && (
+            {!this.state.invalidSize && (
               <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: '3%' }}>
                 <Text style={[screenStyles.text, { fontSize: 12 }]}> </Text>
               </View>
@@ -167,7 +120,7 @@ export default class Time extends React.Component {
                 width: '40%',
                 marginTop: '5%',
               }}
-              onPress={() => this.evaluateTime()}
+              onPress={() => this.evaluateSize()}
             >
               <Text
                 style={[
@@ -191,8 +144,11 @@ export default class Time extends React.Component {
   }
 }
 
-Time.propTypes = {
+Size.propTypes = {
+  title: PropTypes.string,
+  subtext: PropTypes.string,
   press: PropTypes.func,
   cancel: PropTypes.func,
   visible: PropTypes.bool,
+  max: PropTypes.number,
 }

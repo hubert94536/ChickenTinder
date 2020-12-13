@@ -1,13 +1,10 @@
+/* eslint-disable prettier/prettier */
 import React from 'react'
 import {
-  Dimensions,
-  Modal,
   PermissionsAndroid,
-  ScrollView,
   StyleSheet,
   Switch,
   Text,
-  TextInput,
   TouchableHighlight,
   View,
 } from 'react-native'
@@ -15,18 +12,25 @@ import { BlurView } from '@react-native-community/blur'
 import Geolocation from 'react-native-geolocation-service'
 import PropTypes from 'prop-types'
 import Slider from '@react-native-community/slider'
+import Swiper from 'react-native-swiper'
 import Alert from '../modals/alert.js'
 import ChooseFriends from '../modals/chooseFriends.js'
 import Socket from '../apis/socket.js'
-import TagsView from '../tagsView'
+import TagsView from '../tagsView.js'
+import DynamicTags from '../tagsViewGenerator.js'
+import BackgroundButton from '../backgroundButton.js'
 import Location from '../modals/chooseLocation.js'
 import Time from '../modals/chooseTime.js'
+import Size from '../modals/chooseSize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
-import Icon from 'react-native-vector-icons/AntDesign'
 
-const hex = '#F15763'
 const font = 'CircularStd-Medium'
+
+const BACKGROUND_COLOR = 'white'
+const BORDER_COLOR = '#F15763'
+const TEXT_COLOR = '#F15763'
+const ACCENT_COLOR = '#F15763'
 
 const tagsCuisine = [
   'American',
@@ -44,6 +48,10 @@ const tagsCuisine = [
 const tagsDiet = ['Vegan', 'Vegetarian']
 
 const tagsPrice = ['$', '$$', '$$$', '$$$$']
+
+const tagsSizes = [10, 20, 30]
+
+const tagsMajority = ['6', '10', 'All', 'Custom: ']
 
 //  requests the users permission
 const requestLocationPermission = async () => {
@@ -71,27 +79,39 @@ const date = new Date()
 export default class FilterSelector extends React.Component {
   constructor(props) {
     super(props)
-    let date = new Date()
+    const date = new Date()
     this.state = {
-      host: this.props.host,
-      isHost: this.props.isHost,
+      // Filters
       distance: 5,
       zipcode: '',
       location: null,
-      useLocation: false,
+      useCurrentLocation: false,
       hour: date.getUTCHours(),
       minute: date.getUTCMinutes(),
+      asap: true,
       lat: 0,
       long: 0,
+      size: 10,
+      majority: this.props.members.length,
       selectedCuisine: [],
       selectedPrice: [],
       selectedRestriction: [],
-      // showing alerts and modals
-      chooseTime: false,
-      locationAlert: false,
-      chooseLocation: false,
+      selectedSize: [],
+      selectedMajority: [],
+
+      // MODALS
       chooseFriends: false,
+      chooseLocation: false,
+      chooseMajority: false,
+      chooseSize: false,
+      chooseTime: false,
+
+      // ALERTS
       errorAlert: false,
+      locationAlert: false,
+
+      // SWIPER
+      swiperIndex: 0,
     }
   }
 
@@ -115,8 +135,8 @@ export default class FilterSelector extends React.Component {
 
   //  pushes the 'subcategories' of each cusisine
   categorize(cat) {
-    var categories = []
-    for (var i = 0; i < cat.length; i++) {
+    const categories = []
+    for (let i = 0; i < cat.length; i++) {
       switch (cat[i]) {
         case 'American':
           categories.push('american')
@@ -197,12 +217,15 @@ export default class FilterSelector extends React.Component {
 
   // this will pass the filters to the groups page
   handlePress(setFilters) {
-    this.props.press(setFilters)
+    if (this.props.isHost) {
+      Socket.startSession(this.props.code, setFilters)
+      // console.log("startSession")
+    }
   }
 
   //  formats the filters to call yelp api
   evaluateFilters() {
-    var filters = {}
+    const filters = {}
     //  convert to unix time
     const dd = date.getDate()
     const mm = date.getMonth()
@@ -212,29 +235,25 @@ export default class FilterSelector extends React.Component {
     filters.open_at = unix
     filters.price = this.state.selectedPrice.map((item) => item.length).toString()
     // puts the cuisine and restrictions into one array
-    var selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
-    filters.categories = this.categorize(selections)
+    const selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
+    filters.categories = this.categorize(selections).toString()
     filters.radius = this.state.distance * 1600
+    filters.majority = this.state.majority
+    filters.groupSize = this.props.members.length
+    filters.limit = this.state.selectedSize[0]
     //  making sure we have a valid location
-    if (this.state.useLocation) {
+
+
+    if (this.state.location === null && this.state.useCurrentLocation === false) {
+      this.setState({ locationAlert: true })
+    } else if (this.state.useCurrentLocation) {
       filters.latitude = this.state.lat
       filters.longitude = this.state.long
-      Socket.submitFilters(filters, this.state.host)
+      // console.log('filter.js:' + JSON.stringify(filters))
       this.handlePress(filters)
     } else {
-      if (this.state.isHost && this.state.location === null && this.state.useLocation === false) {
-        this.setState({ locationAlert: true })
-      } else {
-        filters.location = this.state.location
-        Socket.submitFilters(filters, this.state.host)
-        this.handlePress(filters)
-      }
-      // else if (true) {
-      // this.setState({formatAlert: true});
-      // console.log('format problems');
-      // //if location is null and useLocation is false for HOST -> create alert location is required,
-      // //check body that it's in format (city, state) if not send alert too
-      // }
+      filters.location = this.state.location
+      this.handlePress(filters)
     }
   }
 
@@ -242,162 +261,279 @@ export default class FilterSelector extends React.Component {
     this.setState({ zipcode: zip, chooseLocation: false })
   }
 
+  startSession() {
+    if (this.state.useCurrentLocation === false && this.state.location === null) {
+      this.setState({ locationAlert: true })
+      // console.log('filter.js startSession')
+    } else if (this.state.majority && this.state.distance) {
+      this.evaluateFilters()
+    }
+  }
+
+  submitUserFilters() {
+    const filters = {}
+    // puts the cuisine and restrictions into one array
+    const selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
+    filters.categories = this.categorize(selections).toString()
+    filters.categories += ','
+    Socket.submitFilters(this.props.code, filters.categories)
+    this.props.handleUpdate()
+  }
+
   render() {
     return (
       <View style={styles.mainContainer}>
-        <View style={styles.titleStyle}>
-          <Text style={[screenStyles.text, { fontSize: 28 }]}>
-            {this.state.isHost ? 'Group Settings' : 'Set Your Filters'}
-          </Text>
-          {this.state.isHost && (
-            <Text style={[screenStyles.text, styles.titleSub]}>(only visible to host)</Text>
-          )}
-        </View>
-        <ScrollView>
-          {this.state.isHost && (
-            <View style={{ margin: '5%' }}>
-              <Text style={[screenStyles.text, styles.header]}>Members</Text>
-              <TouchableHighlight
-                onPress={() => this.setState({ chooseFriends: true })}
-                underlayColor={hex}
+
+        {/* Title */}
+        {this.props.isHost && (
+          <View style={styles.titles}>
+            <View style={styles.titleContainer}>
+              <Text
                 style={[
                   screenStyles.text,
-                  screenStyles.medButton,
-                  { borderColor: hex, marginTop: '5%' },
+                  styles.filterHeader,
+                  { textAlign: 'center', color: this.state.swiperIndex == 0 ? TEXT_COLOR : 'gainsboro' },
                 ]}
               >
-                <Text style={[screenStyles.text, styles.touchableFriendsText]}>
-                  Select from Friends
+                Group Settings
                 </Text>
-              </TouchableHighlight>
             </View>
-          )}
-          <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '2%' }}>
-            <Text style={[screenStyles.text, styles.header]}>Cuisines</Text>
-            <TagsView
-              all={tagsCuisine}
-              selected={this.state.selectedCuisine}
-              isExclusive={false}
-              onChange={(event) => this.setState({ selectedCuisine: event })}
-            />
-          </View>
-          {this.state.isHost && (
-            <View
-              style={{
-                marginLeft: '5%',
-                marginRight: '5%',
-                marginTop: '2%',
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}
+            <View style={styles.titleContainer, {}}>
+              <Text
+                style={[
+                  screenStyles.text,
+                  styles.filterHeader,
+                  { textAlign: 'center', color: this.state.swiperIndex == 1 ? TEXT_COLOR : 'gainsboro' }
+                ]}
               >
-                <Text style={[screenStyles.text, styles.header]}>Use Current Location:</Text>
-                <Switch
-                  thumbColor={hex}
-                  trackColor={{ true: '#eba2a8' }}
-                  style={{ marginTop: '1%' }}
-                  value={this.state.useLocation}
-                  onValueChange={(val) => {
-                    this.setState({
-                      useLocation: val,
-                    })
+                Your Filters
+              </Text>
+            </View>
+          </View>
+        )}
+        {!this.props.isHost && (
+        <View style={
+          styles.titleContainer,
+          {
+            flexDiretion: 'row',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }
+        }>
+          <Text
+            style={[
+              screenStyles.text,
+              styles.filterHeader,
+            ]}
+          >
+            Your Filters
+              </Text>
+        </View>
+        )}
+        <Swiper
+          loop={false}
+          showsPagination={this.props.isHost}
+          activeDotColor={ACCENT_COLOR}
+          paginationStyle={{ bottom: -10 }}
+          onIndexChanged={(index) => this.setState({ swiperIndex: index })}
+          disableScrollViewPanResponder={true}
+        >
+          {this.props.isHost && (
+            <View style={styles.swiperContainer}>
+              {/* TODO: Update Buttom Label */}
+              {/* Majority Rule */}
+              <View style={styles.filterGroupContainer}>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={[screenStyles.text, styles.filterTitleText]}>Majority</Text>
+                  <Text style={styles.filterSubtext}>Members (out of {this.props.members.length}) needed to get a match</Text>
+                </View>
+                <DynamicTags
+                  all={tagsMajority}
+                  selected={this.state.selectedMajority}
+                  selectedNum={this.state.majority}
+                  isExclusive={true}
+                  onChange={(event) => {
+                    if (event[0] === 'Custom: ') {
+                      this.setState({ chooseMajority: true })
+                    } else if (event[0] === 'All') {
+                      this.setState({ majority: this.props.members.length })
+                    } else {
+                      this.setState({ majority: parseInt(event[0]) })
+                      // console.log(this.state.majority)
+                    }
+                    this.setState({ selectedMajority: event })
                   }}
                 />
               </View>
-              <TextInput
-                placeholder={
-                  this.state.useLocation ? 'Using Current Location' : 'Enter City, State'
-                }
-                onChangeText={(text) => this.setState({ location: text })}
-                style={this.state.useLocation ? styles.inputDisabled : styles.inputEnabled}
-                //  To make TextInput enable/disable
-                editable={!this.state.useLocation}
-              />
-            </View>
-          )}
-          {this.state.isHost && (
-            <View style={{ margin: '5%' }}>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={[screenStyles.text, styles.header]}>Distance</Text>
-                <Text
-                  style={{
-                    color: hex,
-                    fontFamily: font,
-                    alignSelf: 'center',
-                    marginLeft: '1%',
-                    marginTop: '1%',
+
+
+              {/* TODO: Update Buttom Label */}
+              {/* Round Size */}
+              <View style={styles.filterGroupContainer}>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={[screenStyles.text, styles.filterTitleText]}>Round Size</Text>
+                  <Text style={styles.filterSubtext}>Max number of restaurants</Text>
+                </View>
+                <TagsView
+                  all={tagsSizes}
+                  selected={this.state.selectedSize}
+                  isExclusive={true}
+                  onChange={(event) => {
+                    if (event[0] === 'Custom: ') {
+                      this.setState({ chooseSize: true })
+                    }
+                    this.setState({ selectedSize: event, size: event[0] })
                   }}
-                >
-                  ({this.state.distance} miles)
-                </Text>
+                />
               </View>
-              <Slider
-                style={{
-                  width: '85%',
-                  height: 30,
-                  alignSelf: 'center',
-                }}
-                minimumValue={5}
-                maximumValue={25}
-                value={5}
-                step={0.5}
-                minimumTrackTintColor={hex}
-                thumbTintColor={hex}
-                onValueChange={(value) => this.setState({ distance: value })}
-              />
+
+              {/* DISTANCE */}
+              <View style={styles.filterGroupContainer}>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={[screenStyles.text, styles.filterTitleText]}>Distance</Text>
+                  <Text style={styles.filterSubtext}>({this.state.distance} miles)</Text>
+                  <TouchableHighlight
+                    underlayColor={'white'}
+                    onPress={() => this.setState({ chooseLocation: true })}
+                    style={[
+                      styles.filterSubtext,
+                      {
+                        backgroundColor: BACKGROUND_COLOR,
+                        borderRadius: 20,
+                        borderWidth: 1,
+                        borderColor: BORDER_COLOR,
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={{
+                        color: TEXT_COLOR,
+                        fontFamily: font,
+                        fontSize: 12,
+                        paddingLeft: 5,
+                        paddingRight: 5,
+                        paddingTop: 3,
+                        paddingBottom: 3,
+                      }}
+                    >
+                      Choose Location
+                    </Text>
+                  </TouchableHighlight>
+                  <Switch
+                    thumbColor={'white'}
+                    trackColor={{ true: '#eba2a8' }}
+                    style={{ marginTop: '1%', marginLeft: '3%' }}
+                    value={this.state.useCurrentLocation}
+                    onValueChange={(val) => {
+                      this.setState({
+                        useCurrentLocation: val,
+                      })
+                    }}
+                  />
+                </View>
+                <Slider
+                  style={{
+                    width: '85%',
+                    height: 30,
+                    alignSelf: 'center',
+                  }}
+                  minimumValue={5}
+                  maximumValue={50}
+                  value={5}
+                  step={0.5}
+                  minimumTrackTintColor={TEXT_COLOR}
+                  maximumTrackTintColor={TEXT_COLOR}
+                  thumbTintColor={TEXT_COLOR}
+                  onValueChange={(value) => this.setState({ distance: value })}
+                />
+              </View>
+
+              {/* PRICE */}
+              <View style={styles.filterGroupContainer}>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={[screenStyles.text, styles.filterTitleText]}>Price</Text>
+                  <Text style={styles.filterSubtext}>Select all that apply</Text>
+                </View>
+                <TagsView
+                  all={tagsPrice}
+                  selected={this.state.selectedPrice}
+                  isExclusive={false}
+                  onChange={(event) => this.setState({ selectedPrice: event })}
+                />
+              </View>
+
+              {/* TIME */}
+              <View style={styles.filterGroupContainer}>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={[screenStyles.text, styles.filterTitleText]}>Time</Text>
+                  <Text style={styles.filterSubtext}>Select when to eat</Text>
+                </View>
+                <View style={styles.buttonContainer}>
+                  <BackgroundButton
+                    backgroundColor={BACKGROUND_COLOR}
+                    textColor={TEXT_COLOR}
+                    borderColor={BORDER_COLOR}
+                    onPress={() => {
+                      const hr = date.getUTCHours()
+                      const min = date.getUTCMinutes()
+                      this.setState({ hour: hr, minute: min, asap: true })
+                    }}
+                    title={'ASAP'}
+                  />
+                  <BackgroundButton
+                    backgroundColor={this.state.asap ? BACKGROUND_COLOR : BORDER_COLOR}
+                    textColor={this.state.asap ? BORDER_COLOR : BACKGROUND_COLOR}
+                    borderColor={BORDER_COLOR}
+                    onPress={() => this.setState({ chooseTime: true, asap: false })}
+                    title={'Set Time'}
+                  />
+                </View>
+              </View>
             </View>
           )}
-          {this.state.isHost && (
-            <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '2%' }}>
-              <Text style={[screenStyles.text, styles.header]}>Open at:</Text>
-            </View>
-          )}
-          {this.state.isHost && (
-            <View style={{ margin: '5%' }}>
-              <Text style={[screenStyles.text, styles.header]}>Price</Text>
+          <View style={styles.swiperContainer}>
+            {/* CUISINES */}
+            <View style={styles.filterGroupContainer}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={[screenStyles.text, styles.filterTitleText]}>Cuisines</Text>
+                <Text style={styles.filterSubtext}>Select all that apply</Text>
+              </View>
               <TagsView
-                all={tagsPrice}
-                selected={this.state.selectedPrice}
+                all={tagsCuisine}
+                selected={this.state.selectedCuisine}
                 isExclusive={false}
-                onChange={(event) => this.setState({ selectedPrice: event })}
+                onChange={(event) => this.setState({ selectedCuisine: event })}
               />
             </View>
-          )}
-          <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: '1%' }}>
-            <Text style={[screenStyles.text, styles.header]}>Dietary Restrictions</Text>
-            <TagsView
-              all={tagsDiet}
-              selected={this.state.selectedRestriction}
-              isExclusive={false}
-              onChange={(event) => this.setState({ selectedRestriction: event })}
-            />
+
+            {/* DIETARY RESTRICTIONS */}
+            <View style={styles.filterGroupContainer}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={[screenStyles.text, styles.filterTitleText]}>Dietary Restrictions</Text>
+                <Text style={styles.filterSubtext}>Select all that apply</Text>
+              </View>
+              <TagsView
+                all={tagsDiet}
+                selected={this.state.selectedRestriction}
+                isExclusive={false}
+                onChange={(event) => this.setState({ selectedRestriction: event })}
+              />
+            </View>
           </View>
-        </ScrollView>
-        <TouchableHighlight
-          underlayColor={hex}
-          style={[screenStyles.medButton, styles.touchable]}
-          onPress={() => this.evaluateFilters()}
-        >
-          <Text style={[screenStyles.text, styles.nextTitle]}>
-            {this.state.isHost ? "Let's Go" : 'Submit Filters'}
-          </Text>
-        </TouchableHighlight>
-        {(this.state.locationAlert ||
-          this.state.errorAlert ||
-          this.state.chooseFriends ||
+        </Swiper>
+        {/* ------------------------------------------ALERTS------------------------------------------ */}
+        {(this.state.chooseFriends ||
           this.state.chooseLocation ||
+          this.state.chooseMajority ||
+          this.state.chooseSize ||
           this.state.chooseTime) && (
-          <BlurView
-            blurType="dark"
-            blurAmount={10}
-            reducedTransparencyFallbackColor="white"
-            style={modalStyles.blur}
-          />
-        )}
+            <BlurView
+              blurType="dark"
+              blurAmount={10}
+              reducedTransparencyFallbackColor="white"
+              style={modalStyles.blur}
+            />
+          )}
         {this.state.locationAlert && (
           <Alert
             title="Location Required"
@@ -406,13 +542,9 @@ export default class FilterSelector extends React.Component {
             height="23%"
             press={() => this.setState({ locationAlert: false })}
             cancel={() => this.setState({ locationAlert: false })}
+            visible={this.state.locationAlert}
           />
         )}
-        <Location
-          visible={this.state.chooseLocation}
-          press={(zip) => this.setLocation(zip)}
-          cancel={() => this.setState({ chooseLocation: false })}
-        />
         {this.state.errorAlert && (
           <Alert
             title="Error, please try again"
@@ -420,8 +552,11 @@ export default class FilterSelector extends React.Component {
             height="20%"
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
+            visible={this.state.errorAlert}
           />
         )}
+
+        {/* ------------------------------------------MODALS------------------------------------------ */}
         <ChooseFriends
           visible={this.state.chooseFriends}
           members={this.props.members}
@@ -432,6 +567,30 @@ export default class FilterSelector extends React.Component {
           cancel={() => this.setState({ chooseTime: false })}
           press={(hr, min) => this.setState({ hour: hr, minute: min, chooseTime: false })}
         />
+        <Size
+          max={50}
+          title={'Round Size'}
+          filterSubtext={'Choose the max number of restaurants to swipe through'}
+          visible={this.state.chooseSize}
+          cancel={() => this.setState({ chooseSize: false })}
+          press={(sz) => this.setState({ size: sz, chooseSize: false })}
+        />
+        <Size
+          max={this.props.members.length}
+          title={'Majority'}
+          filterSubtext={'Choose the number of members needed to get a match'}
+          visible={this.state.chooseMajority}
+          cancel={() => this.setState({ chooseMajority: false })}
+          press={(sz) => {
+            // console.log(sz)
+            this.setState({ majority: sz, chooseMajority: false })
+          }}
+        />
+        <Location
+          visible={this.state.chooseLocation}
+          press={(zip) => this.setLocation(zip)}
+          cancel={() => this.setState({ chooseLocation: false })}
+        />
       </View>
     )
   }
@@ -440,56 +599,86 @@ export default class FilterSelector extends React.Component {
 FilterSelector.propTypes = {
   host: PropTypes.string,
   isHost: PropTypes.bool,
-  press: PropTypes.func,
+  handleUpdate: PropTypes.func,
   members: PropTypes.array,
+  code: PropTypes.number,
 }
 
 const styles = StyleSheet.create({
-  //  Fullscreen
+  // Containers
   mainContainer: {
     flex: 1,
-    backgroundColor: 'white',
+    height: '100%',
+    backgroundColor: BACKGROUND_COLOR,
     justifyContent: 'space-between',
   },
-  titleStyle: {
+  titles: {
     flexDirection: 'row',
-    margin: '5%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginLeft: '5%',
+    marginRight: '5%',
   },
-  titleSub: {
-    alignSelf: 'center',
-    margin: '1%',
-    marginTop: '2%',
+  titleContainer: {
+    marginTop: '3%',
+    marginBottom: '1%',
   },
-  touchableFriendsText: {
-    fontSize: 18,
+  swiperContainer: {
+    flex: 1,
+    height: '100%',
+    backgroundColor: BACKGROUND_COLOR,
+    justifyContent: 'flex-start',
+  },
+  filterGroupContainer: {
+    marginLeft: '5%',
+    marginRight: '5%',
+    flex: 1,
+    justifyContent: 'flex-start',
+  },
+  filterHeader: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: TEXT_COLOR,
+    textAlign: 'center',
+  },
+  filterTitleText: {
+    fontSize: 20,
+    color: TEXT_COLOR,
+    textAlign: 'center',
+  },
+  filterSubtext: {
+    color: TEXT_COLOR,
+    fontSize: 12,
+    fontFamily: font,
+    fontWeight: '100',
     alignSelf: 'center',
-    paddingLeft: '3%',
-    paddingRight: '3%',
-    paddingTop: '2%',
-    paddingBottom: '2%',
+    marginLeft: '4%',
+    marginTop: '1%',
   },
   header: {
     textAlign: 'left',
-    fontSize: 25,
+    color: TEXT_COLOR,
+    fontSize: 20,
+    fontWeight: 'bold',
     margin: '1%',
   },
   touchable: {
     width: '50%',
-    borderColor: hex,
+    borderColor: BORDER_COLOR,
     justifyContent: 'center',
     margin: '5%',
   },
-  nextTitle: {
-    textAlign: 'center',
-    fontSize: 25,
-    paddingTop: '2%',
-    paddingBottom: '2%',
-  },
-  inputEnabled: {
-    backgroundColor: 'white',
-    borderColor: 'black',
-  },
-  inputDisabled: {
-    backgroundColor: 'white',
+  // nextTitle: {
+  //   color: TEXT_COLOR,
+  //   textAlign: 'center',
+  //   fontSize: 25,
+  //   paddingTop: '2%',
+  //   paddingBottom: '2%',
+  // },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingVertical: 5,
   },
 })
