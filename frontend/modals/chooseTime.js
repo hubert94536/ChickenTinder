@@ -1,7 +1,6 @@
 import React from 'react'
 import { Dimensions, Modal, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
-import Location from './chooseLocation.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
 import SwitchButton from 'switch-button-react-native'
@@ -192,7 +191,7 @@ export default class Time extends React.Component {
   }
 }
 
-Location.propTypes = {
+Time.propTypes = {
   press: PropTypes.func,
   cancel: PropTypes.func,
   visible: PropTypes.bool,

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react'
 import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
@@ -11,21 +12,13 @@ import Join from '../modals/join.js'
 import TabBar from '../nav.js'
 import screenStyles from '../../styles/screenStyles.js'
 
-var img = ''
+var id = ''
 var name = ''
+var photo = ''
 var username = ''
 
-//  gets user info
-AsyncStorage.getItem(PHOTO).then((res) => (img = res))
-AsyncStorage.getItem(NAME).then((res) => (name = res))
-AsyncStorage.getItem(USERNAME).then((res) => (username = res))
-var myId = ''
-
 const width = Dimensions.get('window').width
-
-AsyncStorage.getItem(ID).then((res) => {
-  myId = res
-})
+const height = Dimensions.get('window').height
 
 class Home extends React.Component {
   constructor() {
@@ -35,17 +28,20 @@ class Home extends React.Component {
       joinPressed: false,
       searchPressed: false,
       join: false,
-      image: img,
-      name: name,
-      username: username,
       inviteInfo: '',
       friends: '',
       errorAlert: false,
     }
-    socket.connect()
-    socket.getSocket().on('update', (res) => {
-      this.setState({ invite: false })
-      this.props.navigation.navigate('Group', res)
+    AsyncStorage.multiGet([ID, NAME, PHOTO, USERNAME]).then((res) => {
+      id = res[0][1]
+      name = res[1][1]
+      photo = res[2][1]
+      username = res[3][1]
+      socket.connect(id, name, photo, username)
+      socket.getSocket().on('update', (res) => {
+        this.setState({ invite: false })
+        this.props.navigation.navigate('Group', res)
+      })
     })
   }
 
@@ -83,11 +79,8 @@ class Home extends React.Component {
         </Text>
         {/* dummy image below */}
         <Image
-          source={{
-            uri:
-              'https://banner2.cleanpng.com/20181107/fhg/kisspng-computer-icons-location-map-united-states-of-ameri-5be33fd26a48d9.3500512415416196664353.jpg',
-          }}
-          style={{ width: 200, height: 200 }}
+          source={require('../assets/Icon_Transparent.png')}
+          style={{ width: height*0.3, height: height*0.3 }}
         />
         <View>
           <TouchableHighlight

@@ -46,7 +46,7 @@ const Friends = sequelize.define('friends', {
     type: DataTypes.BIGINT,
     allowNull: false,
     primaryKey: true,
-  }
+  },
 })
 
 const Notifications = sequelize.define('notifications', {

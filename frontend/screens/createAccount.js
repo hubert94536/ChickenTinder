@@ -23,44 +23,42 @@ export default class createAccount extends React.Component {
       username: '',
       phone: '',
       email: '',
-      id: 22,
+      id: '',
       photo: '',
       defImg: '',
       defImgInd: 0,
     }
   }
 
-  async componentDidMount() {
-    // accountsApi.deleteUser()
-
+  componentDidMount() {
     var index = Math.floor(Math.random() * defImages.length)
-    this.setState({
-      name: await AsyncStorage.getItem(NAME),
-      id: await AsyncStorage.getItem(ID),
-      email: await AsyncStorage.getItem(EMAIL),
-      // photo: await AsyncStorage.getItem(PHOTO),
-      phone: await AsyncStorage.getItem(PHONE),
-      defImg: defImages[index],
-      defImgInd: index,
+    AsyncStorage.multiGet([EMAIL, ID, NAME, PHONE]).then((res) => {
+      this.setState({
+        email: res[0][1],
+        id: res[1][1],
+        name: res[2][1],
+        phone: res[3][1],
+        defImg: defImages[index],
+        defImgInd: index,
+      })
     })
     AsyncStorage.setItem(DEFPHOTO, this.state.defImgInd.toString())
   }
 
   //  checks whether or not the username can be set
   handleClick() {
-    console.log('finish')
-    console.log(this.state)
     accountsApi
       .checkUsername(this.state.username)
       .then(() => {
-        AsyncStorage.setItem(USERNAME, this.state.username)
-        AsyncStorage.setItem(PHOTO, this.state.photo)
-        AsyncStorage.setItem(NAME, this.state.name)
-        AsyncStorage.setItem(EMAIL, this.state.email)
-        // AsyncStorage.setItem(ID, this.state.id)
-        AsyncStorage.setItem(PHONE, this.state.phone)
-        AsyncStorage.setItem(DEFPHOTO, this.state.defImgInd.toString())
-
+        AsyncStorage.multiSet([
+          [USERNAME, this.state.username],
+          [PHOTO, this.state.photo],
+          [NAME, this.state.name],
+          [EMAIL, this.state.email],
+          [ID, this.state.id],
+          [PHONE, this.state.phone],
+          [DEFPHOTO, this.state.defImgInd.toString()],
+        ])
         return accountsApi.createFBUser(
           this.state.name,
           this.state.id,
@@ -91,17 +89,21 @@ export default class createAccount extends React.Component {
       width: 150,
       height: 150,
       cropping: true,
-    }).then((image) => {
-      this.setState({
-        photo: image.path,
-        photoData: {
-          uri: image.path,
-          type: image.mime,
-          name: 'avatar',
-        },
-      })
     })
-    console.log('upload photo')
+      .then((image) => {
+        this.setState({
+          photo: image.path,
+          photoData: {
+            uri: image.path,
+            type: image.mime,
+            name: 'avatar',
+          },
+        })
+      })
+      .catch((error) => {
+        // handle this later on
+        console.log(error)
+      })
   }
 
   render() {
@@ -149,7 +151,6 @@ export default class createAccount extends React.Component {
         <TextInput
           style={[styles.fieldText]}
           textAlign="left"
-          placeholder="Name"
           onChangeText={(name) => {
             this.setState({ name })
           }}
@@ -160,7 +161,6 @@ export default class createAccount extends React.Component {
         <TextInput
           style={[styles.fieldText]}
           textAlign="left"
-          placeholder="@username"
           onChangeText={(username) => {
             this.setState({ username })
           }}
@@ -171,7 +171,6 @@ export default class createAccount extends React.Component {
         <TextInput
           style={[styles.fieldText]}
           textAlign="left"
-          placeholder="(xxx)xxx-xxxx"
           onChangeText={(phone) => {
             this.setState({ phone })
           }}
@@ -182,7 +181,6 @@ export default class createAccount extends React.Component {
         <TextInput
           style={[styles.fieldText]}
           textAlign="left"
-          placeholder="email@domain.com"
           onChangeText={(email) => {
             this.setState({ email: email })
           }}

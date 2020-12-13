@@ -6,8 +6,10 @@ module.exports = {
     jest: true,
   },
   extends: ['eslint:recommended', 'plugin:react/recommended', 'plugin:prettier/recommended'],
+  parser: 'babel-eslint',
   parserOptions: {
     ecmaFeatures: {
+      experimentalObjectRestSpread: true,
       jsx: true,
     },
     ecmaVersion: 12,
