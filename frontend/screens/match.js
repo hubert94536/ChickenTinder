@@ -21,7 +21,6 @@ export default class Match extends React.Component {
       restaurant: this.props.navigation.state.params.restaurant,
       host: this.props.host,
     }
-    console.log(this.props.navigation.state.params.restaurant)
   }
 
   endRound() {
