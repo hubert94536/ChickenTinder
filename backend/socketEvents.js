@@ -252,6 +252,7 @@ module.exports = (io) => {
           filters.limit = data.filters.limit
         }
         filters.categories += data.filters.categories
+        filters.categories = Array.from(new Set(filters.categories.split(','))).toString()
         const resList = await Yelp.getRestaurants(filters)
         // clear filters for getting restaurants and replace with group logistics
         filters = {}
