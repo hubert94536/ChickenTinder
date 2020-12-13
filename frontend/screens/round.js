@@ -20,16 +20,31 @@ export default class Round extends React.Component {
       instr: true,
       index: 1,
     }
+
+    // socket.getSocket().on('match', (data) => {
+    //   this.props.navigation.navigate('Match', {
+    //     restaurant: data.restaurant,
+    //     host: this.state.host,
+    //   })
+    // })
+
     socket.getSocket().on('match', (data) => {
+      var res
+      for (var i = 0; i < this.state.results.length; i++) {
+        if (this.state.results[i].id === data) {
+          res = this.state.results[i]
+          break
+        }
+      }
       this.props.navigation.navigate('Match', {
-        restaurant: data.restaurant,
+        restaurant: res,
         host: this.state.host,
       })
     })
 
-    socket.getSocket().on('exception', (error) => {
-      console.log(error)
-    })
+    // socket.getSocket().on('exception', (error) => {
+    //   console.log(error)
+    // })
   }
 
   likeRestaurant(resId) {
@@ -45,12 +60,12 @@ export default class Round extends React.Component {
     this._isMounted = false
   }
 
-  endGroup() {
-    socket.endSession()
-    socket.getSocket().on('leave', () => {
-      this.props.navigation.navigate('Home')
-    })
-  }
+  // endGroup() {
+  //   socket.endSession()
+  //   socket.getSocket().on('leave', () => {
+  //     this.props.navigation.navigate('Home')
+  //   })
+  // }
 
   leaveGroup() {
     socket.leaveRoom()
@@ -70,7 +85,19 @@ export default class Round extends React.Component {
             disableBottomSwipe
             disableTopSwipe
             onSwiped={() => this.setState({ index: this.state.index + 1 })}
-            onSwipedRight={(cardIndex) => this.likeRestaurant(this.state.results[cardIndex].id)}
+            onSwipedRight={(cardIndex) => {
+              this.likeRestaurant(this.state.results[cardIndex].id)
+              //if that was the last card
+              if (cardIndex === this.state.results.length) {
+                //let backend know you're done
+                socket.finishedRound(this.state.code)
+                //go to the loading page
+                this.props.navigation.navigate('Loading', {
+                  restaurant: this.state.results,
+                  host: this.state.host,
+                })
+              }
+            }}
             stackSeparation={0}
             backgroundColor="transparent"
             animateOverlayLabelsOpacity
@@ -84,7 +111,7 @@ export default class Round extends React.Component {
               Get chews-ing!
             </Text>
             <TouchableHighlight
-              onPress={() => this.endGroup()}
+              onPress={() => this.leaveGroup()}
               style={{ position: 'absolute', marginLeft: '5%', marginTop: '7%' }}
               underlayColor="transparent"
             >

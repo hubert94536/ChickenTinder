@@ -17,6 +17,7 @@ import UserProfileView from './frontend/screens/profile.js'
 import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
 import Loading from './frontend/screens/loading.js'
 import TabBar from './frontend/nav.js'
+import TopThree from './frontend/screens/TopThree.js'
 import CreateAccount from './frontend/screens/createAccount.js'
 import PropTypes from 'prop-types'
 
@@ -107,6 +108,9 @@ export default class App extends React.Component {
           },
           CreateAccount: {
             screen: CreateAccount,
+          },
+          TopThree: {
+            screen: TopThree,
           },
         },
         {
