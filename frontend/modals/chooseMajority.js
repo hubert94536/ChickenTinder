@@ -109,7 +109,7 @@ export default class Majority extends React.Component {
                   },
                 ]}
               >
-              / {this.props.max} members
+                / {this.props.max} members
               </Text>
             </View>
             {this.state.invalidValue && (
