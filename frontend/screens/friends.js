@@ -100,7 +100,7 @@ export default class Friends extends React.Component {
             total={this.state.friends}
             name={friendList[i].name}
             username={friendList[i].username}
-            image={friendList[i].image}
+            image={friendList[i].photo}
             friends={this.state.isFriends}
             id={friendList[i].id}
             key={i}
