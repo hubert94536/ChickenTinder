@@ -362,10 +362,10 @@ export default class Group extends React.Component {
                     style={[
                       screenStyles.bigButton,
                       styles.bigButton,
-                      !this.state.userSubmitted ? { opacity: 0.75 } : { opacity: 1 },
+                      !this.state.userSubmitted ? { opacity: 1 } : { opacity: 0.4 },
                     ]}
                     onPress={() => {
-                      this.filterRef.current.submitUserFilters()
+                      if (!this.state.userSubmitted) this.filterRef.current.submitUserFilters()
                     }}
                   >
                     <Text style={styles.buttonText}>

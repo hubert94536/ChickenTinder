@@ -52,7 +52,7 @@ const tagsPrice = ['$', '$$', '$$$', '$$$$']
 
 const tagsSizes = [10, 20, 30]
 
-const tagsMajority = ['6', '10', 'All', 'Custom: ']
+let tagsMajority = ['6', '10', 'All', 'Custom: ']
 
 //  requests the users permission
 const requestLocationPermission = async () => {
@@ -133,6 +133,17 @@ export default class FilterSelector extends React.Component {
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
       )
     }
+  }
+
+  componentDidUpdate() {
+    let size = this.props.members.length
+    let half = Math.ceil(size * 0.5)
+    let twoThirds = Math.ceil(size * 0.66)
+    tagsMajority =[]
+    tagsMajority.append(half)
+    if (twoThirds != half) tagsMajority.append(twoThirds)
+    tagsMajority.append('All')
+    tagsMajority.append('Custom: ')
   }
 
   //  pushes the 'subcategories' of each cusisine
@@ -266,7 +277,9 @@ export default class FilterSelector extends React.Component {
 
   startSession() {
     if (this.state.useCurrentLocation === false && this.state.location === null) {
+      // this.props.setBlur(true)
       this.setState({ locationAlert: true })
+
     } else if (this.state.majority && this.state.distance) {
       this.evaluateFilters()
       console.log('filter.js startSession')
@@ -592,7 +605,10 @@ export default class FilterSelector extends React.Component {
         />
         <Time
           visible={this.state.chooseTime}
-          cancel={() => this.setState({ chooseTime: false })}
+          cancel={() => {
+            this.setState({ chooseTime: false })
+            this.props.setBlur(false)
+          }}
           press={(hr, min) => {
             this.setState({ hour: hr, minute: min, chooseTime: false })
             this.props.setBlur(false)
@@ -603,7 +619,10 @@ export default class FilterSelector extends React.Component {
           title={'Round Size'}
           filterSubtext={'Choose the max number of restaurants to swipe through'}
           visible={this.state.chooseSize}
-          cancel={() => this.setState({ chooseSize: false })}
+          cancel={() => {
+            this.setState({ chooseSize: false })
+            this.props.setBlur(false)
+          }}
           press={(sz) => {
             this.setState({ size: sz, chooseSize: false })
             this.props.setBlur(false)
@@ -614,7 +633,10 @@ export default class FilterSelector extends React.Component {
           title={'Majority'}
           filterSubtext={'Choose the number of members needed to get a match'}
           visible={this.state.chooseMajority}
-          cancel={() => this.setState({ chooseMajority: false })}
+          cancel={() => {
+            this.setState({ chooseMajority: false })
+            this.props.setBlur(false)
+          }}
           press={(sz) => {
             // console.log(sz)
             this.setState({ majority: sz, chooseMajority: false })
@@ -623,7 +645,10 @@ export default class FilterSelector extends React.Component {
         />
         <Location
           visible={this.state.chooseLocation}
-          press={(zip) => this.setLocation(zip)}
+          press={(zip) => {
+            this.setLocation(zip)
+            this.props.setBlur(false)
+          }}
           cancel={() => {
             this.setState({ chooseLocation: false })
             this.props.setBlur(false)

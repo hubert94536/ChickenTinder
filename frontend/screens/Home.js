@@ -86,7 +86,7 @@ class Home extends React.Component {
         {/* dummy image below */}
         <Image
           source={require('../assets/Icon_Transparent.png')}
-          style={{ width: height*0.3, height: height*0.3 }}
+          style={{ width: height * 0.3, height: height * 0.3 }}
         />
         <View>
           <TouchableHighlight
