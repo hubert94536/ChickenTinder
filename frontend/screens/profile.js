@@ -365,7 +365,7 @@ export default class UserProfileView extends Component {
             </Text>
           </View>
           <View style={{ height: '50%', marginTop: '0%' }}>
-            <Friends isFriends onFriendsChange={() => this.handleFriendsCount} />
+            <Friends isFriends onFriendsChange={(n) => this.handleFriendsCount(n)} />
           </View>
           {(this.state.visible || this.state.edit) && (
             <BlurView

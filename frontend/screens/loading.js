@@ -20,8 +20,8 @@ export default class Loading extends React.Component {
             Round done!
           </Text>
           <Image
-            source={require('../assets/images/logo1.png')}
-            style={{ alignSelf: 'center', width: 200, height: 248 }}
+            source={require('../assets/loading.gif')}
+            style={{ alignSelf: 'center', width: height*0.3, height: height*0.4 }} 
           />
           <Text style={[styles.general, { color: 'black' }]}>
             Hang tight while others finish swiping and a match is found!
