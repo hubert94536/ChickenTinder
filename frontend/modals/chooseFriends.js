@@ -1,10 +1,12 @@
 import React from 'react'
 import { Dimensions, FlatList, Modal, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import Clipboard from '@react-native-community/clipboard'
+import { ID } from 'react-native-dotenv'
+import { SearchBar } from 'react-native-elements'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { SearchBar } from 'react-native-elements'
+import AsyncStorage from '@react-native-community/async-storage'
+import Clipboard from '@react-native-community/clipboard'
 import PropTypes from 'prop-types'
 import Alert from './alert.js'
 import ChooseCard from '../cards/chooseCard.js'
@@ -15,7 +17,7 @@ const hexBlack = '#000000'
 const font = 'CircularStd-Bold'
 const fontRegular = 'CircularStd-Medium'
 const height = Dimensions.get('window').height
-
+var id = ''
 //  little pop up modal that is showed when you click choose friends in filters
 export default class ChooseFriends extends React.Component {
   constructor(props) {
@@ -26,14 +28,17 @@ export default class ChooseFriends extends React.Component {
       search: '',
       errorAlert: false,
     }
-    this.getFriends()
+    AsyncStorage.getItem(ID).then((res) => {
+      id = res
+      this.getFriends(id)
+    })
   }
 
   //  gets your friends
-  async getFriends() {
+  async getFriends(id) {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
-      .getFriends()
+      .getFriends(id)
       .then((res) => {
         let pushFriends = []
         for (var friend in res.friendList) {

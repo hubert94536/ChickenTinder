@@ -1,13 +1,16 @@
 import React from 'react'
 import { Image, Text, TouchableHighlight, View } from 'react-native'
+import { ID } from 'react-native-dotenv'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
+import AsyncStorage from '@react-native-community/async-storage'
 import Alert from '../modals/alert.js'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
 
 const font = 'CircularStd-Book'
 const hex = '#F15763'
+var id = ''
 
 export default class ProfileCard extends React.Component {
   constructor(props) {
@@ -19,12 +22,15 @@ export default class ProfileCard extends React.Component {
       errorAlert: false,
       deleteFriend: false,
     }
+    AsyncStorage.getItem(ID).then((res) => {
+      id = res
+    })
   }
 
   // accept friend request and modify card
   async acceptFriend() {
     friendsApi
-      .acceptFriendRequest(this.state.id)
+      .acceptFriendRequest(id, this.state.id)
       .then(() => {
         this.setState({ isFriend: true })
       })
@@ -34,7 +40,7 @@ export default class ProfileCard extends React.Component {
   // delete friend and modify view
   async deleteFriend() {
     friendsApi
-      .removeFriendship(this.state.id)
+      .removeFriendship(id, this.state.id)
       .then(() => {
         this.setState({ deleteFriend: false })
         var filteredArray = this.props.total.filter((item) => {
