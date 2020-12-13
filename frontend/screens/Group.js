@@ -325,6 +325,7 @@ export default class Group extends React.Component {
                       <GroupCard
                         name={item.name}
                         username={item.username}
+                        // Placeholder image for null image
                         image={item.photo == '' ? 'https://via.placeholder.com/150' : item.photo}
                         filters={item.filters}
                         host={this.state.host}
