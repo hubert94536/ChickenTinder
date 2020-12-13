@@ -34,7 +34,7 @@ export default class Majority extends React.Component {
     console.log(this.props.max)
 
     // Adjust min/max round lengths
-    if (s < 1 || s > this.props.max) {
+    if (s < 1 || s > this.props.max || isNaN(s)) {
       this.setState({ invalidValue: true })
     } else {
       this.handlePress(s)
@@ -75,8 +75,10 @@ export default class Majority extends React.Component {
             <Text style={[screenStyles.text, { fontSize: 17, marginBottom: '3%' }]}>
               {this.props.title}
             </Text>
-            <Text style={[screenStyles.text, { color: 'black' }]}>{this.props.subtext}</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={[screenStyles.text, { color: 'black' }]}>
+              Members (out of {this.props.max}) needed to get a match
+            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: '1%' }}>
               <TextInput
                 style={[
                   {
@@ -93,10 +95,25 @@ export default class Majority extends React.Component {
                 value={this.state.selectedValue}
                 onChangeText={(text) => this.setState({ selectedValue: text, invalidValue: false })}
                 keyboardType="numeric"
+                defaultValue={this.props.max.toString()}
               />
+              <Text
+                style={[
+                  screenStyles.text,
+                  {
+                    fontSize: 17,
+                    alignSelf: 'center',
+                    marginTop: '3%',
+                    marginBottom: '3%',
+                    marginLeft: '2%',
+                  },
+                ]}
+              >
+              / {this.props.max} members
+              </Text>
             </View>
             {this.state.invalidValue && (
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: '3%' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: '2%' }}>
                 <Icon
                   name="exclamationcircle"
                   color={hex}
@@ -118,7 +135,7 @@ export default class Majority extends React.Component {
                 borderRadius: 30,
                 alignSelf: 'center',
                 width: '40%',
-                marginTop: '5%',
+                marginTop: '3%',
               }}
               onPress={() => this.evaluate()}
             >
