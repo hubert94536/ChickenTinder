@@ -57,7 +57,7 @@ export default class createAccount extends React.Component {
           [EMAIL, this.state.email],
           [ID, this.state.id],
           [PHONE, this.state.phone],
-          [DEFPHOTO, this.state.defImgInd.toString()]
+          [DEFPHOTO, this.state.defImgInd.toString()],
         ])
         return accountsApi.createFBUser(
           this.state.name,
