@@ -2,10 +2,9 @@ import 'react-native'
 import { render, fireEvent, cleanup } from '@testing-library/react-native'
 import Renderer from 'react-test-renderer'
 import Search from '../screens/search'
-import MockAsyncStorage from 'mock-async-storage'
 import React from 'react'
-
-//import { AsyncStorage } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
+import MockAsyncStorage from 'mock-async-storage'
 
 const mock = () => {
   const mockImpl = new MockAsyncStorage()
@@ -17,7 +16,13 @@ mock()
 jest.mock('../apis/friendsApi')
 jest.mock('../apis/accountsApi.js')
 
-afterEach(cleanup)
+//afterEach(cleanup)
+
+it('Mock Async Storage working', async () => {
+  await AsyncStorage.setItem('myKey', 'myValue')
+  const value = await AsyncStorage.getItem('myKey')
+  expect(value).toBe('myValue')
+})
 
 test('renders search for nothing correctly', () => {
   const tree = render(<Search />)
@@ -25,7 +30,8 @@ test('renders search for nothing correctly', () => {
 })
 
 test('snapshot for search', () => {
-  const { getByText, getByPlaceholderText } = render(<Search />)
+  const create = Renderer.create(<Search />).getInstance()
+  const { getByText, getByPlaceholderText, toJSON } = render(<Search />)
   // Test typing generates cards
   fireEvent.changeText(getByPlaceholderText('Search for friends'), 'John')
   expect(getByText('j0hn'))
@@ -36,7 +42,7 @@ test('snapshot for search', () => {
 
 test('snapshot for search, no results', () => {
   const tree = render(<Search />)
-  const { getByPlaceholderText } = render(<Search />)
+  const { getByPlaceholderText, toJson } = render(<Search />)
   // Test for search that generates nothing
   fireEvent.changeText(getByPlaceholderText('Search for friends'), 'Harbinger')
   expect(tree.toJSON()).toMatchSnapshot()

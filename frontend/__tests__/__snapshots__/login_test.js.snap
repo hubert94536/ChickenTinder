@@ -1,619 +1,248 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-exports[`renders error correctly 1`] = `
-<View>
-  <Text
-    style={
-      Array [
-        Object {
-          "color": "#F25763",
-          "fontFamily": "CircularStd-Bold",
-        },
-        Object {
-          "fontSize": 45,
-          "textAlign": "center",
-        },
-        Object {
-          "marginTop": "40%",
-        },
-      ]
-    }
-  >
-    Welcome!
-  </Text>
-  <Text
-    style={
-      Array [
-        Object {
-          "color": "#F25763",
-          "fontFamily": "CircularStd-Bold",
-        },
-        Object {
-          "fontFamily": "CircularStd-Bold",
-          "fontSize": 20,
-          "textAlign": "center",
-        },
-      ]
-    }
-  >
-    Let's get goin'.
-  </Text>
-  <View
-    accessible={true}
-    focusable={true}
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
-    style={
-      Array [
-        Object {
-          "alignSelf": "center",
-          "borderRadius": 30,
-          "borderWidth": 2.5,
-        },
-        Object {
-          "borderColor": "#3b5998",
-          "marginTop": "10%",
-          "paddingHorizontal": 12,
-          "paddingVertical": 10,
-          "width": "70%",
-        },
-        Object {
-          "borderColor": "#F25763",
-        },
-      ]
-    }
-  >
-    <Text
-      style={
-        Array [
-          Object {
-            "alignSelf": "center",
-            "fontFamily": "CircularStd-Bold",
-            "fontSize": 17,
-            "fontWeight": "bold",
-          },
-          Object {
-            "color": "#F25763",
-          },
-        ]
-      }
-    >
-      Phone Number Login
-    </Text>
-  </View>
-  <View
-    accessible={true}
-    focusable={true}
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
-    style={
-      Array [
-        Object {
-          "alignSelf": "center",
-          "borderRadius": 30,
-          "borderWidth": 2.5,
-        },
-        Object {
-          "borderColor": "#3b5998",
-          "marginTop": "10%",
-          "paddingHorizontal": 12,
-          "paddingVertical": 10,
-          "width": "70%",
-        },
-      ]
-    }
-  >
-    <Text
-      style={
-        Array [
-          Object {
-            "alignSelf": "center",
-            "fontFamily": "CircularStd-Bold",
-            "fontSize": 17,
-            "fontWeight": "bold",
-          },
-          Object {
-            "color": "#3b5998",
-          },
-        ]
-      }
-    >
-      Log in with Facebook
-    </Text>
-  </View>
-</View>
-`;
-
-exports[`renders home correctly 1`] = `
-<View>
-  <Text
-    style={
-      Array [
-        Object {
-          "color": "#F25763",
-          "fontFamily": "CircularStd-Bold",
-        },
-        Object {
-          "fontSize": 45,
-          "textAlign": "center",
-        },
-        Object {
-          "marginTop": "40%",
-        },
-      ]
-=======
-exports[`renders correctly 1`] = `
-<View>
-  <Text
-    style={
-      Object {
-        "alignSelf": "center",
-        "color": "#F25763",
-        "fontFamily": "CircularStd-Medium",
-        "fontSize": 50,
-        "fontWeight": "bold",
-        "marginTop": "40%",
-      }
->>>>>>> f0c39505509fa92b6ed0fd7507999106e9c4618e
-    }
-  >
-    Welcome!
-  </Text>
-  <Text
-    style={
-<<<<<<< HEAD
-      Array [
-        Object {
-          "color": "#F25763",
-          "fontFamily": "CircularStd-Bold",
-        },
-        Object {
-          "fontFamily": "CircularStd-Bold",
-          "fontSize": 20,
-          "textAlign": "center",
-        },
-      ]
-    }
-  >
-    Let's get goin'.
-  </Text>
-  <View
-    accessible={true}
-    focusable={true}
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
-    style={
-      Array [
-        Object {
-          "alignSelf": "center",
-          "borderRadius": 30,
-          "borderWidth": 2.5,
-        },
-        Object {
-          "borderColor": "#3b5998",
-          "marginTop": "10%",
-          "paddingHorizontal": 12,
-          "paddingVertical": 10,
-          "width": "70%",
-        },
-        Object {
-          "borderColor": "#F25763",
-        },
-      ]
-    }
-  >
-    <Text
-      style={
-        Array [
-          Object {
-            "alignSelf": "center",
-            "fontFamily": "CircularStd-Bold",
-            "fontSize": 17,
-            "fontWeight": "bold",
-          },
-          Object {
-            "color": "#F25763",
-          },
-        ]
-      }
-    >
-      Phone Number Login
-    </Text>
-  </View>
-  <View
-    accessible={true}
-    focusable={true}
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
-    style={
-      Array [
-        Object {
-          "alignSelf": "center",
-          "borderRadius": 30,
-          "borderWidth": 2.5,
-        },
-        Object {
-          "borderColor": "#3b5998",
-          "marginTop": "10%",
-          "paddingHorizontal": 12,
-          "paddingVertical": 10,
-          "width": "70%",
-        },
-      ]
-    }
-  >
-    <Text
-      style={
-        Array [
-          Object {
-            "alignSelf": "center",
-            "fontFamily": "CircularStd-Bold",
-            "fontSize": 17,
-            "fontWeight": "bold",
-          },
-          Object {
-            "color": "#3b5998",
-          },
-        ]
-      }
-    >
-      Log in with Facebook
-    </Text>
-  </View>
-</View>
-`;
-
-exports[`renders username correctly 1`] = `
-<View>
-  <Text
-    style={
-=======
 exports[`renders login page correctly 1`] = `
-<View>
-  <Text
-    style={
->>>>>>> 21f90f553fa612fb7a9c51b9d4996e263351a25a
-      Array [
-        Object {
-          "color": "#F25763",
-          "fontFamily": "CircularStd-Bold",
-        },
-        Object {
-          "fontSize": 45,
-          "textAlign": "center",
-        },
-        Object {
-          "marginTop": "40%",
-        },
-      ]
+<View
+  style={
+    Array [
+      Object {
+        "backgroundColor": "white",
+        "flex": 1,
+      },
+    ]
+  }
+>
+  <Image
+    source={
+      Object {
+        "testUri": "../../../frontend/assets/images/logo2.png",
+      }
     }
-  >
-    Welcome!
-  </Text>
-  <Text
     style={
-      Array [
-        Object {
-          "color": "#F25763",
-          "fontFamily": "CircularStd-Bold",
-        },
-        Object {
-          "fontFamily": "CircularStd-Bold",
-          "fontSize": 20,
-          "textAlign": "center",
-        },
-      ]
-<<<<<<< HEAD
-=======
       Object {
         "alignSelf": "center",
-        "color": "#F25763",
-        "fontFamily": "CircularStd-Medium",
-        "fontSize": 30,
+        "height": 248,
+        "marginTop": "12%",
+        "width": 200,
       }
->>>>>>> f0c39505509fa92b6ed0fd7507999106e9c4618e
-=======
->>>>>>> 21f90f553fa612fb7a9c51b9d4996e263351a25a
     }
-  >
-    Let's get goin'.
-  </Text>
-  <View
-    accessible={true}
-    focusable={true}
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
-    style={
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 21f90f553fa612fb7a9c51b9d4996e263351a25a
-      Array [
-        Object {
-          "alignSelf": "center",
-          "borderRadius": 30,
-          "borderWidth": 2.5,
-        },
-        Object {
-          "borderColor": "#3b5998",
-          "marginTop": "10%",
-          "paddingHorizontal": 12,
-          "paddingVertical": 10,
-          "width": "70%",
-        },
-        Object {
-          "borderColor": "#F25763",
-        },
-      ]
-<<<<<<< HEAD
-=======
-      Object {
-        "alignSelf": "center",
-        "borderColor": "#3b5998",
-        "borderRadius": 25,
-        "borderWidth": 2.5,
-        "marginTop": "10%",
-        "paddingHorizontal": 12,
-        "paddingVertical": 10,
-        "width": "70%",
-      }
->>>>>>> f0c39505509fa92b6ed0fd7507999106e9c4618e
-    }
-  >
-    <Text
-      style={
-<<<<<<< HEAD
-        Array [
-          Object {
-            "alignSelf": "center",
-            "fontFamily": "CircularStd-Bold",
-            "fontSize": 17,
-            "fontWeight": "bold",
-          },
-          Object {
-            "color": "#F25763",
-          },
-        ]
-      }
-=======
-    }
-  >
-    <Text
-      style={
-        Array [
-          Object {
-            "alignSelf": "center",
-            "fontFamily": "CircularStd-Bold",
-            "fontSize": 17,
-            "fontWeight": "bold",
-          },
-          Object {
-            "color": "#F25763",
-          },
-        ]
-      }
->>>>>>> 21f90f553fa612fb7a9c51b9d4996e263351a25a
-    >
-      Phone Number Login
-    </Text>
-  </View>
-  <View
-    accessible={true}
-    focusable={true}
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
+  />
+  <Text
     style={
       Array [
         Object {
-          "alignSelf": "center",
-          "borderRadius": 30,
-          "borderWidth": 2.5,
-        },
-        Object {
-          "borderColor": "#3b5998",
-          "marginTop": "10%",
-          "paddingHorizontal": 12,
-          "paddingVertical": 10,
-          "width": "70%",
-        },
-      ]
-    }
-  >
-    <Text
-      style={
-        Array [
-          Object {
-            "alignSelf": "center",
-            "fontFamily": "CircularStd-Bold",
-            "fontSize": 17,
-            "fontWeight": "bold",
-          },
-          Object {
-            "color": "#3b5998",
-          },
-        ]
-<<<<<<< HEAD
-=======
-        Object {
-          "alignSelf": "center",
-          "color": "#3b5998",
+          "color": "#F15763",
           "fontFamily": "CircularStd-Medium",
-          "fontSize": 17,
-          "fontWeight": "bold",
-        }
->>>>>>> f0c39505509fa92b6ed0fd7507999106e9c4618e
-=======
-      }
-    >
-      Log in with Facebook
-    </Text>
-  </View>
-</View>
-`;
-
-exports[`renders login with Facebook alert 1`] = `
-<View>
-  <Text
-    style={
-      Array [
-        Object {
-          "color": "#F25763",
-          "fontFamily": "CircularStd-Bold",
         },
         Object {
           "fontSize": 45,
           "textAlign": "center",
         },
         Object {
-          "marginTop": "40%",
+          "fontFamily": "CircularStd-Bold",
+          "fontSize": 30,
+          "fontWeight": "bold",
+          "marginBottom": "10%",
+          "marginTop": "2.5%",
         },
       ]
     }
   >
-    Welcome!
+    Let's Get Chews-ing!
   </Text>
+  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Array [
+        Object {
+          "alignSelf": "center",
+          "borderRadius": 30,
+          "borderWidth": 2.5,
+          "paddingHorizontal": 12,
+          "paddingVertical": 5,
+          "width": "70%",
+        },
+        Object {
+          "backgroundColor": "#F15763",
+          "borderColor": "#F15763",
+          "marginTop": "7%",
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        Object {
+          "alignSelf": "center",
+          "flexDirection": "row",
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        style={
+          Array [
+            Object {
+              "color": undefined,
+              "fontSize": 12,
+            },
+            Array [
+              Object {
+                "alignSelf": "center",
+                "color": "#F15763",
+                "fontFamily": "CircularStd-Medium",
+                "fontSize": 35,
+              },
+              Object {
+                "color": "white",
+                "fontSize": 22,
+                "marginRight": "5%",
+              },
+            ],
+            Object {
+              "fontFamily": "FontAwesome",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            Object {},
+          ]
+        }
+      >
+        
+      </Text>
+      <Text
+        style={
+          Array [
+            Object {
+              "alignSelf": "center",
+              "fontFamily": "CircularStd-Book",
+              "fontSize": 18,
+              "fontWeight": "normal",
+            },
+            Object {
+              "color": "white",
+            },
+          ]
+        }
+      >
+        Login with Phone
+      </Text>
+    </View>
+  </View>
+  <View
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Array [
+        Object {
+          "alignSelf": "center",
+          "borderRadius": 30,
+          "borderWidth": 2.5,
+          "paddingHorizontal": 12,
+          "paddingVertical": 5,
+          "width": "70%",
+        },
+        Object {
+          "backgroundColor": "#3b5998",
+          "borderColor": "#3b5998",
+          "marginTop": "7%",
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        Object {
+          "alignSelf": "center",
+          "flexDirection": "row",
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        style={
+          Array [
+            Object {
+              "color": undefined,
+              "fontSize": 12,
+            },
+            Array [
+              Object {
+                "alignSelf": "center",
+                "color": "#F15763",
+                "fontFamily": "CircularStd-Medium",
+                "fontSize": 35,
+              },
+              Object {
+                "color": "white",
+                "fontSize": 22,
+                "marginRight": "5%",
+              },
+            ],
+            Object {
+              "fontFamily": "FontAwesome",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            Object {},
+          ]
+        }
+      >
+        
+      </Text>
+      <Text
+        style={
+          Array [
+            Object {
+              "alignSelf": "center",
+              "fontFamily": "CircularStd-Book",
+              "fontSize": 18,
+              "fontWeight": "normal",
+            },
+            Object {
+              "color": "white",
+            },
+          ]
+        }
+      >
+        Login with Facebook
+      </Text>
+    </View>
+  </View>
   <Text
     style={
       Array [
         Object {
-          "color": "#F25763",
-          "fontFamily": "CircularStd-Bold",
+          "color": "#F15763",
+          "fontFamily": "CircularStd-Medium",
         },
         Object {
-          "fontFamily": "CircularStd-Bold",
-          "fontSize": 20,
+          "alignSelf": "center",
+          "fontFamily": "CircularStd-Book",
+          "fontSize": 13,
+          "lineHeight": 17,
+          "marginHorizontal": "15%",
+          "marginTop": "7.5%",
           "textAlign": "center",
         },
       ]
     }
   >
-    Let's get goin'.
+    By clicking log in, you agree with our Terms and Conditions.
   </Text>
-  <View
-    accessible={true}
-    focusable={true}
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
-    style={
-      Array [
-        Object {
-          "alignSelf": "center",
-          "borderRadius": 30,
-          "borderWidth": 2.5,
-        },
-        Object {
-          "borderColor": "#3b5998",
-          "marginTop": "10%",
-          "paddingHorizontal": 12,
-          "paddingVertical": 10,
-          "width": "70%",
-        },
-        Object {
-          "borderColor": "#F25763",
-        },
-      ]
-    }
-  >
-    <Text
-      style={
-        Array [
-          Object {
-            "alignSelf": "center",
-            "fontFamily": "CircularStd-Bold",
-            "fontSize": 17,
-            "fontWeight": "bold",
-          },
-          Object {
-            "color": "#F25763",
-          },
-        ]
-      }
-    >
-      Phone Number Login
-    </Text>
-  </View>
-  <View
-    accessible={true}
-    focusable={true}
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
-    style={
-      Array [
-        Object {
-          "alignSelf": "center",
-          "borderRadius": 30,
-          "borderWidth": 2.5,
-        },
-        Object {
-          "borderColor": "#3b5998",
-          "marginTop": "10%",
-          "paddingHorizontal": 12,
-          "paddingVertical": 10,
-          "width": "70%",
-        },
-      ]
-    }
-  >
-    <Text
-      style={
-        Array [
-          Object {
-            "alignSelf": "center",
-            "fontFamily": "CircularStd-Bold",
-            "fontSize": 17,
-            "fontWeight": "bold",
-          },
-          Object {
-            "color": "#3b5998",
-          },
-        ]
->>>>>>> 21f90f553fa612fb7a9c51b9d4996e263351a25a
-      }
-    >
-      Log in with Facebook
-    </Text>
-  </View>
 </View>
 `;
