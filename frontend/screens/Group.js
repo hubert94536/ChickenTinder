@@ -29,10 +29,6 @@ const hex = '#F15763'
 const font = 'CircularStd-Medium'
 let memberList = []
 let memberRenderList = []
-let myUsername = ''
-AsyncStorage.getItem(USERNAME).then((res) => {
-  myUsername = res
-})
 
 const windowWidth = Dimensions.get('window').width
 const windowHeight = Dimensions.get('window').height
@@ -41,26 +37,26 @@ export default class Group extends React.Component {
   constructor(props) {
     super(props)
     this._isMounted = false
-    const members = this.props.navigation.state.params.members
+    const members = this.props.navigation.state.params.response.members
     this.filterRef = React.createRef()
     this.state = {
-      myUsername: myUsername,
-
+      myUsername: this.props.navigation.state.params.username,
       // Group data
       // Member Dictionary
       members: members,
 
-      host: this.props.navigation.state.params.host,
-      hostName: members[this.props.navigation.state.params.host].username,
+      host: this.props.navigation.state.params.response.host,
+      hostName: members[this.props.navigation.state.params.response.host].username,
       // hostName: "NOT YOU",
       needFilters: Object.keys(members).filter((user) => !user.filters).length,
 
       filters: {},
-      code: this.props.navigation.state.params.code,
+      code: this.props.navigation.state.params.response.code,
 
       // UI state
       canStart: false,
       userSubmitted: false,
+      blur: false,
 
       // Modal visibility vars
       leaveAlert: false,
@@ -76,7 +72,7 @@ export default class Group extends React.Component {
 
     // listens for group updates
     socket.getSocket().on('update', (res) => {
-      console.log('group.js: Update')
+      // console.log('group.js: update')
       if (this._isMounted) {
         console.log('socket "update": ' + JSON.stringify(res))
         this.setState({ members: res.members, host: res.host, code: res.code })
@@ -122,6 +118,10 @@ export default class Group extends React.Component {
     })
   }
 
+  blur(isBlurred) {
+    this.setState({ blur: isBlurred })
+  }
+
   setUserSubmit() {
     this.setState({ userSubmitted: true })
   }
@@ -129,6 +129,7 @@ export default class Group extends React.Component {
   // counts number of users who haven't submitted filters
   countNeedFilters(users) {
     let count = 0
+    console.log('countNeedFilters: ' + JSON.stringify(users))
     for (const user in users) {
       if (!users[user].filters) {
         count++
@@ -157,15 +158,15 @@ export default class Group extends React.Component {
       a.host = this.state.host
       a.isHost = this.state.hostName == this.state.myUsername
       a.key = user
-      a.f = false
       memberList.push(a)
+      a.f = false
       memberRenderList.push(a)
     }
     const footer = {}
     footer.f = true
     memberRenderList.push(footer)
     // console.log('\n\n\n\n\n\n=========================')
-    // console.log(memberList)
+    console.log('group.js: ' + JSON.stringify(memberList))
     // console.log('=========================\n\n\n\n\n\n')
   }
 
@@ -215,6 +216,14 @@ export default class Group extends React.Component {
     this.updateMemberList()
     return (
       <View style={{ backgroundColor: '#FFF' }}>
+        {this.state.blur && (
+          <BlurView
+            blurType="dark"
+            blurAmount={5}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
         <View style={[styles.top, styles.floating]}>
           <View
             style={{
@@ -424,7 +433,7 @@ export default class Group extends React.Component {
                 />
               )}
               <ChooseFriends
-                code={this.props.navigation.state.params.code}
+                code={this.props.navigation.state.params.response.code}
                 visible={this.state.chooseFriends}
                 members={memberList}
                 press={() => this.setState({ chooseFriends: false })}
@@ -453,6 +462,7 @@ export default class Group extends React.Component {
                     members={memberList}
                     ref={this.filterRef}
                     code={this.state.code}
+                    setBlur={(res) => this.blur(res)}
                   />
                 </View>
               </View>
