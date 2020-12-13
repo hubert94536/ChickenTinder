@@ -12,23 +12,13 @@ import Join from '../modals/join.js'
 import TabBar from '../nav.js'
 import screenStyles from '../../styles/screenStyles.js'
 
-var img = ''
+var id = ''
 var name = ''
+var photo = ''
 var username = ''
-
-//  gets user info
-AsyncStorage.getItem(PHOTO).then((res) => (img = res))
-AsyncStorage.getItem(NAME).then((res) => (name = res))
-AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 
 const width = Dimensions.get('window').width
 const height = Dimensions.get('window').height
-
-var myId = ''
-
-AsyncStorage.getItem(ID).then((res) => {
-  myId = res
-})
 
 class Home extends React.Component {
   constructor() {
@@ -38,18 +28,22 @@ class Home extends React.Component {
       joinPressed: false,
       searchPressed: false,
       join: false,
-      image: img,
-      name: name,
-      username: username,
       inviteInfo: '',
       friends: '',
       errorAlert: false,
     }
-    socket.connect()
-    socket.getSocket().on('update', (res) => {
-      this.setState({ invite: false })
-      this.props.navigation.navigate('Group', res)
+    AsyncStorage.multiGet([ID, NAME, PHOTO, USERNAME]).then((res) => {
+      id = res[0][1]
+      name = res[1][1]
+      photo = res[2][1]
+      username = res[3][1]
+      socket.connect(id, name, photo, username)
+      socket.getSocket().on('update', (res) => {
+        this.setState({ invite: false })
+        this.props.navigation.navigate('Group', res)
+      })
     })
+
   }
 
   createGroup() {
