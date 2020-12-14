@@ -1,9 +1,10 @@
 import React from 'react'
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 
 const hex = '#F15763'
+const font = 'CircularStd-Book'
 const height = Dimensions.get('window').height
 
 export default class Loading extends React.Component {
@@ -24,8 +25,17 @@ export default class Loading extends React.Component {
           }
         }
       }
-      this.props.navigation.navigate('TopThree', { top: restaurants, random: res.random, host: this.state.host })
+      this.props.navigation.navigate('TopThree', {
+        top: restaurants,
+        random: res.random,
+        host: this.state.host,
+      })
     })
+  }
+
+  leaveGroup() {
+    socket.leaveRoom()
+    this.props.navigation.navigate('Home')
   }
 
   render() {
@@ -43,6 +53,25 @@ export default class Loading extends React.Component {
             Hang tight while others finish swiping and a match is found!
           </Text>
         </View>
+        <TouchableHighlight
+          style={{ alignSelf: 'center', width: '50%' }}
+          underlayColor="transparent"
+          onPress={() => this.leaveGroup()}
+        >
+          <Text
+            style={[
+              {
+                color: '#6A6A6A',
+                textAlign: 'center',
+                fontFamily: font,
+                fontSize: 18,
+                padding: '3%',
+              },
+            ]}
+          >
+            Leave Round
+          </Text>
+        </TouchableHighlight>
       </View>
     )
   }
@@ -64,6 +93,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   general: {
+    fontFamily: font,
     fontSize: 15,
     padding: 30,
     textAlign: 'center',
