@@ -250,7 +250,7 @@ export default class FilterSelector extends React.Component {
     const timezone = date.getTimezoneOffset()
     const unix = Date.UTC(yyyy, mm, dd, this.state.hour, this.state.minute + timezone) / 1000
     filters.open_at = unix
-    filters.price = this.state.selectedPrice.map((item) => item.length).toString()
+    filters.price = this.state.selectedPrice.map((item) => item.length).sort().toString()
     // puts the cuisine and restrictions into one array
     const selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
     filters.categories = this.categorize(selections).toString()
