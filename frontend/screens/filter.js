@@ -497,8 +497,8 @@ export default class FilterSelector extends React.Component {
                 </View>
                 <View style={styles.buttonContainer}>
                   <BackgroundButton
-                    backgroundColor={BACKGROUND_COLOR}
-                    textColor={TEXT_COLOR}
+                    backgroundColor={this.state.asap ? ACCENT_COLOR : BACKGROUND_COLOR}
+                    textColor={this.state.asap ? BACKGROUND_COLOR : ACCENT_COLOR}
                     borderColor={BORDER_COLOR}
                     onPress={() => {
                       const hr = date.getUTCHours()
@@ -508,8 +508,8 @@ export default class FilterSelector extends React.Component {
                     title={'ASAP'}
                   />
                   <BackgroundButton
-                    backgroundColor={this.state.asap ? BACKGROUND_COLOR : BORDER_COLOR}
-                    textColor={this.state.asap ? BORDER_COLOR : BACKGROUND_COLOR}
+                    backgroundColor={!this.state.asap ? ACCENT_COLOR : BACKGROUND_COLOR}
+                    textColor={!this.state.asap ? BACKGROUND_COLOR : ACCENT_COLOR}
                     borderColor={BORDER_COLOR}
                     onPress={() => { 
                       this.setState({ chooseTime: true, asap: false })
@@ -611,10 +611,11 @@ export default class FilterSelector extends React.Component {
           visible={this.state.chooseTime}
           cancel={() => {
             this.setState({ chooseTime: false })
+            this.setState({ asap: true })
             this.props.setBlur(false)
           }}
           press={(hr, min) => {
-            this.setState({ hour: hr, minute: min, chooseTime: false })
+            this.setState({ hour: hr, minute: min, chooseTime: false, asap: false })
             this.props.setBlur(false)
           }}
         />
