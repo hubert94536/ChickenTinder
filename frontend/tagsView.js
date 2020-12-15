@@ -80,14 +80,12 @@ TagsView.propTypes = {
   onChange: PropTypes.func,
   isExclusive: PropTypes.bool,
   all: PropTypes.array,
-  BACKGROUND_COLOR: PropTypes.string,
-  BORDER_COLOR: PropTypes.string,
-  TEXT_COLOR: PropTypes.string,
   ACCENT_COLOR: PropTypes.string,
 }
 
 const styles = StyleSheet.create({
   container: {
+    height: '100%',
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',

@@ -146,7 +146,7 @@ export default class FilterSelector extends React.Component {
     let size = this.props.members.length
     let half = Math.ceil(size * 0.5)
     let twoThirds = Math.ceil(size * 0.66)
-    this.state.tagsMajority =[]
+    this.state.tagsMajority = []
     this.state.tagsMajority.push(half)
     if (twoThirds != half) this.state.tagsMajority.push(twoThirds)
     if (size != twoThirds) this.state.tagsMajority.push('All')
@@ -528,7 +528,7 @@ export default class FilterSelector extends React.Component {
           )}
           <View style={styles.swiperContainer}>
             {/* CUISINES */}
-            <View style={styles.filterGroupContainer}>
+            <View style={styles.bigFilterGroupContainer}>
               <View style={{ flexDirection: 'row' }}>
                 <Text style={[screenStyles.text, styles.filterTitleText]}>Cuisines</Text>
                 <Text style={styles.filterSubtext}>Select all that apply</Text>
@@ -540,10 +540,6 @@ export default class FilterSelector extends React.Component {
                 isExclusive={false}
                 onChange={(event) => this.setState({ selectedCuisine: event })}
               />
-            </View>
-
-            {/* DIETARY RESTRICTIONS */}
-            <View style={styles.filterGroupContainer}>
               <View style={{ flexDirection: 'row' }}>
                 <Text style={[screenStyles.text, styles.filterTitleText]}>Dietary Restrictions</Text>
                 <Text style={styles.filterSubtext}>Select all that apply</Text>
@@ -556,6 +552,11 @@ export default class FilterSelector extends React.Component {
                 onChange={(event) => this.setState({ selectedRestriction: event })}
               />
             </View>
+
+            {/* DIETARY RESTRICTIONS
+            <View style={styles.filterGroupContainer}>
+              
+            </View> */}
           </View>
         </Swiper>
         {/* ------------------------------------------ALERTS------------------------------------------ */}
@@ -709,6 +710,13 @@ const styles = StyleSheet.create({
     marginLeft: '5%',
     marginRight: '5%',
     flex: 1,
+    justifyContent: 'flex-start',
+  },
+  bigFilterGroupContainer: {
+    marginLeft: '5%',
+    marginRight: '5%',
+    flex: 1,
+    flexDirection: 'column',
     justifyContent: 'flex-start',
   },
   filterHeader: {
