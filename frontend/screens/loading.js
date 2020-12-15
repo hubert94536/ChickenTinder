@@ -45,7 +45,6 @@ export default class Loading extends React.Component {
       }
       this.props.navigation.navigate('TopThree', {
         top: restaurants,
-        random: res.random,
         code: this.state.code,
         host: this.state.host,
         isHost: this.state.isHost

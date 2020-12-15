@@ -27,21 +27,21 @@ export default class TopThree extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      restaurants: this.props.navigation.state.params.top,
-      random: this.props.navigation.state.params.random,
-      host: this.props.navigation.state.params.host,
-      code: this.props.navigation.state.params.code,
-      isHost: this.props.navigation.state.params.isHost,
       first: true,
       second: false,
       third: false,
+      restaurants: this.props.navigation.state.params.top,
+      host: this.props.navigation.state.params.host,
+      code: this.props.navigation.state.params.code,
+      isHost: this.props.navigation.state.params.isHost,
+      random: Math.floor(Math.random() * 3),
     }
 
-    socket.getSocket().on('randomize', () => {
+    socket.getSocket().on('choose', (ind) => {
       this.props.navigation.navigate('Match', {
-        restaurant: this.state.restaurants[random],
-        host: this.state.host,
-        code: this.state.code,
+        restaurant: restaurants[ind],
+        host: host,
+        code: code,
       })
     })
 
@@ -67,14 +67,10 @@ export default class TopThree extends React.Component {
 
   goMatch() {
     var chosen
-    if (this.state.first) chosen = this.state.restaurants[0]
-    if (this.state.first) chosen = this.state.restaurants[1]
-    if (this.state.first) chosen = this.state.restaurants[2]
-    this.props.navigation.navigate('Match', {
-      restaurant: chosen,
-      host: this.state.host,
-      code: this.state.code,
-    })
+    if (this.state.first) chosen = 0
+    if (this.state.first) chosen = 1
+    if (this.state.first) chosen = 2
+    socket.choose(this.state.code, chosen)
   }
 
   render() {
@@ -135,7 +131,6 @@ export default class TopThree extends React.Component {
                 >
                   <Icon name="heart" style={{ color: 'white', fontSize: 18, margin: '1%' }} />
                   <Text style={[screenStyles.text, { color: 'white', fontSize: 15 }]}>
-                    {' '}
                     {this.state.restaurants[0].likes} likes
                   </Text>
                 </View>
@@ -203,7 +198,6 @@ export default class TopThree extends React.Component {
                 >
                   <Icon name="heart" style={{ color: 'white', fontSize: 18, margin: '1%' }} />
                   <Text style={[screenStyles.text, { color: 'white', fontSize: 15 }]}>
-                    {' '}
                     {this.state.restaurants[1].likes} likes
                   </Text>
                 </View>
@@ -272,7 +266,6 @@ export default class TopThree extends React.Component {
                 >
                   <Icon name="heart" style={{ color: 'white', fontSize: 18, margin: '1%' }} />
                   <Text style={[screenStyles.text, { color: 'white', fontSize: 15 }]}>
-                    {' '}
                     {this.state.restaurants[2].likes} likes
                   </Text>
                 </View>
@@ -308,36 +301,55 @@ export default class TopThree extends React.Component {
             </View>
           </TouchableHighlight>
         </View>
-        <TouchableHighlight underlayColor="transparent" onPress={() => this.randomize()} disabled={!this.state.isHost}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: '15%',
-            }}
+        {this.state.isHost && (
+          <TouchableHighlight underlayColor="transparent" onPress={() => this.randomize()}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '15%',
+              }}
+            >
+              <Ion name="shuffle" style={{ fontSize: 50, color: hex, marginRight: '2%' }} />
+              <Text style={[screenStyles.text, { fontSize: 23, fontWeight: 'bold' }]}>
+                Randomize for me
+              </Text>
+            </View>
+          </TouchableHighlight>
+        )}
+        {this.state.isHost && (
+          <TouchableHighlight
+            underlayColor="white"
+            onPress={() => this.goMatch()}
+            style={[screenStyles.bigButton, { borderColor: hex, backgroundColor: hex }]}
           >
-            <Ion name="shuffle" style={{ fontSize: 50, color: hex, marginRight: '2%' }} />
-            <Text style={[screenStyles.text, { fontSize: 23, fontWeight: 'bold' }]}>
-              Randomize for me
+            <Text
+              style={[
+                screenStyles.medButtonText,
+                { fontFamily: font, color: 'white', padding: '2%' },
+              ]}
+            >
+              Submit
             </Text>
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight
-          disabled={!this.state.isHost}
-          underlayColor="white"
-          onPress={() => this.goMatch()}
-          style={[screenStyles.bigButton, { borderColor: hex, backgroundColor: hex }]}
-        >
-          <Text
-            style={[
-              screenStyles.medButtonText,
-              { fontFamily: font, color: 'white', padding: '2%' },
-            ]}
+          </TouchableHighlight>
+        )}
+        {!this.state.isHost && (
+          <TouchableHighlight
+            disabled={!this.state.isHost}
+            underlayColor="white"
+            style={[screenStyles.bigButton, { borderColor: hex, backgroundColor: hex, opacity: 0.8, marginTop:'25%'}]}
           >
-            Submit
-          </Text>
-        </TouchableHighlight>
+            <Text
+              style={[
+                screenStyles.medButtonText,
+                { fontFamily: font, color: 'white', padding: '2%', fontWeight:'bold' },
+              ]}
+            >
+              Waiting for Host...
+            </Text>
+          </TouchableHighlight>
+        )}
       </View>
     )
   }

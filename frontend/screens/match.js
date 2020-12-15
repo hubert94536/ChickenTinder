@@ -32,6 +32,7 @@ export default class Match extends React.Component {
 
   componentDidMount() {
     this._isMounted = true
+    console.log(this.state.restaurant)
   }
 
   componentWillUnmount() {

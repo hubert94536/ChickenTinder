@@ -37,11 +37,9 @@ export default class Round extends React.Component {
         isHost: this.state.isHost
       })
     })
-    var modified = []
     for (var i = 0; i < this.state.results.length; i++) {
-      modified[i] = getCuisine(this.state.results[i])
+     this.state.results[i] = getCuisine(this.state.results[i])
     }
-    this.setState({ results: modified })
   }
 
   likeRestaurant(resId) {

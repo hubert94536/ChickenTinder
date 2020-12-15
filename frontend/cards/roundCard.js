@@ -17,6 +17,7 @@ import PropTypes from 'prop-types'
 
 const font = 'CircularStd-Medium'
 
+
 export default class RoundCard extends React.Component {
   constructor(props) {
     super(props)
