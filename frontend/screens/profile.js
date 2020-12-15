@@ -1,15 +1,5 @@
 import React, { Component } from 'react'
-import {
-  Dimensions,
-  Image,
-  Keyboard,
-  Modal,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableHighlight,
-  View,
-} from 'react-native'
+import { Dimensions, Image, Keyboard, StyleSheet, Text, View } from 'react-native'
 import { ID, NAME, PHOTO, USERNAME, DEFPHOTO, EMAIL } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
@@ -21,76 +11,18 @@ import Friends from './friends.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import TabBar from '../nav.js'
-import AntDesign from 'react-native-vector-icons/AntDesign'
 import ImagePicker from 'react-native-image-crop-picker'
 import defImages from '../assets/images/foodImages.js'
 import uploadApi from '../apis/uploadApi.js'
 import PropTypes from 'prop-types'
+import EditProfile from '../modals/EditProfile.js'
+import Settings from '../modals/ProfileSettings.js'
 
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
 const height = Dimensions.get('window').height
 var email = ''
 var id = ''
-
-//=========================Testing Code=========================================
-// import { ID } from 'react-native-dotenv'
-// import friendsApi from '../apis/friendsApi.js'
-
-// var myId = ''
-// AsyncStorage.getItem(ID).then((res) => {
-//   myId = res
-// })
-
-// const dummyFriends = () => {
-// uncomment if testing friends/requests
-//this.getNotifs();
-// accountsApi.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
-// accountsApi.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
-// accountsApi.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
-// accountsApi.createFBUser('Helen', 5, 'helenthemelon', 'helenw@gmail.com', 'sjdkf'),
-// accountsApi.createFBUser('Kevin', 6, 'kevint', 'kevintang@gmail.com', 'sdfddf'),
-// accountsApi.createFBUser('David', 7, 'das', 'das@gmail.com', 'fhgdgffgad'),
-// accountsApi.createFBUser('Jeff', 8, 'jeffwinger', 'jeffw@gmail.com', 'sdfaadddf'),
-// accountsApi.createFBUser('Annie', 9, 'anniee', 'anniee@gmail.com', 'sdfgfsdddf'),
-// accountsApi.createFBUser('Britta', 10, 'theworst', 'brittap@gmail.com', 'sdfhgjddf'),
-
-// accountsApi.createFBUser('Ice Cream', 30, 'icecream', 'icecream@gmail.com', 'hjgkjgkjg')
-// accountsApi.createFBUser('Sundae', 31, 'sundae', 'sundae@gmail.com', 'sfhkslfs')
-// accountsApi.createFBUser('Float', 32, 'float', 'float@gmail.com', 'ksflsfsf')
-
-// console.log("My id:" + myId),
-// friendsApi.createFriendshipTest(1288355614841173, myId)
-// .then((res) => {
-//   console.log('this is the response: ' + res)
-// })
-// .catch((err)=>{
-//   console.log(err)
-// }),
-
-// friendsApi.createFriendshipTest(myId, 31)
-
-// friendsApi.createFriendshipTest(32, myId)
-
-// friendsApi.createFriendshipTest(3, myId),
-// friendsApi.createFriendshipTest(4, myId),
-// friendsApi.createFriendshipTest(5, myId),
-// friendsApi.createFriendshipTest(6, myId),
-// friendsApi.createFriendshipTest(7, myId),
-// friendsApi.createFriendshipTest(8, myId),
-// friendsApi.createFriendshipTest(9, myId),
-// friendsApi.createFriendshipTest(10, myId),
-// friendsApi.acceptFriendRequest(1288355614841173)
-// friendsApi.acceptFriendRequest(3)
-// friendsApi.acceptFriendRequest(4)
-// friendsApi.acceptFriendRequest(5)
-// friendsApi.acceptFriendRequest(6)
-// friendsApi.acceptFriendRequest(7)
-// friendsApi.acceptFriendRequest(8)
-// friendsApi.acceptFriendRequest(9)
-// friendsApi.acceptFriendRequest(10)
-// }
-//==============================================================================
 
 export default class UserProfileView extends Component {
   constructor(props) {
@@ -128,9 +60,10 @@ export default class UserProfileView extends Component {
         image: res[4][1],
         oldImage: res[4][1],
         username: res[5][1],
-        usernameValue: [5][1],
+        usernameValue: res[5][1],
       })
     })
+    console.log(this.state.name)
   }
 
   // getting current user's info
@@ -375,389 +308,29 @@ export default class UserProfileView extends Component {
               style={modalStyles.blur}
             />
           )}
-          <Modal animationType="fade" visible={this.state.visible} transparent>
-            <View style={styles.modal}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Text
-                  style={[
-                    screenStyles.textBold,
-                    {
-                      fontSize: 20,
-                      marginLeft: '10%',
-                      marginTop: '10%',
-                      marginBottom: '5%',
-                      alignSelf: 'center',
-                    },
-                  ]}
-                >
-                  Settings
-                </Text>
-                {/* old log out button */}
-                {/* <TouchableHighlight
-                  underlayColor={hex}
-                  onShowUnderlay={() => this.setState({ logout: true })}
-                  onHideUnderlay={() => this.setState({ logout: false })}
-                  onPress={() => this.setState({ logoutAlert: true })}
-                  style={[
-                    screenStyles.smallButton,
-                    styles.button,
-                    this.state.logout ? { backgroundColor: hex } : { backgroundColor: 'white' },
-                    { width: '28%', borderWidth: 1.5 },
-                  ]}
-                >
-                  <Text
-                    style={[
-                      screenStyles.smallButtonText,
-                      this.state.logout ? { color: 'white' } : { color: hex },
-                    ]}
-                  >
-                    Logout
-                  </Text>
-                </TouchableHighlight>
-                {this.state.logoutAlert && (
-                  <Alert
-                    title="Log out"
-                    body="Are you sure you want to log out?"
-                    buttonAff="Logout"
-                    buttonNeg="Go back"
-                    height="25%"
-                    twoButton
-                    press={() => this.handleLogout()}
-                    cancel={() => this.cancelLogout()}
-                  />
-                )} */}
-                <AntDesign
-                  name="closecircleo"
-                  style={[screenStyles.text, { margin: '5%', fontSize: 25 }]}
-                  onPress={() =>
-                    this.setState({
-                      visible: false,
-                    })
-                  }
-                />
-              </View>
-              <View
-                style={{
-                  justifyContent: 'space-between',
-                  marginHorizontal: '10%',
-                }}
-              >
-                <View>
-                  <Text style={[{ fontFamily: font, fontSize: 18 }]}>Email</Text>
-                  <TextInput
-                    style={[
-                      screenStyles.text,
-                      screenStyles.input,
-                      {
-                        color: '#B2B2B2',
-                        fontSize: 17,
-                        alignSelf: 'stretch',
-                        backgroundColor: '#F2F2F2',
-                        borderWidth: 1,
-                        borderColor: '#E0E0E0',
-                        borderRadius: 5,
-                        paddingHorizontal: 5,
-                        paddingVertical: 2,
-                        marginTop: '3%',
-                      },
-                    ]}
-                    editable={false}
-                    value={email}
-                    onChangeText={(text) => this.setState({ nameValue: text })}
-                  />
-                </View>
-              </View>
-              <View
-                style={{
-                  justifyContent: 'space-between',
-                  marginVertical: '5%',
-                  marginHorizontal: '10%',
-                }}
-              >
-                <Text style={{ fontFamily: font, fontSize: 18 }}>Phone Number</Text>
-                <TextInput
-                  style={[
-                    screenStyles.text,
-                    screenStyles.input,
-                    {
-                      color: '#B2B2B2',
-                      fontSize: 15,
-                      alignSelf: 'stretch',
-                      backgroundColor: '#F2F2F2',
-                      borderWidth: 1,
-                      borderColor: '#E0E0E0',
-                      borderRadius: 5,
-                      paddingHorizontal: 5,
-                      paddingVertical: 2,
-                      marginTop: '3%',
-                    },
-                  ]}
-                  editable={false}
-                  value={'+0 (770) 090-0461'}
-                  onChangeText={(text) => this.setState({ nameValue: text })}
-                />
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                }}
-              >
-                <Text
-                  onPress={() => this.setState({ deleteAlert: true })}
-                  style={[
-                    screenStyles.textBold,
-                    { fontSize: 18, color: 'black', marginRight: '35%' },
-                  ]}
-                >
-                  Delete account...
-                </Text>
-                {this.state.deleteAlert && [
-                  <BlurView
-                    blurType="dark"
-                    blurAmount={10}
-                    reducedTransparencyFallbackColor="black"
-                  />,
-                  <Alert
-                    title="Delete account?"
-                    body="By deleting your account, you will lose all of your data"
-                    buttonAff="Delete"
-                    buttonNeg="Go back"
-                    twoButton
-                    height="27%"
-                    press={() => this.handleDelete()}
-                    cancel={() => this.cancelDelete()}
-                  />,
-                ]}
-                {this.state.errorAlert && (
-                  <Alert
-                    title="Error, please try again"
-                    button
-                    buttonText="Close"
-                    press={() => this.closeError()}
-                    cancel={() => this.closeError()}
-                  />
-                )}
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                }}
-              >
-                <TouchableHighlight
-                  style={[
-                    screenStyles.medButton,
-                    {
-                      backgroundColor: hex,
-                      borderColor: hex,
-                      marginTop: '7%',
-                      width: '40%',
-                    },
-                  ]}
-                  underlayColor="white"
-                  onShowUnderlay={() => this.setState({ logout: true })}
-                  onHideUnderlay={() => this.setState({ logout: false })}
-                  onPress={() => this.setState({ logoutAlert: true })}
-                >
-                  <Text
-                    style={[
-                      screenStyles.smallButtonText,
-                      { paddingTop: '5%', paddingBottom: '5%', fontSize: 19 },
-                      this.state.logout ? { color: hex } : { color: 'white' },
-                    ]}
-                  >
-                    Logout
-                  </Text>
-                </TouchableHighlight>
-                {this.state.logoutAlert && (
-                  <Alert
-                    title="Log out"
-                    body="Are you sure you want to log out?"
-                    buttonAff="Logout"
-                    buttonNeg="Go back"
-                    height="25%"
-                    twoButton
-                    press={() => this.handleLogout()}
-                    cancel={() => this.cancelLogout()}
-                  />
-                )}
-              </View>
-            </View>
-          </Modal>
-          <Modal animationType="fade" transparent visible={this.state.edit}>
-            <View
-              style={[
-                {
-                  height: Dimensions.get('window').height * 0.5,
-                  width: '75%',
-                  marginTop: '15%',
-                  backgroundColor: 'white',
-                  elevation: 20,
-                  alignSelf: 'center',
-                  borderRadius: 10,
-                },
-              ]}
-            >
-              <AntDesign
-                name="closecircleo"
-                style={[
-                  screenStyles.text,
-                  {
-                    fontSize: 18,
-                    flexDirection: 'row',
-                    alignSelf: 'flex-end',
-                    marginTop: '4%',
-                    marginRight: '4%',
-                  },
-                ]}
-                onPress={() => this.dontSave()}
-              />
-              <View style={{ textAlign: 'center', marginLeft: '10%', marginRight: '10%' }}>
-                <Text style={[screenStyles.text, { fontSize: 16 }]}>Edit Profile</Text>
 
-                {this.state.image == null && (
-                  <Image
-                    style={{
-                      height: height * 0.13,
-                      width: height * 0.13,
-                      borderRadius: 60,
-                      alignSelf: 'center',
-                    }}
-                    source={this.state.defImg}
-                  />
-                )}
+          <Settings
+            visible={this.state.visible}
+            close={() => this.setState({ visible: false })}
+            delete={() => this.handleDelete()}
+            logout={() => this.handleLogout()}
+            email={email}
+          />
 
-                {this.state.image != null && (
-                  <Image
-                    source={{
-                      uri: this.state.image,
-                    }}
-                    style={{
-                      height: height * 0.13,
-                      width: height * 0.13,
-                      borderRadius: 60,
-                      alignSelf: 'center',
-                    }}
-                  />
-                )}
+          <EditProfile
+            visible={this.state.edit}
+            // image = {this.state.image}
+            defImage={this.state.defImage}
+            name={this.state.nameValue}
+            username={this.state.usernameValue}
+            dontSave={() => this.dontSave()}
+            uploadPhoto={() => this.uploadPhoto()}
+            removePhoto={() => this.removePhoto()}
+            makeChanges={() => this.makeChanges()}
+            userChange={(text) => this.setState({ usernameValue: text })}
+            nameChange={(text) => this.setState({ nameValue: text })}
+          />
 
-                <View
-                  style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: '4%' }}
-                >
-                  <Text
-                    style={[screenStyles.text, { marginRight: '5%' }]}
-                    onPress={() => this.uploadPhoto()}
-                  >
-                    Upload
-                  </Text>
-                  <Text
-                    style={[screenStyles.text, { color: 'black', marginLeft: '5%' }]}
-                    onPress={() => this.removePhoto()}
-                  >
-                    Remove
-                  </Text>
-                </View>
-                <Text style={[screenStyles.text, { color: 'black', marginBottom: '2%' }]}>
-                  Display name
-                </Text>
-                <TextInput
-                  style={[
-                    screenStyles.text,
-                    screenStyles.input,
-                    {
-                      color: '#7d7d7d',
-                      fontSize: 15,
-                      borderBottomWidth: 1,
-                      marginBottom: '7%',
-                      borderColor: '#7d7d7d',
-                    },
-                  ]}
-                  underlineColorAndroid="transparent"
-                  spellCheck={false}
-                  autoCorrect={false}
-                  keyboardType="visible-password"
-                  value={this.state.nameValue}
-                  onChangeText={(text) => this.setState({ nameValue: text })}
-                  // onSubmitEditing={() => this.makeChanges()}
-                />
-                <Text style={[screenStyles.text, { color: 'black', marginBottom: '2%' }]}>
-                  Username
-                </Text>
-                <TextInput
-                  style={[
-                    screenStyles.text,
-                    screenStyles.input,
-                    {
-                      color: '#7d7d7d',
-                      fontSize: 15,
-                      borderBottomWidth: 1,
-                      borderColor: '#7d7d7d',
-                    },
-                  ]}
-                  underlineColorAndroid="transparent"
-                  spellCheck={false}
-                  autoCorrect={false}
-                  keyboardType="visible-password"
-                  value={this.state.usernameValue}
-                  onChangeText={(text) => this.setState({ usernameValue: text })}
-                  // onSubmitEditing={() => this.makeChanges()}
-                />
-              </View>
-              <TouchableHighlight
-                style={[
-                  screenStyles.medButton,
-                  { backgroundColor: hex, borderColor: hex, margin: '7%', width: '50%' },
-                ]}
-                onPress={() => this.makeChanges()}
-                underlayColor="white"
-                onShowUnderlay={() => this.setState({ changeName: true })}
-                onHideUnderlay={() => this.setState({ changeName: false })}
-              >
-                <Text
-                  style={[
-                    screenStyles.smallButtonText,
-                    { padding: '10%' },
-                    this.state.changeName ? { color: hex } : { color: 'white' },
-                  ]}
-                >
-                  Save Changes
-                </Text>
-              </TouchableHighlight>
-            </View>
-          </Modal>
-          {/* {this.state.deleteAlert && (
-            <BlurView blurType="dark" blurAmount={10} reducedTransparencyFallbackColor="black" />
-          )} */}
-          {/* {this.state.deleteAlert && (
-            <Alert
-              title="Delete account?"
-              body="By deleting your account, you will lose all of your data"
-              buttonAff="Delete"
-              buttonNeg="Go back"
-              twoButton
-              height="27%"
-              press={() => this.handleDelete()}
-              cancel={() => this.cancelDelete()}
-            />
-          )} */}
-          {/* {this.state.logoutAlert && (
-            // <Alert
-            //   title="Log out"
-            //   body="Are you sure you want to log out?"
-            //   buttonAff="Logout"
-            //   buttonNeg="Go back"
-            //   height="25%"
-            //   twoButton
-            //   press={() => this.handleLogout()}
-            //   cancel={() => this.cancelLogout()}
-            // />
-          )} */}
           {this.state.errorAlert && (
             <Alert
               title="Error, please try again"
@@ -799,15 +372,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginRight: '0%',
   },
-  modal: {
-    height: height * 0.45,
-    width: '85%',
-    marginTop: '15%',
-    backgroundColor: 'white',
-    alignSelf: 'center',
-    borderRadius: 15,
-    elevation: 20,
-  },
+  // modal: {
+  //   height: height * 0.45,
+  //   width: '85%',
+  //   marginTop: '15%',
+  //   backgroundColor: 'white',
+  //   alignSelf: 'center',
+  //   borderRadius: 15,
+  //   elevation: 20,
+  // },
   changeButtons: {
     alignSelf: 'center',
     width: '35%',

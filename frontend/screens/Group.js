@@ -13,9 +13,7 @@ import Clipboard from '@react-native-community/clipboard'
 import { USERNAME } from 'react-native-dotenv'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import AsyncStorage from '@react-native-community/async-storage'
 import PropTypes from 'prop-types'
-
 import Drawer from './Drawer.js'
 import Alert from '../modals/alert.js'
 import GroupCard from '../cards/groupCard.js'
@@ -30,10 +28,6 @@ const hex = '#F15763'
 const font = 'CircularStd-Medium'
 let memberList = []
 let memberRenderList = []
-let myUsername = ''
-AsyncStorage.getItem(USERNAME).then((res) => {
-  myUsername = res
-})
 
 const windowWidth = Dimensions.get('window').width
 const windowHeight = Dimensions.get('window').height
@@ -42,26 +36,26 @@ export default class Group extends React.Component {
   constructor(props) {
     super(props)
     this._isMounted = false
-    const members = this.props.navigation.state.params.members
+    const members = this.props.navigation.state.params.response.members
     this.filterRef = React.createRef()
     this.state = {
-      myUsername: myUsername,
-
+      myUsername: this.props.navigation.state.params.username,
       // Group data
       // Member Dictionary
       members: members,
 
-      host: this.props.navigation.state.params.host,
-      hostName: members[this.props.navigation.state.params.host].username,
+      host: this.props.navigation.state.params.response.host,
+      hostName: members[this.props.navigation.state.params.response.host].username,
       // hostName: "NOT YOU",
       needFilters: Object.keys(members).filter((user) => !user.filters).length,
 
       filters: {},
-      code: this.props.navigation.state.params.code,
+      code: this.props.navigation.state.params.response.code,
 
       // UI state
       canStart: false,
       userSubmitted: false,
+      blur: false,
 
       // Modal visibility vars
       leaveAlert: false,
@@ -77,9 +71,9 @@ export default class Group extends React.Component {
 
     // listens for group updates
     socket.getSocket().on('update', (res) => {
-      // console.log('group.js: Update')
+      // console.log('group.js: update')
       if (this._isMounted) {
-        // console.log('socket "update": ' + JSON.stringify(res))
+        console.log('socket "update": ' + JSON.stringify(res))
         this.setState({ members: res.members, host: res.host, code: res.code })
         const count = this.countNeedFilters(res.members)
         this.setState({ needFilters: count })
@@ -123,6 +117,10 @@ export default class Group extends React.Component {
     })
   }
 
+  blur(isBlurred) {
+    this.setState({ blur: isBlurred })
+  }
+
   setUserSubmit() {
     this.setState({ userSubmitted: true })
   }
@@ -130,6 +128,7 @@ export default class Group extends React.Component {
   // counts number of users who haven't submitted filters
   countNeedFilters(users) {
     let count = 0
+    console.log('countNeedFilters: ' + JSON.stringify(users))
     for (const user in users) {
       if (!users[user].filters) {
         count++
@@ -158,15 +157,15 @@ export default class Group extends React.Component {
       a.host = this.state.host
       a.isHost = this.state.hostName == this.state.myUsername
       a.key = user
-      a.f = false
       memberList.push(a)
+      a.f = false
       memberRenderList.push(a)
     }
     const footer = {}
     footer.f = true
     memberRenderList.push(footer)
     // console.log('\n\n\n\n\n\n=========================')
-    // console.log(memberList)
+    console.log('group.js: ' + JSON.stringify(memberList))
     // console.log('=========================\n\n\n\n\n\n')
   }
 
@@ -326,7 +325,8 @@ export default class Group extends React.Component {
                       <GroupCard
                         name={item.name}
                         username={item.username}
-                        image={item.photo}
+                        // Placeholder image for null image
+                        image={item.photo == '' ? 'https://via.placeholder.com/150' : item.photo}
                         filters={item.filters}
                         host={this.state.host}
                         isHost={this.state.hostName == item.username}
@@ -362,10 +362,10 @@ export default class Group extends React.Component {
                     style={[
                       screenStyles.bigButton,
                       styles.bigButton,
-                      !this.state.userSubmitted ? { opacity: 0.75 } : { opacity: 1 },
+                      !this.state.userSubmitted ? { opacity: 1 } : { opacity: 0.4 },
                     ]}
                     onPress={() => {
-                      this.filterRef.current.submitUserFilters()
+                      if (!this.state.userSubmitted) this.filterRef.current.submitUserFilters()
                     }}
                   >
                     <Text style={styles.buttonText}>
@@ -424,7 +424,7 @@ export default class Group extends React.Component {
                 />
               )}
               <ChooseFriends
-                code={this.props.navigation.state.params.code}
+                code={this.props.navigation.state.params.response.code}
                 visible={this.state.chooseFriends}
                 members={memberList}
                 press={() => this.setState({ chooseFriends: false })}
@@ -453,6 +453,7 @@ export default class Group extends React.Component {
                     members={memberList}
                     ref={this.filterRef}
                     code={this.state.code}
+                    setBlur={(res) => this.blur(res)}
                   />
                 </View>
               </View>
@@ -496,6 +497,14 @@ export default class Group extends React.Component {
             </View>
           )}
         />
+        {this.state.blur && (
+          <BlurView
+            blurType="dark"
+            blurAmount={5}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
       </View>
     )
   }

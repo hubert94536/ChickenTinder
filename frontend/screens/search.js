@@ -177,6 +177,10 @@ export default class Search extends Component {
   }
 }
 
+Search.propTypes = {
+  navigation: PropTypes.object,
+}
+
 const styles = StyleSheet.create({
   topIcons: {
     marginLeft: '5%',
