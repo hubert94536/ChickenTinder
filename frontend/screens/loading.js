@@ -13,9 +13,26 @@ export default class Loading extends React.Component {
     this.state = {
       restaurant: this.props.navigation.state.params.restaurant,
       host: this.props.navigation.state.params.host,
-      code: this.props.navigation.state.params.code
+      code: this.props.navigation.state.params.code,
+      isHost: this.props.navigation.state.params.isHost,
     }
-    socket.getSocket().on('top3', (res) => {
+
+    socket.getSocket().on('match', (data) => {
+      var res
+      for (var i = 0; i < this.state.results.length; i++) {
+        if (this.state.results[i].id === data) {
+          res = this.state.results[i]
+          break
+        }
+      }
+      this.props.navigation.navigate('Match', {
+        restaurant: res,
+        host: this.state.host,
+        code: this.state.code,
+      })
+    })
+
+    socket.getSocket().on('top 3', (res) => {
       var restaurants = []
       for (var i = 0; i < 3; i++) {
         for (var j = 0; j < this.state.restaurant.length; j++) {
@@ -30,13 +47,14 @@ export default class Loading extends React.Component {
         top: restaurants,
         random: res.random,
         code: this.state.code,
-        host: this.state.host
+        host: this.state.host,
+        isHost: this.state.isHost
       })
     })
   }
 
   leaveGroup() {
-    socket.leaveRoom()
+    socket.leaveRoom(this.state.code)
     this.props.navigation.navigate('Home')
   }
 
