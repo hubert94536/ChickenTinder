@@ -13,6 +13,7 @@ export default class Loading extends React.Component {
     this.state = {
       restaurant: this.props.navigation.state.params.restaurant,
       host: this.props.navigation.state.params.host,
+      code: this.props.navigation.state.params.code
     }
     socket.getSocket().on('top3', (res) => {
       var restaurants = []
@@ -28,7 +29,8 @@ export default class Loading extends React.Component {
       this.props.navigation.navigate('TopThree', {
         top: restaurants,
         random: res.random,
-        host: this.state.host,
+        code: this.state.code,
+        host: this.state.host
       })
     })
   }
@@ -80,6 +82,7 @@ export default class Loading extends React.Component {
 Loading.propTypes = {
   restaurant: PropTypes.array,
   navigation: PropTypes.object,
+  code: PropTypes.number
 }
 
 const styles = StyleSheet.create({
