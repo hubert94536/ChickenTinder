@@ -9,6 +9,7 @@ import RoundCard from '../cards/roundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Tooltip from 'react-native-walkthrough-tooltip'
+import getCuisine from '../assets/cards/foodImages.js'
 
 export default class Round extends React.Component {
   constructor(props) {
@@ -21,13 +22,6 @@ export default class Round extends React.Component {
       index: 1,
     }
 
-    // socket.getSocket().on('match', (data) => {
-    //   this.props.navigation.navigate('Match', {
-    //     restaurant: data.restaurant,
-    //     host: this.state.host,
-    //   })
-    // })
-
     socket.getSocket().on('match', (data) => {
       var res
       for (var i = 0; i < this.state.results.length; i++) {
@@ -39,12 +33,13 @@ export default class Round extends React.Component {
       this.props.navigation.navigate('Match', {
         restaurant: res,
         host: this.state.host,
+        code: this.props.navigation.state.params.code,
+        isHost: this.state.isHost,
       })
     })
-
-    // socket.getSocket().on('exception', (error) => {
-    //   console.log(error)
-    // })
+    for (var i = 0; i < this.state.results.length; i++) {
+      this.state.results[i] = getCuisine(this.state.results[i])
+    }
   }
 
   likeRestaurant(resId) {
@@ -68,7 +63,7 @@ export default class Round extends React.Component {
   // }
 
   leaveGroup() {
-    socket.leaveRoom()
+    socket.leaveRoom(this.props.navigation.state.params.code)
     this.props.navigation.navigate('Home')
   }
 
@@ -77,6 +72,7 @@ export default class Round extends React.Component {
       <View style={styles.mainContainer}>
         <View style={{ flex: 1 }}>
           <Swiper
+            ref={(deck) => (this.deck = deck)}
             cards={this.state.results}
             cardStyle={{ justifyContent: 'center' }}
             cardIndex={0}
@@ -87,16 +83,20 @@ export default class Round extends React.Component {
             onSwiped={() => this.setState({ index: this.state.index + 1 })}
             onSwipedRight={(cardIndex) => {
               this.likeRestaurant(this.state.results[cardIndex].id)
-              //if that was the last card
-              if (cardIndex === this.state.results.length) {
-                //let backend know you're done
-                socket.finishedRound(this.state.code)
-                //go to the loading page
-                this.props.navigation.navigate('Loading', {
-                  restaurant: this.state.results,
-                  host: this.state.host,
-                })
-              }
+            }}
+            onSwipedAll={() => {
+              //let backend know you're done
+              socket.finishedRound(this.props.navigation.state.params.code)
+              //go to the loading page
+              this.props.navigation.navigate('Loading', {
+                restaurant: this.state.results,
+                host: this.state.host,
+                code: this.props.navigation.state.params.code,
+                isHost: this.state.isHost,
+              })
+            }}
+            onSwipedRight={(cardIndex) => {
+              this.likeRestaurant(this.state.results[cardIndex].id)
             }}
             stackSeparation={0}
             backgroundColor="transparent"
@@ -144,58 +144,64 @@ export default class Round extends React.Component {
             marginLeft: '10%',
           }}
         >
-          <Tooltip
-            isVisible={this.state.instr}
-            content={
-              <View style={{ flexDirection: 'row' }}>
-                <Feather
-                  name="arrow-left"
-                  style={{ color: 'white', fontSize: 15, marginRight: '1%' }}
-                />
-                <Text style={[screenStyles.text, { color: 'white', fontSize: 12 }]}>
-                  swipe left to dislike
-                </Text>
-              </View>
-            }
-            placement="top"
-            backgroundColor="transparent"
-            contentStyle={{ backgroundColor: '#6A6A6A' }}
-            onClose={() => this.setState({ instr: false })}
-          >
+          <View>
+            <Tooltip
+              isVisible={this.state.instr}
+              content={
+                <View style={{ flexDirection: 'row-reverse' }}>
+                  <Text style={[screenStyles.text, { color: 'white', fontSize: 12 }]}>
+                    swipe left to dislike
+                  </Text>
+                  <Feather
+                    name="arrow-left"
+                    style={{ color: 'white', fontSize: 15, marginRight: '1%' }}
+                  />
+                </View>
+              }
+              placement="top"
+              backgroundColor="transparent"
+              contentStyle={{ backgroundColor: '#6A6A6A' }}
+              onClose={() => this.setState({ instr: false })}
+            >
+              <Text> </Text>
+            </Tooltip>
             <TouchableHighlight
-              onPress={() => console.log('x')}
+              onPress={() => this.deck.swipeLeft()}
               underlayColor="transparent"
               style={{ backgroundColor: 'transparent' }}
             >
               <Feather name="x" style={[screenStyles.text, { color: '#6A6A6A', fontSize: 45 }]} />
             </TouchableHighlight>
-          </Tooltip>
-          <Tooltip
-            isVisible={this.state.instr}
-            content={
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={[screenStyles.text, { color: 'white', fontSize: 12 }]}>
-                  swipe right to like
-                </Text>
-                <Feather
-                  name="arrow-right"
-                  style={{ color: 'white', fontSize: 15, marginLeft: '1%' }}
-                />
-              </View>
-            }
-            placement="top"
-            backgroundColor="transparent"
-            contentStyle={{ backgroundColor: '#F15763' }}
-            onClose={() => this.setState({ instr: false })}
-          >
+          </View>
+          <View>
+            <Tooltip
+              isVisible={this.state.instr}
+              content={
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={[screenStyles.text, { color: 'white', fontSize: 12 }]}>
+                    swipe right to like
+                  </Text>
+                  <Feather
+                    name="arrow-right"
+                    style={{ color: 'white', fontSize: 15, marginLeft: '1%' }}
+                  />
+                </View>
+              }
+              placement="top"
+              backgroundColor="transparent"
+              contentStyle={{ backgroundColor: '#F15763' }}
+              onClose={() => this.setState({ instr: false })}
+            >
+              <Text> </Text>
+            </Tooltip>
             <TouchableHighlight
-              onPress={() => console.log('heart')}
+              onPress={() => this.deck.swipeRight()}
               underlayColor="transparent"
-              style={{ backgroundColor: 'transparent' }}
+              style={{ backgroundColor: 'transparent', marginTop: '1%' }}
             >
               <Icon name="heart" style={[screenStyles.text, { fontSize: 35 }]} />
             </TouchableHighlight>
-          </Tooltip>
+          </View>
         </View>
       </View>
     )

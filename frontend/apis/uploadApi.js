@@ -16,6 +16,7 @@ const uploadApi = axios.create({
 /**
  * uploads photo to server
  * @param {uri, type, name} photo an object containing the uri, type, and name of the photo to be uploaded
+ * @returns {string} a link to the uploaded photo on AWS
  * get info from the two separate libraries
  * NOTE: Check if crop-picker automatically resizes image (without restricting cropping)
  * from crop-picker: type: res.mime
@@ -33,23 +34,11 @@ const uploadPhoto = async (photo) => {
   const data = new FormData()
   data.append('id', myId)
   data.append('avatar', photo)
-  // return uploadApi.get('/accounts')
-  //       .then((res) => {
-  //         console.log(res)
-  //       })
-
-  // const uploadUrl = 'http://172.16.0.10:5000/images'
-  // return fetch(uploadUrl, {
-  //   method: 'post',
-  //   body: data
-  // })
-  //   .then((res) => res.json())
-  //   .then((res) => console.log(res));
 
   return uploadApi
     .post('/images', data, config)
-    .then((res) => {
-      return res.status
+    .then(async (res) => {
+      return await res.text()
     })
     .catch((error) => {
       throw error.response.status

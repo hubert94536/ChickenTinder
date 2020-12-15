@@ -1,4 +1,4 @@
-const foodImages = [
+const cardImages = [
   require('./African.png'),
   require('./Australian.png'),
   require('./Bakery.png'),
@@ -52,190 +52,499 @@ const foodImages = [
   require('./Vietnamese.png'),
 ]
 
-const generalFoodImages = [
+const generalCardImages = [
   require('./General1.png'),
   require('./General2.png'),
   require('./General3.png'),
 ]
 
-export default function getCusine(categories) {
-  for (var i = 0; i < categories.length; i++) {
-    if (categories[i].title === 'African') {
-      return foodImages[0]
+const foodImages = [
+  require('../images/African.png'),
+  require('../images/Australian.png'),
+  require('../images/Bakery.png'),
+  require('../images/Bakery2.png'),
+  require('../images/Breakfast.png'),
+  require('../images/British.png'),
+  require('../images/Burmese.png'),
+  require('../images/Cafes.png'),
+  require('../images/Cambodian.png'),
+  require('../images/Canadian.png'),
+  require('../images/Caribbean.png'),
+  require('../images/ChickenWings.png'),
+  require('../images/chinese.png'),
+  require('../images/Cuban.png'),
+  require('../images/Ethiopian.png'),
+  require('../images/Filipino.png'),
+  require('../images/French.png'),
+  require('../images/German.png'),
+  require('../images/Greek.png'),
+  require('../images/Halal_Middle_Eastern.png'),
+  require('../images/hamburger.png'),
+  require('../images/Hawaiian.png'),
+  require('../images/Hawaiian_Polynesian.png'),
+  require('../images/Hot_Dog.png'),
+  require('../images/indian.png'),
+  require('../images/Indonesian.png'),
+  require('../images/Irish_Bars.png'),
+  require('../images/italian.png'),
+  require('../images/japanese.png'),
+  require('../images/Kebab_Middle_Eastern.png'),
+  require('../images/korean.png'),
+  require('../images/Mediterranean.png'),
+  require('../images/mexican.png'),
+  require('../images/mongolian.png'),
+  require('../images/Moroccan.png'),
+  require('../images/Peruvian.png'),
+  require('../images/Pizza.png'),
+  require('../images/Polish.png'),
+  require('../images/Russian.png'),
+  require('../images/Salad.png'),
+  require('../images/Sandwiches.png'),
+  require('../images/Seafood.png'),
+  require('../images/Southern_Soulfood.png'),
+  require('../images/Spanish_Tapas.png'),
+  require('../images/Sri_Lankan.png'),
+  require('../images/Steakhouse.png'),
+  require('../images/Sushi.png'),
+  require('../images/Swedish_Scandinavian.png'),
+  require('../images/Taiwanese.png'),
+  require('../images/thai.png'),
+  require('../images/Vietnamese.png'),
+]
+
+const generalFoodImages = [
+  require('../images/General1.png'),
+  require('../images/General2.png'),
+  require('../images/General3.png'),
+]
+
+const matchImages = [
+  require('../matchcard/African.png'),
+  require('../matchcard/Australian.png'),
+  require('../matchcard/Bakery.png'),
+  require('../matchcard/Bakery2.png'),
+  require('../matchcard/Breakfast.png'),
+  require('../matchcard/British.png'),
+  require('../matchcard/Burmese.png'),
+  require('../matchcard/Cafes.png'),
+  require('../matchcard/Cambodian.png'),
+  require('../matchcard/Canadian.png'),
+  require('../matchcard/Caribbean.png'),
+  require('../matchcard/ChickenWings.png'),
+  require('../matchcard/chinese.png'),
+  require('../matchcard/Cuban.png'),
+  require('../matchcard/Ethiopian.png'),
+  require('../matchcard/Filipino.png'),
+  require('../matchcard/French.png'),
+  require('../matchcard/German.png'),
+  require('../matchcard/Greek.png'),
+  require('../matchcard/Halal_Middle_Eastern.png'),
+  require('../matchcard/hamburger.png'),
+  require('../matchcard/Hawaiian.png'),
+  require('../matchcard/Hawaiian_Polynesian.png'),
+  require('../matchcard/Hot_Dog.png'),
+  require('../matchcard/indian.png'),
+  require('../matchcard/Indonesian.png'),
+  require('../matchcard/Irish_Bars.png'),
+  require('../matchcard/italian.png'),
+  require('../matchcard/japanese.png'),
+  require('../matchcard/Kebab_Middle_Eastern.png'),
+  require('../matchcard/korean.png'),
+  require('../matchcard/Mediterranean.png'),
+  require('../matchcard/mexican.png'),
+  require('../matchcard/mongolian.png'),
+  require('../matchcard/Moroccan.png'),
+  require('../matchcard/Peruvian.png'),
+  require('../matchcard/Pizza.png'),
+  require('../matchcard/Polish.png'),
+  require('../matchcard/Russian.png'),
+  require('../matchcard/Salad.png'),
+  require('../matchcard/Sandwiches.png'),
+  require('../matchcard/Seafood.png'),
+  require('../matchcard/Southern_Soulfood.png'),
+  require('../matchcard/Spanish_Tapas.png'),
+  require('../matchcard/Sri_Lankan.png'),
+  require('../matchcard/Steakhouse.png'),
+  require('../matchcard/Sushi.png'),
+  require('../matchcard/Swedish_Scandinavian.png'),
+  require('../matchcard/Taiwanese.png'),
+  require('../matchcard/thai.png'),
+  require('../matchcard/Vietnamese.png'),
+]
+
+const generalMatchImages = [
+  require('../matchcard/General1.png'),
+  require('../matchcard/General2.png'),
+  require('../matchcard/General3.png'),
+]
+
+export default function getCusine(restaurant) {
+  for (var i = 0; i < restaurant.categories.length; i++) {
+    if (restaurant.categories[i].title === 'African') {
+      restaurant.image = cardImages[0]
+      restaurant.matchImage = matchImages[0]
+      restaurant.topImage = foodImages[0]
+      return restaurant
     } else if (
-      categories[i].title === 'Australian' ||
-      categories[i].title === 'Modern Australian' ||
-      categories[i].title === 'New Zealand'
+      restaurant.categories[i].title === 'Australian' ||
+      restaurant.categories[i].title === 'Modern Australian' ||
+      restaurant.categories[i].title === 'New Zealand'
     ) {
-      return foodImages[1]
-    } else if (categories[i].title === 'Creperies') {
-      return foodImages[2]
-    } else if (categories[i].title === 'Baguettes') {
-      return foodImages[3]
+      restaurant.image = cardImages[1]
+      restaurant.matchImage = matchImages[1]
+      restaurant.topImage = foodImages[1]
+      return restaurant
+    } else if (restaurant.categories[i].title === 'Creperies') {
+      restaurant.image = cardImages[2]
+      restaurant.matchImage = matchImages[2]
+      restaurant.topImage = foodImages[2]
+      return restaurant
+    } else if (restaurant.categories[i].title === 'Baguettes') {
+      restaurant.image = cardImages[3]
+      restaurant.matchImage = matchImages[3]
+      restaurant.topImage = foodImages[3]
+      return restaurant
     } else if (
-      categories[i].title === 'Breakfast & Brunch' ||
-      categories[i].title === 'Diners' ||
-      categories[i].title === 'Waffles'
+      restaurant.categories[i].title === 'Breakfast & Brunch' ||
+      restaurant.categories[i].title === 'Diners' ||
+      restaurant.categories[i].title === 'Waffles'
     ) {
-      return foodImages[4]
-    } else if (categories[i].title === 'British' || categories[i].title === 'Fish & Chips') {
-      return foodImages[5]
-    } else if (categories[i].title === 'Burmese') {
-      return foodImages[6]
+      restaurant.image = cardImages[4]
+      restaurant.matchImage = matchImages[4]
+      restaurant.topImage = foodImages[4]
+      return restaurant
     } else if (
-      categories[i].title === 'Cafes' ||
-      categories[i].title === 'Hong Kong Style Cafe' ||
-      categories[i].title === 'Coffeeshops' ||
-      categories[i].title === 'Coffee & Tea'
+      restaurant.categories[i].title === 'British' ||
+      restaurant.categories[i].title === 'Fish & Chips'
     ) {
-      return foodImages[7]
-    } else if (categories[i].title === 'Cambodian') {
-      return foodImages[8]
-    } else if (categories[i].title === 'Canadian') {
-      return foodImages[9]
-    } else if (categories[i].title === 'Cajun/Creole' || categories[i].title === 'Caribbean') {
-      return foodImages[10]
+      restaurant.image = cardImages[5]
+      restaurant.matchImage = matchImages[5]
+      restaurant.topImage = foodImages[5]
+      return restaurant
+    } else if (restaurant.categories[i].title === 'Burmese') {
+      restaurant.image = cardImages[6]
+      restaurant.matchImage = matchImages[6]
+      restaurant.topImage = foodImages[6]
+      return restaurant
     } else if (
-      categories[i].title === 'Chicken Shop' ||
-      categories[i].title === 'Chicken Wings' ||
-      categories[i].title === 'Rotisserie Chicken'
+      restaurant.categories[i].title === 'Cafes' ||
+      restaurant.categories[i].title === 'Hong Kong Style Cafe' ||
+      restaurant.categories[i].title === 'Coffeeshops' ||
+      restaurant.categories[i].title === 'Coffee & Tea'
     ) {
-      return foodImages[11]
+      restaurant.image = cardImages[7]
+      restaurant.matchImage = matchImages[7]
+      restaurant.topImage = foodImages[7]
+      return restaurant
+    } else if (restaurant.categories[i].title === 'Cambodian') {
+      restaurant.image = cardImages[8]
+      restaurant.matchImage = matchImages[8]
+      restaurant.topImage = foodImages[8]
+      return restaurant
+    } else if (restaurant.categories[i].title === 'Canadian') {
+      restaurant.image = cardImages[9]
+      restaurant.matchImage = matchImages[9]
+      restaurant.topImage = foodImages[9]
+      return restaurant
     } else if (
-      categories[i].title === 'Chinese' ||
-      categories[i].title === 'Dumplings' ||
-      categories[i].title === 'Hot Pot' ||
-      categories[i].title === 'Wok'
+      restaurant.categories[i].title === 'Cajun/Creole' ||
+      restaurant.categories[i].title === 'Caribbean'
     ) {
-      return foodImages[12]
-    } else if (categories[i].title === 'Cuban') {
-      return foodImages[13]
-    } else if (categories[i].title === 'Ethiopian') {
-      return foodImages[14]
-    } else if (categories[i].title === 'Filipino') {
-      return foodImages[15]
+      restaurant.image = cardImages[10]
+      restaurant.matchImage = matchImages[10]
+      restaurant.topImage = foodImages[10]
+      return restaurant
     } else if (
-      categories[i].title === 'Bistro' ||
-      categories[i].title === 'French' ||
-      categories[i].title === 'French Southwest'
+      restaurant.categories[i].title === 'Chicken Shop' ||
+      restaurant.categories[i].title === 'Chicken Wings' ||
+      restaurant.categories[i].title === 'Rotisserie Chicken'
     ) {
-      return foodImages[16]
+      restaurant.image = cardImages[11]
+      restaurant.matchImage = matchImages[11]
+      restaurant.topImage = foodImages[11]
+      return restaurant
     } else if (
-      categories[i].title === 'Bavarian' ||
-      categories[i].title === 'Fischbroetchen' ||
-      categories[i].title === 'German' ||
-      categories[i].title === 'Schnitzel'
+      restaurant.categories[i].title === 'Chinese' ||
+      restaurant.categories[i].title === 'Dumplings' ||
+      restaurant.categories[i].title === 'Hot Pot' ||
+      restaurant.categories[i].title === 'Wok'
     ) {
-      return foodImages[17]
-    } else if (categories[i].title === 'Greek' || categories[i].title === 'Wraps') {
-      return foodImages[18]
-    } else if (categories[i].title === 'Halal' || categories[i].title === 'Middle Eastern') {
-      return foodImages[19]
-    } else if (categories[i].title === 'Burgers' || categories[i].title === 'Fast Food') {
-      return foodImages[20]
-    } else if (categories[i].title === 'Hawaiian') {
-      return foodImages[21]
-    } else if (categories[i].title === 'Polynesian') {
-      return foodImages[22]
+      restaurant.image = cardImages[12]
+      restaurant.matchImage = matchImages[12]
+      restaurant.topImage = foodImages[12]
+      return restaurant
+    } else if (restaurant.categories[i].title === 'Cuban') {
+      restaurant.image = cardImages[13]
+      restaurant.matchImage = matchImages[13]
+      restaurant.topImage = foodImages[13]
+      return restaurant
+    } else if (restaurant.categories[i].title === 'Ethiopian') {
+      restaurant.image = cardImages[14]
+      restaurant.matchImage = matchImages[14]
+      restaurant.topImage = foodImages[14]
+      return restaurant
+    } else if (restaurant.categories[i].title === 'Filipino') {
+      restaurant.image = cardImages[15]
+      restaurant.matchImage = matchImages[15]
+      restaurant.topImage = foodImages[15]
+      return restaurant
     } else if (
-      categories[i].title === 'American (New)' ||
-      categories[i].title === 'American (Traditional)' ||
-      categories[i].title === 'Hot Dogs'
+      restaurant.categories[i].title === 'Bistro' ||
+      restaurant.categories[i].title === 'French' ||
+      restaurant.categories[i].title === 'French Southwest'
     ) {
-      return foodImages[23]
-    } else if (categories[i].title === 'Indian' || categories[i].title === 'Pakistani') {
-      return foodImages[24]
-    } else if (categories[i].title === 'Indonesian') {
-      return foodImages[25]
+      restaurant.image = cardImages[16]
+      restaurant.matchImage = matchImages[16]
+      restaurant.topImage = foodImages[16]
+      return restaurant
     } else if (
-      categories[i].title === 'Beer Garden' ||
-      categories[i].title === 'Beer Hall' ||
-      categories[i].title === 'Gastropubs' ||
-      categories[i].title === 'Irish' ||
-      categories[i] === 'Island Pub'
+      restaurant.categories[i].title === 'Bavarian' ||
+      restaurant.categories[i].title === 'Fischbroetchen' ||
+      restaurant.categories[i].title === 'German' ||
+      restaurant.categories[i].title === 'Schnitzel'
     ) {
-      return foodImages[26]
-    } else if (categories[i].title === 'Italian') {
-      return foodImages[27]
+      restaurant.image = cardImages[17]
+      restaurant.matchImage = matchImages[17]
+      restaurant.topImage = foodImages[17]
+      return restaurant
     } else if (
-      categories[i].title === 'Japanese' ||
-      categories[i].title === 'Nikkei' ||
-      categories[i].title === 'Noodles'
+      restaurant.categories[i].title === 'Greek' ||
+      restaurant.categories[i].title === 'Wraps'
     ) {
-      return foodImages[28]
-    } else if (categories[i].title === 'Kebab') {
-      return foodImages[29]
-    } else if (categories[i].title === 'Korean') {
-      return foodImages[30]
-    } else if (categories[i].title === 'Mediterranean' || categories[i].title === 'Pita') {
-      return foodImages[31]
-    } else if (categories[i].title === 'Mexican' || categories[i].title === 'Tex-Mex') {
-      return foodImages[32]
-    } else if (categories[i].title == 'Mongolian') {
-      return foodImages[33]
-    } else if (categories[i].title === 'Moroccan') {
-      return foodImages[34]
-    } else if (categories[i].title === 'Peruvian') {
-      return foodImages[35]
-    } else if (categories[i].title === 'Pizza') {
-      return foodImages[36]
-    } else if (categories[i].title === 'Polish') {
-      return foodImages[37]
+      restaurant.image = cardImages[18]
+      restaurant.matchImage = matchImages[18]
+      restaurant.topImage = foodImages[18]
+      return restaurant
     } else if (
-      categories[i].title === 'Eastern European' ||
-      categories[i].title === 'Russian' ||
-      categories[i].title === 'Soup' ||
-      categories[i].title === 'Ukrainian'
+      restaurant.categories[i].title === 'Halal' ||
+      restaurant.categories[i].title === 'Middle Eastern'
     ) {
-      return foodImages[38]
+      restaurant.image = cardImages[19]
+      restaurant.matchImage = matchImages[19]
+      restaurant.topImage = foodImages[19]
+      return restaurant
     } else if (
-      categories[i].title === 'Salad' ||
-      categories[i].title === 'Vegetarian' ||
-      categories[i].title === 'Vegan'
+      restaurant.categories[i].title === 'Burgers' ||
+      restaurant.categories[i].title === 'Fast Food'
     ) {
-      return foodImages[39]
+      restaurant.image = cardImages[20]
+      restaurant.matchImage = matchImages[20]
+      restaurant.topImage = foodImages[20]
+      return
+    } else if (restaurant.categories[i].title === 'Hawaiian') {
+      restaurant.image = cardImages[21]
+      restaurant.matchImage = matchImages[21]
+      restaurant.topImage = foodImages[21]
+      return restaurant
+    } else if (restaurant.categories[i].title === 'Polynesian') {
+      restaurant.image = cardImages[22]
+      restaurant.matchImage = matchImages[22]
+      restaurant.topImage = foodImages[22]
+      return restaurant
     } else if (
-      categories[i].title === 'Delis' ||
-      categories[i].title === 'Open Sandwiches' ||
-      categories[i].title === 'Sandwiches'
+      restaurant.categories[i].title === 'American (New)' ||
+      restaurant.categories[i].title === 'American (Traditional)' ||
+      restaurant.categories[i].title === 'Hot Dogs'
     ) {
-      return foodImages[40]
-    } else if (categories[i].title === 'Live/Raw Food' || categories[i].title === 'Seafood') {
-      return foodImages[41]
+      restaurant.image = cardImages[23]
+      restaurant.matchImage = matchImages[23]
+      restaurant.topImage = foodImages[23]
+      return restaurant
     } else if (
-      categories[i].title === 'Comfort Food' ||
-      categories[i].title === 'Soul Food' ||
-      categories[i].title === 'Southern'
+      restaurant.categories[i].title === 'Indian' ||
+      restaurant.categories[i].title === 'Pakistani'
     ) {
-      return foodImages[42]
+      restaurant.image = cardImages[24]
+      restaurant.matchImage = matchImages[24]
+      restaurant.topImage = foodImages[24]
+      return restaurant
+    } else if (restaurant.categories[i].title === 'Indonesian') {
+      restaurant.image = cardImages[25]
+      restaurant.matchImage = matchImages[25]
+      restaurant.topImage = foodImages[25]
+      return restaurant
     } else if (
-      categories[i].title === 'Spanish' ||
-      categories[i].title === 'Tapas Bars' ||
-      categories[i].title === 'Tapas/Small Plates'
+      restaurant.categories[i].title === 'Beer Garden' ||
+      restaurant.categories[i].title === 'Beer Hall' ||
+      restaurant.categories[i].title === 'Gastropubs' ||
+      restaurant.categories[i].title === 'Irish' ||
+      restaurant.categories[i] === 'Island Pub'
     ) {
-      return foodImages[43]
-    } else if (categories[i].title === 'Sri Lankan') {
-      return foodImages[44]
-    } else if (categories[i].title === 'Barbeque' || categories[i].title === 'Steakhouses') {
-      return foodImages[45]
-    } else if (categories[i].title === 'Sushi Bars') {
-      return foodImages[46]
+      restaurant.image = cardImages[26]
+      restaurant.matchImage = matchImages[26]
+      restaurant.topImage = foodImages[26]
+      return restaurant
+    } else if (restaurant.categories[i].title === 'Italian') {
+      restaurant.image = cardImages[27]
+      restaurant.matchImage = matchImages[27]
+      restaurant.topImage = foodImages[27]
+      return restaurant
     } else if (
-      categories[i].title === 'Meatballs' ||
-      categories[i].title === 'Scandinavian' ||
-      categories[i].title === 'Swedish' ||
-      categories[i].title === 'Traditional Norwegian' ||
-      categories[i].title === 'Traditional Swedish'
+      restaurant.categories[i].title === 'Japanese' ||
+      restaurant.categories[i].title === 'Nikkei' ||
+      restaurant.categories[i].title === 'Noodles'
     ) {
-      return foodImages[47]
-    } else if (categories[i].title === 'Asian Fusion' || categories[i].title === 'Taiwanese') {
-      return foodImages[48]
-    } else if (categories[i].title === 'Thai') {
-      return foodImages[49]
-    } else if (categories[i].title === 'Vietnamese') {
-      return foodImages[50]
+      restaurant.image = cardImages[28]
+      restaurant.matchImage = matchImages[28]
+      restaurant.topImage = foodImages[28]
+      return restaurant
+    } else if (restaurant.categories[i].title === 'Kebab') {
+      restaurant.image = cardImages[29]
+      restaurant.matchImage = matchImages[29]
+      restaurant.topImage = foodImages[29]
+      return restaurant
+    } else if (restaurant.categories[i].title === 'Korean') {
+      restaurant.image = cardImages[30]
+      restaurant.matchImage = matchImages[30]
+      restaurant.topImage = foodImages[30]
+      return restaurant
+    } else if (
+      restaurant.categories[i].title === 'Mediterranean' ||
+      restaurant.categories[i].title === 'Pita'
+    ) {
+      restaurant.image = cardImages[31]
+      restaurant.matchImage = matchImages[31]
+      restaurant.topImage = foodImages[31]
+      return restaurant
+    } else if (
+      restaurant.categories[i].title === 'Mexican' ||
+      restaurant.categories[i].title === 'Tex-Mex'
+    ) {
+      restaurant.image = cardImages[32]
+      restaurant.matchImage = matchImages[32]
+      restaurant.topImage = foodImages[32]
+      return restaurant
+    } else if (restaurant.categories[i].title == 'Mongolian') {
+      restaurant.image = cardImages[33]
+      restaurant.matchImage = matchImages[33]
+      restaurant.topImage = foodImages[33]
+      return restaurant
+    } else if (restaurant.categories[i].title === 'Moroccan') {
+      restaurant.image = cardImages[34]
+      restaurant.matchImage = matchImages[34]
+      restaurant.topImage = foodImages[34]
+      return restaurant
+    } else if (restaurant.categories[i].title === 'Peruvian') {
+      restaurant.image = cardImages[35]
+      restaurant.matchImage = matchImages[35]
+      restaurant.topImage = foodImages[35]
+      return restaurant
+    } else if (restaurant.categories[i].title === 'Pizza') {
+      restaurant.image = cardImages[36]
+      restaurant.matchImage = matchImages[36]
+      restaurant.topImage = foodImages[36]
+      return restaurant
+    } else if (restaurant.categories[i].title === 'Polish') {
+      restaurant.image = cardImages[37]
+      restaurant.matchImage = matchImages[37]
+      restaurant.topImage = foodImages[37]
+      return restaurant
+    } else if (
+      restaurant.categories[i].title === 'Eastern European' ||
+      restaurant.categories[i].title === 'Russian' ||
+      restaurant.categories[i].title === 'Soup' ||
+      restaurant.categories[i].title === 'Ukrainian'
+    ) {
+      restaurant.image = cardImages[38]
+      restaurant.matchImage = matchImages[38]
+      restaurant.topImage = foodImages[38]
+      return restaurant
+    } else if (
+      restaurant.categories[i].title === 'Salad' ||
+      restaurant.categories[i].title === 'Vegetarian' ||
+      restaurant.categories[i].title === 'Vegan'
+    ) {
+      restaurant.image = cardImages[39]
+      restaurant.matchImage = matchImages[39]
+      restaurant.topImage = foodImages[39]
+      return restaurant
+    } else if (
+      restaurant.categories[i].title === 'Delis' ||
+      restaurant.categories[i].title === 'Open Sandwiches' ||
+      restaurant.categories[i].title === 'Sandwiches'
+    ) {
+      restaurant.image = cardImages[40]
+      restaurant.matchImage = matchImages[40]
+      restaurant.topImage = foodImages[40]
+      return restaurant
+    } else if (
+      restaurant.categories[i].title === 'Live/Raw Food' ||
+      restaurant.categories[i].title === 'Seafood'
+    ) {
+      restaurant.image = cardImages[41]
+      restaurant.matchImage = matchImages[41]
+      restaurant.topImage = foodImages[41]
+      return restaurant
+    } else if (
+      restaurant.categories[i].title === 'Comfort Food' ||
+      restaurant.categories[i].title === 'Soul Food' ||
+      restaurant.categories[i].title === 'Southern'
+    ) {
+      restaurant.image = cardImages[42]
+      restaurant.matchImage = matchImages[42]
+      restaurant.topImage = foodImages[42]
+      return restaurant
+    } else if (
+      restaurant.categories[i].title === 'Spanish' ||
+      restaurant.categories[i].title === 'Tapas Bars' ||
+      restaurant.categories[i].title === 'Tapas/Small Plates'
+    ) {
+      restaurant.image = cardImages[43]
+      restaurant.matchImage = matchImages[43]
+      restaurant.topImage = foodImages[43]
+      return restaurant
+    } else if (restaurant.categories[i].title === 'Sri Lankan') {
+      restaurant.image = cardImages[44]
+      restaurant.matchImage = matchImages[44]
+      restaurant.topImage = foodImages[44]
+      return restaurant
+    } else if (
+      restaurant.categories[i].title === 'Barbeque' ||
+      restaurant.categories[i].title === 'Steakhouses'
+    ) {
+      restaurant.image = cardImages[45]
+      restaurant.matchImage = matchImages[45]
+      restaurant.topImage = foodImages[45]
+      return restaurant
+    } else if (restaurant.categories[i].title === 'Sushi Bars') {
+      restaurant.image = cardImages[46]
+      restaurant.matchImage = matchImages[46]
+      restaurant.topImage = foodImages[46]
+      return restaurant
+    } else if (
+      restaurant.categories[i].title === 'Meatballs' ||
+      restaurant.categories[i].title === 'Scandinavian' ||
+      restaurant.categories[i].title === 'Swedish' ||
+      restaurant.categories[i].title === 'Traditional Norwegian' ||
+      restaurant.categories[i].title === 'Traditional Swedish'
+    ) {
+      restaurant.image = cardImages[47]
+      restaurant.matchImage = matchImages[47]
+      restaurant.topImage = foodImages[47]
+      return restaurant
+    } else if (
+      restaurant.categories[i].title === 'Asian Fusion' ||
+      restaurant.categories[i].title === 'Taiwanese'
+    ) {
+      restaurant.image = cardImages[48]
+      restaurant.matchImage = matchImages[48]
+      restaurant.topImage = foodImages[48]
+      return restaurant
+    } else if (restaurant.categories[i].title === 'Thai') {
+      restaurant.image = cardImages[49]
+      restaurant.matchImage = matchImages[49]
+      restaurant.topImage = foodImages[49]
+      return restaurant
+    } else if (restaurant.categories[i].title === 'Vietnamese') {
+      restaurant.image = cardImages[50]
+      restaurant.matchImage = matchImages[50]
+      restaurant.topImage = foodImages[50]
+      return restaurant
     }
   }
   var index = Math.floor(Math.random() * 3)
-  return generalFoodImages[index]
+  restaurant.image = generalCardImages[index]
+  restaurant.matchImage = generalMatchImages[index]
+  restaurant.topImage = generalFoodImages[index]
+  return restaurant
 }

@@ -12,7 +12,6 @@ import {
 import { faMapMarkerAlt, faUtensils } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import getCuisine from '../assets/cards/foodImages.js'
 import getStarPath from '../assets/stars/star.js'
 import PropTypes from 'prop-types'
 
@@ -40,14 +39,17 @@ export default class RoundCard extends React.Component {
 
   evaluateCuisines(cuisines) {
     // return cuisines.map((item) => item.title).join(', ')
-    if (cuisines.length > 2) return cuisines[0].title + ', ' + cuisines[1].title
-    else return cuisines[0].title
+    if (cuisines.length > 2) {
+      return cuisines[0].title + ', ' + cuisines[1].title
+    } else {
+      return cuisines[0].title
+    }
   }
 
   render() {
     // console.log('roundCard: ' + JSON.stringify(this.props.card.categories))
     return (
-      <ImageBackground source={getCuisine(this.props.card.categories)} style={[styles.card]}>
+      <ImageBackground source={this.props.card.image} style={[styles.card]}>
         <TouchableHighlight
           underlayColor="transparent"
           onPress={() => Linking.openURL(this.props.card.url)}
@@ -107,12 +109,14 @@ export default class RoundCard extends React.Component {
               {this.props.card.distance} miles away — {this.props.card.city}
             </Text>
           </View>
-          <View style={styles.info}>
-            <FontAwesomeIcon icon={faUtensils} style={styles.icon} />
-            <Text numberOfLines={2} style={styles.infoText}>
-              {this.evaluateTransactions(this.props.card.transactions)}
-            </Text>
-          </View>
+          {this.props.card.transactions.length > 0 && (
+            <View style={styles.info}>
+              <FontAwesomeIcon icon={faUtensils} style={styles.icon} />
+              <Text numberOfLines={2} style={styles.infoText}>
+                {this.evaluateTransactions(this.props.card.transactions)}
+              </Text>
+            </View>
+          )}
         </View>
       </ImageBackground>
     )

@@ -13,9 +13,9 @@ import FA from 'react-native-vector-icons/FontAwesome'
 import Ion from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
-import getCuisine from '../assets/images/foodImages.js'
 import getStarPath from '../assets/stars/star.js'
 import screenStyles from '../../styles/screenStyles.js'
+import socket from '../apis/socket.js'
 
 const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
@@ -27,13 +27,23 @@ export default class TopThree extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      restaurants: this.props.navigation.state.params.top,
-      random: this.props.navigation.state.params.random,
-      host: this.props.navigation.state.params.host,
       first: true,
       second: false,
       third: false,
+      restaurants: this.props.navigation.state.params.top,
+      host: this.props.navigation.state.params.host,
+      code: this.props.navigation.state.params.code,
+      isHost: this.props.navigation.state.params.isHost,
+      random: Math.floor(Math.random() * 3),
     }
+
+    socket.getSocket().on('choose', (ind) => {
+      this.props.navigation.navigate('Match', {
+        restaurant: this.state.restaurants[ind],
+        host: this.state.host,
+        code: this.state.code,
+      })
+    })
   }
 
   evaluateCuisines(cuisines) {
@@ -56,13 +66,10 @@ export default class TopThree extends React.Component {
 
   goMatch() {
     var chosen
-    if (this.state.first) chosen = this.state.restaurants[0]
-    if (this.state.first) chosen = this.state.restaurants[1]
-    if (this.state.first) chosen = this.state.restaurants[2]
-    this.props.navigation.navigate('Match', {
-      restaurant: chosen,
-      host: this.state.host,
-    })
+    if (this.state.first) chosen = 0
+    if (this.state.first) chosen = 1
+    if (this.state.first) chosen = 2
+    socket.choose(this.state.code, chosen)
   }
 
   render() {
@@ -91,6 +98,7 @@ export default class TopThree extends React.Component {
         </View>
         <View style={{ height: '50%' }}>
           <TouchableHighlight
+            disabled={!this.state.isHost}
             underlayColor="#F9E2C2"
             style={[
               { alignSelf: 'center' },
@@ -100,7 +108,7 @@ export default class TopThree extends React.Component {
           >
             <View style={{ flex: 1, justifyContent: 'space-between' }}>
               <ImageBackground
-                source={getCuisine(this.state.restaurants[0].categories)}
+                source={this.state.restaurants[0].topImage}
                 style={[
                   this.state.first ? styles.imageSelected : styles.imageUnselected,
                   { alignSelf: 'center' },
@@ -122,7 +130,6 @@ export default class TopThree extends React.Component {
                 >
                   <Icon name="heart" style={{ color: 'white', fontSize: 18, margin: '1%' }} />
                   <Text style={[screenStyles.text, { color: 'white', fontSize: 15 }]}>
-                    {' '}
                     {this.state.restaurants[0].likes} likes
                   </Text>
                 </View>
@@ -158,6 +165,7 @@ export default class TopThree extends React.Component {
             </View>
           </TouchableHighlight>
           <TouchableHighlight
+            disabled={!this.state.isHost}
             underlayColor="#F9E2C2"
             style={[
               { top: '30%', left: '5%', alignSelf: 'flex-start' },
@@ -167,7 +175,7 @@ export default class TopThree extends React.Component {
           >
             <View style={{ flex: 1, justifyContent: 'space-between' }}>
               <ImageBackground
-                source={getCuisine(this.state.restaurants[1].categories)}
+                source={this.state.restaurants[1].topImage}
                 style={[
                   this.state.second ? styles.imageSelected : styles.imageUnselected,
                   { alignSelf: 'center' },
@@ -189,7 +197,6 @@ export default class TopThree extends React.Component {
                 >
                   <Icon name="heart" style={{ color: 'white', fontSize: 18, margin: '1%' }} />
                   <Text style={[screenStyles.text, { color: 'white', fontSize: 15 }]}>
-                    {' '}
                     {this.state.restaurants[1].likes} likes
                   </Text>
                 </View>
@@ -225,6 +232,7 @@ export default class TopThree extends React.Component {
             </View>
           </TouchableHighlight>
           <TouchableHighlight
+            disabled={!this.state.isHost}
             underlayColor="#F9E2C2"
             style={[
               { top: '30%', right: '5%', alignSelf: 'flex-end' },
@@ -234,7 +242,7 @@ export default class TopThree extends React.Component {
           >
             <View style={{ flex: 1, justifyContent: 'space-between' }}>
               <ImageBackground
-                source={getCuisine(this.state.restaurants[2].categories)}
+                source={this.state.restaurants[2].topImage}
                 style={[
                   this.state.third ? styles.imageSelected : styles.imageUnselected,
                   { alignSelf: 'center' },
@@ -257,7 +265,6 @@ export default class TopThree extends React.Component {
                 >
                   <Icon name="heart" style={{ color: 'white', fontSize: 18, margin: '1%' }} />
                   <Text style={[screenStyles.text, { color: 'white', fontSize: 15 }]}>
-                    {' '}
                     {this.state.restaurants[2].likes} likes
                   </Text>
                 </View>
@@ -293,35 +300,58 @@ export default class TopThree extends React.Component {
             </View>
           </TouchableHighlight>
         </View>
-        <TouchableHighlight underlayColor="transparent" onPress={() => this.randomize()}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: '15%',
-            }}
+        {this.state.isHost && (
+          <TouchableHighlight underlayColor="transparent" onPress={() => this.randomize()}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '15%',
+              }}
+            >
+              <Ion name="shuffle" style={{ fontSize: 50, color: hex, marginRight: '2%' }} />
+              <Text style={[screenStyles.text, { fontSize: 23, fontWeight: 'bold' }]}>
+                Randomize for me
+              </Text>
+            </View>
+          </TouchableHighlight>
+        )}
+        {this.state.isHost && (
+          <TouchableHighlight
+            underlayColor="white"
+            onPress={() => this.goMatch()}
+            style={[screenStyles.bigButton, { borderColor: hex, backgroundColor: hex }]}
           >
-            <Ion name="shuffle" style={{ fontSize: 50, color: hex, marginRight: '2%' }} />
-            <Text style={[screenStyles.text, { fontSize: 23, fontWeight: 'bold' }]}>
-              Randomize for me
+            <Text
+              style={[
+                screenStyles.medButtonText,
+                { fontFamily: font, color: 'white', padding: '2%' },
+              ]}
+            >
+              Submit
             </Text>
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight
-          underlayColor="white"
-          onPress={() => this.goMatch()}
-          style={[screenStyles.bigButton, { borderColor: hex, backgroundColor: hex }]}
-        >
-          <Text
+          </TouchableHighlight>
+        )}
+        {!this.state.isHost && (
+          <TouchableHighlight
+            disabled={!this.state.isHost}
+            underlayColor="white"
             style={[
-              screenStyles.medButtonText,
-              { fontFamily: font, color: 'white', padding: '2%' },
+              screenStyles.bigButton,
+              { borderColor: hex, backgroundColor: hex, opacity: 0.8, marginTop: '25%' },
             ]}
           >
-            Submit
-          </Text>
-        </TouchableHighlight>
+            <Text
+              style={[
+                screenStyles.medButtonText,
+                { fontFamily: font, color: 'white', padding: '2%', fontWeight: 'bold' },
+              ]}
+            >
+              Waiting for Host...
+            </Text>
+          </TouchableHighlight>
+        )}
       </View>
     )
   }
@@ -335,6 +365,8 @@ TopThree.propTypes = {
         top: PropTypes.array,
         random: PropTypes.number,
         host: PropTypes.string,
+        code: PropTypes.number,
+        isHost: PropTypes.bool,
       }),
     }),
   }),
