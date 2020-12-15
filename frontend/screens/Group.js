@@ -164,7 +164,12 @@ export default class Group extends React.Component {
   }
 
   leaveGroup() {
-    socket.leaveRoom(this.state.code)
+    if (this.state.hostName === this.state.myUsername) {
+      // socket.endRound(this.state.code)
+      socket.leaveRoom(this.state.code)
+    } else {
+      socket.leaveRoom(this.state.code)
+    }
     this.props.navigation.navigate('Home')
   }
 
