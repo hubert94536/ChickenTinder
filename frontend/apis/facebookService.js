@@ -97,9 +97,9 @@ const logoutWithFacebook = async () => {
     })
 }
 
-const deleteUser = async () => {
+const deleteUser = async (id) => {
   accountsApi
-    .deleteUser()
+    .deleteUser(id)
     .then(() => {
       // Need to refresh access token since old one expired
       AccessToken.refreshCurrentAccessTokenAsync()

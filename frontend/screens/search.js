@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native'
-import { USERNAME } from 'react-native-dotenv'
+import { ID, USERNAME } from 'react-native-dotenv'
 import { BlurView } from '@react-native-community/blur'
 import { SearchBar } from 'react-native-elements'
 import AsyncStorage from '@react-native-community/async-storage'
@@ -14,6 +14,7 @@ import TabBar from '../nav.js'
 
 const font = 'CircularStd-Medium'
 var username = ''
+var id = ''
 AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 
 export default class Search extends Component {
@@ -27,18 +28,22 @@ export default class Search extends Component {
       deleteFriendName: '',
       value: '',
     }
-    friendsApi
-      .getFriends()
-      .then((res) => {
-        var friendsMap = new Object()
-        for (var friend in res.friendList) {
-          friendsMap[res.friendList[friend].id] = res.friendList[friend].status
-        }
-        this.setState({ friends: friendsMap })
-      })
-      .catch(() => {
-        this.setState({ errorAlert: true })
-      })
+    AsyncStorage.multiGet([ID, USERNAME]).then((res) => {
+      id = res[0][1]
+      username = res[1][1]
+      friendsApi
+        .getFriends(id)
+        .then((res) => {
+          var friendsMap = new Object()
+          for (var friend in res.friendList) {
+            friendsMap[res.friendList[friend].id] = res.friendList[friend].status
+          }
+          this.setState({ friends: friendsMap })
+        })
+        .catch(() => {
+          this.setState({ errorAlert: true })
+        })
+    })
   }
 
   searchFilterFunction = (text) => {
@@ -78,10 +83,10 @@ export default class Search extends Component {
     )
   }
 
-  async removeRequest(id, newArr, status) {
+  async removeRequest(friend, newArr, status) {
     if (!status) {
       friendsApi
-        .removeFriendship(id)
+        .removeFriendship(id, friend)
         .then(() => {
           this.setState({ friends: newArr })
         })
@@ -170,6 +175,10 @@ export default class Search extends Component {
       </View>
     )
   }
+}
+
+Search.propTypes = {
+  navigation: PropTypes.object,
 }
 
 const styles = StyleSheet.create({

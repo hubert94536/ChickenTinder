@@ -252,7 +252,7 @@ describe('socket with Redis', () => {
       socket.emit('start', {
         code: code,
         filters: {
-          categories: 'chinese,newamerican',
+          categories: 'japanese,korean,chinese,taiwanese,mongolian,japanese',
           majority: 2,
           price: '',
           radius: 10000,

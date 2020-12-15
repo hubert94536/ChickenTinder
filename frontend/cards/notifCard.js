@@ -79,14 +79,17 @@
 // }
 
 import React from 'react'
-import { Image, Text, TouchableHighlight, View, TouchableWithoutFeedback } from 'react-native'
+import { Image, Text, TouchableHighlight, View } from 'react-native'
+import { ID } from 'react-native-dotenv'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
+import AsyncStorage from '@react-native-community/async-storage'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
 import Swipeout from 'react-native-swipeout'
 
 const font = 'CircularStd-Medium'
+var id = ''
 
 export default class NotifCard extends React.Component {
   constructor(props) {
@@ -98,12 +101,15 @@ export default class NotifCard extends React.Component {
       deletePressed: false,
       trash: false,
     }
+    AsyncStorage.getItem(ID).then((res) => {
+      id = res
+    })
   }
 
   // accept friend request and modify card
   async acceptFriend() {
     friendsApi
-      .acceptFriendRequest(this.state.id)
+      .acceptFriendRequest(id, this.state.id)
       .then(() => {
         this.setState({ isFriend: true })
       })
@@ -113,7 +119,7 @@ export default class NotifCard extends React.Component {
   // delete friend and modify view
   async deleteFriend() {
     friendsApi
-      .removeFriendship(this.state.id)
+      .removeFriendship(id, this.state.id)
       .then(() => {
         this.props.removeDelete()
         var filteredArray = this.props.total.filter((item) => {

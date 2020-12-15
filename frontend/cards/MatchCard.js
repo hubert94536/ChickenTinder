@@ -43,30 +43,117 @@ export default class MatchCard extends React.Component {
   // get image based on cuisine
   getCuisine(category) {
     switch (category) {
-      case 'American':
-        return require('../assets/images/american.png')
-      case 'Asian Fusion':
-        return require('../assets/images/asianFusion.png')
+      case 'African':
+        return require('../assets/images/matchcard/African.png')
+      case 'Australian':
+        return require('../assets/images/matchcard/Australian.png')
+      case 'Bakery':
+        return require('../assets/images/matchcard/Bakery.png')
+      case 'French Bakery':
+        return require('../assets/images/matchcard/BakeryFrench.png')
+      case 'Breakfast':
+        return require('../assets/images/matchcard/Breakfast.png')
+      case 'British':
+        return require('../assets/images/matchcard/British.png')
+      case 'Burgers':
+        return require('../assets/images/matchcard/BurgersAmerican.png')
+      case 'Burmese':
+        return require('../assets/images/matchcard/Burmese.png')
+      case 'Cambodian':
+        return require('../assets/images/matchcard/Cambodian.png')
+      case 'Canadian':
+        return require('../assets/images/matchcard/Canadian.png')
+      case 'Caribbean':
+        return require('../assets/images/matchcard/Caribbean.png')
+      case 'Chicken':
+        return require('../assets/images/matchcard/ChickenWings.png')
       case 'Chinese':
-        return require('../assets/images/chinese.png')
-      case 'European':
-        return require('../assets/images/european.png')
+        return require('../assets/images/matchcard/ChineseDimSum.png')
+      case 'Coffee':
+      case 'Coffee & Tea':
+      case 'Tea':
+      case 'Cafe':
+        return require('../assets/images/matchcard/CoffeeTeaCafes.png')
+      case 'Cuban':
+      case 'Latin American':
+        return require('../assets/images/matchcard/CubanMexicanLatinAmerican.png')
+      case 'Ethiopian':
+        return require('../assets/images/matchcard/Ethiopian.png')
+      case 'Filipino':
+        return require('../assets/images/matchcard/Filipino.png')
+      case 'French':
+        return require('../assets/images/matchcard/French.png')
+      case 'German':
+        return require('../assets/images/matchcard/German.png')
+      case 'Greek':
+        return require('../assets/images/matchcard/Greek.png')
+      case 'Halal':
+        return require('../assets/images/matchcard/HalalMiddleEastern.png')
+      case 'Hawaiian':
+        return require('../assets/images/matchcard/Hawaiian.png')
+      case 'Polynesian':
+        return require('../assets/images/matchcard/HawaiianPolynesian.png')
+      case 'Hot Dog':
+        return require('../assets/images/matchcard/HotDogAmerican.png')
       case 'Indian':
-        return require('../assets/images/Indian.png')
+        return require('../assets/images/matchcard/Indian.png')
+      case 'Indonesian':
+        return require('../assets/images/matchcard/Indonesian.png')
+      case 'Irish':
+        return require('../assets/images/matchcard/Irish.png')
       case 'Italian':
-        return require('../assets/images/Italian.png')
+        return require('../assets/images/matchcard/ItalianNoodles.png')
       case 'Japanese':
-        return require('../assets/images/Japanese.png')
+        return require('../assets/images/matchcard/Japanese.png')
+      case 'Japanese Noodles':
+        return require('../assets/images/matchcard/JapaneseNoodles.png')
       case 'Korean':
-        return require('../assets/images/Korean.png')
+        return require('../assets/images/matchcard/Korean.png')
       case 'Mediterranean':
-        return require('../assets/images/mediterranean.png')
+        return require('../assets/images/matchcard/MediterraneanMiddleEastern.png')
       case 'Mexican':
-        return require('../assets/images/Mexican.png')
+        return require('../assets/images/matchcard/MexicanTacos.png')
       case 'Middle Eastern':
-        return require('../assets/images/middleEastern.png')
+        return require('../assets/images/matchcard/MiddleEastern.png')
+      case 'Mongolian':
+        return require('../assets/images/matchcard/Mongolian.png')
+      case 'Moroccan':
+        return require('../assets/images/matchcard/Moroccan.png')
+      case 'Peruvian':
+        return require('../assets/images/matchcard/Peruvian.png')
+      case 'Pizza':
+        return require('../assets/images/matchcard/PizzaAmerican.png')
+      case 'Polish':
+        return require('../assets/images/matchcard/Polish.png')
+      case 'Russian':
+        return require('../assets/images/matchcard/Russian.png')
+      case 'Salad':
+        return require('../assets/images/matchcard/SaladAmerican.png')
+      case 'Scandinavian':
+      case 'Swedish':
+        return require('../assets/images/matchcard/ScandinavianSwedish.png')
+      case 'Sandwiches':
+        return require('../assets/images/matchcard/SandwichesAmerican.png')
+      case 'Seafood':
+      case 'Cajun':
+        return require('../assets/images/matchcard/SeafoodCajunAmerican.png')
+      case 'Southern':
+      case 'Soul Food':
+        return require('../assets/images/matchcard/SouthernSoulFood.png')
+      case 'Spanish':
+        return require('../assets/images/matchcard/SpanishTapas.png')
+      case 'Sri Lankan':
+        return require('../assets/images/matchcard/SriLankan.png')
+      case 'Steakhouse':
+        return require('../assets/images/matchcard/Steakhouse.png')
+      case 'Taiwanese':
+        return require('../assets/images/matchcard/TaiwaneseChinese.png')
       case 'Thai':
-        return require('../assets/images/Thai.png')
+        return require('../assets/images/matchcard/Thai.png')
+      case 'Vietnamese':
+        return require('../assets/images/matchcard/Vietnamese.png')
+      default:
+        return require('../assets/images/matchcard/General1.png')
     }
   }
 

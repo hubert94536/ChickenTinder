@@ -22,6 +22,7 @@ import BackgroundButton from '../backgroundButton.js'
 import Location from '../modals/chooseLocation.js'
 import Time from '../modals/chooseTime.js'
 import Size from '../modals/chooseSize.js'
+import Majority from '../modals/chooseMajority.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 
@@ -51,7 +52,7 @@ const tagsPrice = ['$', '$$', '$$$', '$$$$']
 
 const tagsSizes = [10, 20, 30]
 
-const tagsMajority = ['6', '10', 'All', 'Custom: ']
+let tagsMajority = ['6', '10', 'All', 'Custom: ']
 
 //  requests the users permission
 const requestLocationPermission = async () => {
@@ -71,6 +72,7 @@ const requestLocationPermission = async () => {
     })
     .catch(() => {
       this.setState({ errorAlert: true })
+      this.props.setBlur(true)
     })
 }
 
@@ -131,7 +133,24 @@ export default class FilterSelector extends React.Component {
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
       )
     }
+    this.updateMajorityTags()
   }
+
+  componentDidUpdate() {
+    this.updateMajorityTags()
+  }
+
+  updateMajorityTags() {
+    let size = this.props.members.length
+    let half = Math.ceil(size * 0.5)
+    let twoThirds = Math.ceil(size * 0.66)
+    tagsMajority =[]
+    tagsMajority.push(half)
+    if (twoThirds != half) tagsMajority.push(twoThirds)
+    if (size != twoThirds) tagsMajority.push('All')
+    tagsMajority.push('Custom: ')
+  }
+
 
   //  pushes the 'subcategories' of each cusisine
   categorize(cat) {
@@ -246,10 +265,11 @@ export default class FilterSelector extends React.Component {
 
     if (this.state.location === null && this.state.useCurrentLocation === false) {
       this.setState({ locationAlert: true })
+      this.props.setBlur(true)
     } else if (this.state.useCurrentLocation) {
       filters.latitude = this.state.lat
       filters.longitude = this.state.long
-      // console.log('filter.js:' + JSON.stringify(filters))
+      console.log('filter.js:' + JSON.stringify(filters))
       this.handlePress(filters)
     } else {
       filters.location = this.state.location
@@ -263,10 +283,12 @@ export default class FilterSelector extends React.Component {
 
   startSession() {
     if (this.state.useCurrentLocation === false && this.state.location === null) {
+      // this.props.setBlur(true)
       this.setState({ locationAlert: true })
-      // console.log('filter.js startSession')
+
     } else if (this.state.majority && this.state.distance) {
       this.evaluateFilters()
+      console.log('filter.js startSession')
     }
   }
 
@@ -275,7 +297,9 @@ export default class FilterSelector extends React.Component {
     // puts the cuisine and restrictions into one array
     const selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
     filters.categories = this.categorize(selections).toString()
-    filters.categories += ','
+    if(filters.categories != '')
+      filters.categories += ','
+    console.log('userfilters: ' + JSON.stringify(filters.categories))
     Socket.submitFilters(this.props.code, filters.categories)
     this.props.handleUpdate()
   }
@@ -355,6 +379,7 @@ export default class FilterSelector extends React.Component {
                   onChange={(event) => {
                     if (event[0] === 'Custom: ') {
                       this.setState({ chooseMajority: true })
+                      this.props.setBlur(true)
                     } else if (event[0] === 'All') {
                       this.setState({ majority: this.props.members.length })
                     } else {
@@ -381,6 +406,7 @@ export default class FilterSelector extends React.Component {
                   onChange={(event) => {
                     if (event[0] === 'Custom: ') {
                       this.setState({ chooseSize: true })
+                      this.props.setBlur(true)
                     }
                     this.setState({ selectedSize: event, size: event[0] })
                   }}
@@ -394,7 +420,10 @@ export default class FilterSelector extends React.Component {
                   <Text style={styles.filterSubtext}>({this.state.distance} miles)</Text>
                   <TouchableHighlight
                     underlayColor={'white'}
-                    onPress={() => this.setState({ chooseLocation: true })}
+                    onPress={() => {
+                      this.setState({ chooseLocation: true })
+                      this.props.setBlur(true)    
+                    }}
                     style={[
                       styles.filterSubtext,
                       {
@@ -484,7 +513,10 @@ export default class FilterSelector extends React.Component {
                     backgroundColor={this.state.asap ? BACKGROUND_COLOR : BORDER_COLOR}
                     textColor={this.state.asap ? BORDER_COLOR : BACKGROUND_COLOR}
                     borderColor={BORDER_COLOR}
-                    onPress={() => this.setState({ chooseTime: true, asap: false })}
+                    onPress={() => { 
+                      this.setState({ chooseTime: true, asap: false })
+                      this.props.setBlur(true)
+                    }}
                     title={'Set Time'}
                   />
                 </View>
@@ -522,7 +554,7 @@ export default class FilterSelector extends React.Component {
           </View>
         </Swiper>
         {/* ------------------------------------------ALERTS------------------------------------------ */}
-        {(this.state.chooseFriends ||
+        {/* {(this.state.chooseFriends ||
           this.state.chooseLocation ||
           this.state.chooseMajority ||
           this.state.chooseSize ||
@@ -533,15 +565,21 @@ export default class FilterSelector extends React.Component {
               reducedTransparencyFallbackColor="white"
               style={modalStyles.blur}
             />
-          )}
+          )} */}
         {this.state.locationAlert && (
           <Alert
             title="Location Required"
             body="Your location is required to find nearby restuarants"
             buttonAff="Close"
             height="23%"
-            press={() => this.setState({ locationAlert: false })}
-            cancel={() => this.setState({ locationAlert: false })}
+            press={() => {
+              this.setState({ locationAlert: false })
+              this.props.setBlur(false)
+            }}
+            cancel={() => {
+              this.setState({ locationAlert: false })
+              this.props.setBlur(false)
+            }}
             visible={this.state.locationAlert}
           />
         )}
@@ -550,8 +588,14 @@ export default class FilterSelector extends React.Component {
             title="Error, please try again"
             buttonAff="Close"
             height="20%"
-            press={() => this.setState({ errorAlert: false })}
-            cancel={() => this.setState({ errorAlert: false })}
+            press={() => {
+              this.setState({ errorAlert: false })
+              this.props.setBlur(false)
+            }}
+            cancel={() => {
+              this.setState({ errorAlert: false })
+              this.props.setBlur(false)
+            }}
             visible={this.state.errorAlert}
           />
         )}
@@ -560,36 +604,61 @@ export default class FilterSelector extends React.Component {
         <ChooseFriends
           visible={this.state.chooseFriends}
           members={this.props.members}
-          press={() => this.setState({ chooseFriends: false })}
+          press={() => {
+            this.setState({ chooseFriends: false })
+            this.props.setBlur(false)
+          }}
         />
         <Time
           visible={this.state.chooseTime}
-          cancel={() => this.setState({ chooseTime: false })}
-          press={(hr, min) => this.setState({ hour: hr, minute: min, chooseTime: false })}
+          cancel={() => {
+            this.setState({ chooseTime: false })
+            this.props.setBlur(false)
+          }}
+          press={(hr, min) => {
+            this.setState({ hour: hr, minute: min, chooseTime: false })
+            this.props.setBlur(false)
+          }}
         />
         <Size
           max={50}
           title={'Round Size'}
           filterSubtext={'Choose the max number of restaurants to swipe through'}
           visible={this.state.chooseSize}
-          cancel={() => this.setState({ chooseSize: false })}
-          press={(sz) => this.setState({ size: sz, chooseSize: false })}
+          cancel={() => {
+            this.setState({ chooseSize: false })
+            this.props.setBlur(false)
+          }}
+          press={(sz) => {
+            this.setState({ size: sz, chooseSize: false })
+            this.props.setBlur(false)
+          }}
         />
-        <Size
+        <Majority
           max={this.props.members.length}
           title={'Majority'}
           filterSubtext={'Choose the number of members needed to get a match'}
           visible={this.state.chooseMajority}
-          cancel={() => this.setState({ chooseMajority: false })}
+          cancel={() => {
+            this.setState({ chooseMajority: false })
+            this.props.setBlur(false)
+          }}
           press={(sz) => {
             // console.log(sz)
             this.setState({ majority: sz, chooseMajority: false })
+            this.props.setBlur(false)
           }}
         />
         <Location
           visible={this.state.chooseLocation}
-          press={(zip) => this.setLocation(zip)}
-          cancel={() => this.setState({ chooseLocation: false })}
+          press={(zip) => {
+            this.setLocation(zip)
+            this.props.setBlur(false)
+          }}
+          cancel={() => {
+            this.setState({ chooseLocation: false })
+            this.props.setBlur(false)
+          }}
         />
       </View>
     )
@@ -600,6 +669,7 @@ FilterSelector.propTypes = {
   host: PropTypes.string,
   isHost: PropTypes.bool,
   handleUpdate: PropTypes.func,
+  setBlur: PropTypes.func,
   members: PropTypes.array,
   code: PropTypes.number,
 }

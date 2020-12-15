@@ -10,7 +10,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
-import { NAME, PHOTO, USERNAME, DEFPHOTO, EMAIL } from 'react-native-dotenv'
+import { ID, NAME, PHOTO, USERNAME, EMAIL } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -23,92 +23,26 @@ import modalStyles from '../../styles/modalStyles.js'
 import TabBar from '../nav.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import ImagePicker from 'react-native-image-crop-picker'
-import defImages from '../assets/images/foodImages.js'
+import {foodImages as defImages} from '../assets/images/foodImages.js'
 import uploadApi from '../apis/uploadApi.js'
 import PropTypes from 'prop-types'
 
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
 const height = Dimensions.get('window').height
-var img = null
-var name = ''
-var username = ''
 var email = ''
-
-//  gets user info
-AsyncStorage.getItem(USERNAME).then((res) => (username = res))
-AsyncStorage.getItem(PHOTO).then((res) => (img = res))
-AsyncStorage.getItem(NAME).then((res) => (name = res))
-AsyncStorage.getItem(EMAIL).then((res) => (email = res))
-//=========================Testing Code=========================================
-import { ID } from 'react-native-dotenv'
-import friendsApi from '../apis/friendsApi.js'
-
-var myId = ''
-AsyncStorage.getItem(ID).then((res) => {
-  myId = res
-})
-
-const dummyFriends = () => {
-  // uncomment if testing friends/requests
-  //this.getNotifs();
-  // accountsApi.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
-  // accountsApi.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
-  // accountsApi.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
-  // accountsApi.createFBUser('Helen', 5, 'helenthemelon', 'helenw@gmail.com', 'sjdkf'),
-  // accountsApi.createFBUser('Kevin', 6, 'kevint', 'kevintang@gmail.com', 'sdfddf'),
-  // accountsApi.createFBUser('David', 7, 'das', 'das@gmail.com', 'fhgdgffgad'),
-  // accountsApi.createFBUser('Jeff', 8, 'jeffwinger', 'jeffw@gmail.com', 'sdfaadddf'),
-  // accountsApi.createFBUser('Annie', 9, 'anniee', 'anniee@gmail.com', 'sdfgfsdddf'),
-  // accountsApi.createFBUser('Britta', 10, 'theworst', 'brittap@gmail.com', 'sdfhgjddf'),
-
-  // accountsApi.createFBUser('Ice Cream', 30, 'icecream', 'icecream@gmail.com', 'hjgkjgkjg')
-  // accountsApi.createFBUser('Sundae', 31, 'sundae', 'sundae@gmail.com', 'sfhkslfs')
-  // accountsApi.createFBUser('Float', 32, 'float', 'float@gmail.com', 'ksflsfsf')
-
-  // console.log("My id:" + myId),
-  // friendsApi.createFriendshipTest(1288355614841173, myId)
-  // .then((res) => {
-  //   console.log('this is the response: ' + res)
-  // })
-  // .catch((err)=>{
-  //   console.log(err)
-  // }),
-
-  friendsApi.createFriendshipTest(myId, 31)
-
-  friendsApi.createFriendshipTest(32, myId)
-
-  // friendsApi.createFriendshipTest(3, myId),
-  // friendsApi.createFriendshipTest(4, myId),
-  // friendsApi.createFriendshipTest(5, myId),
-  // friendsApi.createFriendshipTest(6, myId),
-  // friendsApi.createFriendshipTest(7, myId),
-  // friendsApi.createFriendshipTest(8, myId),
-  // friendsApi.createFriendshipTest(9, myId),
-  // friendsApi.createFriendshipTest(10, myId),
-  // friendsApi.acceptFriendRequest(1288355614841173)
-  // friendsApi.acceptFriendRequest(3)
-  // friendsApi.acceptFriendRequest(4)
-  // friendsApi.acceptFriendRequest(5)
-  // friendsApi.acceptFriendRequest(6)
-  // friendsApi.acceptFriendRequest(7)
-  // friendsApi.acceptFriendRequest(8)
-  // friendsApi.acceptFriendRequest(9)
-  // friendsApi.acceptFriendRequest(10)
-}
-//==============================================================================
+var id = ''
 
 export default class UserProfileView extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      name: name,
-      nameValue: name,
-      username: username,
-      usernameValue: username,
-      image: img,
-      oldImage: img,
+      name: '',
+      nameValue: '',
+      username: '',
+      usernameValue: '',
+      image: '',
+      oldImage: '',
       friends: true,
       visible: false,
       edit: false,
@@ -123,14 +57,21 @@ export default class UserProfileView extends Component {
       errorAlert: false,
       // friends text
       numFriends: 0,
-      defImg: defImages[Math.floor(Math.random() * defImages.length)],
+      // defImg: defImages[Math.floor(Math.random() * defImages.length)],
     }
-    AsyncStorage.getItem(USERNAME).then((res) => this.setState({ username: res }))
-    AsyncStorage.getItem(PHOTO).then((res) => this.setState({ image: res, oldImage: res }))
-    // AsyncStorage.getItem(DEFPHOTO).then((res) =>
-    //   this.setState({ defImg: defImages[parseInt(res)] }),
-    // )
-    AsyncStorage.getItem(NAME).then((res) => this.setState({ name: res, nameValue: res }))
+    AsyncStorage.multiGet([EMAIL, ID, NAME, PHOTO, USERNAME]).then((res) => {
+      email = res[0][1]
+      id = res[1][1]
+      this.setState({
+        // defImg: defImages[parseInt(res[0][1])],
+        name: res[2][1],
+        nameValue: res[2][1],
+        image: res[3][1],
+        oldImage: res[3][1],
+        username: res[4][1],
+        usernameValue: res[4][1],
+      })
+    })
   }
 
   componentDidMount() {
@@ -142,7 +83,7 @@ export default class UserProfileView extends Component {
     if (this.state.nameValue !== this.state.name) {
       const name = this.state.nameValue
       return accountsApi
-        .updateName(name)
+        .updateName(id, name)
         .then(() => {
           // update name locally
           AsyncStorage.setItem(NAME, name)
@@ -166,7 +107,7 @@ export default class UserProfileView extends Component {
         .checkUsername(user)
         .then(() => {
           // update username locally
-          return accountsApi.updateUsername(user).then(() => {
+          return accountsApi.updateUsername(id, user).then(() => {
             AsyncStorage.setItem(USERNAME, user)
             this.setState({ username: this.state.usernameValue })
             Keyboard.dismiss()
@@ -186,7 +127,7 @@ export default class UserProfileView extends Component {
 
   async handleDelete() {
     facebookService
-      .deleteUser()
+      .deleteUser(id)
       .then(() => {
         // close settings and navigate to Login
         this.setState({ visible: false })
@@ -370,7 +311,7 @@ export default class UserProfileView extends Component {
             </Text>
           </View>
           <View style={{ height: '50%', marginTop: '0%' }}>
-            <Friends isFriends onFriendsChange={() => this.handleFriendsCount} />
+            <Friends isFriends onFriendsChange={(n) => this.handleFriendsCount(n)} />
           </View>
           {(this.state.visible || this.state.edit) && (
             <BlurView
@@ -402,40 +343,6 @@ export default class UserProfileView extends Component {
                 >
                   Settings
                 </Text>
-                {/* old log out button */}
-                {/* <TouchableHighlight
-                  underlayColor={hex}
-                  onShowUnderlay={() => this.setState({ logout: true })}
-                  onHideUnderlay={() => this.setState({ logout: false })}
-                  onPress={() => this.setState({ logoutAlert: true })}
-                  style={[
-                    screenStyles.smallButton,
-                    styles.button,
-                    this.state.logout ? { backgroundColor: hex } : { backgroundColor: 'white' },
-                    { width: '28%', borderWidth: 1.5 },
-                  ]}
-                >
-                  <Text
-                    style={[
-                      screenStyles.smallButtonText,
-                      this.state.logout ? { color: 'white' } : { color: hex },
-                    ]}
-                  >
-                    Logout
-                  </Text>
-                </TouchableHighlight>
-                {this.state.logoutAlert && (
-                  <Alert
-                    title="Log out"
-                    body="Are you sure you want to log out?"
-                    buttonAff="Logout"
-                    buttonNeg="Go back"
-                    height="25%"
-                    twoButton
-                    press={() => this.handleLogout()}
-                    cancel={() => this.cancelLogout()}
-                  />
-                )} */}
                 <AntDesign
                   name="closecircleo"
                   style={[screenStyles.text, { margin: '5%', fontSize: 25 }]}
@@ -522,23 +429,27 @@ export default class UserProfileView extends Component {
                 >
                   Delete account...
                 </Text>
-                {this.state.deleteAlert && [
-                  <BlurView
-                    blurType="dark"
-                    blurAmount={10}
-                    reducedTransparencyFallbackColor="black"
-                  />,
-                  <Alert
-                    title="Delete account?"
-                    body="By deleting your account, you will lose all of your data"
-                    buttonAff="Delete"
-                    buttonNeg="Go back"
-                    twoButton
-                    height="27%"
-                    press={() => this.handleDelete()}
-                    cancel={() => this.cancelDelete()}
-                  />,
-                ]}
+                {this.state.deleteAlert && (
+                  <View>
+                    <BlurView
+                      blurType="dark"
+                      blurAmount={10}
+                      reducedTransparencyFallbackColor="black"
+                    />
+                    ,
+                    <Alert
+                      title="Delete account?"
+                      body="By deleting your account, you will lose all of your data"
+                      buttonAff="Delete"
+                      buttonNeg="Go back"
+                      twoButton
+                      height="27%"
+                      press={() => this.handleDelete()}
+                      cancel={() => this.cancelDelete()}
+                    />
+                    ,
+                  </View>
+                )}
                 {this.state.errorAlert && (
                   <Alert
                     title="Error, please try again"
@@ -736,33 +647,7 @@ export default class UserProfileView extends Component {
               </TouchableHighlight>
             </View>
           </Modal>
-          {/* {this.state.deleteAlert && (
-            <BlurView blurType="dark" blurAmount={10} reducedTransparencyFallbackColor="black" />
-          )} */}
-          {/* {this.state.deleteAlert && (
-            <Alert
-              title="Delete account?"
-              body="By deleting your account, you will lose all of your data"
-              buttonAff="Delete"
-              buttonNeg="Go back"
-              twoButton
-              height="27%"
-              press={() => this.handleDelete()}
-              cancel={() => this.cancelDelete()}
-            />
-          )} */}
-          {/* {this.state.logoutAlert && (
-            // <Alert
-            //   title="Log out"
-            //   body="Are you sure you want to log out?"
-            //   buttonAff="Logout"
-            //   buttonNeg="Go back"
-            //   height="25%"
-            //   twoButton
-            //   press={() => this.handleLogout()}
-            //   cancel={() => this.cancelLogout()}
-            // />
-          )} */}
+
           {this.state.errorAlert && (
             <Alert
               title="Error, please try again"

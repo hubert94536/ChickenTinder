@@ -1,13 +1,15 @@
 import React from 'react'
 import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native'
 import PropTypes from 'prop-types'
+import { ID } from 'react-native-dotenv'
 import { SearchBar } from 'react-native-elements'
+import AsyncStorage from '@react-native-community/async-storage'
 import Alert from '../modals/alert.js'
 import ProfileCard from '../cards/profileCard.js'
 import friendsApi from '../apis/friendsApi.js'
 
 const font = 'CircularStd-Medium'
-
+var id = ''
 // Used to make refreshing indicator appear/disappear
 const sleep = (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds))
@@ -24,14 +26,17 @@ export default class Friends extends React.Component {
       isFriends: this.props.isFriends, // For rendering friends (true) or requests (false)
       refreshing: false, // Are we currently refreshing the list?
     }
-    this.getFriends()
+    AsyncStorage.getItem(ID).then((res) => {
+      id = res
+      this.getFriends(id)
+    })
   }
 
   //  gets the users friends
-  async getFriends() {
+  async getFriends(id) {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
-      .getFriends()
+      .getFriends(id)
       .then((res) => {
         var pushFriends = []
         var friendOrRequest = this.state.isFriends ? 'friends' : 'pending'
@@ -62,10 +67,10 @@ export default class Friends extends React.Component {
     this.setState({ friends: newData })
   }
 
-  async removeRequest(id, newArr, status) {
+  async removeRequest(friend, newArr, status) {
     if (!status) {
       friendsApi
-        .removeFriendship(id)
+        .removeFriendship(id, friend)
         .then(() => {
           this.setState({ friends: newArr })
         })
@@ -95,7 +100,7 @@ export default class Friends extends React.Component {
             total={this.state.friends}
             name={friendList[i].name}
             username={friendList[i].username}
-            image={friendList[i].image}
+            image={friendList[i].photo}
             friends={this.state.isFriends}
             id={friendList[i].id}
             key={i}

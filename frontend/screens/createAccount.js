@@ -6,7 +6,7 @@ import accountsApi from '../apis/accountsApi.js'
 import screenStyles from '../../styles/screenStyles.js'
 import PropTypes from 'prop-types'
 import ImagePicker from 'react-native-image-crop-picker'
-import defImages from '../assets/images/foodImages.js'
+import {foodImages as defImages} from '../assets/images/foodImages.js'
 import uploadApi from '../apis/uploadApi.js'
 
 const hex = '#F15763'
@@ -25,34 +25,33 @@ export default class createAccount extends React.Component {
       email: '',
       id: '',
       photo: '',
-      defImg: '',
-      defImgInd: 0,
       validEmail: false,
       validEmailFormat: false,
       validUsername: false
     }
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     var index = Math.floor(Math.random() * defImages.length)
-    this.setState({
-      name: await AsyncStorage.getItem(NAME),
-      id: await AsyncStorage.getItem(ID),
-      email: await AsyncStorage.getItem(EMAIL),
-      // photo: await AsyncStorage.getItem(PHOTO),
-      phone: await AsyncStorage.getItem(PHONE),
-      defImg: defImages[index].toString(),
-      photo: defImages[index].toString(),
-      defImgInd: index,
-      
-    }, () => {
-      this.checkEmailValidity(this.state.email) 
-      this.checkUsernameValidity(this.state.username)
-      console.log("Def Img " + this.state.defImg)
-      console.log("Def Img Ind:" + this.state.defImgInd)
-  }),
+    AsyncStorage.multiGet([EMAIL, ID, NAME, PHONE]).then((res) => {
+      this.setState({
+        email: res[0][1],
+        id: res[1][1],
+        name: res[2][1],
+        phone: res[3][1],
+        photo: defImages[index].toString(),
+      }
+      , () => {
+        this.checkEmailValidity(this.state.email) 
+        this.checkUsernameValidity(this.state.username)
+        console.log("Def Img " + this.state.photo)
+        console.log(this.state.id)
+        console.log(defImages)
+        accountsApi.deleteUser(this.state.id)
+    })
+    })
     
-    AsyncStorage.setItem(DEFPHOTO, this.state.defImgInd.toString())
+    // 
     
   }
 
@@ -61,14 +60,14 @@ export default class createAccount extends React.Component {
     accountsApi
       .checkUsername(this.state.username)
       .then(() => {
-        AsyncStorage.setItem(USERNAME, this.state.username)
-        AsyncStorage.setItem(PHOTO, this.state.photo)
-        AsyncStorage.setItem(NAME, this.state.name)
-        AsyncStorage.setItem(EMAIL, this.state.email)
-        // AsyncStorage.setItem(ID, this.state.id)
-        AsyncStorage.setItem(PHONE, this.state.phone)
-        AsyncStorage.setItem(DEFPHOTO, this.state.defImgInd.toString())
-
+        AsyncStorage.multiSet([
+          [USERNAME, this.state.username],
+          [PHOTO, this.state.photo],
+          [NAME, this.state.name],
+          [EMAIL, this.state.email],
+          [ID, this.state.id],
+          [PHONE, this.state.phone],
+        ])
         return accountsApi.createFBUser(
           this.state.name,
           this.state.id,
