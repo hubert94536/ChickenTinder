@@ -97,14 +97,14 @@ export default class Match extends React.Component {
 }
 
 Match.propTypes = {
-  host: PropTypes.string,
-  code: PropTypes.number,
   //navig should contain navigate fx + state, which contains params which contains the necessary restaurant arr
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     state: PropTypes.shape({
       params: PropTypes.shape({
         restaurant: PropTypes.array.isRequired,
+        host: PropTypes.string,
+        code: PropTypes.number,
       }),
     }),
   }),

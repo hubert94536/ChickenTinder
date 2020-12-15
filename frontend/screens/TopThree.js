@@ -39,12 +39,11 @@ export default class TopThree extends React.Component {
 
     socket.getSocket().on('choose', (ind) => {
       this.props.navigation.navigate('Match', {
-        restaurant: restaurants[ind],
-        host: host,
-        code: code,
+        restaurant: this.state.restaurants[ind],
+        host: this.state.host,
+        code: this.state.code,
       })
     })
-
   }
 
   evaluateCuisines(cuisines) {
@@ -338,12 +337,15 @@ export default class TopThree extends React.Component {
           <TouchableHighlight
             disabled={!this.state.isHost}
             underlayColor="white"
-            style={[screenStyles.bigButton, { borderColor: hex, backgroundColor: hex, opacity: 0.8, marginTop:'25%'}]}
+            style={[
+              screenStyles.bigButton,
+              { borderColor: hex, backgroundColor: hex, opacity: 0.8, marginTop: '25%' },
+            ]}
           >
             <Text
               style={[
                 screenStyles.medButtonText,
-                { fontFamily: font, color: 'white', padding: '2%', fontWeight:'bold' },
+                { fontFamily: font, color: 'white', padding: '2%', fontWeight: 'bold' },
               ]}
             >
               Waiting for Host...
@@ -364,6 +366,7 @@ TopThree.propTypes = {
         random: PropTypes.number,
         host: PropTypes.string,
         code: PropTypes.number,
+        isHost: PropTypes.bool,
       }),
     }),
   }),

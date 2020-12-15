@@ -47,7 +47,7 @@ export default class Loading extends React.Component {
         top: restaurants,
         code: this.state.code,
         host: this.state.host,
-        isHost: this.state.isHost
+        isHost: this.state.isHost,
       })
     })
   }
