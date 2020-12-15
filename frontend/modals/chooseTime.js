@@ -34,7 +34,7 @@ export default class Time extends React.Component {
     }
     var hour = parseInt(this.state.selectedHour)
     var min = parseInt(this.state.selectedMinute)
-    if (hour < 0 || hour > 12 || min < 0 || min > 59) {
+    if (hour < 0 || hour > 12 || min < 0 || min > 59 || isNaN(hour) || isNaN(min)) {
       this.setState({ invalidTime: true })
     } else {
       if (this.state.timeMode === 'pm') {
@@ -47,7 +47,6 @@ export default class Time extends React.Component {
         }
       }
       this.handlePress(hour, min)
-      console.log(hour + ':' + min)
     }
   }
 
