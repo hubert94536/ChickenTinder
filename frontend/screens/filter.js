@@ -8,7 +8,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
-import { BlurView } from '@react-native-community/blur'
+// import { BlurView } from '@react-native-community/blur'
 import Geolocation from 'react-native-geolocation-service'
 import PropTypes from 'prop-types'
 import Slider from '@react-native-community/slider'
@@ -24,7 +24,7 @@ import Time from '../modals/chooseTime.js'
 import Size from '../modals/chooseSize.js'
 import Majority from '../modals/chooseMajority.js'
 import screenStyles from '../../styles/screenStyles.js'
-import modalStyles from '../../styles/modalStyles.js'
+// import modalStyles from '../../styles/modalStyles.js'
 
 const font = 'CircularStd-Medium'
 
@@ -158,20 +158,19 @@ export default class FilterSelector extends React.Component {
     for (let i = 0; i < cat.length; i++) {
       switch (cat[i]) {
         case 'American':
-          categories.push('american')
+          categories.push('newamerican')
+          categories.push('diners')
           break
         case 'European':
-          categories.push('eastern_european')
           categories.push('french')
           categories.push('british')
           categories.push('spanish')
           categories.push('portuguese')
           categories.push('german')
           categories.push('austrian')
-          categories.push('danish')
-          categories.push('swedish')
           break
         case 'Latin American':
+          categories.push('latin')
           categories.push('argentine')
           categories.push('brazilian')
           categories.push('cuban')
@@ -185,12 +184,11 @@ export default class FilterSelector extends React.Component {
           categories.push('mediterranean')
           break
         case 'South Asian':
-          categories.push('indian')
+          categories.push('indpak')
           categories.push('pakistani')
           categories.push('afghan')
           categories.push('bangladeshi')
           categories.push('himalayan')
-          categories.push('nepalese')
           categories.push('srilankan')
           break
         case 'Southeast Asian':
@@ -215,7 +213,7 @@ export default class FilterSelector extends React.Component {
           categories.push('mongolian')
           break
         case 'Middle Eastern':
-          categories.push('middle_eastern')
+          categories.push('mideastern')
           break
         case 'African':
           categories.push('african')

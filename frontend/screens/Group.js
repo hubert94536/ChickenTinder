@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import Clipboard from '@react-native-community/clipboard'
-import { USERNAME } from 'react-native-dotenv'
+// import { USERNAME } from 'react-native-dotenv'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
