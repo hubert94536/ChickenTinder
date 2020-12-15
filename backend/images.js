@@ -119,7 +119,7 @@ const uploadHandler = async (req, res) => {
     if (!req.file) throw new Error('no file received')
     if (!req.user) throw new Error('user does not exist')
     await req.user.update({ photo: req.file.location })
-    return res.status(200).send('Uploaded photo at ' + req.file.location)
+    return res.status(200).send(req.file.location)
   } catch (error) {
     console.log(error)
     return res.status(500).send(error.message)
