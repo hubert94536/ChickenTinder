@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Animated, PanResponder } from 'react-native'
+import { Dimensions, StyleSheet, View, Animated, PanResponder } from 'react-native'
 import PropTypes from 'prop-types'
+
+const windowHeight = Dimensions.get('window').height
 
 class Drawer extends Component {
   constructor(props) {
@@ -15,6 +17,7 @@ class Drawer extends Component {
       openPosition: downPos,
       currState: true, // true = top, false = down
       objectHeight: this.props.objectHeight,
+      height: windowHeight - this.props.offset
     }
 
     this.state.position.setOffset(0)
@@ -81,7 +84,7 @@ class Drawer extends Component {
           styles.viewport,
           {
             top: this.props.offset,
-            height: '100%',
+            height: this.state.height,
           },
         ]}
       >
@@ -121,6 +124,7 @@ const styles = StyleSheet.create({
   },
   container: {
     width: '100%',
+    height: '100%',
     position: 'absolute',
     top: 0,
     backgroundColor: 'white',

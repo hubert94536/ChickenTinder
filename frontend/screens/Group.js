@@ -339,6 +339,8 @@ export default class Group extends React.Component {
                 }}
                 keyExtractor={(item, index) => index}
               />
+
+              {/* =====================================BOTTOM===================================== */}
               <View style={styles.bottom}>
                 <Text style={styles.bottomText}>
                   When everyone has submitted filters, the round will begin!
@@ -522,6 +524,7 @@ const styles = StyleSheet.create({
   main: {
     marginTop: 35,
     flexDirection: 'column',
+    height: '100%',
     flex: 1,
     backgroundColor: 'white',
     color: '#aaa',
@@ -536,9 +539,9 @@ const styles = StyleSheet.create({
   },
   leave: {
     alignSelf: 'center',
-    marginTop: '3%',
+    marginTop: '1%',
     borderRadius: 25,
-    width: '25%',
+    width: '55%',
   },
   leaveText: {
     fontFamily: font,
@@ -585,7 +588,7 @@ const styles = StyleSheet.create({
   },
   bottomText: {
     color: '#aaa',
-    width: '50%',
+    width: '70%',
     alignSelf: 'center',
     fontWeight: 'bold',
     textAlign: 'center',
@@ -603,13 +606,14 @@ const styles = StyleSheet.create({
     top: 0,
   },
   center: {
-    flex: 0.6,
     margin: 15,
     marginLeft: 25,
     marginRight: 25,
   },
   bottom: {
-    flex: 0.5,
+    position: 'absolute',
+    bottom: 40,
+    flexDirection: 'column',
     color: '#aaa',
   },
   memberContainer: {
