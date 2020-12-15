@@ -252,7 +252,7 @@ describe('socket with Redis', () => {
       socket.emit('start', {
         code: code,
         filters: {
-          categories: 'japanese,korean,chinese,taiwanese,mongolian,japanese',
+          categories: ',',
           majority: 2,
           price: '',
           radius: 10000,
@@ -321,7 +321,7 @@ describe('socket with Redis', () => {
   })
 
   it('gets top 3 restaurants correctly', async (done) => {
-    expect.assertions(2)
+    expect.assertions(1)
     // initialize filters
     let filters = {}
     filters.groupSize = 2
@@ -349,7 +349,6 @@ describe('socket with Redis', () => {
     socket.on('top 3', (data) => {
       // order of top 3 choices should be correct
       expect(data.choices).toEqual(['res3', 'res1', 'res2'])
-      expect(data.random).toBeDefined()
       done()
     })
     setTimeout(() => {

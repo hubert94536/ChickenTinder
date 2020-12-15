@@ -34,7 +34,7 @@ export default class Round extends React.Component {
         restaurant: res,
         host: this.state.host,
         code: this.props.navigation.state.params.code,
-        isHost: this.state.isHost
+        isHost: this.state.isHost,
       })
     })
     var modified = []
@@ -94,7 +94,7 @@ export default class Round extends React.Component {
                 restaurant: this.state.results,
                 host: this.state.host,
                 code: this.props.navigation.state.params.code,
-                isHost: this.state.isHost
+                isHost: this.state.isHost,
               })
             }}
             onSwipedRight={(cardIndex) => {
