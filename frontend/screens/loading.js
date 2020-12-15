@@ -48,7 +48,7 @@ export default class Loading extends React.Component {
         random: res.random,
         code: this.state.code,
         host: this.state.host,
-        isHost: this.state.isHost
+        isHost: this.state.isHost,
       })
     })
   }
@@ -100,7 +100,7 @@ export default class Loading extends React.Component {
 Loading.propTypes = {
   restaurant: PropTypes.array,
   navigation: PropTypes.object,
-  code: PropTypes.number
+  code: PropTypes.number,
 }
 
 const styles = StyleSheet.create({
