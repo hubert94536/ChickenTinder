@@ -29,6 +29,7 @@ export default class TopThree extends React.Component {
       restaurants: this.props.navigation.state.params.top,
       random: this.props.navigation.state.params.random,
       host: this.props.navigation.state.params.host,
+      code: this.props.navigation.state.params.code,
       first: true,
       second: false,
       third: false,
@@ -61,6 +62,7 @@ export default class TopThree extends React.Component {
     this.props.navigation.navigate('Match', {
       restaurant: chosen,
       host: this.state.host,
+      code: this.state.code,
     })
   }
 
@@ -334,6 +336,7 @@ TopThree.propTypes = {
         top: PropTypes.array,
         random: PropTypes.number,
         host: PropTypes.string,
+        code: PropTypes.number
       }),
     }),
   }),

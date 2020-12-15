@@ -33,6 +33,7 @@ export default class Round extends React.Component {
       this.props.navigation.navigate('Match', {
         restaurant: res,
         host: this.state.host,
+        code: this.props.navigation.state.params.code,
       })
     })
     var modified = []
@@ -63,7 +64,7 @@ export default class Round extends React.Component {
   // }
 
   leaveGroup() {
-    socket.leaveRoom()
+    socket.leaveRoom(this.props.navigation.state.params.code)
     this.props.navigation.navigate('Home')
   }
 
@@ -86,11 +87,12 @@ export default class Round extends React.Component {
             }}
             onSwipedAll={() => {
               //let backend know you're done
-              socket.finishedRound(this.state.code)
+              socket.finishedRound(this.props.navigation.state.params.code)
               //go to the loading page
               this.props.navigation.navigate('Loading', {
                 restaurant: this.state.results,
                 host: this.state.host,
+                code: this.props.navigation.state.params.code,
               })
             }}
             onSwipedRight={(cardIndex) => {
