@@ -98,17 +98,17 @@ Friends.belongsTo(Accounts, { foreignKey: 'friend_id', foreignKeyConstraint: tru
 
 module.exports = { Accounts, Friends, Notifications }
 
-sequelize.query(`CREATE OR REPLACE FUNCTION notify_insert() \
-  RETURNS trigger AS $$ \
-  DECLARE \
-      rec RECORD;\
-  BEGIN \
-      SELECT INTO rec notifications.id, notifications.receiver_id, notifications.type, notifications.content, \
-        notifications.sender_id, accounts.name, accounts.username \
-        FROM notifications, accounts \
-        WHERE notifications.id = NEW.id, notifications.sender_id = accounts.id
-      PERFORM pg_notify('notifications', row_to_json(rec) ::text); \
-      RETURN rec; \
-  END; \
-  $$ LANGUAGE plpgsql;`
-)
+// sequelize.query(`CREATE OR REPLACE FUNCTION notify_insert() \
+//   RETURNS trigger AS $$ \
+//   DECLARE \
+//       rec RECORD;\
+//   BEGIN \
+//       SELECT INTO rec notifications.id, notifications.receiver_id, notifications.type, notifications.content, \
+//         notifications.sender_id, accounts.name, accounts.username \
+//         FROM notifications, accounts \
+//         WHERE notifications.id = NEW.id, notifications.sender_id = accounts.id
+//       PERFORM pg_notify('notifications', row_to_json(rec) ::text); \
+//       RETURN rec; \
+//   END; \
+//   $$ LANGUAGE plpgsql;`
+// )
