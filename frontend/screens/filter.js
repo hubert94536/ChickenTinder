@@ -465,7 +465,7 @@ export default class FilterSelector extends React.Component {
                     alignSelf: 'center',
                   }}
                   minimumValue={5}
-                  maximumValue={50}
+                  maximumValue={25}
                   value={5}
                   step={0.5}
                   minimumTrackTintColor={TEXT_COLOR}
