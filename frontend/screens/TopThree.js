@@ -363,7 +363,7 @@ TopThree.propTypes = {
         top: PropTypes.array,
         random: PropTypes.number,
         host: PropTypes.string,
-        code: PropTypes.number
+        code: PropTypes.number,
       }),
     }),
   }),

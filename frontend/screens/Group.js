@@ -73,7 +73,12 @@ export default class Group extends React.Component {
     socket.getSocket().on('update', (res) => {
       // console.log('group.js: update')
       console.log('socket "update": ' + JSON.stringify(res))
-      this.setState({ members: res.members, host: res.host, code: res.code })
+      this.setState({
+        members: res.members,
+        host: res.host,
+        hostName: res.members[res.host].username,
+        code: res.code,
+      })
       const count = this.countNeedFilters(res.members)
       this.setState({ needFilters: count })
       if (!count) {

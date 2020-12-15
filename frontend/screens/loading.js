@@ -99,7 +99,7 @@ export default class Loading extends React.Component {
 Loading.propTypes = {
   restaurant: PropTypes.array,
   navigation: PropTypes.object,
-  code: PropTypes.number
+  code: PropTypes.number,
 }
 
 const styles = StyleSheet.create({
