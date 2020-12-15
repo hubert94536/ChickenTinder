@@ -15,6 +15,7 @@ import Icon from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
 import getStarPath from '../assets/stars/star.js'
 import screenStyles from '../../styles/screenStyles.js'
+import socket from '../apis/socket.js'
 
 const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
@@ -35,6 +36,15 @@ export default class TopThree extends React.Component {
       second: false,
       third: false,
     }
+
+    socket.getSocket().on('randomize', () => {
+      this.props.navigation.navigate('Match', {
+        restaurant: this.state.restaurants[random],
+        host: this.state.host,
+        code: this.state.code,
+      })
+    })
+
   }
 
   evaluateCuisines(cuisines) {
