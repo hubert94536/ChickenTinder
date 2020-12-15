@@ -30,6 +30,7 @@ export default class TopThree extends React.Component {
       random: this.props.navigation.state.params.random,
       host: this.props.navigation.state.params.host,
       code: this.props.navigation.state.params.code,
+      isHost: this.props.navigation.state.params.isHost,
       first: true,
       second: false,
       third: false,
@@ -92,6 +93,7 @@ export default class TopThree extends React.Component {
         </View>
         <View style={{ height: '50%' }}>
           <TouchableHighlight
+            disabled={!this.state.isHost}
             underlayColor="#F9E2C2"
             style={[
               { alignSelf: 'center' },
@@ -159,6 +161,7 @@ export default class TopThree extends React.Component {
             </View>
           </TouchableHighlight>
           <TouchableHighlight
+            disabled={!this.state.isHost}
             underlayColor="#F9E2C2"
             style={[
               { top: '30%', left: '5%', alignSelf: 'flex-start' },
@@ -226,6 +229,7 @@ export default class TopThree extends React.Component {
             </View>
           </TouchableHighlight>
           <TouchableHighlight
+            disabled={!this.state.isHost}
             underlayColor="#F9E2C2"
             style={[
               { top: '30%', right: '5%', alignSelf: 'flex-end' },
@@ -294,7 +298,7 @@ export default class TopThree extends React.Component {
             </View>
           </TouchableHighlight>
         </View>
-        <TouchableHighlight underlayColor="transparent" onPress={() => this.randomize()}>
+        <TouchableHighlight underlayColor="transparent" onPress={() => this.randomize()} disabled={!this.state.isHost}>
           <View
             style={{
               flexDirection: 'row',
@@ -310,6 +314,7 @@ export default class TopThree extends React.Component {
           </View>
         </TouchableHighlight>
         <TouchableHighlight
+          disabled={!this.state.isHost}
           underlayColor="white"
           onPress={() => this.goMatch()}
           style={[screenStyles.bigButton, { borderColor: hex, backgroundColor: hex }]}
