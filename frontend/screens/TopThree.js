@@ -37,14 +37,13 @@ export default class TopThree extends React.Component {
       third: false,
     }
 
-    socket.getSocket().on('randomize', () => {
+    socket.getSocket().on('choose', () => {
       this.props.navigation.navigate('Match', {
-        restaurant: this.state.restaurants[random],
+        restaurant: this.state.restaurants[this.props.navigation.state.params.random],
         host: this.state.host,
         code: this.state.code,
       })
     })
-
   }
 
   evaluateCuisines(cuisines) {
@@ -66,15 +65,16 @@ export default class TopThree extends React.Component {
   }
 
   goMatch() {
-    var chosen
-    if (this.state.first) chosen = this.state.restaurants[0]
-    if (this.state.first) chosen = this.state.restaurants[1]
-    if (this.state.first) chosen = this.state.restaurants[2]
-    this.props.navigation.navigate('Match', {
-      restaurant: chosen,
-      host: this.state.host,
-      code: this.state.code,
-    })
+    // var chosen
+    // if (this.state.first) chosen = this.state.restaurants[0]
+    // if (this.state.first) chosen = this.state.restaurants[1]
+    // if (this.state.first) chosen = this.state.restaurants[2]
+    // this.props.navigation.navigate('Match', {
+    //   restaurant: chosen,
+    //   host: this.state.host,
+    //   code: this.state.code,
+    // })
+    socket.randomize(this.state.code)
   }
 
   render() {
@@ -308,7 +308,11 @@ export default class TopThree extends React.Component {
             </View>
           </TouchableHighlight>
         </View>
-        <TouchableHighlight underlayColor="transparent" onPress={() => this.randomize()} disabled={!this.state.isHost}>
+        <TouchableHighlight
+          underlayColor="transparent"
+          onPress={() => this.randomize()}
+          disabled={!this.state.isHost}
+        >
           <View
             style={{
               flexDirection: 'row',
@@ -351,7 +355,7 @@ TopThree.propTypes = {
         top: PropTypes.array,
         random: PropTypes.number,
         host: PropTypes.string,
-        code: PropTypes.number
+        code: PropTypes.number,
       }),
     }),
   }),
