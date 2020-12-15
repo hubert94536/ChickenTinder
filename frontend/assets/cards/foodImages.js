@@ -161,7 +161,7 @@ const matchImages = [
   require('../matchcard/Salad.png'),
   require('../matchcard/Sandwiches.png'),
   require('../matchcard/Seafood.png'),
-  require('../matchcard/Southern_SoulFood.png'),
+  require('../matchcard/Southern_Soulfood.png'),
   require('../matchcard/Spanish_Tapas.png'),
   require('../matchcard/Sri_Lankan.png'),
   require('../matchcard/Steakhouse.png'),
@@ -430,12 +430,12 @@ export default function getCusine(restaurant) {
       restaurant.topImage = foodImages[35]
       return restaurant
     } else if (restaurant.categories[i].title === 'Pizza') {
-      rrestaurant.image = cardImages[36]
+      restaurant.image = cardImages[36]
       restaurant.matchImage = matchImages[36]
       restaurant.topImage = foodImages[36]
       return restaurant
     } else if (restaurant.categories[i].title === 'Polish') {
-      rrestaurant.image = cardImages[37]
+      restaurant.image = cardImages[37]
       restaurant.matchImage = matchImages[37]
       restaurant.topImage = foodImages[37]
       return restaurant
@@ -507,7 +507,7 @@ export default function getCusine(restaurant) {
       restaurant.topImage = foodImages[45]
       return restaurant
     } else if (restaurant.categories[i].title === 'Sushi Bars') {
-      rrestaurant.image = cardImages[46]
+      restaurant.image = cardImages[46]
       restaurant.matchImage = matchImages[46]
       restaurant.topImage = foodImages[46]
       return restaurant

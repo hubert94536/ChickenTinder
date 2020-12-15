@@ -10,9 +10,6 @@ const font = 'CircularStd-Medium'
 export default class MatchCard extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      card: this.props.card,
-    }
   }
 
   evaluateCuisines(cuisines) {
