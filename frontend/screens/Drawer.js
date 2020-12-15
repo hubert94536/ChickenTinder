@@ -17,7 +17,7 @@ class Drawer extends Component {
       openPosition: downPos,
       currState: true, // true = top, false = down
       objectHeight: this.props.objectHeight,
-      height: windowHeight - this.props.offset
+      height: windowHeight - this.props.offset,
     }
 
     this.state.position.setOffset(0)

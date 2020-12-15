@@ -59,6 +59,3 @@ buck-out/
 /ios/Pods/
 #api-key
 .env
-categories.json
-category_generator.py
-fixed_categories.json
