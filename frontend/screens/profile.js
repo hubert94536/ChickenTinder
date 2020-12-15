@@ -219,12 +219,17 @@ export default class UserProfileView extends Component {
   }
 
   editProfile() {
+    //===============================================================//
+    // console.log('profile.js name: ' + this.state.name)
+    // console.log('profile.js username: ' + this.state.username)
+    //===============================================================//
     this.setState({
       edit: true,
       nameValue: this.state.name,
-      username: this.state.username,
+      usernameValue: this.state.username,
       changeName: false,
-    })
+    }, ()=>{console.log('nameValue: ' + this.state.nameValue) 
+            console.log('usernameValue: ' + this.state.usernameValue)})
   }
 
   render() {
