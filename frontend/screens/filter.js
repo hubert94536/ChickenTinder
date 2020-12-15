@@ -52,8 +52,6 @@ const tagsPrice = ['$', '$$', '$$$', '$$$$']
 
 const tagsSizes = [10, 20, 30]
 
-let tagsMajority = ['6', '10', 'All', 'Custom: ']
-
 //  requests the users permission
 const requestLocationPermission = async () => {
   PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
@@ -82,8 +80,10 @@ export default class FilterSelector extends React.Component {
   constructor(props) {
     super(props)
     const date = new Date()
+
     this.state = {
       // Filters
+      tagsMajority: ['1'],
       distance: 5,
       zipcode: '',
       location: null,
@@ -115,6 +115,8 @@ export default class FilterSelector extends React.Component {
       // SWIPER
       swiperIndex: 0,
     }
+
+    this.updateMajorityTags()
   }
 
   // asks user for permission and get location as the component mounts
@@ -144,11 +146,11 @@ export default class FilterSelector extends React.Component {
     let size = this.props.members.length
     let half = Math.ceil(size * 0.5)
     let twoThirds = Math.ceil(size * 0.66)
-    tagsMajority =[]
-    tagsMajority.push(half)
-    if (twoThirds != half) tagsMajority.push(twoThirds)
-    if (size != twoThirds) tagsMajority.push('All')
-    tagsMajority.push('Custom: ')
+    this.state.tagsMajority =[]
+    this.state.tagsMajority.push(half)
+    if (twoThirds != half) this.state.tagsMajority.push(twoThirds)
+    if (size != twoThirds) this.state.tagsMajority.push('All')
+    this.state.tagsMajority.push('Custom: ')
   }
 
 
@@ -370,7 +372,7 @@ export default class FilterSelector extends React.Component {
                   <Text style={styles.filterSubtext}>Members (out of {this.props.members.length}) needed to get a match</Text>
                 </View>
                 <DynamicTags
-                  all={tagsMajority}
+                  all={this.state.tagsMajority}
                   selected={this.state.selectedMajority}
                   selectedNum={this.state.majority}
                   isExclusive={true}
@@ -401,6 +403,7 @@ export default class FilterSelector extends React.Component {
                   all={tagsSizes}
                   selected={this.state.selectedSize}
                   isExclusive={true}
+                  ACCENT_COLOR={ACCENT_COLOR}
                   onChange={(event) => {
                     if (event[0] === 'Custom: ') {
                       this.setState({ chooseSize: true })
@@ -482,6 +485,8 @@ export default class FilterSelector extends React.Component {
                   <Text style={styles.filterSubtext}>Select all that apply</Text>
                 </View>
                 <TagsView
+                ACCENT_COLOR={ACCENT_COLOR}
+                TEXT_COLOR={TEXT_COLOR}
                   all={tagsPrice}
                   selected={this.state.selectedPrice}
                   isExclusive={false}
@@ -529,6 +534,7 @@ export default class FilterSelector extends React.Component {
                 <Text style={styles.filterSubtext}>Select all that apply</Text>
               </View>
               <TagsView
+                ACCENT_COLOR={ACCENT_COLOR}
                 all={tagsCuisine}
                 selected={this.state.selectedCuisine}
                 isExclusive={false}
@@ -543,6 +549,7 @@ export default class FilterSelector extends React.Component {
                 <Text style={styles.filterSubtext}>Select all that apply</Text>
               </View>
               <TagsView
+                ACCENT_COLOR={ACCENT_COLOR}
                 all={tagsDiet}
                 selected={this.state.selectedRestriction}
                 isExclusive={false}
@@ -693,7 +700,7 @@ const styles = StyleSheet.create({
     marginBottom: '1%',
   },
   swiperContainer: {
-    flex: 1,
+    // flex: 1,
     height: '100%',
     backgroundColor: BACKGROUND_COLOR,
     justifyContent: 'flex-start',
