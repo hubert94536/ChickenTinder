@@ -10,10 +10,9 @@ import {
   View,
 } from 'react-native'
 import { faMapMarkerAlt, faUtensils } from '@fortawesome/free-solid-svg-icons'
-import { faStar } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import LinearGradient from 'react-native-linear-gradient'
+import getStarPath from '../assets/stars/star.js'
 import PropTypes from 'prop-types'
 
 const font = 'CircularStd-Medium'
@@ -26,80 +25,42 @@ export default class RoundCard extends React.Component {
     }
   }
 
-  // getting which stars to display
-  getStarPath(rating) {
-    switch (rating) {
-      case 0:
-        return require('../assets/stars/0.png')
-      case 1:
-        return require('../assets/stars/1.png')
-      case 1.5:
-        return require('../assets/stars/1.5.png')
-      case 2:
-        return require('../assets/stars/2.png')
-      case 2.5:
-        return require('../assets/stars/2.5.png')
-      case 3:
-        return require('../assets/stars/3.png')
-      case 3.5:
-        return require('../assets/stars/3.5.png')
-      case 4:
-        return require('../assets/stars/4.png')
-      case 4.5:
-        return require('../assets/stars/4.5.png')
-      case 5:
-        return require('../assets/stars/5.png')
-    }
-  }
-
-  // get image based on cuisine
-  getCuisine(category) {
-    switch (category) {
-      case 'American':
-        return require('../assets/images/american.png')
-      case 'Asian Fusion':
-        return require('../assets/images/asianFusion.png')
-      case 'Chinese':
-        return require('../assets/images/chinese.png')
-      case 'European':
-        return require('../assets/images/european.png')
-      case 'Indian':
-        return require('../assets/images/indian.png')
-      case 'Italian':
-        return require('../assets/images/italian.png')
-      case 'Japanese':
-        return require('../assets/images/japanese.png')
-      case 'Korean':
-        return require('../assets/images/korean.png')
-      case 'Mediterranean':
-        return require('../assets/images/mediterranean.png')
-      case 'Mexican':
-        return require('../assets/images/mexican.png')
-      case 'Middle Eastern':
-        return require('../assets/images/middleEastern.png')
-      case 'Thai':
-        return require('../assets/images/thai.png')
-    }
-  }
-
   // for each transaction, put into comma-separated string
   evaluateTransactions(transactions) {
-    return transactions.map((item) => item.charAt(0).toUpperCase() + item.slice(1)).join(', ')
+    var fork = ''
+    for (var i = 0; i < transactions.length; i++) {
+      if (transactions[i] === 'restaurant_reservation') fork += 'Reservation'
+      else fork += transactions[i].charAt(0).toUpperCase() + transactions[i].slice(1)
+      if (i < transactions.length - 1) fork += ', '
+    }
+    return fork
+    //  return transactions.map((item) => item.charAt(0).toUpperCase() + item.slice(1)).join(', ')
   }
 
   evaluateCuisines(cuisines) {
-    return cuisines.map((item) => item.title).join(', ')
+    // return cuisines.map((item) => item.title).join(', ')
+    if (cuisines.length > 2) return cuisines[0].title + ', ' + cuisines[1].title
+    else return cuisines[0].title
   }
 
   render() {
     // console.log('roundCard: ' + JSON.stringify(this.props.card.categories))
     return (
-      <ImageBackground
-        source={this.getCuisine(this.props.card.categories[0].title)}
-        style={[styles.card]}
-      >
+      <ImageBackground source={this.props.card.image} style={[styles.card]}>
+        <TouchableHighlight
+          underlayColor="transparent"
+          onPress={() => Linking.openURL(this.props.card.url)}
+          style={{ justifyContent: 'flex-start', margin: '2%' }}
+        >
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={[{ fontFamily: font, color: 'black', fontSize: 18 }]}>yelp</Text>
+            <Icon name="yelp" style={{ color: 'red', fontSize: 20, marginLeft: '1%' }} />
+          </View>
+        </TouchableHighlight>
         <View style={{ marginLeft: '5%', justifyContent: 'flex-end', flex: 1, marginBottom: '5%' }}>
-          <Text style={styles.title}>{this.props.card.name}</Text>
+          <Text numberOfLines={2} style={styles.title}>
+            {this.props.card.name}
+          </Text>
           <View
             style={{
               flexDirection: 'row',
@@ -108,10 +69,11 @@ export default class RoundCard extends React.Component {
             }}
           >
             <Image
-              source={this.getStarPath(this.props.card.rating)}
+              source={getStarPath(this.props.card.rating)}
               style={{ marginRight: '2%', justifyContent: 'center' }}
             />
             <Text
+              numberOfLines={2}
               style={{
                 alignSelf: 'center',
                 fontFamily: 'CircularStd-Book',
@@ -127,6 +89,7 @@ export default class RoundCard extends React.Component {
               {this.props.card.price}
             </Text>
             <Text
+              numberOfLines={2}
               style={{
                 marginLeft: '1%',
                 fontFamily: 'CircularStd-Book',
@@ -139,44 +102,18 @@ export default class RoundCard extends React.Component {
           </View>
           <View style={styles.info}>
             <FontAwesomeIcon icon={faMapMarkerAlt} style={styles.icon} />
-            <Text style={styles.infoText}>
+            <Text numberOfLines={1} style={styles.infoText}>
               {this.props.card.distance} miles away — {this.props.card.city}
             </Text>
           </View>
-          <View style={styles.info}>
-            <FontAwesomeIcon icon={faUtensils} style={styles.icon} />
-            <Text style={styles.infoText}>
-              {this.evaluateTransactions(this.props.card.transactions)}
-            </Text>
-          </View>
-          {/* <TouchableHighlight
-              underlayColor="black"
-              onShowUnderlay={() => this.setState({ press: true })}
-              onHideUnderlay={() => this.setState({ press: false })}
-              style={styles.button}
-              onPress={() => Linking.openURL(this.props.card.url)}
-            >
-              <View
-                style={{
-                  flexDirection: 'row',
-                  padding: '1%',
-                  paddingLeft: '3%',
-                  paddingRight: '3%',
-                }}
-              >
-                <Icon name="yelp" style={{ color: 'red', fontSize: 18, marginRight: '2%' }} />
-                <Text
-                  style={{
-                    fontFamily: font,
-                    fontSize: 15,
-                    fontWeight: 'bold',
-                    color: this.state.press ? 'white' : 'black',
-                  }}
-                >
-                  See more on Yelp
-                </Text>
-              </View>
-            </TouchableHighlight> */}
+          {this.props.card.transactions.length > 0 && (
+            <View style={styles.info}>
+              <FontAwesomeIcon icon={faUtensils} style={styles.icon} />
+              <Text numberOfLines={2} style={styles.infoText}>
+                {this.evaluateTransactions(this.props.card.transactions)}
+              </Text>
+            </View>
+          )}
         </View>
       </ImageBackground>
     )
