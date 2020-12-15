@@ -70,6 +70,10 @@ class Home extends React.Component {
     // friendsApi.acceptFriendRequest(2)
   }
 
+  componentWillUnmount() {
+    socket.off('update')
+  }
+
   render() {
     return (
       <View
