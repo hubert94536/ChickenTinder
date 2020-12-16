@@ -31,7 +31,7 @@ export default class ChooseCard extends React.Component {
           source={{
             uri: this.props.image,
           }}
-          style={[imgStyles.button, {marginTop: '3%'}]}
+          style={[imgStyles.button, { marginTop: '3%' }]}
         />
         <View
           style={{

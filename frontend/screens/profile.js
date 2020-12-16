@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Dimensions, Image, Keyboard, StyleSheet, Text, View } from 'react-native'
+import { Image, Keyboard, StyleSheet, Text, View } from 'react-native'
 import { ID, NAME, PHOTO, USERNAME, DEFPHOTO, EMAIL } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
@@ -20,7 +20,6 @@ import Settings from '../modals/ProfileSettings.js'
 
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
-const height = Dimensions.get('window').height
 var email = ''
 var id = ''
 
@@ -316,7 +315,7 @@ export default class UserProfileView extends Component {
             email={email}
           />
 
-          {this.state.edit && 
+          {this.state.edit && (
             <EditProfile
               // image = {this.state.image}
               defImage={this.state.defImage}
@@ -329,7 +328,7 @@ export default class UserProfileView extends Component {
               userChange={(text) => this.setState({ usernameValue: text })}
               nameChange={(text) => this.setState({ nameValue: text })}
             />
-          }
+          )}
 
           {this.state.errorAlert && (
             <Alert
