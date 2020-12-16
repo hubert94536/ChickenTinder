@@ -63,7 +63,6 @@ export default class UserProfileView extends Component {
         usernameValue: res[5][1],
       })
     })
-    console.log(this.state.name)
   }
 
   // getting current user's info
@@ -219,17 +218,12 @@ export default class UserProfileView extends Component {
   }
 
   editProfile() {
-    //===============================================================//
-    // console.log('profile.js name: ' + this.state.name)
-    // console.log('profile.js username: ' + this.state.username)
-    //===============================================================//
     this.setState({
       edit: true,
       nameValue: this.state.name,
       usernameValue: this.state.username,
       changeName: false,
-    }, ()=>{console.log('nameValue: ' + this.state.nameValue) 
-            console.log('usernameValue: ' + this.state.usernameValue)})
+    })
   }
 
   render() {
@@ -322,19 +316,20 @@ export default class UserProfileView extends Component {
             email={email}
           />
 
-          <EditProfile
-            visible={this.state.edit}
-            // image = {this.state.image}
-            defImage={this.state.defImage}
-            name={this.state.nameValue}
-            username={this.state.usernameValue}
-            dontSave={() => this.dontSave()}
-            uploadPhoto={() => this.uploadPhoto()}
-            removePhoto={() => this.removePhoto()}
-            makeChanges={() => this.makeChanges()}
-            userChange={(text) => this.setState({ usernameValue: text })}
-            nameChange={(text) => this.setState({ nameValue: text })}
-          />
+          {this.state.edit && 
+            <EditProfile
+              // image = {this.state.image}
+              defImage={this.state.defImage}
+              name={this.state.nameValue}
+              username={this.state.usernameValue}
+              dontSave={() => this.dontSave()}
+              uploadPhoto={() => this.uploadPhoto()}
+              removePhoto={() => this.removePhoto()}
+              makeChanges={() => this.makeChanges()}
+              userChange={(text) => this.setState({ usernameValue: text })}
+              nameChange={(text) => this.setState({ nameValue: text })}
+            />
+          }
 
           {this.state.errorAlert && (
             <Alert
