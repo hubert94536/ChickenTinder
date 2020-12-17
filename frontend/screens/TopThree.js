@@ -36,10 +36,7 @@ export default class TopThree extends React.Component {
       random: Math.floor(Math.random() * 3),
     }
 
-    console.log(this.state.restaurants)
-
     socket.getSocket().on('choose', (ind) => {
-      console.log(ind)
       this.props.navigation.navigate('Match', {
         restaurant: this.state.restaurants[ind],
         host: this.state.host,
