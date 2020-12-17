@@ -1,10 +1,12 @@
 import React from 'react'
 import { Dimensions, FlatList, Modal, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import Clipboard from '@react-native-community/clipboard'
+import { ID } from 'react-native-dotenv'
+import { SearchBar } from 'react-native-elements'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { SearchBar } from 'react-native-elements'
+import AsyncStorage from '@react-native-community/async-storage'
+import Clipboard from '@react-native-community/clipboard'
 import PropTypes from 'prop-types'
 import Alert from './alert.js'
 import ChooseCard from '../cards/chooseCard.js'
@@ -15,7 +17,7 @@ const hexBlack = '#000000'
 const font = 'CircularStd-Bold'
 const fontRegular = 'CircularStd-Medium'
 const height = Dimensions.get('window').height
-
+var id = ''
 //  little pop up modal that is showed when you click choose friends in filters
 export default class ChooseFriends extends React.Component {
   constructor(props) {
@@ -26,18 +28,21 @@ export default class ChooseFriends extends React.Component {
       search: '',
       errorAlert: false,
     }
-    this.getFriends()
+    AsyncStorage.getItem(ID).then((res) => {
+      id = res
+      this.getFriends(id)
+    })
   }
 
   //  gets your friends
-  async getFriends() {
+  getFriends(id) {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
-      .getFriends()
+      .getFriends(id)
       .then((res) => {
-        var pushFriends = []
+        let pushFriends = []
         for (var friend in res.friendList) {
-          if (res.friendList[friend].status === 'Accepted') {
+          if (res.friendList[friend].status === 'friends') {
             if (
               this.props.members.some(
                 (member) => member.username === res.friendList[friend].username,
@@ -58,7 +63,7 @@ export default class ChooseFriends extends React.Component {
 
   // copies the room code (dummy text for now)
   copyToClipboard() {
-    Clipboard.setString('BADWOLF42')
+    Clipboard.setString(this.props.code.toString())
   }
 
   //  closes the choose friends modal in filters
@@ -92,8 +97,8 @@ export default class ChooseFriends extends React.Component {
             </View>
             <View style={styles.header2}>
               <Text style={styles.headertext2}>Group PIN: </Text>
-              <Text style={styles.headertext3}>BADWOLF42</Text>
-              <TouchableOpacity onPress={this.copyToClipboard}>
+              <Text style={styles.headertext3}>{this.props.code}</Text>
+              <TouchableOpacity onPress={() => this.copyToClipboard()}>
                 <Ionicons name="copy-outline" style={styles.icon2} />
               </TouchableOpacity>
             </View>
@@ -129,7 +134,7 @@ export default class ChooseFriends extends React.Component {
                 <ChooseCard
                   name={item.name}
                   username={item.username}
-                  image={item.image}
+                  image={item.photo}
                   added={false}
                 />
               )}
@@ -218,4 +223,7 @@ const styles = StyleSheet.create({
 ChooseFriends.propTypes = {
   members: PropTypes.array,
   press: PropTypes.func,
+  visible: PropTypes.bool,
+  code: PropTypes.number,
+  username: PropTypes.string,
 }

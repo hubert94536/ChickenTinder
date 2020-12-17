@@ -42,8 +42,6 @@ const getTop3 = (restaurants) => {
       top3.likes.push(arrVal[i])
     }
   }
-  // pick a random number (0-2) to select restaurant
-  top3.random = Math.floor(Math.random() * top3.choices.length)
   return top3
 }
 
@@ -252,6 +250,10 @@ module.exports = (io) => {
           filters.limit = data.filters.limit
         }
         filters.categories += data.filters.categories
+        if (filters.categories.endsWith(',')) {
+          filters.categories = filters.categories.slice(0, -1)
+        }
+        filters.categories = Array.from(new Set(filters.categories.split(','))).toString()
         const resList = await Yelp.getRestaurants(filters)
         // clear filters for getting restaurants and replace with group logistics
         filters = {}
@@ -371,8 +373,13 @@ module.exports = (io) => {
     })
 
     // alert all users to choose random pick
-    socket.on('randomize', async (data) => {
-      io.in(data.code).emit('choose')
+    socket.on('choose', (data) => {
+      io.in(data.code).emit('choose', data.index)
+    })
+
+    // alert all users to leave
+    socket.on('end', (data) => {
+      io.in(data.code).emit('kick')
     })
   })
 }

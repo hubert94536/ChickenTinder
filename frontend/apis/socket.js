@@ -1,21 +1,16 @@
-import { USERNAME, NAME, PHOTO, ID } from 'react-native-dotenv'
-import AsyncStorage from '@react-native-community/async-storage'
 import io from 'socket.io-client'
 
-var myUsername = ''
-var myPhoto = ''
-var myName = ''
 var myId = ''
+var myName = ''
+var myPhoto = ''
+var myUsername = ''
 var socket = null
 
-AsyncStorage.multiGet([USERNAME, NAME, PHOTO, ID]).then((res) => {
-  myUsername = res[0][1]
-  myName = res[1][1]
-  myPhoto = res[2][1]
-  myId = res[3][1]
-})
-
-const connect = () => {
+const connect = (id, name, photo, username) => {
+  myId = id
+  myName = name
+  myPhoto = photo
+  myUsername = username
   socket = io('https://wechews.herokuapp.com', {
     query: `id=${myId}`,
   })
@@ -95,9 +90,14 @@ const finishedRound = (code) => {
   socket.emit('finished', { code: code, id: myId })
 }
 
-// randomize the restaurant chosen
-const randomize = (code) => {
-  socket.emit('randomize', { code: code })
+// send chosen restaurant
+const choose = (code, index) => {
+  socket.emit('choose', { code: code, index: index })
+}
+
+// end session
+const endRound = (code) => {
+  socket.emit('end', { code: code })
 }
 
 const getSocket = () => {
@@ -116,5 +116,6 @@ export default {
   submitFilters,
   likeRestaurant,
   getSocket,
-  randomize,
+  choose,
+  endRound,
 }
