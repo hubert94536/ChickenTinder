@@ -116,7 +116,7 @@ class Drawer extends Component {
               right: 0,
               elevation: 1,
               zIndex: 1,
-              backgroundColor: 'rgba(52, 52, 52, 0.8)',
+              backgroundColor: 'rgba(42, 42, 42, 0.9)',
             }}
           ></View>
           {/* Blur looks very very nice but crashes when other 
