@@ -10,11 +10,14 @@ class Drawer extends Component {
     const upPos = -1 * this.props.objectHeight
     const downPos = 0.0 // screen height - thingy size
 
+    // true = top, false = down
+    // Avoid state variables to avoid setState, which re-renders component
+    this.currState = true
+
     this.state = {
       position: new Animated.Value(0, this.props.initialDrawerPos),
       closedPosition: upPos,
       openPosition: downPos,
-      currState: true, // true = top, false = down
       objectHeight: this.props.objectHeight,
       height: windowHeight - this.props.offset,
     }
@@ -30,7 +33,7 @@ class Drawer extends Component {
         )
       },
       onPanResponderGrant: () => {
-        if (this.state.currState == true) {
+        if (this.currState == true) {
           this.state.position.setOffset(-this.state.objectHeight)
         } else {
           this.state.position.setOffset(0)
@@ -50,13 +53,13 @@ class Drawer extends Component {
         const goingUp = gestureState.dy < 0 && gestureState.vy < 0
         const goingDown = gestureState.dy > 0 && gestureState.vy > 0
         if (goingUp) {
-          this.setState({ currState: true })
+          this.currState = true
           Animated.spring(this.state.position, {
             toValue: this.state.closedPosition,
             useNativeDriver: 'false',
           }).start()
         } else if (goingDown) {
-          this.setState({ currState: false })
+          this.currState = false
           Animated.spring(this.state.position, {
             toValue: this.state.openPosition,
             useNativeDriver: 'false',
@@ -64,7 +67,7 @@ class Drawer extends Component {
         } else if (!goingUp && !goingDown) {
           // console.log('filterContainer.js: bounce')
           Animated.spring(this.state.position, {
-            toValue: this.state.currentState ? this.state.closedPosition : this.state.openPosition,
+            toValue: this.currState ? this.state.closedPosition : this.state.openPosition,
             useNativeDriver: 'false',
           }).start()
         }
