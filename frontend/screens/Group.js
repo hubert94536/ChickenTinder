@@ -92,7 +92,7 @@ export default class Group extends React.Component {
     socket.getSocket().on('start', (restaurants) => {
       if (restaurants.length > 0) {
         // console.log('group.js: ' + JSON.stringify(restaurants))
-        let x = 10 // ROUND SIZE - implement once hubert changes backend
+        // let x = 10 // ROUND SIZE - implement once hubert changes backend
 
         this.props.navigation.navigate('Round', {
           results: restaurants,
