@@ -228,7 +228,7 @@ export default class Group extends React.Component {
             <Text style={styles.groupTitle}>
               {this.state.hostName === this.state.myUsername
                 ? 'Your Group'
-                : `${this.firstName(this.state.members[this.state.host].name)}'s Group`}
+                : `${this.firstName(this.state.hostName)}'s Group`}
             </Text>
             <View style={styles.subheader}>
               <Text style={styles.pinText}>Group PIN: </Text>
