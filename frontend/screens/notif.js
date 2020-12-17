@@ -12,6 +12,7 @@ import modalStyles from '../../styles/modalStyles.js'
 import friendsApi from '../apis/friendsApi.js'
 import NotifCard from '../cards/notifCard.js'
 import TabBar from '../nav.js'
+import notifApi from '../apis/notificationsApi.js'
 // import Swipeout from 'react-native-swipeout';
 
 const hex = '#F15763'
@@ -84,23 +85,25 @@ export default class Notif extends Component {
         username: 'hco',
         id: '3',
         image: 'kjkhkk',
-        type: 'Invite',
+        type: 'invited',
       },
       {
         name: 'Francis Feng',
         username: 'francis',
         id: '8',
         image: 'sfdsds',
-        type: 'Invite',
+        type: 'invited',
       },
       {
         name: 'Hubert Chen',
         username: 'hubesc',
         id: '5',
         image: 'sdfsdf',
-        type: 'Request',
+        type: 'requested',
       },
     ]
+
+    
 
     console.log(notifList)
     for (var notif in notifList) {
@@ -116,7 +119,7 @@ export default class Notif extends Component {
     // Create all friend/request cards
     if (Array.isArray(notifList) && notifList.length) {
       for (var i = 0; i < notifList.length; i++) {
-        if (notifList[i].type == 'Request') {
+        if (notifList[i].type == 'requested') {
           requestNotifs.push(
             <NotifCard
               total={this.state.notifs}
