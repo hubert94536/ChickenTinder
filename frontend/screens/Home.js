@@ -44,11 +44,22 @@ class Home extends React.Component {
       friends: '',
       errorAlert: false,
     }
-    socket.connect()
-    socket.getSocket().on('update', (res) => {
-      this.setState({ invite: false })
-      this.props.navigation.navigate('Group', res)
-      console.log(res)
+    AsyncStorage.multiGet([ID, NAME, PHOTO, USERNAME]).then((res) => {
+      id = res[0][1]
+      name = res[1][1]
+      photo = res[2][1]
+      username = res[3][1]
+      socket.connect(id, name, photo, username)
+      socket.getSocket().on('update', (res) => {
+        this.setState({ invite: false })
+        this.props.navigation.push('Group', {
+          response: res,
+          id: id,
+          name: name,
+          photo: photo,
+          username: username,
+        })
+      })
     })
   }
 
@@ -150,7 +161,7 @@ class Home extends React.Component {
           </TouchableHighlight>
         </View>
         <TabBar
-          goHome={() => this.props.navigation.navigate('Home')}
+          goHome={() => this.props.navigation.replace('Home')}
           goSearch={() => this.props.navigation.navigate('Search')}
           goNotifs={() => this.props.navigation.navigate('Notifications')}
           goProfile={() => this.props.navigation.navigate('Profile')}
@@ -178,9 +189,7 @@ class Home extends React.Component {
 }
 
 Home.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func,
-  }),
+  navigation: PropTypes.object,
 }
 const styles = StyleSheet.create({
   button: {

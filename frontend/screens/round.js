@@ -30,7 +30,7 @@ export default class Round extends React.Component {
           break
         }
       }
-      this.props.navigation.navigate('Match', {
+      this.props.navigation.replace('Match', {
         restaurant: res,
         host: this.state.host,
         code: this.props.navigation.state.params.code,
@@ -48,6 +48,7 @@ export default class Round extends React.Component {
 
   componentDidMount() {
     this._isMounted = true
+    // console.log('round.js: ' + JSON.stringify(this.props.navigation.state.params.code))
     // console.log('round.js ' + JSON.stringify(this.state.results))
   }
 
@@ -64,7 +65,7 @@ export default class Round extends React.Component {
 
   leaveGroup() {
     socket.leaveRoom(this.props.navigation.state.params.code)
-    this.props.navigation.navigate('Home')
+    this.props.navigation.popToTop()
   }
 
   render() {
@@ -88,7 +89,7 @@ export default class Round extends React.Component {
               //let backend know you're done
               socket.finishedRound(this.props.navigation.state.params.code)
               //go to the loading page
-              this.props.navigation.navigate('Loading', {
+              this.props.navigation.replace('Loading', {
                 restaurant: this.state.results,
                 host: this.state.host,
                 code: this.props.navigation.state.params.code,

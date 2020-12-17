@@ -238,7 +238,6 @@ export default class FilterSelector extends React.Component {
   handlePress(setFilters) {
     if (this.props.isHost) {
       Socket.startSession(this.props.code, setFilters)
-      // console.log("startSession")
     }
   }
 
@@ -288,7 +287,7 @@ export default class FilterSelector extends React.Component {
 
     } else if (this.state.majority && this.state.distance) {
       this.evaluateFilters()
-      console.log('filter.js startSession')
+      // console.log('filter.js startSession')
     }
   }
 

@@ -126,7 +126,7 @@ export default class UserProfileView extends Component {
       .then(() => {
         // close settings and navigate to Login
         this.setState({ visible: false })
-        this.props.navigation.navigate('Login')
+        this.props.navigation.replace('Login')
       })
       .catch(() => {
         this.setState({ errorAlert: true })
@@ -154,7 +154,7 @@ export default class UserProfileView extends Component {
       .then(() => {
         // close settings and navigate to Login
         this.setState({ visible: false })
-        this.props.navigation.navigate('Login')
+        this.props.navigation.replace('Login')
       })
       .catch(() => {
         this.setState({ errorAlert: true })
@@ -364,10 +364,10 @@ export default class UserProfileView extends Component {
           )}
         </View>
         <TabBar
-          goHome={() => this.props.navigation.navigate('Home')}
-          goSearch={() => this.props.navigation.navigate('Search')}
-          goNotifs={() => this.props.navigation.navigate('Notifications')}
-          goProfile={() => this.props.navigation.navigate('Profile')}
+          goHome={() => navigation.popToTop()}
+          goSearch={() => navigation.navigate('Search')}
+          goNotifs={() => navigation.navigate('Notifications')}
+          goProfile={() => navigation.navigate('Profile')}
           cur="Profile"
         />
       </View>
