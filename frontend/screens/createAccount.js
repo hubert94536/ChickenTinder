@@ -47,7 +47,7 @@ export default class createAccount extends React.Component {
         console.log("Def Img " + this.state.photo)
         console.log(this.state.id)
         console.log(defImages)
-        // accountsApi.deleteUser(this.state.id)
+        accountsApi.deleteUser(this.state.id)
     })
     })
     
