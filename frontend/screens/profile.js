@@ -250,7 +250,9 @@ export default class UserProfileView extends Component {
               <View
                 style={[screenStyles.icons, { width: 27, margin: '5%', textAlign: 'right' }]}
               ></View>
-              <Text style={[screenStyles.text, styles.myProfile]}>Profile</Text>
+              <Text style={[screenStyles.text, styles.myProfile, { fontWeight: 'bold' }]}>
+                Profile
+              </Text>
               <Icon
                 name="cog-outline"
                 style={[screenStyles.icons, { margin: '5%', textAlign: 'right' }]}
@@ -278,20 +280,23 @@ export default class UserProfileView extends Component {
                 }}
               >
                 <View style={{ width: 20, marginTop: '4%', marginLeft: '1%' }}></View>
-                <Text style={{ fontFamily: font, fontSize: 20, marginTop: '4%' }}>{name}</Text>
+                <Text
+                  style={{ fontFamily: font, fontSize: 22, marginTop: '4%', fontWeight: 'bold' }}
+                >
+                  {name}
+                </Text>
                 <Icon
                   name="pencil-outline"
-                  style={{ fontSize: 20, marginTop: '4%', marginLeft: '1%' }}
+                  style={{ fontSize: 28, marginTop: '4%', marginLeft: '1%', marginBottom: '1%' }}
                   onPress={() => this.editProfile()}
                 />
               </View>
-              <Text style={{ fontFamily: font, fontSize: 13, color: hex }}>{'@' + username}</Text>
+              <Text style={{ fontFamily: font, fontSize: 14, color: hex }}>{'@' + username}</Text>
             </View>
             <Text
               style={{
                 fontFamily: font,
                 marginTop: '5%',
-                marginBottom: '1%',
                 marginLeft: '7%',
                 fontSize: 20,
                 fontWeight: 'bold',
@@ -309,8 +314,45 @@ export default class UserProfileView extends Component {
             </Text>
           </View>
           <View style={{ height: '50%', marginTop: '1%' }}>
-            {/* Contains the search bar */}
-            <Friends isFriends onFriendsChange={(n) => this.handleFriendsCount(n)} />
+            {/* Contains the search bar and friends display, only shows if user has friends */}
+            {numFriends > 0 && (
+              <Friends isFriends onFriendsChange={(n) => this.handleFriendsCount(n)} />
+            )}
+            {numFriends === 0 && (
+              <View>
+                <Icon
+                  name="emoticon-sad-outline"
+                  style={{ fontSize: 72, marginTop: '15%', alignSelf: 'center' }}
+                />
+                <Text
+                  style={{
+                    fontFamily: font,
+                    fontSize: 20,
+                    marginTop: '1%',
+                    alignSelf: 'center',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  No friends, yet
+                </Text>
+                <Text
+                  style={[
+                    screenStyles.text,
+                    {
+                      marginTop: '3%',
+                      marginHorizontal: '6%',
+                      alignSelf: 'center',
+                      textAlign: 'center',
+                      fontSize: 18,
+                      fontFamily: 'CircularStd-Book',
+                      color: 'grey',
+                    },
+                  ]}
+                >
+                  You have no friends, yet. Add friends using the search feature below!
+                </Text>
+              </View>
+            )}
           </View>
           {(visible || edit) && (
             <BlurView
