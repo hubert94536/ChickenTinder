@@ -37,7 +37,7 @@ export default class TopThree extends React.Component {
     }
 
     socket.getSocket().on('choose', (ind) => {
-      this.props.navigation.navigate('Match', {
+      this.props.navigation.replace('Match', {
         restaurant: this.state.restaurants[ind],
         host: this.state.host,
         code: this.state.code,
@@ -362,6 +362,7 @@ export default class TopThree extends React.Component {
 TopThree.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
+    replace: PropTypes.func,
     state: PropTypes.shape({
       params: PropTypes.shape({
         top: PropTypes.array,

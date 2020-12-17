@@ -24,7 +24,7 @@ export default class Login extends React.Component {
       .loginWithFacebook()
       .then((result) => {
         this.setState({ alert: false })
-        this.props.navigation.navigate(result)
+        this.props.navigation.replace(result)
       })
       .catch(() => {
         this.setState({ errorAlert: true })
@@ -66,7 +66,7 @@ export default class Login extends React.Component {
           onHideUnderlay={() => this.setState({ phonePressed: false })}
           activeOpacity={1}
           underlayColor={'white'}
-          onPress={() => this.props.navigation.navigate('Phone')}
+          onPress={() => this.props.navigation.replace('Phone')}
           style={[
             screenStyles.longButton,
             { borderColor: hex, backgroundColor: hex, marginTop: '7%' },
@@ -160,5 +160,6 @@ export default class Login extends React.Component {
 Login.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
+    replace: PropTypes.func,
   }).isRequired,
 }

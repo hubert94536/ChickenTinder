@@ -27,7 +27,7 @@ export default class Match extends React.Component {
 
   endRound() {
     const { navigation, code } = this.state
-    navigation.navigate('Home')
+    navigation.popToTop()
     socket.leaveRoom(code)
   }
 
@@ -102,7 +102,7 @@ Match.propTypes = {
     navigate: PropTypes.func,
     state: PropTypes.shape({
       params: PropTypes.shape({
-        restaurant: PropTypes.array.isRequired,
+        restaurant: PropTypes.object,
         host: PropTypes.string,
         code: PropTypes.number,
       }),
