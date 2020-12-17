@@ -98,7 +98,7 @@ export default class App extends React.Component {
             screen: PhoneAuthScreen,
           },
           Notifications: {
-            screen: Notifications,
+            screen: Notif,
             navigationOptions: {
               animationEnabled: false,
             },
