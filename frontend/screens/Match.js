@@ -19,14 +19,16 @@ export default class Match extends React.Component {
     this.state = {
       navigation: this.props.navigation,
       restaurant: this.props.navigation.state.params.restaurant,
-      host: this.props.host,
+      host: this.props.navigation.state.params.host,
+      code: this.props.navigation.state.params.code,
     }
+    console.log(this.props.navigation.state.params.restaurant)
   }
 
   endRound() {
-    const { navigation, host } = this.state
+    const { navigation, code } = this.state
     navigation.navigate('Home')
-    socket.leaveRoom(host)
+    socket.leaveRoom(code)
   }
 
   componentDidMount() {
@@ -95,13 +97,14 @@ export default class Match extends React.Component {
 }
 
 Match.propTypes = {
-  host: PropTypes.string,
   //navig should contain navigate fx + state, which contains params which contains the necessary restaurant arr
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     state: PropTypes.shape({
       params: PropTypes.shape({
         restaurant: PropTypes.array.isRequired,
+        host: PropTypes.string,
+        code: PropTypes.number,
       }),
     }),
   }),

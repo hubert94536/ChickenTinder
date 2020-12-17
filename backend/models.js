@@ -82,7 +82,6 @@ Friends.belongsTo(Accounts, { foreignKey: 'friend_id', foreignKeyConstraint: tru
 //   // sequelize.query('CREATE OR REPLACE FUNCTION notify_insert()' +
 //   //   ' RETURNS trigger AS $$' +
 //   //   ' DECLARE' +
-     //         ' row 
 //   //   ' BEGIN' +
 //   //         ' PERFORM pg_notify(\'notifications\', row_to_json(NEW) ::text);' +
 //   //         ' RETURN NEW;' +

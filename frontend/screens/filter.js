@@ -8,7 +8,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
-import { BlurView } from '@react-native-community/blur'
+// import { BlurView } from '@react-native-community/blur'
 import Geolocation from 'react-native-geolocation-service'
 import PropTypes from 'prop-types'
 import Slider from '@react-native-community/slider'
@@ -24,7 +24,7 @@ import Time from '../modals/chooseTime.js'
 import Size from '../modals/chooseSize.js'
 import Majority from '../modals/chooseMajority.js'
 import screenStyles from '../../styles/screenStyles.js'
-import modalStyles from '../../styles/modalStyles.js'
+// import modalStyles from '../../styles/modalStyles.js'
 
 const font = 'CircularStd-Medium'
 
@@ -51,8 +51,6 @@ const tagsDiet = ['Vegan', 'Vegetarian']
 const tagsPrice = ['$', '$$', '$$$', '$$$$']
 
 const tagsSizes = [10, 20, 30]
-
-let tagsMajority = ['6', '10', 'All', 'Custom: ']
 
 //  requests the users permission
 const requestLocationPermission = async () => {
@@ -82,6 +80,7 @@ export default class FilterSelector extends React.Component {
   constructor(props) {
     super(props)
     const date = new Date()
+
     this.state = {
       // Filters
       distance: 5,
@@ -133,24 +132,7 @@ export default class FilterSelector extends React.Component {
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
       )
     }
-    this.updateMajorityTags()
   }
-
-  componentDidUpdate() {
-    this.updateMajorityTags()
-  }
-
-  updateMajorityTags() {
-    let size = this.props.members.length
-    let half = Math.ceil(size * 0.5)
-    let twoThirds = Math.ceil(size * 0.66)
-    tagsMajority =[]
-    tagsMajority.push(half)
-    if (twoThirds != half) tagsMajority.push(twoThirds)
-    if (size != twoThirds) tagsMajority.push('All')
-    tagsMajority.push('Custom: ')
-  }
-
 
   //  pushes the 'subcategories' of each cusisine
   categorize(cat) {
@@ -158,20 +140,19 @@ export default class FilterSelector extends React.Component {
     for (let i = 0; i < cat.length; i++) {
       switch (cat[i]) {
         case 'American':
-          categories.push('american')
+          categories.push('newamerican')
+          categories.push('diners')
           break
         case 'European':
-          categories.push('eastern_european')
           categories.push('french')
           categories.push('british')
           categories.push('spanish')
           categories.push('portuguese')
           categories.push('german')
           categories.push('austrian')
-          categories.push('danish')
-          categories.push('swedish')
           break
         case 'Latin American':
+          categories.push('latin')
           categories.push('argentine')
           categories.push('brazilian')
           categories.push('cuban')
@@ -185,12 +166,11 @@ export default class FilterSelector extends React.Component {
           categories.push('mediterranean')
           break
         case 'South Asian':
-          categories.push('indian')
+          categories.push('indpak')
           categories.push('pakistani')
           categories.push('afghan')
           categories.push('bangladeshi')
           categories.push('himalayan')
-          categories.push('nepalese')
           categories.push('srilankan')
           break
         case 'Southeast Asian':
@@ -215,7 +195,7 @@ export default class FilterSelector extends React.Component {
           categories.push('mongolian')
           break
         case 'Middle Eastern':
-          categories.push('middle_eastern')
+          categories.push('mideastern')
           break
         case 'African':
           categories.push('african')
@@ -231,7 +211,8 @@ export default class FilterSelector extends React.Component {
           break
       }
     }
-    return categories
+    if (categories.length == 0) return null
+    else return categories.toString()
   }
 
   // this will pass the filters to the groups page
@@ -246,16 +227,12 @@ export default class FilterSelector extends React.Component {
   evaluateFilters() {
     const filters = {}
     //  convert to unix time
-    const dd = date.getDate()
-    const mm = date.getMonth()
-    const yyyy = date.getFullYear()
-    const timezone = date.getTimezoneOffset()
-    const unix = Date.UTC(yyyy, mm, dd, this.state.hour, this.state.minute + timezone) / 1000
+    const unix = Math.floor(Date.now() / 1000)
     filters.open_at = unix
-    filters.price = this.state.selectedPrice.map((item) => item.length).toString()
+    filters.price = this.state.selectedPrice.map((item) => item.length).sort().toString()
     // puts the cuisine and restrictions into one array
     const selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
-    filters.categories = this.categorize(selections).toString()
+    filters.categories = this.categorize(selections)
     filters.radius = this.state.distance * 1600
     filters.majority = this.state.majority
     filters.groupSize = this.props.members.length
@@ -296,15 +273,22 @@ export default class FilterSelector extends React.Component {
     const filters = {}
     // puts the cuisine and restrictions into one array
     const selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
-    filters.categories = this.categorize(selections).toString()
-    if(filters.categories != '')
-      filters.categories += ','
+    filters.categories = this.categorize(selections)
     console.log('userfilters: ' + JSON.stringify(filters.categories))
     Socket.submitFilters(this.props.code, filters.categories)
     this.props.handleUpdate()
   }
 
   render() {
+    let tagsMajority = []
+    let size = this.props.members.length
+    let half = Math.ceil(size * 0.5)
+    let twoThirds = Math.ceil(size * 0.66)
+    tagsMajority.push(half)
+    if (twoThirds != half) tagsMajority.push(twoThirds)
+    tagsMajority.push('All')
+    tagsMajority.push('Custom: ')
+
     return (
       <View style={styles.mainContainer}>
 
@@ -336,23 +320,23 @@ export default class FilterSelector extends React.Component {
           </View>
         )}
         {!this.props.isHost && (
-        <View style={
-          styles.titleContainer,
-          {
-            flexDiretion: 'row',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }
-        }>
-          <Text
-            style={[
-              screenStyles.text,
-              styles.filterHeader,
-            ]}
-          >
-            Your Filters
+          <View style={
+            styles.titleContainer,
+            {
+              flexDiretion: 'row',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }
+          }>
+            <Text
+              style={[
+                screenStyles.text,
+                styles.filterHeader,
+              ]}
+            >
+              Your Filters
               </Text>
-        </View>
+          </View>
         )}
         <Swiper
           loop={false}
@@ -403,6 +387,7 @@ export default class FilterSelector extends React.Component {
                   all={tagsSizes}
                   selected={this.state.selectedSize}
                   isExclusive={true}
+                  ACCENT_COLOR={ACCENT_COLOR}
                   onChange={(event) => {
                     if (event[0] === 'Custom: ') {
                       this.setState({ chooseSize: true })
@@ -422,7 +407,7 @@ export default class FilterSelector extends React.Component {
                     underlayColor={'white'}
                     onPress={() => {
                       this.setState({ chooseLocation: true })
-                      this.props.setBlur(true)    
+                      this.props.setBlur(true)
                     }}
                     style={[
                       styles.filterSubtext,
@@ -467,7 +452,7 @@ export default class FilterSelector extends React.Component {
                     alignSelf: 'center',
                   }}
                   minimumValue={5}
-                  maximumValue={50}
+                  maximumValue={25}
                   value={5}
                   step={0.5}
                   minimumTrackTintColor={TEXT_COLOR}
@@ -484,6 +469,8 @@ export default class FilterSelector extends React.Component {
                   <Text style={styles.filterSubtext}>Select all that apply</Text>
                 </View>
                 <TagsView
+                  ACCENT_COLOR={ACCENT_COLOR}
+                  TEXT_COLOR={TEXT_COLOR}
                   all={tagsPrice}
                   selected={this.state.selectedPrice}
                   isExclusive={false}
@@ -499,8 +486,8 @@ export default class FilterSelector extends React.Component {
                 </View>
                 <View style={styles.buttonContainer}>
                   <BackgroundButton
-                    backgroundColor={BACKGROUND_COLOR}
-                    textColor={TEXT_COLOR}
+                    backgroundColor={this.state.asap ? ACCENT_COLOR : BACKGROUND_COLOR}
+                    textColor={this.state.asap ? BACKGROUND_COLOR : ACCENT_COLOR}
                     borderColor={BORDER_COLOR}
                     onPress={() => {
                       const hr = date.getUTCHours()
@@ -510,10 +497,10 @@ export default class FilterSelector extends React.Component {
                     title={'ASAP'}
                   />
                   <BackgroundButton
-                    backgroundColor={this.state.asap ? BACKGROUND_COLOR : BORDER_COLOR}
-                    textColor={this.state.asap ? BORDER_COLOR : BACKGROUND_COLOR}
+                    backgroundColor={!this.state.asap ? ACCENT_COLOR : BACKGROUND_COLOR}
+                    textColor={!this.state.asap ? BACKGROUND_COLOR : ACCENT_COLOR}
                     borderColor={BORDER_COLOR}
-                    onPress={() => { 
+                    onPress={() => {
                       this.setState({ chooseTime: true, asap: false })
                       this.props.setBlur(true)
                     }}
@@ -525,17 +512,19 @@ export default class FilterSelector extends React.Component {
           )}
           <View style={styles.swiperContainer}>
             {/* CUISINES */}
-            <View style={styles.filterGroupContainer}>
+            <View style={styles.bigFilterGroupContainer}>
               <View style={{ flexDirection: 'row' }}>
                 <Text style={[screenStyles.text, styles.filterTitleText]}>Cuisines</Text>
                 <Text style={styles.filterSubtext}>Select all that apply</Text>
               </View>
               <TagsView
+                ACCENT_COLOR={ACCENT_COLOR}
                 all={tagsCuisine}
                 selected={this.state.selectedCuisine}
                 isExclusive={false}
                 onChange={(event) => this.setState({ selectedCuisine: event })}
               />
+
             </View>
 
             {/* DIETARY RESTRICTIONS */}
@@ -545,6 +534,7 @@ export default class FilterSelector extends React.Component {
                 <Text style={styles.filterSubtext}>Select all that apply</Text>
               </View>
               <TagsView
+                ACCENT_COLOR={ACCENT_COLOR}
                 all={tagsDiet}
                 selected={this.state.selectedRestriction}
                 isExclusive={false}
@@ -613,10 +603,11 @@ export default class FilterSelector extends React.Component {
           visible={this.state.chooseTime}
           cancel={() => {
             this.setState({ chooseTime: false })
+            this.setState({ asap: true })
             this.props.setBlur(false)
           }}
           press={(hr, min) => {
-            this.setState({ hour: hr, minute: min, chooseTime: false })
+            this.setState({ hour: hr, minute: min, chooseTime: false, asap: false })
             this.props.setBlur(false)
           }}
         />
@@ -694,7 +685,7 @@ const styles = StyleSheet.create({
     marginBottom: '1%',
   },
   swiperContainer: {
-    flex: 1,
+    // flex: 1,
     height: '100%',
     backgroundColor: BACKGROUND_COLOR,
     justifyContent: 'flex-start',
@@ -703,6 +694,14 @@ const styles = StyleSheet.create({
     marginLeft: '5%',
     marginRight: '5%',
     flex: 1,
+    justifyContent: 'flex-start',
+  },
+  bigFilterGroupContainer: {
+    marginLeft: '5%',
+    marginRight: '5%',
+    flex: 1,
+    flexGrow: 2,
+    flexDirection: 'column',
     justifyContent: 'flex-start',
   },
   filterHeader: {

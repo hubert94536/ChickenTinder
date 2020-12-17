@@ -15,8 +15,6 @@ export default class EditProfile extends React.Component {
       usernameValue: this.props.username,
       changeName: false,
     }
-    console.log(this.state.nameValue)
-    console.log(this.state.changeName)
   }
 
   changeUser(text) {

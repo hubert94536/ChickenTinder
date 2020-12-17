@@ -4,26 +4,29 @@ import React from 'react'
 import { Dimensions, ImageBackground, Image, StyleSheet, Text, View } from 'react-native'
 import PropTypes from 'prop-types'
 import getStarPath from '../assets/stars/star.js'
+import getCuisine from '../assets/matchcard/foodImages.js'
 
 const font = 'CircularStd-Medium'
 
 export default class MatchCard extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      card: this.props.card,
-    }
   }
 
   evaluateCuisines(cuisines) {
-    return cuisines.map((item) => item.title).join(', ')
+    // return cuisines.map((item) => item.title).join(', ')
+    if (cuisines.length > 2) {
+      return cuisines[0].title + ', ' + cuisines[1].title
+    } else {
+      return cuisines[0].title
+    }
   }
 
   render() {
     const { card } = this.props
 
     return (
-      <ImageBackground source={card.matchImage} style={[styles.card]}>
+      <ImageBackground source={getCuisine(card.categories)} style={[styles.card]}>
         <View style={{ marginLeft: '5%', justifyContent: 'center', flex: 1, marginBottom: '4%' }}>
           <Text style={styles.title}>{card.name}</Text>
           <View

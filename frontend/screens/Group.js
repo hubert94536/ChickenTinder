@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import Clipboard from '@react-native-community/clipboard'
-import { USERNAME } from 'react-native-dotenv'
+// import { USERNAME } from 'react-native-dotenv'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
@@ -62,30 +62,38 @@ export default class Group extends React.Component {
       endAlert: false,
       chooseFriends: false,
     }
+
     this.updateMemberList()
 
     // listens if user is to be kicked
     socket.getSocket().on('kick', () => {
-      this.leaveGroup
+      this.leaveGroup()
     })
 
     // listens for group updates
     socket.getSocket().on('update', (res) => {
       // console.log('group.js: update')
-      if (this._isMounted) {
-        console.log('socket "update": ' + JSON.stringify(res))
-        this.setState({ members: res.members, host: res.host, code: res.code })
-        const count = this.countNeedFilters(res.members)
-        this.setState({ needFilters: count })
-        if (!count) {
-          this.setState({ canStart: true })
-        }
+      console.log('socket "update": ' + JSON.stringify(res))
+      this.setState({
+        members: res.members,
+        host: res.host,
+        hostName: res.members[res.host].username,
+        code: res.code,
+      })
+
+      const count = this.countNeedFilters(res.members)
+      this.setState({ needFilters: count })
+      if (!count) {
+        this.setState({ canStart: true })
       }
+      this.updateMemberList()
     })
 
     socket.getSocket().on('start', (restaurants) => {
-      // console.log('group.js: ' + JSON.stringify(restaurants))
       if (restaurants.length > 0) {
+        // console.log('group.js: ' + JSON.stringify(restaurants))
+        // let x = 10 // ROUND SIZE - implement once hubert changes backend
+
         this.props.navigation.navigate('Round', {
           results: restaurants,
           host: this.state.host,
@@ -99,15 +107,7 @@ export default class Group extends React.Component {
     })
 
     socket.getSocket().on('leave', () => {
-      if (this._isMounted) {
-        this.leaveGroup()
-      }
-    })
-
-    socket.getSocket().on('leave', () => {
-      if (this._isMounted) {
-        this.leaveGroup()
-      }
+      this.leaveGroup()
     })
 
     socket.getSocket().on('exception', (error) => {
@@ -128,7 +128,7 @@ export default class Group extends React.Component {
   // counts number of users who haven't submitted filters
   countNeedFilters(users) {
     let count = 0
-    console.log('countNeedFilters: ' + JSON.stringify(users))
+    // console.log('countNeedFilters: ' + JSON.stringify(users))
     for (const user in users) {
       if (!users[user].filters) {
         count++
@@ -140,6 +140,7 @@ export default class Group extends React.Component {
   // pings server to fetch restaurants, start session
   start() {
     // this.filterRef.current.setState({ locationAlert: true })
+    // console.log('start pressed')
     this.filterRef.current.startSession()
   }
 
@@ -164,18 +165,16 @@ export default class Group extends React.Component {
     const footer = {}
     footer.f = true
     memberRenderList.push(footer)
-    // console.log('\n\n\n\n\n\n=========================')
-    console.log('group.js: ' + JSON.stringify(memberList))
-    // console.log('=========================\n\n\n\n\n\n')
   }
 
   leaveGroup() {
-    socket.leaveRoom(this.state.host)
+    if (this.state.hostName === this.state.myUsername) {
+      // socket.endRound(this.state.code)
+      socket.leaveRoom(this.state.code)
+    } else {
+      socket.leaveRoom(this.state.code)
+    }
     this.props.navigation.navigate('Home')
-  }
-
-  endGroup() {
-    socket.endSession()
   }
 
   // shows proper alert based on if user is host
@@ -231,7 +230,7 @@ export default class Group extends React.Component {
             <Text style={styles.groupTitle}>
               {this.state.hostName === this.state.myUsername
                 ? 'Your Group'
-                : `${this.firstName(this.state.members[this.state.host].name)}'s Group`}
+                : `${this.firstName(this.state.hostName)}'s Group`}
             </Text>
             <View style={styles.subheader}>
               <Text style={styles.pinText}>Group PIN: </Text>
@@ -272,14 +271,14 @@ export default class Group extends React.Component {
                 </Text>
               </View>
               <FlatList
-                style={[styles.center, { marginTop: 0, height: windowHeight * 0.5 }]}
+                style={[styles.center, { marginTop: 0, height: 0.5 * windowHeight }]}
                 numColumns={2}
                 ListHeaderComponentStyle={{
                   color: '#F15763',
                   marginBottom: 10,
                 }}
                 data={memberRenderList}
-                contentContainerStyle={styles.memberContainer}
+                contentContainerStyle={[styles.memberContainer]}
                 renderItem={({ item }) => {
                   if (item.f) {
                     return (
@@ -338,63 +337,8 @@ export default class Group extends React.Component {
                 }}
                 keyExtractor={(item, index) => index}
               />
-              <View style={styles.bottom}>
-                <Text style={styles.bottomText}>
-                  When everyone has submitted filters, the round will begin!
-                </Text>
-                {this.state.hostName === this.state.myUsername && (
-                  <TouchableHighlight
-                    underlayColor="#F15763"
-                    activeOpacity={1}
-                    onPress={() => this.start()}
-                    style={[
-                      screenStyles.bigButton,
-                      styles.bigButton,
-                      this.state.canStart ? { opacity: 0.75 } : { opacity: 1 },
-                    ]}
-                  >
-                    {/* TODO: Change text if required options have not been set */}
-                    <Text style={styles.buttonText}>Start Round</Text>
-                  </TouchableHighlight>
-                )}
-                {this.state.hostName !== this.state.myUsername && (
-                  <TouchableHighlight
-                    style={[
-                      screenStyles.bigButton,
-                      styles.bigButton,
-                      !this.state.userSubmitted ? { opacity: 1 } : { opacity: 0.4 },
-                    ]}
-                    onPress={() => {
-                      if (!this.state.userSubmitted) this.filterRef.current.submitUserFilters()
-                    }}
-                  >
-                    <Text style={styles.buttonText}>
-                      {!this.state.userSubmitted ? 'Submit Filters' : 'Waiting...'}
-                    </Text>
-                  </TouchableHighlight>
-                )}
-                <TouchableHighlight
-                  onShowUnderlay={() => this.setState({ leaveGroup: true })}
-                  onHideUnderlay={() => this.setState({ leaveGroup: false })}
-                  style={styles.leave}
-                  onPress={() => {
-                    // console.log(this.state.members)
-                    this.state.hostName === this.state.myUsername
-                      ? this.setState({ endAlert: true })
-                      : this.setState({ leaveAlert: true })
-                  }}
-                  underlayColor="white"
-                >
-                  <Text
-                    style={[
-                      styles.leaveText,
-                      this.state.leaveGroup ? { color: hex } : { color: '#6A6A6A' },
-                    ]}
-                  >
-                    {this.state.hostName === this.state.myUsername ? 'Cancel Group' : 'Leave Group'}
-                  </Text>
-                </TouchableHighlight>
-              </View>
+
+              {/* =====================================BOTTOM===================================== */}
               {this.state.leaveAlert && (
                 <Alert
                   title="Leave?"
@@ -431,19 +375,20 @@ export default class Group extends React.Component {
               />
             </View>
           )}
-          objectHeight={this.state.hostName == this.state.myUsername ? 400 : 400}
+          objectHeight={this.state.hostName == this.state.myUsername ? 400 : 350}
           offset={120}
           renderDrawerView={() => (
             <View>
               <View>
                 <View
                   style={{
+                    backgroundColor: 'white',
                     width: windowWidth,
-                    height: 400,
-                    zIndex: 3,
-                    borderColor: '#F15763',
-                    borderWidth: 1,
-                    overflow: 'hidden',
+                    height: this.state.hostName == this.state.myUsername ? 400 : 350,
+                    zIndex: 30,
+                    elevation: 30,
+                    // borderColor: '#F15763',
+                    // borderWidth: 1,
                   }}
                 >
                   <FilterSelector
@@ -454,13 +399,13 @@ export default class Group extends React.Component {
                     ref={this.filterRef}
                     code={this.state.code}
                     setBlur={(res) => this.blur(res)}
+                    style={{ elevation: 31 }}
                   />
                 </View>
               </View>
               <View
                 style={{
                   flexDirection: 'row',
-                  margin: '4%',
                   justifyContent: 'center',
                 }}
               >
@@ -468,17 +413,18 @@ export default class Group extends React.Component {
                   style={{
                     color: 'white',
                     fontFamily: font,
-                    marginRight: '3%',
-                    height: 70,
+                    height: 30,
                     backgroundColor: 'white',
                     padding: 15,
-                    marginTop: -45,
-                    borderRadius: 15,
-                    borderColor: '#F15763',
-                    borderWidth: 1,
+                    paddingTop: 25,
+                    borderBottomLeftRadius: 15,
+                    borderBottomRightRadius: 15,
+                    // borderColor: '#F15763',
+                    // borderWidth: 1,
                     flexDirection: 'column',
                     justifyContent: 'flex-end',
-                    zIndex: 2,
+                    zIndex: 30,
+                    elevation: 30,
                   }}
                 >
                   <Text
@@ -497,6 +443,64 @@ export default class Group extends React.Component {
             </View>
           )}
         />
+        <View style={styles.bottom}>
+          <Text style={styles.bottomText}>
+            When everyone has submitted filters, the round will begin!
+          </Text>
+          <View>
+            {this.state.hostName === this.state.myUsername && (
+              <TouchableHighlight
+                underlayColor="#F15763"
+                activeOpacity={1}
+                onPress={() => this.start()}
+                style={[
+                  screenStyles.bigButton,
+                  styles.bigButton,
+                  this.state.canStart ? { opacity: 0.75 } : { opacity: 1 },
+                ]}
+              >
+                {/* TODO: Change text if required options have not been set */}
+                <Text style={styles.buttonText}>Start Round</Text>
+              </TouchableHighlight>
+            )}
+            {this.state.hostName !== this.state.myUsername && (
+              <TouchableHighlight
+                style={[
+                  screenStyles.bigButton,
+                  styles.bigButton,
+                  !this.state.userSubmitted ? { opacity: 1 } : { opacity: 0.4 },
+                ]}
+                onPress={() => {
+                  if (!this.state.userSubmitted) this.filterRef.current.submitUserFilters()
+                }}
+              >
+                <Text style={styles.buttonText}>
+                  {!this.state.userSubmitted ? 'Submit Filters' : 'Waiting...'}
+                </Text>
+              </TouchableHighlight>
+            )}
+          </View>
+          <TouchableHighlight
+            style={styles.leave}
+            activeOpacity={1}
+            onPress={() => {
+              // console.log('left')
+              this.state.hostName === this.state.myUsername
+                ? this.setState({ endAlert: true })
+                : this.setState({ leaveAlert: true })
+            }}
+            underlayColor="white"
+          >
+            <Text
+              style={[
+                styles.leaveText,
+                this.state.leaveGroup ? { color: hex } : { color: '#6A6A6A' },
+              ]}
+            >
+              {this.state.hostName === this.state.myUsername ? 'Cancel Group' : 'Leave Group'}
+            </Text>
+          </TouchableHighlight>
+        </View>
         {this.state.blur && (
           <BlurView
             blurType="dark"
@@ -517,10 +521,11 @@ Group.propTypes = {
 }
 
 const styles = StyleSheet.create({
-  // Containerse
+  // Containers
   main: {
     marginTop: 35,
     flexDirection: 'column',
+    height: '100%',
     flex: 1,
     backgroundColor: 'white',
     color: '#aaa',
@@ -535,9 +540,9 @@ const styles = StyleSheet.create({
   },
   leave: {
     alignSelf: 'center',
-    marginTop: '3%',
+    marginTop: '1%',
     borderRadius: 25,
-    width: '25%',
+    width: '55%',
   },
   leaveText: {
     fontFamily: font,
@@ -584,7 +589,7 @@ const styles = StyleSheet.create({
   },
   bottomText: {
     color: '#aaa',
-    width: '50%',
+    width: '70%',
     alignSelf: 'center',
     fontWeight: 'bold',
     textAlign: 'center',
@@ -602,13 +607,16 @@ const styles = StyleSheet.create({
     top: 0,
   },
   center: {
-    flex: 0.6,
     margin: 15,
     marginLeft: 25,
     marginRight: 25,
   },
   bottom: {
-    flex: 0.5,
+    position: 'absolute',
+    bottom: '0%',
+    left: 0,
+    right: 0,
+    flexDirection: 'column',
     color: '#aaa',
   },
   memberContainer: {

@@ -57,15 +57,14 @@ export default class DynamicTags extends React.Component {
   makeButtons() {
     return this.props.all.map((tag, i) => {
       const on = this.state.selected.includes(tag)
-      const backgroundColor = on ? 'white' : hex
-      const textColor = on ? hex : 'white'
-      const borderColor = on ? 'white' : 'white'
+      const backgroundColor = !on ? 'white' : hex
+      const textColor = !on ? hex : 'white'
       const text = tag == 'Custom: ' ? 'Custom: ' + this.props.selectedNum : tag
       return (
         <BackgroundButton
           backgroundColor={backgroundColor}
           textColor={textColor}
-          borderColor={borderColor}
+          borderColor={hex}
           onPress={() => {
             this.onPress(tag)
           }}
