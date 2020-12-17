@@ -94,7 +94,7 @@ export default class Group extends React.Component {
         // console.log('group.js: ' + JSON.stringify(restaurants))
         // let x = 10 // ROUND SIZE - implement once hubert changes backend
 
-        this.props.navigation.navigate('Round', {
+        this.props.navigation.replace('Round', {
           results: restaurants,
           host: this.state.host,
           isHost: this.state.hostName === this.state.myUsername,
@@ -174,7 +174,7 @@ export default class Group extends React.Component {
     } else {
       socket.leaveRoom(this.state.code)
     }
-    this.props.navigation.navigate('Home')
+    this.props.navigation.pop()
   }
 
   // shows proper alert based on if user is host
@@ -230,7 +230,7 @@ export default class Group extends React.Component {
             <Text style={styles.groupTitle}>
               {this.state.hostName === this.state.myUsername
                 ? 'Your Group'
-                : `${this.firstName(this.state.hostName)}'s Group`}
+                : `${this.firstName(this.state.members[this.state.host].name)}'s Group`}
             </Text>
             <View style={styles.subheader}>
               <Text style={styles.pinText}>Group PIN: </Text>
