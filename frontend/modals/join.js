@@ -24,7 +24,9 @@ export default class Join extends React.Component {
 
   handleAccept() {
     this.setState({ pressed: false })
-    const { code } = this.state
+    const code = this.state.code
+    this.setState({ code: '' })
+    // const { code } = this.state
     socket.joinRoom(code)
     this.props.cancel()
   }

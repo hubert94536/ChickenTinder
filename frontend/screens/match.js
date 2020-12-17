@@ -4,7 +4,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import screenStyles from '../../styles/screenStyles.js'
-import MatchCard from '../cards/MatchCard.js'
+import MatchCard from '../cards/matchCard.js'
 // commented out during linting but socket is used in commented-out code below
 import socket from '../apis/socket.js'
 
@@ -19,18 +19,20 @@ export default class Match extends React.Component {
     this.state = {
       navigation: this.props.navigation,
       restaurant: this.props.navigation.state.params.restaurant,
-      host: this.props.host,
+      host: this.props.navigation.state.params.host,
+      code: this.props.navigation.state.params.code,
     }
   }
 
   endRound() {
-    const { navigation, host } = this.state
+    const { navigation, code } = this.state
     navigation.navigate('Home')
-    socket.leaveRoom(host)
+    socket.leaveRoom(code)
   }
 
   componentDidMount() {
     this._isMounted = true
+    console.log(this.state.restaurant)
   }
 
   componentWillUnmount() {
@@ -95,13 +97,14 @@ export default class Match extends React.Component {
 }
 
 Match.propTypes = {
-  host: PropTypes.string,
   //navig should contain navigate fx + state, which contains params which contains the necessary restaurant arr
   navigation: PropTypes.shape({
     navigate: PropTypes.func,
     state: PropTypes.shape({
       params: PropTypes.shape({
         restaurant: PropTypes.array.isRequired,
+        host: PropTypes.string,
+        code: PropTypes.number,
       }),
     }),
   }),
