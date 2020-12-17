@@ -40,7 +40,7 @@ class Home extends React.Component {
       socket.connect(id, name, photo, username)
       socket.getSocket().on('update', (res) => {
         this.setState({ invite: false })
-        this.props.navigation.navigate('Group', {
+        this.props.navigation.push('Group', {
           response: res,
           id: id,
           name: name,
@@ -146,7 +146,7 @@ class Home extends React.Component {
           </TouchableHighlight>
         </View>
         <TabBar
-          goHome={() => this.props.navigation.navigate('Home')}
+          goHome={() => this.props.navigation.replace('Home')}
           goSearch={() => this.props.navigation.navigate('Search')}
           goNotifs={() => this.props.navigation.navigate('Notifications')}
           goProfile={() => this.props.navigation.navigate('Profile')}
@@ -174,9 +174,7 @@ class Home extends React.Component {
 }
 
 Home.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func,
-  }),
+  navigation: PropTypes.object,
 }
 const styles = StyleSheet.create({
   button: {
