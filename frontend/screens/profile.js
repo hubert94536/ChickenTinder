@@ -343,7 +343,7 @@ export default class UserProfileView extends Component {
                       marginHorizontal: '6%',
                       alignSelf: 'center',
                       textAlign: 'center',
-                      fontSize: 18,
+                      fontSize: 16,
                       fontFamily: 'CircularStd-Book',
                       color: 'grey',
                     },
