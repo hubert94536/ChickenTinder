@@ -16,6 +16,7 @@ import PropTypes from 'prop-types'
 import getStarPath from '../assets/stars/star.js'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
+import getCuisine from '../assets/images/foodImages.js'
 
 const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
@@ -27,9 +28,7 @@ export default class TopThree extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      first: true,
-      second: false,
-      third: false,
+      chosen: 0,
       restaurants: this.props.navigation.state.params.top,
       host: this.props.navigation.state.params.host,
       code: this.props.navigation.state.params.code,
@@ -37,7 +36,10 @@ export default class TopThree extends React.Component {
       random: Math.floor(Math.random() * 3),
     }
 
+    console.log(this.state.restaurants)
+
     socket.getSocket().on('choose', (ind) => {
+      console.log(ind)
       this.props.navigation.navigate('Match', {
         restaurant: this.state.restaurants[ind],
         host: this.state.host,
@@ -53,23 +55,20 @@ export default class TopThree extends React.Component {
   randomize() {
     switch (this.state.random) {
       case 0:
-        this.setState({ first: true, second: false, third: false })
+        this.setState({ chosen: 0 })
         break
       case 1:
-        this.setState({ first: false, second: true, third: false })
+        this.setState({ chosen: 1 })
         break
       case 2:
-        this.setState({ first: false, second: false, third: true })
+        this.setState({ chosen: 2 })
         break
     }
   }
 
   goMatch() {
-    var chosen
-    if (this.state.first) chosen = 0
-    if (this.state.first) chosen = 1
-    if (this.state.first) chosen = 2
-    socket.choose(this.state.code, chosen)
+    console.log(this.state.chosen)
+    socket.choose(this.state.code, this.state.chosen)
   }
 
   render() {
@@ -102,22 +101,24 @@ export default class TopThree extends React.Component {
             underlayColor="#F9E2C2"
             style={[
               { alignSelf: 'center' },
-              this.state.first ? styles.cardSelected : styles.cardUnselected,
+              this.state.chosen === 0 ? styles.cardSelected : styles.cardUnselected,
             ]}
-            onPress={() => this.setState({ first: true, second: false, third: false })}
+            onPress={() => this.setState({ chosen: 0 })}
           >
             <View style={{ flex: 1, justifyContent: 'space-between' }}>
               <ImageBackground
-                source={this.state.restaurants[0].topImage}
+                source={getCuisine(this.state.restaurants[0].categories)}
                 style={[
-                  this.state.first ? styles.imageSelected : styles.imageUnselected,
+                  this.state.chosen === 0 ? styles.imageSelected : styles.imageUnselected,
                   { alignSelf: 'center' },
                 ]}
               />
               <TouchableHighlight
                 style={[
                   styles.tinyButton,
-                  this.state.first ? { backgroundColor: hex } : { backgroundColor: '#c4c4c4' },
+                  this.state.chosen === 0
+                    ? { backgroundColor: hex }
+                    : { backgroundColor: '#c4c4c4' },
                 ]}
               >
                 <View
@@ -169,22 +170,24 @@ export default class TopThree extends React.Component {
             underlayColor="#F9E2C2"
             style={[
               { top: '30%', left: '5%', alignSelf: 'flex-start' },
-              this.state.second ? styles.cardSelected : styles.cardUnselected,
+              this.state.chosen === 1 ? styles.cardSelected : styles.cardUnselected,
             ]}
-            onPress={() => this.setState({ first: false, second: true, third: false })}
+            onPress={() => this.setState({ chosen: 1 })}
           >
             <View style={{ flex: 1, justifyContent: 'space-between' }}>
               <ImageBackground
-                source={this.state.restaurants[1].topImage}
+                source={getCuisine(this.state.restaurants[1].categories)}
                 style={[
-                  this.state.second ? styles.imageSelected : styles.imageUnselected,
+                  this.state.chosen === 1 ? styles.imageSelected : styles.imageUnselected,
                   { alignSelf: 'center' },
                 ]}
               />
               <TouchableHighlight
                 style={[
                   styles.tinyButton,
-                  this.state.second ? { backgroundColor: hex } : { backgroundColor: '#c4c4c4' },
+                  this.state.chosen === 1
+                    ? { backgroundColor: hex }
+                    : { backgroundColor: '#c4c4c4' },
                 ]}
               >
                 <View
@@ -236,15 +239,15 @@ export default class TopThree extends React.Component {
             underlayColor="#F9E2C2"
             style={[
               { top: '30%', right: '5%', alignSelf: 'flex-end' },
-              this.state.third ? styles.cardSelected : styles.cardUnselected,
+              this.state.chosen === 2 ? styles.cardSelected : styles.cardUnselected,
             ]}
-            onPress={() => this.setState({ first: false, second: false, third: true })}
+            onPress={() => this.setState({ chosen: 2 })}
           >
             <View style={{ flex: 1, justifyContent: 'space-between' }}>
               <ImageBackground
-                source={this.state.restaurants[2].topImage}
+                source={getCuisine(this.state.restaurants[2].categories)}
                 style={[
-                  this.state.third ? styles.imageSelected : styles.imageUnselected,
+                  this.state.chosen === 2 ? styles.imageSelected : styles.imageUnselected,
                   { alignSelf: 'center' },
                 ]}
               />
@@ -252,7 +255,9 @@ export default class TopThree extends React.Component {
                 style={[
                   styles.tinyButtonRight,
                   { alignSelf: 'flex-end' },
-                  this.state.third ? { backgroundColor: hex } : { backgroundColor: '#c4c4c4' },
+                  this.state.chosen === 2
+                    ? { backgroundColor: hex }
+                    : { backgroundColor: '#c4c4c4' },
                 ]}
               >
                 <View

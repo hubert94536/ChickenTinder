@@ -22,6 +22,7 @@ export default class Match extends React.Component {
       host: this.props.navigation.state.params.host,
       code: this.props.navigation.state.params.code,
     }
+    console.log(this.props.navigation.state.params.restaurant)
   }
 
   endRound() {
@@ -32,7 +33,6 @@ export default class Match extends React.Component {
 
   componentDidMount() {
     this._isMounted = true
-    console.log(this.state.restaurant)
   }
 
   componentWillUnmount() {
