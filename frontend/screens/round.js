@@ -95,9 +95,6 @@ export default class Round extends React.Component {
                 isHost: this.state.isHost,
               })
             }}
-            onSwipedRight={(cardIndex) => {
-              this.likeRestaurant(this.state.results[cardIndex].id)
-            }}
             stackSeparation={0}
             backgroundColor="transparent"
             animateOverlayLabelsOpacity
