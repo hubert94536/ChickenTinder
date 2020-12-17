@@ -65,10 +65,12 @@ export default class UserProfileView extends Component {
       })
     })
     console.log(this.state.name)
+    
+    
   }
 
   componentDidMount() {
-    console.log("image:" + this.state.image)
+    console.log("current image:" + this.state.image)
   }
 
   // getting current user's info
@@ -219,8 +221,10 @@ export default class UserProfileView extends Component {
     if (this.state.oldImage != this.state.image) {
       this.setState({ oldImage: this.state.image })
       AsyncStorage.setItem(PHOTO, this.state.image)
-      uploadApi.uploadPhoto(this.state.imageData)
+      var uploaded = uploadApi.uploadPhoto(this.state.imageData)
       console.log("New image" + this.state.image)
+      console.log("Uploaded" + uploaded)
+
     }
   }
 
@@ -231,6 +235,9 @@ export default class UserProfileView extends Component {
       username: this.state.username,
       changeName: false,
     })
+
+    console.log("current image:" + this.state.image)
+    
   }
 
   render() {
@@ -250,7 +257,7 @@ export default class UserProfileView extends Component {
               />
             </View>
 
-            {this.state.image.includes("file") ? (
+            {this.state.image.includes("file") || this.state.image.includes("http") ? (
               <Image
                 source={{
                   uri: this.state.image,
@@ -325,7 +332,7 @@ export default class UserProfileView extends Component {
 
           <EditProfile
             visible={this.state.edit}
-            // image = {this.state.image}
+            image = {this.state.image}
             defImage={this.state.defImage}
             name={this.state.nameValue}
             username={this.state.usernameValue}

@@ -161,7 +161,7 @@ const matchImages = [
   require('../matchcard/Salad.png'),
   require('../matchcard/Sandwiches.png'),
   require('../matchcard/Seafood.png'),
-  require('../matchcard/Southern_Soulfood.png'),
+  require('../matchcard/Southern_SoulFood.png'),
   require('../matchcard/Spanish_Tapas.png'),
   require('../matchcard/Sri_Lankan.png'),
   require('../matchcard/Steakhouse.png'),

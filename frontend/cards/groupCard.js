@@ -24,13 +24,17 @@ export default class GroupCard extends React.Component {
     return (
       <View style={styles.card}>
         <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+        {this.props.image.includes("file") || this.props.image.includes("http") ? (
           <Image
-            source={{ uri: this.props.image }}
-            style={[
-              styles.image,
-              this.props.filters ? { borderColor: hex } : { borderColor: '#F5F5F5' },
-            ]}
+            source={{
+              uri: this.props.image,
+            }}
+            style={imgStyles.button}
           />
+          ) : (
+            <Image source={this.props.image} style={imgStyles.button}/>
+ 
+            )}   
         </View>
         {this.props.filters ? (
           <Icon

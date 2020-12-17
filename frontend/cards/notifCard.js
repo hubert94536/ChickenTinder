@@ -79,7 +79,7 @@
 // }
 
 import React from 'react'
-import { Image, Text, TouchableHighlight, View } from 'react-native'
+import { Image, Text, TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native'
 import { ID } from 'react-native-dotenv'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'

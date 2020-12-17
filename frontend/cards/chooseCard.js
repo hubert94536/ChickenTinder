@@ -27,12 +27,22 @@ export default class ChooseCard extends React.Component {
   render() {
     return (
       <View style={{ flexDirection: 'row', flex: 1 }}>
-        <Image
-          source={{
-            uri: this.props.image,
-          }}
-          style={imgStyles.button}
-        />
+
+        {this.props.image.includes("file") || this.props.image.includes("http") ? (
+          <Image
+            source={{
+              uri: this.props.image,
+            }}
+            style={imgStyles.button}
+          />
+          ) : (
+            <Image source={this.props.image} style={imgStyles.button}/>
+ 
+            )}   
+
+        
+
+        
         <View
           style={{
             alignSelf: 'center',
