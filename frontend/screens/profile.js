@@ -38,6 +38,7 @@ export default class UserProfileView extends Component {
       edit: false,
       changeName: false,
       changeUser: false,
+      navigation: this.props.navigation,
       // button appearance
       logout: false,
       delete: false,
@@ -226,6 +227,21 @@ export default class UserProfileView extends Component {
   }
 
   render() {
+    const {
+      image,
+      defImg,
+      name,
+      username,
+      numFriends,
+      navigation,
+      visible,
+      edit,
+      nameValue,
+      usernameValue,
+      errorAlert,
+      takenAlert,
+    } = this.state
+
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <View style={{ backgroundColor: 'white', height: '90%' }}>
@@ -234,7 +250,9 @@ export default class UserProfileView extends Component {
               <View
                 style={[screenStyles.icons, { width: 27, margin: '5%', textAlign: 'right' }]}
               ></View>
-              <Text style={[screenStyles.text, styles.myProfile]}>Profile</Text>
+              <Text style={[screenStyles.text, styles.myProfile, { fontWeight: 'bold' }]}>
+                Profile
+              </Text>
               <Icon
                 name="cog-outline"
                 style={[screenStyles.icons, { margin: '5%', textAlign: 'right' }]}
@@ -242,15 +260,15 @@ export default class UserProfileView extends Component {
               />
             </View>
 
-            {this.state.image ? (
+            {image ? (
               <Image
                 source={{
-                  uri: this.state.image,
+                  uri: image,
                 }}
                 style={screenStyles.avatar}
               />
             ) : (
-              <Image source={this.state.defImg} style={screenStyles.avatar} />
+              <Image source={defImg} style={screenStyles.avatar} />
             )}
 
             <View style={{ alignItems: 'center' }}>
@@ -262,18 +280,18 @@ export default class UserProfileView extends Component {
                 }}
               >
                 <View style={{ width: 20, marginTop: '4%', marginLeft: '1%' }}></View>
-                <Text style={{ fontFamily: font, fontSize: 20, marginTop: '4%' }}>
-                  {this.state.name}
+                <Text
+                  style={{ fontFamily: font, fontSize: 22, marginTop: '4%', fontWeight: 'bold' }}
+                >
+                  {name}
                 </Text>
                 <Icon
                   name="pencil-outline"
-                  style={{ fontSize: 20, marginTop: '4%', marginLeft: '1%' }}
+                  style={{ fontSize: 28, marginTop: '4%', marginLeft: '1%', marginBottom: '1%' }}
                   onPress={() => this.editProfile()}
                 />
               </View>
-              <Text style={{ fontFamily: font, fontSize: 13, color: hex }}>
-                {'@' + this.state.username}
-              </Text>
+              <Text style={{ fontFamily: font, fontSize: 14, color: hex }}>{'@' + username}</Text>
             </View>
             <Text
               style={{
@@ -292,13 +310,51 @@ export default class UserProfileView extends Component {
                 { marginLeft: '7%', fontSize: 17, fontFamily: 'CircularStd-Medium' },
               ]}
             >
-              {this.state.numFriends + ' friends'}
+              {numFriends + ' friends'}
             </Text>
           </View>
-          <View style={{ height: '50%', marginTop: '0%' }}>
-            <Friends isFriends onFriendsChange={(n) => this.handleFriendsCount(n)} />
+          <View style={{ height: '50%', marginTop: '1%' }}>
+            {/* Contains the search bar and friends display, only shows if user has friends */}
+            {numFriends > 0 && (
+              <Friends isFriends onFriendsChange={(n) => this.handleFriendsCount(n)} />
+            )}
+            {numFriends === 0 && (
+              <View>
+                <Icon
+                  name="emoticon-sad-outline"
+                  style={{ fontSize: 72, marginTop: '15%', alignSelf: 'center' }}
+                />
+                <Text
+                  style={{
+                    fontFamily: font,
+                    fontSize: 20,
+                    marginTop: '1%',
+                    alignSelf: 'center',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  No friends, yet
+                </Text>
+                <Text
+                  style={[
+                    screenStyles.text,
+                    {
+                      marginTop: '3%',
+                      marginHorizontal: '6%',
+                      alignSelf: 'center',
+                      textAlign: 'center',
+                      fontSize: 16,
+                      fontFamily: 'CircularStd-Book',
+                      color: 'grey',
+                    },
+                  ]}
+                >
+                  You have no friends, yet. Add friends using the search feature below!
+                </Text>
+              </View>
+            )}
           </View>
-          {(this.state.visible || this.state.edit) && (
+          {(visible || edit) && (
             <BlurView
               blurType="dark"
               blurAmount={10}
@@ -308,19 +364,19 @@ export default class UserProfileView extends Component {
           )}
 
           <Settings
-            visible={this.state.visible}
+            visible={visible}
             close={() => this.setState({ visible: false })}
             delete={() => this.handleDelete()}
             logout={() => this.handleLogout()}
             email={email}
           />
 
-          {this.state.edit && (
+          {edit && (
             <EditProfile
               // image = {this.state.image}
-              defImage={this.state.defImage}
-              name={this.state.nameValue}
-              username={this.state.usernameValue}
+              defImage={defImg}
+              name={nameValue}
+              username={usernameValue}
               dontSave={() => this.dontSave()}
               uploadPhoto={() => this.uploadPhoto()}
               removePhoto={() => this.removePhoto()}
@@ -330,7 +386,7 @@ export default class UserProfileView extends Component {
             />
           )}
 
-          {this.state.errorAlert && (
+          {errorAlert && (
             <Alert
               title="Error, please try again"
               buttonAff="Close"
@@ -339,7 +395,7 @@ export default class UserProfileView extends Component {
               cancel={() => this.setState({ errorAlert: false })}
             />
           )}
-          {this.state.takenAlert && (
+          {takenAlert && (
             <Alert
               title="Username taken!"
               buttonAff="Close"
@@ -350,10 +406,10 @@ export default class UserProfileView extends Component {
           )}
         </View>
         <TabBar
-          goHome={() => this.props.navigation.navigate('Home')}
-          goSearch={() => this.props.navigation.navigate('Search')}
-          goNotifs={() => this.props.navigation.navigate('Notifications')}
-          goProfile={() => this.props.navigation.navigate('Profile')}
+          goHome={() => navigation.navigate('Home')}
+          goSearch={() => navigation.navigate('Search')}
+          goNotifs={() => navigation.navigate('Notifications')}
+          goProfile={() => navigation.navigate('Profile')}
           cur="Profile"
         />
       </View>

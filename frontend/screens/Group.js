@@ -62,6 +62,7 @@ export default class Group extends React.Component {
       endAlert: false,
       chooseFriends: false,
     }
+
     this.updateMemberList()
 
     // listens if user is to be kicked
@@ -79,6 +80,7 @@ export default class Group extends React.Component {
         hostName: res.members[res.host].username,
         code: res.code,
       })
+
       const count = this.countNeedFilters(res.members)
       this.setState({ needFilters: count })
       if (!count) {
@@ -88,8 +90,8 @@ export default class Group extends React.Component {
     })
 
     socket.getSocket().on('start', (restaurants) => {
-      // console.log('group.js: ' + JSON.stringify(restaurants))
       if (restaurants.length > 0) {
+        // console.log('group.js: ' + JSON.stringify(restaurants))
         this.props.navigation.navigate('Round', {
           results: restaurants,
           host: this.state.host,
