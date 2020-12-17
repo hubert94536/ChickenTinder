@@ -3,7 +3,6 @@ import { Dimensions, StyleSheet, View, Animated, PanResponder } from 'react-nati
 import PropTypes from 'prop-types'
 
 const windowHeight = Dimensions.get('window').height
-
 class Drawer extends Component {
   constructor(props) {
     super(props)
@@ -57,7 +56,6 @@ class Drawer extends Component {
             useNativeDriver: 'false',
           }).start()
         } else if (goingDown) {
-          // console.log('filterContainer.js: goingDown')
           this.setState({ currState: false })
           Animated.spring(this.state.position, {
             toValue: this.state.openPosition,
@@ -88,6 +86,54 @@ class Drawer extends Component {
           },
         ]}
       >
+        <View style={styles.container}>{containerView}</View>
+        <Animated.View
+          style={{
+            opacity: this.state.position.interpolate({
+              inputRange: [-this.state.objectHeight * 1, 0],
+              outputRange: [0, 1],
+              extrapolate: 'clamp',
+            }),
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            elevation: 1,
+            zIndex: 1,
+          }}
+          pointerEvents={'none'}
+        >
+          <View
+            style={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              elevation: 1,
+              zIndex: 1,
+              backgroundColor: 'rgba(52, 52, 52, 0.8)',
+            }}
+          ></View>
+          {/* Blur looks very very nice but crashes when other 
+              blurs are enabled due to a bue w/ BlurView )): */}
+          {/* <BlurView
+            blurType="light"
+            blurAmount={10}
+            blurRadius={10}
+            style={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              elevation: 1,
+              zIndex: 1,
+            }}
+          /> */}
+        </Animated.View>
+
         <View style={{ height: this.props.objectHeight + 40 }} {...this._panGesture.panHandlers}>
           <Animated.View
             style={[
@@ -107,7 +153,6 @@ class Drawer extends Component {
             {drawerView}
           </Animated.View>
         </View>
-        <View style={styles.container}>{containerView}</View>
       </View>
     )
   }
