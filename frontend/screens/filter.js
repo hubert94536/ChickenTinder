@@ -227,11 +227,7 @@ export default class FilterSelector extends React.Component {
   evaluateFilters() {
     const filters = {}
     //  convert to unix time
-    const dd = date.getDate()
-    const mm = date.getMonth()
-    const yyyy = date.getFullYear()
-    const timezone = date.getTimezoneOffset()
-    const unix = Date.UTC(yyyy, mm, dd, this.state.hour, this.state.minute + timezone) / 1000
+    const unix = Math.floor(Date.now() / 1000)
     filters.open_at = unix
     filters.price = this.state.selectedPrice.map((item) => item.length).sort().toString()
     // puts the cuisine and restrictions into one array
