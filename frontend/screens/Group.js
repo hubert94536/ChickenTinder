@@ -166,7 +166,12 @@ export default class Group extends React.Component {
   }
 
   leaveGroup() {
-    socket.leaveRoom(this.state.code)
+    if (this.state.hostName === this.state.myUsername) {
+      // socket.endRound(this.state.code)
+      socket.leaveRoom(this.state.code)
+    } else {
+      socket.leaveRoom(this.state.code)
+    }
     this.props.navigation.navigate('Home')
   }
 
@@ -223,7 +228,7 @@ export default class Group extends React.Component {
             <Text style={styles.groupTitle}>
               {this.state.hostName === this.state.myUsername
                 ? 'Your Group'
-                : `${this.firstName(this.state.members[this.state.host].name)}'s Group`}
+                : `${this.firstName(this.state.hostName)}'s Group`}
             </Text>
             <View style={styles.subheader}>
               <Text style={styles.pinText}>Group PIN: </Text>
