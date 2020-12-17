@@ -9,6 +9,7 @@ import RoundCard from '../cards/roundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Tooltip from 'react-native-walkthrough-tooltip'
+import getCuisine from '../assets/cards/foodImages.js'
 
 export default class Round extends React.Component {
   constructor(props) {
@@ -36,6 +37,9 @@ export default class Round extends React.Component {
         isHost: this.state.isHost,
       })
     })
+    for (var i = 0; i < this.state.results.length; i++) {
+      this.state.results[i] = getCuisine(this.state.results[i])
+    }
   }
 
   likeRestaurant(resId) {
@@ -76,11 +80,7 @@ export default class Round extends React.Component {
             stackSize={3}
             disableBottomSwipe
             disableTopSwipe
-            onSwiped={() => {
-              if (this.state.index !== 10) {
-                this.setState({ index: this.state.index + 1 })
-              }
-            }}
+            onSwiped={() => this.setState({ index: this.state.index + 1 })}
             onSwipedRight={(cardIndex) => {
               this.likeRestaurant(this.state.results[cardIndex].id)
             }}
@@ -94,6 +94,9 @@ export default class Round extends React.Component {
                 code: this.props.navigation.state.params.code,
                 isHost: this.state.isHost,
               })
+            }}
+            onSwipedRight={(cardIndex) => {
+              this.likeRestaurant(this.state.results[cardIndex].id)
             }}
             stackSeparation={0}
             backgroundColor="transparent"

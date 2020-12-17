@@ -15,6 +15,8 @@ export default class EditProfile extends React.Component {
       usernameValue: this.props.username,
       changeName: false,
     }
+    console.log("name" + this.state.nameValue)
+    console.log("change" + this.state.changeName)
   }
 
   changeUser(text) {
@@ -60,31 +62,32 @@ export default class EditProfile extends React.Component {
           <View style={{ textAlign: 'center', marginLeft: '10%', marginRight: '10%' }}>
             <Text style={[screenStyles.text, { fontSize: 16 }]}>Edit Profile</Text>
 
-            {this.props.image == null && (
+            {this.props.image.includes("file") || this.props.image.includes("http") ? (
               <Image
+              style={{
+                height: height * 0.13,
+                width: height * 0.13,
+                borderRadius: 60,
+                alignSelf: 'center',
+              }}
+              source={{
+                uri: this.props.image,
+              }}
+              
+            />
+            ) : (
+              <Image
+              source={this.props.image}
                 style={{
                   height: height * 0.13,
                   width: height * 0.13,
                   borderRadius: 60,
                   alignSelf: 'center',
                 }}
-                source={this.props.defImg}
               />
             )}
 
-            {this.props.image != null && (
-              <Image
-                source={{
-                  uri: this.props.image,
-                }}
-                style={{
-                  height: height * 0.13,
-                  width: height * 0.13,
-                  borderRadius: 60,
-                  alignSelf: 'center',
-                }}
-              />
-            )}
+            
 
             <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: '4%' }}>
               <Text
