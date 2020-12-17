@@ -324,23 +324,23 @@ export default class FilterSelector extends React.Component {
           </View>
         )}
         {!this.props.isHost && (
-        <View style={
-          styles.titleContainer,
-          {
-            flexDiretion: 'row',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }
-        }>
-          <Text
-            style={[
-              screenStyles.text,
-              styles.filterHeader,
-            ]}
-          >
-            Your Filters
+          <View style={
+            styles.titleContainer,
+            {
+              flexDiretion: 'row',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }
+          }>
+            <Text
+              style={[
+                screenStyles.text,
+                styles.filterHeader,
+              ]}
+            >
+              Your Filters
               </Text>
-        </View>
+          </View>
         )}
         <Swiper
           loop={false}
@@ -411,7 +411,7 @@ export default class FilterSelector extends React.Component {
                     underlayColor={'white'}
                     onPress={() => {
                       this.setState({ chooseLocation: true })
-                      this.props.setBlur(true)    
+                      this.props.setBlur(true)
                     }}
                     style={[
                       styles.filterSubtext,
@@ -473,8 +473,8 @@ export default class FilterSelector extends React.Component {
                   <Text style={styles.filterSubtext}>Select all that apply</Text>
                 </View>
                 <TagsView
-                ACCENT_COLOR={ACCENT_COLOR}
-                TEXT_COLOR={TEXT_COLOR}
+                  ACCENT_COLOR={ACCENT_COLOR}
+                  TEXT_COLOR={TEXT_COLOR}
                   all={tagsPrice}
                   selected={this.state.selectedPrice}
                   isExclusive={false}
@@ -504,7 +504,7 @@ export default class FilterSelector extends React.Component {
                     backgroundColor={!this.state.asap ? ACCENT_COLOR : BACKGROUND_COLOR}
                     textColor={!this.state.asap ? BACKGROUND_COLOR : ACCENT_COLOR}
                     borderColor={BORDER_COLOR}
-                    onPress={() => { 
+                    onPress={() => {
                       this.setState({ chooseTime: true, asap: false })
                       this.props.setBlur(true)
                     }}
@@ -528,6 +528,11 @@ export default class FilterSelector extends React.Component {
                 isExclusive={false}
                 onChange={(event) => this.setState({ selectedCuisine: event })}
               />
+
+            </View>
+
+            {/* DIETARY RESTRICTIONS */}
+            <View style={styles.filterGroupContainer}>
               <View style={{ flexDirection: 'row' }}>
                 <Text style={[screenStyles.text, styles.filterTitleText]}>Dietary Restrictions</Text>
                 <Text style={styles.filterSubtext}>Select all that apply</Text>
@@ -540,11 +545,6 @@ export default class FilterSelector extends React.Component {
                 onChange={(event) => this.setState({ selectedRestriction: event })}
               />
             </View>
-
-            {/* DIETARY RESTRICTIONS
-            <View style={styles.filterGroupContainer}>
-              
-            </View> */}
           </View>
         </Swiper>
         {/* ------------------------------------------ALERTS------------------------------------------ */}
@@ -704,6 +704,7 @@ const styles = StyleSheet.create({
     marginLeft: '5%',
     marginRight: '5%',
     flex: 1,
+    flexGrow: 2,
     flexDirection: 'column',
     justifyContent: 'flex-start',
   },
