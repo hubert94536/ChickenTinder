@@ -105,6 +105,7 @@ export default function getCusine(categories) {
       return foodImages[11]
     } else if (
       categories[i].title === 'Chinese' ||
+      categories[i].title === 'Dim Sum' ||
       categories[i].title === 'Dumplings' ||
       categories[i].title === 'Hot Pot' ||
       categories[i].title === 'Wok'
@@ -161,6 +162,7 @@ export default function getCusine(categories) {
       return foodImages[27]
     } else if (
       categories[i].title === 'Japanese' ||
+      categories[i].title === 'Ramen' ||
       categories[i].title === 'Nikkei' ||
       categories[i].title === 'Noodles'
     ) {
