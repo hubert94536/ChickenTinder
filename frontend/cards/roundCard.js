@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import getStarPath from '../assets/stars/star.js'
 import PropTypes from 'prop-types'
+import getCuisine from '../assets/cards/foodImages.js'
 
 const font = 'CircularStd-Medium'
 
@@ -49,7 +50,7 @@ export default class RoundCard extends React.Component {
   render() {
     // console.log('roundCard: ' + JSON.stringify(this.props.card.categories))
     return (
-      <ImageBackground source={this.props.card.image} style={[styles.card]}>
+      <ImageBackground source={getCuisine(this.props.card.categories)} style={[styles.card]}>
         <TouchableHighlight
           underlayColor="transparent"
           onPress={() => Linking.openURL(this.props.card.url)}
