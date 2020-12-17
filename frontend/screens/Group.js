@@ -373,7 +373,7 @@ export default class Group extends React.Component {
               />
             </View>
           )}
-          objectHeight={this.state.hostName == this.state.myUsername ? 400 : 400}
+          objectHeight={this.state.hostName == this.state.myUsername ? 400 : 350}
           offset={120}
           renderDrawerView={() => (
             <View>
@@ -381,7 +381,7 @@ export default class Group extends React.Component {
                 <View
                   style={{
                     width: windowWidth,
-                    height: 400,
+                    height: this.state.hostName == this.state.myUsername ? 400 : 350,
                     zIndex: 3,
                     borderColor: '#F15763',
                     borderWidth: 1,
