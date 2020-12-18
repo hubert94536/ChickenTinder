@@ -314,45 +314,8 @@ export default class UserProfileView extends Component {
             </Text>
           </View>
           <View style={{ height: '50%', marginTop: '1%' }}>
-            {/* Contains the search bar and friends display, only shows if user has friends */}
-            {true && (
-              <Friends isFriends onFriendsChange={(n) => this.handleFriendsCount(n)} />
-            )}
-            {/* {numFriends === 0 && (
-              <View>
-                <Icon
-                  name="emoticon-sad-outline"
-                  style={{ fontSize: 72, marginTop: '15%', alignSelf: 'center' }}
-                />
-                <Text
-                  style={{
-                    fontFamily: font,
-                    fontSize: 20,
-                    marginTop: '1%',
-                    alignSelf: 'center',
-                    fontWeight: 'bold',
-                  }}
-                >
-                  No friends, yet
-                </Text>
-                <Text
-                  style={[
-                    screenStyles.text,
-                    {
-                      marginTop: '3%',
-                      marginHorizontal: '6%',
-                      alignSelf: 'center',
-                      textAlign: 'center',
-                      fontSize: 16,
-                      fontFamily: 'CircularStd-Book',
-                      color: 'grey',
-                    },
-                  ]}
-                >
-                  You have no friends, yet. Add friends using the search feature below!
-                </Text>
-              </View>
-            )} */}
+            {/* Contains the search bar and friends display if has friends, otherwise no friends view */}
+            <Friends isFriends onFriendsChange={(n) => this.handleFriendsCount(n)} />
           </View>
           {(visible || edit) && (
             <BlurView
