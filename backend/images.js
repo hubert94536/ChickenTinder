@@ -61,58 +61,6 @@ const upload = (req, res, next) =>
     },
   }).single('avatar')(req, res, next)
 
-// const upload = multer({
-//     storage: multerS3({
-//       s3: s3,
-//       bucket: process.env.AWS_BUCKET,
-//       acl: 'public-read',
-//       contentType: multerS3.AUTO_CONTENT_TYPE,
-//       key: function (req, file, cb) {
-//         // TODO: id will only be populated if sent first in the request... see if this is fixable
-//         const uid = req.body.id;
-//         if (!uid) cb(new Error('no id given'));
-//         console.log(1)
-//         Accounts.findOne({ where: { id: uid } })
-//             .then((user) => {
-//                 console.log(2)
-//                 if (!user) {
-//                     cb(new Error('user does not exist'))
-//                 } else {
-//                     req.user = user;
-//                     const ext = (function(file){
-//                         if (file.mimetype == "image/png") return ".png";
-//                         if (file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") return ".jpg";
-//                     })(file);
-//                     console.log(3)
-//                     cb(null, uid + ext);
-//                 }
-//             })
-//             .catch((error) => {
-//                 cb(error);
-//             });
-//       }
-//     }),
-//     fileFilter: (req, file, cb) => {
-//         if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
-//           cb(null, true);
-//         } else {
-//           cb(null, false);
-//           return cb(new Error('file not .png, .jpg or .jpeg'));
-//         }
-//       }
-// });
-
-// const uploadPhoto = upload.single('avatar');
-
-// const uploadPhoto = (req, res, next) => {
-//     upload.single('avatar')(req, res, function(error) {
-//         if (error) {
-//             req.error = error;
-//             // next();
-//         }
-//     });
-// }
-
 const uploadHandler = async (req, res) => {
   try {
     if (!req.validContent) throw new Error('invalid content')
@@ -126,7 +74,39 @@ const uploadHandler = async (req, res) => {
   }
 }
 
+const deletePhoto = async (req, res) => {
+  try {
+    const uid = req.body.id;
+    if (!uid) throw new Error('no id given');
+    let user = await Accounts.findOne({ where: { id: uid } });
+    if (!user) {
+      throw new Error('user does not exist');
+    }
+    
+    const params = {
+      Bucket: process.env.AWS_BUCKET,
+      Key: req.body.key
+    }
+
+    s3.deleteObject(params, function(err, data) {
+      try {
+        if (err) throw err;
+        await user.update({photo: req.body.replacement});
+        return res.status(200).send("photo deleted")
+      } catch (error) {
+        console.log(error);
+        return res.status(500).send(error.message);
+      }
+    })
+    
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error.message);
+  }
+}
+
 module.exports = {
   upload,
   uploadHandler,
+  deletePhoto
 }

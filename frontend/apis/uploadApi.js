@@ -15,13 +15,8 @@ const uploadApi = axios.create({
 
 /**
  * uploads photo to server
- * @param {uri, type, name} photo an object containing the uri, type, and name of the photo to be uploaded
+ * @param {{uri, type, name}} photo an object containing the uri, type, and name of the photo to be uploaded
  * @returns {string} a link to the uploaded photo on AWS
- * get info from the two separate libraries
- * NOTE: Check if crop-picker automatically resizes image (without restricting cropping)
- * from crop-picker: type: res.mime
- * pass res.path into ImageResizer.createResizedImage
- * from image-resizer: uri: res.uri, name: res.name
  */
 const uploadPhoto = async (photo) => {
   if (!photo) return
@@ -37,14 +32,39 @@ const uploadPhoto = async (photo) => {
 
   return uploadApi
     .post('/images', data, config)
-    .then(async (res) => {
-      return await res.text()
+    .then((res) => {
+      return res.text()
+    })
+    .then((text) => {
+      return text;
     })
     .catch((error) => {
       throw error.response.status
     })
 }
 
+/**
+ * deletes photo from AWS and replaces user's photo in database
+ * @param {string} replacement a string to replace the user's photo string in the database
+ */
+const removePhoto = async (replacement = '') => {
+  const url = await AsyncStorage.getItem(PHOTO).then((photo) => {return url.split('/')})
+  
+  if (url[2] != "wechews-images-2020.s3.us-west-1.amazonaws.com") 
+    throw {name: "InvalidUrlError", message: "photo url is invalid"}
+  
+  return uploadApi
+    .delete('/images', {key: url[3], id: myId, replacement: replacement})
+    .then((res) => {
+      return res.status
+    })
+    .catch((error) => {
+      throw error.response.status
+    })
+
+}
+
 export default {
   uploadPhoto,
+  removePhoto
 }

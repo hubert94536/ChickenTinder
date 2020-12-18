@@ -205,6 +205,7 @@ export default class UserProfileView extends Component {
   removePhoto() {
     this.setState({ image: defImages[Math.floor(Math.random() * defImages.length)].toString() })
     // TODO: delete from AWS
+    uploadApi.removePhoto(this.state.image);
     AsyncStorage.setItem(PHOTO, this.state.image)
   }
 

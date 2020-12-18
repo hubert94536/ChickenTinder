@@ -28,8 +28,11 @@ if (app.get('env') === 'development') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 }
 
-//image uploads
-app.route('/images').post(images.upload, images.uploadHandler)
+// images
+app
+  .route('/images')
+  .post(images.upload, images.uploadHandler)
+  .delete(images.deletePhoto)
 
 // accounts table
 app
