@@ -64,17 +64,12 @@ export default class ProfileCard extends React.Component {
         }}
       >
         <View style={{ flexDirection: 'row' }}>
-        {this.props.image.includes("file") || this.props.image.includes("http") ? (
           <Image
             source={{
               uri: this.props.image,
             }}
             style={imgStyles.button}
           />
-          ) : (
-            <Image source={this.props.image} style={imgStyles.button}/>
- 
-            )} 
           <View
             style={{
               alignSelf: 'center',
