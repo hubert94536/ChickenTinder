@@ -77,8 +77,9 @@ export default class createAccount extends React.Component {
         )
       })
       .then(() => uploadApi.uploadPhoto(this.state.photoData))
-      .then(() => {
-        this.props.navigation.navigate('Home')
+      .then((url) => {
+        AsyncStorage.setItem(PHOTO, this.state.photo);
+        this.props.navigation.replace('Home')
       })
       .catch((error) => {
         if (error === 404) {
@@ -90,7 +91,7 @@ export default class createAccount extends React.Component {
   }
 
   altHandleClick() {
-    this.props.navigation.navigate('Home')
+    this.props.navigation.replace('Home')
   }
 
   uploadPhoto() {
@@ -276,9 +277,7 @@ export default class createAccount extends React.Component {
 }
 
 createAccount.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired,
-  }).isRequired,
+  navigation: PropTypes.object,
 }
 const styles = StyleSheet.create({
   button: {

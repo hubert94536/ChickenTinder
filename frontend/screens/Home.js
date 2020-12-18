@@ -71,7 +71,7 @@ class Home extends React.Component {
   }
 
   componentWillUnmount() {
-    socket.off('update')
+    // socket.off('update')
   }
 
   render() {
@@ -149,7 +149,7 @@ class Home extends React.Component {
           </TouchableHighlight>
         </View>
         <TabBar
-          goHome={() => this.props.navigation.navigate('Home')}
+          goHome={() => this.props.navigation.replace('Home')}
           goSearch={() => this.props.navigation.navigate('Search')}
           goNotifs={() => this.props.navigation.navigate('Notifications')}
           goProfile={() => this.props.navigation.navigate('Profile')}
@@ -177,9 +177,7 @@ class Home extends React.Component {
 }
 
 Home.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func,
-  }),
+  navigation: PropTypes.object,
 }
 const styles = StyleSheet.create({
   button: {

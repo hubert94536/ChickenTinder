@@ -47,7 +47,7 @@ export default class Group extends React.Component {
       host: this.props.navigation.state.params.response.host,
       hostName: members[this.props.navigation.state.params.response.host].username,
       // hostName: "NOT YOU",
-      needFilters: Object.keys(members).filter((user) => !user.filters).length,
+      needFilters: Object.keys(members).filter((user) => !user.filters).length - 1,
 
       filters: {},
       code: this.props.navigation.state.params.response.code,
@@ -90,7 +90,10 @@ export default class Group extends React.Component {
     socket.getSocket().on('start', (restaurants) => {
       // console.log('group.js: ' + JSON.stringify(restaurants))
       if (restaurants.length > 0) {
-        this.props.navigation.navigate('Round', {
+        // console.log('group.js: ' + JSON.stringify(restaurants))
+        // let x = 10 // ROUND SIZE - implement once hubert changes backend
+
+        this.props.navigation.replace('Round', {
           results: restaurants,
           host: this.state.host,
           isHost: this.state.hostName === this.state.myUsername,
@@ -164,8 +167,13 @@ export default class Group extends React.Component {
   }
 
   leaveGroup() {
-    socket.leaveRoom(this.state.code)
-    this.props.navigation.navigate('Home')
+    if (this.state.hostName === this.state.myUsername) {
+      // socket.endRound(this.state.code)
+      socket.leaveRoom(this.state.code)
+    } else {
+      socket.leaveRoom(this.state.code)
+    }
+    this.props.navigation.popToTop()
   }
 
   // shows proper alert based on if user is host

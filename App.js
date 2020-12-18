@@ -48,7 +48,7 @@ export default class App extends React.Component {
     this.state = {
       // can change to our loading screen
       appContainer: <Text />,
-    }
+    };
   }
 
   componentDidMount() {
@@ -126,6 +126,6 @@ export default class App extends React.Component {
   }
 
   render() {
-    return this.state.appContainer
+    return this.state.appContainer;
   }
 }
