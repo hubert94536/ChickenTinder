@@ -39,6 +39,7 @@ export default class UserProfileView extends Component {
       edit: false,
       changeName: false,
       changeUser: false,
+      navigation: this.props.navigation,
       // button appearance
       logout: false,
       delete: false,
@@ -241,6 +242,8 @@ export default class UserProfileView extends Component {
   }
 
   render() {
+    const {navigation} = this.state;
+    
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <View style={{ backgroundColor: 'white', height: '90%' }}>
