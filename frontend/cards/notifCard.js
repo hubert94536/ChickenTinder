@@ -167,12 +167,17 @@ export default class NotifCard extends React.Component {
           }}
           
         >
+          {this.props.image.includes("file") || this.props.image.includes("http") ? (
           <Image
             source={{
               uri: this.props.image,
             }}
             style={imgStyles.button}
           />
+          ) : (
+            <Image source={this.props.image} style={imgStyles.button}/>
+ 
+            )} 
           <View
             style={{
               alignSelf: 'center',
