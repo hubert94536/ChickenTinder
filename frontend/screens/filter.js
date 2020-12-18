@@ -83,7 +83,6 @@ export default class FilterSelector extends React.Component {
 
     this.state = {
       // Filters
-      tagsMajority: ['1'],
       distance: 5,
       zipcode: '',
       location: null,
@@ -115,8 +114,6 @@ export default class FilterSelector extends React.Component {
       // SWIPER
       swiperIndex: 0,
     }
-
-    this.updateMajorityTags()
   }
 
   // asks user for permission and get location as the component mounts
@@ -135,24 +132,7 @@ export default class FilterSelector extends React.Component {
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
       )
     }
-    this.updateMajorityTags()
   }
-
-  componentDidUpdate() {
-    this.updateMajorityTags()
-  }
-
-  updateMajorityTags() {
-    let size = this.props.members.length
-    let half = Math.ceil(size * 0.5)
-    let twoThirds = Math.ceil(size * 0.66)
-    this.state.tagsMajority = []
-    this.state.tagsMajority.push(half)
-    if (twoThirds != half) this.state.tagsMajority.push(twoThirds)
-    if (size != twoThirds) this.state.tagsMajority.push('All')
-    this.state.tagsMajority.push('Custom: ')
-  }
-
 
   //  pushes the 'subcategories' of each cusisine
   categorize(cat) {
@@ -231,7 +211,8 @@ export default class FilterSelector extends React.Component {
           break
       }
     }
-    return categories
+    if (categories.length == 0) return null
+    else return categories.toString()
   }
 
   // this will pass the filters to the groups page
@@ -245,16 +226,12 @@ export default class FilterSelector extends React.Component {
   evaluateFilters() {
     const filters = {}
     //  convert to unix time
-    const dd = date.getDate()
-    const mm = date.getMonth()
-    const yyyy = date.getFullYear()
-    const timezone = date.getTimezoneOffset()
-    const unix = Date.UTC(yyyy, mm, dd, this.state.hour, this.state.minute + timezone) / 1000
+    const unix = Math.floor(Date.now() / 1000)
     filters.open_at = unix
     filters.price = this.state.selectedPrice.map((item) => item.length).sort().toString()
     // puts the cuisine and restrictions into one array
     const selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
-    filters.categories = this.categorize(selections).toString()
+    filters.categories = this.categorize(selections)
     filters.radius = this.state.distance * 1600
     filters.majority = this.state.majority
     filters.groupSize = this.props.members.length
@@ -295,15 +272,22 @@ export default class FilterSelector extends React.Component {
     const filters = {}
     // puts the cuisine and restrictions into one array
     const selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
-    filters.categories = this.categorize(selections).toString()
-    if(filters.categories != '')
-      filters.categories += ','
+    filters.categories = this.categorize(selections)
     console.log('userfilters: ' + JSON.stringify(filters.categories))
     Socket.submitFilters(this.props.code, filters.categories)
     this.props.handleUpdate()
   }
 
   render() {
+    let tagsMajority = []
+    let size = this.props.members.length
+    let half = Math.ceil(size * 0.5)
+    let twoThirds = Math.ceil(size * 0.66)
+    tagsMajority.push(half)
+    if (twoThirds != half) tagsMajority.push(twoThirds)
+    tagsMajority.push('All')
+    tagsMajority.push('Custom: ')
+
     return (
       <View style={styles.mainContainer}>
 
@@ -335,23 +319,23 @@ export default class FilterSelector extends React.Component {
           </View>
         )}
         {!this.props.isHost && (
-        <View style={
-          styles.titleContainer,
-          {
-            flexDiretion: 'row',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }
-        }>
-          <Text
-            style={[
-              screenStyles.text,
-              styles.filterHeader,
-            ]}
-          >
-            Your Filters
+          <View style={
+            styles.titleContainer,
+            {
+              flexDiretion: 'row',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }
+          }>
+            <Text
+              style={[
+                screenStyles.text,
+                styles.filterHeader,
+              ]}
+            >
+              Your Filters
               </Text>
-        </View>
+          </View>
         )}
         <Swiper
           loop={false}
@@ -371,7 +355,7 @@ export default class FilterSelector extends React.Component {
                   <Text style={styles.filterSubtext}>Members (out of {this.props.members.length}) needed to get a match</Text>
                 </View>
                 <DynamicTags
-                  all={this.state.tagsMajority}
+                  all={tagsMajority}
                   selected={this.state.selectedMajority}
                   selectedNum={this.state.majority}
                   isExclusive={true}
@@ -422,7 +406,7 @@ export default class FilterSelector extends React.Component {
                     underlayColor={'white'}
                     onPress={() => {
                       this.setState({ chooseLocation: true })
-                      this.props.setBlur(true)    
+                      this.props.setBlur(true)
                     }}
                     style={[
                       styles.filterSubtext,
@@ -484,8 +468,8 @@ export default class FilterSelector extends React.Component {
                   <Text style={styles.filterSubtext}>Select all that apply</Text>
                 </View>
                 <TagsView
-                ACCENT_COLOR={ACCENT_COLOR}
-                TEXT_COLOR={TEXT_COLOR}
+                  ACCENT_COLOR={ACCENT_COLOR}
+                  TEXT_COLOR={TEXT_COLOR}
                   all={tagsPrice}
                   selected={this.state.selectedPrice}
                   isExclusive={false}
@@ -515,7 +499,7 @@ export default class FilterSelector extends React.Component {
                     backgroundColor={!this.state.asap ? ACCENT_COLOR : BACKGROUND_COLOR}
                     textColor={!this.state.asap ? BACKGROUND_COLOR : ACCENT_COLOR}
                     borderColor={BORDER_COLOR}
-                    onPress={() => { 
+                    onPress={() => {
                       this.setState({ chooseTime: true, asap: false })
                       this.props.setBlur(true)
                     }}
@@ -539,6 +523,11 @@ export default class FilterSelector extends React.Component {
                 isExclusive={false}
                 onChange={(event) => this.setState({ selectedCuisine: event })}
               />
+
+            </View>
+
+            {/* DIETARY RESTRICTIONS */}
+            <View style={styles.filterGroupContainer}>
               <View style={{ flexDirection: 'row' }}>
                 <Text style={[screenStyles.text, styles.filterTitleText]}>Dietary Restrictions</Text>
                 <Text style={styles.filterSubtext}>Select all that apply</Text>
@@ -551,11 +540,6 @@ export default class FilterSelector extends React.Component {
                 onChange={(event) => this.setState({ selectedRestriction: event })}
               />
             </View>
-
-            {/* DIETARY RESTRICTIONS
-            <View style={styles.filterGroupContainer}>
-              
-            </View> */}
           </View>
         </Swiper>
         {/* ------------------------------------------ALERTS------------------------------------------ */}
@@ -715,6 +699,7 @@ const styles = StyleSheet.create({
     marginLeft: '5%',
     marginRight: '5%',
     flex: 1,
+    flexGrow: 2,
     flexDirection: 'column',
     justifyContent: 'flex-start',
   },
