@@ -35,14 +35,14 @@ export default class ChooseFriends extends React.Component {
   }
 
   //  gets your friends
-  async getFriends(id) {
+  getFriends(id) {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
       .getFriends(id)
       .then((res) => {
         let pushFriends = []
         for (var friend in res.friendList) {
-          if (res.friendList[friend].status === 'Accepted') {
+          if (res.friendList[friend].status === 'friends') {
             if (
               this.props.members.some(
                 (member) => member.username === res.friendList[friend].username,
@@ -134,7 +134,7 @@ export default class ChooseFriends extends React.Component {
                 <ChooseCard
                   name={item.name}
                   username={item.username}
-                  image={item.image}
+                  image={item.photo}
                   added={false}
                 />
               )}
