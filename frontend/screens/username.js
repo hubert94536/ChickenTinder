@@ -61,7 +61,7 @@ class Username extends React.Component {
             this.state.photo,
           )
           .then(() => {
-            this.props.navigation.navigate('Home')
+            this.props.navigation.popToTop()
           })
       })
       .catch((error) => {

@@ -9,7 +9,6 @@ import RoundCard from '../cards/roundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Tooltip from 'react-native-walkthrough-tooltip'
-import getCuisine from '../assets/cards/foodImages.js'
 
 export default class Round extends React.Component {
   constructor(props) {
@@ -30,16 +29,13 @@ export default class Round extends React.Component {
           break
         }
       }
-      this.props.navigation.navigate('Match', {
+      this.props.navigation.replace('Match', {
         restaurant: res,
         host: this.state.host,
         code: this.props.navigation.state.params.code,
         isHost: this.state.isHost,
       })
     })
-    for (var i = 0; i < this.state.results.length; i++) {
-      this.state.results[i] = getCuisine(this.state.results[i])
-    }
   }
 
   likeRestaurant(resId) {
@@ -48,6 +44,7 @@ export default class Round extends React.Component {
 
   componentDidMount() {
     this._isMounted = true
+    // console.log('round.js: ' + JSON.stringify(this.props.navigation.state.params.code))
     // console.log('round.js ' + JSON.stringify(this.state.results))
   }
 
@@ -64,7 +61,7 @@ export default class Round extends React.Component {
 
   leaveGroup() {
     socket.leaveRoom(this.props.navigation.state.params.code)
-    this.props.navigation.navigate('Home')
+    this.props.navigation.popToTop()
   }
 
   render() {
@@ -80,7 +77,11 @@ export default class Round extends React.Component {
             stackSize={3}
             disableBottomSwipe
             disableTopSwipe
-            onSwiped={() => this.setState({ index: this.state.index + 1 })}
+            onSwiped={() => {
+              if (this.state.index !== 10) {
+                this.setState({ index: this.state.index + 1 })
+              }
+            }}
             onSwipedRight={(cardIndex) => {
               this.likeRestaurant(this.state.results[cardIndex].id)
             }}
@@ -88,15 +89,12 @@ export default class Round extends React.Component {
               //let backend know you're done
               socket.finishedRound(this.props.navigation.state.params.code)
               //go to the loading page
-              this.props.navigation.navigate('Loading', {
+              this.props.navigation.replace('Loading', {
                 restaurant: this.state.results,
                 host: this.state.host,
                 code: this.props.navigation.state.params.code,
                 isHost: this.state.isHost,
               })
-            }}
-            onSwipedRight={(cardIndex) => {
-              this.likeRestaurant(this.state.results[cardIndex].id)
             }}
             stackSeparation={0}
             backgroundColor="transparent"

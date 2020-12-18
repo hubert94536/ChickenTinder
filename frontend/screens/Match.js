@@ -22,17 +22,17 @@ export default class Match extends React.Component {
       host: this.props.navigation.state.params.host,
       code: this.props.navigation.state.params.code,
     }
+    console.log(this.props.navigation.state.params.restaurant)
   }
 
   endRound() {
     const { navigation, code } = this.state
-    navigation.navigate('Home')
+    navigation.popToTop()
     socket.leaveRoom(code)
   }
 
   componentDidMount() {
     this._isMounted = true
-    console.log(this.state.restaurant)
   }
 
   componentWillUnmount() {
@@ -102,7 +102,7 @@ Match.propTypes = {
     navigate: PropTypes.func,
     state: PropTypes.shape({
       params: PropTypes.shape({
-        restaurant: PropTypes.array.isRequired,
+        restaurant: PropTypes.object,
         host: PropTypes.string,
         code: PropTypes.number,
       }),
