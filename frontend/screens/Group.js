@@ -1,0 +1,662 @@
+import React from 'react'
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
+  Dimensions,
+} from 'react-native'
+import { BlurView } from '@react-native-community/blur'
+import Clipboard from '@react-native-community/clipboard'
+// import { USERNAME } from 'react-native-dotenv'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import PropTypes from 'prop-types'
+import Drawer from './Drawer.js'
+import Alert from '../modals/alert.js'
+import GroupCard from '../cards/groupCard.js'
+import ChooseFriends from '../modals/chooseFriends.js'
+import FilterSelector from './filter.js'
+import socket from '../apis/socket.js'
+import screenStyles from '../../styles/screenStyles.js'
+import modalStyles from '../../styles/modalStyles.js'
+
+const hex = '#F15763'
+
+const font = 'CircularStd-Medium'
+let memberList = []
+let memberRenderList = []
+
+const windowWidth = Dimensions.get('window').width
+const windowHeight = Dimensions.get('window').height
+
+export default class Group extends React.Component {
+  constructor(props) {
+    super(props)
+    this._isMounted = false
+    const members = this.props.navigation.state.params.response.members
+    this.filterRef = React.createRef()
+    this.state = {
+      myUsername: this.props.navigation.state.params.username,
+      // Group data
+      // Member Dictionary
+      members: members,
+
+      host: this.props.navigation.state.params.response.host,
+      hostName: members[this.props.navigation.state.params.response.host].username,
+      // hostName: "NOT YOU",
+      needFilters: Object.keys(members).filter((user) => !user.filters).length,
+
+      filters: {},
+      code: this.props.navigation.state.params.response.code,
+
+      // UI state
+      canStart: false,
+      userSubmitted: false,
+      blur: false,
+
+      // Modal visibility vars
+      leaveAlert: false,
+      endAlert: false,
+      chooseFriends: false,
+    }
+
+    this.updateMemberList()
+
+    // listens if user is to be kicked
+    socket.getSocket().on('kick', () => {
+      this.leaveGroup()
+    })
+
+    // listens for group updates
+    socket.getSocket().on('update', (res) => {
+      // console.log('group.js: update')
+      console.log('socket "update": ' + JSON.stringify(res))
+      this.setState({
+        members: res.members,
+        host: res.host,
+        hostName: res.members[res.host].username,
+        code: res.code,
+      })
+
+      const count = this.countNeedFilters(res.members)
+      this.setState({ needFilters: count })
+      if (!count) {
+        this.setState({ canStart: true })
+      }
+      this.updateMemberList()
+    })
+
+    socket.getSocket().on('start', (restaurants) => {
+      if (restaurants.length > 0) {
+        // console.log('group.js: ' + JSON.stringify(restaurants))
+        // let x = 10 // ROUND SIZE - implement once hubert changes backend
+
+        this.props.navigation.replace('Round', {
+          results: restaurants,
+          host: this.state.host,
+          isHost: this.state.hostName === this.state.myUsername,
+          code: this.state.code,
+        })
+      } else {
+        console.log('group.js: no restaurants found')
+        // need to handle no restaurants returned
+      }
+    })
+
+    socket.getSocket().on('leave', () => {
+      this.leaveGroup()
+    })
+
+    socket.getSocket().on('exception', (error) => {
+      if (this._isMounted) {
+        console.log(error)
+      }
+    })
+  }
+
+  blur(isBlurred) {
+    this.setState({ blur: isBlurred })
+  }
+
+  setUserSubmit() {
+    this.setState({ userSubmitted: true })
+  }
+
+  // counts number of users who haven't submitted filters
+  countNeedFilters(users) {
+    let count = 0
+    // console.log('countNeedFilters: ' + JSON.stringify(users))
+    for (const user in users) {
+      if (!users[user].filters) {
+        count++
+      }
+    }
+    return count
+  }
+
+  // pings server to fetch restaurants, start session
+  start() {
+    // this.filterRef.current.setState({ locationAlert: true })
+    // console.log('start pressed')
+    this.filterRef.current.startSession()
+  }
+
+  // update user cards in group
+  updateMemberList() {
+    memberList = []
+    memberRenderList = []
+    for (const user in this.state.members) {
+      const a = {}
+      a.name = this.state.members[user].name
+      a.username = this.state.members[user].username
+      a.user = user
+      a.photo = this.state.members[user].photo
+      a.filters = this.state.members[user].filters
+      a.host = this.state.host
+      a.isHost = this.state.hostName == this.state.myUsername
+      a.key = user
+      memberList.push(a)
+      a.f = false
+      memberRenderList.push(a)
+    }
+    const footer = {}
+    footer.f = true
+    memberRenderList.push(footer)
+  }
+
+  leaveGroup() {
+    if (this.state.hostName === this.state.myUsername) {
+      // socket.endRound(this.state.code)
+      socket.leaveRoom(this.state.code)
+    } else {
+      socket.leaveRoom(this.state.code)
+    }
+    this.props.navigation.pop()
+  }
+
+  // shows proper alert based on if user is host
+  cancelAlert() {
+    this.state.hostName === this.state.myUsername
+      ? this.setState({ endAlert: false })
+      : this.setState({ leaveAlert: false })
+  }
+
+  // _handleChooseFriendsPress() {
+  //   console.log('added')
+  //   // add code to close choose friend modal
+  // }
+
+  componentDidMount() {
+    // console.log('Group - DidMount')
+    // console.log('Group.js: nav params ' + JSON.stringify(this.props.navigation.state.params))
+    this.setState({ _isMounted: true })
+  }
+
+  componentWillUnmount() {
+    // console.log('Group - WillUnmount')
+    this.setState({ _isMounted: false })
+    // Todo - potentially add leave group?
+  }
+
+  firstName(str) {
+    const first_sp = str.indexOf(' ')
+    return str.substr(0, first_sp)
+  }
+
+  copyToClipboard() {
+    Clipboard.setString(this.state.code.toString())
+  }
+
+  render() {
+    this.updateMemberList()
+    return (
+      <View style={{ backgroundColor: '#FFF' }}>
+        <View style={[styles.top, styles.floating]}>
+          <View
+            style={{
+              alignSelf: 'center',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              backgroundColor: hex,
+              height: 120,
+              width: '100%',
+              paddingBottom: 20,
+            }}
+          >
+            <Text style={styles.groupTitle}>
+              {this.state.hostName === this.state.myUsername
+                ? 'Your Group'
+                : `${this.firstName(this.state.members[this.state.host].name)}'s Group`}
+            </Text>
+            <View style={styles.subheader}>
+              <Text style={styles.pinText}>Group PIN: </Text>
+              <Text style={styles.codeText}>{this.state.code + ' '}</Text>
+              <TouchableOpacity
+                style={{
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  width: 15,
+                  height: 15,
+                }}
+                onPress={() => this.copyToClipboard()}
+              >
+                <Ionicons name="copy-outline" style={styles.copyIcon} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+        <Drawer
+          style={styles.drawer}
+          initialDrawerPos={100}
+          renderContainerView={() => (
+            <View style={styles.main}>
+              <View style={[styles.center, { flexDirection: 'row' }]}>
+                <Icon name="user" style={[styles.icon, { color: '#F15763' }]} />
+                <Text
+                  style={{
+                    color: '#F15763',
+                    fontWeight: 'bold',
+                    fontFamily: font,
+                  }}
+                >
+                  {memberList.length}
+                </Text>
+                <Text style={[styles.divider, { color: '#F15763' }]}>|</Text>
+                <Text style={[styles.waiting, { color: '#F15763' }]}>
+                  waiting for {this.state.needFilters} member filters
+                </Text>
+              </View>
+              <FlatList
+                style={[styles.center, { marginTop: 0, height: 0.5 * windowHeight }]}
+                numColumns={2}
+                ListHeaderComponentStyle={{
+                  color: '#F15763',
+                  marginBottom: 10,
+                }}
+                data={memberRenderList}
+                contentContainerStyle={[styles.memberContainer]}
+                renderItem={({ item }) => {
+                  if (item.f) {
+                    return (
+                      <View>
+                        <TouchableHighlight
+                          style={{
+                            backgroundColor: '#DCDCDC',
+                            borderRadius: 7,
+                            alignSelf: 'center',
+                            width: 170,
+                            height: 35,
+                            padding: 0,
+                            margin: 5,
+                          }}
+                          onPress={() => this.setState({ chooseFriends: true })}
+                        >
+                          <Text
+                            style={{
+                              color: 'black',
+                              textAlign: 'center',
+                              width: '100%',
+                              lineHeight: 36,
+                            }}
+                          >
+                            + Add Friends
+                          </Text>
+                        </TouchableHighlight>
+                        <View
+                          style={{
+                            width: 170,
+                            height: 30,
+                            padding: 0,
+                            margin: 5,
+                            display: 'none',
+                          }}
+                        >
+                          <Text>footer</Text>
+                        </View>
+                      </View>
+                    )
+                  } else {
+                    return (
+                      <GroupCard
+                        name={item.name}
+                        username={item.username}
+                        // Placeholder image for null image
+                        image={item.photo == '' ? 'https://via.placeholder.com/150' : item.photo}
+                        filters={item.filters}
+                        host={this.state.host}
+                        isHost={this.state.hostName == item.username}
+                        key={item.key}
+                        style={{ width: 170 }}
+                      />
+                    )
+                  }
+                }}
+                keyExtractor={(item, index) => index}
+              />
+
+              {/* =====================================BOTTOM===================================== */}
+              {this.state.leaveAlert && (
+                <Alert
+                  title="Leave?"
+                  body="You will will not be able to return without an invite"
+                  buttonAff="Yes"
+                  height="20%"
+                  press={() => this.leaveGroup()}
+                  cancel={() => this.cancelAlert()}
+                />
+              )}
+              {this.state.endAlert && (
+                <Alert
+                  title="End the session?"
+                  body="You will not be able to return"
+                  buttonAff="Yes"
+                  height="20%"
+                  press={() => this.leaveGroup()}
+                  cancel={() => this.cancelAlert()}
+                />
+              )}
+              {this.state.chooseFriends && (
+                <BlurView
+                  blurType="dark"
+                  blurAmount={10}
+                  reducedTransparencyFallbackColor="white"
+                  style={modalStyles.blur}
+                />
+              )}
+              <ChooseFriends
+                code={this.props.navigation.state.params.response.code}
+                visible={this.state.chooseFriends}
+                members={memberList}
+                press={() => this.setState({ chooseFriends: false })}
+              />
+            </View>
+          )}
+          objectHeight={this.state.hostName == this.state.myUsername ? 400 : 350}
+          offset={120}
+          renderDrawerView={() => (
+            <View>
+              <View>
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    width: windowWidth,
+                    height: this.state.hostName == this.state.myUsername ? 400 : 350,
+                    zIndex: 30,
+                    elevation: 30,
+                    // borderColor: '#F15763',
+                    // borderWidth: 1,
+                  }}
+                >
+                  <FilterSelector
+                    host={this.state.host}
+                    isHost={this.state.hostName == this.state.myUsername}
+                    handleUpdate={() => this.setUserSubmit()}
+                    members={memberList}
+                    ref={this.filterRef}
+                    code={this.state.code}
+                    setBlur={(res) => this.blur(res)}
+                    style={{ elevation: 31 }}
+                  />
+                </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                }}
+              >
+                <View
+                  style={{
+                    color: 'white',
+                    fontFamily: font,
+                    height: 30,
+                    backgroundColor: 'white',
+                    padding: 15,
+                    paddingTop: 25,
+                    borderBottomLeftRadius: 15,
+                    borderBottomRightRadius: 15,
+                    // borderColor: '#F15763',
+                    // borderWidth: 1,
+                    flexDirection: 'column',
+                    justifyContent: 'flex-end',
+                    zIndex: 30,
+                    elevation: 30,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: '#F15763',
+                      fontFamily: font,
+                      fontSize: 11,
+                    }}
+                  >
+                    {this.state.myUsername === this.state.hostName
+                      ? 'Pull down for host menu'
+                      : 'Pull down to set filters'}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          )}
+        />
+        <View style={styles.bottom}>
+          <Text style={styles.bottomText}>
+            When everyone has submitted filters, the round will begin!
+          </Text>
+          <View>
+            {this.state.hostName === this.state.myUsername && (
+              <TouchableHighlight
+                underlayColor="#F15763"
+                activeOpacity={1}
+                onPress={() => this.start()}
+                style={[
+                  screenStyles.bigButton,
+                  styles.bigButton,
+                  this.state.canStart ? { opacity: 0.75 } : { opacity: 1 },
+                ]}
+              >
+                {/* TODO: Change text if required options have not been set */}
+                <Text style={styles.buttonText}>Start Round</Text>
+              </TouchableHighlight>
+            )}
+            {this.state.hostName !== this.state.myUsername && (
+              <TouchableHighlight
+                style={[
+                  screenStyles.bigButton,
+                  styles.bigButton,
+                  !this.state.userSubmitted ? { opacity: 1 } : { opacity: 0.4 },
+                ]}
+                onPress={() => {
+                  if (!this.state.userSubmitted) this.filterRef.current.submitUserFilters()
+                }}
+              >
+                <Text style={styles.buttonText}>
+                  {!this.state.userSubmitted ? 'Submit Filters' : 'Waiting...'}
+                </Text>
+              </TouchableHighlight>
+            )}
+          </View>
+          <TouchableHighlight
+            style={styles.leave}
+            activeOpacity={1}
+            onPress={() => {
+              // console.log('left')
+              this.state.hostName === this.state.myUsername
+                ? this.setState({ endAlert: true })
+                : this.setState({ leaveAlert: true })
+            }}
+            underlayColor="white"
+          >
+            <Text
+              style={[
+                styles.leaveText,
+                this.state.leaveGroup ? { color: hex } : { color: '#6A6A6A' },
+              ]}
+            >
+              {this.state.hostName === this.state.myUsername ? 'Cancel Group' : 'Leave Group'}
+            </Text>
+          </TouchableHighlight>
+        </View>
+        {this.state.blur && (
+          <BlurView
+            blurType="dark"
+            blurAmount={5}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
+      </View>
+    )
+  }
+}
+
+Group.propTypes = {
+  navigation: PropTypes.object,
+  members: PropTypes.array,
+  host: PropTypes.string,
+}
+
+const styles = StyleSheet.create({
+  // Containers
+  main: {
+    marginTop: 35,
+    flexDirection: 'column',
+    height: '100%',
+    flex: 1,
+    backgroundColor: 'white',
+    color: '#aaa',
+  },
+  groupTitle: {
+    color: '#fff',
+    fontSize: 30,
+    marginTop: '7%',
+    fontWeight: 'bold',
+    fontFamily: font,
+    alignSelf: 'center',
+  },
+  leave: {
+    alignSelf: 'center',
+    marginTop: '1%',
+    borderRadius: 25,
+    width: '55%',
+  },
+  leaveText: {
+    fontFamily: font,
+    textAlign: 'center',
+    fontSize: 16,
+    paddingTop: '2%',
+    paddingBottom: '2%',
+  },
+  icon: {
+    color: '#aaa',
+    marginLeft: '5%',
+    marginTop: '2%',
+    fontSize: 30,
+  },
+  divider: {
+    color: '#aaa',
+    alignSelf: 'center',
+    marginLeft: '3%',
+    fontSize: 25,
+    fontFamily: font,
+  },
+  waiting: {
+    color: '#aaa',
+    marginLeft: '3%',
+    alignSelf: 'center',
+    fontFamily: font,
+  },
+  button: {
+    borderRadius: 25,
+    borderWidth: 2.5,
+    borderColor: '#aaa',
+    paddingVertical: 5,
+    paddingHorizontal: 8,
+    width: '30%',
+    alignSelf: 'center',
+    alignContent: 'center',
+    marginTop: '3%',
+  },
+  buttonText: {
+    color: '#fff',
+    alignSelf: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  bottomText: {
+    color: '#aaa',
+    width: '70%',
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontFamily: font,
+  },
+  bigButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 4,
+    width: '50%',
+    marginTop: '3%',
+    backgroundColor: '#F15763',
+  },
+  top: {
+    backgroundColor: '#fff',
+    top: 0,
+  },
+  center: {
+    margin: 15,
+    marginLeft: 25,
+    marginRight: 25,
+  },
+  bottom: {
+    position: 'absolute',
+    bottom: '0%',
+    left: 0,
+    right: 0,
+    flexDirection: 'column',
+    color: '#aaa',
+  },
+  memberContainer: {
+    width: '100%',
+  },
+  subheader: {
+    color: '#FFF',
+    marginTop: 5,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
+  pinText: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: 'normal',
+    fontFamily: font,
+    alignSelf: 'center',
+  },
+  codeText: {
+    color: '#ffffff',
+    fontFamily: font,
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+  copyIcon: {
+    color: '#fff',
+    fontSize: 15,
+    marginLeft: '7%',
+  },
+  drawer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
+  floating: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    zIndex: 20,
+    elevation: 20,
+  },
+})

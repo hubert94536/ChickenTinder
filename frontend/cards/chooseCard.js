@@ -31,7 +31,7 @@ export default class ChooseCard extends React.Component {
           source={{
             uri: this.props.image,
           }}
-          style={imgStyles.button}
+          style={[imgStyles.button, { marginTop: '3%' }]}
         />
         <View
           style={{
@@ -40,7 +40,9 @@ export default class ChooseCard extends React.Component {
             flex: 1,
           }}
         >
-          <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
+          <Text style={{ fontFamily: font, fontWeight: 'bold', fontSize: 15 }}>
+            {this.props.name}
+          </Text>
           <Text style={{ fontFamily: font, color: hex }}>@{this.props.username}</Text>
         </View>
         {this.state.added && (

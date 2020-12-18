@@ -1,41 +1,46 @@
+/* eslint-disable no-unused-vars */
 import React from 'react'
 import { Text, View } from 'react-native'
 import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
 import { createAppContainer } from 'react-navigation'
 import firebase from 'firebase'
-import createAccount from './frontend/screens/createAccount.js'
-import Group from './frontend/screens/group.js'
-import Home from './frontend/screens/home.js'
-import Invite from './frontend/modals/invite.js'
+import Group from './frontend/screens/Group.js'
+import Home from './frontend/screens/Home.js'
+// import Invite from './frontend/modals/invite.js'
 import Login from './frontend/screens/login.js'
-import Match from './frontend/screens/match.js'
+import Match from './frontend/screens/Match.js'
 import Notif from './frontend/screens/notif.js'
 import Round from './frontend/screens/round.js'
 import Search from './frontend/screens/search.js'
 import Username from './frontend/screens/username.js'
 import UserProfileView from './frontend/screens/profile.js'
 import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
-// import TabBar from './frontend/nav.js'
-import AsyncStorage from '@react-native-community/async-storage'
-import { ID, REGISTRATION_TOKEN } from 'react-native-dotenv'
-import PushNotification from 'react-native-push-notification'
+import Loading from './frontend/screens/loading.js'
+import TabBar from './frontend/nav.js'
+import TopThree from './frontend/screens/TopThree.js'
+import CreateAccount from './frontend/screens/createAccount.js'
+import PropTypes from 'prop-types'
 
-// class Notifications extends React.Component {
-//   render() {
-//     return (
-//       <View style={{flex: 1,justifyContent: 'center', alignItems: 'center',}}>
-//         <Text>Notifications</Text>
-//         <TabBar
-//           goHome={() => this.props.navigation.navigate('Home')}
-//           goSearch={() => this.props.navigation.navigate('Search')}
-//           goNotifs={() => this.props.navigation.navigate('Notifications')}
-//           goProfile={() => this.props.navigation.navigate('Profile')}
-//           cur='Notifs'
-//         />
-//       </View>
-//     )
-//   }
-// }
+class Notifications extends React.Component {
+  render() {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Notifications</Text>
+        <TabBar
+          goHome={() => this.props.navigation.navigate('Home')}
+          goSearch={() => this.props.navigation.navigate('Search')}
+          goNotifs={() => this.props.navigation.navigate('Notifications')}
+          goProfile={() => this.props.navigation.navigate('Profile')}
+          cur="Notifs"
+        />
+      </View>
+    )
+  }
+}
+
+Notifications.propTypes = {
+  navigation: PropTypes.object,
+}
 
 export default class App extends React.Component {
   constructor() {
@@ -132,9 +137,6 @@ export default class App extends React.Component {
           Login: {
             screen: Login,
           },
-          createAccount: {
-            screen: createAccount,
-          },
           Username: {
             screen: Username,
           },
@@ -163,10 +165,19 @@ export default class App extends React.Component {
             screen: PhoneAuthScreen,
           },
           Notifications: {
-            screen: Notif,
+            screen: Notifications,
             navigationOptions: {
               animationEnabled: false,
             },
+          },
+          Loading: {
+            screen: Loading,
+          },
+          CreateAccount: {
+            screen: CreateAccount,
+          },
+          TopThree: {
+            screen: TopThree,
           },
         },
         {

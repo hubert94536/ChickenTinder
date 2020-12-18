@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import Alert from '../modals/alert.js'
 import accountsApi from '../apis/accountsApi.js'
 import screenStyles from '../../styles/screenStyles.js'
+import PropTypes from 'prop-types'
 
 const hex = '#F15763'
 
@@ -60,7 +61,7 @@ class Username extends React.Component {
             this.state.photo,
           )
           .then(() => {
-            this.props.navigation.navigate('Home')
+            this.props.navigation.popToTop()
           })
       })
       .catch((error) => {
@@ -76,7 +77,7 @@ class Username extends React.Component {
     return (
       <View style={styles.mainContainer}>
         <Text style={[screenStyles.text, screenStyles.title, styles.header]}>
-          'Chews' a username!
+          &aposChews&apos a username!
         </Text>
         <View style={{ marginTop: '35%' }}>
           <TextInput
@@ -131,6 +132,10 @@ class Username extends React.Component {
       </View>
     )
   }
+}
+
+Username.propTypes = {
+  navigation: PropTypes.object,
 }
 
 const styles = StyleSheet.create({

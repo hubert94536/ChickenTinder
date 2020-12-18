@@ -7,6 +7,8 @@ export default StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+    zIndex: 99,
+    elevation: 99,
   },
   icon: {
     fontFamily: 'CircularStd-Medium',
@@ -21,7 +23,8 @@ export default StyleSheet.create({
     backgroundColor: 'white',
     alignSelf: 'center',
     borderRadius: 15,
-    elevation: 20,
+    zIndex: 100,
+    elevation: 100,
     margin: '50%',
   },
   text: {

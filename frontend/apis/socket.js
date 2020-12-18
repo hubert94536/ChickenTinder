@@ -1,34 +1,29 @@
-import { USERNAME, NAME, PHOTO, ID } from 'react-native-dotenv'
-import AsyncStorage from '@react-native-community/async-storage'
 import io from 'socket.io-client'
 
-var myUsername = ''
-var myPhoto = ''
-var myName = ''
 var myId = ''
+var myName = ''
+var myPhoto = ''
+var myUsername = ''
 var socket = null
 
-AsyncStorage.multiGet([USERNAME, NAME, PHOTO, ID]).then((res) => {
-  myUsername = res[0][1]
-  myName = res[1][1]
-  myPhoto = res[2][1]
-  myId = res[3][1]
-})
-
-const connect = () => {
+const connect = (id, name, photo, username) => {
+  myId = id
+  myName = name
+  myPhoto = photo
+  myUsername = username
   socket = io('https://wechews.herokuapp.com', {
     query: `id=${myId}`,
   })
 }
 // uncomment below if testing on local server
 /* const connect = () => {
-   socket = io('http://192.168.0.23:5000', {
+   socket = io('http://172.16.0.10:5000', {
      query: `username=${myUsername}`,
    })
 } */
 
 const createRoom = () => {
-  socket.emit('createRoom', {
+  socket.emit('create', {
     id: myId,
     name: myName,
     username: myUsername,
@@ -49,7 +44,7 @@ const sendInvite = (receiver, code) => {
 }
 
 const joinRoom = (code) => {
-  socket.emit('joinRoom', {
+  socket.emit('join', {
     id: myId,
     name: myName,
     username: myUsername,
@@ -78,7 +73,7 @@ const startSession = (code, filters) => {
 
 // submit categories array (append a ',' at end)
 const submitFilters = (code, categories) => {
-  socket.emit('submitFilters', {
+  socket.emit('submit', {
     code: code,
     categories: categories,
     id: myId,
@@ -92,12 +87,17 @@ const likeRestaurant = (code, resId) => {
 
 // let everyone know you are done swiping
 const finishedRound = (code) => {
-  socket.emit('final', { code: code, id: myId })
+  socket.emit('finished', { code: code, id: myId })
 }
 
-// randomize the restaurant chosen
-const randomize = (code) => {
-  socket.emit('choose', { code: code })
+// send chosen restaurant
+const choose = (code, index) => {
+  socket.emit('choose', { code: code, index: index })
+}
+
+// end session
+const endRound = (code) => {
+  socket.emit('end', { code: code })
 }
 
 const getSocket = () => {
@@ -116,5 +116,6 @@ export default {
   submitFilters,
   likeRestaurant,
   getSocket,
-  randomize
+  choose,
+  endRound,
 }

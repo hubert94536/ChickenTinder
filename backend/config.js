@@ -1,7 +1,6 @@
-const pg = require('pg')
+// const pg = require('pg')
 const { promisify } = require('util')
 const redis = require('redis')
-
 const { Sequelize } = require('sequelize')
 
 // configuration for database
@@ -26,10 +25,12 @@ const sequelize = new Sequelize(config)
 //         console.log(err)
 //     }
 //     client.on('notification', (msg) => {
-//       console.log('hi')
+//       console.log(JSON.parse(msg.payload))
 //     })
+//     client.query('LISTEN notifications')
 //   })
 // const redisClient = redis.createClient('redis://localhost:6379')
+
 const redisClient = redis.createClient({
   host: process.env.REDIS_HOST,
   port: process.env.REDIS_PORT,
@@ -37,5 +38,6 @@ const redisClient = redis.createClient({
 })
 const hgetAll = promisify(redisClient.hgetall).bind(redisClient)
 const sendCommand = promisify(redisClient.send_command).bind(redisClient)
+const hmset = promisify(redisClient.hmset).bind(redisClient)
 
-module.exports = { sequelize, hgetAll, sendCommand, redisClient }
+module.exports = { sequelize, hgetAll, sendCommand, redisClient, hmset }

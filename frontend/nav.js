@@ -11,28 +11,6 @@ export default class TabBar extends React.Component {
   render() {
     return (
       <View style={styles.bar}>
-<<<<<<< HEAD
-        <Icon
-          name="home"
-          style={{ color: this.props.cur === 'Home' ? hex : '#8d8d8d', fontSize: 26 }}
-          onPress={() => this.props.goHome()}
-        />
-        <Icon
-          name="search"
-          style={{ color: this.props.cur === 'Search' ? hex : '#8d8d8d', fontSize: 26 }}
-          onPress={() => this.props.goSearch()}
-        />
-        <Icon
-          name="bullhorn"
-          style={{ color: this.props.cur === 'Notifs' ? hex : '#8d8d8d', fontSize: 26 }}
-          onPress={() => this.props.goNotifs()}
-        />
-        <Icon
-          name="user"
-          style={{ color: this.props.cur === 'Profile' ? hex : '#8d8d8d', fontSize: 26 }}
-          onPress={() => this.props.goProfile()}
-        />
-=======
         <TouchableHighlight
           onPress={() => this.props.goHome()}
           style={{ width: '10%' }}
@@ -73,7 +51,6 @@ export default class TabBar extends React.Component {
             style={{ color: this.props.cur === 'Profile' ? hex : '#8d8d8d', fontSize: 26 }}
           />
         </TouchableHighlight>
->>>>>>> eba913259aa3bd98b1dd99a1145586158356bbff
       </View>
     )
   }
@@ -86,7 +63,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     height: height * 0.07,
     backgroundColor: '#fff2f2',
-    justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
     elevation: 20,

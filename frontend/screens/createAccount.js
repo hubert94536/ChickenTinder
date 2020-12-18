@@ -7,6 +7,7 @@ import screenStyles from '../../styles/screenStyles.js'
 import PropTypes from 'prop-types'
 import ImagePicker from 'react-native-image-crop-picker'
 import defImages from '../assets/images/foodImages.js'
+import uploadApi from '../apis/uploadApi.js'
 
 const hex = '#F15763'
 const textColor = '#6A6A6A'
@@ -22,25 +23,24 @@ export default class createAccount extends React.Component {
       username: '',
       phone: '',
       email: '',
-      id: 22,
-      photo: null,
+      id: '',
+      photo: '',
       defImg: '',
       defImgInd: 0,
     }
   }
 
-  async componentDidMount() {
-    // accountsApi.deleteUser()
-
+  componentDidMount() {
     var index = Math.floor(Math.random() * defImages.length)
-    this.setState({
-      name: await AsyncStorage.getItem(NAME),
-      id: await AsyncStorage.getItem(ID),
-      email: await AsyncStorage.getItem(EMAIL),
-      // photo: await AsyncStorage.getItem(PHOTO),
-      phone: await AsyncStorage.getItem(PHONE),
-      defImg: defImages[index],
-      defImgInd: index,
+    AsyncStorage.multiGet([EMAIL, ID, NAME, PHONE]).then((res) => {
+      this.setState({
+        email: res[0][1],
+        id: res[1][1],
+        name: res[2][1],
+        phone: res[3][1],
+        defImg: defImages[index],
+        defImgInd: index,
+      })
     })
     AsyncStorage.setItem(DEFPHOTO, this.state.defImgInd.toString())
   }
@@ -50,25 +50,26 @@ export default class createAccount extends React.Component {
     accountsApi
       .checkUsername(this.state.username)
       .then(() => {
-        AsyncStorage.setItem(USERNAME, this.state.username)
-        AsyncStorage.setItem(PHOTO, this.state.photo)
-        AsyncStorage.setItem(NAME, this.state.name)
-        AsyncStorage.setItem(EMAIL, this.state.email)
-        // AsyncStorage.setItem(ID, this.state.id)
-        AsyncStorage.setItem(PHONE, this.state.phone)
-        AsyncStorage.setItem(DEFPHOTO, this.state.defImgInd.toString())
-
-        return accountsApi
-          .createFBUser(
-            this.state.name,
-            this.state.id,
-            this.state.username,
-            this.state.email,
-            this.state.photo,
-          )
-          .then(() => {
-            this.props.navigation.navigate('Home')
-          })
+        AsyncStorage.multiSet([
+          [USERNAME, this.state.username],
+          [PHOTO, this.state.photo],
+          [NAME, this.state.name],
+          [EMAIL, this.state.email],
+          [ID, this.state.id],
+          [PHONE, this.state.phone],
+          [DEFPHOTO, this.state.defImgInd.toString()],
+        ])
+        return accountsApi.createFBUser(
+          this.state.name,
+          this.state.id,
+          this.state.username,
+          this.state.email,
+          this.state.photo,
+        )
+      })
+      .then(() => uploadApi.uploadPhoto(this.state.photoData))
+      .then(() => {
+        this.props.navigation.replace('Home')
       })
       .catch((error) => {
         if (error === 404) {
@@ -80,19 +81,29 @@ export default class createAccount extends React.Component {
   }
 
   altHandleClick() {
-    this.props.navigation.navigate('Home')
+    this.props.navigation.replace('Home')
   }
 
   uploadPhoto() {
     ImagePicker.openPicker({
-      width: 400,
-      height: 400,
+      width: 150,
+      height: 150,
       cropping: true,
-    }).then((image) => {
-      //do something with the image
-      this.setState({ photo: image.path })
     })
-    console.log('upload photo')
+      .then((image) => {
+        this.setState({
+          photo: image.path,
+          photoData: {
+            uri: image.path,
+            type: image.mime,
+            name: 'avatar',
+          },
+        })
+      })
+      .catch((error) => {
+        // handle this later on
+        console.log(error)
+      })
   }
 
   render() {
@@ -116,18 +127,17 @@ export default class createAccount extends React.Component {
         <Text style={[styles.mediumText]}>Account Verified!</Text>
         <Text style={[styles.mediumText]}>Finish setting up your account</Text>
 
-        {this.state.photo == null && (
-          <Image source={this.state.defImg} style={screenStyles.avatar} />
-        )}
-
-        {this.state.photo != null && (
+        {this.state.photo ? (
           <Image
             source={{
               uri: this.state.photo,
             }}
             style={screenStyles.avatar}
           />
+        ) : (
+          <Image source={this.state.defImg} style={screenStyles.avatar} />
         )}
+
         <Text
           style={[
             styles.mediumText,
@@ -141,7 +151,6 @@ export default class createAccount extends React.Component {
         <TextInput
           style={[styles.fieldText]}
           textAlign="left"
-          placeholder="Name"
           onChangeText={(name) => {
             this.setState({ name })
           }}
@@ -152,7 +161,6 @@ export default class createAccount extends React.Component {
         <TextInput
           style={[styles.fieldText]}
           textAlign="left"
-          placeholder="@username"
           onChangeText={(username) => {
             this.setState({ username })
           }}
@@ -163,7 +171,6 @@ export default class createAccount extends React.Component {
         <TextInput
           style={[styles.fieldText]}
           textAlign="left"
-          placeholder="(xxx)xxx-xxxx"
           onChangeText={(phone) => {
             this.setState({ phone })
           }}
@@ -174,9 +181,8 @@ export default class createAccount extends React.Component {
         <TextInput
           style={[styles.fieldText]}
           textAlign="left"
-          placeholder="email@domain.com"
           onChangeText={(email) => {
-            this.setState({ email })
+            this.setState({ email: email })
           }}
           value={this.state.email}
         />
@@ -206,9 +212,7 @@ export default class createAccount extends React.Component {
 }
 
 createAccount.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired,
-  }).isRequired,
+  navigation: PropTypes.object,
 }
 const styles = StyleSheet.create({
   button: {

@@ -2,10 +2,10 @@ import React from 'react'
 import { Modal, Text, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
-import modalStyles from '../../styles/modalStyles.js'
 import { TextInput } from 'react-native-paper'
-import screenStyles from '../../styles/screenStyles.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import modalStyles from '../../styles/modalStyles.js'
+import screenStyles from '../../styles/screenStyles.js'
 
 const hex = '#F15763'
 //  props are name, image url, and functions for cancel and go
@@ -23,12 +23,17 @@ export default class Join extends React.Component {
   }
 
   handleAccept() {
-    socket.joinRoom(this.props.username)
+    this.setState({ pressed: false })
+    const code = this.state.code
+    this.setState({ code: '' })
+    // const { code } = this.state
+    socket.joinRoom(code)
     this.props.cancel()
   }
 
   handleCancel() {
-    socket.declineInvite(this.props.username)
+    const { username } = this.props
+    socket.declineInvite(username)
     this.props.cancel()
   }
 
@@ -41,11 +46,7 @@ export default class Join extends React.Component {
   render() {
     return (
       <View>
-<<<<<<< HEAD
-        <Modal transparent animationType="none">
-=======
         <Modal transparent animationType="none" visible={this.props.visible}>
->>>>>>> eba913259aa3bd98b1dd99a1145586158356bbff
           <View style={[modalStyles.modal, { flex: 0, height: 180, borderRadius: 15 }]}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               <AntDesign
@@ -90,12 +91,7 @@ export default class Join extends React.Component {
                   onPress={() => this.handleAccept()}
                   style={modalStyles.button}
                 >
-                  <Text
-                    style={[
-                      modalStyles.text,
-                      this.state.pressed ? { color: 'white' } : { color: hex },
-                    ]}
-                  >
+                  <Text style={[modalStyles.text, { color: this.state.pressed ? 'white' : hex }]}>
                     Join Group
                   </Text>
                 </TouchableHighlight>
@@ -125,5 +121,5 @@ Join.propTypes = {
   cancel: PropTypes.func,
   onPress: PropTypes.func,
   name: PropTypes.string,
-  visible: PropTypes.bool
+  visible: PropTypes.bool,
 }

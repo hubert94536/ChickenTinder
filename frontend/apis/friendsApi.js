@@ -1,16 +1,8 @@
-import AsyncStorage from '@react-native-community/async-storage'
-import { ID } from 'react-native-dotenv'
 import axios from 'axios'
-
-var myId = ''
-
-AsyncStorage.getItem(ID).then((res) => {
-  myId = res
-})
 
 const friendsApi = axios.create({
   baseURL: 'https://wechews.herokuapp.com',
-  //baseURL: 'http://192.168.0.23:5000'
+  // baseURL: 'http://172.16.0.10:5000'
 })
 
 // creates friendship
@@ -30,11 +22,11 @@ const createFriendshipTest = async (main, friend) => {
     })
 }
 
-const createFriendship = async (friend) => {
+const createFriendship = async (id, friend) => {
   return friendsApi
     .post('/friendships', {
       params: {
-        main: myId,
+        main: id,
         friend: friend,
       },
     })
@@ -47,9 +39,9 @@ const createFriendship = async (friend) => {
 }
 
 // gets a users friends/requests
-const getFriends = async () => {
+const getFriends = async (id) => {
   return friendsApi
-    .get(`/friendships/${myId}`)
+    .get(`/friendships/${id}`)
     .then((res) => {
       return {
         status: res.status,
@@ -71,9 +63,9 @@ const getFriends = async () => {
 }
 
 // accept a friend request
-const acceptFriendRequest = async (friend) => {
+const acceptFriendRequest = async (id, friend) => {
   return friendsApi
-    .put(`/friendships/${myId}/${friend}`)
+    .put(`/friendships/${id}/${friend}`)
     .then((res) => {
       return res.status
     })
@@ -83,9 +75,9 @@ const acceptFriendRequest = async (friend) => {
 }
 
 // remove a friendship
-const removeFriendship = async (friend) => {
+const removeFriendship = async (id, friend) => {
   return friendsApi
-    .delete(`/friendships/${myId}/${friend}`)
+    .delete(`/friendships/${id}/${friend}`)
     .then((res) => {
       return res.status
     })
