@@ -37,7 +37,7 @@ export default class Alert extends Component {
           reducedTransparencyFallbackColor="white"
           style={modalStyles.blur}
         />
-        <Modal transparent animationType="none">
+        <Modal transparent animationType="none" visible={this.props.visible}>
           <View style={[modalStyles.modal, { height: this.props.height }]}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               <AntDesign
@@ -110,6 +110,11 @@ Alert.propTypes = {
   height: PropTypes.string,
   buttonAff: PropTypes.string,
   buttonNeg: PropTypes.string,
+  visible: PropTypes.bool,
+}
+
+Alert.defaultProps = {
+  visible: true,
 }
 
 const styles = StyleSheet.create({

@@ -1,4 +1,4 @@
-const pg = require('pg')
+// const pg = require('pg')
 const { promisify } = require('util')
 const redis = require('redis')
 const { Sequelize } = require('sequelize')

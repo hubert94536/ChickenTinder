@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Image, Text, TouchableHighlight, View } from 'react-native'
 import Alert from '../modals/alert.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import imgStyles from '../../styles/cardImage.js'
@@ -24,7 +24,7 @@ export default class Login extends React.Component {
       .loginWithFacebook()
       .then((result) => {
         this.setState({ alert: false })
-        this.props.navigation.navigate(result)
+        this.props.navigation.replace(result)
       })
       .catch(() => {
         this.setState({ errorAlert: true })
@@ -59,14 +59,14 @@ export default class Login extends React.Component {
             },
           ]}
         >
-          Let's Get Chews-ing!
+          Let&apos;s Get Chews-ing!
         </Text>
         <TouchableHighlight
           onShowUnderlay={() => this.setState({ phonePressed: true })}
           onHideUnderlay={() => this.setState({ phonePressed: false })}
           activeOpacity={1}
           underlayColor={'white'}
-          onPress={() => this.props.navigation.navigate('Phone')}
+          onPress={() => this.props.navigation.replace('Phone')}
           style={[
             screenStyles.longButton,
             { borderColor: hex, backgroundColor: hex, marginTop: '7%' },
@@ -160,5 +160,6 @@ export default class Login extends React.Component {
 Login.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
+    replace: PropTypes.func,
   }).isRequired,
 }

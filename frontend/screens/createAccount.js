@@ -6,7 +6,7 @@ import accountsApi from '../apis/accountsApi.js'
 import screenStyles from '../../styles/screenStyles.js'
 import PropTypes from 'prop-types'
 import ImagePicker from 'react-native-image-crop-picker'
-import defImages from '../assets/images/foodImages.js'
+import {foodImages as defImages} from '../assets/images/foodImages.js'
 import uploadApi from '../apis/uploadApi.js'
 
 const hex = '#F15763'
@@ -23,44 +23,51 @@ export default class createAccount extends React.Component {
       username: '',
       phone: '',
       email: '',
-      id: 22,
+      id: '',
       photo: '',
-      defImg: '',
-      defImgInd: 0,
+      validEmail: false,
+      validEmailFormat: false,
+      validUsername: false
     }
   }
 
-  async componentDidMount() {
-    // accountsApi.deleteUser()
-
+  componentDidMount() {
     var index = Math.floor(Math.random() * defImages.length)
-    this.setState({
-      name: await AsyncStorage.getItem(NAME),
-      id: await AsyncStorage.getItem(ID),
-      email: await AsyncStorage.getItem(EMAIL),
-      // photo: await AsyncStorage.getItem(PHOTO),
-      phone: await AsyncStorage.getItem(PHONE),
-      defImg: defImages[index],
-      defImgInd: index,
+    AsyncStorage.multiGet([EMAIL, ID, NAME, PHONE]).then((res) => {
+      this.setState({
+        email: res[0][1],
+        id: res[1][1],
+        name: res[2][1],
+        phone: res[3][1],
+        photo: defImages[index].toString(),
+      }
+      , () => {
+        this.checkEmailValidity(this.state.email) 
+        this.checkUsernameValidity(this.state.username)
+        console.log("Def Img " + this.state.photo)
+        console.log(this.state.id)
+        console.log(defImages)
+        accountsApi.deleteUser(this.state.id)
     })
-    AsyncStorage.setItem(DEFPHOTO, this.state.defImgInd.toString())
+    })
+    
+    // 
+    
   }
 
   //  checks whether or not the username can be set
   handleClick() {
-    console.log('finish')
-    console.log(this.state)
     accountsApi
       .checkUsername(this.state.username)
       .then(() => {
-        AsyncStorage.setItem(USERNAME, this.state.username)
-        AsyncStorage.setItem(PHOTO, this.state.photo)
-        AsyncStorage.setItem(NAME, this.state.name)
-        AsyncStorage.setItem(EMAIL, this.state.email)
-        // AsyncStorage.setItem(ID, this.state.id)
-        AsyncStorage.setItem(PHONE, this.state.phone)
-        AsyncStorage.setItem(DEFPHOTO, this.state.defImgInd.toString())
-
+        AsyncStorage.multiSet([
+          [USERNAME, this.state.username],
+          [PHOTO, this.state.photo],
+          [NAME, this.state.name],
+          [EMAIL, this.state.email],
+          [ID, this.state.id],
+          [PHONE, this.state.phone],
+        ])
         return accountsApi.createFBUser(
           this.state.name,
           this.state.id,
@@ -71,7 +78,7 @@ export default class createAccount extends React.Component {
       })
       .then(() => uploadApi.uploadPhoto(this.state.photoData))
       .then(() => {
-        this.props.navigation.navigate('Home')
+        this.props.navigation.replace('Home')
       })
       .catch((error) => {
         if (error === 404) {
@@ -83,7 +90,7 @@ export default class createAccount extends React.Component {
   }
 
   altHandleClick() {
-    this.props.navigation.navigate('Home')
+    this.props.navigation.replace('Home')
   }
 
   uploadPhoto() {
@@ -91,18 +98,57 @@ export default class createAccount extends React.Component {
       width: 150,
       height: 150,
       cropping: true,
-    }).then((image) => {
-      this.setState({
-        photo: image.path,
-        photoData: {
-          uri: image.path,
-          type: image.mime,
-          name: 'avatar',
-        },
-      })
     })
-    console.log('upload photo')
+      .then((image) => {
+        this.setState({
+          photo: image.path,
+          photoData: {
+            uri: image.path,
+            type: image.mime,
+            name: 'avatar',
+          },
+        })
+        console.log("Image path:" + image.path)
+      })
+      .catch((error) => {
+        // handle this later on
+        console.log(error)
+      })
   }
+
+  checkEmailValidity(email) {
+    const reg = /^[ ]*([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})[ ]*$/i;
+    if (email !== null && reg.test(email) === false) {
+      this.setState({validEmailFormat: false})
+    }
+    else
+    {
+      this.setState({validEmailFormat: true})
+    }
+    
+    accountsApi
+    .checkEmail(email)
+    .then(() => {
+        this.setState({validEmail: true})
+    })
+    .catch((error) => {
+        this.setState({validEmail: false})
+    })
+
+  }
+
+  checkUsernameValidity(username) {
+    accountsApi
+    .checkUsername(username)
+    .then(() => {
+        this.setState({validUsername: true})
+    })
+    .catch((error) => {
+        this.setState({validUsername: false})
+    })
+
+  }
+
 
   render() {
     return (
@@ -125,7 +171,7 @@ export default class createAccount extends React.Component {
         <Text style={[styles.mediumText]}>Account Verified!</Text>
         <Text style={[styles.mediumText]}>Finish setting up your account</Text>
 
-        {this.state.photo ? (
+        {this.state.photo.includes("file") ? (
           <Image
             source={{
               uri: this.state.photo,
@@ -133,7 +179,7 @@ export default class createAccount extends React.Component {
             style={screenStyles.avatar}
           />
         ) : (
-          <Image source={this.state.defImg} style={screenStyles.avatar} />
+          <Image source={this.state.photo} style={screenStyles.avatar} />
         )}
 
         <Text
@@ -149,7 +195,6 @@ export default class createAccount extends React.Component {
         <TextInput
           style={[styles.fieldText]}
           textAlign="left"
-          placeholder="Name"
           onChangeText={(name) => {
             this.setState({ name })
           }}
@@ -158,20 +203,26 @@ export default class createAccount extends React.Component {
 
         <Text style={[styles.mediumText, styles.fieldName]}>Username</Text>
         <TextInput
-          style={[styles.fieldText]}
+          style={[styles.fieldText, {marginBottom: this.state.validUsername ? '3%' :'0%'}]
+            }
           textAlign="left"
-          placeholder="@username"
           onChangeText={(username) => {
-            this.setState({ username })
+          this.setState({ username })
+          this.checkUsernameValidity(username)
           }}
           value={this.state.username}
+          maxLength={15} 
         />
+
+        {!this.state.validUsername &&(
+          <Text style={[styles.mediumText, 
+            styles.warningText]}>This username is taken</Text>
+        )}
 
         <Text style={[styles.mediumText, styles.fieldName]}>Phone Number</Text>
         <TextInput
           style={[styles.fieldText]}
           textAlign="left"
-          placeholder="(xxx)xxx-xxxx"
           onChangeText={(phone) => {
             this.setState({ phone })
           }}
@@ -180,14 +231,25 @@ export default class createAccount extends React.Component {
 
         <Text style={[styles.mediumText, styles.fieldName]}>Email</Text>
         <TextInput
-          style={[styles.fieldText]}
+          style={[styles.fieldText, 
+            {marginBottom:  (this.state.validEmail && this.state.validEmailFormat) ? '3%' :'0%'}
+          ]}
           textAlign="left"
-          placeholder="email@domain.com"
           onChangeText={(email) => {
             this.setState({ email: email })
+            this.checkEmailValidity(email) 
           }}
           value={this.state.email}
         />
+
+        {!this.state.validEmail && this.state.validEmailFormat &&(
+          <Text style={[styles.mediumText, 
+            styles.warningText]}>This email is taken</Text>
+        )}
+        {!this.state.validEmailFormat &&(
+          <Text style={[styles.mediumText, 
+            styles.warningText]}>Input a valid email</Text>
+        )}
 
         <TouchableHighlight
           onShowUnderlay={() => this.setState({ finishPressed: true })}
@@ -214,9 +276,7 @@ export default class createAccount extends React.Component {
 }
 
 createAccount.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired,
-  }).isRequired,
+  navigation: PropTypes.object,
 }
 const styles = StyleSheet.create({
   button: {
@@ -246,4 +306,10 @@ const styles = StyleSheet.create({
     color: 'black',
     marginLeft: '10%',
   },
+  warningText: {
+    color: hex, 
+    fontSize: 12, 
+    marginHorizontal: '12%', 
+    alignSelf: 'flex-start'
+  }
 })

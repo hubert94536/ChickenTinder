@@ -22,73 +22,89 @@ export default class GroupCard extends React.Component {
 
   render() {
     return (
-      <View>
-        <View style={styles.card}>
+      <View style={styles.card}>
+        <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+        {this.props.image.includes("file") || this.props.image.includes("http") ? (
           <Image
-            source={{ uri: this.props.image }}
-            style={[
-              styles.image,
-              this.props.filters ? { borderColor: hex } : { borderColor: 'white' },
-            ]}
+            source={{
+              uri: this.props.image,
+            }}
+            style={imgStyles.button}
           />
-          {this.props.filters ? (
-            <Icon
-              name="check-circle"
-              style={{
-                color: hex,
-                fontSize: 20,
-                position: 'absolute',
-                marginLeft: '14%',
-                marginTop: '1%',
-              }}
-            />
-          ) : null}
-          <View
+          ) : (
+            <Image source={this.props.image} style={imgStyles.button}/>
+ 
+            )}   
+        </View>
+        {this.props.filters ? (
+          <Icon
+            name="check-circle"
             style={{
-              alignSelf: 'center',
-              marginLeft: '3%',
-              flex: 1,
+              color: hex,
+              fontSize: 20,
+              position: 'absolute',
+              marginLeft: '31%',
+              marginTop: '5%',
+              backgroundColor: '#F5F5F5',
+              borderRadius: 30,
+              width: 13,
+              height: 13,
+              overflow: 'hidden',
+            }}
+          />
+        ) : null}
+        <View
+          style={{
+            marginLeft: '3%',
+            width: 200,
+            flexDirection: 'column',
+            justifyContent: 'center',
+            color: 'green',
+          }}
+        >
+          <Text
+            style={{
+              color: 'black',
+              fontWeight: 'normal',
+              fontFamily: font,
+              fontSize: 14,
+              width: 100,
             }}
           >
+            {this.props.name}
+          </Text>
+          <Text
+            style={{
+              color: hex,
+              fontWeight: 'normal',
+              fontFamily: font,
+              fontSize: 10,
+              width: 100,
+            }}
+          >
+            {'@' + this.props.username}
+          </Text>
+        </View>
+        <View style={{ flex: 1, flexDirection: 'row' }}>
+          {this.props.username !== this.props.host && this.isHost ? (
             <Text
               style={{
                 color: hex,
-                fontWeight: 'bold',
+                alignSelf: 'center',
                 fontFamily: font,
+                marginLeft: '30%',
               }}
             >
-              {this.props.name}
+              Remove
             </Text>
-            <Text
-              style={{
-                color: hex,
-                fontFamily: font,
-              }}
-            >
-              {'@' + this.props.username}
-            </Text>
-          </View>
-          <View style={{ flex: 1, flexDirection: 'row' }}>
-            {this.props.username !== this.props.host && this.isHost ? (
-              <Text
-                style={{
-                  color: hex,
-                  alignSelf: 'center',
-                  fontFamily: font,
-                  marginLeft: '30%',
-                }}
-              >
-                Remove
-              </Text>
-            ) : null}
-            {this.props.username !== this.props.host && this.isHost ? (
-              <Icon
-                name="times-circle"
-                style={[imgStyles.icon, { marginLeft: '5%' }]}
-                onPress={() => this.removeUser(this.props.username)}
-              />
-            ) : null}
-          </View>
+          ) : null}
+          {this.props.username !== this.props.host && this.isHost ? (
+            <Icon
+              name="times-circle"
+              style={[imgStyles.icon, { marginLeft: '5%' }]}
+              onPress={() => this.removeUser(this.props.username)}
+            />
+          ) : null}
         </View>
       </View>
     )
@@ -106,25 +122,25 @@ GroupCard.propTypes = {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
-    borderRadius: 20,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 7,
     alignSelf: 'center',
-    width: '94%',
-    height: 90,
+    width: 170,
+    height: 70,
     padding: 0,
-    margin: 0,
-    marginTop: '3%',
+    margin: 5,
     flexDirection: 'row',
-    flex: 1,
   },
   image: {
     borderRadius: 63,
-    height: Dimensions.get('window').height * 0.09,
-    width: Dimensions.get('window').height * 0.09,
+    height: Dimensions.get('window').height * 0.075,
+    width: Dimensions.get('window').height * 0.075,
     borderWidth: 3,
     borderColor: hex,
     alignSelf: 'flex-start',
-    marginTop: '3.5%',
-    marginLeft: '2.5%',
+    marginLeft: 7,
+  },
+  topText: {
+    color: '#000',
   },
 })
