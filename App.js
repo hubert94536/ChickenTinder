@@ -127,10 +127,5 @@ export default class App extends React.Component {
 
   render() {
     return this.state.appContainer;
-    // return (
-    //   <View>
-    //     {this.state.appContainer}
-    //     <NotificationHandler/>
-    //   </View>)
   }
 }
