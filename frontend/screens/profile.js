@@ -315,10 +315,10 @@ export default class UserProfileView extends Component {
           </View>
           <View style={{ height: '50%', marginTop: '1%' }}>
             {/* Contains the search bar and friends display, only shows if user has friends */}
-            {numFriends > 0 && (
+            {true && (
               <Friends isFriends onFriendsChange={(n) => this.handleFriendsCount(n)} />
             )}
-            {numFriends === 0 && (
+            {/* {numFriends === 0 && (
               <View>
                 <Icon
                   name="emoticon-sad-outline"
@@ -352,7 +352,7 @@ export default class UserProfileView extends Component {
                   You have no friends, yet. Add friends using the search feature below!
                 </Text>
               </View>
-            )}
+            )} */}
           </View>
           {(visible || edit) && (
             <BlurView
