@@ -173,7 +173,7 @@ export default class Group extends React.Component {
     } else {
       socket.leaveRoom(this.state.code)
     }
-    this.props.navigation.popToTop()
+    this.props.navigation.pop()
   }
 
   // shows proper alert based on if user is host

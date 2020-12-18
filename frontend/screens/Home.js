@@ -52,7 +52,7 @@ class Home extends React.Component {
       socket.connect(id, name, photo, username)
       socket.getSocket().on('update', (res) => {
         this.setState({ invite: false })
-        this.props.navigation.navigate('Group', {
+        this.props.navigation.push('Group', {
           response: res,
           id: id,
           name: name,

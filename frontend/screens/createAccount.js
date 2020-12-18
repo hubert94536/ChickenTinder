@@ -77,8 +77,7 @@ export default class createAccount extends React.Component {
         )
       })
       .then(() => uploadApi.uploadPhoto(this.state.photoData))
-      .then((url) => {
-        AsyncStorage.setItem(PHOTO, this.state.photo);
+      .then(() => {
         this.props.navigation.replace('Home')
       })
       .catch((error) => {
