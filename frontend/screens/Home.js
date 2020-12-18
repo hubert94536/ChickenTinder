@@ -71,7 +71,7 @@ class Home extends React.Component {
   }
 
   componentWillUnmount() {
-    socket.off('update')
+    // socket.off('update')
   }
 
   render() {
