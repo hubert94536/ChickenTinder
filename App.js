@@ -49,11 +49,6 @@ export default class App extends React.Component {
       // can change to our loading screen
       appContainer: <Text />,
     };
-
-    // this.notif = new NotifService(
-    //   this.onRegister.bind(this),
-    //   this.onNotification.bind(this),
-    // );
   }
 
   componentDidMount() {
@@ -137,24 +132,5 @@ export default class App extends React.Component {
     //     {this.state.appContainer}
     //     <NotificationHandler/>
     //   </View>)
-  }
-
-  onRegister(token) {
-    console.log(token);
-    AsyncStorage.setItem(REGISTRATION_TOKEN, token.token)
-    AsyncStorage.getItem(ID).then((id) => {
-      if (id) ; //send to back-end server to register with id
-    })
-  }
-  onNotification(notification){
-    // Consider sending only data, then constructing a notification here to display to the user (as FCM base notification construction is quite limited)
-    console.log(notification);
-    if (!notification.userInteraction){
-      //construct using data
-    }
-  }
-  onAction(notification){
-    console.log(notification);
-    if (notification.action === "open") PushNotification.invokeApp(notification); // figure this out later
   }
 }
