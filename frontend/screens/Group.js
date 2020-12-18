@@ -47,7 +47,7 @@ export default class Group extends React.Component {
       host: this.props.navigation.state.params.response.host,
       hostName: members[this.props.navigation.state.params.response.host].username,
       // hostName: "NOT YOU",
-      needFilters: Object.keys(members).filter((user) => !user.filters).length,
+      needFilters: Object.keys(members).filter((user) => !user.filters).length - 1,
 
       filters: {},
       code: this.props.navigation.state.params.response.code,
@@ -174,7 +174,7 @@ export default class Group extends React.Component {
     } else {
       socket.leaveRoom(this.state.code)
     }
-    this.props.navigation.pop()
+    this.props.navigation.popToTop()
   }
 
   // shows proper alert based on if user is host
