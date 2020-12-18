@@ -62,6 +62,7 @@ export default class Group extends React.Component {
       endAlert: false,
       chooseFriends: false,
     }
+
     this.updateMemberList()
 
     // listens if user is to be kicked
@@ -79,6 +80,7 @@ export default class Group extends React.Component {
         hostName: res.members[res.host].username,
         code: res.code,
       })
+
       const count = this.countNeedFilters(res.members)
       this.setState({ needFilters: count })
       if (!count) {
@@ -88,7 +90,6 @@ export default class Group extends React.Component {
     })
 
     socket.getSocket().on('start', (restaurants) => {
-      // console.log('group.js: ' + JSON.stringify(restaurants))
       if (restaurants.length > 0) {
         // console.log('group.js: ' + JSON.stringify(restaurants))
         // let x = 10 // ROUND SIZE - implement once hubert changes backend
@@ -374,19 +375,20 @@ export default class Group extends React.Component {
               />
             </View>
           )}
-          objectHeight={this.state.hostName == this.state.myUsername ? 400 : 400}
+          objectHeight={this.state.hostName == this.state.myUsername ? 400 : 350}
           offset={120}
           renderDrawerView={() => (
             <View>
               <View>
                 <View
                   style={{
+                    backgroundColor: 'white',
                     width: windowWidth,
-                    height: 400,
-                    zIndex: 3,
-                    borderColor: '#F15763',
-                    borderWidth: 1,
-                    overflow: 'hidden',
+                    height: this.state.hostName == this.state.myUsername ? 400 : 350,
+                    zIndex: 30,
+                    elevation: 30,
+                    // borderColor: '#F15763',
+                    // borderWidth: 1,
                   }}
                 >
                   <FilterSelector
@@ -397,13 +399,13 @@ export default class Group extends React.Component {
                     ref={this.filterRef}
                     code={this.state.code}
                     setBlur={(res) => this.blur(res)}
+                    style={{ elevation: 31 }}
                   />
                 </View>
               </View>
               <View
                 style={{
                   flexDirection: 'row',
-                  margin: '4%',
                   justifyContent: 'center',
                 }}
               >
@@ -411,17 +413,18 @@ export default class Group extends React.Component {
                   style={{
                     color: 'white',
                     fontFamily: font,
-                    marginRight: '3%',
-                    height: 70,
+                    height: 30,
                     backgroundColor: 'white',
                     padding: 15,
-                    marginTop: -45,
-                    borderRadius: 15,
-                    borderColor: '#F15763',
-                    borderWidth: 1,
+                    paddingTop: 25,
+                    borderBottomLeftRadius: 15,
+                    borderBottomRightRadius: 15,
+                    // borderColor: '#F15763',
+                    // borderWidth: 1,
                     flexDirection: 'column',
                     justifyContent: 'flex-end',
-                    zIndex: 2,
+                    zIndex: 30,
+                    elevation: 30,
                   }}
                 >
                   <Text

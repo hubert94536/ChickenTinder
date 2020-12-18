@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Dimensions, Image, Keyboard, StyleSheet, Text, View } from 'react-native'
+import { Image, Keyboard, StyleSheet, Text, View } from 'react-native'
 import { ID, NAME, PHOTO, USERNAME, DEFPHOTO, EMAIL } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
@@ -12,7 +12,7 @@ import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import TabBar from '../nav.js'
 import ImagePicker from 'react-native-image-crop-picker'
-import {foodImages as defImages} from '../assets/images/foodImages.js'
+import defImages from '../assets/images/foodImages.js'
 import uploadApi from '../apis/uploadApi.js'
 import PropTypes from 'prop-types'
 import EditProfile from '../modals/EditProfile.js'
@@ -20,7 +20,6 @@ import Settings from '../modals/ProfileSettings.js'
 
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
-const height = Dimensions.get('window').height
 var email = ''
 var id = ''
 
@@ -39,6 +38,7 @@ export default class UserProfileView extends Component {
       edit: false,
       changeName: false,
       changeUser: false,
+      navigation: this.props.navigation,
       // button appearance
       logout: false,
       delete: false,
@@ -48,29 +48,21 @@ export default class UserProfileView extends Component {
       errorAlert: false,
       // friends text
       numFriends: 0,
-      imageData:null,
-      // defImg: defImages[Math.floor(Math.random() * defImages.length)],
+      defImg: '',
     }
-    AsyncStorage.multiGet([EMAIL, ID, NAME, PHOTO, USERNAME]).then((res) => {
-      email = res[0][1]
-      id = res[1][1]
+    AsyncStorage.multiGet([DEFPHOTO, EMAIL, ID, NAME, PHOTO, USERNAME]).then((res) => {
+      email = res[1][1]
+      id = res[2][1]
       this.setState({
-        // defImg: defImages[parseInt(res[0][1])],
-        name: res[2][1],
-        nameValue: res[2][1],
-        image: res[3][1],
-        oldImage: res[3][1],
-        username: res[4][1],
-        usernameValue: res[4][1],
+        defImg: defImages[parseInt(res[0][1])],
+        name: res[3][1],
+        nameValue: res[3][1],
+        image: res[4][1],
+        oldImage: res[4][1],
+        username: res[5][1],
+        usernameValue: res[5][1],
       })
     })
-    console.log(this.state.name)
-    
-    
-  }
-
-  componentDidMount() {
-    console.log("current image:" + this.state.image)
   }
 
   // getting current user's info
@@ -203,7 +195,7 @@ export default class UserProfileView extends Component {
   }
 
   removePhoto() {
-    this.setState({ image: defImages[Math.floor(Math.random() * defImages.length)].toString() })
+    this.setState({ image: null })
     // TODO: delete from AWS
     AsyncStorage.setItem(PHOTO, this.state.image)
   }
@@ -221,10 +213,7 @@ export default class UserProfileView extends Component {
     if (this.state.oldImage != this.state.image) {
       this.setState({ oldImage: this.state.image })
       AsyncStorage.setItem(PHOTO, this.state.image)
-      var uploaded = uploadApi.uploadPhoto(this.state.imageData)
-      console.log("New image" + this.state.image)
-      console.log("Uploaded" + uploaded)
-
+      uploadApi.uploadPhoto(this.state.imageData)
     }
   }
 
@@ -232,15 +221,27 @@ export default class UserProfileView extends Component {
     this.setState({
       edit: true,
       nameValue: this.state.name,
-      username: this.state.username,
+      usernameValue: this.state.username,
       changeName: false,
     })
-
-    console.log("current image:" + this.state.image)
-    
   }
 
   render() {
+    const {
+      image,
+      defImg,
+      name,
+      username,
+      numFriends,
+      navigation,
+      visible,
+      edit,
+      nameValue,
+      usernameValue,
+      errorAlert,
+      takenAlert,
+    } = this.state
+
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <View style={{ backgroundColor: 'white', height: '90%' }}>
@@ -249,7 +250,9 @@ export default class UserProfileView extends Component {
               <View
                 style={[screenStyles.icons, { width: 27, margin: '5%', textAlign: 'right' }]}
               ></View>
-              <Text style={[screenStyles.text, styles.myProfile]}>Profile</Text>
+              <Text style={[screenStyles.text, styles.myProfile, { fontWeight: 'bold' }]}>
+                Profile
+              </Text>
               <Icon
                 name="cog-outline"
                 style={[screenStyles.icons, { margin: '5%', textAlign: 'right' }]}
@@ -257,15 +260,15 @@ export default class UserProfileView extends Component {
               />
             </View>
 
-            {this.state.image.includes("file") || this.state.image.includes("http") ? (
+            {image ? (
               <Image
                 source={{
-                  uri: this.state.image,
+                  uri: image,
                 }}
                 style={screenStyles.avatar}
               />
             ) : (
-              <Image source={this.state.image} style={screenStyles.avatar} />
+              <Image source={defImg} style={screenStyles.avatar} />
             )}
 
             <View style={{ alignItems: 'center' }}>
@@ -277,18 +280,18 @@ export default class UserProfileView extends Component {
                 }}
               >
                 <View style={{ width: 20, marginTop: '4%', marginLeft: '1%' }}></View>
-                <Text style={{ fontFamily: font, fontSize: 20, marginTop: '4%' }}>
-                  {this.state.name}
+                <Text
+                  style={{ fontFamily: font, fontSize: 22, marginTop: '4%', fontWeight: 'bold' }}
+                >
+                  {name}
                 </Text>
                 <Icon
                   name="pencil-outline"
-                  style={{ fontSize: 20, marginTop: '4%', marginLeft: '1%' }}
+                  style={{ fontSize: 28, marginTop: '4%', marginLeft: '1%', marginBottom: '1%' }}
                   onPress={() => this.editProfile()}
                 />
               </View>
-              <Text style={{ fontFamily: font, fontSize: 13, color: hex }}>
-                {'@' + this.state.username}
-              </Text>
+              <Text style={{ fontFamily: font, fontSize: 14, color: hex }}>{'@' + username}</Text>
             </View>
             <Text
               style={{
@@ -307,13 +310,51 @@ export default class UserProfileView extends Component {
                 { marginLeft: '7%', fontSize: 17, fontFamily: 'CircularStd-Medium' },
               ]}
             >
-              {this.state.numFriends + ' friends'}
+              {numFriends + ' friends'}
             </Text>
           </View>
-          <View style={{ height: '50%', marginTop: '0%' }}>
-            <Friends isFriends onFriendsChange={(n) => this.handleFriendsCount(n)} />
+          <View style={{ height: '50%', marginTop: '1%' }}>
+            {/* Contains the search bar and friends display, only shows if user has friends */}
+            {numFriends > 0 && (
+              <Friends isFriends onFriendsChange={(n) => this.handleFriendsCount(n)} />
+            )}
+            {numFriends === 0 && (
+              <View>
+                <Icon
+                  name="emoticon-sad-outline"
+                  style={{ fontSize: 72, marginTop: '15%', alignSelf: 'center' }}
+                />
+                <Text
+                  style={{
+                    fontFamily: font,
+                    fontSize: 20,
+                    marginTop: '1%',
+                    alignSelf: 'center',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  No friends, yet
+                </Text>
+                <Text
+                  style={[
+                    screenStyles.text,
+                    {
+                      marginTop: '3%',
+                      marginHorizontal: '6%',
+                      alignSelf: 'center',
+                      textAlign: 'center',
+                      fontSize: 16,
+                      fontFamily: 'CircularStd-Book',
+                      color: 'grey',
+                    },
+                  ]}
+                >
+                  You have no friends, yet. Add friends using the search feature below!
+                </Text>
+              </View>
+            )}
           </View>
-          {(this.state.visible || this.state.edit) && (
+          {(visible || edit) && (
             <BlurView
               blurType="dark"
               blurAmount={10}
@@ -323,28 +364,29 @@ export default class UserProfileView extends Component {
           )}
 
           <Settings
-            visible={this.state.visible}
+            visible={visible}
             close={() => this.setState({ visible: false })}
             delete={() => this.handleDelete()}
             logout={() => this.handleLogout()}
             email={email}
           />
 
-          <EditProfile
-            visible={this.state.edit}
-            image = {this.state.image}
-            defImage={this.state.defImage}
-            name={this.state.nameValue}
-            username={this.state.usernameValue}
-            dontSave={() => this.dontSave()}
-            uploadPhoto={() => this.uploadPhoto()}
-            removePhoto={() => this.removePhoto()}
-            makeChanges={() => this.makeChanges()}
-            userChange={(text) => this.setState({ usernameValue: text })}
-            nameChange={(text) => this.setState({ nameValue: text })}
-          />
+          {edit && (
+            <EditProfile
+              // image = {this.state.image}
+              defImage={defImg}
+              name={nameValue}
+              username={usernameValue}
+              dontSave={() => this.dontSave()}
+              uploadPhoto={() => this.uploadPhoto()}
+              removePhoto={() => this.removePhoto()}
+              makeChanges={() => this.makeChanges()}
+              userChange={(text) => this.setState({ usernameValue: text })}
+              nameChange={(text) => this.setState({ nameValue: text })}
+            />
+          )}
 
-          {this.state.errorAlert && (
+          {errorAlert && (
             <Alert
               title="Error, please try again"
               buttonAff="Close"
@@ -353,7 +395,7 @@ export default class UserProfileView extends Component {
               cancel={() => this.setState({ errorAlert: false })}
             />
           )}
-          {this.state.takenAlert && (
+          {takenAlert && (
             <Alert
               title="Username taken!"
               buttonAff="Close"
