@@ -16,6 +16,7 @@ export default class Loading extends React.Component {
       code: this.props.navigation.state.params.code,
       isHost: this.props.navigation.state.params.isHost,
     }
+    console.log(this.state.isHost)
 
     socket.getSocket().on('match', (data) => {
       var res
