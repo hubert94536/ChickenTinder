@@ -8,7 +8,7 @@ import Group from './frontend/screens/Group.js'
 import Home from './frontend/screens/Home.js'
 // import Invite from './frontend/modals/invite.js'
 import Login from './frontend/screens/login.js'
-import Match from './frontend/screens/Match.js'
+import Match from './frontend/screens/match.js'
 import Notif from './frontend/screens/notif.js'
 import Round from './frontend/screens/round.js'
 import Search from './frontend/screens/search.js'
@@ -48,7 +48,7 @@ export default class App extends React.Component {
     this.state = {
       // can change to our loading screen
       appContainer: <Text />,
-    }
+    };
   }
 
   componentDidMount() {
@@ -126,6 +126,6 @@ export default class App extends React.Component {
   }
 
   render() {
-    return this.state.appContainer
+    return this.state.appContainer;
   }
 }
