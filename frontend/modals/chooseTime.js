@@ -1,7 +1,6 @@
 import React from 'react'
 import { Dimensions, Modal, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
-import Location from './chooseLocation.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
 import SwitchButton from 'switch-button-react-native'
@@ -35,7 +34,7 @@ export default class Time extends React.Component {
     }
     var hour = parseInt(this.state.selectedHour)
     var min = parseInt(this.state.selectedMinute)
-    if (hour < 0 || hour > 12 || min < 0 || min > 59) {
+    if (hour < 0 || hour > 12 || min < 0 || min > 59 || isNaN(hour) || isNaN(min)) {
       this.setState({ invalidTime: true })
     } else {
       if (this.state.timeMode === 'pm') {
@@ -48,7 +47,6 @@ export default class Time extends React.Component {
         }
       }
       this.handlePress(hour, min)
-      console.log(hour + ':' + min)
     }
   }
 
@@ -92,7 +90,7 @@ export default class Time extends React.Component {
                 style={[
                   {
                     fontSize: 17,
-                    color: '#9f9f9f',
+                    color: 'black',
                     backgroundColor: '#E5E5E5',
                     height: '80%',
                     width: '17%',
@@ -103,6 +101,7 @@ export default class Time extends React.Component {
                 ]}
                 value={this.state.selectedHour}
                 placeholder="12"
+                placeholderTextColor="#9f9f9f"
                 onChangeText={(text) => this.setState({ selectedHour: text, invalidTime: false })}
                 keyboardType="numeric"
               />
@@ -115,7 +114,7 @@ export default class Time extends React.Component {
                 style={[
                   {
                     fontSize: 17,
-                    color: '#9f9f9f',
+                    color: 'black',
                     backgroundColor: '#E5E5E5',
                     height: '80%',
                     width: '17%',
@@ -127,6 +126,7 @@ export default class Time extends React.Component {
                 ]}
                 value={this.state.selectedMinute}
                 placeholder="00"
+                placeholderTextColor="#9f9f9f"
                 onChangeText={(text) => this.setState({ selectedMinute: text, invalidTime: false })}
                 keyboardType="numeric"
               />
@@ -192,7 +192,7 @@ export default class Time extends React.Component {
   }
 }
 
-Location.propTypes = {
+Time.propTypes = {
   press: PropTypes.func,
   cancel: PropTypes.func,
   visible: PropTypes.bool,

@@ -8,7 +8,6 @@ import {
   Modal,
   TextInput,
 } from 'react-native'
-import { BlurView } from '@react-native-community/blur'
 import PropTypes from 'prop-types'
 import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
