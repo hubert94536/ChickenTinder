@@ -35,7 +35,7 @@ const getNotifs = async () => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -47,7 +47,7 @@ const removeNotif = async (id) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
