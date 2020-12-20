@@ -1,6 +1,6 @@
 import React from 'react'
 import { Image, Text, TouchableHighlight, View } from 'react-native'
-import Alert from '../modals/alert.js'
+import Alert from '../modals/Alert.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import imgStyles from '../../styles/cardImage.js'
 import facebookService from '../apis/facebookService.js'

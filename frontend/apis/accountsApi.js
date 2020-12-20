@@ -21,7 +21,7 @@ const createFBUser = async (name, id, username, email, photo) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -44,7 +44,7 @@ const getAllUsers = async () => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -67,7 +67,7 @@ const searchUsers = async (text) => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -79,7 +79,7 @@ const deleteUser = async (id) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -98,7 +98,7 @@ const getUser = async (id) => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -146,7 +146,7 @@ const updateUser = async (id, req) => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -159,7 +159,7 @@ const checkUsername = async (username) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -171,7 +171,7 @@ const checkPhoneNumber = async (phoneNumber) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -183,7 +183,7 @@ const checkEmail = async (email) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 

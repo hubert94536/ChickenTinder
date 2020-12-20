@@ -18,7 +18,7 @@ const createFriendshipTest = async (main, friend) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -34,7 +34,7 @@ const createFriendship = async (id, friend) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -58,7 +58,7 @@ const getFriends = async (id) => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -70,7 +70,7 @@ const acceptFriendRequest = async (id, friend) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -82,7 +82,7 @@ const removeFriendship = async (id, friend) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
