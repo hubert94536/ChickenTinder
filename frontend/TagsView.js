@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import PropTypes from 'prop-types'
-import BackgroundButton from './backgroundButton.js'
+import BackgroundButton from './BackgroundButton.js'
 
 const hex = '#F15763'
 
