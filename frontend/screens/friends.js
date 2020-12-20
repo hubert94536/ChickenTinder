@@ -1,12 +1,14 @@
 import React from 'react'
-import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native'
+import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
 import PropTypes from 'prop-types'
 import { ID } from 'react-native-dotenv'
 import { SearchBar } from 'react-native-elements'
 import AsyncStorage from '@react-native-community/async-storage'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Alert from '../modals/alert.js'
 import ProfileCard from '../cards/profileCard.js'
 import friendsApi from '../apis/friendsApi.js'
+import screenStyles from '../../styles/screenStyles.js'
 
 const font = 'CircularStd-Medium'
 var id = ''
@@ -112,38 +114,77 @@ export default class Friends extends React.Component {
     }
     return (
       <View>
-        <View>
-          <SearchBar
-            containerStyle={styles.container}
-            inputContainerStyle={styles.inputContainer}
-            inputStyle={styles.input}
-            placeholder="Search by username"
-            onChangeText={(text) => this.searchFilterFunction(text)}
-            value={this.state.search}
-            lightTheme
-            round
-          />
-        </View>
-        <ScrollView
-          style={{ flexDirection: 'column' }}
-          alwaysBounceVertical="true"
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this.onRefresh.bind(this)}
+        {this.state.friends.length > 0 && ( //Shows search bar + friends list if there are friends
+          <View>
+            <View>
+              <SearchBar
+                containerStyle={styles.container}
+                inputContainerStyle={styles.inputContainer}
+                inputStyle={styles.input}
+                placeholder="Search by username"
+                onChangeText={(text) => this.searchFilterFunction(text)}
+                value={this.state.search}
+                lightTheme
+                round
+              />
+            </View>
+            <ScrollView
+              style={{ flexDirection: 'column' }}
+              alwaysBounceVertical="true"
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.refreshing}
+                  onRefresh={this.onRefresh.bind(this)}
+                />
+              }
+            >
+              {friends}
+            </ScrollView>
+            {this.state.errorAlert && (
+              <Alert
+                title="Error, please try again"
+                buttonAff="Close"
+                height="20%"
+                press={() => this.setState({ errorAlert: false })}
+                cancel={() => this.setState({ errorAlert: false })}
+              />
+            )}
+          </View>
+        )}
+        {this.state.friends.length === 0 && ( //Show no friends view if there aren't any friends
+          <View>
+            <Icon
+              name="emoticon-sad-outline"
+              style={{ fontSize: 72, marginTop: '15%', alignSelf: 'center' }}
             />
-          }
-        >
-          {friends}
-        </ScrollView>
-        {this.state.errorAlert && (
-          <Alert
-            title="Error, please try again"
-            buttonAff="Close"
-            height="20%"
-            press={() => this.setState({ errorAlert: false })}
-            cancel={() => this.setState({ errorAlert: false })}
-          />
+            <Text
+              style={{
+                fontFamily: font,
+                fontSize: 20,
+                marginTop: '1%',
+                alignSelf: 'center',
+                fontWeight: 'bold',
+              }}
+            >
+              No friends, yet
+            </Text>
+            <Text
+              style={[
+                screenStyles.text,
+                {
+                  marginTop: '3%',
+                  marginHorizontal: '6%',
+                  alignSelf: 'center',
+                  textAlign: 'center',
+                  fontSize: 16,
+                  fontFamily: 'CircularStd-Book',
+                  color: 'grey',
+                },
+              ]}
+            >
+              You have no friends, yet. Add friends using the search feature below!
+            </Text>
+          </View>
         )}
       </View>
     )
