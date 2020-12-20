@@ -38,11 +38,11 @@ const uploadPhoto = async (photo) => {
   return uploadApi
     .post('/images', data, config)
     .then((res) => {
-      return res.data;
+      return res.data
     })
     .catch((error) => {
       console.log(error)
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 

@@ -2,7 +2,7 @@
 // import { Image, Text, TouchableHighlight, View } from 'react-native'
 // import Icon from 'react-native-vector-icons/FontAwesome'
 // import PropTypes from 'prop-types'
-// import Alert from '../modals/alert.js'
+// import Alert from '../modals/Alert.js'
 // import friendsApi from '../apis/friendsApi.js'
 // import imgStyles from '../../styles/cardImage.js'
 
