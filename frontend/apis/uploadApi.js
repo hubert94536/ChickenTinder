@@ -37,10 +37,11 @@ const uploadPhoto = async (photo) => {
 
   return uploadApi
     .post('/images', data, config)
-    .then(async (res) => {
-      return await res.text()
+    .then((res) => {
+      return res.data;
     })
     .catch((error) => {
+      console.log(error)
       throw error.response.status
     })
 }
