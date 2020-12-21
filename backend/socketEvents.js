@@ -1,4 +1,4 @@
-const { hgetAll, sendCommand, redisClient } = require('./config.js')
+const { hgetAll, sendCommand, redisClient, pool } = require('./config.js')
 const Notifs = require('./notificationsQueries.js')
 const Yelp = require('./yelpQuery.js')
 
@@ -47,6 +47,15 @@ const getTop3 = (restaurants) => {
 
 module.exports = (io) => {
   io.on('connection', async (socket) => {
+    pool.connect((err, client, release) => {
+      if (err) {
+          console.log(err)
+      }
+      client.on('notification', (msg) => {
+        console.log(JSON.parse(msg.payload))
+      })
+      client.query('LISTEN notifications')
+    })
     try {
       // TODO get notifications
       // update user with new socket id and info
