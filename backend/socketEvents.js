@@ -49,7 +49,7 @@ module.exports = (io) => {
   io.on('connection', async (socket) => {
     pool.connect((err, client, release) => {
       if (err) {
-          console.log(err)
+        console.log(err)
       }
       client.on('notification', (msg) => {
         console.log(JSON.parse(msg.payload))

@@ -12,7 +12,7 @@ const config = {
   port: process.env.USERS_PORT,
   database: process.env.USERS_DATABASE,
   dialect: 'postgresql',
-  ssl: false
+  ssl: false,
 }
 
 const pool = new pg.Pool(config)
@@ -28,4 +28,4 @@ const hgetAll = promisify(redisClient.hgetall).bind(redisClient)
 const hmset = promisify(redisClient.hmset).bind(redisClient)
 const sendCommand = promisify(redisClient.send_command).bind(redisClient)
 
-module.exports = { hgetAll, hmset, pool, redisClient, sendCommand, sequelize}
+module.exports = { hgetAll, hmset, pool, redisClient, sendCommand, sequelize }
