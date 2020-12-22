@@ -1,5 +1,5 @@
 const { hgetAll, sendCommand, redisClient } = require('./config.js')
-const notifs = require('./notificationsQueries.js')
+const notifs = require('./notifsQueries.js')
 const yelp = require('./yelpQuery.js')
 
 // gets top 3 liked restaurants for a session
