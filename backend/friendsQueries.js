@@ -54,8 +54,8 @@ const acceptRequest = async (req, res) => {
 // Creates friendship requests between both accounts
 const createFriends = async (req, res) => {
   try {
-    const main = req.body.params.main
-    const friend = req.body.params.friend
+    const main = req.body.main
+    const friend = req.body.friend
     // create pending and requested friendship statuses
     await Friends.bulkCreate([
       { main_id: main, status: 'requested', friend_id: friend, include: [Accounts] },
