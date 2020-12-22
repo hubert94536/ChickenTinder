@@ -12,11 +12,11 @@ function validateRequest(req, next, schema) {
   }
   // schema.validate(val, options) ==> validates val using current schema and options
   // Returns obj w keys value (validated, normalised val) and error (any validation errors)
-  const { value, error } = schema.validate(req.body.params, validationOptions)
+  const { value, error } = schema.validate(req.body, validationOptions)
   if (error) {
     next(`Validation error: ${error.details.map((x) => x.message).join(', ')}`)
   } else {
-    req.body.params = value
+    req.body = value
     next()
   }
 }

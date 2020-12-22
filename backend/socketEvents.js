@@ -1,6 +1,6 @@
-const { hgetAll, sendCommand, redisClient, pool } = require('./config.js')
-const Notifs = require('./notificationsQueries.js')
-const Yelp = require('./yelpQuery.js')
+const { hgetAll, sendCommand, redisClient } = require('./config.js')
+const notifs = require('./notificationsQueries.js')
+const yelp = require('./yelpQuery.js')
 
 // gets top 3 liked restaurants for a session
 const getTop3 = (restaurants) => {
@@ -47,15 +47,6 @@ const getTop3 = (restaurants) => {
 
 module.exports = (io) => {
   io.on('connection', async (socket) => {
-    pool.connect((err, client, release) => {
-      if (err) {
-        console.log(err)
-      }
-      client.on('notification', (msg) => {
-        console.log(JSON.parse(msg.payload))
-      })
-      client.query('LISTEN notifications')
-    })
     try {
       // TODO get notifications
       // update user with new socket id and info
@@ -67,7 +58,7 @@ module.exports = (io) => {
       socket.emit('exception', err.toString())
       console.log(err)
     }
-    //TODO: modify
+
     // disconnects user and removes them if in room
     socket.on('disconnect', async () => {
       try {
@@ -164,21 +155,20 @@ module.exports = (io) => {
         console.log(err)
       }
     })
-    // TODO create notif in db and update
+
     // send invite with host info to join a room
     socket.on('invite', async (data) => {
       try {
-        let user = await hgetAll(`users:${data.receiver}`)
-        await Notifs.createNotif(data.receiver, 'invite', data.code, data.id)
-        io.to(user.client).emit('invite', {
-          id: data.id,
-          username: data.username,
-          photo: data.photo,
-          name: data.name,
-          code: data.code,
-        })
-      } catch (error) {
-        socket.emit('exception', error.toString())
+        let req = {}
+        req.body = {}
+        req.body.receiver_id = data.receiver_id
+        req.body.type = 'invite'
+        req.body.content = data.code
+        req.body.sender_id = data.id
+        await notifs.createNotif(req)
+      } catch (err) {
+        socket.emit('exception', err.toString())
+        console.log(err)
       }
     })
 
@@ -263,7 +253,7 @@ module.exports = (io) => {
           filters.categories = filters.categories.slice(0, -1)
         }
         filters.categories = Array.from(new Set(filters.categories.split(','))).toString()
-        const resList = await Yelp.getRestaurants(filters)
+        const resList = await yelp.getRestaurants(filters)
         // clear filters for getting restaurants and replace with group logistics
         filters = {}
         filters.majority = data.filters.majority

@@ -75,6 +75,11 @@ describe('socket with Redis', () => {
     socket.on('update', async (session) => {
       try {
         // session should have correct format and data
+        socket.emit('invite', {
+          receiver_id: 1234,
+          code: 555555,
+          id: 123,
+        })
         expect(session.host).toBe('123')
         expect(session.code).toBeDefined()
         expect(session.members['123']).toEqual({
@@ -287,7 +292,7 @@ describe('socket with Redis', () => {
   })
 
   it('leaves session correctly', async (done) => {
-    expect.assertions(2)
+    expect.assertions(3)
     // create room
     socket.emit('create', {
       name: 'test',
@@ -309,6 +314,9 @@ describe('socket with Redis', () => {
           let filters = await sendCommand('JSON.GET', [`filters:${session.code}`])
           expect(room).toBe(null)
           expect(filters).toBe(null)
+          setTimeout(() => {}, 100)
+          let user = await hgetAll(`users:${'123'}`)
+          expect(user.room).toBe(undefined)
           done()
         } catch (err) {
           done(err)
