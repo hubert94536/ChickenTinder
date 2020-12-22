@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
-import Alert from '../modals/alert.js'
+import Alert from '../modals/Alert.js'
 import screenStyles from '../../styles/screenStyles.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'

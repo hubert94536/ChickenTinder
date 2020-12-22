@@ -9,32 +9,28 @@ const friendsApi = axios.create({
 const createFriendshipTest = async (main, friend) => {
   return friendsApi
     .post('/friendships', {
-      params: {
-        main: main,
-        friend: friend,
-      },
+      main: main,
+      friend: friend,
     })
     .then((res) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
 const createFriendship = async (id, friend) => {
   return friendsApi
     .post('/friendships', {
-      params: {
-        main: id,
-        friend: friend,
-      },
+      main: id,
+      friend: friend,
     })
     .then((res) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -58,7 +54,7 @@ const getFriends = async (id) => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -70,7 +66,7 @@ const acceptFriendRequest = async (id, friend) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -82,7 +78,7 @@ const removeFriendship = async (id, friend) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 

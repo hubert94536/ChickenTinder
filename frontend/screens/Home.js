@@ -7,9 +7,9 @@ import PropTypes from 'prop-types'
 // import friendsApi from '../apis/friendsApi.js'
 // import accountsApi from '../apis/accountsApi.js'
 import socket from '../apis/socket.js'
-import Alert from '../modals/alert.js'
-import Join from '../modals/join.js'
-import TabBar from '../nav.js'
+import Alert from '../modals/Alert.js'
+import Join from '../modals/Join.js'
+import TabBar from '../Nav.js'
 import screenStyles from '../../styles/screenStyles.js'
 
 var id = ''
@@ -40,7 +40,7 @@ class Home extends React.Component {
       socket.connect(id, name, photo, username)
       socket.getSocket().on('update', (res) => {
         this.setState({ invite: false })
-        this.props.navigation.push('Group', {
+        this.props.navigation.navigate('Group', {
           response: res,
           id: id,
           name: name,

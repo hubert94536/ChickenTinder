@@ -15,10 +15,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import Drawer from './Drawer.js'
-import Alert from '../modals/alert.js'
-import GroupCard from '../cards/groupCard.js'
-import ChooseFriends from '../modals/chooseFriends.js'
-import FilterSelector from './filter.js'
+import Alert from '../modals/Alert.js'
+import GroupCard from '../cards/GroupCard.js'
+import ChooseFriends from '../modals/ChooseFriends.js'
+import FilterSelector from './Filter.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
@@ -47,7 +47,7 @@ export default class Group extends React.Component {
       host: this.props.navigation.state.params.response.host,
       hostName: members[this.props.navigation.state.params.response.host].username,
       // hostName: "NOT YOU",
-      needFilters: Object.keys(members).filter((user) => !user.filters).length,
+      needFilters: Object.keys(members).filter((user) => !user.filters).length - 1,
 
       filters: {},
       code: this.props.navigation.state.params.response.code,
@@ -174,7 +174,7 @@ export default class Group extends React.Component {
     } else {
       socket.leaveRoom(this.state.code)
     }
-    this.props.navigation.pop()
+    this.props.navigation.popToTop()
   }
 
   // shows proper alert based on if user is host

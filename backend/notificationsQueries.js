@@ -2,17 +2,18 @@ const { Accounts, Notifications } = require('./models')
 var attributes = ['username', 'photo', 'name']
 
 // Creates notification
-const createNotif = async (rid, type, content, sid) => {
+const createNotif = async (req) => {
   try {
     await Notifications.create({
-      receiver_id: rid,
-      type: type,
-      content: content,
-      sender_id: sid,
+      receiver_id: req.body.receiver_id,
+      type: req.body.type,
+      content: req.body.content,
+      sender_id: req.body.sender_id,
       include: [Accounts],
     })
-    return Promise.resolve(201)
+    Promise.resolve(201)
   } catch (error) {
+    console.log(error)
     return Promise.reject(500)
   }
 }
@@ -29,6 +30,7 @@ const deleteNotif = async (req, res) => {
     }
     return res.status(404).send('Notification not found')
   } catch (error) {
+    console.log(error)
     return res.status(500).send(error.message)
   }
 }
@@ -48,6 +50,7 @@ const getNotifs = async (req, res) => {
     })
     return res.status(200).json({ notifs })
   } catch (error) {
+    console.log(error)
     return res.status(500).send(error.message)
   }
 }
@@ -66,6 +69,7 @@ const updateNotif = async (id, type) => {
     }
     return Promise.reject(404)
   } catch (error) {
+    console.log(error)
     return Promise.reject(error)
   }
 }
