@@ -54,12 +54,12 @@ const checkUsername = async (req, res) => {
 const createAccount = async (req, res) => {
   try {
     await Accounts.create({
-      id: req.body.params.id,
-      name: req.body.params.name,
-      username: req.body.params.username,
-      email: req.body.params.email,
-      photo: req.body.params.photo,
-      phone_number: req.body.params.phone_number,
+      id: req.body.id,
+      name: req.body.name,
+      username: req.body.username,
+      email: req.body.email,
+      photo: req.body.photo,
+      phone_number: req.body.phone_number,
     })
     return res.status(201).send('Account created')
   } catch (error) {
@@ -140,7 +140,7 @@ const getAllAccounts = async (req, res) => {
 const updateAccount = async (req, res) => {
   try {
     const { id } = req.params
-    const updated = await Accounts.update(req.body.params, {
+    const updated = await Accounts.update(req.body, {
       where: { id: id },
     })
     if (updated) {
