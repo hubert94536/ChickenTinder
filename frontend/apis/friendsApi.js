@@ -9,10 +9,8 @@ const friendsApi = axios.create({
 const createFriendshipTest = async (main, friend) => {
   return friendsApi
     .post('/friendships', {
-      params: {
-        main: main,
-        friend: friend,
-      },
+      main: main,
+      friend: friend,
     })
     .then((res) => {
       return res.status
@@ -25,10 +23,8 @@ const createFriendshipTest = async (main, friend) => {
 const createFriendship = async (id, friend) => {
   return friendsApi
     .post('/friendships', {
-      params: {
-        main: id,
-        friend: friend,
-      },
+      main: id,
+      friend: friend,
     })
     .then((res) => {
       return res.status
