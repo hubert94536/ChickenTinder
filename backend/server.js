@@ -2,11 +2,12 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const http = require('http')
 const io = require('socket.io')()
+const validateRoute = require('express-joi-validation').createValidator({})
 const accounts = require('./accountsQueries.js')
 const friends = require('./friendsQueries.js')
 const images = require('./images')
-const notifications = require('./notificationsQueries.js')
-const schemaValidation = require('./schemaValidation.js')
+const notifications = require('./notifsQueries.js')
+const schema = require('./schema.js')
 
 const app = express()
 const server = http.createServer(app)
@@ -28,83 +29,87 @@ if (app.get('env') === 'development') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 }
 
+// TODO: add schema validation for images
 //image uploads
 app.route('/images').post(images.upload, images.uploadHandler)
 
-// accounts table
+// Accounts table
 app
   .route('/accounts')
   .get(accounts.getAllAccounts)
-  .post(schemaValidation.checkCreateAccountsSchema, accounts.createAccount)
+  .post(schema.checkCreateAccounts, accounts.createAccount)
 
 app
   .route('/accounts/search/:text')
   .get(
-    schemaValidation.validateRoute.params(schemaValidation.searchAccountSchema),
+    validateRoute.params(schema.textSchema),
     accounts.searchAccounts,
   )
+
 app
   .route('/accounts/:id')
   .get(
-    schemaValidation.validateRoute.params(schemaValidation.accountByIdSchema),
+    validateRoute.params(schema.idSchema),
     accounts.getAccountById,
   )
   .put(
-    schemaValidation.checkUpdateAccountSchema,
-    schemaValidation.validateRoute.params(schemaValidation.accountByIdSchema),
+    schema.checkUpdateAccount,
+    validateRoute.params(schema.idSchema),
     accounts.updateAccount,
   )
   .delete(
-    schemaValidation.validateRoute.params(schemaValidation.accountByIdSchema),
+    validateRoute.params(schema.idSchema),
     accounts.deleteAccount,
   )
 
 app
   .route('/username/:username')
   .get(
-    schemaValidation.validateRoute.params(schemaValidation.usernameSchema),
+    validateRoute.params(schema.usernameSchema),
     accounts.checkUsername,
   )
 
 app
   .route('/phoneNumber/:phone_number')
   .get(
-    schemaValidation.validateRoute.params(schemaValidation.phoneNumberSchema),
+    validateRoute.params(schema.phoneNumberSchema),
     accounts.checkPhoneNumber,
   )
 
-app.route('/email/:email').get(accounts.checkEmail)
+app.route('/email/:email').get(
+  validateRoute.params(schema.emailSchema),
+  accounts.checkEmail
+  )
 
-// friendships table
-app.route('/friendships').post(schemaValidation.checkCreateFriendsSchema, friends.createFriends)
+// Friendships table
+app
+  .route('/friendships/:id')
+  .get(validateRoute.params(schema.idSchema), friends.getFriends)
 
 app
-  .route('/friendships/:user')
-  .get(schemaValidation.validateRoute.params(schemaValidation.getFriendsSchema), friends.getFriends)
-
-app
-  .route('/friendships/:user/:friend')
+  .route('/friendships/:main/:friend')
+  .post(validateRoute.params(schema.friendshipSchema), friends.createFriends)
   .delete(
-    schemaValidation.validateRoute.params(schemaValidation.friendshipSchema),
+    validateRoute.params(schema.friendshipSchema),
     friends.deleteFriendship,
   )
   .put(
-    schemaValidation.validateRoute.params(schemaValidation.friendshipSchema),
+    validateRoute.params(schema.friendshipSchema),
     friends.acceptRequest,
   )
 
-// notifications table
+// Notifications table
 app
   .route('/notifications/user/:id')
   .get(
-    schemaValidation.validateRoute.params(schemaValidation.notifsSchema),
+    validateRoute.params(schema.idSchema),
     notifications.getNotifs,
   )
 
 app
   .route('/notifications/:id')
   .delete(
-    schemaValidation.validateRoute.params(schemaValidation.notifsSchema),
+    validateRoute.params(schema.idSchema),
     notifications.deleteNotif,
   )
 
