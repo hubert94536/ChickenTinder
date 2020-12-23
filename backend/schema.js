@@ -87,5 +87,5 @@ module.exports = {
   idSchema,
   phoneNumberSchema,
   textSchema,
-  usernameSchema
+  usernameSchema,
 }
