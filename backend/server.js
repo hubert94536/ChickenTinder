@@ -41,77 +41,41 @@ app
 
 app
   .route('/accounts/search/:text')
-  .get(
-    validateRoute.params(schema.textSchema),
-    accounts.searchAccounts,
-  )
+  .get(validateRoute.params(schema.textSchema), accounts.searchAccounts)
 
 app
   .route('/accounts/:id')
-  .get(
-    validateRoute.params(schema.idSchema),
-    accounts.getAccountById,
-  )
-  .put(
-    schema.checkUpdateAccount,
-    validateRoute.params(schema.idSchema),
-    accounts.updateAccount,
-  )
-  .delete(
-    validateRoute.params(schema.idSchema),
-    accounts.deleteAccount,
-  )
+  .get(validateRoute.params(schema.idSchema), accounts.getAccountById)
+  .put(schema.checkUpdateAccount, validateRoute.params(schema.idSchema), accounts.updateAccount)
+  .delete(validateRoute.params(schema.idSchema), accounts.deleteAccount)
 
 app
   .route('/username/:username')
-  .get(
-    validateRoute.params(schema.usernameSchema),
-    accounts.checkUsername,
-  )
+  .get(validateRoute.params(schema.usernameSchema), accounts.checkUsername)
 
 app
   .route('/phoneNumber/:phone_number')
-  .get(
-    validateRoute.params(schema.phoneNumberSchema),
-    accounts.checkPhoneNumber,
-  )
+  .get(validateRoute.params(schema.phoneNumberSchema), accounts.checkPhoneNumber)
 
-app.route('/email/:email').get(
-  validateRoute.params(schema.emailSchema),
-  accounts.checkEmail
-  )
+app.route('/email/:email').get(validateRoute.params(schema.emailSchema), accounts.checkEmail)
 
 // Friendships table
-app
-  .route('/friendships/:id')
-  .get(validateRoute.params(schema.idSchema), friends.getFriends)
+app.route('/friendships/:id').get(validateRoute.params(schema.idSchema), friends.getFriends)
 
 app
   .route('/friendships/:main/:friend')
   .post(validateRoute.params(schema.friendshipSchema), friends.createFriends)
-  .delete(
-    validateRoute.params(schema.friendshipSchema),
-    friends.deleteFriendship,
-  )
-  .put(
-    validateRoute.params(schema.friendshipSchema),
-    friends.acceptRequest,
-  )
+  .delete(validateRoute.params(schema.friendshipSchema), friends.deleteFriendship)
+  .put(validateRoute.params(schema.friendshipSchema), friends.acceptRequest)
 
 // Notifications table
 app
   .route('/notifications/user/:id')
-  .get(
-    validateRoute.params(schema.idSchema),
-    notifications.getNotifs,
-  )
+  .get(validateRoute.params(schema.idSchema), notifications.getNotifs)
 
 app
   .route('/notifications/:id')
-  .delete(
-    validateRoute.params(schema.idSchema),
-    notifications.deleteNotif,
-  )
+  .delete(validateRoute.params(schema.idSchema), notifications.deleteNotif)
 
 server.listen(PORT, () => {
   console.log(`App running on port ${PORT}.`)
