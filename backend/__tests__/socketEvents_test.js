@@ -75,11 +75,6 @@ describe('socket with Redis', () => {
     socket.on('update', async (session) => {
       try {
         // session should have correct format and data
-        socket.emit('invite', {
-          receiver_id: 1234,
-          code: 555555,
-          id: 123,
-        })
         expect(session.host).toBe('123')
         expect(session.code).toBeDefined()
         expect(session.members['123']).toEqual({
