@@ -1,6 +1,6 @@
 const { Accounts, Notifications } = require('./models')
-var attributes = ['username', 'photo', 'name']
 
+var attributes = ['username', 'photo', 'name']
 // Creates notification
 const createNotif = async (req) => {
   try {

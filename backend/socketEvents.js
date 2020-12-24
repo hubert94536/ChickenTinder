@@ -6,6 +6,7 @@ const yelp = require('./yelpQuery.js')
 const getTop3 = (restaurants) => {
   let arrKey = ['', '', '']
   let arrVal = [0, 0, 0]
+  // loops through keys and sets array to order of most likes
   for (let [key, value] of Object.entries(restaurants)) {
     let tempVal = 0
     let tempKey = ''
@@ -48,7 +49,6 @@ const getTop3 = (restaurants) => {
 module.exports = (io) => {
   io.on('connection', async (socket) => {
     try {
-      // TODO get notifications
       // update user with new socket id and info
       let id = socket.handshake.query.id
       redisClient.hmset(`users:${id}`, 'client', socket.id)
@@ -65,6 +65,7 @@ module.exports = (io) => {
         // retrieve user's last room and id from socket id
         let client = await hgetAll(`clients:${socket.id}`)
         // delete old socket id
+        redisClient.hdel(`users:${client.id}`, 'client')
         redisClient.hdel(`clients:${socket.id}`, 'id', 'room')
         if (client.room) {
           // retrieve session information
@@ -159,6 +160,7 @@ module.exports = (io) => {
     // send invite with host info to join a room
     socket.on('invite', async (data) => {
       try {
+        // create request body
         let req = {}
         req.body = {}
         req.body.receiver_id = data.receiver_id
