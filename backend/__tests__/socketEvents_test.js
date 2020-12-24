@@ -43,7 +43,7 @@ describe('socket with Redis', () => {
 
   it('it connects and disconnects correctly', async (done) => {
     try {
-      // expect.assertions(2)
+      expect.assertions(2)
       // test socket id and user id can be used to fetch the other
       let user = await hgetAll(`users:${123}`)
       let client = await hgetAll(`clients:${user.client}`)
