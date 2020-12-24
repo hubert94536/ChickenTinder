@@ -1,5 +1,5 @@
-const { Accounts, Friends, Notifications } = require('./models.js')
 const { Op } = require('sequelize')
+const { Accounts, Friends, Notifications } = require('./models.js')
 
 // Check if email exists
 const checkEmail = async (req, res) => {

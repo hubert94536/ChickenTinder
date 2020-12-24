@@ -70,6 +70,6 @@ const getRestaurants = jest
       ],
     }),
   )
-export default {
+module.exports = {
   getRestaurants,
 }
