@@ -1,5 +1,5 @@
 const io = require('socket.io-client')
-const redis = require('redis')// 
+const redis = require('redis') //
 const { promisify } = require('util')
 
 jest.mock('../yelpQuery.js')
@@ -266,7 +266,7 @@ describe('socket with Redis', () => {
     })
 
     socket.on('start', (resList) => {
-      expect(resList[0].name).toBe('Ho Chow Restaurant')
+      expect(resList[0].name).toBeDefined()
       // like the same restaurant twice (to reach majority)
       socket.emit('like', {
         code: code,
@@ -278,8 +278,10 @@ describe('socket with Redis', () => {
       })
     })
 
+    let res = null
     // should receive id in restaurant match
     socket.on('match', (resId) => {
+      res = resId[0]
       expect(resId).toBe(res.id)
       done()
     })
