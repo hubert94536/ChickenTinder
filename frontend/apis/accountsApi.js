@@ -27,25 +27,20 @@ const accountsApi = axios.create({
 
 // creates user and returns id
 const createFBUser = async (name, id, username, email, photo) => {
-  return (
-    accountsApi
-      .post('/accounts', {
-        params: {
-          id: id,
-          name: name,
-          username: username,
-          email: email,
-          photo: photo,
-        },
-      })
-      //  returns business info from Yelp
-      .then((res) => {
-        return res.status
-      })
-      .catch((error) => {
-        throw error.response.status
-      })
-  )
+  return accountsApi
+    .post('/accounts', {
+      id: id,
+      name: name,
+      username: username,
+      email: email,
+      photo: photo,
+    })
+    .then((res) => {
+      return res.status
+    })
+    .catch((error) => {
+      Promise.reject(error.response)
+    })
 }
 
 // gets list of users
@@ -67,7 +62,7 @@ const getAllUsers = async () => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -77,7 +72,6 @@ const searchUsers = async (text) => {
     .get(`/accounts/search/${text}`)
     .then((res) => {
       return {
-        status: res.status,
         count: res.data.users.count,
         userList: res.data.users.rows.map(function (users) {
           // returns individual user info
@@ -91,19 +85,19 @@ const searchUsers = async (text) => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
 // deletes user and returns status
-const deleteUser = async () => {
+const deleteUser = async (id) => {
   return accountsApi
-    .delete(`/accounts/${myId}`)
+    .delete(`/accounts/${id}`)
     .then((res) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -113,7 +107,6 @@ const getUser = async (id) => {
     .get(`/accounts/${id}`)
     .then((res) => {
       return {
-        status: res.status,
         username: res.data.user.username,
         email: res.data.user.email,
         phone_number: res.data.user.phone_number,
@@ -123,67 +116,66 @@ const getUser = async (id) => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
 // update email and returns status
-const updateEmail = async (info) => {
+const updateEmail = async (id, info) => {
   const req = {
     email: info,
   }
-  return updateUser(req)
+  return updateUser(id, req)
 }
 
 // update username and returns status
-const updateUsername = async (info) => {
+const updateUsername = async (id, info) => {
   const req = {
     username: info,
   }
-  return updateUser(req)
+  return updateUser(id, req)
 }
 
 // update username and returns status
-const updateName = async (info) => {
+const updateName = async (id, info) => {
   const req = {
     name: info,
   }
-  return updateUser(req)
+  return updateUser(id, req)
 }
 
 // update username and returns status
-const updatePhoneNumber = async (info) => {
+const updatePhoneNumber = async (id, info) => {
   const req = {
     phone_number: info,
   }
-  return updateUser(req)
+  return updateUser(id, req)
 }
 
 // updates user and returns status
-const updateUser = async (req) => {
+const updateUser = async (id, req) => {
   return accountsApi
-    .put(`/accounts/${myId}`, {
-      params: req,
-    })
+    .put(`/accounts/${id}`, req)
     .then((res) => {
       return {
         status: res.status,
       }
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
 // checks username and returns status
 const checkUsername = async (username) => {
+  console.log('check')
   return accountsApi
     .get(`/username/${username}`)
     .then((res) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -195,7 +187,19 @@ const checkPhoneNumber = async (phoneNumber) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
+    })
+}
+
+// checks email and returns status
+const checkEmail = async (email) => {
+  return accountsApi
+    .get(`/email/${email}`)
+    .then((res) => {
+      return res.status
+    })
+    .catch((error) => {
+      Promise.reject(error.response)
     })
 }
 
@@ -211,4 +215,5 @@ export default {
   checkUsername,
   checkPhoneNumber,
   searchUsers,
+  checkEmail,
 }

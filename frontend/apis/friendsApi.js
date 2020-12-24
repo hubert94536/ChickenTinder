@@ -29,46 +29,39 @@ const friendsApi = axios.create({
 const createFriendshipTest = async (main, friend) => {
   return friendsApi
     .post('/friendships', {
-      params: {
-        main: main,
-        friend: friend,
-      },
+      main: main,
+      friend: friend,
     })
     .then((res) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
-const createFriendship = async (friend) => {
+const createFriendship = async (id, friend) => {
   return friendsApi
-    .post('/friendships', {
-      params: {
-        main: myId,
-        friend: friend,
-      },
-    })
+    .post(`/friendships/${id}/${friend}`)
     .then((res) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
 // gets a users friends/requests
-const getFriends = async () => {
+const getFriends = async (id) => {
   return friendsApi
-    .get(`/friendships/friends/${myId}`)
+    .get(`/friendships/${id}`)
     .then((res) => {
       return {
         status: res.status,
         friendList: res.data.friends.map(function (friends) {
           // returns individual user info
           return {
-            id: friends.f_id,
+            id: friends.friend_id,
             name: friends.account.name,
             photo: friends.account.photo,
             username: friends.account.username,
@@ -78,31 +71,31 @@ const getFriends = async () => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
 // accept a friend request
-const acceptFriendRequest = async (friend) => {
+const acceptFriendRequest = async (id, friend) => {
   return friendsApi
-    .put(`/friendships/friends/${myId}/${friend}`)
+    .put(`/friendships/${id}/${friend}`)
     .then((res) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
 // remove a friendship
-const removeFriendship = async (friend) => {
+const removeFriendship = async (id, friend) => {
   return friendsApi
-    .delete(`/friendships/friends/${myId}/${friend}`)
+    .delete(`/friendships/${id}/${friend}`)
     .then((res) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 

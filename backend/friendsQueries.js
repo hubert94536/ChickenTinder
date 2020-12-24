@@ -1,20 +1,101 @@
-const { Accounts, Friends } = require('./models')
-const { Sequelize } = require('sequelize')
-const Op = Sequelize.Op
+const { Op } = require('sequelize')
+const { Accounts, Friends, Notifications } = require('./models')
+
 var attributes = ['username', 'photo', 'name']
+
+// Accept a friend request
+const acceptRequest = async (req, res) => {
+  try {
+    const main = req.params.main
+    const friend = req.params.friend
+    // set status to friends for friend and main account ids
+    const mainAccount = await Friends.update(
+      { status: 'friends' },
+      {
+        where: {
+          [Op.and]: [{ main_id: main }, { friend_id: friend }],
+        },
+      },
+    )
+    const friendAccount = await Friends.update(
+      { status: 'friends' },
+      {
+        where: {
+          [Op.and]: [{ main_id: friend }, { friend_id: main }],
+        },
+      },
+    )
+    if (mainAccount && friendAccount) {
+      // update notification to main from pending friend request to friends
+      await Notifications.update(
+        { type: 'friends' },
+        {
+          where: {
+            [Op.and]: [{ receiver_id: main }, { sender_id: friend }, { type: 'pending' }],
+          },
+        },
+      )
+      // create notification to friend for accepted friend request
+      await Notifications.create({
+        receiver_id: friend,
+        type: 'accepted',
+        sender_id: main,
+        include: [Accounts],
+      })
+      return res.status(200).send('Friendship accepted')
+    }
+    return res.status(404).send('Friendship not found')
+  } catch (error) {
+    console.log(error)
+    return res.status(500).send(error.message)
+  }
+}
 
 // Creates friendship requests between both accounts
 const createFriends = async (req, res) => {
   try {
-    const main = req.body.params.main
-    const friend = req.body.params.friend
+    const main = req.params.main
+    const friend = req.params.friend
+    // create pending and requested friendship statuses
     await Friends.bulkCreate([
-      { m_id: main, status: 'Requested', f_id: friend, f_info: friend, include: [Accounts] },
-      { m_id: friend, status: 'Pending Request', f_id: main, f_info: main, include: [Accounts] },
+      { main_id: main, status: 'requested', friend_id: friend, include: [Accounts] },
+      { main_id: friend, status: 'pending', friend_id: main, include: [Accounts] },
     ])
+    // create notification to friend for pending friend request
+    await Notifications.create({
+      receiver_id: friend,
+      type: 'pending',
+      sender_id: main,
+      include: [Accounts],
+    })
     return res.status(201).send('Friend requested')
   } catch (error) {
+    console.log(error)
     return res.status(500).json({ error: error.message })
+  }
+}
+
+// Delete a friendship
+const deleteFriendship = async (req, res) => {
+  try {
+    const main = req.params.main
+    const friend = req.params.friend
+    // delete friendship rows for both main and friend
+    const destroyed = await Friends.destroy({
+      where: {
+        [Op.or]: [
+          { [Op.and]: [{ main_id: friend }, { friend_id: main }] },
+          { [Op.and]: [{ main_id: main }, { friend_id: friend }] },
+        ],
+      },
+    })
+    if (destroyed) {
+      return res.status(204).send('Friendship deleted')
+    }
+    return res.status(404).send('Friendship not found')
+  } catch (error) {
+    console.log(error)
+    return res.status(500).send(error.message)
   }
 }
 
@@ -22,7 +103,7 @@ const createFriends = async (req, res) => {
 const getFriends = async (req, res) => {
   try {
     const friends = await Friends.findAll({
-      where: { m_id: req.params.user },
+      where: { main_id: req.params.id },
       include: [
         {
           model: Accounts,
@@ -36,61 +117,9 @@ const getFriends = async (req, res) => {
   }
 }
 
-// Accept a friend request
-const acceptRequest = async (req, res) => {
-  try {
-    const main = req.params.user
-    const friend = req.params.friend
-    const mainAccount = await Friends.update(
-      { status: 'Accepted' },
-      {
-        where: {
-          [Op.and]: [{ m_id: main }, { f_id: friend }],
-        },
-      },
-    )
-    const friendAccount = await Friends.update(
-      { status: 'Accepted' },
-      {
-        where: {
-          [Op.and]: [{ m_id: friend }, { f_id: main }],
-        },
-      },
-    )
-    if (mainAccount && friendAccount) {
-      return res.status(200).send('Friendship accepted')
-    }
-    return res.status(404).send('Friendship not found')
-  } catch (error) {
-    return res.status(500).send(error.message)
-  }
-}
-
-// Delete a friendship
-const deleteFriendship = async (req, res) => {
-  try {
-    const main = req.params.user
-    const friend = req.params.friend
-    const destroyed = await Friends.destroy({
-      where: {
-        [Op.or]: [
-          { [Op.and]: [{ m_id: friend }, { f_id: main }] },
-          { [Op.and]: [{ m_id: main }, { f_id: friend }] },
-        ],
-      },
-    })
-    if (destroyed) {
-      return res.status(204).send('Friendship deleted')
-    }
-    return res.status(404).send('Friendship not found')
-  } catch (error) {
-    return res.status(500).send(error.message)
-  }
-}
-
 module.exports = {
-  createFriends,
-  getFriends,
   acceptRequest,
+  createFriends,
   deleteFriendship,
+  getFriends,
 }

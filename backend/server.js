@@ -1,13 +1,18 @@
-const express = require('express')
-const io = require('socket.io')()
 const bodyParser = require('body-parser')
-const accounts = require('./accountsQueries.js')
-const friends = require('./friendsQueries.js')
-const auth = require('./auth.js')
+const express = require('express')
 const http = require('http')
+const io = require('socket.io')()
+const validateRoute = require('express-joi-validation').createValidator({})
+const accounts = require('./accountsQueries.js')
+const auth = require('./auth.js')
+const friends = require('./friendsQueries.js')
+const images = require('./images')
+const notifications = require('./notifsQueries.js')
+const schema = require('./schema.js')
 
 const app = express()
 const server = http.createServer(app)
+
 io.attach(server)
 require('./socketEvents.js')(io)
 
@@ -28,33 +33,54 @@ if (app.get('env') === 'development') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 }
 
-// accounts table
-// TODO: Unauthenticated
-app.route('/accounts').get(accounts.getAllAccounts).post(accounts.createAccount)
+// TODO: add schema validation for images
+//image uploads
+app.route('/images').post(images.upload, images.uploadHandler)
+// TODO: unauthenticated
+// Accounts table
+app
+  .route('/accounts')
+  .get(accounts.getAllAccounts)
+  .post(schema.checkCreateAccounts, accounts.createAccount)
 
-app.route('/accounts/search/:text').get(accounts.searchAccounts)
+app
+  .route('/accounts/search/:text')
+  .get(validateRoute.params(schema.textSchema), accounts.searchAccounts)
 
 app
   .route('/accounts/:id')
-  .get(accounts.getAccountById)
-  .put(accounts.updateAccount)
-  .delete(accounts.deleteAccount)
-
-// TODO: Unauthenticated
-app.route('/username/:username').get(accounts.checkUsername)
-
-// TODO: Unauthenticated
-app.route('/phoneNumber/:phone_number').get(accounts.checkPhoneNumber)
-
-// friendships table
-app.route('/friendships').post(friends.createFriends)
-
-app.route('/friendships/friends/:user').get(friends.getFriends)
+  .get(validateRoute.params(schema.idSchema), accounts.getAccountById)
+  .put(schema.checkUpdateAccount, validateRoute.params(schema.idSchema), accounts.updateAccount)
+  .delete(validateRoute.params(schema.idSchema), accounts.deleteAccount)
 
 app
-  .route('/friendships/friends/:user/:friend')
-  .delete(friends.deleteFriendship)
-  .put(friends.acceptRequest)
+  .route('/username/:username')
+  .get(validateRoute.params(schema.usernameSchema), accounts.checkUsername)
+
+// TODO: unauthenticated
+app
+  .route('/phoneNumber/:phone_number')
+  .get(validateRoute.params(schema.phoneNumberSchema), accounts.checkPhoneNumber)
+// TODO: unauthenticated
+app.route('/email/:email').get(validateRoute.params(schema.emailSchema), accounts.checkEmail)
+
+// Friendships table
+app.route('/friendships/:id').get(validateRoute.params(schema.idSchema), friends.getFriends)
+
+app
+  .route('/friendships/:main/:friend')
+  .post(validateRoute.params(schema.friendshipSchema), friends.createFriends)
+  .delete(validateRoute.params(schema.friendshipSchema), friends.deleteFriendship)
+  .put(validateRoute.params(schema.friendshipSchema), friends.acceptRequest)
+// TODO: unauthenticated
+// Notifications table
+app
+  .route('/notifications/user/:id')
+  .get(validateRoute.params(schema.idSchema), notifications.getNotifs)
+
+app
+  .route('/notifications/:id')
+  .delete(validateRoute.params(schema.idSchema), notifications.deleteNotif)
 
 server.listen(PORT, () => {
   console.log(`App running on port ${PORT}.`)

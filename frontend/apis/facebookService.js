@@ -11,6 +11,7 @@ import {
   UID,
   EMAIL,
   PHOTO,
+  PHONE,
 } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import FBSDK from 'react-native-fbsdk'
@@ -29,7 +30,8 @@ const config = {
   storageBucket: FIREBASE_STORAGE_BUCKET, // Storage
 }
 
-Firebase.initializeApp(config)
+if (!Firebase.apps.length) Firebase.initializeApp(config)
+
 const loginWithFacebook = async () => {
   // Attempt a login using the Facebook login dialog asking for default permissions.
   return LoginManager.logInWithPermissions(['public_profile', 'email'])
@@ -45,27 +47,35 @@ const loginWithFacebook = async () => {
       return Firebase.auth().signInWithCredential(credential)
     })
     .then((currentUser) => {
-      // Set user's info locally
-      AsyncStorage.setItem(UID, Firebase.auth().currentUser.uid)
-      AsyncStorage.setItem(NAME, currentUser.additionalUserInfo.profile.name)
-      AsyncStorage.setItem(ID, currentUser.additionalUserInfo.profile.id)
-      AsyncStorage.setItem(EMAIL, currentUser.additionalUserInfo.profile.email)
-      AsyncStorage.setItem(PHOTO, currentUser.user.photoURL)
-      // Get username from database if not new user
+      // Get info from database if not new user
       if (!currentUser.additionalUserInfo.isNewUser) {
         return accountsApi.getUser(currentUser.additionalUserInfo.profile.id).then((res) => {
-          AsyncStorage.setItem(USERNAME, res.username)
+          AsyncStorage.multiSet([
+            [USERNAME, res.username],
+            [PHOTO, res.photo],
+            [NAME, res.name],
+            [EMAIL, res.email],
+            [ID, res.id],
+            [PHONE, ''],
+          ])
           return 'Home'
         })
       }
-      return 'Username'
+      // Set user's info locally
+      AsyncStorage.multiSet([
+        [UID, Firebase.auth().currentUser.uid],
+        [NAME, currentUser.additionalUserInfo.profile.name],
+        [ID, currentUser.additionalUserInfo.profile.id],
+        [EMAIL, currentUser.additionalUserInfo.profile.email],
+      ])
+      return 'CreateAccount'
     })
     .catch((error) => {
       //  Account linking will be needed with email/phone_number login
       // if (errorCode === 'auth/account-exists-with-different-credential') {
       //   alert('Email already associated with another account.');
       //   // Handle account linking here, if using.
-      throw error
+      Promise.reject(error)
     })
 }
 
@@ -74,6 +84,7 @@ const loginWithFacebook = async () => {
 // }
 
 // Log out of Firebase and Facebook
+// TODO: Update with new async storage items
 const logoutWithFacebook = async () => {
   Firebase.auth()
     .signOut()
@@ -82,13 +93,13 @@ const logoutWithFacebook = async () => {
       AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO])
     })
     .catch((error) => {
-      throw error
+      Promise.reject(error)
     })
 }
 
-const deleteUser = async () => {
+const deleteUser = async (id) => {
   accountsApi
-    .deleteUser()
+    .deleteUser(id)
     .then(() => {
       // Need to refresh access token since old one expired
       AccessToken.refreshCurrentAccessTokenAsync()
@@ -101,12 +112,12 @@ const deleteUser = async () => {
           .currentUser.reauthenticateWithCredential(credential)
           .then(() => {
             Firebase.auth().currentUser.delete()
-            AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO])
+            AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO, PHONE])
           })
       })
     })
     .catch((error) => {
-      throw error
+      Promise.reject(error)
     })
 }
 //  getUser if needed

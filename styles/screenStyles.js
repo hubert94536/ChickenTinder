@@ -1,4 +1,3 @@
-import React from 'react'
 import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
@@ -9,9 +8,18 @@ export default StyleSheet.create({
     width: '65%',
     alignSelf: 'center',
   },
+  bigButtonText: {
+    fontFamily: 'CircularStd-Book',
+    fontSize: 16,
+    textAlign: 'center',
+  },
   text: {
+    fontFamily: 'CircularStd-Medium',
+    color: '#F15763',
+  },
+  textBold: {
     fontFamily: 'CircularStd-Bold',
-    color: '#F25763',
+    color: '#F15763',
   },
   input: {
     fontSize: 20,
@@ -20,11 +28,11 @@ export default StyleSheet.create({
   },
   smallButton: {
     borderRadius: 45,
-    borderColor: '#F25763',
+    borderColor: '#F15763',
     borderWidth: 2,
   },
   smallButtonText: {
-    fontFamily: 'CircularStd-Bold',
+    fontFamily: 'CircularStd-Medium',
     textAlign: 'center',
     fontSize: 17,
     paddingTop: '0.5%',
@@ -37,9 +45,9 @@ export default StyleSheet.create({
     fontSize: 45,
   },
   icons: {
-    color: '#F25763',
+    color: '#F15763',
     fontSize: 27,
-    fontFamily: 'CircularStd-Bold',
+    fontFamily: 'CircularStd-Medium',
   },
   medButton: {
     borderRadius: 30,
@@ -47,8 +55,33 @@ export default StyleSheet.create({
     alignSelf: 'center',
   },
   medButtonText: {
-    fontFamily: 'CircularStd-Bold',
-    fontSize: 20,
+    fontFamily: 'CircularStd-Medium',
+    fontSize: 16,
     textAlign: 'center',
+  },
+
+  longButton: {
+    borderRadius: 30,
+    borderWidth: 2.5,
+    alignSelf: 'center',
+    paddingVertical: 5,
+    paddingHorizontal: 12,
+    width: '70%',
+  },
+
+  longButtonText: {
+    alignSelf: 'center',
+    fontFamily: 'CircularStd-Book',
+    fontSize: 18,
+    fontWeight: 'normal',
+  },
+
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 63,
+    borderWidth: 4,
+    alignSelf: 'center',
+    margin: '1.5%',
   },
 })
