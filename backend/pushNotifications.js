@@ -1,3 +1,4 @@
+/* Deprecat */
 var admin = require('firebase-admin');
 
 admin.initializeApp({
@@ -5,78 +6,53 @@ admin.initializeApp({
     databaseUrl: "bar" // REPLACE
 })
 
+var messaging = admin.messaging;
+
 // Store id: tokens in socket w/ redis
 
-// Friend request notification
-const sendfriendRequest = (sender, recipientToken) => {
-    // build message
-    // send message
+const sendNotification = (id, receiver_id, type, content, sender_id, name, username, photo) => {
     var message = {
-        notifications: {
-            title: `${sender} has sent you a friend request`
+        data: {
+            type: type,
+            content: content, 
+            name: name,
+            username: username, 
+            photo: photo
         },
-        android: {
-            priority: "high",
-            notification: {
-                click_action: "foo" // REPLACE
-            }
-        },
-        token: recipientToken
+        token: "foo" //get recipientToken from receiver_id
     }
 }
 
-// Accepted notification
-const sendAcceptFriend = (sender, recipientToken) => {
-    // build message
-    // send message
-    var message = {
-        notifications: {
-            title: `${sender} has accepted your friend request`
-        },
-        android: {
-            priority: "high",
-            notification: {
-                click_action: "foo" // REPLACE
-            }
-        },
-        token: recipientToken
-    }
+const associateToken = () => {
+    // associate recipientToken with id
+    // caled on login
 }
 
-// Invite notification
-// Pass in array to send to multiple
-const sendInvite = (sender, recipientToken) => {
-    var message = {
-        notifications: {
-            title: `${sender} has invited you`,
-            body: "Click to join"
-        },
-        android: {
-            priority: "high",
-            notification: {
-                click_action: "foo" // REPLACE
-            }
-        },
-        token: recipientToken
-    }
-
-
+const disassociateToken = () => {
+    // disassociate recipientToken with id
+    // called on logout
 }
 
-// Currently no groups
-
-// Subscribes multiple people to a group
-const subscribeToGroup = (registrationTokens, topic) => {
-
-}
-
-// Unsubscribes multiple people from a group
-const unsubscribeFromGroup = (registrationTokens, topic) => {
-
-}
-
-// Send a message to a group
-const sendToGroup = (sender, topic, message) = { 
-
-}
-
+// const Notifications = sequelize.define('notifications', {
+//     id: {
+//       type: DataTypes.BIGINT,
+//       allowNull: false,
+//       primaryKey: true,
+//       autoIncrement: true,
+//     },
+//     receiver_id: {
+//       type: DataTypes.BIGINT,
+//       allowNull: false,
+//     },
+//     type: {
+//       type: DataTypes.STRING,
+//       allowNull: false,
+//     },
+//     content: {
+//       type: DataTypes.STRING(20),
+//     },
+//     sender_id: {
+//       type: DataTypes.BIGINT,
+//       allowNull: false,
+//     },
+//   })

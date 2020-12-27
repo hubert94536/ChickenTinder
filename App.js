@@ -51,11 +51,6 @@ export default class App extends React.Component {
       appContainer: <Text />,
     };
 
-    // this.notif = new NotifService(
-    //   this.onRegister.bind(this),
-    //   this.onNotification.bind(this),
-    // );
-
     PushNotification.configure({
       onRegister: function(token) {
         console.log(token);
@@ -195,11 +190,6 @@ export default class App extends React.Component {
 
   render() {
     return this.state.appContainer;
-    // return (
-    //   <View>
-    //     {this.state.appContainer}
-    //     <NotificationHandler/>
-    //   </View>)
   }
 
   onRegister(token) {

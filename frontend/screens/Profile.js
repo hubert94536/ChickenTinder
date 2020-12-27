@@ -212,8 +212,8 @@ export default class UserProfileView extends Component {
     this.setState({ edit: false })
     if (this.state.oldImage != this.state.image) {
       this.setState({ oldImage: this.state.image })
-      AsyncStorage.setItem(PHOTO, this.state.image)
       uploadApi.uploadPhoto(this.state.imageData)
+        .then((url) => AsyncStorage.setItem(PHOTO, url))
     }
   }
 
