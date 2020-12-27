@@ -20,7 +20,7 @@ test('renders login with Facebook alert', () => {
   fireEvent.press(getByText('Login with Facebook'))
   expect(getByText('Open "Facebook?"'))
   // Test cancel button closes alert
-  fireEvent.press(getByText(''))
+  fireEvent.press(getByText(''))
   expect(toJSON()).toMatchSnapshot()
   // Test error alert renders and closes
   return create.handleClick().then(() => {

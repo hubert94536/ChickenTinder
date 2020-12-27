@@ -24,8 +24,9 @@ test('snapshot for search', () => {
   const { getByText, getByPlaceholderText, toJSON } = render(<Search />)
   // Test typing generates cards
   fireEvent.changeText(getByPlaceholderText('Search for friends'), 'John')
-  expect(getByText('John'))
   expect(toJSON()).toMatchSnapshot()
+  expect(getByText('John'))
+  
   // Test cards remain after deleting
   fireEvent.changeText(getByPlaceholderText('Search for friends'), '')
   expect(getByText('@j0hn'))
@@ -39,9 +40,10 @@ test('snapshot for search, no results', () => {
   expect(tree.toJSON()).toMatchSnapshot()
 })
 
-// fail first, accept later
+// accept first, fail later
 
 // test('accept friend request calls API + changes button, failing case', () => {
+//   const tree = render(<Search />)
 
 // })
 
