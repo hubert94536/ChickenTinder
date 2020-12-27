@@ -9,19 +9,17 @@ const accountsApi = axios.create({
 const createFBUser = async (name, id, username, email, photo) => {
   return accountsApi
     .post('/accounts', {
-      params: {
-        id: id,
-        name: name,
-        username: username,
-        email: email,
-        photo: photo,
-      },
+      id: id,
+      name: name,
+      username: username,
+      email: email,
+      photo: photo,
     })
     .then((res) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -44,7 +42,7 @@ const getAllUsers = async () => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -67,7 +65,7 @@ const searchUsers = async (text) => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -79,7 +77,7 @@ const deleteUser = async (id) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -98,7 +96,7 @@ const getUser = async (id) => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -137,16 +135,14 @@ const updatePhoneNumber = async (id, info) => {
 // updates user and returns status
 const updateUser = async (id, req) => {
   return accountsApi
-    .put(`/accounts/${id}`, {
-      params: req,
-    })
+    .put(`/accounts/${id}`, req)
     .then((res) => {
       return {
         status: res.status,
       }
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -159,7 +155,7 @@ const checkUsername = async (username) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -171,7 +167,7 @@ const checkPhoneNumber = async (phoneNumber) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -183,7 +179,7 @@ const checkEmail = async (email) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 

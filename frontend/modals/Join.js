@@ -1,8 +1,8 @@
 import React from 'react'
-import { Modal, Text, TouchableHighlight, View } from 'react-native'
+import { Modal, Text, TouchableHighlight, View, TextInput } from 'react-native'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
-import { TextInput } from 'react-native-paper'
+// import { TextInput } from 'react-native-paper'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -67,12 +67,14 @@ export default class Join extends React.Component {
                 <Text style={[screenStyles.text, { fontSize: 20, margin: '2%' }]}>Group PIN:</Text>
                 <TextInput
                   style={
-                    ([screenStyles.input],
-                    { height: 30, fontSize: 20, textAlignVertical: 'center' })
+                    ([screenStyles.text, screenStyles.input],
+                    { fontSize: 18, borderRadius: 5, padding: '1%', textAlignVertical: 'center' })
                   }
-                  placeholderTextColor="#999999"
+                  placeholderTextColor="#9F9F9F"
                   textAlign="left"
                   placeholder="e.g. A12345"
+                  backgroundColor="#E0E0E0"
+                  underlineColorAndroid="transparent"
                   onChangeText={(code) => {
                     this.evaluatePin(code)
                   }}
@@ -92,19 +94,16 @@ export default class Join extends React.Component {
                   style={modalStyles.button}
                 >
                   <Text style={[modalStyles.text, { color: this.state.pressed ? 'white' : hex }]}>
-                    Join Group
+                    Join
                   </Text>
                 </TouchableHighlight>
               )}
               {!this.state.isValid && (
                 <TouchableHighlight
                   onPress={() => this.setState({ invalid: true })}
-                  style={[
-                    modalStyles.button,
-                    { backgroundColor: '#999999', borderColor: '#999999' },
-                  ]}
+                  style={[modalStyles.button, { backgroundColor: hex }]}
                 >
-                  <Text style={[modalStyles.text, { color: 'white' }]}>Join Group</Text>
+                  <Text style={[modalStyles.text, { color: 'white' }]}>Join</Text>
                 </TouchableHighlight>
               )}
             </View>

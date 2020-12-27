@@ -13,16 +13,16 @@ import Geolocation from 'react-native-geolocation-service'
 import PropTypes from 'prop-types'
 import Slider from '@react-native-community/slider'
 import Swiper from 'react-native-swiper'
-import Alert from '../modals/alert.js'
-import ChooseFriends from '../modals/chooseFriends.js'
+import Alert from '../modals/Alert.js'
+import ChooseFriends from '../modals/ChooseFriends.js'
 import Socket from '../apis/socket.js'
-import TagsView from '../tagsView.js'
-import DynamicTags from '../tagsViewGenerator.js'
-import BackgroundButton from '../backgroundButton.js'
-import Location from '../modals/chooseLocation.js'
-import Time from '../modals/chooseTime.js'
-import Size from '../modals/chooseSize.js'
-import Majority from '../modals/chooseMajority.js'
+import TagsView from '../TagsView.js'
+import DynamicTags from '../TagsViewGenerator.js'
+import BackgroundButton from '../BackgroundButton.js'
+import Location from '../modals/ChooseLocation.js'
+import Time from '../modals/ChooseTime.js'
+import Size from '../modals/ChooseSize.js'
+import Majority from '../modals/ChooseMajority.js'
 import screenStyles from '../../styles/screenStyles.js'
 // import modalStyles from '../../styles/modalStyles.js'
 
@@ -261,14 +261,12 @@ export default class FilterSelector extends React.Component {
     filters.limit = this.state.selectedSize[0]
     //  making sure we have a valid location
 
-
     if (this.state.location === null && this.state.useCurrentLocation === false) {
       this.setState({ locationAlert: true })
       this.props.setBlur(true)
     } else if (this.state.useCurrentLocation) {
       filters.latitude = this.state.lat
       filters.longitude = this.state.long
-      console.log('filter.js:' + JSON.stringify(filters))
       this.handlePress(filters)
     } else {
       filters.location = this.state.location
@@ -287,7 +285,6 @@ export default class FilterSelector extends React.Component {
 
     } else if (this.state.majority && this.state.distance) {
       this.evaluateFilters()
-      // console.log('filter.js startSession')
     }
   }
 
