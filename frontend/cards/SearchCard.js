@@ -4,7 +4,7 @@ import { ID } from 'react-native-dotenv'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
 

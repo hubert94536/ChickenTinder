@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Image, Keyboard, StyleSheet, Text, View } from 'react-native'
 import { ID, NAME, PHOTO, USERNAME, DEFPHOTO, EMAIL } from 'react-native-dotenv'
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Alert from '../modals/Alert.js'

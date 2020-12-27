@@ -5,7 +5,7 @@ import { SearchBar } from 'react-native-elements'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import Clipboard from '@react-native-community/clipboard'
 import PropTypes from 'prop-types'
 import Alert from './Alert.js'
@@ -61,7 +61,7 @@ export default class ChooseFriends extends React.Component {
       .catch(() => this.setState({ errorAlert: true }))
   }
 
-  // copies the room code (dummy text for now)
+  // copies the room code
   copyToClipboard() {
     Clipboard.setString(this.props.code.toString())
   }
