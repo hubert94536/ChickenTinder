@@ -246,3 +246,5 @@ export default function getCusine(categories) {
     return generalFoodImages[1]
   else return generalFoodImages[2]
 }
+
+export { foodImages, getCusine };
