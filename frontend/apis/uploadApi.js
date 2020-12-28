@@ -57,7 +57,8 @@ const removePhoto = async (replacement = '') => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      console.log(error)
+      Promise.reject(error.response)
     })
 
 }
