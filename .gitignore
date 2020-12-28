@@ -59,3 +59,8 @@ buck-out/
 /ios/Pods/
 #api-key
 .env
+
+#java file
+android/java_pid15630.hprof
+
+
