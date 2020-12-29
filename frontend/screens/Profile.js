@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Image, Keyboard, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, Image, Keyboard, StyleSheet, Text, View } from 'react-native'
 import { ID, NAME, PHOTO, USERNAME, DEFPHOTO, EMAIL } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import { BlurView } from '@react-native-community/blur'
@@ -12,7 +12,7 @@ import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import TabBar from '../Nav.js'
 import ImagePicker from 'react-native-image-crop-picker'
-import defImages from '../assets/images/foodImages.js'
+import defImages from '../assets/images/defImages.js'
 import uploadApi from '../apis/uploadApi.js'
 import PropTypes from 'prop-types'
 import EditProfile from '../modals/EditProfile.js'
@@ -20,6 +20,7 @@ import Settings from '../modals/ProfileSettings.js'
 
 const hex = '#F15763'
 const font = 'CircularStd-Medium'
+const height = Dimensions.get('window').height
 var email = ''
 var id = ''
 
@@ -48,22 +49,24 @@ export default class UserProfileView extends Component {
       errorAlert: false,
       // friends text
       numFriends: 0,
-      defImg: '',
+      imageData:null,
+      // defImg: '',
     }
-    AsyncStorage.multiGet([DEFPHOTO, EMAIL, ID, NAME, PHOTO, USERNAME]).then((res) => {
-      email = res[1][1]
-      id = res[2][1]
-      this.setState({
-        defImg: defImages[parseInt(res[0][1])],
-        name: res[3][1],
-        nameValue: res[3][1],
-        image: res[4][1],
-        oldImage: res[4][1],
-        username: res[5][1],
-        usernameValue: res[5][1],
-      })
+
+  AsyncStorage.multiGet([EMAIL, ID, NAME, PHOTO, USERNAME]).then((res) => {
+    email = res[0][1]
+    id = res[1][1]
+    this.setState({
+      // defImg: defImages[parseInt(res[0][1])],
+      name: res[2][1],
+      nameValue: res[2][1],
+      image: res[3][1],
+      oldImage: res[3][1],
+      username: res[4][1],
+      usernameValue: res[4][1],
     })
-  }
+  })
+}
 
   // getting current user's info
   async changeName() {
@@ -195,7 +198,7 @@ export default class UserProfileView extends Component {
   }
 
   removePhoto() {
-    this.setState({ image: null })
+    this.setState({ image: defImages[Math.floor(Math.random() * defImages.length)].toString() })
     // TODO: delete from AWS
     AsyncStorage.setItem(PHOTO, this.state.image)
   }
@@ -222,6 +225,7 @@ export default class UserProfileView extends Component {
       edit: true,
       nameValue: this.state.name,
       usernameValue: this.state.username,
+      username: this.state.username,
       changeName: false,
     })
   }
@@ -260,15 +264,15 @@ export default class UserProfileView extends Component {
               />
             </View>
 
-            {image ? (
+            {this.state.image.includes("file") || this.state.image.includes("http") ? (
               <Image
                 source={{
-                  uri: image,
+                  uri: this.state.image,
                 }}
                 style={screenStyles.avatar}
               />
             ) : (
-              <Image source={defImg} style={screenStyles.avatar} />
+              <Image source={this.state.image} style={screenStyles.avatar} />
             )}
 
             <View style={{ alignItems: 'center' }}>
@@ -338,6 +342,7 @@ export default class UserProfileView extends Component {
             <EditProfile
               // image = {this.state.image}
               defImage={defImg}
+              image = {this.state.image}
               name={nameValue}
               username={usernameValue}
               dontSave={() => this.dontSave()}

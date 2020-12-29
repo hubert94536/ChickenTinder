@@ -22,10 +22,7 @@ const createFriendshipTest = async (main, friend) => {
 
 const createFriendship = async (id, friend) => {
   return friendsApi
-    .post('/friendships', {
-      main: id,
-      friend: friend,
-    })
+    .post(`/friendships/${id}/${friend}`)
     .then((res) => {
       return res.status
     })

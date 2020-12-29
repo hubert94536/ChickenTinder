@@ -1,12 +1,12 @@
+const { Op } = require('sequelize')
 const { Accounts, Friends, Notifications } = require('./models')
-const { Sequelize } = require('sequelize')
-const Op = Sequelize.Op
+
 var attributes = ['username', 'photo', 'name']
 
 // Accept a friend request
 const acceptRequest = async (req, res) => {
   try {
-    const main = req.params.user
+    const main = req.params.main
     const friend = req.params.friend
     // set status to friends for friend and main account ids
     const mainAccount = await Friends.update(
@@ -54,8 +54,8 @@ const acceptRequest = async (req, res) => {
 // Creates friendship requests between both accounts
 const createFriends = async (req, res) => {
   try {
-    const main = req.body.main
-    const friend = req.body.friend
+    const main = req.params.main
+    const friend = req.params.friend
     // create pending and requested friendship statuses
     await Friends.bulkCreate([
       { main_id: main, status: 'requested', friend_id: friend, include: [Accounts] },
@@ -78,7 +78,7 @@ const createFriends = async (req, res) => {
 // Delete a friendship
 const deleteFriendship = async (req, res) => {
   try {
-    const main = req.params.user
+    const main = req.params.main
     const friend = req.params.friend
     // delete friendship rows for both main and friend
     const destroyed = await Friends.destroy({
@@ -103,7 +103,7 @@ const deleteFriendship = async (req, res) => {
 const getFriends = async (req, res) => {
   try {
     const friends = await Friends.findAll({
-      where: { main_id: req.params.user },
+      where: { main_id: req.params.id },
       include: [
         {
           model: Accounts,
