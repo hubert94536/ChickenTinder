@@ -46,29 +46,6 @@ const uploadPhoto = async (photo) => {
     })
 }
 
-/**
- * deletes photo from AWS and replaces user's photo in database
- * @param {string} replacement a string to replace the user's photo string in the database
- */
-const removePhoto = async (replacement = '') => {
-  const url = await AsyncStorage.getItem(PHOTO).then((photo) => {return url.split('/')})
-
-  if (url[2] != "wechews-images-2020.s3.us-west-1.amazonaws.com") 
-    throw {name: "InvalidUrlError", message: "photo url is invalid"}
-
-  return uploadApi
-    .delete('/images', {key: url[3], id: myId, replacement: replacement})
-    .then((res) => {
-      return res.status
-    })
-    .catch((error) => {
-      console.log(error)
-      Promise.reject(error.response)
-    })
-
-}
-
 export default {
   uploadPhoto,
-  removePhoto
 }

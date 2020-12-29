@@ -31,10 +31,7 @@ if (app.get('env') === 'development') {
 
 // TODO: add schema validation for images
 //image uploads
-app
-  .route('/images')
-  .post(images.upload, images.uploadHandler)
-  .delete(images.deletePhoto)
+app.route('/images').post(images.upload, images.uploadHandler)
 
 // Accounts table
 app
