@@ -7,7 +7,6 @@ import screenStyles from '../../styles/screenStyles.js'
 import PropTypes from 'prop-types'
 import ImagePicker from 'react-native-image-crop-picker'
 import defImages from '../assets/images/defImages.js'
-import uploadApi from '../apis/uploadApi.js'
 
 const hex = '#F15763'
 const textColor = '#6A6A6A'
@@ -85,7 +84,6 @@ export default class createAccount extends React.Component {
           this.state.photo,
         )
       })
-      .then(() => uploadApi.uploadPhoto(this.state.photoData))
       .then(() => {
         AsyncStorage.setItem(PHOTO, this.state.photo)
         this.props.navigation.replace('Home')
@@ -103,6 +101,7 @@ export default class createAccount extends React.Component {
     this.props.navigation.replace('Home')
   }
 
+  // TODO: Change from photo picker from phone gallery to our default photos
   uploadPhoto() {
     ImagePicker.openPicker({
       width: 150,

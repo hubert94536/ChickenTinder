@@ -13,7 +13,6 @@ import modalStyles from '../../styles/modalStyles.js'
 import TabBar from '../Nav.js'
 import ImagePicker from 'react-native-image-crop-picker'
 import defImages from '../assets/images/defImages.js'
-import uploadApi from '../apis/uploadApi.js'
 import PropTypes from 'prop-types'
 import EditProfile from '../modals/EditProfile.js'
 import Settings from '../modals/ProfileSettings.js'
@@ -178,6 +177,7 @@ export default class UserProfileView extends Component {
     this.setState({ numFriends: n })
   }
 
+  // TODO: Change from photo picker from phone gallery to our default photos
   uploadPhoto() {
     ImagePicker.openPicker({
       width: 400,
@@ -216,7 +216,6 @@ export default class UserProfileView extends Component {
     if (this.state.oldImage != this.state.image) {
       this.setState({ oldImage: this.state.image })
       AsyncStorage.setItem(PHOTO, this.state.image)
-      uploadApi.uploadPhoto(this.state.imageData)
     }
   }
 
