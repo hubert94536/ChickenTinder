@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, Text, TouchableHighlight, View, TextInput } from 'react-native'
+import { Modal, StyleSheet, Text, TouchableHighlight, View, TextInput } from 'react-native'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 // import { TextInput } from 'react-native-paper'
@@ -47,8 +47,8 @@ export default class Join extends React.Component {
     return (
       <View>
         <Modal transparent animationType="none" visible={this.props.visible}>
-          <View style={[modalStyles.modal, { flex: 0, height: 180, borderRadius: 15 }]}>
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+          <View style={[modalStyles.modal, styles.modalContainer]}>
+            <View style={modalStyles.topRightIcon}>
               <AntDesign
                 name="closecircleo"
                 style={modalStyles.icon}
@@ -56,34 +56,28 @@ export default class Join extends React.Component {
               />
             </View>
             <View
-              style={{
-                flex: 1,
-                justifyContent: 'space-evenly',
-              }}
+              style={modalStyles.modalContent}
             >
-              <View
-                style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
-              >
-                <Text style={[screenStyles.text, { fontSize: 20, margin: '2%' }]}>Group PIN:</Text>
+              <View style={styles.inputContainer}>
+                <Text style={[screenStyles.text, styles.text]}>Group PIN:</Text>
                 <TextInput
-                  style={
-                    ([screenStyles.text, screenStyles.input],
-                    { fontSize: 18, borderRadius: 5, padding: '1%', textAlignVertical: 'center' })
-                  }
+                  style={[screenStyles.text, screenStyles.input, styles.textInput]}
                   placeholderTextColor="#9F9F9F"
                   textAlign="left"
                   placeholder="e.g. A12345"
                   backgroundColor="#E0E0E0"
                   underlineColorAndroid="transparent"
+                  //change max length accordingly to avoid overflow
+                  maxLength={6}
                   onChangeText={(code) => {
                     this.evaluatePin(code)
                   }}
                   value={this.state.code}
                 />
               </View>
-              {!this.state.invalid && <Text style={{ textAlign: 'center' }}> </Text>}
+              {!this.state.invalid && <Text style={styles.alignCenter}> </Text>}
               {this.state.invalid && (
-                <Text style={{ textAlign: 'center' }}>Sorry, PIN is invalid or expired</Text>
+                <Text style={styles.alignCenter}>Sorry, PIN is invalid or expired</Text>
               )}
               {this.state.isValid && (
                 <TouchableHighlight
@@ -101,9 +95,9 @@ export default class Join extends React.Component {
               {!this.state.isValid && (
                 <TouchableHighlight
                   onPress={() => this.setState({ invalid: true })}
-                  style={[modalStyles.button, { backgroundColor: hex }]}
+                  style={[modalStyles.button, styles.bgHex]}
                 >
-                  <Text style={[modalStyles.text, { color: 'white' }]}>Join</Text>
+                  <Text style={[modalStyles.text, screenStyles.white]}>Join</Text>
                 </TouchableHighlight>
               )}
             </View>
@@ -113,6 +107,36 @@ export default class Join extends React.Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  modalContainer: { 
+    flex: 0, 
+    height: 180, 
+    borderRadius: 15, 
+  },
+  inputContainer: { 
+    flexDirection: 'row', 
+    justifyContent: 'center', 
+    alignItems: 'center' 
+  },
+  text: {
+    fontSize: 20, 
+    margin: '2%',
+  },
+  textInput: {
+    fontSize: 18, 
+    borderRadius: 5, 
+    padding: '1%', 
+    textAlignVertical: 'center',
+    color: 'black'
+  },
+  alignCenter: {
+    textAlign: 'center',
+  },
+  bgHex: {
+    backgroundColor: hex,
+  },
+})
 
 Join.propTypes = {
   username: PropTypes.string,

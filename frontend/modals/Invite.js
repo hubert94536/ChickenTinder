@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import modalStyles from '../../styles/modalStyles.js'
+import screenStyles from '../../styles/screenStyles.js'
 
 const hex = '#F25763'
 const font = 'CircularStd-Medium'
@@ -41,38 +42,21 @@ export default class Invite extends React.Component {
         />
         <Modal transparent animationType="none">
           <View style={modalStyles.modal}>
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+            <View style={modalStyles.topRightIcon}>
               <Icon
                 name="times-circle"
                 style={modalStyles.icon}
                 onPress={() => this.props.onPress()}
               />
             </View>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'space-evenly',
-              }}
-            >
-              <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+            <View style={modalStyles.modalContent}>
+              <View style={styles.invite}>
                 <Image source={{ uri: this.props.image }} style={styles.avatar} />
                 <View>
-                  <Text
-                    style={{
-                      fontFamily: font,
-                      color: hex,
-                      fontSize: 25,
-                    }}
-                  >
+                  <Text style={styles.inviteText}>
                     {this.props.name}
                   </Text>
-                  <Text
-                    style={{
-                      fontFamily: font,
-                      color: hex,
-                      fontSize: 25,
-                    }}
-                  >
+                  <Text style={styles.inviteText}>
                     invites you to join!
                   </Text>
                 </View>
@@ -87,7 +71,7 @@ export default class Invite extends React.Component {
                 <Text
                   style={[
                     modalStyles.text,
-                    this.state.pressed ? { color: 'white' } : { color: hex },
+                    this.state.pressed ? screenStyles.white : { color: hex },
                   ]}
                 >
                   Go
@@ -116,4 +100,13 @@ const styles = StyleSheet.create({
     borderRadius: 63,
     borderWidth: 4,
   },
+  invite: {
+    flexDirection: 'row', 
+    justifyContent: 'space-evenly',
+  },
+  inviteText: {
+    fontFamily: font,
+    color: hex,
+    fontSize: 25,
+  }
 })

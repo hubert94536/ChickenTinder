@@ -84,4 +84,16 @@ export default StyleSheet.create({
     alignSelf: 'center',
     margin: '1.5%',
   },
+
+  hex: {
+    color: '#F15763',
+  },
+
+  white: {
+    color:'#FFFFFF'
+  },
+
+  black: {
+    color:'#000000'
+  }
 })

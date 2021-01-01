@@ -1,6 +1,7 @@
 import React from 'react'
-import { Dimensions, Modal, Text, TextInput, TouchableHighlight, View } from 'react-native'
+import { Dimensions, Modal, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
+import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
 
@@ -44,113 +45,53 @@ export default class Majority extends React.Component {
   render() {
     return (
       <Modal animationType="fade" transparent visible={this.props.visible}>
-        <View
-          style={[
-            {
-              height: Dimensions.get('window').height * 0.3,
-              width: '75%',
-              marginTop: '50%',
-              backgroundColor: 'white',
-              elevation: 20,
-              alignSelf: 'center',
-              borderRadius: 10,
-            },
-          ]}
-        >
+        <View style={[modalStyles.mainContainer, styles.mainContainerHeight]}>
           <Icon
             name="closecircleo"
-            style={[
-              screenStyles.text,
-              {
-                fontSize: 18,
-                flexDirection: 'row',
-                alignSelf: 'flex-end',
-                marginTop: '4%',
-                marginRight: '4%',
-              },
-            ]}
+            style={[screenStyles.text, modalStyles.closeIcon]}
             onPress={() => this.handleCancel()}
           />
-          <View style={{ marginLeft: '5%' }}>
-            <Text style={[screenStyles.text, { fontSize: 17, marginBottom: '3%' }]}>
+          <View style={modalStyles.titleContainer}>
+            <Text style={[screenStyles.text, modalStyles.titleText]}>
               {this.props.title}
             </Text>
-            <Text style={[screenStyles.text, { color: 'black' }]}>
+            <Text style={[screenStyles.text, screenStyles.black]}>
               Members (out of {this.props.max}) needed to get a match
             </Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: '1%' }}>
+            <View style={modalStyles.inputContainer}>
               <TextInput
-                style={[
-                  {
-                    fontSize: 17,
-                    color: '#9f9f9f',
-                    backgroundColor: '#E5E5E5',
-                    height: '80%',
-                    width: '17%',
-                    borderRadius: 7,
-                    textAlign: 'center',
-                    padding: '3%',
-                  },
-                ]}
+                style={modalStyles.textInput}
                 value={this.state.selectedValue}
                 onChangeText={(text) => this.setState({ selectedValue: text, invalidValue: false })}
                 keyboardType="numeric"
                 defaultValue={this.props.max.toString()}
               />
-              <Text
-                style={[
-                  screenStyles.text,
-                  {
-                    fontSize: 17,
-                    alignSelf: 'center',
-                    marginTop: '3%',
-                    marginBottom: '3%',
-                    marginLeft: '2%',
-                  },
-                ]}
-              >
+              <Text style={[screenStyles.text, ,modalStyles.titleText, styles.input]}>
                 / {this.props.max} members
               </Text>
             </View>
             {this.state.invalidValue && (
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: '2%' }}>
+              <View style={[modalStyles.error, styles.errorMargin]}>
                 <Icon
                   name="exclamationcircle"
                   color={hex}
-                  style={{ fontSize: 15, marginRight: '2%' }}
+                  style={modalStyles.errorIcon}
                 />
-                <Text style={[screenStyles.text, { fontSize: 12 }]}>
+                <Text style={[screenStyles.text, modalStyles.errorText]}>
                   Invalid {this.props.title.toLowerCase()}. Please try again
                 </Text>
               </View>
             )}
             {!this.state.invalidValue && (
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: '3%' }}>
-                <Text style={[screenStyles.text, { fontSize: 12 }]}> </Text>
+              <View style={[modalStyles.error, styles.errorMargin]}>
+                <Text style={[screenStyles.text, modalStyles.errorText]}> </Text>
               </View>
             )}
             <TouchableHighlight
-              style={{
-                backgroundColor: hex,
-                borderRadius: 30,
-                alignSelf: 'center',
-                width: '40%',
-                marginTop: '3%',
-              }}
+              style={[modalStyles.doneButton, styles.doneButtonMargin]}
               onPress={() => this.evaluate()}
             >
-              <Text
-                style={[
-                  screenStyles.text,
-                  {
-                    color: 'white',
-                    textAlign: 'center',
-                    paddingTop: '5%',
-                    paddingBottom: '5%',
-                    fontSize: 20,
-                  },
-                ]}
-              >
+              <Text style={[screenStyles.text, modalStyles.doneText]}>
                 Done
               </Text>
             </TouchableHighlight>
@@ -160,6 +101,23 @@ export default class Majority extends React.Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  mainContainerHeight: {
+    height: Dimensions.get('window').height * 0.3,
+  },
+  input: {
+    alignSelf: 'center',
+    marginTop: '3%',
+    marginLeft: '2%',
+  },
+  errorMargin: {
+    marginBottom: '1%',
+  },
+  doneButtonMargin: {
+    marginTop: '3%',
+  },
+})
 
 Majority.propTypes = {
   title: PropTypes.string,

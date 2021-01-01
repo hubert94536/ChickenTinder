@@ -66,24 +66,16 @@ export default class Location extends Component {
       <View>
         <Text />
         <Modal transparent animationType="none" visible={this.props.visible}>
-          <View style={[modalStyles.modal, { height: height * 0.3 }]}>
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+          <View style={[modalStyles.modal, styles.modalHeight]}>
+            <View style={styles.icon}>
               <AntDesign
                 name="closecircleo"
                 style={modalStyles.icon}
                 onPress={() => this.handleCancel()}
               />
             </View>
-            <View
-              style={{
-                flexDirection: 'column',
-                flex: 1,
-                justifyContent: 'space-evenly',
-              }}
-            >
-              <View>
-                <Text style={styles.title}>Choose a starting location</Text>
-              </View>
+            <View style={styles.modalStyle}>
+              <Text style={styles.title}>Choose a starting location</Text>
               <TextInput
                 style={[screenStyles.text, screenStyles.input, styles.input]}
                 placeholderTextColor="#9F9F9F"
@@ -92,17 +84,12 @@ export default class Location extends Component {
               />
               {this.state.zipValid && <Text style={{ textAlign: 'center' }}> </Text>}
               {!this.state.zipValid && (
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: '7.5%' }}>
+                <View style={styles.error}>
                   <AntDesign
                     name="exclamationcircle"
-                    style={{ color: 'red', marginRight: '2%', fontSize: 15 }}
+                    style={styles.errorIcon}
                   />
-                  <Text
-                    style={[
-                      screenStyles.text,
-                      { textAlign: 'center', color: 'red', fontFamily: font },
-                    ]}
-                  >
+                  <Text style={[screenStyles.text, styles.errorText]}>
                     Invalid zip code
                   </Text>
                 </View>
@@ -112,12 +99,12 @@ export default class Location extends Component {
                 onHideUnderlay={() => this.setState({ buttonPressed: false })}
                 onShowUnderlay={() => this.setState({ buttonPressed: true })}
                 onPress={() => this.validateZip()}
-                style={[modalStyles.button, { backgroundColor: hex }]}
+                style={[modalStyles.button, styles.buttonColor]}
               >
                 <Text
                   style={[
                     modalStyles.text,
-                    this.state.buttonPressed ? { color: hex } : { color: 'white' },
+                    this.state.buttonPressed ? screenStyles.hex : screenStyles.white,
                   ]}
                 >
                   Done
@@ -147,6 +134,36 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: '1%',
     fontFamily: font,
+  },
+  modalHeight: {
+    height: height * 0.3,
+  },
+  icon: {
+    flexDirection: 'row', 
+    justifyContent: 'flex-end',
+  },
+  modalStyle: {
+    flexDirection: 'column',
+    flex: 1,
+    justifyContent: 'space-evenly',
+  },
+  error: {
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    marginLeft: '8%' 
+  },
+  errorIcon: {
+    color: 'red', 
+    marginRight: '2%', 
+    fontSize: 15
+  },
+  errorText: {
+    textAlign: 'center', 
+    color: 'red', 
+    fontFamily: font 
+  },
+  buttonColor: {
+    backgroundColor: hex
   },
 })
 
