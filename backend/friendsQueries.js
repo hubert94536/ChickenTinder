@@ -1,6 +1,6 @@
-const { Sequelize } = require('sequelize')
+const { Op } = require('sequelize')
 const { Accounts, Friends, Notifications } = require('./models')
-const Op = Sequelize.Op
+
 var attributes = ['username', 'photo', 'name']
 
 // Accept a friend request
