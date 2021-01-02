@@ -9,7 +9,9 @@ import AsyncStorage from '@react-native-community/async-storage'
 import Clipboard from '@react-native-community/clipboard'
 import PropTypes from 'prop-types'
 import Alert from './Alert.js'
-import ChooseCard from '../cards/ChooseCard.js'
+// import Card  from '../cards/ChooseCard.js'
+import Card from '../cards/Card.js'
+import socket from '../apis/socket.js'
 import friendsApi from '../apis/friendsApi.js'
 
 const hex = '#F15763'
@@ -69,6 +71,10 @@ export default class ChooseFriends extends React.Component {
   //  closes the choose friends modal in filters
   handlePress() {
     this.props.press()
+  }
+
+  sendInvite() {
+    socket.sendInvite(this.props.username)
   }
 
   //  function for searching your friends
@@ -131,11 +137,16 @@ export default class ChooseFriends extends React.Component {
               style={{ marginLeft: '5%', marginRight: '5%', marginBottom: '2%' }}
               data={this.state.friends}
               renderItem={({ item }) => (
-                <ChooseCard
+                <Card
                   name={item.name}
-                  username={item.username}
                   image={item.photo}
-                  added={false}
+                  id={item.id}
+                  username={item.username}
+                  currentUser={id}
+                  total={this.state.data}
+                  status="Not Added"
+                  key={item.id}
+                  press={() => this.sendInvite()}
                 />
               )}
               keyExtractor={(item) => item.username}

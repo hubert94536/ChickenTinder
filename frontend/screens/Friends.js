@@ -6,7 +6,8 @@ import { SearchBar } from 'react-native-elements'
 import AsyncStorage from '@react-native-community/async-storage'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Alert from '../modals/Alert.js'
-import ProfileCard from '../cards/ProfileCard.js'
+// import Card from '../cards/ProfileCard.js'
+import Card from '../cards/Card.js'
 import friendsApi from '../apis/friendsApi.js'
 import screenStyles from '../../styles/screenStyles.js'
 
@@ -70,19 +71,15 @@ export default class Friends extends React.Component {
   }
 
   async removeRequest(friend, newArr, status) {
-    if (!status) {
-      friendsApi
-        .removeFriendship(id, friend)
-        .then(() => {
-          this.setState({ friends: newArr })
-        })
-        .catch((err) => {
-          console.log(err)
-          this.setState({ errorAlert: true })
-        })
-    } else if (status) {
-      this.setState({ friends: newArr })
-    }
+    friendsApi
+      .removeFriendship(id, friend)
+      .then(() => {
+        this.setState({ friends: newArr })
+      })
+      .catch((err) => {
+        console.log(err)
+        this.setState({ errorAlert: true })
+      })
   }
 
   // Called on friends-list pulldown refresh
@@ -97,14 +94,19 @@ export default class Friends extends React.Component {
     // Create all friend/request cards
     if (Array.isArray(friendList) && friendList.length) {
       for (var i = 0; i < friendList.length; i++) {
+        console.log(friendList[i])
+        var status = ''
+        if (this.props.isFriends) status = 'Friends'
+        else status = 'Not Friends'
         friends.push(
-          <ProfileCard
-            total={this.state.friends}
+          <Card
             name={friendList[i].name}
-            username={friendList[i].username}
             image={friendList[i].photo}
-            friends={this.state.isFriends}
             id={friendList[i].id}
+            username={friendList[i].username}
+            currentUser={id}
+            total={this.state.friends}
+            status={status}
             key={i}
             index={i}
             press={(id, newArr, status) => this.removeRequest(id, newArr, status)}

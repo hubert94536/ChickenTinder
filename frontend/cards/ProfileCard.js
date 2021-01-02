@@ -32,7 +32,7 @@ export default class ProfileCard extends React.Component {
     friendsApi
       .acceptFriendRequest(id, this.state.id)
       .then(() => {
-        this.setState({ isFriend: true })
+        this.setState({ isFriend: 'Friends' })
       })
       .catch(() => this.setState({ errorAlert: true }))
   }
@@ -64,17 +64,16 @@ export default class ProfileCard extends React.Component {
         }}
       >
         <View style={{ flexDirection: 'row' }}>
-        {this.props.image.includes("file") || this.props.image.includes("http") ? (
-          <Image
-            source={{
-              uri: this.props.image,
-            }}
-            style={imgStyles.button}
-          />
+          {this.props.image.includes('file') || this.props.image.includes('http') ? (
+            <Image
+              source={{
+                uri: this.props.image,
+              }}
+              style={imgStyles.button}
+            />
           ) : (
-            <Image source={this.props.image} style={imgStyles.button}/>
- 
-            )} 
+            <Image source={this.props.image} style={imgStyles.button} />
+          )}
           <View
             style={{
               alignSelf: 'center',
@@ -85,7 +84,7 @@ export default class ProfileCard extends React.Component {
             <Text style={{ fontFamily: font, color: hex }}>@{this.props.username}</Text>
           </View>
         </View>
-        {this.state.isFriend && (
+        {this.props.friends == 'Friends' && (
           <TouchableHighlight onPress={() => this.setState({ deleteFriend: true })}>
             <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
               <Text style={(imgStyles.text, { color: hex, marginRight: '5%' })}>Friends</Text>
@@ -96,7 +95,7 @@ export default class ProfileCard extends React.Component {
             </View>
           </TouchableHighlight>
         )}
-        {!this.state.isFriend && (
+        {this.props.friends == 'Not Friends' && (
           <View style={{ flex: 1, flexDirection: 'row' }}>
             <TouchableHighlight
               underlayColor="black"
@@ -173,7 +172,10 @@ export default class ProfileCard extends React.Component {
             buttonNeg="Cancel"
             height="28%"
             twoButton
-            press={() => this.deleteFriend()}
+            press={() => {
+              this.props.press()
+              this.setState({ deleteFriend: false })
+            }}
             cancel={() => this.setState({ deleteFriend: false })}
           />
         )}
@@ -192,7 +194,7 @@ export default class ProfileCard extends React.Component {
 }
 
 ProfileCard.propTypes = {
-  friends: PropTypes.bool,
+  friends: PropTypes.string,
   id: PropTypes.string,
   total: PropTypes.array,
   username: PropTypes.string,

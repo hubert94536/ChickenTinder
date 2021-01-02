@@ -1,33 +1,44 @@
 import React from 'react'
-import { Image, Text, View, TouchableHighlight } from 'react-native'
-import { ID } from 'react-native-dotenv'
+import { Text, View, Image, TouchableHighlight, StyleSheet } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
+import imgStyles from '../../styles/cardImage.js'
+import { ID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import Alert from '../modals/Alert.js'
 import friendsApi from '../apis/friendsApi.js'
-import imgStyles from '../../styles/cardImage.js'
 
-// commented out during linting but hex is used in commented-out code below
-const hex = '#F25763'
 const font = 'CircularStd-Medium'
+const hex = '#F15763'
 var id = ''
-// cards for the search for friends screen
-export default class SearchCard extends React.Component {
+
+export default class Card extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      // for button display
-      requested: this.props.requested,
-      pressed: false,
-      renderOption: this.props.currentUser !== this.props.username,
       errorAlert: false,
       deleteFriend: false,
+      renderOption: this.props.currentUser !== this.props.username,
+      status: this.props.status,
+      pressed: false,
     }
     AsyncStorage.getItem(ID).then((res) => {
       id = res
     })
+  }
+
+  async deleteFriend() {
+    friendsApi
+      .removeFriendship(id, this.props.id)
+      .then(() => {
+        this.setState({ deleteFriend: false })
+        var filteredArray = this.props.total.filter((item) => {
+          return item.username !== this.props.username
+        })
+        this.props.press(this.props.id, filteredArray, true)
+      })
+      .catch(() => this.setState({ errorAlert: true, deleteFriend: false }))
   }
 
   async acceptFriend() {
@@ -59,7 +70,7 @@ export default class SearchCard extends React.Component {
 
   render() {
     return (
-      <View style={{ flexDirection: 'row', flex: 1, width: '85%', alignSelf: 'center' }}>
+      <View style={styles.container}>
         {this.props.image.includes('file') || this.props.image.includes('http') ? (
           <Image
             source={{
@@ -70,18 +81,32 @@ export default class SearchCard extends React.Component {
         ) : (
           <Image source={this.props.image} style={imgStyles.button} />
         )}
-        <View
-          style={{
-            alignSelf: 'center',
-            marginLeft: '1%',
-            flex: 1,
-          }}
-        >
-          <Text style={{ fontFamily: font, fontSize: 15 }}>{this.props.name}</Text>
-          <Text style={{ fontFamily: font, color: hex }}>{'@' + this.props.username}</Text>
+        <View style={styles.info}>
+          <Text style={styles.name}>{this.props.name}</Text>
+          <Text style={styles.username}>@{this.props.username}</Text>
         </View>
-        {this.state.requested === 'requested' && this.state.renderOption && (
-          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
+        {this.props.status === 'Added' && (
+          <View style={imgStyles.card}>
+            <Text style={[imgStyles.text, styles.text]}>Added!</Text>
+          </View>
+        )}
+        {this.props.status === 'Not Added' && (
+          <TouchableHighlight>
+            <View style={imgStyles.card}>
+              <Text style={[imgStyles.text, { marginTop: '10%' }]}>Add</Text>
+              <AntDesign
+                style={[imgStyles.icon, { margin: '10%', marginTop: '20%', fontSize: 25 }]}
+                name="pluscircleo"
+                onPress={() => {
+                  this.setState({ status: 'Added' })
+                  this.props.press()
+                }}
+              />
+            </View>
+          </TouchableHighlight>
+        )}
+        {this.props.status === 'requested' && this.state.renderOption && (
+          <View style={imgStyles.card}>
             <Text style={[imgStyles.text, { color: '#777777' }]}>Request Sent</Text>
             <Icon
               style={[imgStyles.icon, { fontSize: 20, margin: '8%', color: '#777777' }]}
@@ -89,9 +114,9 @@ export default class SearchCard extends React.Component {
             />
           </View>
         )}
-        {this.state.requested === 'add' && this.state.renderOption && (
+        {this.props.status === 'add' && this.state.renderOption && (
           <TouchableHighlight underlayColor="white" onPress={() => this.addFriend()}>
-            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
+            <View style={imgStyles.card}>
               <Text style={[imgStyles.text, { color: 'black' }]}>Add Friend</Text>
               <AntDesign
                 style={[imgStyles.icon, { fontSize: 25, margin: '8%', color: 'black' }]}
@@ -100,31 +125,45 @@ export default class SearchCard extends React.Component {
             </View>
           </TouchableHighlight>
         )}
-        {this.state.requested === 'friends' && this.state.renderOption && (
+        {this.props.status === 'friends' && this.state.renderOption && (
           <TouchableHighlight
             underlayColor="white"
             onPress={() => this.setState({ errorAlert: false, deleteFriend: true })}
           >
-            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
+            <View style={imgStyles.card}>
               <Text style={[imgStyles.text]}>Friends</Text>
               <Icon style={[imgStyles.icon, { fontSize: 20, margin: '8%' }]} name="heart" />
             </View>
           </TouchableHighlight>
         )}
-        {this.state.requested === 'pending' && this.state.renderOption && (
-          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
+        {this.props.status === 'pending' && this.state.renderOption && (
+          <View style={imgStyles.card}>
             <Text style={[imgStyles.text, { color: 'black' }]}>Pending Request</Text>
             <Icon
               style={[imgStyles.icon, { fontSize: 25, margin: '3%' }]}
               name="check-circle"
-              onPress={() => this.acceptFriend()}
+              onPress={() => this.acceptFriend}
             />
             <AntDesign
               style={[imgStyles.icon, { fontSize: 25, margin: '3%', color: 'black' }]}
               name="closecircleo"
-              onPress={() => this.rejectFriend()}
+              onPress={() => this.rejectFriend}
             />
           </View>
+        )}
+        {this.props.status == 'Friends' && (
+          <TouchableHighlight
+            onPress={() => this.setState({ errorAlert: false, deleteFriend: true })}
+            underlayColor="transparent"
+          >
+            <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
+              <Text style={(imgStyles.text, { color: hex, marginRight: '5%' })}>Friends</Text>
+              <Icon
+                style={(imgStyles.icon, { marginLeft: '5%', color: hex, fontSize: 18 })}
+                name="heart"
+              />
+            </View>
+          </TouchableHighlight>
         )}
         {this.state.deleteFriend && (
           <Alert
@@ -135,8 +174,7 @@ export default class SearchCard extends React.Component {
             height="28%"
             twoButton
             press={() => {
-              this.props.press()
-              this.setState({ deleteFriend: false })
+              this.deleteFriend()
             }}
             cancel={() => this.setState({ deleteFriend: false })}
           />
@@ -155,13 +193,25 @@ export default class SearchCard extends React.Component {
   }
 }
 
-SearchCard.propTypes = {
-  requested: PropTypes.string,
+Card.propTypes = {
   currentUser: PropTypes.string,
   username: PropTypes.string,
+  status: PropTypes.string,
   id: PropTypes.string,
-  name: PropTypes.string,
-  image: PropTypes.string,
   total: PropTypes.array,
+  image: PropTypes.string,
   press: PropTypes.func,
+  name: PropTypes.string,
 }
+
+const styles = StyleSheet.create({
+  container: { flexDirection: 'row', flex: 1, width: '85%', alignSelf: 'center' },
+  info: {
+    alignSelf: 'center',
+    marginLeft: '1%',
+    flex: 1,
+  },
+  name: { fontFamily: font, fontWeight: 'bold', fontSize: 15 },
+  username: { fontFamily: font, color: hex },
+  text: { color: '#6A6A6A', marginRight: '8%' },
+})

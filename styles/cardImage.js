@@ -19,4 +19,5 @@ export default StyleSheet.create({
     fontSize: 35,
     alignSelf: 'center',
   },
+  card: { flexDirection: 'row', flex: 1, justifyContent: 'flex-end' },
 })

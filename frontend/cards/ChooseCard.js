@@ -15,29 +15,26 @@ export default class ChooseCard extends React.Component {
     super(props)
     this.state = {
       added: this.props.added,
-      pressed: false,
     }
   }
 
   sendInvite() {
     socket.sendInvite(this.props.username)
-    this.setState({ added: true })
   }
 
   render() {
     return (
       <View style={{ flexDirection: 'row', flex: 1 }}>
-        {this.props.image.includes("file") || this.props.image.includes("http") ? (
+        {this.props.image.includes('file') || this.props.image.includes('http') ? (
           <Image
             source={{
               uri: this.props.image,
             }}
             style={imgStyles.button}
           />
-          ) : (
-            <Image source={this.props.image} style={imgStyles.button}/>
-
-            )}
+        ) : (
+          <Image source={this.props.image} style={imgStyles.button} />
+        )}
         <View
           style={{
             alignSelf: 'center',
@@ -50,22 +47,24 @@ export default class ChooseCard extends React.Component {
           </Text>
           <Text style={{ fontFamily: font, color: hex }}>@{this.props.username}</Text>
         </View>
-        {this.state.added && (
+        {this.props.added === 'Added' && (
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
             <Text style={[imgStyles.text, { color: '#6A6A6A', marginRight: '8%' }]}>Added!</Text>
           </View>
         )}
-        {!this.state.added && (
-          <TouchableHighlight>
+        {this.props.added === 'Not Added' && (
+          <TouchableHighlight
+            onPress={() => {
+              this.setState({ added: 'Added' })
+              console.log('add')
+              this.sendInvite()
+            }}
+          >
             <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
               <Text style={[imgStyles.text, { marginTop: '10%' }]}>Add</Text>
               <AntDesign
                 style={[imgStyles.icon, { margin: '10%', marginTop: '20%', fontSize: 25 }]}
                 name="pluscircleo"
-                onPress={() => {
-                  this.setState({ added: true })
-                  this.sendInvite()
-                }}
               />
             </View>
           </TouchableHighlight>

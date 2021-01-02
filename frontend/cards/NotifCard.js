@@ -242,31 +242,21 @@ export default class NotifCard extends React.Component {
       .catch(() => this.props.showError())
   }
 
-  handleHold()
-  {
-    this.setState({trash: true})
-    console.log("held")
+  handleHold() {
+    this.setState({ trash: true })
+    console.log('held')
   }
 
-  handleClick()
-  {
+  handleClick() {}
 
+  pressTrash() {
+    this.setState({ trash: false })
+    console.log('Trash')
   }
-
-  pressTrash()
-  {
-    this.setState({trash: false})
-    console.log("Trash")
-
-  }
-
-
 
   render() {
-
     return (
-      <TouchableWithoutFeedback
-      onPress={() => this.handleHold()}>
+      <TouchableWithoutFeedback onPress={() => this.handleHold()}>
         <View
           style={{
             flexDirection: 'row',
@@ -277,7 +267,6 @@ export default class NotifCard extends React.Component {
             borderRadius: 5,
             paddingVertical: '1.5%',
           }}
-          
         >
           {/* <Image
             source={{
@@ -286,19 +275,17 @@ export default class NotifCard extends React.Component {
             style={imgStyles.button}
           /> */}
 
-        {this.props.image.includes("file") || this.props.image.includes("http") ? (
-          <Image
-            source={{
-              uri: this.props.image,
-            }}
-            style={imgStyles.button}
-          />
+          {this.props.image.includes('file') || this.props.image.includes('http') ? (
+            <Image
+              source={{
+                uri: this.props.image,
+              }}
+              style={imgStyles.button}
+            />
           ) : (
-            <Image source={this.props.image} style={imgStyles.button}/>
- 
-            )} 
- 
-          
+            <Image source={this.props.image} style={imgStyles.button} />
+          )}
+
           <View
             style={{
               alignSelf: 'center',
@@ -319,16 +306,28 @@ export default class NotifCard extends React.Component {
             <Text style={{ fontFamily: font, color: '#F15763' }}>@{this.props.username}</Text>
           </View>
 
-          {this.props.type == 'invited' && !this.state.trash &&(
+          {this.props.type == 'invited' && !this.state.trash && (
             <View style={{ flexDirection: 'row', marginLeft: '3%' }}>
-              <Icon style={[imgStyles.icon, { fontSize: 20, }]} name="chevron-right" />
+              <Icon style={[imgStyles.icon, { fontSize: 20 }]} name="chevron-right" />
             </View>
           )}
 
-          {this.props.type == 'invited' && this.state.trash &&(
-            <View style={{ flexDirection: 'row', marginLeft: '3%', backgroundColor: '#C82020', width: '15%', justifyContent: 'center', borderRadius: 10,}}>
-              <Icon style={[imgStyles.icon, { fontSize: 20, color: 'white' }]} name="trash" 
-              onPress={() => this.pressTrash()}/>
+          {this.props.type == 'invited' && this.state.trash && (
+            <View
+              style={{
+                flexDirection: 'row',
+                marginLeft: '3%',
+                backgroundColor: '#C82020',
+                width: '15%',
+                justifyContent: 'center',
+                borderRadius: 10,
+              }}
+            >
+              <Icon
+                style={[imgStyles.icon, { fontSize: 20, color: 'white' }]}
+                name="trash"
+                onPress={() => this.pressTrash()}
+              />
             </View>
           )}
 
@@ -403,8 +402,7 @@ export default class NotifCard extends React.Component {
             </View>
           )}
         </View>
-        </TouchableWithoutFeedback>
-      
+      </TouchableWithoutFeedback>
     )
   }
 }
@@ -419,4 +417,3 @@ NotifCard.propTypes = {
   name: PropTypes.string,
   image: PropTypes.string,
 }
-
