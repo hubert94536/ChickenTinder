@@ -3,18 +3,14 @@ import AsyncStorage from '@react-native-community/async-storage'
 import { EMAIL, NAME, PHOTO, USERNAME, ID, PHONE, DEFPHOTO } from 'react-native-dotenv'
 import { Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import accountsApi from '../apis/accountsApi.js'
-import screenStyles from '../../styles/screenStyles.js'
 import normalize from '../../styles/normalize.js'
+import screenStyles from '../../styles/screenStyles.js'
 import PropTypes from 'prop-types'
 import ImagePicker from 'react-native-image-crop-picker'
 import defImages from '../assets/images/defImages.js'
 
 const hex = '#F15763'
 const textColor = '#6A6A6A'
-
-// const defImages = [
-//   require('../assets/images//African.png'),
-// ]
 
 export default class createAccount extends React.Component {
   constructor() {
@@ -157,7 +153,7 @@ export default class createAccount extends React.Component {
       <View style={[{ backgroundColor: 'white', flex: 1 }]}>
         <Text
           style={[
-            screenStyles.text,
+            screenStyles.textBold,
             screenStyles.title,
             styles.title
             
@@ -165,8 +161,8 @@ export default class createAccount extends React.Component {
         >
           Create Account
         </Text>
-        <Text style={[styles.mediumText]}>Account Verified!</Text>
-        <Text style={[styles.mediumText]}>Finish setting up your account</Text>
+        <Text style={[styles.text, styles.mediumText]}>Account Verified!</Text>
+        <Text style={[styles.text, styles.mediumText]}>Finish setting up your account</Text>
 
         {this.state.photo.includes('file') ? (
           <Image
@@ -179,18 +175,9 @@ export default class createAccount extends React.Component {
           <Image source={this.state.photo} style={screenStyles.avatar} />
         )}
 
-        {/* <Text
-          style={[
-            styles.mediumText,
-            { fontSize: 15, color: hex, fontWeight: 'bold', marginBottom: '5%' },
-          ]}
-          onPress={() => this.uploadPhoto()}
-        >
-          Upload Profile Photo
-        </Text> */}
-        <Text style={[styles.mediumText, styles.fieldName , {marginTop: '5%'}]}>Display Name</Text>
+        <Text style={[styles.text, styles.mediumText, styles.fieldName , {marginTop: '5%'}]}>Display Name</Text>
         <TextInput
-          style={[styles.fieldText]}
+          style={[screenStyles.textBook, styles.fieldText]}
           textAlign="left"
           onChangeText={(name) => {
             this.setState({ name })
@@ -198,9 +185,9 @@ export default class createAccount extends React.Component {
           value={this.state.name}
         />
 
-<Text style={[styles.mediumText, styles.fieldName]}>Username</Text>
+<Text style={[styles.text, styles.mediumText, styles.fieldName]}>Username</Text>
         <TextInput
-          style={[styles.fieldText, { marginBottom: this.state.validUsername ? '3%' : '0%' }]}
+          style={[screenStyles.textBook, styles.fieldText, { marginBottom: this.state.validUsername ? '3%' : '0%' }]}
           textAlign="left"
           onChangeText={(username) => {
             this.setState({ username })
@@ -211,12 +198,12 @@ export default class createAccount extends React.Component {
         />
 
         {!this.state.validUsername && (
-          <Text style={[styles.mediumText, styles.warningText]}>This username is taken</Text>
+          <Text style={[styles.text, styles.mediumText, styles.warningText]}>This username is taken</Text>
         )}
 
-        <Text style={[styles.mediumText, styles.fieldName]}>Phone Number</Text>
+        <Text style={[styles.text, styles.mediumText, styles.fieldName]}>Phone Number</Text>
         <TextInput
-          style={[styles.fieldText]}
+          style={[screenStyles.textBook, styles.fieldText]}
           textAlign="left"
           onChangeText={(phone) => {
             this.setState({ phone })
@@ -224,10 +211,10 @@ export default class createAccount extends React.Component {
           value={this.state.phone}
         />
 
-        <Text style={[styles.mediumText, styles.fieldName]}>Email</Text>
+        <Text style={[styles.text, styles.mediumText, styles.fieldName]}>Email</Text>
         <TextInput
           style={[
-            styles.fieldText,
+            screenStyles.textBook, styles.fieldText,
             { marginBottom: this.state.validEmail && this.state.validEmailFormat ? '3%' : '0%' },
           ]}
           textAlign="left"
@@ -239,10 +226,10 @@ export default class createAccount extends React.Component {
         />
 
         {!this.state.validEmail && this.state.validEmailFormat && (
-          <Text style={[styles.mediumText, styles.warningText]}>This email is taken</Text>
+          <Text style={[styles.text, styles.mediumText, styles.warningText]}>This email is taken</Text>
         )}
         {!this.state.validEmailFormat && (
-          <Text style={[styles.mediumText, styles.warningText]}>Input a valid email</Text>
+          <Text style={[styles.text, styles.mediumText, styles.warningText]}>Input a valid email</Text>
         )}
 
         <TouchableHighlight
@@ -275,11 +262,9 @@ createAccount.propTypes = {
 const styles = StyleSheet.create({
   title:
   {
-    fontFamily: 'CircularStd-Bold',
     fontSize: normalize(25),
     marginTop: '10%',
     marginBottom: '5%',
-    fontWeight: 'bold',
   },
   button: {
     borderColor: hex,
@@ -288,13 +273,11 @@ const styles = StyleSheet.create({
     marginTop: '3%',
   },
   mediumText: {
-    fontFamily: 'CircularStd-Medium',
     alignSelf: 'center',
     fontSize: normalize(18.5),
     color: textColor,
   },
   fieldText: {
-    fontFamily: 'CircularStd-Book',
     fontSize: normalize(18),
     color: textColor,
     marginHorizontal: '12%',

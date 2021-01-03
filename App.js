@@ -114,7 +114,7 @@ export default class App extends React.Component {
           },
         },
         {
-          initialRouteName: 'Profile',
+          initialRouteName: 'CreateAccount',
           headerMode: 'none',
           animationEnabled: false,
         },

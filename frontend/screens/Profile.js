@@ -8,9 +8,9 @@ import Alert from '../modals/Alert.js'
 import accountsApi from '../apis/accountsApi.js'
 import facebookService from '../apis/facebookService.js'
 import Friends from './Friends.js'
-import screenStyles from '../../styles/screenStyles.js'
-import normalize from '../../styles/normalize.js'
 import modalStyles from '../../styles/modalStyles.js'
+import normalize from '../../styles/normalize.js'
+import screenStyles from '../../styles/screenStyles.js'
 import TabBar from '../Nav.js'
 import ImagePicker from 'react-native-image-crop-picker'
 import defImages from '../assets/images/defImages.js'
@@ -252,7 +252,7 @@ export default class UserProfileView extends Component {
           <View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <View
-                style={[screenStyles.icons, { width: 27, margin: '5%', textAlign: 'right' }]}
+                style={[screenStyles.icons, styles.filler]}
               ></View>
               <Text style={[screenStyles.text, styles.myProfile]}>
                 Profile
@@ -430,4 +430,9 @@ const styles = StyleSheet.create({
     fontSize: normalize(17), 
     fontFamily: 'CircularStd-Medium' 
   },
+  filler: 
+  { width: 27, 
+    margin: '5%', 
+    textAlign: 'right' 
+  }
 })

@@ -111,7 +111,7 @@ export default class Login extends React.Component {
 
         <Text
           style={[
-            screenStyles.text, styles.termsText
+            screenStyles.text, screenStyles.textBook, styles.termsText
           ]}
         >
           By clicking log in, you agree with our Terms and Conditions.
@@ -153,7 +153,6 @@ Login.propTypes = {
 const styles = StyleSheet.create({
   slogan: 
   {
-    fontFamily: 'CircularStd-Bold',
     fontSize: normalize(30),
     marginTop: '2.5%',
     marginBottom: '10%',
@@ -176,7 +175,7 @@ const styles = StyleSheet.create({
   },
   termsText:
   {
-    fontFamily: 'CircularStd-Book',
+    // fontFamily: 'CircularStd-Book',
     alignSelf: 'center',
     marginHorizontal: '15%',
     marginTop: '7.5%',

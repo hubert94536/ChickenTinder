@@ -86,18 +86,6 @@ export default class EditProfile extends React.Component {
              
 
             <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: '4%' }}>
-              {/* <Text
-                style={[screenStyles.text, { marginRight: '5%' }]}
-                onPress={() => this.props.uploadPhoto()}
-              >
-                Upload
-              </Text>
-              <Text
-                style={[screenStyles.text, { color: 'black', marginLeft: '5%' }]}
-                onPress={() => this.props.removePhoto()}
-              >
-                Remove
-              </Text> */}
             </View>
             <Text style={[screenStyles.text, { color: 'black', marginBottom: '2%' }]}>
               Display name
