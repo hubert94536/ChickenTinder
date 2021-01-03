@@ -94,7 +94,6 @@ export default class Friends extends React.Component {
     // Create all friend/request cards
     if (Array.isArray(friendList) && friendList.length) {
       for (var i = 0; i < friendList.length; i++) {
-        console.log(friendList[i])
         var status = ''
         // if (this.props.isFriends) status = 'Friends'
         if (this.props.isFriends) status = 'friends'

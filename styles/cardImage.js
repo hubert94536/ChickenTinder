@@ -7,6 +7,12 @@ export default StyleSheet.create({
   hex: {
     color: '#F15763',
   },
+  hexBorder: {
+    borderColor: '#F15763',
+  },
+  greyBorder: {
+    borderColor: '#F5F5F5',
+  },
   button: {
     borderRadius: 63,
     height: 45,

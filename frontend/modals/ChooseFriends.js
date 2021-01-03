@@ -144,7 +144,7 @@ export default class ChooseFriends extends React.Component {
                   username={item.username}
                   currentUser={id}
                   total={this.state.data}
-                  status="Not Added"
+                  status="not added"
                   key={item.id}
                   press={() => this.sendInvite()}
                 />

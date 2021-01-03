@@ -30,7 +30,7 @@ export default class Card extends React.Component {
       .removeFriendship(id, this.props.id)
       .then(() => {
         this.setState({ deleteFriend: false })
-        var filteredArray = total.filter((item) => {
+        var filteredArray = this.props.total.filter((item) => {
           return item.username !== this.props.username
         })
         this.props.press(this.props.id, filteredArray, true)
@@ -83,12 +83,14 @@ export default class Card extends React.Component {
           <Text style={[imgStyles.font, styles.name]}>{this.props.name}</Text>
           <Text style={[imgStyles.font, imgStyles.hex]}>@{this.props.username}</Text>
         </View>
-        {this.props.status === 'Added' && (
+        {/* if user is in a group */}
+        {this.props.status === 'in group' && (
           <View style={imgStyles.card}>
             <Text style={[imgStyles.text, styles.text]}>Added!</Text>
           </View>
         )}
-        {this.props.status === 'Not Added' && (
+        {/* if user is not in a group */}
+        {this.props.status === 'not added' && (
           <TouchableHighlight>
             <View style={imgStyles.card}>
               <Text style={[imgStyles.text, styles.topMargin]}>Add</Text>
@@ -96,19 +98,21 @@ export default class Card extends React.Component {
                 style={[imgStyles.icon, styles.addIcon]}
                 name="pluscircleo"
                 onPress={() => {
-                  this.setState({ status: 'Added' })
+                  this.setState({ status: 'in group' })
                   this.props.press()
                 }}
               />
             </View>
           </TouchableHighlight>
         )}
+        {/* if user has requested to add them as a friend */}
         {this.props.status === 'requested' && renderOption && (
           <View style={imgStyles.card}>
             <Text style={[imgStyles.text, styles.grey]}>Request Sent</Text>
             <Icon style={[imgStyles.icon, styles.icon, styles.grey]} name="hourglass-end" />
           </View>
         )}
+        {/* if they are not friends */}
         {this.props.status === 'add' && renderOption && (
           <TouchableHighlight underlayColor="white" onPress={() => this.addFriend()}>
             <View style={imgStyles.card}>
@@ -117,6 +121,7 @@ export default class Card extends React.Component {
             </View>
           </TouchableHighlight>
         )}
+        {/* if they are friends */}
         {this.props.status === 'friends' && renderOption && (
           <TouchableHighlight
             underlayColor="transparent"
@@ -128,6 +133,7 @@ export default class Card extends React.Component {
             </View>
           </TouchableHighlight>
         )}
+        {/* if they've requested you as a friend*/}
         {this.props.status === 'pending' && renderOption && (
           <View style={imgStyles.card}>
             <Text style={[imgStyles.text, styles.black]}>Pending Request</Text>
@@ -189,7 +195,7 @@ const styles = StyleSheet.create({
     marginLeft: '1%',
     flex: 1,
   },
-  name: { fontWeight: 'bold', fontSize: 15 },
+  name: { fontWeight: 'bold', fontSize: normalize(15) },
   text: { color: '#6A6A6A', marginRight: '8%' },
   icon: { fontSize: normalize(20), margin: '8%' },
   pend: { fontSize: normalize(25), margin: '3%' },
