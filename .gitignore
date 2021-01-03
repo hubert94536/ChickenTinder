@@ -63,4 +63,5 @@ buck-out/
 #java file
 android/java_pid15630.hprof
 
-
+#firebase admin
+backend/wechews-83255-firebase-adminsdk-60u99-50c08765b3.json
