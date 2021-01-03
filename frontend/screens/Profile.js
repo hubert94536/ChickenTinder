@@ -9,6 +9,7 @@ import accountsApi from '../apis/accountsApi.js'
 import facebookService from '../apis/facebookService.js'
 import Friends from './Friends.js'
 import screenStyles from '../../styles/screenStyles.js'
+import normalize from '../../styles/normalize.js'
 import modalStyles from '../../styles/modalStyles.js'
 import TabBar from '../Nav.js'
 import ImagePicker from 'react-native-image-crop-picker'
@@ -253,7 +254,7 @@ export default class UserProfileView extends Component {
               <View
                 style={[screenStyles.icons, { width: 27, margin: '5%', textAlign: 'right' }]}
               ></View>
-              <Text style={[screenStyles.text, styles.myProfile, { fontWeight: 'bold' }]}>
+              <Text style={[screenStyles.text, styles.myProfile]}>
                 Profile
               </Text>
               <Icon
@@ -284,33 +285,27 @@ export default class UserProfileView extends Component {
               >
                 <View style={{ width: 20, marginTop: '4%', marginLeft: '1%' }}></View>
                 <Text
-                  style={{ fontFamily: font, fontSize: 22, marginTop: '4%', fontWeight: 'bold' }}
+                  style={styles.name}
                 >
                   {name}
                 </Text>
                 <Icon
                   name="pencil-outline"
-                  style={{ fontSize: 28, marginTop: '4%', marginLeft: '1%', marginBottom: '1%' }}
+                  style={styles.pencil}
                   onPress={() => this.editProfile()}
                 />
               </View>
-              <Text style={{ fontFamily: font, fontSize: 14, color: hex }}>{'@' + username}</Text>
+              <Text style={styles.username}>{'@' + username}</Text>
             </View>
             <Text
-              style={{
-                fontFamily: font,
-                marginTop: '5%',
-                marginLeft: '7%',
-                fontSize: 20,
-                fontWeight: 'bold',
-              }}
+              style={styles.friends}
             >
               Your Friends
             </Text>
             <Text
               style={[
                 screenStyles.text,
-                { marginLeft: '7%', fontSize: 17, fontFamily: 'CircularStd-Medium' },
+                styles.friendNum,
               ]}
             >
               {numFriends + ' friends'}
@@ -390,19 +385,11 @@ UserProfileView.propTypes = {
 
 const styles = StyleSheet.create({
   myProfile: {
-    fontSize: 25,
+    fontSize: normalize(25),
     alignSelf: 'center',
     marginRight: '0%',
+    fontWeight: 'bold'
   },
-  // modal: {
-  //   height: height * 0.45,
-  //   width: '85%',
-  //   marginTop: '15%',
-  //   backgroundColor: 'white',
-  //   alignSelf: 'center',
-  //   borderRadius: 15,
-  //   elevation: 20,
-  // },
   changeButtons: {
     alignSelf: 'center',
     width: '35%',
@@ -412,5 +399,35 @@ const styles = StyleSheet.create({
     width: '35%',
     marginRight: '5%',
     marginTop: '5%',
+  },
+  name:
+  { fontFamily: font,
+    fontSize: normalize(22),
+    marginTop: '4%',
+    fontWeight: 'bold' 
+  },
+  pencil:
+  { fontSize: normalize(28), 
+    marginTop: '4%', 
+    marginLeft: '1%', 
+    marginBottom: '1%' 
+  },
+  username:
+  { fontFamily: font, 
+    fontSize: normalize(14), 
+    color: hex 
+  },
+  friends:
+  {
+    fontFamily: font,
+    marginTop: '5%',
+    marginLeft: '7%',
+    fontSize: normalize(20),
+    fontWeight: 'bold',
+  },
+  friendNum:
+  { marginLeft: '7%',
+    fontSize: normalize(17), 
+    fontFamily: 'CircularStd-Medium' 
   },
 })

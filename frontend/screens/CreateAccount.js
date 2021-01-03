@@ -4,6 +4,7 @@ import { EMAIL, NAME, PHOTO, USERNAME, ID, PHONE, DEFPHOTO } from 'react-native-
 import { Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import accountsApi from '../apis/accountsApi.js'
 import screenStyles from '../../styles/screenStyles.js'
+import normalize from '../../styles/normalize.js'
 import PropTypes from 'prop-types'
 import ImagePicker from 'react-native-image-crop-picker'
 import defImages from '../assets/images/defImages.js'
@@ -158,13 +159,8 @@ export default class createAccount extends React.Component {
           style={[
             screenStyles.text,
             screenStyles.title,
-            {
-              fontFamily: 'CircularStd-Bold',
-              fontSize: 25,
-              marginTop: '10%',
-              marginBottom: '5%',
-              fontWeight: 'bold',
-            },
+            styles.title
+            
           ]}
         >
           Create Account
@@ -177,13 +173,13 @@ export default class createAccount extends React.Component {
             source={{
               uri: this.state.photo,
             }}
-            style={screenStyles.avatar}
+            style={[screenStyles.avatar]}
           />
         ) : (
           <Image source={this.state.photo} style={screenStyles.avatar} />
         )}
 
-        <Text
+        {/* <Text
           style={[
             styles.mediumText,
             { fontSize: 15, color: hex, fontWeight: 'bold', marginBottom: '5%' },
@@ -191,8 +187,8 @@ export default class createAccount extends React.Component {
           onPress={() => this.uploadPhoto()}
         >
           Upload Profile Photo
-        </Text>
-        <Text style={[styles.mediumText, styles.fieldName]}>Display Name</Text>
+        </Text> */}
+        <Text style={[styles.mediumText, styles.fieldName , {marginTop: '5%'}]}>Display Name</Text>
         <TextInput
           style={[styles.fieldText]}
           textAlign="left"
@@ -277,6 +273,14 @@ createAccount.propTypes = {
   navigation: PropTypes.object,
 }
 const styles = StyleSheet.create({
+  title:
+  {
+    fontFamily: 'CircularStd-Bold',
+    fontSize: normalize(25),
+    marginTop: '10%',
+    marginBottom: '5%',
+    fontWeight: 'bold',
+  },
   button: {
     borderColor: hex,
     backgroundColor: hex,
@@ -286,12 +290,12 @@ const styles = StyleSheet.create({
   mediumText: {
     fontFamily: 'CircularStd-Medium',
     alignSelf: 'center',
-    fontSize: 18.5,
+    fontSize: normalize(18.5),
     color: textColor,
   },
   fieldText: {
     fontFamily: 'CircularStd-Book',
-    fontSize: 18,
+    fontSize: normalize(18),
     color: textColor,
     marginHorizontal: '12%',
     marginBottom: '3%',
@@ -306,7 +310,7 @@ const styles = StyleSheet.create({
   },
   warningText: {
     color: hex,
-    fontSize: 12,
+    fontSize: normalize(12),
     marginHorizontal: '12%',
     alignSelf: 'flex-start',
   },
