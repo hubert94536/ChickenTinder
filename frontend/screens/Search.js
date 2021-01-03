@@ -6,7 +6,8 @@ import { SearchBar } from 'react-native-elements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
 import accountsApi from '../apis/accountsApi.js'
-import SearchCard from '../cards/SearchCard.js'
+// import Card from '../cards/SearchCard.js'
+import Card from '../cards/Card.js'
 import Alert from '../modals/Alert.js'
 import screenStyles from '../../styles/screenStyles.js'
 import friendsApi from '../apis/friendsApi.js'
@@ -123,21 +124,16 @@ export default class Search extends Component {
         <FlatList
           data={this.state.data}
           renderItem={({ item }) => (
-            <SearchCard
-              currentUser={username}
+            <Card
               name={item.name}
-              username={item.username}
               image={item.image}
               id={item.id}
-              requested={item.status}
+              username={item.username}
+              currentUser={username}
               total={this.state.data}
+              status={item.status}
+              key={item.id}
               press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
-              showError={() => this.setState({ errorAlert: true })}
-              deleteError={() => this.setState({ errorAlert: false })}
-              showDelete={() =>
-                this.setState({ deleteFriend: true, deleteFriendName: item.username })
-              }
-              deleteDelete={() => this.setState({ deleteFriend: false })}
             />
           )}
           keyExtractor={(item) => item.username}

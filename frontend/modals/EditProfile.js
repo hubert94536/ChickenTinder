@@ -41,20 +41,19 @@ export default class EditProfile extends React.Component {
           <View style={styles.modalContent}>
             <Text style={[screenStyles.text, styles.titleText]}>Edit Profile</Text>
 
-            {this.props.image.includes("file") || this.props.image.includes("http") ? (
+            {this.props.image.includes('file') || this.props.image.includes('http') ? (
               <Image
-              style={styles.pfp}
-              source={{
-                uri: this.props.image,
-              }}
-            />
+                style={styles.pfp}
+                source={{
+                  uri: this.props.image,
+                }}
+              />
             ) : (
               <Image
-              source={this.props.image}
+                source={this.props.image}
                 style={styles.pfp}
               />
             )}
-             
 
             <View style={styles.pfpActions}>
               <Text

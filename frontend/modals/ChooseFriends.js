@@ -8,7 +8,10 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Clipboard from '@react-native-community/clipboard'
 import PropTypes from 'prop-types'
-import ChooseCard from '../cards/ChooseCard.js'
+import Alert from './Alert.js'
+// import Card  from '../cards/ChooseCard.js'
+import Card from '../cards/Card.js'
+import socket from '../apis/socket.js'
 import friendsApi from '../apis/friendsApi.js'
 import screenStyles from '../../styles/screenStyles.js'
 
@@ -68,6 +71,10 @@ export default class ChooseFriends extends React.Component {
     this.props.press()
   }
 
+  sendInvite() {
+    socket.sendInvite(this.props.username)
+  }
+
   //  function for searching your friends
   searchFilterFunction(text) {
     this.setState({ search: text })
@@ -113,11 +120,16 @@ export default class ChooseFriends extends React.Component {
               style={styles.flatList}
               data={this.state.friends}
               renderItem={({ item }) => (
-                <ChooseCard
+                <Card
                   name={item.name}
-                  username={item.username}
                   image={item.photo}
-                  added={false}
+                  id={item.id}
+                  username={item.username}
+                  currentUser={id}
+                  total={this.state.data}
+                  status="not added"
+                  key={item.id}
+                  press={() => this.sendInvite()}
                 />
               )}
               keyExtractor={(item) => item.username}
