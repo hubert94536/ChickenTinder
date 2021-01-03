@@ -1,6 +1,12 @@
 import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
+  font: {
+    fontFamily: 'CircularStd-Medium',
+  },
+  hex: {
+    color: '#F15763',
+  },
   button: {
     borderRadius: 63,
     height: 45,

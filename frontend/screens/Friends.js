@@ -96,7 +96,8 @@ export default class Friends extends React.Component {
       for (var i = 0; i < friendList.length; i++) {
         console.log(friendList[i])
         var status = ''
-        if (this.props.isFriends) status = 'Friends'
+        // if (this.props.isFriends) status = 'Friends'
+        if (this.props.isFriends) status = 'friends'
         else status = 'Not Friends'
         friends.push(
           <Card
