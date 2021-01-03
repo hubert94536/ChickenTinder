@@ -7,11 +7,9 @@ import screenStyles from '../../styles/screenStyles.js'
 import PropTypes from 'prop-types'
 import ImagePicker from 'react-native-image-crop-picker'
 import defImages from '../assets/images/defImages.js'
-import uploadApi from '../apis/uploadApi.js'
 
 const hex = '#F15763'
 const textColor = '#6A6A6A'
-
 
 // const defImages = [
 //   require('../assets/images//African.png'),
@@ -41,23 +39,22 @@ export default class createAccount extends React.Component {
   componentDidMount() {
     var index = Math.floor(Math.random() * defImages.length)
     AsyncStorage.multiGet([EMAIL, ID, NAME, PHONE]).then((res) => {
-      this.setState({
-        email: res[0][1],
-        id: res[1][1],
-        name: res[2][1],
-        phone: res[3][1],
-        photo: defImages[index].toString(),
-      }
-      , () => {
-        this.checkEmailValidity(this.state.email) 
-        this.checkUsernameValidity(this.state.username)
-        console.log("Def Img " + this.state.photo)
-        console.log(this.state.id)
-        console.log(defImages)
-        accountsApi.deleteUser(this.state.id)
-    }
-      
-      
+      this.setState(
+        {
+          email: res[0][1],
+          id: res[1][1],
+          name: res[2][1],
+          phone: res[3][1],
+          photo: defImages[index].toString(),
+        },
+        () => {
+          this.checkEmailValidity(this.state.email)
+          this.checkUsernameValidity(this.state.username)
+          console.log('Def Img ' + this.state.photo)
+          console.log(this.state.id)
+          console.log(defImages)
+          accountsApi.deleteUser(this.state.id)
+        },
       )
     })
     AsyncStorage.setItem(DEFPHOTO, this.state.defImgInd.toString())
@@ -85,7 +82,6 @@ export default class createAccount extends React.Component {
           this.state.photo,
         )
       })
-      .then(() => uploadApi.uploadPhoto(this.state.photoData))
       .then(() => {
         AsyncStorage.setItem(PHOTO, this.state.photo)
         this.props.navigation.replace('Home')
@@ -103,6 +99,7 @@ export default class createAccount extends React.Component {
     this.props.navigation.replace('Home')
   }
 
+  // TODO: Change from photo picker from phone gallery to our default photos
   uploadPhoto() {
     ImagePicker.openPicker({
       width: 150,
@@ -126,36 +123,32 @@ export default class createAccount extends React.Component {
   }
 
   checkEmailValidity(email) {
-    const reg = /^[ ]*([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})[ ]*$/i;
+    const reg = /^[ ]*([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})[ ]*$/i
     if (email !== null && reg.test(email) === false) {
-      this.setState({validEmailFormat: false})
+      this.setState({ validEmailFormat: false })
+    } else {
+      this.setState({ validEmailFormat: true })
     }
-    else
-    {
-      this.setState({validEmailFormat: true})
-    }
-    
-    accountsApi
-    .checkEmail(email)
-    .then(() => {
-        this.setState({validEmail: true})
-    })
-    .catch((error) => {
-        this.setState({validEmail: false})
-    })
 
+    accountsApi
+      .checkEmail(email)
+      .then(() => {
+        this.setState({ validEmail: true })
+      })
+      .catch((error) => {
+        this.setState({ validEmail: false })
+      })
   }
 
   checkUsernameValidity(username) {
     accountsApi
-    .checkUsername(username)
-    .then(() => {
-        this.setState({validUsername: true})
-    })
-    .catch((error) => {
-        this.setState({validUsername: false})
-    })
-
+      .checkUsername(username)
+      .then(() => {
+        this.setState({ validUsername: true })
+      })
+      .catch((error) => {
+        this.setState({ validUsername: false })
+      })
   }
 
   render() {
@@ -179,7 +172,7 @@ export default class createAccount extends React.Component {
         <Text style={[styles.mediumText]}>Account Verified!</Text>
         <Text style={[styles.mediumText]}>Finish setting up your account</Text>
 
-        {this.state.photo.includes("file") ? (
+        {this.state.photo.includes('file') ? (
           <Image
             source={{
               uri: this.state.photo,
@@ -211,22 +204,19 @@ export default class createAccount extends React.Component {
 
 <Text style={[styles.mediumText, styles.fieldName]}>Username</Text>
         <TextInput
-          style={[styles.fieldText, {marginBottom: this.state.validUsername ? '3%' :'0%'}]
-            }
+          style={[styles.fieldText, { marginBottom: this.state.validUsername ? '3%' : '0%' }]}
           textAlign="left"
           onChangeText={(username) => {
-          this.setState({ username })
-          this.checkUsernameValidity(username)
+            this.setState({ username })
+            this.checkUsernameValidity(username)
           }}
           value={this.state.username}
-          maxLength={15} 
+          maxLength={15}
         />
 
-        {!this.state.validUsername &&(
-          <Text style={[styles.mediumText, 
-            styles.warningText]}>This username is taken</Text>
+        {!this.state.validUsername && (
+          <Text style={[styles.mediumText, styles.warningText]}>This username is taken</Text>
         )}
-        
 
         <Text style={[styles.mediumText, styles.fieldName]}>Phone Number</Text>
         <TextInput
@@ -240,24 +230,23 @@ export default class createAccount extends React.Component {
 
         <Text style={[styles.mediumText, styles.fieldName]}>Email</Text>
         <TextInput
-          style={[styles.fieldText, 
-            {marginBottom:  (this.state.validEmail && this.state.validEmailFormat) ? '3%' :'0%'}
+          style={[
+            styles.fieldText,
+            { marginBottom: this.state.validEmail && this.state.validEmailFormat ? '3%' : '0%' },
           ]}
           textAlign="left"
           onChangeText={(email) => {
             this.setState({ email: email })
-            this.checkEmailValidity(email) 
+            this.checkEmailValidity(email)
           }}
           value={this.state.email}
         />
 
-        {!this.state.validEmail && this.state.validEmailFormat &&(
-          <Text style={[styles.mediumText, 
-            styles.warningText]}>This email is taken</Text>
+        {!this.state.validEmail && this.state.validEmailFormat && (
+          <Text style={[styles.mediumText, styles.warningText]}>This email is taken</Text>
         )}
-        {!this.state.validEmailFormat &&(
-          <Text style={[styles.mediumText, 
-            styles.warningText]}>Input a valid email</Text>
+        {!this.state.validEmailFormat && (
+          <Text style={[styles.mediumText, styles.warningText]}>Input a valid email</Text>
         )}
 
         <TouchableHighlight
@@ -316,9 +305,9 @@ const styles = StyleSheet.create({
     marginLeft: '10%',
   },
   warningText: {
-    color: hex, 
-    fontSize: 12, 
-    marginHorizontal: '12%', 
-    alignSelf: 'flex-start'
-  }
+    color: hex,
+    fontSize: 12,
+    marginHorizontal: '12%',
+    alignSelf: 'flex-start',
+  },
 })
