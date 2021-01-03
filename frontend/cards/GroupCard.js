@@ -6,8 +6,7 @@ import socket from '../apis/socket.js'
 import imgStyles from '../../styles/cardImage.js'
 import normalize from '../../styles/normalize.js'
 
-const hex = '#F15763'
-const font = 'CircularStd-Medium'
+const height = Dimensions.get('window').height
 
 export default class GroupCard extends React.Component {
   constructor(props) {
@@ -85,19 +84,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
     borderRadius: 7,
     alignSelf: 'center',
-    width: 170,
-    height: 70,
+    width: height * 0.22,
+    height: height * 0.09,
     padding: 0,
-    margin: 5,
+    margin: '3%',
     flexDirection: 'row',
   },
   image: {
     borderRadius: 63,
-    height: Dimensions.get('window').height * 0.075,
-    width: Dimensions.get('window').height * 0.075,
-    borderWidth: 3,
+    height: height * 0.075,
+    width: height * 0.075,
+    borderWidth: height * 0.004,
     alignSelf: 'flex-start',
-    marginLeft: 7,
+    marginLeft: '7%',
   },
   topText: {
     color: '#000',
@@ -109,13 +108,11 @@ const styles = StyleSheet.create({
     marginTop: '5%',
     backgroundColor: '#F5F5F5',
     borderRadius: 30,
-    width: 13,
-    height: 13,
     overflow: 'hidden',
   },
   none: {
     marginLeft: '3%',
-    width: 200,
+    width: height * 0.26,
     flexDirection: 'column',
     justifyContent: 'center',
     color: 'green',
@@ -124,19 +121,15 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'normal',
     fontSize: normalize(14),
-    width: 100,
+    width: height * 0.13,
   },
   username: {
-    color: hex,
     fontWeight: 'normal',
-    fontFamily: font,
     fontSize: normalize(10),
-    width: 100,
+    width: height * 0.13,
   },
   remove: {
-    color: hex,
     alignSelf: 'center',
-    fontFamily: font,
     marginLeft: '30%',
   },
   general: { flex: 1, flexDirection: 'row' },
