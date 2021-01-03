@@ -2,6 +2,7 @@ const pg = require('pg')
 const { promisify } = require('util')
 const redis = require('redis')
 const { Sequelize } = require('sequelize')
+var firebase = require("firebase-admin");
 
 // configuration for database
 const config = {
@@ -28,4 +29,11 @@ const hgetAll = promisify(redisClient.hgetall).bind(redisClient)
 const hmset = promisify(redisClient.hmset).bind(redisClient)
 const sendCommand = promisify(redisClient.send_command).bind(redisClient)
 
-module.exports = { hgetAll, hmset, pool, redisClient, sendCommand, sequelize }
+var serviceAccount = require("wechews-83255-firebase-adminsdk-60u99-50c08765b3.json");
+
+firebase.initializeApp({
+  credential: firebase.credential.cert(serviceAccount),
+  databaseURL: "https://wechews-83255.firebaseio.com"
+});
+
+module.exports = { hgetAll, hmset, pool, redisClient, sendCommand, sequelize, firebase }
