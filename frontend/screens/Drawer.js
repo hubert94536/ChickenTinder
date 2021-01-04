@@ -57,6 +57,8 @@ class Drawer extends Component {
           Animated.spring(this.state.position, {
             toValue: this.state.closedPosition,
             useNativeDriver: 'false',
+            speed: 12,
+            bounciness: 12,
           }).start()
         } else if (goingDown) {
           this.currState = false
@@ -120,7 +122,7 @@ class Drawer extends Component {
             }}
           ></View>
           {/* Blur looks very very nice but crashes when other 
-              blurs are enabled due to a bue w/ BlurView )): */}
+              blurs are enabled due to a bug w/ BlurView package ): */}
           {/* <BlurView
             blurType="light"
             blurAmount={10}
