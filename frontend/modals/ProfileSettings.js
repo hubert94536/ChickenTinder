@@ -9,13 +9,13 @@ import {
   View,
 } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
-import Alert from '../modals/Alert.js'
-import screenStyles from '../../styles/screenStyles.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
+import Alert from '../modals/Alert.js'
+import modalStyles from '../../styles/modalStyles.js'
+import normalize from '../../styles/normalize.js'
+import screenStyles from '../../styles/screenStyles.js'
 
-const hex = '#F15763'
-const font = 'CircularStd-Medium'
 const height = Dimensions.get('window').height
 
 export default class Settings extends React.Component {
@@ -51,101 +51,39 @@ export default class Settings extends React.Component {
   render() {
     return (
       <Modal animationType="fade" visible={this.props.visible} transparent>
-        <View style={styles.modal}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-          >
-            <Text
-              style={[
-                screenStyles.textBold,
-                {
-                  fontSize: 20,
-                  marginLeft: '10%',
-                  marginTop: '10%',
-                  marginBottom: '5%',
-                  alignSelf: 'center',
-                },
-              ]}
-            >
-              Settings
-            </Text>
+        <View style={[modalStyles.mainContainer, styles.modal]}>
+          <View style={styles.titleContainer}>
+            <Text style={[screenStyles.textBold, styles.titleText]}>Settings</Text>
             <AntDesign
               name="closecircleo"
-              style={[screenStyles.text, { margin: '5%', fontSize: 25 }]}
+              style={[screenStyles.text, styles.closeIcon]}
               onPress={() => this.props.close()}
             />
           </View>
-          <View
-            style={{
-              justifyContent: 'space-between',
-              marginHorizontal: '10%',
-            }}
-          >
+          <View style={styles.bodyContainer}>
             <View>
-              <Text style={[{ fontFamily: font, fontSize: 18 }]}>Email</Text>
+              <Text style={[styles.subTitle, screenStyles.text]}>Email</Text>
               <TextInput
-                style={[
-                  screenStyles.text,
-                  screenStyles.input,
-                  {
-                    color: '#B2B2B2',
-                    fontSize: 17,
-                    alignSelf: 'stretch',
-                    backgroundColor: '#F2F2F2',
-                    borderWidth: 1,
-                    borderColor: '#E0E0E0',
-                    borderRadius: 5,
-                    paddingHorizontal: 5,
-                    paddingVertical: 2,
-                    marginTop: '3%',
-                  },
-                ]}
+                style={[screenStyles.text, screenStyles.input, styles.textInput]}
                 editable={false}
                 value={this.props.email}
               />
             </View>
           </View>
-          <View
-            style={{
-              justifyContent: 'space-between',
-              marginVertical: '5%',
-              marginHorizontal: '10%',
-            }}
-          >
-            <Text style={{ fontFamily: font, fontSize: 18 }}>Phone Number</Text>
+          <View style={[styles.bodyContainer, styles.bodyMargin]}>
+            <Text style={[styles.subTitle, screenStyles.text]}>
+              Phone Number
+            </Text>
             <TextInput
-              style={[
-                screenStyles.text,
-                screenStyles.input,
-                {
-                  color: '#B2B2B2',
-                  fontSize: 15,
-                  alignSelf: 'stretch',
-                  backgroundColor: '#F2F2F2',
-                  borderWidth: 1,
-                  borderColor: '#E0E0E0',
-                  borderRadius: 5,
-                  paddingHorizontal: 5,
-                  paddingVertical: 2,
-                  marginTop: '3%',
-                },
-              ]}
+              style={[screenStyles.text, screenStyles.input, styles.textInput]}
               editable={false}
               value={'+0 (770) 090-0461'}
             />
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-            }}
-          >
+          <View style={modalStyles.justifyCenter}>
             <Text
               onPress={() => this.setState({ deleteAlert: true })}
-              style={[screenStyles.textBold, { fontSize: 18, color: 'black', marginRight: '35%' }]}
+              style={[screenStyles.textBold, styles.deleteText]}
             >
               Delete account...
             </Text>
@@ -180,22 +118,9 @@ export default class Settings extends React.Component {
               />
             )}
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-            }}
-          >
+          <View style={modalStyles.justifyCenter}>
             <TouchableHighlight
-              style={[
-                screenStyles.medButton,
-                {
-                  backgroundColor: hex,
-                  borderColor: hex,
-                  marginTop: '7%',
-                  width: '40%',
-                },
-              ]}
+              style={[screenStyles.medButton, styles.logoutButton]}
               underlayColor="white"
               onShowUnderlay={() => this.setState({ logout: true })}
               onHideUnderlay={() => this.setState({ logout: false })}
@@ -204,8 +129,8 @@ export default class Settings extends React.Component {
               <Text
                 style={[
                   screenStyles.smallButtonText,
-                  { paddingTop: '5%', paddingBottom: '5%', fontSize: 19 },
-                  this.state.logout ? { color: hex } : { color: 'white' },
+                  styles.logoutText,
+                  this.state.logout ? screenStyles.hex : styles.white,
                 ]}
               >
                 Logout
@@ -230,6 +155,72 @@ export default class Settings extends React.Component {
   }
 }
 
+const styles = StyleSheet.create({
+  modal: {
+    height: height * 0.45,
+    width: '85%',
+    marginTop: '15%',
+    borderRadius: 15,
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  titleText: {
+    fontSize: normalize(20),
+    marginLeft: '10%',
+    marginTop: '10%',
+    marginBottom: '5%',
+    alignSelf: 'center',
+  },
+  closeIcon: {
+    margin: '5%',
+    fontSize: normalize(25),
+  },
+  bodyContainer: {
+    justifyContent: 'space-between',
+    marginHorizontal: '10%',
+  },
+  bodyMargin: {
+    marginVertical: '5%',
+  },
+  subTitle: {
+    color: 'black',
+    fontSize: normalize(18),
+  },
+  textInput: {
+    color: '#B2B2B2',
+    fontSize: normalize(17),
+    alignSelf: 'stretch',
+    backgroundColor: '#F2F2F2',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: 5,
+    paddingHorizontal: 5,
+    paddingVertical: 2,
+    marginTop: '3%',
+  },
+  deleteText: {
+    fontSize: normalize(18),
+    color: 'black',
+    marginRight: '35%',
+  },
+  logoutButton: {
+    backgroundColor: screenStyles.hex.color,
+    borderColor: screenStyles.hex.color,
+    marginTop: '7%',
+    width: '40%',
+  },
+  logoutText: {
+    paddingTop: '5%',
+    paddingBottom: '5%',
+    fontSize: normalize(19),
+  },
+  white: {
+    color: 'white',
+  },
+})
+
 Settings.propTypes = {
   delete: PropTypes.func,
   logout: PropTypes.func,
@@ -237,15 +228,3 @@ Settings.propTypes = {
   visible: PropTypes.bool,
   email: PropTypes.string,
 }
-
-const styles = StyleSheet.create({
-  modal: {
-    height: height * 0.45,
-    width: '85%',
-    marginTop: '15%',
-    backgroundColor: 'white',
-    alignSelf: 'center',
-    borderRadius: 15,
-    elevation: 20,
-  },
-})

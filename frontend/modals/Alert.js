@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, TouchableHighlight, Modal } from 'react-native'
+import { StyleSheet, View, Text, TouchableHighlight, Modal } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import PropTypes from 'prop-types'
 import modalStyles from '../../styles/modalStyles.js'
+import normalize from '../../styles/normalize.js'
+import screenStyles from '../../styles/screenStyles.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
 const hex = '#F15763'
@@ -39,36 +41,30 @@ export default class Alert extends Component {
         />
         <Modal transparent animationType="none" visible={this.props.visible}>
           <View style={[modalStyles.modal, { height: this.props.height }]}>
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+            <View style={modalStyles.topRightIcon}>
               <AntDesign
                 name="closecircleo"
                 style={modalStyles.icon}
                 onPress={() => this.handleCancel()}
               />
             </View>
-            <View
-              style={{
-                flexDirection: 'column',
-                flex: 1,
-                justifyContent: 'space-evenly',
-              }}
-            >
-              <View style={{ marginLeft: '10%', marginRight: '10%' }}>
-                <Text style={styles.title}>{this.props.title}</Text>
+            <View style={styles.modalContent}>
+              <View style={styles.textMargin}>
+                <Text style={[styles.title, screenStyles.hex]}>{this.props.title}</Text>
                 <Text style={styles.body}>{this.props.body}</Text>
               </View>
-              <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+              <View style={modalStyles.justifyCenter}>
                 <TouchableHighlight
-                  underlayColor={hex}
+                  underlayColor={screenStyles.hex.color}
                   onHideUnderlay={() => this.setState({ affPressed: false })}
                   onShowUnderlay={() => this.setState({ affPressed: true })}
                   onPress={() => this.handlePress()}
-                  style={[modalStyles.button, { marginBottom: '3%' }]}
+                  style={[modalStyles.button, styles.buttonMargin]}
                 >
                   <Text
                     style={[
                       modalStyles.text,
-                      this.state.affPressed ? { color: 'white' } : { color: hex },
+                      this.state.affPressed ? styles.white : screenStyles.hex,
                     ]}
                   >
                     {this.props.buttonAff}
@@ -80,12 +76,12 @@ export default class Alert extends Component {
                     onHideUnderlay={() => this.setState({ negPressed: false })}
                     onShowUnderlay={() => this.setState({ negPressed: true })}
                     onPress={() => this.handleCancel()}
-                    style={[modalStyles.button, { marginBottom: '3%', backgroundColor: hex }]}
+                    style={[modalStyles.button, styles.buttonMargin, styles.bgHex]}
                   >
                     <Text
                       style={[
                         modalStyles.text,
-                        this.state.negPressed ? { color: hex } : { color: 'white' },
+                        this.state.negPressed ? screenStyles.hex : styles.white,
                       ]}
                     >
                       {this.props.buttonNeg}
@@ -100,6 +96,38 @@ export default class Alert extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  title: {
+    fontFamily: font,
+    fontWeight: 'bold',
+    fontSize: normalize(20),
+    marginBottom: '3%',
+  },
+  body: {
+    fontFamily: font,
+    fontSize: normalize(15.5),
+    marginLeft: '2%',
+  },
+  modalContent: {
+    flexDirection: 'column',
+    flex: 1,
+    justifyContent: 'space-evenly',
+  },
+  textMargin: {
+    marginLeft: '10%',
+    marginRight: '10%',
+  },
+  buttonMargin: {
+    marginBottom: '3%',
+  },
+  bgHex: {
+    backgroundColor: screenStyles.hex.color,
+  },
+  white: {
+    color: 'white',
+  },
+})
 
 Alert.propTypes = {
   press: PropTypes.func,
@@ -116,18 +144,3 @@ Alert.propTypes = {
 Alert.defaultProps = {
   visible: true,
 }
-
-const styles = StyleSheet.create({
-  title: {
-    fontFamily: font,
-    fontWeight: 'bold',
-    color: hex,
-    fontSize: 20,
-    marginBottom: '3%',
-  },
-  body: {
-    fontFamily: font,
-    fontSize: 15,
-    marginLeft: '2%',
-  },
-})
