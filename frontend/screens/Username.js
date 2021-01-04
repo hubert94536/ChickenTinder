@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import { NAME, USERNAME, ID, UID, EMAIL, PHOTO } from 'react-native-dotenv'
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import Alert from '../modals/Alert.js'
 import accountsApi from '../apis/accountsApi.js'
 import screenStyles from '../../styles/screenStyles.js'
