@@ -42,17 +42,13 @@ export default class Login extends React.Component {
 
   render() {
     return (
-      <View style={[{ backgroundColor: 'white', flex: 1 }]}>
+      <View style={[screenStyles.mainContainer]}>
         <Image
           source={require('../assets/images/logo2.png')}
-          style={{ alignSelf: 'center', width: 200, height: 248, marginTop: '12%' }}
+          style={styles.logo}
         />
         <Text
-          style={[
-            screenStyles.text,
-            screenStyles.title,
-            styles.slogan
-          ]}
+          style={[ screenStyles.text, screenStyles.title, styles.slogan]}
         >
           Let&apos;s Get Chews-ing!
         </Text>
@@ -62,12 +58,9 @@ export default class Login extends React.Component {
           activeOpacity={1}
           underlayColor={'white'}
           onPress={() => this.props.navigation.replace('Phone')}
-          style={[
-            screenStyles.longButton,
-            styles.phoneButton
-          ]}
+          style={[screenStyles.longButton, styles.phoneButton]}
         >
-          <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+          <View style={screenStyles.contentContainer}>
             <Icon
               style={[imgStyles.icon, styles.buttonIcon]}
               name="phone"
@@ -88,12 +81,9 @@ export default class Login extends React.Component {
           activeOpacity={1}
           underlayColor="white"
           onPress={() => this.login()}
-          style={[
-            screenStyles.longButton,
-            styles.fbButton,
-          ]}
+          style={[ screenStyles.longButton, styles.fbButton]}
         >
-          <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+          <View style={[screenStyles.contentContainer]}>
             <Icon
               style={[imgStyles.icon, styles.buttonIcon]}
               name="facebook-official"
@@ -110,9 +100,7 @@ export default class Login extends React.Component {
         </TouchableHighlight>
 
         <Text
-          style={[
-            screenStyles.text, screenStyles.textBook, styles.termsText
-          ]}
+          style={[screenStyles.textBook, styles.termsText]}
         >
           By clicking log in, you agree with our Terms and Conditions.
         </Text>
@@ -151,6 +139,13 @@ Login.propTypes = {
 }
 
 const styles = StyleSheet.create({
+  logo:
+  {
+    alignSelf: 'center', 
+    width: 200, 
+    height: 248, 
+    marginTop: '12%' },
+
   slogan: 
   {
     fontSize: normalize(30),

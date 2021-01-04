@@ -50,7 +50,7 @@ export default class createAccount extends React.Component {
           console.log('Def Img ' + this.state.photo)
           console.log(this.state.id)
           console.log(defImages)
-          accountsApi.deleteUser(this.state.id)
+          // accountsApi.deleteUser(this.state.id)
         },
       )
     })
@@ -150,19 +150,14 @@ export default class createAccount extends React.Component {
 
   render() {
     return (
-      <View style={[{ backgroundColor: 'white', flex: 1 }]}>
+      <View style={[screenStyles.mainContainer]}>
         <Text
-          style={[
-            screenStyles.textBold,
-            screenStyles.title,
-            styles.title
-            
-          ]}
+          style={[screenStyles.textBold, screenStyles.title, styles.title]}
         >
           Create Account
         </Text>
-        <Text style={[styles.text, styles.mediumText]}>Account Verified!</Text>
-        <Text style={[styles.text, styles.mediumText]}>Finish setting up your account</Text>
+        <Text style={[screenStyles.textBook, styles.mediumText]}>Account Verified!</Text>
+        <Text style={[screenStyles.textBook, styles.mediumText]}>Finish setting up your account</Text>
 
         {this.state.photo.includes('file') ? (
           <Image
@@ -175,7 +170,7 @@ export default class createAccount extends React.Component {
           <Image source={this.state.photo} style={screenStyles.avatar} />
         )}
 
-        <Text style={[styles.text, styles.mediumText, styles.fieldName , {marginTop: '5%'}]}>Display Name</Text>
+        <Text style={[screenStyles.textBook, styles.fieldName , {marginTop: '5%'}]}>Display Name</Text>
         <TextInput
           style={[screenStyles.textBook, styles.fieldText]}
           textAlign="left"
@@ -185,7 +180,7 @@ export default class createAccount extends React.Component {
           value={this.state.name}
         />
 
-<Text style={[styles.text, styles.mediumText, styles.fieldName]}>Username</Text>
+<Text style={[screenStyles.textBook, styles.fieldName]}>Username</Text>
         <TextInput
           style={[screenStyles.textBook, styles.fieldText, { marginBottom: this.state.validUsername ? '3%' : '0%' }]}
           textAlign="left"
@@ -198,10 +193,10 @@ export default class createAccount extends React.Component {
         />
 
         {!this.state.validUsername && (
-          <Text style={[styles.text, styles.mediumText, styles.warningText]}>This username is taken</Text>
+          <Text style={[screenStyles.text, styles.warningText]}>This username is taken</Text>
         )}
 
-        <Text style={[styles.text, styles.mediumText, styles.fieldName]}>Phone Number</Text>
+        <Text style={[screenStyles.textBook, styles.fieldName]}>Phone Number</Text>
         <TextInput
           style={[screenStyles.textBook, styles.fieldText]}
           textAlign="left"
@@ -211,7 +206,7 @@ export default class createAccount extends React.Component {
           value={this.state.phone}
         />
 
-        <Text style={[styles.text, styles.mediumText, styles.fieldName]}>Email</Text>
+        <Text style={[screenStyles.textBook, styles.fieldName]}>Email</Text>
         <TextInput
           style={[
             screenStyles.textBook, styles.fieldText,
@@ -226,10 +221,10 @@ export default class createAccount extends React.Component {
         />
 
         {!this.state.validEmail && this.state.validEmailFormat && (
-          <Text style={[styles.text, styles.mediumText, styles.warningText]}>This email is taken</Text>
+          <Text style={[screenStyles.text, styles.warningText]}>This email is taken</Text>
         )}
         {!this.state.validEmailFormat && (
-          <Text style={[styles.text, styles.mediumText, styles.warningText]}>Input a valid email</Text>
+          <Text style={[screenStyles.text, styles.warningText]}>Input a valid email</Text>
         )}
 
         <TouchableHighlight
@@ -240,7 +235,7 @@ export default class createAccount extends React.Component {
           onPress={() => this.handleClick()}
           style={[screenStyles.longButton, styles.button]}
         >
-          <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+          <View style={[screenStyles.contentContainer]}>
             <Text
               style={[
                 screenStyles.longButtonText,
@@ -287,6 +282,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   fieldName: {
+    fontSize: normalize(18.5),
     alignSelf: 'flex-start',
     color: 'black',
     marginLeft: '10%',

@@ -247,10 +247,10 @@ export default class UserProfileView extends Component {
     } = this.state
 
     return (
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
-        <View style={{ backgroundColor: 'white', height: '90%' }}>
+      <View style={[screenStyles.mainContainer]}>
+        <View style={styles.background}>
           <View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View style={[styles.titleContainer]}>
               <View
                 style={[screenStyles.icons, styles.filler]}
               ></View>
@@ -259,7 +259,7 @@ export default class UserProfileView extends Component {
               </Text>
               <Icon
                 name="cog-outline"
-                style={[screenStyles.icons, { margin: '5%', textAlign: 'right' }]}
+                style={[screenStyles.icons, styles.cog]}
                 onPress={() => this.setState({ visible: true })}
               />
             </View>
@@ -275,15 +275,11 @@ export default class UserProfileView extends Component {
               <Image source={this.state.image} style={screenStyles.avatar} />
             )}
 
-            <View style={{ alignItems: 'center' }}>
+            <View style={[styles.infoContainer]}>
               <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
+                style={[styles.nameContainer]}
               >
-                <View style={{ width: 20, marginTop: '4%', marginLeft: '1%' }}></View>
+                <View style={[styles.nameFiller]}></View>
                 <Text
                   style={styles.name}
                 >
@@ -303,15 +299,12 @@ export default class UserProfileView extends Component {
               Your Friends
             </Text>
             <Text
-              style={[
-                screenStyles.text,
-                styles.friendNum,
-              ]}
+              style={[ screenStyles.text, styles.friendNum]}
             >
               {numFriends + ' friends'}
             </Text>
           </View>
-          <View style={{ height: '50%', marginTop: '1%' }}>
+          <View style={[styles.friendContainer]}>
             {/* Contains the search bar and friends display if has friends, otherwise no friends view */}
             <Friends isFriends onFriendsChange={(n) => this.handleFriendsCount(n)} />
           </View>
@@ -384,6 +377,28 @@ UserProfileView.propTypes = {
 }
 
 const styles = StyleSheet.create({
+  background: { 
+    backgroundColor: 'white', 
+    height: '90%' 
+  },
+  titleContainer: { 
+    flexDirection: 'row', 
+    justifyContent: 'space-between' 
+  },
+  cog: { 
+    margin: '5%', 
+    textAlign: 'right' 
+  },
+  nameContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  nameFiller: { 
+    width: '4%', 
+    marginTop: '4%', 
+    marginLeft: '1%'
+  },
   myProfile: {
     fontSize: normalize(25),
     alignSelf: 'center',
@@ -430,9 +445,16 @@ const styles = StyleSheet.create({
     fontSize: normalize(17), 
     fontFamily: 'CircularStd-Medium' 
   },
+  friendContainer: { 
+    height: '50%', 
+    marginTop: '1%' 
+  },
   filler: 
   { width: 27, 
     margin: '5%', 
     textAlign: 'right' 
-  }
+  },
+  infoContainer: { 
+    alignItems: 'center' 
+  },
 })

@@ -122,7 +122,7 @@ export default class Friends extends React.Component {
               <SearchBar
                 containerStyle={styles.container}
                 inputContainerStyle={styles.inputContainer}
-                inputStyle={styles.input}
+                inputStyle={styles.text, styles.input}
                 placeholder="Search by username"
                 onChangeText={(text) => this.searchFilterFunction(text)}
                 value={this.state.search}
@@ -131,7 +131,7 @@ export default class Friends extends React.Component {
               />
             </View>
             <ScrollView
-              style={{ flexDirection: 'column' }}
+              style={[styles.scrollView]}
               alwaysBounceVertical="true"
               refreshControl={
                 <RefreshControl
@@ -157,32 +157,15 @@ export default class Friends extends React.Component {
           <View>
             <Icon
               name="emoticon-sad-outline"
-              style={{ fontSize: 72, marginTop: '15%', alignSelf: 'center' }}
+              style={[styles.sadFace]}
             />
             <Text
-              style={{
-                fontFamily: font,
-                fontSize: 20,
-                marginTop: '1%',
-                alignSelf: 'center',
-                fontWeight: 'bold',
-              }}
+              style={[screenStyles.text, styles.noFriendText1]}
             >
               No friends, yet
             </Text>
             <Text
-              style={[
-                screenStyles.text,
-                {
-                  marginTop: '3%',
-                  marginHorizontal: '6%',
-                  alignSelf: 'center',
-                  textAlign: 'center',
-                  fontSize: 16,
-                  fontFamily: 'CircularStd-Book',
-                  color: 'grey',
-                },
-              ]}
+              style={[ screenStyles.textBook, styles.noFriendText2]}
             >
               You have no friends, yet. Add friends using the search feature below!
             </Text>
@@ -214,7 +197,29 @@ const styles = StyleSheet.create({
     backgroundColor: '#ebecf0',
   },
   input: {
-    fontFamily: font,
     fontSize: 15,
+  },
+  scrollView: { 
+    flexDirection: 'column' 
+  },
+  sadFace: {
+    fontSize: 72, 
+    marginTop: '15%', 
+    alignSelf: 'center' 
+  },
+  noFriendText1: {
+    fontSize: 20,
+    marginTop: '1%',
+    alignSelf: 'center',
+    fontWeight: 'bold',
+  },
+
+  noFriendText2: {
+    marginTop: '3%',
+    marginHorizontal: '6%',
+    alignSelf: 'center',
+    textAlign: 'center',
+    fontSize: 16,
+    color: 'grey',
   },
 })
