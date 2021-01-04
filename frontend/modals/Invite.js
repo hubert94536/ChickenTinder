@@ -53,8 +53,8 @@ export default class Invite extends React.Component {
               <View style={styles.invite}>
                 <Image source={{ uri: this.props.image }} style={styles.avatar} />
                 <View>
-                  <Text style={[styles.inviteText, screenStyles.hex]}>{this.props.name}</Text>
-                  <Text style={[styles.inviteText, screenStyles.hex]}>invites you to join!</Text>
+                  <Text style={[screenStyles.text, styles.inviteText]}>{this.props.name}</Text>
+                  <Text style={[screenStyles.text, styles.inviteText]}>invites you to join!</Text>
                 </View>
               </View>
               <TouchableHighlight
@@ -101,7 +101,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   inviteText: {
-    fontFamily: font,
     fontSize: normalize(25),
   },
 })

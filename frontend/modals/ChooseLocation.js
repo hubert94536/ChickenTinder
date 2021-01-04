@@ -15,7 +15,6 @@ import screenStyles from '../../styles/screenStyles.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { ZIP_ID, ZIP_TOKEN } from 'react-native-dotenv'
 
-const font = 'CircularStd-Book'
 const height = Dimensions.get('window').height
 
 const SmartyStreetsSDK = require('smartystreets-javascript-sdk')
@@ -75,9 +74,9 @@ export default class Location extends Component {
               />
             </View>
             <View style={styles.modalStyle}>
-              <Text style={[styles.title, screenStyles.hex]}>Choose a starting location</Text>
+              <Text style={[styles.title, screenStyles.textBook, screenStyles.hex]}>Choose a starting location</Text>
               <TextInput
-                style={[screenStyles.text, screenStyles.input, styles.input]}
+                style={[screenStyles.input, screenStyles.textBook, styles.input]}
                 placeholderTextColor="#9F9F9F"
                 placeholder="Enter your zip code"
                 onChangeText={(text) => this.setState({ zip: text })}
@@ -86,7 +85,7 @@ export default class Location extends Component {
               {!this.state.zipValid && (
                 <View style={styles.error}>
                   <AntDesign name="exclamationcircle" style={styles.errorIcon} />
-                  <Text style={[screenStyles.text, styles.errorText]}>Invalid zip code</Text>
+                  <Text style={[screenStyles.textBook, styles.errorText]}>Invalid zip code</Text>
                 </View>
               )}
               <TouchableHighlight
@@ -115,7 +114,6 @@ export default class Location extends Component {
 
 const styles = StyleSheet.create({
   title: {
-    fontFamily: font,
     fontSize: normalize(20),
     marginLeft: '7.5%',
   },
@@ -127,7 +125,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 5,
     padding: '1%',
-    fontFamily: font,
   },
   modalHeight: {
     height: height * 0.3,
@@ -154,7 +151,6 @@ const styles = StyleSheet.create({
   errorText: {
     textAlign: 'center',
     color: 'red',
-    fontFamily: font,
   },
   buttonColor: {
     backgroundColor: screenStyles.hex.color,

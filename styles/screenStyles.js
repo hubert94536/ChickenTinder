@@ -21,6 +21,9 @@ export default StyleSheet.create({
     fontFamily: 'CircularStd-Bold',
     color: '#F15763',
   },
+  textBook: {
+    fontFamily: 'CircularStd-Book',
+  },
   input: {
     fontSize: 20,
     margin: 0,
