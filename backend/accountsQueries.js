@@ -54,7 +54,7 @@ const checkUsername = async (req, res) => {
 const createAccount = async (req, res) => {
   try {
     await Accounts.create({
-      id: req.body.id,
+      uid: req.authId ,
       name: req.body.name,
       username: req.body.username,
       email: req.body.email,
@@ -68,19 +68,19 @@ const createAccount = async (req, res) => {
   }
 }
 
-// Delete account by id
+// Delete account by uid
 // TODO: Delete their associated photo from S3
 const deleteAccount = async (req, res) => {
   try {
-    const { id } = req.params
+    const uid = req.authId 
     await Friends.destroy({
       where: {
         [Op.or]: [
           {
-            main_id: id,
+            main_uid: uid,
           },
           {
-            friend_id: id,
+            friend_uid: uid,
           },
         ],
       },
@@ -89,36 +89,36 @@ const deleteAccount = async (req, res) => {
       where: {
         [Op.or]: [
           {
-            receiver_id: id,
+            receiver_uid: uid,
           },
           {
-            sender_id: id,
+            sender_uid: uid,
           },
         ],
       },
     })
     const deleted = await Accounts.destroy({
-      where: { id: id },
+      where: { uid: uid },
     })
     if (deleted) {
       return res.status(204).send('User deleted')
     }
-    return res.status(404).send('User with the specified ID does not exists')
+    return res.status(404).send('User with the specified UID does not exists')
   } catch (error) {
     console.log(error)
     return res.status(500).send(error.message)
   }
 }
 
-// Get the account by id
-const getAccountById = async (req, res) => {
+// Get the account by uid
+const getAccountByUID = async (req, res) => {
   try {
-    const { id } = req.params
-    const user = await Accounts.findOne({ where: { id: id } })
+    const uid = req.authId 
+    const user = await Accounts.findOne({ where: { uid: uid } })
     if (user) {
       return res.status(200).json({ user })
     }
-    return res.status(404).send('User with the specified ID does not exists')
+    return res.status(404).send('User with the specified UID does not exists')
   } catch (error) {
     console.log(error)
     return res.status(500).send(error.message)
@@ -135,18 +135,18 @@ const getAllAccounts = async (req, res) => {
   }
 }
 
-// Update account by id
+// Update account by uid
 // TODO: Transactions
 const updateAccount = async (req, res) => {
   try {
-    const { id } = req.params
+    const uid = req.authId 
     const updated = await Accounts.update(req.body, {
-      where: { id: id },
+      where: { uid: uid },
     })
     if (updated) {
       return res.status(200).send('Updated account info')
     }
-    return res.status(404).send('User with the specified ID does not exists')
+    return res.status(404).send('User with the specified UID does not exists')
   } catch (error) {
     console.log(error)
     return res.status(500).send(error.message)
@@ -169,7 +169,7 @@ const searchAccounts = async (req, res) => {
           },
         ],
       },
-      attributes: ['id', 'name', 'username', 'photo'],
+      attributes: ['uid', 'name', 'username', 'photo'],
     })
     return res.status(200).json({ users })
   } catch (error) {
@@ -184,7 +184,7 @@ module.exports = {
   checkUsername,
   createAccount,
   deleteAccount,
-  getAccountById,
+  getAccountByUID,
   getAllAccounts,
   searchAccounts,
   updateAccount,

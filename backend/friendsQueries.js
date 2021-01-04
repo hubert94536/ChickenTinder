@@ -6,14 +6,14 @@ var attributes = ['username', 'photo', 'name']
 // Accept a friend request
 const acceptRequest = async (req, res) => {
   try {
-    const main = req.params.main
-    const friend = req.params.friend
-    // set status to friends for friend and main account ids
+    const main = req.authId 
+    const friend = req.params.uid
+    // set status to friends for friend and main account uids
     const mainAccount = await Friends.update(
       { status: 'friends' },
       {
         where: {
-          [Op.and]: [{ main_id: main }, { friend_id: friend }],
+          [Op.and]: [{ main_uid: main }, { friend_uid: friend }],
         },
       },
     )
@@ -21,7 +21,7 @@ const acceptRequest = async (req, res) => {
       { status: 'friends' },
       {
         where: {
-          [Op.and]: [{ main_id: friend }, { friend_id: main }],
+          [Op.and]: [{ main_uid: friend }, { friend_uid: main }],
         },
       },
     )
@@ -31,15 +31,15 @@ const acceptRequest = async (req, res) => {
         { type: 'friends' },
         {
           where: {
-            [Op.and]: [{ receiver_id: main }, { sender_id: friend }, { type: 'pending' }],
+            [Op.and]: [{ receiver_uid: main }, { sender_uid: friend }, { type: 'pending' }],
           },
         },
       )
       // create notification to friend for accepted friend request
       await Notifications.create({
-        receiver_id: friend,
+        receiver_uid: friend,
         type: 'accepted',
-        sender_id: main,
+        sender_uid: main,
         include: [Accounts],
       })
       return res.status(200).send('Friendship accepted')
@@ -54,18 +54,18 @@ const acceptRequest = async (req, res) => {
 // Creates friendship requests between both accounts
 const createFriends = async (req, res) => {
   try {
-    const main = req.params.main
-    const friend = req.params.friend
+    const main = req.authId
+    const friend = req.params.uid
     // create pending and requested friendship statuses
     await Friends.bulkCreate([
-      { main_id: main, status: 'requested', friend_id: friend, include: [Accounts] },
-      { main_id: friend, status: 'pending', friend_id: main, include: [Accounts] },
+      { main_uid: main, status: 'requested', friend_uid: friend, include: [Accounts] },
+      { main_uid: friend, status: 'pending', friend_uid: main, include: [Accounts] },
     ])
     // create notification to friend for pending friend request
     await Notifications.create({
-      receiver_id: friend,
+      receiver_uid: friend,
       type: 'pending',
-      sender_id: main,
+      sender_uid: main,
       include: [Accounts],
     })
     return res.status(201).send('Friend requested')
@@ -78,14 +78,14 @@ const createFriends = async (req, res) => {
 // Delete a friendship
 const deleteFriendship = async (req, res) => {
   try {
-    const main = req.params.main
-    const friend = req.params.friend
+    const main = req.authId
+    const friend = req.params.uid
     // delete friendship rows for both main and friend
     const destroyed = await Friends.destroy({
       where: {
         [Op.or]: [
-          { [Op.and]: [{ main_id: friend }, { friend_id: main }] },
-          { [Op.and]: [{ main_id: main }, { friend_id: friend }] },
+          { [Op.and]: [{ main_uid: friend }, { friend_uid: main }] },
+          { [Op.and]: [{ main_uid: main }, { friend_uid: friend }] },
         ],
       },
     })
@@ -103,7 +103,7 @@ const deleteFriendship = async (req, res) => {
 const getFriends = async (req, res) => {
   try {
     const friends = await Friends.findAll({
-      where: { main_id: req.params.id },
+      where: { main_uid: req.authId },
       include: [
         {
           model: Accounts,

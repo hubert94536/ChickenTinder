@@ -4,7 +4,7 @@ const joi = require('joi')
 // Check request body for creating account
 function checkCreateAccounts(req, res, next) {
   const createAccountsSchema = joi.object().keys({
-    id: joi.number().positive().unsafe().required(), //ids are BigInts and outside of safe range
+    uid: joi.string().required(),
     name: joi.string().required(),
     username: joi.string().required(),
     email: joi.string().email().required(),
@@ -34,11 +34,6 @@ const emailSchema = joi.object().keys({
   email: joi.string().email().required(),
 })
 
-// Check account id is passed in route
-const idSchema = joi.object().keys({
-  id: joi.number().positive().unsafe().required(),
-})
-
 // Check phone number is passed in route
 const phoneNumberSchema = joi.object().keys({
   phone_number: joi.string().min(7).max(15).required(),
@@ -55,10 +50,14 @@ const usernameSchema = joi.object().keys({
 })
 
 // Friendship table schema
-// Check user and friend id is passed in
-const friendshipSchema = joi.object().keys({
-  main: joi.number().positive().unsafe().required(),
-  friend: joi.number().positive().unsafe().required(),
+// Check friend uid is passed in
+const uidSchema = joi.object().keys({
+  uid: joi.string().required(),
+})
+
+// Check notification id is passed in route
+const idSchema = joi.object().keys({
+  id: joi.number().required(),
 })
 
 //General helper function for validating schema
@@ -83,7 +82,7 @@ module.exports = {
   checkCreateAccounts,
   checkUpdateAccount,
   emailSchema,
-  friendshipSchema,
+  uidSchema,
   idSchema,
   phoneNumberSchema,
   textSchema,

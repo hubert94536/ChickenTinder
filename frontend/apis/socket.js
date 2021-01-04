@@ -6,35 +6,32 @@ var myPhoto = ''
 var myUsername = ''
 var socket = null
 
-const connect = (id, name, photo, username) => {
-  myId = id
+const connect = (uid, name, photo, username) => {
+  myId = uid
   myName = name
   myPhoto = photo
   myUsername = username
-  socket = io('https://wechews.herokuapp.com', {
-    query: `id=${myId}`,
+  // socket = io('https://wechews.herokuapp.com', {
+  //   query: `uid=${myId}`,
+  // })
+  socket = io('http://192.168.0.23:5000', {
+    query: `uid=${myId}`,
   })
 }
-// uncomment below if testing on local server
-/* const connect = () => {
-   socket = io('http://172.16.0.10:5000', {
-     query: `username=${myUsername}`,
-   })
-} */
 
 const createRoom = () => {
   socket.emit('create', {
-    id: myId,
+    uid: myId,
     name: myName,
     username: myUsername,
     photo: myPhoto,
   })
 }
 
-// sends invite to an id
+// sends invite to an uid
 const sendInvite = (receiver, code) => {
   socket.emit('invite', {
-    id: myId,
+    uid: myId,
     name: myName,
     username: myUsername,
     photo: myPhoto,
@@ -45,7 +42,7 @@ const sendInvite = (receiver, code) => {
 
 const joinRoom = (code) => {
   socket.emit('join', {
-    id: myId,
+    uid: myId,
     name: myName,
     username: myUsername,
     photo: myPhoto,
@@ -56,12 +53,12 @@ const joinRoom = (code) => {
 const leaveRoom = (code) => {
   socket.emit('leave', {
     code: code,
-    id: myId,
+    uid: myId,
   })
 }
 
-const kickUser = (id) => {
-  socket.emit('kick', { id: id })
+const kickUser = (uid) => {
+  socket.emit('kick', { uid: uid })
 }
 
 // host starts a session
@@ -76,7 +73,7 @@ const submitFilters = (code, categories) => {
   socket.emit('submit', {
     code: code,
     categories: categories,
-    id: myId,
+    uid: myId,
   })
 }
 
@@ -87,7 +84,7 @@ const likeRestaurant = (code, resId) => {
 
 // let everyone know you are done swiping
 const finishedRound = (code) => {
-  socket.emit('finished', { code: code, id: myId })
+  socket.emit('finished', { code: code, uid: myId })
 }
 
 // send chosen restaurant

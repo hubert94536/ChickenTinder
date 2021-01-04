@@ -1,6 +1,6 @@
 import React from 'react'
 import AsyncStorage from '@react-native-community/async-storage'
-import { EMAIL, NAME, PHOTO, USERNAME, ID, PHONE, DEFPHOTO } from 'react-native-dotenv'
+import { EMAIL, NAME, PHOTO, USERNAME, PHONE, DEFPHOTO } from 'react-native-dotenv'
 import { Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import accountsApi from '../apis/accountsApi.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -28,7 +28,6 @@ export default class createAccount extends React.Component {
       username: '',
       phone: '',
       email: '',
-      id: '',
       photo: '',
       defImg: '',
       defImgInd: 0,
@@ -73,16 +72,15 @@ export default class createAccount extends React.Component {
           [PHOTO, this.state.photo],
           [NAME, this.state.name],
           [EMAIL, this.state.email],
-          [ID, this.state.id],
           [PHONE, this.state.phone],
           [DEFPHOTO, this.state.defImgInd.toString()],
         ])
         return accountsApi.createFBUser(
           this.state.name,
-          this.state.id,
           this.state.username,
           this.state.email,
           this.state.photo,
+          this.state.phone
         )
       })
       .then(() => uploadApi.uploadPhoto(this.state.photoData))

@@ -5,10 +5,10 @@ var attributes = ['username', 'photo', 'name']
 const createNotif = async (req) => {
   try {
     await Notifications.create({
-      receiver_id: req.body.receiver_id,
+      receiver_uid: req.body.receiver_uid,
       type: req.body.type,
       content: req.body.content,
-      sender_id: req.body.sender_id,
+      sender_uid: req.body.sender_uid,
       include: [Accounts],
     })
     Promise.resolve(201)
@@ -38,9 +38,9 @@ const deleteNotif = async (req, res) => {
 // Get all user notifications
 const getNotifs = async (req, res) => {
   try {
-    const id = req.params.id
+    const uid = req.authId 
     const notifs = await Notifications.findAll({
-      where: { receiver_id: id },
+      where: { receiver_uid: uid },
       include: [
         {
           model: Accounts,

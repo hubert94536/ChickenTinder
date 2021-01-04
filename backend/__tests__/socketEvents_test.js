@@ -17,7 +17,7 @@ describe('socket with Redis', () => {
   beforeEach(function async(done) {
     // Set up socket client
     socket = io('http://192.168.0.23:5000', {
-      query: { id: '123' },
+      query: { uid: '123' },
     })
     // Set up Redis client and promisfy Redis client
     redisClient = redis.createClient('redis://localhost:6379')
@@ -44,10 +44,10 @@ describe('socket with Redis', () => {
   it('it connects and disconnects correctly', async (done) => {
     try {
       expect.assertions(2)
-      // test socket id and user id can be used to fetch the other
+      // test socket id and user uid can be used to fetch the other
       let user = await hgetAll(`users:${123}`)
       let client = await hgetAll(`clients:${user.client}`)
-      expect(client.id).toBe('123')
+      expect(client.uid).toBe('123')
       socket.disconnect()
 
       // test disconnection
@@ -71,7 +71,7 @@ describe('socket with Redis', () => {
     socket.emit('create', {
       name: 'test',
       username: 'testUser',
-      id: '123',
+      uid: '123',
       photo: 'example@pic.com',
     })
 
@@ -133,7 +133,7 @@ describe('socket with Redis', () => {
     socket.emit('create', {
       name: 'test',
       username: 'testUser',
-      id: '123',
+      uid: '123',
       photo: 'example@pic.com',
     })
 
@@ -154,7 +154,7 @@ describe('socket with Redis', () => {
         socket.emit('join', {
           name: 'test1',
           username: 'testUser1',
-          id: '1234',
+          uid: '1234',
           photo: 'example1@pic.com',
           code: session.code,
         })
@@ -200,7 +200,7 @@ describe('socket with Redis', () => {
     socket.emit('create', {
       name: 'test',
       username: 'testUser',
-      id: '123',
+      uid: '123',
       photo: 'example@pic.com',
     })
     let sentFilters = false
@@ -229,7 +229,7 @@ describe('socket with Redis', () => {
         sentFilters = true
         socket.emit('submit', {
           code: code,
-          id: '123',
+          uid: '123',
           categories: 'chinese,newamerican',
         })
       }
@@ -245,7 +245,7 @@ describe('socket with Redis', () => {
     socket.emit('create', {
       name: 'test',
       username: 'testUser',
-      id: '123',
+      uid: '123',
       photo: 'example@pic.com',
     })
 
@@ -264,9 +264,10 @@ describe('socket with Redis', () => {
         },
       })
     })
-
+    let res = null
     socket.on('start', (resList) => {
       expect(resList[0].name).toBeDefined()
+      res = resList[0]
       // like the same restaurant twice (to reach majority)
       socket.emit('like', {
         code: code,
@@ -277,11 +278,8 @@ describe('socket with Redis', () => {
         resId: resList[0].id,
       })
     })
-
-    let res = null
     // should receive id in restaurant match
     socket.on('match', (resId) => {
-      res = resId[0]
       expect(resId).toBe(res.id)
       done()
     })
@@ -296,7 +294,7 @@ describe('socket with Redis', () => {
     socket.emit('create', {
       name: 'test',
       username: 'testUser',
-      id: '123',
+      uid: '123',
       photo: 'example@pic.com',
     })
 
@@ -304,7 +302,7 @@ describe('socket with Redis', () => {
       // leave session after creating
       socket.emit('leave', {
         code: session.code,
-        id: '123',
+        uid: '123',
       })
       setTimeout(async () => {
         try {
@@ -342,15 +340,15 @@ describe('socket with Redis', () => {
     socket.emit('create', {
       name: 'test',
       username: 'testUser',
-      id: '123',
+      uid: '123',
       photo: 'example@pic.com',
     })
 
     socket.on('update', async (session) => {
       // let server know user is done swiping
       await sendCommand('JSON.SET', [`filters:${session.code}`, '.', JSON.stringify(filters)])
-      socket.emit('finished', { id: 123, code: session.code })
-      socket.emit('finished', { id: 456, code: session.code })
+      socket.emit('finished', { uid: 123, code: session.code })
+      socket.emit('finished', { uid: 456, code: session.code })
     })
 
     socket.on('top 3', (data) => {

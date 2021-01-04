@@ -1,16 +1,16 @@
 import AsyncStorage from '@react-native-community/async-storage'
-import { ID } from 'react-native-dotenv'
+import { UID } from 'react-native-dotenv'
 import axios from 'axios'
 
 var myId = ''
 
-AsyncStorage.getItem(ID).then((res) => {
+AsyncStorage.getItem(UID).then((res) => {
   myId = res
 })
 
 const notificationsApi = axios.create({
-  baseURL: 'https://wechews.herokuapp.com',
-  // baseURL: 'http://172.16.0.10:5000'
+  // baseURL: 'https://wechews.herokuapp.com',
+  baseURL: 'http://172.16.0.10:5000'
 })
 
 // gets a users friends/requests
@@ -26,7 +26,7 @@ const getNotifs = async () => {
             id: notif.id,
             type: notif.type,
             updatedAt: notif.updatedAt,
-            sender: notif.sender_id,
+            sender: notif.sender_uid,
             senderUsername: notif.account.username,
             senderPhoto: notif.account.photo,
             senderName: notif.account.name,

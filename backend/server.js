@@ -38,20 +38,21 @@ if (app.get('env') === 'development') {
 app.route('/images').post(images.upload, images.uploadHandler)
 // TODO: unauthenticated
 // Accounts table
-app
-  .route('/accounts')
-  .get(accounts.getAllAccounts)
-  .post(schema.checkCreateAccounts, accounts.createAccount)
+// app
+//   .route('/accounts')
+//   .get(accounts.getAllAccounts)
+//   .post(schema.checkCreateAccounts, accounts.createAccount)
 
 app
   .route('/accounts/search/:text')
   .get(validateRoute.params(schema.textSchema), accounts.searchAccounts)
 
 app
-  .route('/accounts/:id')
-  .get(validateRoute.params(schema.idSchema), accounts.getAccountById)
-  .put(schema.checkUpdateAccount, validateRoute.params(schema.idSchema), accounts.updateAccount)
-  .delete(validateRoute.params(schema.idSchema), accounts.deleteAccount)
+  .route('/accounts')
+  .get(auth.authenticate, accounts.getAccountByUID)
+  .post(schema.checkCreateAccounts, auth.authenticate, accounts.createAccount)
+  .put(schema.checkUpdateAccount, auth.authenticate, accounts.updateAccount)
+  .delete(auth.authenticate, accounts.deleteAccount)
 
 app
   .route('/username/:username')
@@ -65,27 +66,30 @@ app
 app.route('/email/:email').get(validateRoute.params(schema.emailSchema), accounts.checkEmail)
 
 // Friendships table
-app.route('/friendships/:id').get(validateRoute.params(schema.idSchema), friends.getFriends)
+// app.route('/friendships/:uid').get(validateRoute.params(schema.uidSchema), friends.getFriends)
+
+// app
+//   .route('/friendships/:main/:friend')
+//   .post(validateRoute.params(schema.friendshipSchema), friends.createFriends)
+//   .delete(validateRoute.params(schema.friendshipSchema), friends.deleteFriendship)
+//   .put(validateRoute.params(schema.friendshipSchema), friends.acceptRequest)
+app.route('/friendships').get(friends.getFriends)
 
 app
-  .route('/friendships/:main/:friend')
-  .post(validateRoute.params(schema.friendshipSchema), friends.createFriends)
-  .delete(validateRoute.params(schema.friendshipSchema), friends.deleteFriendship)
-  .put(validateRoute.params(schema.friendshipSchema), friends.acceptRequest)
+  .route('/friendships/:uid')
+  .post(validateRoute.params(schema.uidSchema), auth.authenticate, friends.createFriends)
+  .delete(validateRoute.params(schema.uidSchema), auth.authenticate, friends.deleteFriendship)
+  .put(validateRoute.params(schema.uidSchema), auth.authenticate, friends.acceptRequest)
 // TODO: unauthenticated
 // Notifications table
 app
-  .route('/notifications/user/:id')
-  .get(validateRoute.params(schema.idSchema), notifications.getNotifs)
+  .route('/notifications')
+  .get(notifications.getNotifs)
 
 app
   .route('/notifications/:id')
-  .delete(validateRoute.params(schema.idSchema), notifications.deleteNotif)
+  .delete(validateRoute.params(schema.idSchema), auth.authenticate, notifications.deleteNotif)
 
 server.listen(PORT, () => {
   console.log(`App running on port ${PORT}.`)
 })
-
-// auth services
-app.route('/auth/access')
-app.route('/auth/refresh') // TODO: FIND how to make secure

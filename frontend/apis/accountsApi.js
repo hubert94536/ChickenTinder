@@ -1,39 +1,30 @@
-import { ID, REFRESH_TOKEN, ACCESS_TOKEN } from 'react-native-dotenv'
+import { ID_TOKEN } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
 
-var myId = ''
+var token = ''
 
-AsyncStorage.getItem(ID).then((res) => {
-  myId = res
+AsyncStorage.getItem(ID_TOKEN).then((res) => {
+  token
 })
 
-// uncomment when tokens are set up
-// var tokenHeaders = {};
-// AsyncStorage.multiGet([REFRESH_TOKEN, ACCESS_TOKEN]).then((res) => {
-//   tokenHeaders = {
-//     'x-access-token': res[0][1],
-//     'x-refresh-token': res[1][1]
-//   }
-// })
-
 const accountsApi = axios.create({
-  baseURL: 'https://wechews.herokuapp.com',
-  // baseURL: 'http://192.168.0.23:5000',
+  // baseURL: 'https://wechews.herokuapp.com',
+  baseURL: 'http://192.168.0.23:5000',
   
   // uncomment when tokens are set up
   // headers: tokenHeaders
 })
 
-// creates user and returns id
-const createFBUser = async (name, id, username, email, photo) => {
+// creates user
+const createFBUser = async (name, username, email, photo, phone) => {
   return accountsApi
     .post('/accounts', {
-      id: id,
       name: name,
       username: username,
       email: email,
       photo: photo,
+      phone_number: phone
     })
     .then((res) => {
       return res.status
@@ -56,7 +47,7 @@ const getAllUsers = async () => {
             name: users.name,
             username: users.username,
             photo: users.photo,
-            id: users.id,
+            uid: users.uid,
           }
         }),
       }
@@ -79,7 +70,7 @@ const searchUsers = async (text) => {
             name: users.name,
             username: users.username,
             photo: users.photo,
-            id: users.id,
+            uid: users.uid,
           }
         }),
       }
@@ -90,9 +81,9 @@ const searchUsers = async (text) => {
 }
 
 // deletes user and returns status
-const deleteUser = async (id) => {
+const deleteUser = async () => {
   return accountsApi
-    .delete(`/accounts/${id}`)
+    .delete(`/accounts`)
     .then((res) => {
       return res.status
     })
@@ -101,10 +92,10 @@ const deleteUser = async (id) => {
     })
 }
 
-// gets user by id and returns user info
-const getUser = async (id) => {
+// gets user and returns user info
+const getUser = async () => {
   return accountsApi
-    .get(`/accounts/${id}`)
+    .get(`/accounts`)
     .then((res) => {
       return {
         username: res.data.user.username,
@@ -112,7 +103,6 @@ const getUser = async (id) => {
         phone_number: res.data.user.phone_number,
         name: res.data.user.name,
         photo: res.data.user.photo,
-        id: res.data.user.id,
       }
     })
     .catch((error) => {
@@ -121,41 +111,41 @@ const getUser = async (id) => {
 }
 
 // update email and returns status
-const updateEmail = async (id, info) => {
+const updateEmail = async (info) => {
   const req = {
     email: info,
   }
-  return updateUser(id, req)
+  return updateUser(req)
 }
 
 // update username and returns status
-const updateUsername = async (id, info) => {
+const updateUsername = async (info) => {
   const req = {
     username: info,
   }
-  return updateUser(id, req)
+  return updateUser(req)
 }
 
 // update username and returns status
-const updateName = async (id, info) => {
+const updateName = async (info) => {
   const req = {
     name: info,
   }
-  return updateUser(id, req)
+  return updateUser(req)
 }
 
 // update username and returns status
-const updatePhoneNumber = async (id, info) => {
+const updatePhoneNumber = async (info) => {
   const req = {
     phone_number: info,
   }
-  return updateUser(id, req)
+  return updateUser(req)
 }
 
 // updates user and returns status
-const updateUser = async (id, req) => {
+const updateUser = async (req) => {
   return accountsApi
-    .put(`/accounts/${id}`, req)
+    .put(`/accounts/`, req)
     .then((res) => {
       return {
         status: res.status,
@@ -168,7 +158,6 @@ const updateUser = async (id, req) => {
 
 // checks username and returns status
 const checkUsername = async (username) => {
-  console.log('check')
   return accountsApi
     .get(`/username/${username}`)
     .then((res) => {

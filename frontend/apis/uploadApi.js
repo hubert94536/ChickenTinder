@@ -1,16 +1,16 @@
 import AsyncStorage from '@react-native-community/async-storage'
-import { ID } from 'react-native-dotenv'
+import { UID } from 'react-native-dotenv'
 import axios from 'axios'
 
 var myId = ''
 
-AsyncStorage.getItem(ID).then((res) => {
+AsyncStorage.getItem(UID).then((res) => {
   myId = res
 })
 
 const uploadApi = axios.create({
-  baseURL: 'https://wechews.herokuapp.com',
-  // baseURL: 'http://172.16.0.10:5000'
+  // baseURL: 'https://wechews.herokuapp.com',
+  baseURL: 'http://192.168.0.23:5000'
 })
 
 /**
