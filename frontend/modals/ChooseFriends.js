@@ -98,18 +98,18 @@ export default class ChooseFriends extends React.Component {
               />
             </View>
             <View style={styles.header2}>
-              <Text style={[
-                screenStyles.text, 
-                styles.subHeaderText, 
-                styles.subHeaderMarginL, 
-                screenStyles.black]}>
-                  Group PIN: 
+              <Text
+                style={[
+                  screenStyles.text,
+                  styles.subHeaderText,
+                  styles.subHeaderMarginL,
+                  screenStyles.black,
+                ]}
+              >
+                Group PIN:
               </Text>
-              <Text style={[
-                screenStyles.textBold, 
-                styles.subHeaderText, 
-                screenStyles.black]}>
-                  {this.props.code}
+              <Text style={[screenStyles.textBold, styles.subHeaderText, screenStyles.black]}>
+                {this.props.code}
               </Text>
               <TouchableOpacity onPress={() => this.copyToClipboard()}>
                 <Ionicons name="copy-outline" style={styles.icon2} />

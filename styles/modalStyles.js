@@ -58,17 +58,17 @@ export default StyleSheet.create({
     alignSelf: 'flex-end',
     marginTop: '4%',
     marginRight: '4%',
-  },  
+  },
   titleContainer: {
-    marginLeft: '5%'
+    marginLeft: '5%',
   },
   titleText: {
-    fontSize: 17, 
+    fontSize: 17,
     marginBottom: '3%',
   },
   inputContainer: {
-    flexDirection: 'row', 
-    alignItems: 'center', 
+    flexDirection: 'row',
+    alignItems: 'center',
     marginTop: '1%',
   },
   textInput: {
@@ -82,11 +82,11 @@ export default StyleSheet.create({
     padding: '3%',
   },
   error: {
-    flexDirection: 'row', 
-    alignItems: 'center', 
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   errorIcon: {
-    fontSize: 15, 
+    fontSize: 15,
     marginRight: '2%',
   },
   errorText: {
@@ -106,7 +106,7 @@ export default StyleSheet.create({
     fontSize: 20,
   },
   topRightIcon: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     justifyContent: 'flex-end',
   },
   modalContent: {

@@ -1,5 +1,13 @@
 import React from 'react'
-import { Dimensions, Modal, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
+import {
+  Dimensions,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  View,
+} from 'react-native'
 import PropTypes from 'prop-types'
 import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -50,9 +58,7 @@ export default class Majority extends React.Component {
             onPress={() => this.handleCancel()}
           />
           <View style={modalStyles.titleContainer}>
-            <Text style={[screenStyles.text, modalStyles.titleText]}>
-              {this.props.title}
-            </Text>
+            <Text style={[screenStyles.text, modalStyles.titleText]}>{this.props.title}</Text>
             <Text style={[screenStyles.text, screenStyles.black]}>
               Members (out of {this.props.max}) needed to get a match
             </Text>
@@ -64,7 +70,7 @@ export default class Majority extends React.Component {
                 keyboardType="numeric"
                 defaultValue={this.props.max.toString()}
               />
-              <Text style={[screenStyles.text, ,modalStyles.titleText, styles.input]}>
+              <Text style={[screenStyles.text, modalStyles.titleText, styles.input]}>
                 / {this.props.max} members
               </Text>
             </View>
@@ -89,9 +95,7 @@ export default class Majority extends React.Component {
               style={[modalStyles.doneButton, styles.doneButtonMargin]}
               onPress={() => this.evaluate()}
             >
-              <Text style={[screenStyles.text, modalStyles.doneText]}>
-                Done
-              </Text>
+              <Text style={[screenStyles.text, modalStyles.doneText]}>Done</Text>
             </TouchableHighlight>
           </View>
         </View>

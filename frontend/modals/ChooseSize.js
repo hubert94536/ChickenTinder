@@ -1,5 +1,13 @@
 import React from 'react'
-import { Dimensions, Modal, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
+import {
+  Dimensions,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  View,
+} from 'react-native'
 import PropTypes from 'prop-types'
 import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -43,18 +51,14 @@ export default class Size extends React.Component {
   render() {
     return (
       <Modal animationType="fade" transparent visible={this.props.visible}>
-        <View
-          style={[modalStyles.mainContainer, styles.mainContainerHeight]}
-        >
+        <View style={[modalStyles.mainContainer, styles.mainContainerHeight]}>
           <Icon
             name="closecircleo"
             style={[screenStyles.text, modalStyles.closeIcon]}
             onPress={() => this.handleCancel()}
           />
           <View style={modalStyles.titleContainer}>
-            <Text style={[screenStyles.text, modalStyles.titleText]}>
-              {this.props.title}
-            </Text>
+            <Text style={[screenStyles.text, modalStyles.titleText]}>{this.props.title}</Text>
             <Text style={[screenStyles.text, screenStyles.black]}>{this.props.filterSubtext}</Text>
             <View style={modalStyles.inputContainer}>
               <TextInput
@@ -85,9 +89,7 @@ export default class Size extends React.Component {
               style={[modalStyles.doneButton, styles.doneButtonMargin]}
               onPress={() => this.evaluateSize()}
             >
-              <Text style={[screenStyles.text, modalStyles.doneText]}>
-                Done
-              </Text>
+              <Text style={[screenStyles.text, modalStyles.doneText]}>Done</Text>
             </TouchableHighlight>
           </View>
         </View>
@@ -101,7 +103,7 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height * 0.3,
   },
   errorMargin: {
-    marginTop: '3%'
+    marginTop: '3%',
   },
   doneButtonMargin: {
     marginTop: '5%',
@@ -109,7 +111,7 @@ const styles = StyleSheet.create({
 })
 Size.propTypes = {
   title: PropTypes.string,
-  subtext: PropTypes.string,
+  filterSubtext: PropTypes.string,
   press: PropTypes.func,
   cancel: PropTypes.func,
   visible: PropTypes.bool,

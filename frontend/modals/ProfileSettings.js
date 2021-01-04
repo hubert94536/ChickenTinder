@@ -51,13 +51,9 @@ export default class Settings extends React.Component {
   render() {
     return (
       <Modal animationType="fade" visible={this.props.visible} transparent>
-        <View style={[modalStyles.mainContainer ,styles.modal]}>
-          <View
-            style={styles.titleContainer}
-          >
-            <Text style={[screenStyles.textBold, styles.titleText]}>
-              Settings
-            </Text>
+        <View style={[modalStyles.mainContainer, styles.modal]}>
+          <View style={styles.titleContainer}>
+            <Text style={[screenStyles.textBold, styles.titleText]}>Settings</Text>
             <AntDesign
               name="closecircleo"
               style={[screenStyles.text, styles.closeIcon]}
@@ -74,10 +70,10 @@ export default class Settings extends React.Component {
               />
             </View>
           </View>
-          <View
-            style={[styles.bodyContainer, styles.bodyMargin]}
-          >
-            <Text style={[styles.subTitle, screenStyles.text, screenStyles.black]}>Phone Number</Text>
+          <View style={[styles.bodyContainer, styles.bodyMargin]}>
+            <Text style={[styles.subTitle, screenStyles.text, screenStyles.black]}>
+              Phone Number
+            </Text>
             <TextInput
               style={[screenStyles.text, screenStyles.input, styles.textInput]}
               editable={false}
@@ -177,8 +173,8 @@ const styles = StyleSheet.create({
     marginBottom: '5%',
     alignSelf: 'center',
   },
-  closeIcon:{
-    margin: '5%', 
+  closeIcon: {
+    margin: '5%',
     fontSize: normalize(25),
   },
   bodyContainer: {
@@ -204,9 +200,9 @@ const styles = StyleSheet.create({
     marginTop: '3%',
   },
   deleteText: {
-    fontSize: normalize(18), 
-    color: 'black', 
-    marginRight: '35%'
+    fontSize: normalize(18),
+    color: 'black',
+    marginRight: '35%',
   },
   logoutButton: {
     backgroundColor: screenStyles.hex.color,
@@ -215,11 +211,10 @@ const styles = StyleSheet.create({
     width: '40%',
   },
   logoutText: {
-    paddingTop: '5%', 
-    paddingBottom: '5%', 
+    paddingTop: '5%',
+    paddingBottom: '5%',
     fontSize: normalize(19),
   },
-
 })
 
 Settings.propTypes = {
@@ -229,4 +224,3 @@ Settings.propTypes = {
   visible: PropTypes.bool,
   email: PropTypes.string,
 }
-

@@ -54,9 +54,7 @@ export default class Join extends React.Component {
                 onPress={() => this.props.onPress()}
               />
             </View>
-            <View
-              style={modalStyles.modalContent}
-            >
+            <View style={modalStyles.modalContent}>
               <View style={styles.inputContainer}>
                 <Text style={[screenStyles.text, styles.text]}>Group PIN:</Text>
                 <TextInput
@@ -86,7 +84,12 @@ export default class Join extends React.Component {
                   onPress={() => this.handleAccept()}
                   style={modalStyles.button}
                 >
-                  <Text style={[modalStyles.text, { color: this.state.pressed ? 'white' : screenStyles.hex.color }]}>
+                  <Text
+                    style={[
+                      modalStyles.text,
+                      { color: this.state.pressed ? 'white' : screenStyles.hex.color },
+                    ]}
+                  >
                     Join
                   </Text>
                 </TouchableHighlight>
@@ -108,26 +111,26 @@ export default class Join extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  modalContainer: { 
-    flex: 0, 
-    height: 180, 
-    borderRadius: 15, 
+  modalContainer: {
+    flex: 0,
+    height: 180,
+    borderRadius: 15,
   },
-  inputContainer: { 
-    flexDirection: 'row', 
-    justifyContent: 'center', 
-    alignItems: 'center' 
+  inputContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   text: {
-    fontSize: normalize(20), 
+    fontSize: normalize(20),
     margin: '2%',
   },
   textInput: {
-    fontSize: normalize(18), 
-    borderRadius: 5, 
-    padding: '1%', 
+    fontSize: normalize(18),
+    borderRadius: 5,
+    padding: '1%',
     textAlignVertical: 'center',
-    color: 'black'
+    color: 'black',
   },
   alignCenter: {
     textAlign: 'center',

@@ -90,10 +90,10 @@ export default StyleSheet.create({
   },
 
   white: {
-    color:'#FFFFFF'
+    color: '#FFFFFF',
   },
 
   black: {
-    color:'#000000'
-  }
+    color: '#000000',
+  },
 })

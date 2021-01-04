@@ -85,13 +85,8 @@ export default class Location extends Component {
               {this.state.zipValid && <Text style={{ textAlign: 'center' }}> </Text>}
               {!this.state.zipValid && (
                 <View style={styles.error}>
-                  <AntDesign
-                    name="exclamationcircle"
-                    style={styles.errorIcon}
-                  />
-                  <Text style={[screenStyles.text, styles.errorText]}>
-                    Invalid zip code
-                  </Text>
+                  <AntDesign name="exclamationcircle" style={styles.errorIcon} />
+                  <Text style={[screenStyles.text, styles.errorText]}>Invalid zip code</Text>
                 </View>
               )}
               <TouchableHighlight
@@ -138,7 +133,7 @@ const styles = StyleSheet.create({
     height: height * 0.3,
   },
   icon: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     justifyContent: 'flex-end',
   },
   modalStyle: {
@@ -147,22 +142,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   error: {
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    marginLeft: '8%' 
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: '8%',
   },
   errorIcon: {
-    color: 'red', 
-    marginRight: '2%', 
+    color: 'red',
+    marginRight: '2%',
     fontSize: normalize(15),
   },
   errorText: {
-    textAlign: 'center', 
-    color: 'red', 
-    fontFamily: font 
+    textAlign: 'center',
+    color: 'red',
+    fontFamily: font,
   },
   buttonColor: {
-    backgroundColor: screenStyles.hex.color
+    backgroundColor: screenStyles.hex.color,
   },
 })
 

@@ -1,5 +1,14 @@
 import React from 'react'
-import { Dimensions, Image, Modal, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
+import {
+  Dimensions,
+  Image,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  View,
+} from 'react-native'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -31,11 +40,10 @@ export default class EditProfile extends React.Component {
   render() {
     return (
       <Modal animationType="fade" transparent visible={this.props.visible}>
-        <View style= {[modalStyles.mainContainer, styles.mainContainerHeight]}>
+        <View style={[modalStyles.mainContainer, styles.mainContainerHeight]}>
           <AntDesign
             name="closecircleo"
-            style={[
-              screenStyles.text, modalStyles.closeIcon]}
+            style={[screenStyles.text, modalStyles.closeIcon]}
             onPress={() => this.props.dontSave()}
           />
           <View style={styles.modalContent}>
@@ -49,10 +57,7 @@ export default class EditProfile extends React.Component {
                 }}
               />
             ) : (
-              <Image
-                source={this.props.image}
-                style={styles.pfp}
-              />
+              <Image source={this.props.image} style={styles.pfp} />
             )}
 
             <View style={styles.pfpActions}>
@@ -82,9 +87,7 @@ export default class EditProfile extends React.Component {
               onChangeText={(text) => this.changeName(text)}
               // onSubmitEditing={() => this.makeChanges()}
             />
-            <Text style={[screenStyles.text, screenStyles.black, styles.nameText]}>
-              Username
-            </Text>
+            <Text style={[screenStyles.text, screenStyles.black, styles.nameText]}>Username</Text>
             <TextInput
               style={[screenStyles.text, screenStyles.input, styles.input]}
               underlineColorAndroid="transparent"
@@ -105,7 +108,8 @@ export default class EditProfile extends React.Component {
           >
             <Text
               style={[
-                screenStyles.smallButtonText, styles.saveText
+                screenStyles.smallButtonText,
+                styles.saveText,
                 //this.state.changeName ? { color: hex } : { color: 'white' },
               ]}
             >
@@ -124,8 +128,8 @@ const styles = StyleSheet.create({
     marginTop: '15%',
   },
   modalContent: {
-    textAlign: 'center', 
-    marginLeft: '10%', 
+    textAlign: 'center',
+    marginLeft: '10%',
     marginRight: '10%',
   },
   titleText: {
@@ -138,8 +142,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   pfpActions: {
-    flexDirection: 'row', 
-    justifyContent: 'center', 
+    flexDirection: 'row',
+    justifyContent: 'center',
     marginBottom: '4%',
   },
   uploadText: {
@@ -156,15 +160,15 @@ const styles = StyleSheet.create({
     borderColor: '#7d7d7d',
   },
   saveButton: {
-    backgroundColor: screenStyles.hex.color, 
-    borderColor: screenStyles.hex.color, 
-    margin: '1.5%', 
+    backgroundColor: screenStyles.hex.color,
+    borderColor: screenStyles.hex.color,
+    margin: '1.5%',
     width: '50%',
   },
-  saveText:{
-    padding: '10%', 
+  saveText: {
+    padding: '10%',
     color: 'white',
-  }
+  },
 })
 
 EditProfile.propTypes = {

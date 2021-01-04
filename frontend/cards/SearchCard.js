@@ -70,17 +70,16 @@ export default class SearchCard extends React.Component {
   render() {
     return (
       <View style={{ flexDirection: 'row', flex: 1, width: '85%', alignSelf: 'center' }}>
-        {this.props.image.includes("file") || this.props.image.includes("http") ? (
+        {this.props.image.includes('file') || this.props.image.includes('http') ? (
           <Image
             source={{
               uri: this.props.image,
             }}
             style={imgStyles.button}
           />
-          ) : (
-            <Image source={this.props.image} style={imgStyles.button}/>
-
-            )} 
+        ) : (
+          <Image source={this.props.image} style={imgStyles.button} />
+        )}
         <View
           style={{
             alignSelf: 'center',

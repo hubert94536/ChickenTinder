@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   textMargin: {
-    marginLeft: '10%', 
+    marginLeft: '10%',
     marginRight: '10%',
   },
   buttonMargin: {
@@ -142,5 +142,3 @@ Alert.propTypes = {
 Alert.defaultProps = {
   visible: true,
 }
-
-

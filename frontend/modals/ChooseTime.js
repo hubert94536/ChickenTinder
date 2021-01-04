@@ -1,5 +1,13 @@
 import React from 'react'
-import { Dimensions, Modal, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
+import {
+  Dimensions,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  View,
+} from 'react-native'
 import PropTypes from 'prop-types'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
@@ -53,9 +61,7 @@ export default class Time extends React.Component {
   render() {
     return (
       <Modal animationType="fade" transparent visible={this.props.visible}>
-        <View
-          style={[styles.mainContainerHeight, modalStyles.mainContainer]}
-        >
+        <View style={[styles.mainContainerHeight, modalStyles.mainContainer]}>
           <Icon
             name="closecircleo"
             style={[screenStyles.text, modalStyles.closeIcon]}
@@ -75,11 +81,7 @@ export default class Time extends React.Component {
                 onChangeText={(text) => this.setState({ selectedHour: text, invalidTime: false })}
                 keyboardType="numeric"
               />
-              <Text
-                style={[screenStyles.text, styles.colon]}
-              >
-                :
-              </Text>
+              <Text style={[screenStyles.text, styles.colon]}>:</Text>
               <TextInput
                 style={[modalStyles.textInput, styles.textInput]}
                 value={this.state.selectedMinute}
@@ -125,9 +127,7 @@ export default class Time extends React.Component {
               style={[modalStyles.doneButton, styles.doneButtonMargin]}
               onPress={() => this.evaluateTime()}
             >
-              <Text style={[screenStyles.text, modalStyles.doneText]}>
-                Done
-              </Text>
+              <Text style={[screenStyles.text, modalStyles.doneText]}>Done</Text>
             </TouchableHighlight>
           </View>
         </View>
@@ -144,12 +144,12 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   colon: {
-    fontSize: normalize(20), 
-    marginRight: '2%', 
+    fontSize: normalize(20),
+    marginRight: '2%',
     marginLeft: '2%',
   },
   switchButton: {
-    marginLeft: '4%'
+    marginLeft: '4%',
   },
   errorMargin: {
     marginTop: '3%',

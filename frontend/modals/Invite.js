@@ -8,7 +8,6 @@ import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
 
-const hex = '#F25763'
 const font = 'CircularStd-Medium'
 //  props are name, image url, and functions for cancel and go
 // invite alert
@@ -54,12 +53,8 @@ export default class Invite extends React.Component {
               <View style={styles.invite}>
                 <Image source={{ uri: this.props.image }} style={styles.avatar} />
                 <View>
-                  <Text style={[styles.inviteText, screenstyles.hex]}>
-                    {this.props.name}
-                  </Text>
-                  <Text style={[styles.inviteText, screenstyles.hex]}>
-                    invites you to join!
-                  </Text>
+                  <Text style={[styles.inviteText, screenStyles.hex]}>{this.props.name}</Text>
+                  <Text style={[styles.inviteText, screenStyles.hex]}>invites you to join!</Text>
                 </View>
               </View>
               <TouchableHighlight
@@ -102,11 +97,11 @@ const styles = StyleSheet.create({
     borderWidth: 4,
   },
   invite: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     justifyContent: 'space-evenly',
   },
   inviteText: {
     fontFamily: font,
     fontSize: normalize(25),
-  }
+  },
 })
