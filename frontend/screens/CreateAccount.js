@@ -9,7 +9,7 @@ import PropTypes from 'prop-types'
 import ImagePicker from 'react-native-image-crop-picker'
 import defImages from '../assets/images/defImages.js'
 
-const hex = '#F15763'
+const hex = screenStyles.hex.color
 const textColor = '#6A6A6A'
 
 export default class createAccount extends React.Component {
@@ -47,9 +47,6 @@ export default class createAccount extends React.Component {
         () => {
           this.checkEmailValidity(this.state.email)
           this.checkUsernameValidity(this.state.username)
-          console.log('Def Img ' + this.state.photo)
-          console.log(this.state.id)
-          console.log(defImages)
           // accountsApi.deleteUser(this.state.id)
         },
       )

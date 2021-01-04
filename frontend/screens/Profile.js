@@ -18,8 +18,7 @@ import PropTypes from 'prop-types'
 import EditProfile from '../modals/EditProfile.js'
 import Settings from '../modals/ProfileSettings.js'
 
-const hex = '#F15763'
-const font = 'CircularStd-Medium'
+const hex = screenStyles.hex.color
 const height = Dimensions.get('window').height
 var email = ''
 var id = ''
@@ -281,7 +280,7 @@ export default class UserProfileView extends Component {
               >
                 <View style={[styles.nameFiller]}></View>
                 <Text
-                  style={styles.name}
+                  style={screenStyles.text, styles.name}
                 >
                   {name}
                 </Text>
@@ -291,10 +290,10 @@ export default class UserProfileView extends Component {
                   onPress={() => this.editProfile()}
                 />
               </View>
-              <Text style={styles.username}>{'@' + username}</Text>
+              <Text style={screenStyles.text, styles.username}>{'@' + username}</Text>
             </View>
             <Text
-              style={styles.friends}
+              style={screenStyles.text, styles.friends}
             >
               Your Friends
             </Text>
@@ -416,7 +415,7 @@ const styles = StyleSheet.create({
     marginTop: '5%',
   },
   name:
-  { fontFamily: font,
+  { 
     fontSize: normalize(22),
     marginTop: '4%',
     fontWeight: 'bold' 
@@ -428,13 +427,12 @@ const styles = StyleSheet.create({
     marginBottom: '1%' 
   },
   username:
-  { fontFamily: font, 
-    fontSize: normalize(14), 
-    color: hex 
+  { fontSize: normalize(14), 
+    color: hex,
+    fontWeight: 'bold' 
   },
   friends:
   {
-    fontFamily: font,
     marginTop: '5%',
     marginLeft: '7%',
     fontSize: normalize(20),
@@ -450,9 +448,9 @@ const styles = StyleSheet.create({
     marginTop: '1%' 
   },
   filler: 
-  { width: 27, 
+  { width: '7%', 
     margin: '5%', 
-    textAlign: 'right' 
+    textAlign: 'right' ,
   },
   infoContainer: { 
     alignItems: 'center' 

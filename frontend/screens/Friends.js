@@ -9,6 +9,7 @@ import Alert from '../modals/Alert.js'
 // import Card from '../cards/ProfileCard.js'
 import Card from '../cards/Card.js'
 import friendsApi from '../apis/friendsApi.js'
+import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 
 const font = 'CircularStd-Medium'
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
     borderTopColor: 'transparent',
     width: '100%',
-    height: 45,
+    height: '35%',
     alignSelf: 'center',
   },
   inputContainer: {
@@ -197,18 +198,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#ebecf0',
   },
   input: {
-    fontSize: 15,
+    fontSize: normalize(15),
   },
   scrollView: { 
     flexDirection: 'column' 
   },
   sadFace: {
-    fontSize: 72, 
+    fontSize: normalize(72), 
     marginTop: '15%', 
     alignSelf: 'center' 
   },
   noFriendText1: {
-    fontSize: 20,
+    fontSize: normalize(20),
     marginTop: '1%',
     alignSelf: 'center',
     fontWeight: 'bold',
@@ -219,7 +220,7 @@ const styles = StyleSheet.create({
     marginHorizontal: '6%',
     alignSelf: 'center',
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: normalize(16),
     color: 'grey',
   },
 })

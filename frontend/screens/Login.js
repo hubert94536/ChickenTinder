@@ -142,8 +142,8 @@ const styles = StyleSheet.create({
   logo:
   {
     alignSelf: 'center', 
-    width: 200, 
-    height: 248, 
+    width: normalize(200), 
+    height: normalize(248), 
     marginTop: '12%' },
 
   slogan: 
@@ -170,13 +170,12 @@ const styles = StyleSheet.create({
   },
   termsText:
   {
-    // fontFamily: 'CircularStd-Book',
     alignSelf: 'center',
     marginHorizontal: '15%',
     marginTop: '7.5%',
     fontSize: normalize(13),
     textAlign: 'center',
-    lineHeight: 17,
+    lineHeight: normalize(17),
   }
   
 })

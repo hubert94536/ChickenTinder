@@ -99,4 +99,7 @@ export default StyleSheet.create({
     flexDirection: 'row', 
     alignSelf: 'center' 
   },
+  hex: {
+    color: '#F15763',
+  },
 })
