@@ -59,20 +59,7 @@ export default class EditProfile extends React.Component {
             ) : (
               <Image source={this.props.image} style={styles.pfp} />
             )}
-
-            <View style={styles.pfpActions}>
-              <Text
-                style={[screenStyles.text, styles.uploadText]}
-                onPress={() => this.props.uploadPhoto()}
-              >
-                Upload
-              </Text>
-              <Text
-                style={[screenStyles.text, screenStyles.black]}
-                onPress={() => this.props.removePhoto()}
-              >
-                Remove
-              </Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: '4%' }}>
             </View>
             <Text style={[screenStyles.text, screenStyles.black, styles.nameText]}>
               Display name
@@ -140,14 +127,6 @@ const styles = StyleSheet.create({
     width: height * 0.13,
     borderRadius: 60,
     alignSelf: 'center',
-  },
-  pfpActions: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: '4%',
-  },
-  uploadText: {
-    marginRight: '10%',
   },
   nameText: {
     marginBottom: '2%',

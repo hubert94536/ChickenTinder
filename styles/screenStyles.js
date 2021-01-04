@@ -23,6 +23,7 @@ export default StyleSheet.create({
   },
   textBook: {
     fontFamily: 'CircularStd-Book',
+    color: '#F15763',
   },
   input: {
     fontSize: 20,
@@ -87,6 +88,7 @@ export default StyleSheet.create({
     alignSelf: 'center',
     margin: '1.5%',
   },
+<<<<<<< HEAD
 
   hex: {
     color: '#F15763',
@@ -98,5 +100,19 @@ export default StyleSheet.create({
 
   black: {
     color: '#000000',
+=======
+  mainContainer:
+  { 
+    backgroundColor: 'white', 
+    flex: 1 
+  },
+  contentContainer:
+  { 
+    flexDirection: 'row', 
+    alignSelf: 'center' 
+  },
+  hex: {
+    color: '#F15763',
+>>>>>>> 1ca8b645ca795eab6df26493f27fc4c352f871f9
   },
 })
