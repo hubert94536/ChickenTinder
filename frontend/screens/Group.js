@@ -43,8 +43,6 @@ export default class Group extends React.Component {
 
       host: this.props.navigation.state.params.response.host,
       hostName: members[this.props.navigation.state.params.response.host].username,
-      // hostName: "NOT YOU",
-      needFilters: Object.keys(members).filter((user) => !user.filters).length - 1,
 
       filters: {},
       code: this.props.navigation.state.params.response.code,
@@ -78,7 +76,6 @@ export default class Group extends React.Component {
       })
 
       const count = this.countNeedFilters(res.members)
-      this.setState({ needFilters: count })
       if (!count) {
         this.setState({ canStart: true })
       }
@@ -112,9 +109,8 @@ export default class Group extends React.Component {
   // counts number of users who haven't submitted filters
   countNeedFilters(users) {
     let count = 0
-    // console.log('countNeedFilters: ' + JSON.stringify(users))
     for (const user in users) {
-      if (!users[user].filters) {
+      if (!users[user].filters && user != this.state.host) {
         count++
       }
     }
@@ -176,8 +172,8 @@ export default class Group extends React.Component {
   render() {
     this.updateMemberList()
     return (
-      <View style={{ backgroundColor: '#FFF' }}>
-        <View style={[styles.top, styles.floating]}>
+      <View>
+        <View style={styles.header}>
           <View
             style={{
               alignSelf: 'center',
@@ -228,9 +224,9 @@ export default class Group extends React.Component {
                 >
                   {memberList.length}
                 </Text>
-                <Text style={[styles.divider, { color: colors.hex }]}>|</Text>
-                <Text style={[styles.waiting, { color: colors.hex }]}>
-                  waiting for {this.state.needFilters} member filters
+                <Text style={[styles.divider, { color: '#F15763' }]}>|</Text>
+                <Text style={[styles.waiting, { color: '#F15763' }]}>
+                  waiting for {this.countNeedFilters(this.state.members)} member filters
                 </Text>
               </View>
               <FlatList
@@ -285,15 +281,14 @@ export default class Group extends React.Component {
                   } else {
                     return (
                       <GroupCard
-                        name={item.name}
-                        username={item.username}
-                        uid={item.uid}
-                        // Placeholder image for null image
-                        image={item.photo == '' ? 'https://via.placeholder.com/150' : item.photo}
                         filters={item.filters}
                         host={this.state.host}
+                        // Placeholder image for null image
+                        image={item.photo == '' ? 'https://via.placeholder.com/150' : item.photo}
                         isHost={this.state.hostName == item.username}
                         key={item.key}
+                        name={item.name}
+                        username={item.username}
                         style={{ width: 170 }}
                       />
                     )
@@ -412,7 +407,7 @@ export default class Group extends React.Component {
                 style={[
                   screenStyles.bigButton,
                   styles.bigButton,
-                  this.state.canStart ? { opacity: 0.75 } : { opacity: 1 },
+                  this.state.canStart ? { opacity: 1 } : { opacity: 0.75 },
                 ]}
               >
                 {/* TODO: Change text if required options have not been set */}
@@ -486,6 +481,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     color: '#aaa',
   },
+  header: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    zIndex: 20,
+    elevation: 20,
+  },
   groupTitle: {
     color: '#fff',
     fontSize: 30,
@@ -558,10 +561,6 @@ const styles = StyleSheet.create({
     marginTop: '3%',
     backgroundColor: colors.hex,
   },
-  top: {
-    backgroundColor: '#fff',
-    top: 0,
-  },
   center: {
     margin: 15,
     marginLeft: 25,
@@ -606,13 +605,5 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-  },
-  floating: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    zIndex: 20,
-    elevation: 20,
   },
 })

@@ -31,7 +31,7 @@ export default class GroupCard extends React.Component {
               }}
               style={[
                 styles.image,
-                this.props.filters ? imgStyles.hexBorder : imgStyles.greyBorder,
+                this.props.filters || this.props.isHost ? imgStyles.hexBorder : imgStyles.greyBorder,
               ]}
             />
           ) : (
