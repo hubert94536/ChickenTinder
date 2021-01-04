@@ -1,5 +1,5 @@
 import React from 'react'
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { EMAIL, NAME, PHOTO, USERNAME, ID, PHONE, DEFPHOTO } from 'react-native-dotenv'
 import { Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import accountsApi from '../apis/accountsApi.js'

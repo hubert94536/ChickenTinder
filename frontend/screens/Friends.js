@@ -3,7 +3,7 @@ import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native
 import PropTypes from 'prop-types'
 import { ID } from 'react-native-dotenv'
 import { SearchBar } from 'react-native-elements'
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Alert from '../modals/Alert.js'
 // import Card from '../cards/ProfileCard.js'

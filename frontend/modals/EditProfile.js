@@ -1,10 +1,20 @@
 import React from 'react'
-import { Dimensions, Image, Modal, Text, TextInput, TouchableHighlight, View } from 'react-native'
+import {
+  Dimensions,
+  Image,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  View,
+} from 'react-native'
+import modalStyles from '../../styles/modalStyles.js'
+import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
 
-const hex = '#F15763'
 const height = Dimensions.get('window').height
 
 export default class EditProfile extends React.Component {
@@ -30,78 +40,32 @@ export default class EditProfile extends React.Component {
   render() {
     return (
       <Modal animationType="fade" transparent visible={this.props.visible}>
-        <View
-          style={[
-            {
-              height: Dimensions.get('window').height * 0.5,
-              width: '75%',
-              marginTop: '15%',
-              backgroundColor: 'white',
-              elevation: 20,
-              alignSelf: 'center',
-              borderRadius: 10,
-            },
-          ]}
-        >
+        <View style={[modalStyles.mainContainer, styles.mainContainerHeight]}>
           <AntDesign
             name="closecircleo"
-            style={[
-              screenStyles.text,
-              {
-                fontSize: 18,
-                flexDirection: 'row',
-                alignSelf: 'flex-end',
-                marginTop: '4%',
-                marginRight: '4%',
-              },
-            ]}
+            style={[screenStyles.text, modalStyles.closeIcon]}
             onPress={() => this.props.dontSave()}
           />
-          <View style={{ textAlign: 'center', marginLeft: '10%', marginRight: '10%' }}>
-            <Text style={[screenStyles.text, { fontSize: 16 }]}>Edit Profile</Text>
+          <View style={styles.modalContent}>
+            <Text style={[screenStyles.text, styles.titleText]}>Edit Profile</Text>
 
             {this.props.image.includes('file') || this.props.image.includes('http') ? (
               <Image
-                style={{
-                  height: height * 0.13,
-                  width: height * 0.13,
-                  borderRadius: 60,
-                  alignSelf: 'center',
-                }}
+                style={styles.pfp}
                 source={{
                   uri: this.props.image,
                 }}
               />
             ) : (
-              <Image
-                source={this.props.image}
-                style={{
-                  height: height * 0.13,
-                  width: height * 0.13,
-                  borderRadius: 60,
-                  alignSelf: 'center',
-                }}
-              />
+              <Image source={this.props.image} style={styles.pfp} />
             )}
-             
-
             <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: '4%' }}>
             </View>
-            <Text style={[screenStyles.text, { color: 'black', marginBottom: '2%' }]}>
+            <Text style={[screenStyles.text, styles.nameText]}>
               Display name
             </Text>
             <TextInput
-              style={[
-                screenStyles.text,
-                screenStyles.input,
-                {
-                  color: '#7d7d7d',
-                  fontSize: 15,
-                  borderBottomWidth: 1,
-                  marginBottom: '7%',
-                  borderColor: '#7d7d7d',
-                },
-              ]}
+              style={[screenStyles.text, screenStyles.input, styles.input]}
               underlineColorAndroid="transparent"
               spellCheck={false}
               autoCorrect={false}
@@ -110,20 +74,9 @@ export default class EditProfile extends React.Component {
               onChangeText={(text) => this.changeName(text)}
               // onSubmitEditing={() => this.makeChanges()}
             />
-            <Text style={[screenStyles.text, { color: 'black', marginBottom: '2%' }]}>
-              Username
-            </Text>
+            <Text style={[screenStyles.text, styles.nameText]}>Username</Text>
             <TextInput
-              style={[
-                screenStyles.text,
-                screenStyles.input,
-                {
-                  color: '#7d7d7d',
-                  fontSize: 15,
-                  borderBottomWidth: 1,
-                  borderColor: '#7d7d7d',
-                },
-              ]}
+              style={[screenStyles.text, screenStyles.input, styles.input]}
               underlineColorAndroid="transparent"
               spellCheck={false}
               autoCorrect={false}
@@ -134,10 +87,7 @@ export default class EditProfile extends React.Component {
             />
           </View>
           <TouchableHighlight
-            style={[
-              screenStyles.medButton,
-              { backgroundColor: hex, borderColor: hex, margin: '7%', width: '50%' },
-            ]}
+            style={[screenStyles.medButton, styles.saveButton]}
             onPress={() => this.props.makeChanges()}
             underlayColor="white"
             // onShowUnderlay={() => this.setState({ changeName: true })}
@@ -146,8 +96,8 @@ export default class EditProfile extends React.Component {
             <Text
               style={[
                 screenStyles.smallButtonText,
-                { padding: '10%', color: 'white' },
-                // this.state.changeName ? { color: hex } : { color: 'white' },
+                styles.saveText,
+                //this.state.changeName ? { color: hex } : { color: 'white' },
               ]}
             >
               Save Changes
@@ -158,6 +108,48 @@ export default class EditProfile extends React.Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  mainContainerHeight: {
+    height: height * 0.5,
+    marginTop: '15%',
+  },
+  modalContent: {
+    textAlign: 'center',
+    marginLeft: '10%',
+    marginRight: '10%',
+  },
+  titleText: {
+    fontSize: normalize(16.5),
+  },
+  pfp: {
+    height: height * 0.13,
+    width: height * 0.13,
+    borderRadius: 60,
+    alignSelf: 'center',
+  },
+  nameText: {
+    marginBottom: '2%',
+    color: 'black',
+  },
+  input: {
+    color: '#7d7d7d',
+    fontSize: normalize(15.5),
+    borderBottomWidth: 1,
+    marginBottom: '7%',
+    borderColor: '#7d7d7d',
+  },
+  saveButton: {
+    backgroundColor: screenStyles.hex.color,
+    borderColor: screenStyles.hex.color,
+    margin: '1.5%',
+    width: '50%',
+  },
+  saveText: {
+    padding: '10%',
+    color: 'white',
+  },
+})
 
 EditProfile.propTypes = {
   name: PropTypes.string,

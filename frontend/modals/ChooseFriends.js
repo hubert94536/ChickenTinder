@@ -5,19 +5,15 @@ import { SearchBar } from 'react-native-elements'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import Clipboard from '@react-native-community/clipboard'
 import PropTypes from 'prop-types'
-import Alert from './Alert.js'
-// import Card  from '../cards/ChooseCard.js'
 import Card from '../cards/Card.js'
-import socket from '../apis/socket.js'
 import friendsApi from '../apis/friendsApi.js'
+import normalize from '../../styles/normalize.js'
+import screenStyles from '../../styles/screenStyles.js'
+import socket from '../apis/socket.js'
 
-const hex = '#F15763'
-const hexBlack = '#000000'
-const font = 'CircularStd-Bold'
-const fontRegular = 'CircularStd-Medium'
 const height = Dimensions.get('window').height
 var id = ''
 //  little pop up modal that is showed when you click choose friends in filters
@@ -63,7 +59,7 @@ export default class ChooseFriends extends React.Component {
       .catch(() => this.setState({ errorAlert: true }))
   }
 
-  // copies the room code (dummy text for now)
+  // copies the room code
   copyToClipboard() {
     Clipboard.setString(this.props.code.toString())
   }
@@ -94,39 +90,34 @@ export default class ChooseFriends extends React.Component {
         <View style={styles.container}>
           <View style={styles.main}>
             <View style={styles.header}>
-              <Text style={styles.headertext}>Friends</Text>
+              <Text style={[screenStyles.textBold, styles.headertext]}>Friends</Text>
               <AntDesign
                 name="closecircleo"
-                style={styles.icon}
+                style={[styles.icon, screenStyles.hex]}
                 onPress={() => this.handlePress()}
               />
             </View>
             <View style={styles.header2}>
-              <Text style={styles.headertext2}>Group PIN: </Text>
-              <Text style={styles.headertext3}>{this.props.code}</Text>
+              <Text
+                style={[
+                  screenStyles.text,
+                  styles.subHeaderText,
+                  styles.subHeaderMarginL,
+                ]}
+              >
+                Group PIN:
+              </Text>
+              <Text style={[screenStyles.textBold, styles.subHeaderText]}>
+                {this.props.code}
+              </Text>
               <TouchableOpacity onPress={() => this.copyToClipboard()}>
                 <Ionicons name="copy-outline" style={styles.icon2} />
               </TouchableOpacity>
             </View>
             <SearchBar
-              containerStyle={{
-                backgroundColor: 'white',
-                borderBottomColor: 'transparent',
-                borderTopColor: 'transparent',
-                width: '100%',
-                height: 45,
-                alignSelf: 'center',
-              }}
-              inputContainerStyle={{
-                height: 7,
-                width: '90%',
-                marginLeft: '5%',
-                backgroundColor: '#ebecf0',
-              }}
-              inputStyle={{
-                fontFamily: fontRegular,
-                fontSize: 15,
-              }}
+              containerStyle={styles.searchBarContainer}
+              inputContainerStyle={styles.searchBarInputContainer}
+              inputStyle={[screenStyles.text, styles.searchBarInput]}
               placeholder="Search for friends"
               onChangeText={(text) => this.searchFilterFunction(text)}
               value={this.state.search}
@@ -134,7 +125,7 @@ export default class ChooseFriends extends React.Component {
               round
             />
             <FlatList
-              style={{ marginLeft: '5%', marginRight: '5%', marginBottom: '2%' }}
+              style={styles.flatList}
               data={this.state.friends}
               renderItem={({ item }) => (
                 <Card
@@ -151,19 +142,9 @@ export default class ChooseFriends extends React.Component {
               )}
               keyExtractor={(item) => item.username}
             />
-            <MaterialIcons name="keyboard-arrow-down" style={styles.icon3} />
+            <MaterialIcons name="keyboard-arrow-down" style={[styles.icon3, screenStyles.hex]} />
           </View>
         </View>
-        {this.state.deleteFriend && (
-          <Alert
-            title="Are you sure?"
-            body={'You are about to remove @' + this.props.username + ' as a friend'}
-            buttonAff="Delete"
-            height="25%"
-            press={() => this.deleteFriend()}
-            cancel={() => this.setState({ deleteFriend: false })}
-          />
-        )}
       </Modal>
     )
   }
@@ -195,39 +176,50 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   icon: {
-    color: hex,
-    fontSize: 25,
-    alignSelf: 'center',
+    fontSize: normalize(25),
     margin: '4%',
   },
   icon2: {
-    color: hexBlack,
-    fontSize: 20,
+    fontSize: normalize(20),
     marginLeft: '7%',
   },
   icon3: {
-    color: hex,
-    fontSize: 35,
+    fontSize: normalize(35),
     marginBottom: '5%',
     alignSelf: 'center',
   },
   headertext: {
-    fontFamily: font,
-    color: hex,
     margin: '4%',
     marginLeft: '7%',
-    fontSize: 25,
+    fontSize: normalize(25),
   },
-  headertext2: {
-    fontFamily: fontRegular,
-    color: hexBlack,
+  subHeaderText: {
+    color: "black",
+    fontSize: normalize(16),
+  },
+  subHeaderMarginL: {
     marginLeft: '7%',
-    fontSize: 15,
   },
-  headertext3: {
-    fontFamily: font,
-    color: hexBlack,
-    fontSize: 15,
+  searchBarContainer: {
+    backgroundColor: 'white',
+    borderBottomColor: 'transparent',
+    borderTopColor: 'transparent',
+    width: '100%',
+    height: 45,
+    alignSelf: 'center',
+  },
+  searchBarInputContainer: {
+    height: 7,
+    width: '90%',
+    marginLeft: '5%',
+    backgroundColor: '#ebecf0',
+  },
+  searchBarInput: {
+    fontSize: normalize(15),
+  },
+  flatList: {
+    marginHorizontal: '5%',
+    marginBottom: '2%',
   },
 })
 
