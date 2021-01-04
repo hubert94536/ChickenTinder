@@ -39,14 +39,17 @@ export default class GroupCard extends React.Component {
               source={this.props.image}
               style={[
                 styles.image,
-                this.props.filters ? imgStyles.hexBorder : imgStyles.greyBorder,
+                this.props.filters || this.props.isHost
+                  ? imgStyles.hexBorder
+                  : imgStyles.greyBorder,
               ]}
             />
           )}
+          {this.props.filters || this.props.isHost ? (
+            <Icon name="check-circle" style={[imgStyles.hex, styles.icon]} />
+          ) : null}
         </View>
-        {this.props.filters ? (
-          <Icon name="check-circle" style={[imgStyles.hex, styles.icon]} />
-        ) : null}
+
         <View style={styles.none}>
           <Text style={[imgStyles.font, styles.name]}>{this.props.name}</Text>
           <Text style={[imgStyles.hex, imgStyles.font, styles.username]}>
@@ -74,9 +77,11 @@ GroupCard.propTypes = {
   uid: PropTypes.string,
   image: PropTypes.string,
   filters: PropTypes.bool,
+  host: PropTypes.string,
+  image: PropTypes.string,
+  isHost: PropTypes.bool,
   name: PropTypes.string,
   username: PropTypes.string,
-  host: PropTypes.string,
 }
 
 const styles = StyleSheet.create({
@@ -104,8 +109,8 @@ const styles = StyleSheet.create({
   icon: {
     fontSize: normalize(20),
     position: 'absolute',
-    marginLeft: '31%',
-    marginTop: '5%',
+    right: '7%',
+    top: '7%',
     backgroundColor: '#F5F5F5',
     borderRadius: 30,
     overflow: 'hidden',
