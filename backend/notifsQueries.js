@@ -35,6 +35,24 @@ const deleteNotif = async (req, res) => {
   }
 }
 
+// Get all notifications
+const getAllNotifs = async (req, res) => {
+  try {
+    const notifs = await Notifications.findAll({
+      include: [
+        {
+          model: Accounts,
+          attributes: attributes,
+        },
+      ],
+    })
+    return res.status(200).json({ notifs })
+  } catch (error) {
+    console.log(error)
+    return res.status(500).send(error.message)
+  }
+}
+
 // Get all user notifications
 const getNotifs = async (req, res) => {
   try {
@@ -77,6 +95,7 @@ const updateNotif = async (id, type) => {
 module.exports = {
   createNotif,
   deleteNotif,
+  getAllNotifs,
   getNotifs,
   updateNotif,
 }

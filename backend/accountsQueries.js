@@ -67,9 +67,25 @@ const createAccount = async (req, res) => {
     return res.status(500).json({ error: error.message })
   }
 }
+// TODO: for testing purposes only
+const createTestAccount = async (req, res) => {
+  try {
+    await Accounts.create({
+      uid: req.body.uid,
+      name: req.body.name,
+      username: req.body.username,
+      email: req.body.email,
+      photo: req.body.photo,
+      phone_number: req.body.phone_number,
+    })
+    return res.status(201).send('Account created')
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({ error: error.message })
+  }
+}
 
 // Delete account by uid
-// TODO: Delete their associated photo from S3
 const deleteAccount = async (req, res) => {
   try {
     const uid = req.authId 
@@ -183,6 +199,7 @@ module.exports = {
   checkPhoneNumber,
   checkUsername,
   createAccount,
+  createTestAccount,
   deleteAccount,
   getAccountByUID,
   getAllAccounts,

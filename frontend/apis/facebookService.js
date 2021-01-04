@@ -88,8 +88,8 @@ const loginWithFacebook = async () => {
     const token = await AccessToken.getCurrentAccessToken()
     const credential = await Firebase.auth.FacebookAuthProvider.credential(token.accessToken)
     // Sign in with Firebase oauth using credential and authentication token
-    const userCredential = await Firebase.auth.signInWithCredential(credential)
-    const idToken = await Firebase.auth.currentUser.getIdToken()
+    const userCredential = await Firebase.auth().signInWithCredential(credential)
+    const idToken = await Firebase.auth().currentUser.getIdToken()
     await AsyncStorage.setItem(ID_TOKEN, idToken)
     // Get info from database if not new user
     if (!userCredential.additionalUserInfo.isNewUser) {
@@ -105,8 +105,8 @@ const loginWithFacebook = async () => {
     }
     // Set user's info locally
     AsyncStorage.multiSet([
-      [NAME, currentUser.additionalUserInfo.profile.name],
-      [EMAIL, currentUser.additionalUserInfo.profile.email],
+      [NAME, userCredential.additionalUserInfo.profile.name],
+      [EMAIL, userCredential.additionalUserInfo.profile.email],
     ])
     return 'CreateAccount'
   } catch (error) {

@@ -1,11 +1,6 @@
 import React from 'react'
-<<<<<<< HEAD
-import AsyncStorage from '@react-native-community/async-storage'
-import { EMAIL, NAME, PHOTO, USERNAME, PHONE, DEFPHOTO } from 'react-native-dotenv'
-=======
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { EMAIL, NAME, PHOTO, USERNAME, ID, PHONE, DEFPHOTO } from 'react-native-dotenv'
->>>>>>> master
 import { Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import accountsApi from '../apis/accountsApi.js'
 import normalize from '../../styles/normalize.js'

@@ -4,11 +4,10 @@ const joi = require('joi')
 // Check request body for creating account
 function checkCreateAccounts(req, res, next) {
   const createAccountsSchema = joi.object().keys({
-    uid: joi.string().required(),
     name: joi.string().required(),
     username: joi.string().required(),
     email: joi.string().email().required(),
-    photo: joi.number().integer().min(0).max(255).required(),
+    photo: joi.number().integer().required(),
     phone_number: joi.string().min(7).max(15),
   })
   validateRequest(req, next, createAccountsSchema)
@@ -22,7 +21,7 @@ function checkUpdateAccount(req, res, next) {
       name: joi.string(),
       username: joi.string(),
       email: joi.string().email(),
-      photo: joi.number().integer().min(0).max(255),
+      photo: joi.number().integer(),
       phone_number: joi.string().min(7).max(15),
     })
     .or('name', 'username', 'email', 'photo', 'phone_number')

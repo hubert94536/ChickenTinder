@@ -29,7 +29,7 @@ const Accounts = sequelize.define('accounts', {
     type: DataTypes.STRING(15),
     unique: true,
   },
-  photo: DataTypes.TINYINT,
+  photo: DataTypes.INTEGER,
 })
 
 const Friends = sequelize.define('friends', {
@@ -84,7 +84,7 @@ sequelize.sync({ force: true }).then(() => {
       ' DECLARE ' +
       ' rec RECORD;' +
       ' BEGIN' +
-      ' SELECT INTO rec NEW.uid, NEW.receiver_uid, NEW.type, NEW.content,' +
+      ' SELECT INTO rec NEW.id, NEW.receiver_uid, NEW.type, NEW.content,' +
       ' NEW.sender_uid, accounts.name, accounts.username, accounts.photo' +
       ' FROM accounts' +
       ' WHERE NEW.sender_uid = accounts.uid;' +

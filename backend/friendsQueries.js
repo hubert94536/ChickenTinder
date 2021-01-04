@@ -117,9 +117,100 @@ const getFriends = async (req, res) => {
   }
 }
 
+// TODO: Remove all below functions in production
+// Creates friendship requests between both accounts
+const createTestFriends = async (req, res) => {
+  try {
+    const main = req.body.uid
+    const friend = req.params.uid
+    // create pending and requested friendship statuses
+    await Friends.bulkCreate([
+      { main_uid: main, status: 'requested', friend_uid: friend, include: [Accounts] },
+      { main_uid: friend, status: 'pending', friend_uid: main, include: [Accounts] },
+    ])
+    // create notification to friend for pending friend request
+    await Notifications.create({
+      receiver_uid: friend,
+      type: 'pending',
+      sender_uid: main,
+      include: [Accounts],
+    })
+    return res.status(201).send('Friend requested')
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({ error: error.message })
+  }
+}
+// Accept a friend request
+const acceptTestRequest = async (req, res) => {
+  try {
+    const main = req.body.uid
+    const friend = req.params.uid
+    // set status to friends for friend and main account uids
+    const mainAccount = await Friends.update(
+      { status: 'friends' },
+      {
+        where: {
+          [Op.and]: [{ main_uid: main }, { friend_uid: friend }],
+        },
+      },
+    )
+    const friendAccount = await Friends.update(
+      { status: 'friends' },
+      {
+        where: {
+          [Op.and]: [{ main_uid: friend }, { friend_uid: main }],
+        },
+      },
+    )
+    if (mainAccount && friendAccount) {
+      // update notification to main from pending friend request to friends
+      await Notifications.update(
+        { type: 'friends' },
+        {
+          where: {
+            [Op.and]: [{ receiver_uid: main }, { sender_uid: friend }, { type: 'pending' }],
+          },
+        },
+      )
+      // create notification to friend for accepted friend request
+      await Notifications.create({
+        receiver_uid: friend,
+        type: 'accepted',
+        sender_uid: main,
+        include: [Accounts],
+      })
+      return res.status(200).send('Friendship accepted')
+    }
+    return res.status(404).send('Friendship not found')
+  } catch (error) {
+    console.log(error)
+    return res.status(500).send(error.message)
+  }
+}
+
+const getAllFriends = async (req, res) => {
+  try {
+    const friends = await Friends.findAll({
+      include: [
+        {
+          model: Accounts,
+          attributes: attributes,
+        },
+      ],
+    })
+    return res.status(200).json({ friends })
+  } catch (error) {
+    return res.status(500).send(error.message)
+  }
+}
+
 module.exports = {
   acceptRequest,
   createFriends,
   deleteFriendship,
+  getAllFriends,
+  createTestFriends,
+  acceptTestRequest,
   getFriends,
 }

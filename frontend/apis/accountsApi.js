@@ -1,20 +1,18 @@
 import { ID_TOKEN } from 'react-native-dotenv'
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
-
-var token = ''
-
-AsyncStorage.getItem(ID_TOKEN).then((res) => {
-  token
-})
 
 const accountsApi = axios.create({
   // baseURL: 'https://wechews.herokuapp.com',
   baseURL: 'http://192.168.0.23:5000',
-  
-  // uncomment when tokens are set up
-  // headers: tokenHeaders
 })
+
+// Set the AUTH token for any request
+accountsApi.interceptors.request.use(async function (config) {
+  const token = await AsyncStorage.getItem(ID_TOKEN)
+  config.headers.authorization =  token ? `Bearer ${token}` : ''
+  return config
+});
 
 // creates user
 const createFBUser = async (name, username, email, photo, phone) => {
