@@ -1,11 +1,11 @@
 import React from 'react'
 import { Dimensions, Image, Modal, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import modalStyles from '../../styles/modalStyles.js'
+import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
 
-const hex = '#F15763'
 const height = Dimensions.get('window').height
 
 export default class EditProfile extends React.Component {
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     marginRight: '10%',
   },
   titleText: {
-    fontSize: 16,
+    fontSize: normalize(16.5),
   },
   pfp: {
     height: height * 0.13,
@@ -150,14 +150,14 @@ const styles = StyleSheet.create({
   },
   input: {
     color: '#7d7d7d',
-    fontSize: 15,
+    fontSize: normalize(15.5),
     borderBottomWidth: 1,
     marginBottom: '7%',
     borderColor: '#7d7d7d',
   },
   saveButton: {
-    backgroundColor: hex, 
-    borderColor: hex, 
+    backgroundColor: screenStyles.hex.color, 
+    borderColor: screenStyles.hex.color, 
     margin: '1.5%', 
     width: '50%',
   },

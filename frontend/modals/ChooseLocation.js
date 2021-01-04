@@ -10,11 +10,11 @@ import {
 } from 'react-native'
 import PropTypes from 'prop-types'
 import modalStyles from '../../styles/modalStyles.js'
+import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { ZIP_ID, ZIP_TOKEN } from 'react-native-dotenv'
 
-const hex = '#F15763'
 const font = 'CircularStd-Book'
 const height = Dimensions.get('window').height
 
@@ -75,7 +75,7 @@ export default class Location extends Component {
               />
             </View>
             <View style={styles.modalStyle}>
-              <Text style={styles.title}>Choose a starting location</Text>
+              <Text style={[styles.title, screenStyles.hex]}>Choose a starting location</Text>
               <TextInput
                 style={[screenStyles.text, screenStyles.input, styles.input]}
                 placeholderTextColor="#9F9F9F"
@@ -121,13 +121,12 @@ export default class Location extends Component {
 const styles = StyleSheet.create({
   title: {
     fontFamily: font,
-    color: hex,
-    fontSize: 20,
+    fontSize: normalize(20),
     marginLeft: '7.5%',
   },
   input: {
     color: 'black',
-    fontSize: 18,
+    fontSize: normalize(18),
     backgroundColor: '#E0E0E0',
     width: '85%',
     alignSelf: 'center',
@@ -155,7 +154,7 @@ const styles = StyleSheet.create({
   errorIcon: {
     color: 'red', 
     marginRight: '2%', 
-    fontSize: 15
+    fontSize: normalize(15),
   },
   errorText: {
     textAlign: 'center', 
@@ -163,7 +162,7 @@ const styles = StyleSheet.create({
     fontFamily: font 
   },
   buttonColor: {
-    backgroundColor: hex
+    backgroundColor: screenStyles.hex.color
   },
 })
 

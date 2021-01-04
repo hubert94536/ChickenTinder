@@ -8,14 +8,12 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Clipboard from '@react-native-community/clipboard'
 import PropTypes from 'prop-types'
-import Alert from './Alert.js'
-// import Card  from '../cards/ChooseCard.js'
 import Card from '../cards/Card.js'
-import socket from '../apis/socket.js'
 import friendsApi from '../apis/friendsApi.js'
+import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
+import socket from '../apis/socket.js'
 
-const hexBlack = '#000000'
 const height = Dimensions.get('window').height
 var id = ''
 //  little pop up modal that is showed when you click choose friends in filters
@@ -100,8 +98,19 @@ export default class ChooseFriends extends React.Component {
               />
             </View>
             <View style={styles.header2}>
-              <Text style={[screenStyles.text, styles.subHeaderText, styles.subHeaderMarginL]}>Group PIN: </Text>
-              <Text style={[screenStyles.textBold, styles.subHeaderText]}>{this.props.code}</Text>
+              <Text style={[
+                screenStyles.text, 
+                styles.subHeaderText, 
+                styles.subHeaderMarginL, 
+                screenStyles.black]}>
+                  Group PIN: 
+              </Text>
+              <Text style={[
+                screenStyles.textBold, 
+                styles.subHeaderText, 
+                screenStyles.black]}>
+                  {this.props.code}
+              </Text>
               <TouchableOpacity onPress={() => this.copyToClipboard()}>
                 <Ionicons name="copy-outline" style={styles.icon2} />
               </TouchableOpacity>
@@ -168,27 +177,25 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   icon: {
-    fontSize: 25,
+    fontSize: normalize(25),
     margin: '4%',
   },
   icon2: {
-    color: hexBlack,
-    fontSize: 20,
+    fontSize: normalize(20),
     marginLeft: '7%',
   },
   icon3: {
-    fontSize: 35,
+    fontSize: normalize(35),
     marginBottom: '5%',
     alignSelf: 'center',
   },
   headertext: {
     margin: '4%',
     marginLeft: '7%',
-    fontSize: 25,
+    fontSize: normalize(25),
   },
   subHeaderText: {
-    color: hexBlack,
-    fontSize: 15,
+    fontSize: normalize(16),
   },
   subHeaderMarginL: {
     marginLeft: '7%',
@@ -208,7 +215,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ebecf0',
   },
   searchBarInput: {
-    fontSize: 15,
+    fontSize: normalize(15),
   },
   flatList: {
     marginHorizontal: '5%',

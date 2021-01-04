@@ -5,8 +5,6 @@ import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
 
-const hex = '#F15763'
-
 export default class Size extends React.Component {
   constructor(props) {
     super(props)
@@ -70,7 +68,7 @@ export default class Size extends React.Component {
               <View style={[modalStyles.error, styles.errorMargin]}>
                 <Icon
                   name="exclamationcircle"
-                  color={hex}
+                  color={screenStyles.hex.color}
                   style={modalStyles.errorIcon}
                 />
                 <Text style={[screenStyles.text, modalStyles.errorText]}>

@@ -2,11 +2,10 @@ import React from 'react'
 import { Dimensions, Modal, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
 import modalStyles from '../../styles/modalStyles.js'
+import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
 import SwitchButton from 'switch-button-react-native'
-
-const hex = '#F15763'
 
 export default class Time extends React.Component {
   constructor(props) {
@@ -96,10 +95,10 @@ export default class Time extends React.Component {
                   text2="am"
                   switchWidth={75}
                   switchHeight={30}
-                  switchBorderColor={hex}
-                  btnBorderColor={hex}
-                  btnBackgroundColor={hex}
-                  fontColor={hex}
+                  switchBorderColor={screenStyles.hex.color}
+                  btnBorderColor={screenStyles.hex.color}
+                  btnBackgroundColor={screenStyles.hex.color}
+                  fontColor={screenStyles.hex.color}
                   activeFontColor="white"
                   style={styles.switchButton}
                 />
@@ -109,7 +108,7 @@ export default class Time extends React.Component {
               <View style={[modalStyles.error, styles.errorMargin]}>
                 <Icon
                   name="exclamationcircle"
-                  color={hex}
+                  color={screenStyles.hex.color}
                   style={modalStyles.errorIcon}
                 />
                 <Text style={[screenStyles.text, modalStyles.errorText]}>
@@ -145,7 +144,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   colon: {
-    fontSize: 20, 
+    fontSize: normalize(20), 
     marginRight: '2%', 
     marginLeft: '2%',
   },

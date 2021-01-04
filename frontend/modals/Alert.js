@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TouchableHighlight, Modal } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import PropTypes from 'prop-types'
 import modalStyles from '../../styles/modalStyles.js'
+import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
@@ -101,12 +102,12 @@ const styles = StyleSheet.create({
     fontFamily: font,
     fontWeight: 'bold',
     color: hex,
-    fontSize: 20,
+    fontSize: normalize(20),
     marginBottom: '3%',
   },
   body: {
     fontFamily: font,
-    fontSize: 15,
+    fontSize: normalize(15.5),
     marginLeft: '2%',
   },
   modalContent: {

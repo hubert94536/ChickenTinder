@@ -9,14 +9,13 @@ import {
   View,
 } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
-import Alert from '../modals/Alert.js'
-import modalStyles from '../../styles/modalStyles.js'
-import screenStyles from '../../styles/screenStyles.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
+import Alert from '../modals/Alert.js'
+import modalStyles from '../../styles/modalStyles.js'
+import normalize from '../../styles/normalize.js'
+import screenStyles from '../../styles/screenStyles.js'
 
-const hex = '#F15763'
-const font = 'CircularStd-Medium'
 const height = Dimensions.get('window').height
 
 export default class Settings extends React.Component {
@@ -67,7 +66,7 @@ export default class Settings extends React.Component {
           </View>
           <View style={styles.bodyContainer}>
             <View>
-              <Text style={styles.subTitle}>Email</Text>
+              <Text style={[styles.subTitle, screenStyles.text, screenStyles.black]}>Email</Text>
               <TextInput
                 style={[screenStyles.text, screenStyles.input, styles.textInput]}
                 editable={false}
@@ -78,7 +77,7 @@ export default class Settings extends React.Component {
           <View
             style={[styles.bodyContainer, styles.bodyMargin]}
           >
-            <Text style={styles.subTitle}>Phone Number</Text>
+            <Text style={[styles.subTitle, screenStyles.text, screenStyles.black]}>Phone Number</Text>
             <TextInput
               style={[screenStyles.text, screenStyles.input, styles.textInput]}
               editable={false}
@@ -172,7 +171,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   titleText: {
-    fontSize: 20,
+    fontSize: normalize(20),
     marginLeft: '10%',
     marginTop: '10%',
     marginBottom: '5%',
@@ -180,7 +179,7 @@ const styles = StyleSheet.create({
   },
   closeIcon:{
     margin: '5%', 
-    fontSize: 25,
+    fontSize: normalize(25),
   },
   bodyContainer: {
     justifyContent: 'space-between',
@@ -190,12 +189,11 @@ const styles = StyleSheet.create({
     marginVertical: '5%',
   },
   subTitle: {
-    fontFamily: font, 
-    fontSize: 18,
+    fontSize: normalize(18),
   },
   textInput: {
     color: '#B2B2B2',
-    fontSize: 17,
+    fontSize: normalize(17),
     alignSelf: 'stretch',
     backgroundColor: '#F2F2F2',
     borderWidth: 1,
@@ -206,20 +204,20 @@ const styles = StyleSheet.create({
     marginTop: '3%',
   },
   deleteText: {
-    fontSize: 18, 
+    fontSize: normalize(18), 
     color: 'black', 
     marginRight: '35%'
   },
   logoutButton: {
-    backgroundColor: hex,
-    borderColor: hex,
+    backgroundColor: screenStyles.hex.color,
+    borderColor: screenStyles.hex.color,
     marginTop: '7%',
     width: '40%',
   },
   logoutText: {
     paddingTop: '5%', 
     paddingBottom: '5%', 
-    fontSize: 19,
+    fontSize: normalize(19),
   },
 
 })

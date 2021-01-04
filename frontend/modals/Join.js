@@ -2,12 +2,11 @@ import React from 'react'
 import { Modal, StyleSheet, Text, TouchableHighlight, View, TextInput } from 'react-native'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
-// import { TextInput } from 'react-native-paper'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import modalStyles from '../../styles/modalStyles.js'
+import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 
-const hex = '#F15763'
 //  props are name, image url, and functions for cancel and go
 // invite alert
 
@@ -81,13 +80,13 @@ export default class Join extends React.Component {
               )}
               {this.state.isValid && (
                 <TouchableHighlight
-                  underlayColor={hex}
+                  underlayColor={screenStyles.hex.color}
                   onHideUnderlay={() => this.setState({ pressed: false })}
                   onShowUnderlay={() => this.setState({ pressed: true })}
                   onPress={() => this.handleAccept()}
                   style={modalStyles.button}
                 >
-                  <Text style={[modalStyles.text, { color: this.state.pressed ? 'white' : hex }]}>
+                  <Text style={[modalStyles.text, { color: this.state.pressed ? 'white' : screenStyles.hex.color }]}>
                     Join
                   </Text>
                 </TouchableHighlight>
@@ -120,11 +119,11 @@ const styles = StyleSheet.create({
     alignItems: 'center' 
   },
   text: {
-    fontSize: 20, 
+    fontSize: normalize(20), 
     margin: '2%',
   },
   textInput: {
-    fontSize: 18, 
+    fontSize: normalize(18), 
     borderRadius: 5, 
     padding: '1%', 
     textAlignVertical: 'center',
@@ -134,7 +133,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   bgHex: {
-    backgroundColor: hex,
+    backgroundColor: screenStyles.hex.color,
   },
 })
 
