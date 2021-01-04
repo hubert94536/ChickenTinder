@@ -44,7 +44,7 @@ export default class Login extends React.Component {
     return (
       <View style={[screenStyles.mainContainer]}>
         <Image
-          source={require('../assets/images/logo2.png')}
+          source={require('../assets/images/Logo.png')}
           style={styles.logo}
         />
         <Text
