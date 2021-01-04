@@ -1,10 +1,11 @@
 import React from 'react'
-import { Image, Text, TouchableHighlight, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import Alert from '../modals/Alert.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import imgStyles from '../../styles/cardImage.js'
 import facebookService from '../apis/facebookService.js'
 import screenStyles from '../../styles/screenStyles.js'
+import normalize from '../../styles/normalize.js'
 import PropTypes from 'prop-types'
 
 const hex = '#F15763'
@@ -41,23 +42,13 @@ export default class Login extends React.Component {
 
   render() {
     return (
-      <View style={[{ backgroundColor: 'white', flex: 1 }]}>
+      <View style={[screenStyles.mainContainer]}>
         <Image
           source={require('../assets/images/logo2.png')}
-          style={{ alignSelf: 'center', width: 200, height: 248, marginTop: '12%' }}
+          style={styles.logo}
         />
         <Text
-          style={[
-            screenStyles.text,
-            screenStyles.title,
-            {
-              fontFamily: 'CircularStd-Bold',
-              fontSize: 30,
-              marginTop: '2.5%',
-              marginBottom: '10%',
-              fontWeight: 'bold',
-            },
-          ]}
+          style={[ screenStyles.text, screenStyles.title, styles.slogan]}
         >
           Let&apos;s Get Chews-ing!
         </Text>
@@ -67,14 +58,11 @@ export default class Login extends React.Component {
           activeOpacity={1}
           underlayColor={'white'}
           onPress={() => this.props.navigation.replace('Phone')}
-          style={[
-            screenStyles.longButton,
-            { borderColor: hex, backgroundColor: hex, marginTop: '7%' },
-          ]}
+          style={[screenStyles.longButton, styles.phoneButton]}
         >
-          <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+          <View style={screenStyles.contentContainer}>
             <Icon
-              style={[imgStyles.icon, { fontSize: 22, color: 'white', marginRight: '5%' }]}
+              style={[imgStyles.icon, styles.buttonIcon]}
               name="phone"
             />
             <Text
@@ -93,14 +81,11 @@ export default class Login extends React.Component {
           activeOpacity={1}
           underlayColor="white"
           onPress={() => this.login()}
-          style={[
-            screenStyles.longButton,
-            { borderColor: '#3b5998', backgroundColor: '#3b5998', marginTop: '7%' },
-          ]}
+          style={[ screenStyles.longButton, styles.fbButton]}
         >
-          <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+          <View style={[screenStyles.contentContainer]}>
             <Icon
-              style={[imgStyles.icon, { fontSize: 22, color: 'white', marginRight: '5%' }]}
+              style={[imgStyles.icon, styles.buttonIcon]}
               name="facebook-official"
             />
             <Text
@@ -115,18 +100,7 @@ export default class Login extends React.Component {
         </TouchableHighlight>
 
         <Text
-          style={[
-            screenStyles.text,
-            {
-              fontFamily: 'CircularStd-Book',
-              alignSelf: 'center',
-              marginHorizontal: '15%',
-              marginTop: '7.5%',
-              fontSize: 13,
-              textAlign: 'center',
-              lineHeight: 17,
-            },
-          ]}
+          style={[screenStyles.textBook, styles.termsText]}
         >
           By clicking log in, you agree with our Terms and Conditions.
         </Text>
@@ -163,3 +137,45 @@ Login.propTypes = {
     replace: PropTypes.func,
   }).isRequired,
 }
+
+const styles = StyleSheet.create({
+  logo:
+  {
+    alignSelf: 'center', 
+    width: normalize(200), 
+    height: normalize(248), 
+    marginTop: '12%' },
+
+  slogan: 
+  {
+    fontSize: normalize(30),
+    marginTop: '2.5%',
+    marginBottom: '10%',
+    fontWeight: 'bold',
+  },
+  phoneButton: 
+  { borderColor: hex, 
+    backgroundColor: hex, 
+    marginTop: '7%' 
+  },
+  buttonIcon:
+  { fontSize: normalize(22), 
+    color: 'white', 
+    marginRight: '5%' 
+  },
+  fbButton:
+  { borderColor: '#3b5998', 
+    backgroundColor: '#3b5998',
+    marginTop: '7%' 
+  },
+  termsText:
+  {
+    alignSelf: 'center',
+    marginHorizontal: '15%',
+    marginTop: '7.5%',
+    fontSize: normalize(13),
+    textAlign: 'center',
+    lineHeight: normalize(17),
+  }
+  
+})
