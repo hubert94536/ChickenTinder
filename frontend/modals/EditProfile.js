@@ -61,7 +61,7 @@ export default class EditProfile extends React.Component {
             )}
             <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: '4%' }}>
             </View>
-            <Text style={[screenStyles.text, screenStyles.black, styles.nameText]}>
+            <Text style={[screenStyles.text, styles.nameText]}>
               Display name
             </Text>
             <TextInput
@@ -74,7 +74,7 @@ export default class EditProfile extends React.Component {
               onChangeText={(text) => this.changeName(text)}
               // onSubmitEditing={() => this.makeChanges()}
             />
-            <Text style={[screenStyles.text, screenStyles.black, styles.nameText]}>Username</Text>
+            <Text style={[screenStyles.text, styles.nameText]}>Username</Text>
             <TextInput
               style={[screenStyles.text, screenStyles.input, styles.input]}
               underlineColorAndroid="transparent"
@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
   },
   nameText: {
     marginBottom: '2%',
+    color: 'black',
   },
   input: {
     color: '#7d7d7d',

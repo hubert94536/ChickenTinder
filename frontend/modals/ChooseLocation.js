@@ -98,7 +98,7 @@ export default class Location extends Component {
                 <Text
                   style={[
                     modalStyles.text,
-                    this.state.buttonPressed ? screenStyles.hex : screenStyles.white,
+                    this.state.buttonPressed ? screenStyles.hex : styles.white,
                   ]}
                 >
                   Done
@@ -155,6 +155,9 @@ const styles = StyleSheet.create({
   buttonColor: {
     backgroundColor: screenStyles.hex.color,
   },
+  white: {
+    color: 'white'
+  }
 })
 
 Location.propTypes = {

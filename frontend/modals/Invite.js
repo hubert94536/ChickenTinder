@@ -67,7 +67,7 @@ export default class Invite extends React.Component {
                 <Text
                   style={[
                     modalStyles.text,
-                    this.state.pressed ? screenStyles.white : screenStyles.hex,
+                    this.state.pressed ? styles.white : screenStyles.hex,
                   ]}
                 >
                   Go
@@ -102,5 +102,8 @@ const styles = StyleSheet.create({
   },
   inviteText: {
     fontSize: normalize(25),
+  },
+  white:{
+    color: 'white',
   },
 })

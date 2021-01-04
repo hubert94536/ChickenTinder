@@ -59,7 +59,7 @@ export default class Size extends React.Component {
           />
           <View style={modalStyles.titleContainer}>
             <Text style={[screenStyles.text, modalStyles.titleText]}>{this.props.title}</Text>
-            <Text style={[screenStyles.text, screenStyles.black]}>{this.props.filterSubtext}</Text>
+            <Text style={[screenStyles.text, styles.black]}>{this.props.filterSubtext}</Text>
             <View style={modalStyles.inputContainer}>
               <TextInput
                 style={modalStyles.textInput}
@@ -107,6 +107,9 @@ const styles = StyleSheet.create({
   },
   doneButtonMargin: {
     marginTop: '5%',
+  },
+  black: {
+    color: 'black',
   },
 })
 Size.propTypes = {

@@ -99,7 +99,7 @@ export default class Join extends React.Component {
                   onPress={() => this.setState({ invalid: true })}
                   style={[modalStyles.button, styles.bgHex]}
                 >
-                  <Text style={[modalStyles.text, screenStyles.white]}>Join</Text>
+                  <Text style={[modalStyles.text, styles.white]}>Join</Text>
                 </TouchableHighlight>
               )}
             </View>
@@ -137,6 +137,9 @@ const styles = StyleSheet.create({
   },
   bgHex: {
     backgroundColor: screenStyles.hex.color,
+  },
+  white: {
+    color: 'white',
   },
 })
 

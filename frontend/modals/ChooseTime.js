@@ -69,12 +69,12 @@ export default class Time extends React.Component {
           />
           <View style={modalStyles.titleContainer}>
             <Text style={[screenStyles.text, modalStyles.titleText]}>Time</Text>
-            <Text style={[screenStyles.text, screenStyles.black]}>
+            <Text style={[screenStyles.text, styles.black]}>
               Set a time for your group to eat
             </Text>
             <View style={modalStyles.error}>
               <TextInput
-                style={[modalStyles.textInput, styles.textInput]}
+                style={[modalStyles.textInput, styles.black]}
                 value={this.state.selectedHour}
                 placeholder="12"
                 placeholderTextColor="#9f9f9f"
@@ -83,7 +83,7 @@ export default class Time extends React.Component {
               />
               <Text style={[screenStyles.text, styles.colon]}>:</Text>
               <TextInput
-                style={[modalStyles.textInput, styles.textInput]}
+                style={[modalStyles.textInput, styles.black]}
                 value={this.state.selectedMinute}
                 placeholder="00"
                 placeholderTextColor="#9f9f9f"
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   mainContainerHeight: {
     height: Dimensions.get('window').height * 0.3,
   },
-  textInput: {
+  black: {
     color: 'black',
   },
   colon: {

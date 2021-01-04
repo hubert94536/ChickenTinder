@@ -59,7 +59,7 @@ export default class Majority extends React.Component {
           />
           <View style={modalStyles.titleContainer}>
             <Text style={[screenStyles.text, modalStyles.titleText]}>{this.props.title}</Text>
-            <Text style={[screenStyles.text, screenStyles.black]}>
+            <Text style={[screenStyles.text, styles.black]}>
               Members (out of {this.props.max}) needed to get a match
             </Text>
             <View style={modalStyles.inputContainer}>
@@ -118,6 +118,9 @@ const styles = StyleSheet.create({
   },
   doneButtonMargin: {
     marginTop: '3%',
+  },
+  black: {
+    color: 'black',
   },
 })
 

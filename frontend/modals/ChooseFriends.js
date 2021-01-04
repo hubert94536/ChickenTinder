@@ -103,12 +103,11 @@ export default class ChooseFriends extends React.Component {
                   screenStyles.text,
                   styles.subHeaderText,
                   styles.subHeaderMarginL,
-                  screenStyles.black,
                 ]}
               >
                 Group PIN:
               </Text>
-              <Text style={[screenStyles.textBold, styles.subHeaderText, screenStyles.black]}>
+              <Text style={[screenStyles.textBold, styles.subHeaderText]}>
                 {this.props.code}
               </Text>
               <TouchableOpacity onPress={() => this.copyToClipboard()}>
@@ -195,6 +194,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(25),
   },
   subHeaderText: {
+    color: "black",
     fontSize: normalize(16),
   },
   subHeaderMarginL: {

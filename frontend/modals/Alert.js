@@ -50,12 +50,12 @@ export default class Alert extends Component {
             </View>
             <View style={styles.modalContent}>
               <View style={styles.textMargin}>
-                <Text style={styles.title}>{this.props.title}</Text>
+                <Text style={[styles.title, screenStyles.hex]}>{this.props.title}</Text>
                 <Text style={styles.body}>{this.props.body}</Text>
               </View>
               <View style={modalStyles.justifyCenter}>
                 <TouchableHighlight
-                  underlayColor={hex}
+                  underlayColor={screenStyles.hex.color}
                   onHideUnderlay={() => this.setState({ affPressed: false })}
                   onShowUnderlay={() => this.setState({ affPressed: true })}
                   onPress={() => this.handlePress()}
@@ -64,7 +64,7 @@ export default class Alert extends Component {
                   <Text
                     style={[
                       modalStyles.text,
-                      this.state.affPressed ? screenStyles.white : screenStyles.hex,
+                      this.state.affPressed ? styles.white : screenStyles.hex,
                     ]}
                   >
                     {this.props.buttonAff}
@@ -81,7 +81,7 @@ export default class Alert extends Component {
                     <Text
                       style={[
                         modalStyles.text,
-                        this.state.negPressed ? screenStyles.hex : screenStyles.white,
+                        this.state.negPressed ? screenStyles.hex : styles.white,
                       ]}
                     >
                       {this.props.buttonNeg}
@@ -101,7 +101,6 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: font,
     fontWeight: 'bold',
-    color: hex,
     fontSize: normalize(20),
     marginBottom: '3%',
   },
@@ -123,7 +122,10 @@ const styles = StyleSheet.create({
     marginBottom: '3%',
   },
   bgHex: {
-    backgroundColor: hex,
+    backgroundColor: screenStyles.hex.color,
+  },
+  white: {
+    color: 'white',
   },
 })
 

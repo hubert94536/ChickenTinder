@@ -88,19 +88,6 @@ export default StyleSheet.create({
     alignSelf: 'center',
     margin: '1.5%',
   },
-<<<<<<< HEAD
-
-  hex: {
-    color: '#F15763',
-  },
-
-  white: {
-    color: '#FFFFFF',
-  },
-
-  black: {
-    color: '#000000',
-=======
   mainContainer:
   { 
     backgroundColor: 'white', 
@@ -113,6 +100,5 @@ export default StyleSheet.create({
   },
   hex: {
     color: '#F15763',
->>>>>>> 1ca8b645ca795eab6df26493f27fc4c352f871f9
   },
 })

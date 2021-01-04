@@ -62,7 +62,7 @@ export default class Settings extends React.Component {
           </View>
           <View style={styles.bodyContainer}>
             <View>
-              <Text style={[styles.subTitle, screenStyles.text, screenStyles.black]}>Email</Text>
+              <Text style={[styles.subTitle, screenStyles.text]}>Email</Text>
               <TextInput
                 style={[screenStyles.text, screenStyles.input, styles.textInput]}
                 editable={false}
@@ -71,7 +71,7 @@ export default class Settings extends React.Component {
             </View>
           </View>
           <View style={[styles.bodyContainer, styles.bodyMargin]}>
-            <Text style={[styles.subTitle, screenStyles.text, screenStyles.black]}>
+            <Text style={[styles.subTitle, screenStyles.text]}>
               Phone Number
             </Text>
             <TextInput
@@ -130,7 +130,7 @@ export default class Settings extends React.Component {
                 style={[
                   screenStyles.smallButtonText,
                   styles.logoutText,
-                  this.state.logout ? screenStyles.hex : screenStyles.white,
+                  this.state.logout ? screenStyles.hex : styles.white,
                 ]}
               >
                 Logout
@@ -185,6 +185,7 @@ const styles = StyleSheet.create({
     marginVertical: '5%',
   },
   subTitle: {
+    color: 'black',
     fontSize: normalize(18),
   },
   textInput: {
@@ -214,6 +215,9 @@ const styles = StyleSheet.create({
     paddingTop: '5%',
     paddingBottom: '5%',
     fontSize: normalize(19),
+  },
+  white: {
+    color: 'white',
   },
 })
 
