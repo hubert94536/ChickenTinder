@@ -142,6 +142,13 @@ const updatePhoneNumber = async (info) => {
   return updateUser(req)
 }
 
+const updatePhoto = async (id, info) => {
+  const req = {
+    photo: info,
+  }
+  return updateUser(id, req)
+}
+
 // updates user and returns status
 const updateUser = async (req) => {
   return accountsApi

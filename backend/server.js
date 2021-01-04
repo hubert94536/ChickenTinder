@@ -6,7 +6,6 @@ const validateRoute = require('express-joi-validation').createValidator({})
 const accounts = require('./accountsQueries.js')
 const auth = require('./auth.js')
 const friends = require('./friendsQueries.js')
-const images = require('./images')
 const notifications = require('./notifsQueries.js')
 const schema = require('./schema.js')
 
@@ -33,10 +32,6 @@ if (app.get('env') === 'development') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 }
 
-// TODO: add schema validation for images
-//image uploads
-app.route('/images').post(images.upload, images.uploadHandler)
-// TODO: unauthenticated
 // Accounts table
 // app
 //   .route('/accounts')

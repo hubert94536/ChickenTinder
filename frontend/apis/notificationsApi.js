@@ -1,5 +1,5 @@
-import AsyncStorage from '@react-native-community/async-storage'
-import { UID } from 'react-native-dotenv'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { ID } from 'react-native-dotenv'
 import axios from 'axios'
 
 var myId = ''

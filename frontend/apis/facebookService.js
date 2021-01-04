@@ -12,7 +12,7 @@ import {
   PHOTO,
   PHONE,
 } from 'react-native-dotenv'
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import FBSDK from 'react-native-fbsdk'
 import Firebase from 'firebase'
 import accountsApi from './accountsApi.js'
