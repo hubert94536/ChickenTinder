@@ -3,10 +3,11 @@ import { Image, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
-import socket from '../apis/socket.js'
 import modalStyles from '../../styles/modalStyles.js'
+import normalize from '../../styles/normalize.js'
+import screenStyles from '../../styles/screenStyles.js'
+import socket from '../apis/socket.js'
 
-const hex = '#F25763'
 const font = 'CircularStd-Medium'
 //  props are name, image url, and functions for cancel and go
 // invite alert
@@ -41,44 +42,23 @@ export default class Invite extends React.Component {
         />
         <Modal transparent animationType="none">
           <View style={modalStyles.modal}>
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+            <View style={modalStyles.topRightIcon}>
               <Icon
                 name="times-circle"
                 style={modalStyles.icon}
                 onPress={() => this.props.onPress()}
               />
             </View>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'space-evenly',
-              }}
-            >
-              <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+            <View style={modalStyles.modalContent}>
+              <View style={styles.invite}>
                 <Image source={{ uri: this.props.image }} style={styles.avatar} />
                 <View>
-                  <Text
-                    style={{
-                      fontFamily: font,
-                      color: hex,
-                      fontSize: 25,
-                    }}
-                  >
-                    {this.props.name}
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: font,
-                      color: hex,
-                      fontSize: 25,
-                    }}
-                  >
-                    invites you to join!
-                  </Text>
+                  <Text style={[screenStyles.text, styles.inviteText]}>{this.props.name}</Text>
+                  <Text style={[screenStyles.text, styles.inviteText]}>invites you to join!</Text>
                 </View>
               </View>
               <TouchableHighlight
-                underlayColor={hex}
+                underlayColor={screenStyles.hex.color}
                 onHideUnderlay={() => this.setState({ pressed: false })}
                 onShowUnderlay={() => this.setState({ pressed: true })}
                 onPress={() => this.handleAccept()}
@@ -87,7 +67,7 @@ export default class Invite extends React.Component {
                 <Text
                   style={[
                     modalStyles.text,
-                    this.state.pressed ? { color: 'white' } : { color: hex },
+                    this.state.pressed ? styles.white : screenStyles.hex,
                   ]}
                 >
                   Go
@@ -115,5 +95,15 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 63,
     borderWidth: 4,
+  },
+  invite: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
+  inviteText: {
+    fontSize: normalize(25),
+  },
+  white:{
+    color: 'white',
   },
 })

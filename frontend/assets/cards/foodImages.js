@@ -11,7 +11,7 @@ const foodImages = [
   require('./Canadian.png'),
   require('./Caribbean.png'),
   require('./ChickenWings.png'),
-  require('./chinese.png'),
+  require('./Chinese.png'),
   require('./Cuban.png'),
   require('./Ethiopian.png'),
   require('./Filipino.png'),
@@ -19,20 +19,20 @@ const foodImages = [
   require('./German.png'),
   require('./Greek.png'),
   require('./Halal_Middle_Eastern.png'),
-  require('./hamburger.png'),
+  require('./Hamburger.png'),
   require('./Hawaiian.png'),
   require('./Hawaiian_Polynesian.png'),
   require('./Hot_Dog.png'),
-  require('./indian.png'),
+  require('./Indian.png'),
   require('./Indonesian.png'),
   require('./Irish_Bars.png'),
-  require('./italian.png'),
-  require('./japanese.png'),
+  require('./Italian.png'),
+  require('./Japanese.png'),
   require('./Kebab_Middle_Eastern.png'),
-  require('./korean.png'),
+  require('./Korean.png'),
   require('./Mediterranean.png'),
-  require('./mexican.png'),
-  require('./mongolian.png'),
+  require('./Mexican.png'),
+  require('./Mongolian.png'),
   require('./Moroccan.png'),
   require('./Peruvian.png'),
   require('./Pizza.png'),
@@ -48,7 +48,7 @@ const foodImages = [
   require('./Sushi.png'),
   require('./Swedish_Scandinavian.png'),
   require('./Taiwanese.png'),
-  require('./thai.png'),
+  require('./Thai.png'),
   require('./Vietnamese.png'),
 ]
 
@@ -247,4 +247,4 @@ export default function getCusine(categories) {
   else return generalFoodImages[2]
 }
 
-export { foodImages, getCusine };
+export { foodImages, getCusine }

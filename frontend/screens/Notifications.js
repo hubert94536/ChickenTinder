@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Dimensions, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Swiper from 'react-native-swiper'
 import PropTypes from 'prop-types'

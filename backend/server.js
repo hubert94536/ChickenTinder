@@ -5,7 +5,6 @@ const io = require('socket.io')()
 const validateRoute = require('express-joi-validation').createValidator({})
 const accounts = require('./accountsQueries.js')
 const friends = require('./friendsQueries.js')
-const images = require('./images')
 const notifications = require('./notifsQueries.js')
 const schema = require('./schema.js')
 
@@ -28,10 +27,6 @@ app.use(
 if (app.get('env') === 'development') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 }
-
-// TODO: add schema validation for images
-//image uploads
-app.route('/images').post(images.upload, images.uploadHandler)
 
 // Accounts table
 app
