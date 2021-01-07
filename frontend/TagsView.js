@@ -2,8 +2,7 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import PropTypes from 'prop-types'
 import BackgroundButton from './BackgroundButton.js'
-
-const hex = '#F15763'
+import colors from '../styles/colors.js'
 
 export default class TagsView extends React.Component {
   constructor(props) {
@@ -55,8 +54,8 @@ export default class TagsView extends React.Component {
   makeButtons() {
     return this.props.all.map((tag, i) => {
       const on = this.state.selected.includes(tag)
-      const backgroundColor = !on ? 'white' : hex
-      const textColor = !on ? hex : 'white'
+      const backgroundColor = !on ? 'white' : colors.hex
+      const textColor = !on ? colors.hex : 'white'
       const borderColor = this.props.ACCENT_COLOR
       return (
         <BackgroundButton

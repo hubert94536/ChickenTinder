@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
 import Swiper from 'react-native-deck-swiper'
 import PropTypes from 'prop-types'
+import colors from '../../styles/colors.js'
 import RoundCard from '../cards/RoundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -187,7 +188,7 @@ export default class Round extends React.Component {
               }
               placement="top"
               backgroundColor="transparent"
-              contentStyle={{ backgroundColor: '#F15763' }}
+              contentStyle={{ backgroundColor: colors.hex }}
               onClose={() => this.setState({ instr: false })}
             >
               <Text> </Text>

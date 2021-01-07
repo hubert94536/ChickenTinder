@@ -8,6 +8,7 @@ import PropTypes from 'prop-types'
 // import accountsApi from '../apis/accountsApi.js'
 import socket from '../apis/socket.js'
 import Alert from '../modals/Alert.js'
+import colors from '../../styles/colors.js'
 import Join from '../modals/Join.js'
 import TabBar from '../Nav.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -99,7 +100,7 @@ class Home extends React.Component {
             activeOpacity={1}
             underlayColor="white"
             style={{
-              backgroundColor: '#F15763',
+              backgroundColor: colors.hex,
               borderRadius: 40,
               width: width * 0.5,
               height: 45,
@@ -112,7 +113,7 @@ class Home extends React.Component {
             <Text
               style={[
                 styles.buttonText,
-                this.state.createPressed ? { color: '#F15763' } : { color: 'white' },
+                this.state.createPressed ? { color: colors.hex } : { color: 'white' },
               ]}
             >
               Create Group
@@ -122,7 +123,7 @@ class Home extends React.Component {
             onShowUnderlay={() => this.setState({ joinPressed: true })}
             onHideUnderlay={() => this.setState({ joinPressed: false })}
             activeOpacity={1}
-            underlayColor="#F15763"
+            underlayColor={colors.hex}
             style={{
               backgroundColor: 'white',
               borderRadius: 40,
@@ -130,7 +131,7 @@ class Home extends React.Component {
               height: 45,
               justifyContent: 'center',
               alignSelf: 'center',
-              borderColor: '#F15763',
+              borderColor: colors.hex,
               borderWidth: 2,
             }}
             onPress={() => this.setState({ join: true })}
@@ -138,7 +139,7 @@ class Home extends React.Component {
             <Text
               style={[
                 styles.buttonText,
-                this.state.profilePressed ? { color: 'white' } : { color: '#F15763' },
+                this.state.profilePressed ? { color: 'white' } : { color: colors.hex },
               ]}
             >
               Join Group
