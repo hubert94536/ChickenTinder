@@ -13,6 +13,7 @@ import FA from 'react-native-vector-icons/FontAwesome'
 import Ion from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
+import colors from '../../styles/colors.js'
 import getStarPath from '../assets/stars/star.js'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
@@ -21,7 +22,6 @@ import getCuisine from '../assets/images/foodImages.js'
 const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
 
-const hex = '#F15763'
 const font = 'CircularStd-Book'
 
 export default class TopThree extends React.Component {
@@ -114,7 +114,7 @@ export default class TopThree extends React.Component {
                 style={[
                   styles.tinyButton,
                   this.state.chosen === 0
-                    ? { backgroundColor: hex }
+                    ? { backgroundColor: colors.hex }
                     : { backgroundColor: '#c4c4c4' },
                 ]}
               >
@@ -183,7 +183,7 @@ export default class TopThree extends React.Component {
                 style={[
                   styles.tinyButton,
                   this.state.chosen === 1
-                    ? { backgroundColor: hex }
+                    ? { backgroundColor: colors.hex }
                     : { backgroundColor: '#c4c4c4' },
                 ]}
               >
@@ -253,7 +253,7 @@ export default class TopThree extends React.Component {
                   styles.tinyButtonRight,
                   { alignSelf: 'flex-end' },
                   this.state.chosen === 2
-                    ? { backgroundColor: hex }
+                    ? { backgroundColor: colors.hex }
                     : { backgroundColor: '#c4c4c4' },
                 ]}
               >
@@ -312,7 +312,7 @@ export default class TopThree extends React.Component {
                 marginBottom: '15%',
               }}
             >
-              <Ion name="shuffle" style={{ fontSize: 50, color: hex, marginRight: '2%' }} />
+              <Ion name="shuffle" style={{ fontSize: 50, color: colors.hex, marginRight: '2%' }} />
               <Text style={[screenStyles.text, { fontSize: 23, fontWeight: 'bold' }]}>
                 Randomize for me
               </Text>
@@ -323,7 +323,7 @@ export default class TopThree extends React.Component {
           <TouchableHighlight
             underlayColor="white"
             onPress={() => this.goMatch()}
-            style={[screenStyles.bigButton, { borderColor: hex, backgroundColor: hex }]}
+            style={[screenStyles.bigButton, { borderColor: colors.hex, backgroundColor: colors.hex }]}
           >
             <Text
               style={[
@@ -341,7 +341,7 @@ export default class TopThree extends React.Component {
             underlayColor="white"
             style={[
               screenStyles.bigButton,
-              { borderColor: hex, backgroundColor: hex, opacity: 0.8, marginTop: '25%' },
+              { borderColor: colors.hex, backgroundColor: colors.hex, opacity: 0.8, marginTop: '25%' },
             ]}
           >
             <Text
@@ -397,7 +397,7 @@ const styles = StyleSheet.create({
     elevation: 1,
     borderRadius: 15,
     borderWidth: 5,
-    borderColor: hex,
+    borderColor: colors.hex,
     backgroundColor: '#F9E2C2',
   },
   cardUnselected: {

@@ -16,14 +16,13 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import Drawer from './Drawer.js'
 import Alert from '../modals/Alert.js'
+import colors from '../../styles/colors.js'
 import GroupCard from '../cards/GroupCard.js'
 import ChooseFriends from '../modals/ChooseFriends.js'
 import FilterSelector from './Filter.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
-
-const hex = '#F15763'
 
 const font = 'CircularStd-Medium'
 let memberList = []
@@ -221,7 +220,7 @@ export default class Group extends React.Component {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'space-between',
-              backgroundColor: hex,
+              backgroundColor: colors.hex,
               height: 120,
               width: '100%',
               paddingBottom: 20,
@@ -255,18 +254,18 @@ export default class Group extends React.Component {
           renderContainerView={() => (
             <View style={styles.main}>
               <View style={[styles.center, { flexDirection: 'row' }]}>
-                <Icon name="user" style={[styles.icon, { color: '#F15763' }]} />
+                <Icon name="user" style={[styles.icon, { color: colors.hex }]} />
                 <Text
                   style={{
-                    color: '#F15763',
+                    color: colors.hex,
                     fontWeight: 'bold',
                     fontFamily: font,
                   }}
                 >
                   {memberList.length}
                 </Text>
-                <Text style={[styles.divider, { color: '#F15763' }]}>|</Text>
-                <Text style={[styles.waiting, { color: '#F15763' }]}>
+                <Text style={[styles.divider, { color: colors.hex }]}>|</Text>
+                <Text style={[styles.waiting, { color: colors.hex }]}>
                   waiting for {this.state.needFilters} member filters
                 </Text>
               </View>
@@ -274,7 +273,7 @@ export default class Group extends React.Component {
                 style={[styles.center, { marginTop: 0, height: 0.5 * windowHeight }]}
                 numColumns={2}
                 ListHeaderComponentStyle={{
-                  color: '#F15763',
+                  color: colors.hex,
                   marginBottom: 10,
                 }}
                 data={memberRenderList}
@@ -387,7 +386,7 @@ export default class Group extends React.Component {
                     height: this.state.hostName == this.state.myUsername ? 400 : 350,
                     zIndex: 30,
                     elevation: 30,
-                    // borderColor: '#F15763',
+                    // borderColor: colors.hex,
                     // borderWidth: 1,
                   }}
                 >
@@ -419,7 +418,7 @@ export default class Group extends React.Component {
                     paddingTop: 25,
                     borderBottomLeftRadius: 15,
                     borderBottomRightRadius: 15,
-                    // borderColor: '#F15763',
+                    // borderColor: colors.hex,
                     // borderWidth: 1,
                     flexDirection: 'column',
                     justifyContent: 'flex-end',
@@ -429,7 +428,7 @@ export default class Group extends React.Component {
                 >
                   <Text
                     style={{
-                      color: '#F15763',
+                      color: colors.hex,
                       fontFamily: font,
                       fontSize: 11,
                     }}
@@ -450,7 +449,7 @@ export default class Group extends React.Component {
           <View>
             {this.state.hostName === this.state.myUsername && (
               <TouchableHighlight
-                underlayColor="#F15763"
+                underlayColor={colors.hex}
                 activeOpacity={1}
                 onPress={() => this.start()}
                 style={[
@@ -494,7 +493,7 @@ export default class Group extends React.Component {
             <Text
               style={[
                 styles.leaveText,
-                this.state.leaveGroup ? { color: hex } : { color: '#6A6A6A' },
+                this.state.leaveGroup ? { color: colors.hex } : { color: '#6A6A6A' },
               ]}
             >
               {this.state.hostName === this.state.myUsername ? 'Cancel Group' : 'Leave Group'}
@@ -600,7 +599,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     width: '50%',
     marginTop: '3%',
-    backgroundColor: '#F15763',
+    backgroundColor: colors.hex,
   },
   top: {
     backgroundColor: '#fff',

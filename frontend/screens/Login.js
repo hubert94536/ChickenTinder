@@ -1,14 +1,13 @@
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import Alert from '../modals/Alert.js'
+import colors from '../../styles/colors.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import imgStyles from '../../styles/cardImage.js'
 import facebookService from '../apis/facebookService.js'
 import screenStyles from '../../styles/screenStyles.js'
 import normalize from '../../styles/normalize.js'
 import PropTypes from 'prop-types'
-
-const hex = '#F15763'
 
 export default class Login extends React.Component {
   constructor() {
@@ -68,7 +67,7 @@ export default class Login extends React.Component {
             <Text
               style={[
                 screenStyles.longButtonText,
-                this.state.phonePressed ? { color: hex } : { color: 'white' },
+                this.state.phonePressed ? { color: colors.hex } : { color: 'white' },
               ]}
             >
               Login with Phone
@@ -154,8 +153,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   phoneButton: 
-  { borderColor: hex, 
-    backgroundColor: hex, 
+  { borderColor: colors.hex, 
+    backgroundColor: colors.hex, 
     marginTop: '7%' 
   },
   buttonIcon:

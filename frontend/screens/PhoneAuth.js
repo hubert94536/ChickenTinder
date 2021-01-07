@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import auth from '@react-native-firebase/auth'
-import Alert from '../modals/Alert.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
+import Alert from '../modals/Alert.js'
+import colors from '../../styles/colors.js'
 
-const hex = '#F15763'
 const font = 'CircularStd-Bold'
 const fontMed = 'CirularStd-Medium'
 
@@ -106,7 +106,7 @@ class PhoneAuthScreen extends Component {
             name="arrowleft"
             style={{
               fontSize: 30,
-              color: hex,
+              color: colors.hex,
               flexDirection: 'row',
               alignSelf: 'flex-start',
               marginTop: '5%',
@@ -117,7 +117,7 @@ class PhoneAuthScreen extends Component {
             }}
           />
           <View alignItems="center">
-            <Text style={{ fontFamily: font, fontSize: 30, color: hex }}>Enter your number</Text>
+            <Text style={{ fontFamily: font, fontSize: 30, color: colors.hex }}>Enter your number</Text>
             <Text
               style={{
                 textAlign: 'center',
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: hex,
+    backgroundColor: colors.hex,
     borderColor: '#FFFFFF',
     borderWidth: 2,
     borderRadius: 30,

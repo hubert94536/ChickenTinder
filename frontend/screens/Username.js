@@ -4,10 +4,9 @@ import { NAME, USERNAME, ID, UID, EMAIL, PHOTO } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Alert from '../modals/Alert.js'
 import accountsApi from '../apis/accountsApi.js'
+import colors from '../../styles/colors.js'
 import screenStyles from '../../styles/screenStyles.js'
 import PropTypes from 'prop-types'
-
-const hex = '#F15763'
 
 class Username extends React.Component {
   constructor(props) {
@@ -93,18 +92,18 @@ class Username extends React.Component {
             onShowUnderlay={() => this.setState({ pressed: true })}
             onHideUnderlay={() => this.setState({ pressed: false })}
             activeOpacity={1}
-            underlayColor={hex}
+            underlayColor={colors.hex}
             onPress={() => this.handleClick()}
             style={[
               screenStyles.medButton,
               styles.button,
-              this.state.pressed ? { borderColor: 'white' } : { borderColor: hex },
+              this.state.pressed ? { borderColor: 'white' } : { borderColor: colors.hex },
             ]}
           >
             <Text
               style={[
                 screenStyles.medButtonText,
-                this.state.pressed ? { color: 'white' } : { color: hex },
+                this.state.pressed ? { color: 'white' } : { color: colors.hex },
               ]}
             >
               Enter
@@ -151,7 +150,7 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 25,
     alignSelf: 'center',
-    borderBottomColor: hex,
+    borderBottomColor: colors.hex,
     borderBottomWidth: 2.5,
     margin: '3%',
     width: '70%',
@@ -160,7 +159,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     width: '70%',
-    borderColor: hex,
+    borderColor: colors.hex,
   },
 })
 

@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
-
-const hex = '#F15763'
+import colors from './colors.js'
+import normalize from './normalize.js'
 
 export default StyleSheet.create({
   blur: {
@@ -14,10 +14,10 @@ export default StyleSheet.create({
   },
   icon: {
     fontFamily: 'CircularStd-Medium',
-    color: '#F15763',
+    color: colors.hex,
     marginTop: '5%',
     marginRight: '5%',
-    fontSize: 21,
+    fontSize: normalize(21),
   },
   modal: {
     justifyContent: 'space-evenly',
@@ -31,13 +31,13 @@ export default StyleSheet.create({
   },
   text: {
     fontFamily: 'CircularStd-Medium',
-    fontSize: 20,
+    fontSize: normalize(20),
     paddingTop: '5%',
     paddingBottom: '5%',
     textAlign: 'center',
   },
   button: {
-    borderColor: '#F15763',
+    borderColor: colors.hex,
     borderWidth: 1.5,
     borderRadius: 60,
     width: '35%',
@@ -53,7 +53,7 @@ export default StyleSheet.create({
     borderRadius: 10,
   },
   closeIcon: {
-    fontSize: 18,
+    fontSize: normalize(18),
     flexDirection: 'row',
     alignSelf: 'flex-end',
     marginTop: '4%',
@@ -63,7 +63,7 @@ export default StyleSheet.create({
     marginLeft: '5%',
   },
   titleText: {
-    fontSize: 17,
+    fontSize: normalize(17),
     marginBottom: '3%',
   },
   inputContainer: {
@@ -72,7 +72,7 @@ export default StyleSheet.create({
     marginTop: '1%',
   },
   textInput: {
-    fontSize: 17,
+    fontSize: normalize(17),
     color: '#9f9f9f',
     backgroundColor: '#E5E5E5',
     height: '80%',
@@ -86,14 +86,14 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   errorIcon: {
-    fontSize: 15,
+    fontSize: normalize(15),
     marginRight: '2%',
   },
   errorText: {
-    fontSize: 12,
+    fontSize: normalize(12),
   },
   doneButton: {
-    backgroundColor: hex,
+    backgroundColor: colors.hex,
     borderRadius: 30,
     alignSelf: 'center',
     width: '40%',
@@ -103,7 +103,7 @@ export default StyleSheet.create({
     textAlign: 'center',
     paddingTop: '5%',
     paddingBottom: '5%',
-    fontSize: 20,
+    fontSize: normalize(20),
   },
   topRightIcon: {
     flexDirection: 'row',
