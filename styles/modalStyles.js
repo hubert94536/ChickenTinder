@@ -2,6 +2,8 @@ import { StyleSheet } from 'react-native'
 import normalize from './normalize.js'
 const hex = '#F15763'
 
+const hex = '#F15763'
+
 export default StyleSheet.create({
   blur: {
     position: 'absolute',
