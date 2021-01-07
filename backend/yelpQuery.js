@@ -37,7 +37,7 @@ const getRestaurants = (req) => {
       })
       .catch((error) => {
         console.log(error)
-        throw error
+        Promise.reject(error)
       })
   )
 }

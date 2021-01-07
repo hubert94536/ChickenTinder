@@ -1,16 +1,19 @@
 const io = require('socket.io-client')
-const redis = require('redis')
+const redis = require('redis') //
 const { promisify } = require('util')
-// jest.mock('./yelpQuery.js')
 
-// Testing sockets functionality with Redis
-// Disclaimer: if test cases fail, comment out expect.assertions()
-// for more detailed info
+jest.mock('../yelpQuery.js')
+/* Testing sockets functionality with Redis
+Disclaimer: if test cases fail, comment out expect.assertions()
+for more information. Test cases will occasionally fail, run test
+suite again to double check.
+*/
 describe('socket with Redis', () => {
   var socket
   var redisClient
   var hgetAll
   var sendCommand
+  var keys
   beforeEach(function async(done) {
     // Set up socket client
     socket = io('http://192.168.0.23:5000', {
@@ -20,6 +23,7 @@ describe('socket with Redis', () => {
     redisClient = redis.createClient('redis://localhost:6379')
     hgetAll = promisify(redisClient.hgetall).bind(redisClient)
     sendCommand = promisify(redisClient.send_command).bind(redisClient)
+    keys = promisify(redisClient.keys).bind(redisClient)
     socket.on('connect', function () {
       done()
     })
@@ -49,10 +53,9 @@ describe('socket with Redis', () => {
       // test disconnection
       setTimeout(async () => {
         try {
-          // socket id should be deleted from database
-          let user = await hgetAll(`users:${123}`)
-          let client = await hgetAll(`clients:${user.client}`)
-          expect(client).toBe(null)
+          // everything should be deleted from Redis
+          let redisKeys = await keys('*')
+          expect(redisKeys).toEqual([])
           done()
         } catch (err) {
           done(err)
@@ -179,6 +182,7 @@ describe('socket with Redis', () => {
           storedSession = JSON.parse(storedSession)
           expect(storedSession.members['123']).toMatchObject(host)
           expect(storedSession.members['1234']).toMatchObject(member)
+          await sendCommand('JSON.DEL', [session.code, ".members['1234']"])
           done()
         } catch (err) {
           done(err)
@@ -252,7 +256,7 @@ describe('socket with Redis', () => {
       socket.emit('start', {
         code: code,
         filters: {
-          categories: 'chinese,newamerican',
+          categories: ',',
           majority: 2,
           price: '',
           radius: 10000,
@@ -261,9 +265,7 @@ describe('socket with Redis', () => {
       })
     })
 
-    let res = null
     socket.on('start', (resList) => {
-      res = resList[0]
       expect(resList[0].name).toBeDefined()
       // like the same restaurant twice (to reach majority)
       socket.emit('like', {
@@ -276,8 +278,10 @@ describe('socket with Redis', () => {
       })
     })
 
+    let res = null
     // should receive id in restaurant match
     socket.on('match', (resId) => {
+      res = resId[0]
       expect(resId).toBe(res.id)
       done()
     })
@@ -287,7 +291,7 @@ describe('socket with Redis', () => {
   })
 
   it('leaves session correctly', async (done) => {
-    expect.assertions(2)
+    expect.assertions(3)
     // create room
     socket.emit('create', {
       name: 'test',
@@ -309,6 +313,9 @@ describe('socket with Redis', () => {
           let filters = await sendCommand('JSON.GET', [`filters:${session.code}`])
           expect(room).toBe(null)
           expect(filters).toBe(null)
+          setTimeout(() => {}, 100)
+          let user = await hgetAll(`users:${'123'}`)
+          expect(user.room).toBe(undefined)
           done()
         } catch (err) {
           done(err)
@@ -321,7 +328,7 @@ describe('socket with Redis', () => {
   })
 
   it('gets top 3 restaurants correctly', async (done) => {
-    expect.assertions(2)
+    expect.assertions(1)
     // initialize filters
     let filters = {}
     filters.groupSize = 2
@@ -349,7 +356,6 @@ describe('socket with Redis', () => {
     socket.on('top 3', (data) => {
       // order of top 3 choices should be correct
       expect(data.choices).toEqual(['res3', 'res1', 'res2'])
-      expect(data.random).toBeDefined()
       done()
     })
     setTimeout(() => {

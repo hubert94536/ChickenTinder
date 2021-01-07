@@ -7,9 +7,9 @@ import PropTypes from 'prop-types'
 // import friendsApi from '../apis/friendsApi.js'
 // import accountsApi from '../apis/accountsApi.js'
 import socket from '../apis/socket.js'
-import Alert from '../modals/alert.js'
-import Join from '../modals/join.js'
-import TabBar from '../nav.js'
+import Alert from '../modals/Alert.js'
+import Join from '../modals/Join.js'
+import TabBar from '../Nav.js'
 import screenStyles from '../../styles/screenStyles.js'
 
 var id = ''
@@ -18,6 +18,7 @@ var photo = ''
 var username = ''
 
 const width = Dimensions.get('window').width
+const height = Dimensions.get('window').height
 
 class Home extends React.Component {
   constructor() {
@@ -39,10 +40,15 @@ class Home extends React.Component {
       socket.connect(id, name, photo, username)
       socket.getSocket().on('update', (res) => {
         this.setState({ invite: false })
-        this.props.navigation.navigate('Group', res)
+        this.props.navigation.navigate('Group', {
+          response: res,
+          id: id,
+          name: name,
+          photo: photo,
+          username: username,
+        })
       })
     })
-
   }
 
   createGroup() {
@@ -64,6 +70,10 @@ class Home extends React.Component {
     // friendsApi.acceptFriendRequest(2)
   }
 
+  componentWillUnmount() {
+    // socket.off('update')
+  }
+
   render() {
     return (
       <View
@@ -79,11 +89,8 @@ class Home extends React.Component {
         </Text>
         {/* dummy image below */}
         <Image
-          source={{
-            uri:
-              'https://banner2.cleanpng.com/20181107/fhg/kisspng-computer-icons-location-map-united-states-of-ameri-5be33fd26a48d9.3500512415416196664353.jpg',
-          }}
-          style={{ width: 200, height: 200 }}
+          source={require('../assets/Icon_Transparent.png')}
+          style={{ width: height * 0.3, height: height * 0.3 }}
         />
         <View>
           <TouchableHighlight
@@ -139,7 +146,7 @@ class Home extends React.Component {
           </TouchableHighlight>
         </View>
         <TabBar
-          goHome={() => this.props.navigation.navigate('Home')}
+          goHome={() => this.props.navigation.replace('Home')}
           goSearch={() => this.props.navigation.navigate('Search')}
           goNotifs={() => this.props.navigation.navigate('Notifications')}
           goProfile={() => this.props.navigation.navigate('Profile')}
@@ -167,9 +174,7 @@ class Home extends React.Component {
 }
 
 Home.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func,
-  }),
+  navigation: PropTypes.object,
 }
 const styles = StyleSheet.create({
   button: {

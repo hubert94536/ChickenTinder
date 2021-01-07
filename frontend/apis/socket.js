@@ -1,5 +1,3 @@
-import { USERNAME, NAME, PHOTO, ID } from 'react-native-dotenv'
-import AsyncStorage from '@react-native-community/async-storage'
 import io from 'socket.io-client'
 
 var myId = ''
@@ -92,9 +90,14 @@ const finishedRound = (code) => {
   socket.emit('finished', { code: code, id: myId })
 }
 
-// randomize the restaurant chosen
-const randomize = (code) => {
-  socket.emit('randomize', { code: code })
+// send chosen restaurant
+const choose = (code, index) => {
+  socket.emit('choose', { code: code, index: index })
+}
+
+// end session
+const endRound = (code) => {
+  socket.emit('end', { code: code })
 }
 
 const getSocket = () => {
@@ -113,5 +116,6 @@ export default {
   submitFilters,
   likeRestaurant,
   getSocket,
-  randomize,
+  choose,
+  endRound,
 }

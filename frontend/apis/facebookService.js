@@ -75,7 +75,7 @@ const loginWithFacebook = async () => {
       // if (errorCode === 'auth/account-exists-with-different-credential') {
       //   alert('Email already associated with another account.');
       //   // Handle account linking here, if using.
-      throw error
+      Promise.reject(error)
     })
 }
 
@@ -93,13 +93,13 @@ const logoutWithFacebook = async () => {
       AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO])
     })
     .catch((error) => {
-      throw error
+      Promise.reject(error)
     })
 }
 
-const deleteUser = async () => {
+const deleteUser = async (id) => {
   accountsApi
-    .deleteUser()
+    .deleteUser(id)
     .then(() => {
       // Need to refresh access token since old one expired
       AccessToken.refreshCurrentAccessTokenAsync()
@@ -117,7 +117,7 @@ const deleteUser = async () => {
       })
     })
     .catch((error) => {
-      throw error
+      Promise.reject(error)
     })
 }
 //  getUser if needed

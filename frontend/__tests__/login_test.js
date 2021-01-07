@@ -2,7 +2,7 @@ import 'react-native'
 import React from 'react'
 import { render, fireEvent, cleanup } from '@testing-library/react-native'
 import Renderer from 'react-test-renderer'
-import Login from '../screens/login'
+import Login from '../screens/Login'
 
 afterEach(cleanup)
 

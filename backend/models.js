@@ -77,20 +77,30 @@ Notifications.belongsTo(Accounts, { foreignKey: 'sender_id', foreignKeyConstrain
 Friends.belongsTo(Accounts, { foreignKey: 'friend_id', foreignKeyConstraint: true })
 
 // sequelize.sync({ force: true }).then(() => {
-//   // sequelize.query('CREATE OR REPLACE FUNCTION notify_insert()' +
-//   //   ' RETURNS trigger AS $$' +
-//   //   ' DECLARE' +
-//   //   ' BEGIN' +
-//   //   ' PERFORM pg_notify(\'notifications\', row_to_json(NEW ::text);' +
-//   //   ' RETURN NEW;' +
-//   //   ' END;' +
-//   //   ' $$ LANGUAGE plpgsql;'
-//   // )
+//   // trigger function to return the newly inserted row and foreign key info
+//   sequelize.query(
+//     'CREATE OR REPLACE FUNCTION notify_insert()' +
+//       " RETURNS trigger AS ' " +
+//       ' DECLARE ' +
+//       ' rec RECORD;' +
+//       ' BEGIN' +
+//       ' SELECT INTO rec NEW.id, NEW.receiver_id, NEW.type, NEW.content,' +
+//       ' NEW.sender_id, accounts.name, accounts.username, accounts.photo' +
+//       ' FROM accounts' +
+//       ' WHERE NEW.sender_id = accounts.id;' +
+//       " PERFORM pg_notify(''notifications'', row_to_json(rec) ::text);" +
+//       ' RETURN NEW;' +
+//       ' END;' +
+//       " ' LANGUAGE plpgsql;",
+//   )
 
-//   // sequelize.query('CREATE TRIGGER notify_insert' +
-//   //   ' AFTER INSERT ON notifications' +
-//   //   ' FOR EACH ROW' +
-//   //   ' EXECUTE PROCEDURE notify_insert();')
+//   // creates trigger upon inserting into notifications
+//   sequelize.query(
+//     'CREATE TRIGGER notify_insert' +
+//       ' AFTER INSERT ON notifications' +
+//       ' FOR EACH ROW' +
+//       ' EXECUTE PROCEDURE notify_insert();',
+//   )
 // })
 
 module.exports = { Accounts, Friends, Notifications }

@@ -1,12 +1,4 @@
-import { ID } from 'react-native-dotenv'
-import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
-
-var myId = ''
-
-AsyncStorage.getItem(ID).then((res) => {
-  myId = res
-})
 
 const accountsApi = axios.create({
   baseURL: 'https://wechews.herokuapp.com',
@@ -17,19 +9,17 @@ const accountsApi = axios.create({
 const createFBUser = async (name, id, username, email, photo) => {
   return accountsApi
     .post('/accounts', {
-      params: {
-        id: id,
-        name: name,
-        username: username,
-        email: email,
-        photo: photo,
-      },
+      id: id,
+      name: name,
+      username: username,
+      email: email,
+      photo: photo,
     })
     .then((res) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -52,7 +42,7 @@ const getAllUsers = async () => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -75,19 +65,19 @@ const searchUsers = async (text) => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
 // deletes user and returns status
-const deleteUser = async () => {
+const deleteUser = async (id) => {
   return accountsApi
-    .delete(`/accounts/${myId}`)
+    .delete(`/accounts/${id}`)
     .then((res) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -106,55 +96,53 @@ const getUser = async (id) => {
       }
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
 // update email and returns status
-const updateEmail = async (info) => {
+const updateEmail = async (id, info) => {
   const req = {
     email: info,
   }
-  return updateUser(req)
+  return updateUser(id, req)
 }
 
 // update username and returns status
-const updateUsername = async (info) => {
+const updateUsername = async (id, info) => {
   const req = {
     username: info,
   }
-  return updateUser(req)
+  return updateUser(id, req)
 }
 
 // update username and returns status
-const updateName = async (info) => {
+const updateName = async (id, info) => {
   const req = {
     name: info,
   }
-  return updateUser(req)
+  return updateUser(id, req)
 }
 
 // update username and returns status
-const updatePhoneNumber = async (info) => {
+const updatePhoneNumber = async (id, info) => {
   const req = {
     phone_number: info,
   }
-  return updateUser(req)
+  return updateUser(id, req)
 }
 
 // updates user and returns status
-const updateUser = async (req) => {
+const updateUser = async (id, req) => {
   return accountsApi
-    .put(`/accounts/${myId}`, {
-      params: req,
-    })
+    .put(`/accounts/${id}`, req)
     .then((res) => {
       return {
         status: res.status,
       }
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -167,7 +155,7 @@ const checkUsername = async (username) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -179,7 +167,7 @@ const checkPhoneNumber = async (phoneNumber) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 
@@ -191,7 +179,7 @@ const checkEmail = async (email) => {
       return res.status
     })
     .catch((error) => {
-      throw error.response.status
+      Promise.reject(error.response)
     })
 }
 

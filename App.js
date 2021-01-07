@@ -6,18 +6,19 @@ import { createAppContainer } from 'react-navigation'
 import firebase from 'firebase'
 import Group from './frontend/screens/Group.js'
 import Home from './frontend/screens/Home.js'
-// import Invite from './frontend/modals/invite.js'
-import Login from './frontend/screens/login.js'
+// import Invite from './frontend/modals/Invite.js'
+import Login from './frontend/screens/Login.js'
 import Match from './frontend/screens/Match.js'
-import Notif from './frontend/screens/notif.js'
-import Round from './frontend/screens/round.js'
-import Search from './frontend/screens/search.js'
-import Username from './frontend/screens/username.js'
-import UserProfileView from './frontend/screens/profile.js'
+import Notif from './frontend/screens/Notif.js'
+import Round from './frontend/screens/Round.js'
+import Search from './frontend/screens/Search.js'
+import Username from './frontend/screens/Username.js'
+import UserProfileView from './frontend/screens/Profile.js'
 import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
-import Loading from './frontend/screens/loading.js'
-import TabBar from './frontend/nav.js'
-import CreateAccount from './frontend/screens/createAccount.js'
+import Loading from './frontend/screens/Loading.js'
+import TabBar from './frontend/Nav.js'
+import TopThree from './frontend/screens/TopThree.js'
+import CreateAccount from './frontend/screens/CreateAccount.js'
 import PropTypes from 'prop-types'
 
 class Notifications extends React.Component {
@@ -107,6 +108,9 @@ export default class App extends React.Component {
           },
           CreateAccount: {
             screen: CreateAccount,
+          },
+          TopThree: {
+            screen: TopThree,
           },
         },
         {
