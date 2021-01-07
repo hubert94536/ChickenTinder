@@ -1,8 +1,6 @@
 import { StyleSheet } from 'react-native'
+import colors from './colors.js'
 import normalize from './normalize.js'
-const hex = '#F15763'
-
-const hex = '#F15763'
 
 export default StyleSheet.create({
   blur: {
@@ -16,7 +14,7 @@ export default StyleSheet.create({
   },
   icon: {
     fontFamily: 'CircularStd-Medium',
-    color: '#F15763',
+    color: colors.hex,
     marginTop: '5%',
     marginRight: '5%',
     fontSize: normalize(21),
@@ -39,7 +37,7 @@ export default StyleSheet.create({
     textAlign: 'center',
   },
   button: {
-    borderColor: '#F15763',
+    borderColor: colors.hex,
     borderWidth: 1.5,
     borderRadius: 60,
     width: '35%',
@@ -95,7 +93,7 @@ export default StyleSheet.create({
     fontSize: normalize(12),
   },
   doneButton: {
-    backgroundColor: hex,
+    backgroundColor: colors.hex,
     borderRadius: 30,
     alignSelf: 'center',
     width: '40%',

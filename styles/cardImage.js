@@ -1,4 +1,5 @@
 import { Dimensions, StyleSheet } from 'react-native'
+import colors from  './colors.js'
 import normalize from '../styles/normalize.js'
 
 const width = Dimensions.get('window').width
@@ -8,10 +9,10 @@ export default StyleSheet.create({
     fontFamily: 'CircularStd-Medium',
   },
   hex: {
-    color: '#F15763',
+    color: colors.hex,
   },
   hexBorder: {
-    borderColor: '#F15763',
+    borderColor: colors.hex,
   },
   greyBorder: {
     borderColor: '#F5F5F5',
@@ -24,13 +25,13 @@ export default StyleSheet.create({
   },
   text: {
     fontFamily: 'CircularStd-Medium',
-    color: '#F15763',
+    color: colors.hex,
     fontSize: normalize(15),
     alignSelf: 'center',
   },
   icon: {
     fontFamily: 'CircularStd-Medium',
-    color: '#F15763',
+    color: colors.hex,
     fontSize: normalize(35),
     alignSelf: 'center',
   },

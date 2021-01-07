@@ -3,12 +3,12 @@ import { Dimensions, Linking, StyleSheet, Text, TouchableHighlight, View } from 
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
+import colors from '../../styles/colors.js'
 import screenStyles from '../../styles/screenStyles.js'
 import MatchCard from '../cards/MatchCard.js'
 // commented out during linting but socket is used in commented-out code below
 import socket from '../apis/socket.js'
 
-const hex = '#F15763'
 const font = 'CircularStd-Medium'
 
 // the card for the restaurant match
@@ -83,7 +83,7 @@ export default class Match extends React.Component {
           style={[screenStyles.bigButton, styles.callButton]}
           onPress={() => Linking.openURL(`tel:${restaurant.phone}`)}
         >
-          <Text style={[screenStyles.bigButtonText, { color: hex }]}>Call: {restaurant.phone}</Text>
+          <Text style={[screenStyles.bigButtonText, { color: colors.hex }]}>Call: {restaurant.phone}</Text>
         </TouchableHighlight>
         <Text /* Link to exit round */
           style={[screenStyles.bigButtonText, styles.exitRoundText]}
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   },
   general: {
     fontFamily: font,
-    color: hex,
+    color: colors.hex,
     textAlign: 'center',
   },
   /* Alignment for header text and icon on top of screen */
@@ -157,11 +157,11 @@ const styles = StyleSheet.create({
   //Styling for Google map for restaurant
   /* For "Open on Yelp" button */
   yelpButton: {
-    backgroundColor: hex,
+    backgroundColor: colors.hex,
     height: '4%',
     justifyContent: 'center',
     alignSelf: 'center',
-    borderColor: hex,
+    borderColor: colors.hex,
     marginTop: '8%',
   },
   /* For "Call number" button */
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     height: '4%',
     justifyContent: 'center',
     alignSelf: 'center',
-    borderColor: hex,
+    borderColor: colors.hex,
   },
   /* Text for exit round link */
   exitRoundText: {
