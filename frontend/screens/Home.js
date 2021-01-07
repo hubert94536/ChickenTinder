@@ -2,7 +2,7 @@
 import React from 'react'
 import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
 // import friendsApi from '../apis/friendsApi.js'
 // import accountsApi from '../apis/accountsApi.js'

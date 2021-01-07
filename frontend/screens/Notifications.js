@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Dimensions, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Swiper from 'react-native-swiper'
 import PropTypes from 'prop-types'
@@ -64,7 +64,8 @@ export default class Notif extends Component {
     accountsApi.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
       accountsApi.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
       accountsApi.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
-      accountsApi.createFBUser('Helen', 5, 'helenthemelon', 'helenw@gmail.com', 'sjdkf'),
+      accountsApi.createFBUser('Helen', 5, 'helenthemelon', 'helenw@gmail.com', '167'),
+      accountsApi.createFBUser('Hey', 12, 'itsme', 'me@gmail.com', '167'),
       accountsApi.createFBUser('Kevin', 6, 'kevint', 'kevintang@gmail.com', 'sdfddf'),
       console.log('My id:' + myId),
       friendsApi.createFriendshipTest(myId, 2),
@@ -83,22 +84,22 @@ export default class Notif extends Component {
         name: 'Hanna Co',
         username: 'hco',
         id: '3',
-        image: 'kjkhkk',
-        type: 'Invite',
+        image: '150',
+        type: 'invited',
       },
       {
         name: 'Francis Feng',
         username: 'francis',
         id: '8',
-        image: 'sfdsds',
-        type: 'Invite',
+        image: '167',
+        type: 'invited',
       },
       {
         name: 'Hubert Chen',
         username: 'hubesc',
         id: '5',
-        image: 'sdfsdf',
-        type: 'Request',
+        image: '165',
+        type: 'requested',
       },
     ]
 
@@ -116,7 +117,7 @@ export default class Notif extends Component {
     // Create all friend/request cards
     if (Array.isArray(notifList) && notifList.length) {
       for (var i = 0; i < notifList.length; i++) {
-        if (notifList[i].type == 'Request') {
+        if (notifList[i].type == 'requested') {
           requestNotifs.push(
             <NotifCard
               total={this.state.notifs}
