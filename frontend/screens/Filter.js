@@ -51,7 +51,7 @@ const tagsDiet = ['Vegan', 'Vegetarian']
 
 const tagsPrice = ['$', '$$', '$$$', '$$$$']
 
-const tagsSizes = [10, 20, 30]
+const tagsSizes = [10, 20, 30, 40, 50]
 
 //  requests the users permission
 const requestLocationPermission = async () => {
