@@ -407,7 +407,9 @@ export default class Group extends React.Component {
                 style={[
                   screenStyles.bigButton,
                   styles.bigButton,
-                  this.state.canStart ? { opacity: 1 } : { opacity: 0.75 },
+                  this.countNeedFilters(this.state.members) == 0
+                    ? { opacity: 1 }
+                    : { opacity: 0.75 },
                 ]}
               >
                 {/* TODO: Change text if required options have not been set */}
