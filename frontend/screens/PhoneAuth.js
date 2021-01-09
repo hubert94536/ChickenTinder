@@ -117,7 +117,9 @@ class PhoneAuthScreen extends Component {
             }}
           />
           <View alignItems="center">
-            <Text style={{ fontFamily: font, fontSize: 30, color: colors.hex }}>Enter your number</Text>
+            <Text style={{ fontFamily: font, fontSize: 30, color: colors.hex }}>
+              Enter your number
+            </Text>
             <Text
               style={{
                 textAlign: 'center',

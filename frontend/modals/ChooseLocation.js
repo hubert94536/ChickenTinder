@@ -74,7 +74,9 @@ export default class Location extends Component {
               />
             </View>
             <View style={styles.modalStyle}>
-              <Text style={[styles.title, screenStyles.textBook, screenStyles.hex]}>Choose a starting location</Text>
+              <Text style={[styles.title, screenStyles.textBook, screenStyles.hex]}>
+                Choose a starting location
+              </Text>
               <TextInput
                 style={[screenStyles.input, screenStyles.textBook, styles.input]}
                 placeholderTextColor="#9F9F9F"
@@ -156,8 +158,8 @@ const styles = StyleSheet.create({
     backgroundColor: screenStyles.hex.color,
   },
   white: {
-    color: 'white'
-  }
+    color: 'white',
+  },
 })
 
 Location.propTypes = {
