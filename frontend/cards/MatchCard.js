@@ -5,8 +5,8 @@ import { Dimensions, ImageBackground, Image, StyleSheet, Text, View } from 'reac
 import PropTypes from 'prop-types'
 import getStarPath from '../assets/stars/star.js'
 import getCuisine from '../assets/matchcard/foodImages.js'
-
-const font = 'CircularStd-Medium'
+import imgStyles from '../../styles/cardImage.js'
+import normalize from '../../styles/normalize.js'
 
 export default class MatchCard extends React.Component {
   constructor(props) {
@@ -27,48 +27,34 @@ export default class MatchCard extends React.Component {
 
     return (
       <ImageBackground source={getCuisine(card.categories)} style={[styles.card]}>
-        <View style={{ marginLeft: '5%', justifyContent: 'center', flex: 1, marginBottom: '4%' }}>
+        <View style={styles.container}>
           <Text style={styles.title}>{card.name}</Text>
           <View
-            style={{
-              flexDirection: 'row',
-              marginRight: '3%',
-              alignItems: 'center',
-            }}
+            style={styles.top}
           >
             <Image
               source={getStarPath(card.rating)}
-              style={{ marginRight: '2%', justifyContent: 'center' }}
+              style={styles.img}
             />
             <Text
-              style={{
-                alignSelf: 'center',
-                fontFamily: 'CircularStd-Book',
-                fontSize: 17,
-                color: 'white',
-              }}
+              style={[styles.review, styles.text]}
             >
               {card.reviewCount} reviews
             </Text>
           </View>
-          <View style={[styles.info, { alignItems: 'center' }]}>
-            <Text style={{ fontFamily: 'CircularStd-Book', color: 'white', fontSize: 23 }}>
+          <View style={[styles.info, styles.center]}>
+            <Text style={[styles.text, styles. price]}>
               {card.price}
             </Text>
             <Text
-              style={{
-                marginLeft: '1%',
-                fontFamily: 'CircularStd-Book',
-                color: 'white',
-                fontSize: 18,
-              }}
+              style={[styles.text, styles.categories]}
             >
               • {this.evaluateCuisines(card.categories)}
             </Text>
           </View>
           <View style={styles.info}>
             <FontAwesomeIcon icon={faMapMarkerAlt} style={styles.icon} />
-            <Text style={styles.infoText}>
+            <Text style={[styles.infoText, styles.text]}>
               {card.distance} miles away — {card.city}
             </Text>
           </View>
@@ -84,6 +70,13 @@ MatchCard.propTypes = {
 
 const styles = StyleSheet.create({
   // Sizing is now based on aspect ratio
+  container: {
+    marginLeft: '5%',
+    justifyContent: 'center',
+    flex: 1,
+    marginBottom: '4%'
+  },
+  center: {alignItems: 'center'},
   card: {
     backgroundColor: 'lightgray',
     borderTopRightRadius: 14,
@@ -96,8 +89,19 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'flex-start',
   },
+  top: {
+    flexDirection: 'row',
+    marginRight: '3%',
+    alignItems: 'center',
+  },
+  text: {
+    fontFamily: 'CircularStd-Book',
+    color: 'white'
+  },
+  img: { marginRight: '2%', justifyContent: 'center' },
+  price: { fontSize: normalize(23) },
   title: {
-    fontFamily: font,
+    fontFamily: imgStyles.font.fontFamily,
     color: 'white',
     fontSize: Dimensions.get('window').width * 0.08,
     textAlign: 'left',
@@ -105,27 +109,33 @@ const styles = StyleSheet.create({
     margin: '3%',
     marginLeft: 0,
   },
+  review: {
+    alignSelf: 'center',
+    fontSize: normalize(17),
+  },
   info: {
     flexDirection: 'row',
     marginTop: '2%',
     alignItems: 'center',
   },
   infoText: {
-    fontFamily: 'CircularStd-Book',
-    fontSize: 18,
+    fontSize: normalize(18),
     alignSelf: 'center',
-    color: 'white',
     marginHorizontal: '1%',
   },
   icon: {
     alignSelf: 'center',
-    fontFamily: font,
-    fontSize: 20,
+    fontFamily: imgStyles.font.fontFamily,
+    fontSize: normalize(20),
     marginRight: '2%',
     color: 'white',
   },
+  categories: {
+    marginLeft: '1%',
+    fontSize: normalize(18),
+  },
   button: {
-    borderRadius: 17,
+    borderRadius: normalize(17),
     borderWidth: 2.5,
     alignSelf: 'center',
     margin: '3%',

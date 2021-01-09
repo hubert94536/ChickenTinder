@@ -101,4 +101,10 @@ export default StyleSheet.create({
   hex: {
     color: '#F15763',
   },
+  book: {
+    fontFamily: 'CircularStd-Book'
+  },
+  medium: {
+    fontFamily: 'CircularStd-Medium'
+  }
 })

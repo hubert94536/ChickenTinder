@@ -17,6 +17,7 @@ import getStarPath from '../assets/stars/star.js'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
 import getCuisine from '../assets/images/foodImages.js'
+import normalize from '../../styles/normalize.js'
 
 const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
@@ -29,20 +30,24 @@ export default class TopThree extends React.Component {
     super(props)
     this.state = {
       chosen: 0,
-      restaurants: this.props.navigation.state.params.top,
-      host: this.props.navigation.state.params.host,
-      code: this.props.navigation.state.params.code,
-      isHost: this.props.navigation.state.params.isHost,
+      // restaurants: this.props.navigation.state.params.top,
+      // host: this.props.navigation.state.params.host,
+      // code: this.props.navigation.state.params.code,
+      // isHost: this.props.navigation.state.params.isHost,
+      restaurants: this.props.top,
+      host: this.props.host,
+      code: this.props.code,
+      isHost: this.props.isHost,
       random: Math.floor(Math.random() * 3),
     }
 
-    socket.getSocket().on('choose', (ind) => {
-      this.props.navigation.replace('Match', {
-        restaurant: this.state.restaurants[ind],
-        host: this.state.host,
-        code: this.state.code,
-      })
-    })
+    // socket.getSocket().on('choose', (ind) => {
+    //   this.props.navigation.replace('Match', {
+    //     restaurant: this.state.restaurants[ind],
+    //     host: this.state.host,
+    //     code: this.state.code,
+    //   })
+    // })
   }
 
   evaluateCuisines(cuisines) {
@@ -71,92 +76,72 @@ export default class TopThree extends React.Component {
   render() {
     return (
       <View>
-        <View style={{ margin: '7%' }}>
+        <View style={styles.container}>
           <Text
-            style={[
-              screenStyles.text,
-              { fontSize: 33, textAlign: 'center', marginBottom: '3%', fontWeight: 'bold' },
-            ]}
+            style={[ screenStyles.text, styles.title ]}
           >
             Top 3 Options
           </Text>
           <Text
-            style={{
-              fontFamily: font,
-              fontSize: 18,
-              textAlign: 'center',
-              marginLeft: '5%',
-              marginRight: '5%',
-            }}
+            style={styles.subtitle}
           >
             Majority was not reached! Chews a restaurant for the group or randomize!
           </Text>
         </View>
-        <View style={{ height: '50%' }}>
+        <View style={styles.height}>
           <TouchableHighlight
             disabled={!this.state.isHost}
             underlayColor="#F9E2C2"
-            style={[
-              { alignSelf: 'center' },
-              this.state.chosen === 0 ? styles.cardSelected : styles.cardUnselected,
-            ]}
+            style={[ styles.center, this.state.chosen === 0 ? styles.cardSelected : styles.cardUnselected ]}
             onPress={() => this.setState({ chosen: 0 })}
           >
-            <View style={{ flex: 1, justifyContent: 'space-between' }}>
+            <View style={styles.card}>
               <ImageBackground
                 source={getCuisine(this.state.restaurants[0].categories)}
-                style={[
-                  this.state.chosen === 0 ? styles.imageSelected : styles.imageUnselected,
-                  { alignSelf: 'center' },
-                ]}
+                style={[ styles.center, this.state.chosen === 0 ? styles.imageSelected : styles.imageUnselected ]}
               />
               <TouchableHighlight
                 style={[
                   styles.tinyButton,
                   this.state.chosen === 0
-                    ? { backgroundColor: hex }
-                    : { backgroundColor: '#c4c4c4' },
+                    ? styles.chosenBackground
+                    : styles.neutralBackground,
                 ]}
               >
                 <View
-                  style={{
-                    flexDirection: 'row',
-                    paddingTop: '3%',
-                    paddingBottom: '3%',
-                    paddingRight: '10%',
-                  }}
+                  style={styles.button}
                 >
-                  <Icon name="heart" style={{ color: 'white', fontSize: 18, margin: '1%' }} />
-                  <Text style={[screenStyles.text, { color: 'white', fontSize: 15 }]}>
+                  <Icon name="heart" style={[styles.buttonIcon, styles.white]} />
+                  <Text style={[screenStyles.text, styles.categories, styles.white]}>
                     {this.state.restaurants[0].likes} likes
                   </Text>
                 </View>
               </TouchableHighlight>
-              <View style={{ margin: '5%' }}>
+              <View style={styles.margin}>
                 <Image
                   source={getStarPath(this.state.restaurants[0].rating)}
-                  style={{ alignSelf: 'center' }}
+                  style={styles.center}
                 />
                 <TouchableHighlight
                   underlayColor="transparent"
                   onPress={() => Linking.openURL(this.state.restaurants[0].url)}
                 >
                   <View
-                    style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
+                    style={styles.yelpInfo}
                   >
-                    <Text style={{ fontSize: 12 }}>
+                    <Text style={styles.yelp}>
                       {this.state.restaurants[0].reviewCount} reviews on yelp
                     </Text>
-                    <FA name="yelp" style={{ color: 'red' }} />
+                    <FA name="yelp" style={styles.red} />
                   </View>
                 </TouchableHighlight>
                 <Text
                   numberOfLines={1}
-                  style={[screenStyles.medButtonText, { fontSize: 20, fontWeight: 'bold' }]}
+                  style={[screenStyles.medButtonText, styles.name]}
                 >
                   {this.state.restaurants[0].name}
                 </Text>
-                <Text numberOfLines={1} style={[screenStyles.smallButtonText, { fontSize: 15 }]}>
+                <Text numberOfLines={1} style={[screenStyles.smallButtonText, styles.categories]}>
                   {this.evaluateCuisines(this.state.restaurants[0].categories)}
                 </Text>
               </View>
@@ -166,62 +151,57 @@ export default class TopThree extends React.Component {
             disabled={!this.state.isHost}
             underlayColor="#F9E2C2"
             style={[
-              { top: '30%', left: '5%', alignSelf: 'flex-start' },
+              styles.left,
               this.state.chosen === 1 ? styles.cardSelected : styles.cardUnselected,
             ]}
             onPress={() => this.setState({ chosen: 1 })}
           >
-            <View style={{ flex: 1, justifyContent: 'space-between' }}>
+            <View style={styles.card}>
               <ImageBackground
                 source={getCuisine(this.state.restaurants[1].categories)}
                 style={[
                   this.state.chosen === 1 ? styles.imageSelected : styles.imageUnselected,
-                  { alignSelf: 'center' },
+                  styles.center,
                 ]}
               />
               <TouchableHighlight
                 style={[
                   styles.tinyButton,
                   this.state.chosen === 1
-                    ? { backgroundColor: hex }
-                    : { backgroundColor: '#c4c4c4' },
+                    ? styles.chosenBackground
+                    : styles.neutralBackground,
                 ]}
               >
                 <View
-                  style={{
-                    flexDirection: 'row',
-                    paddingTop: '3%',
-                    paddingBottom: '3%',
-                    paddingRight: '10%',
-                  }}
+                  style={styles.button}
                 >
-                  <Icon name="heart" style={{ color: 'white', fontSize: 18, margin: '1%' }} />
-                  <Text style={[screenStyles.text, { color: 'white', fontSize: 15 }]}>
+                  <Icon name="heart" style={[styles.buttonIcon, styles.white]} />
+                  <Text style={[screenStyles.text, styles.categories, styles.white]}>
                     {this.state.restaurants[1].likes} likes
                   </Text>
                 </View>
               </TouchableHighlight>
-              <View style={{ margin: '5%' }}>
+              <View style={styles.margin}>
                 <Image
                   source={getStarPath(this.state.restaurants[1].rating)}
-                  style={{ alignSelf: 'center' }}
+                  style={styles.center}
                 />
                 <TouchableHighlight
                   underlayColor="transparent"
                   onPress={() => Linking.openURL(this.state.restaurants[1].url)}
                 >
                   <View
-                    style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
+                    style={styles.yelpInfo}
                   >
-                    <Text style={{ fontSize: 12 }}>
+                    <Text style={styles.yelp}>
                       {this.state.restaurants[1].reviewCount} reviews on yelp
                     </Text>
-                    <FA name="yelp" style={{ color: 'red' }} />
+                    <FA name="yelp" style={styles.red} />
                   </View>
                 </TouchableHighlight>
                 <Text
                   numberOfLines={1}
-                  style={[screenStyles.medButtonText, { fontSize: 20, fontWeight: 'bold' }]}
+                  style={[screenStyles.medButtonText, styles.name]}
                 >
                   {this.state.restaurants[1].name}
                 </Text>
@@ -235,67 +215,61 @@ export default class TopThree extends React.Component {
             disabled={!this.state.isHost}
             underlayColor="#F9E2C2"
             style={[
-              { top: '30%', right: '5%', alignSelf: 'flex-end' },
+              styles.right,
               this.state.chosen === 2 ? styles.cardSelected : styles.cardUnselected,
             ]}
             onPress={() => this.setState({ chosen: 2 })}
           >
-            <View style={{ flex: 1, justifyContent: 'space-between' }}>
+            <View style={styles.card}>
               <ImageBackground
                 source={getCuisine(this.state.restaurants[2].categories)}
                 style={[
                   this.state.chosen === 2 ? styles.imageSelected : styles.imageUnselected,
-                  { alignSelf: 'center' },
+                  styles.center,
                 ]}
               />
               <TouchableHighlight
                 style={[
                   styles.tinyButtonRight,
-                  { alignSelf: 'flex-end' },
                   this.state.chosen === 2
-                    ? { backgroundColor: hex }
-                    : { backgroundColor: '#c4c4c4' },
+                    ? styles.chosenBackground
+                    : styles.neutralBackground,
                 ]}
               >
                 <View
-                  style={{
-                    flexDirection: 'row',
-                    paddingTop: '3%',
-                    paddingBottom: '3%',
-                    paddingRight: '10%',
-                  }}
+                  style={styles.button}
                 >
-                  <Icon name="heart" style={{ color: 'white', fontSize: 18, margin: '1%' }} />
-                  <Text style={[screenStyles.text, { color: 'white', fontSize: 15 }]}>
+                  <Icon name="heart" style={[styles.buttonIcon, styles.white]} />
+                  <Text style={[screenStyles.text, styles.categories, styles.white]}>
                     {this.state.restaurants[2].likes} likes
                   </Text>
                 </View>
               </TouchableHighlight>
-              <View style={{ margin: '5%' }}>
+              <View style={styles.margin}>
                 <Image
                   source={getStarPath(this.state.restaurants[2].rating)}
-                  style={{ alignSelf: 'center' }}
+                  style={styles.center}
                 />
                 <TouchableHighlight
                   underlayColor="transparent"
                   onPress={() => Linking.openURL(this.state.restaurants[2].url)}
                 >
                   <View
-                    style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
+                    style={styles.yelpInfo}
                   >
-                    <Text style={{ fontSize: 12 }}>
+                    <Text style={styles.yelp}>
                       {this.state.restaurants[2].reviewCount} reviews on yelp
                     </Text>
-                    <FA name="yelp" style={{ color: 'red' }} />
+                    <FA name="yelp" style={styles.red} />
                   </View>
                 </TouchableHighlight>
                 <Text
                   numberOfLines={1}
-                  style={[screenStyles.medButtonText, { fontSize: 20, fontWeight: 'bold' }]}
+                  style={[screenStyles.medButtonText, styles.name]}
                 >
                   {this.state.restaurants[2].name}
                 </Text>
-                <Text numberOfLines={1} style={[screenStyles.smallButtonText, { fontSize: 15 }]}>
+                <Text numberOfLines={1} style={[screenStyles.smallButtonText, styles.categories]}>
                   {this.evaluateCuisines(this.state.restaurants[2].categories)}
                 </Text>
               </View>
@@ -305,15 +279,10 @@ export default class TopThree extends React.Component {
         {this.state.isHost && (
           <TouchableHighlight underlayColor="transparent" onPress={() => this.randomize()}>
             <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: '15%',
-              }}
+              style={styles.randomButton}
             >
-              <Ion name="shuffle" style={{ fontSize: 50, color: hex, marginRight: '2%' }} />
-              <Text style={[screenStyles.text, { fontSize: 23, fontWeight: 'bold' }]}>
+              <Ion name="shuffle" style={styles.randomIcon} />
+              <Text style={[screenStyles.text, styles.randomText]}>
                 Randomize for me
               </Text>
             </View>
@@ -326,10 +295,7 @@ export default class TopThree extends React.Component {
             style={[screenStyles.bigButton, { borderColor: hex, backgroundColor: hex }]}
           >
             <Text
-              style={[
-                screenStyles.medButtonText,
-                { fontFamily: font, color: 'white', padding: '2%' },
-              ]}
+              style={[ screenStyles.medButtonText, styles.submit, styles.white ]}
             >
               Submit
             </Text>
@@ -339,16 +305,10 @@ export default class TopThree extends React.Component {
           <TouchableHighlight
             disabled={!this.state.isHost}
             underlayColor="white"
-            style={[
-              screenStyles.bigButton,
-              { borderColor: hex, backgroundColor: hex, opacity: 0.8, marginTop: '25%' },
-            ]}
+            style={[ screenStyles.bigButton, styles.waiting ]}
           >
             <Text
-              style={[
-                screenStyles.medButtonText,
-                { fontFamily: font, color: 'white', padding: '2%', fontWeight: 'bold' },
-              ]}
+              style={[ screenStyles.medButtonText, styles.waitingText, styles.white, styles.submit ]}
             >
               Waiting for Host...
             </Text>
@@ -359,29 +319,108 @@ export default class TopThree extends React.Component {
   }
 }
 
-TopThree.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired,
-    replace: PropTypes.func,
-    state: PropTypes.shape({
-      params: PropTypes.shape({
-        top: PropTypes.array,
-        random: PropTypes.number,
-        host: PropTypes.string,
-        code: PropTypes.number,
-        isHost: PropTypes.bool,
-      }),
-    }),
-  }),
-}
+// TopThree.propTypes = {
+//   navigation: PropTypes.shape({
+//     navigate: PropTypes.func.isRequired,
+//     replace: PropTypes.func,
+//     state: PropTypes.shape({
+//       params: PropTypes.shape({
+//         top: PropTypes.array,
+//         random: PropTypes.number,
+//         host: PropTypes.string,
+//         code: PropTypes.number,
+//         isHost: PropTypes.bool,
+//       }),
+//     }),
+//   }),
+// }
 
 const styles = StyleSheet.create({
+  container: { margin: '7%' },
+  title: { 
+    fontSize: normalize(33),
+    textAlign: 'center',
+    marginBottom: '3%',
+    fontWeight: 'bold' 
+  },
+  subtitle: {
+    fontFamily: font,
+    fontSize: normalize(18),
+    textAlign: 'center',
+    marginLeft: '5%',
+    marginRight: '5%',
+  },
+  height: { height: '50%' },
+  center: { alignSelf: 'center' },
+  card: { flex: 1, justifyContent: 'space-between' },
+  white: {color:'white'},
+  chosenBackground: { backgroundColor: hex },
+  neutralBackground: { backgroundColor: '#c4c4c4' },
+  buttonIcon: { 
+    fontSize: normalize(18),
+    margin: '1%',
+    marginRight:'3%' 
+  },
+  margin: { margin: '5%' },
+  yelpInfo: { 
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center' 
+  },
+  yelp: { fontSize: normalize(12) },
+  red: { color: 'red' },
+  name: {
+    fontSize: normalize(20), 
+    fontWeight: 'bold'
+  },
+  categories: { fontSize: normalize(15) },
+  left: {
+    top: '30%',
+    left: '5%',
+    alignSelf: 'flex-start'
+  },
+  right: {
+    top: '30%',
+    right: '5%',
+    alignSelf: 'flex-end'
+  },
+  randomIcon: {
+    fontSize: normalize(50),
+    color: hex,
+    marginRight: '2%'
+  },
+  randomButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: '15%',
+  },
+  randomText: { fontSize: normalize(23), fontWeight: 'bold' },
+  submit: {
+    fontFamily: font,
+    padding: '2%'
+  },
+  waiting: {
+    borderColor: hex,
+    backgroundColor: hex,
+    opacity: 0.8,
+    marginTop: '25%' 
+  },
+  waitingText: {
+    fontWeight: 'bold'
+  },
   imageSelected: {
     height: height * 0.18,
     width: width * 0.38,
     position: 'absolute',
     overflow: 'hidden',
     marginTop: '2%',
+  },
+  button: {
+    flexDirection: 'row',
+    paddingTop: '3%',
+    paddingBottom: '3%',
+    paddingRight: '10%',
   },
   imageUnselected: {
     height: height * 0.18,
@@ -421,6 +460,7 @@ const styles = StyleSheet.create({
   tinyButtonRight: {
     width: '50%',
     alignItems: 'center',
+    alignSelf: 'flex-end',
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 7,
