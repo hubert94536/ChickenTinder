@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import colors from './colors.js'
 
 export default StyleSheet.create({
   bigButton: {
@@ -15,15 +16,15 @@ export default StyleSheet.create({
   },
   text: {
     fontFamily: 'CircularStd-Medium',
-    color: '#F15763',
+    color: colors.hex,
   },
   textBold: {
     fontFamily: 'CircularStd-Bold',
-    color: '#F15763',
+    color: colors.hex,
   },
   textBook: {
     fontFamily: 'CircularStd-Book',
-    color: '#F15763',
+    color: colors.hex,
   },
   input: {
     fontSize: 20,
@@ -32,7 +33,7 @@ export default StyleSheet.create({
   },
   smallButton: {
     borderRadius: 45,
-    borderColor: '#F15763',
+    borderColor: colors.hex,
     borderWidth: 2,
   },
   smallButtonText: {
@@ -49,7 +50,7 @@ export default StyleSheet.create({
     fontSize: 45,
   },
   icons: {
-    color: '#F15763',
+    color: colors.hex,
     fontSize: 27,
     fontFamily: 'CircularStd-Medium',
   },
@@ -99,7 +100,7 @@ export default StyleSheet.create({
     alignSelf: 'center' 
   },
   hex: {
-    color: '#F15763',
+    color: colors.hex,
   },
   book: {
     fontFamily: 'CircularStd-Book'
