@@ -3,7 +3,6 @@ import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'r
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 
-const hex = '#F15763'
 const font = 'CircularStd-Book'
 const height = Dimensions.get('window').height
 
@@ -62,7 +61,7 @@ export default class Loading extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.content}>
-          <Text style={[styles.general, { fontSize: 30, fontWeight: 'bold', color: hex }]}>
+          <Text style={[styles.general, { fontSize: 30, fontWeight: 'bold', color: colors.hex }]}>
             Round done!
           </Text>
           <Image

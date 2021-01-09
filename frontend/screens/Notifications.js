@@ -7,6 +7,7 @@ import Swiper from 'react-native-swiper'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
 import accountsApi from '../apis/accountsApi.js'
+import colors from '../../styles/colors.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import friendsApi from '../apis/friendsApi.js'
@@ -14,7 +15,6 @@ import NotifCard from '../cards/NotifCard.js'
 import TabBar from '../Nav.js'
 // import Swipeout from 'react-native-swipeout';
 
-const hex = '#F15763'
 var img = ''
 var name = ''
 var username = ''
@@ -168,7 +168,9 @@ export default class Notif extends Component {
               underlayColor="#fff"
               style={[
                 // screenStyles.smallButton,
-                this.state.activity ? { borderBottomColor: hex } : { borderBottomColor: 'white' },
+                this.state.activity
+                  ? { borderBottomColor: colors.hex }
+                  : { borderBottomColor: 'white' },
                 { marginLeft: '5%', flex: 0.5, borderBottomWidth: 2 },
               ]}
               onPress={() => this.refs.swiper.scrollBy(-1)}
@@ -188,7 +190,9 @@ export default class Notif extends Component {
               underlayColor="#fff"
               style={[
                 // screenStyles.smallButton,
-                !this.state.activity ? { borderBottomColor: hex } : { borderBottomColor: 'white' },
+                !this.state.activity
+                  ? { borderBottomColor: colors.hex }
+                  : { borderBottomColor: 'white' },
                 { marginHorizontal: '5%', flex: 0.5, borderBottomWidth: 2 },
               ]}
               onPress={() => this.refs.swiper.scrollBy(1)}
