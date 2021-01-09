@@ -65,7 +65,7 @@ export default class UserProfileView extends Component {
         usernameValue: res[4][1],
       })
     })
-}
+  }
 
   // getting current user's info
   async changeName() {
@@ -250,12 +250,8 @@ export default class UserProfileView extends Component {
         <View style={styles.background}>
           <View>
             <View style={[styles.titleContainer]}>
-              <View
-                style={[screenStyles.icons, styles.filler]}
-              ></View>
-              <Text style={[screenStyles.text, styles.myProfile]}>
-                Profile
-              </Text>
+              <View style={[screenStyles.icons, styles.filler]}></View>
+              <Text style={[screenStyles.text, styles.myProfile]}>Profile</Text>
               <Icon
                 name="cog-outline"
                 style={[screenStyles.icons, styles.cog]}
@@ -275,33 +271,19 @@ export default class UserProfileView extends Component {
             )}
 
             <View style={[styles.infoContainer]}>
-              <View
-                style={[styles.nameContainer]}
-              >
+              <View style={[styles.nameContainer]}>
                 <View style={[styles.nameFiller]}></View>
-                <Text
-                  style={screenStyles.text, styles.name}
-                >
-                  {name}
-                </Text>
+                <Text style={(screenStyles.text, styles.name)}>{name}</Text>
                 <Icon
                   name="pencil-outline"
                   style={styles.pencil}
                   onPress={() => this.editProfile()}
                 />
               </View>
-              <Text style={screenStyles.text, styles.username}>{'@' + username}</Text>
+              <Text style={(screenStyles.text, styles.username)}>{'@' + username}</Text>
             </View>
-            <Text
-              style={screenStyles.text, styles.friends}
-            >
-              Your Friends
-            </Text>
-            <Text
-              style={[ screenStyles.text, styles.friendNum]}
-            >
-              {numFriends + ' friends'}
-            </Text>
+            <Text style={(screenStyles.text, styles.friends)}>Your Friends</Text>
+            <Text style={[screenStyles.text, styles.friendNum]}>{numFriends + ' friends'}</Text>
           </View>
           <View style={[styles.friendContainer]}>
             {/* Contains the search bar and friends display if has friends, otherwise no friends view */}
@@ -376,33 +358,33 @@ UserProfileView.propTypes = {
 }
 
 const styles = StyleSheet.create({
-  background: { 
-    backgroundColor: 'white', 
-    height: '90%' 
+  background: {
+    backgroundColor: 'white',
+    height: '90%',
   },
-  titleContainer: { 
-    flexDirection: 'row', 
-    justifyContent: 'space-between' 
+  titleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  cog: { 
-    margin: '5%', 
-    textAlign: 'right' 
+  cog: {
+    margin: '5%',
+    textAlign: 'right',
   },
   nameContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  nameFiller: { 
-    width: '4%', 
-    marginTop: '4%', 
-    marginLeft: '1%'
+  nameFiller: {
+    width: '4%',
+    marginTop: '4%',
+    marginLeft: '1%',
   },
   myProfile: {
     fontSize: normalize(25),
     alignSelf: 'center',
     marginRight: '0%',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   changeButtons: {
     alignSelf: 'center',
@@ -414,45 +396,26 @@ const styles = StyleSheet.create({
     marginRight: '5%',
     marginTop: '5%',
   },
-  name:
-  { 
+  name: {
     fontSize: normalize(22),
     marginTop: '4%',
-    fontWeight: 'bold' 
+    fontWeight: 'bold',
   },
-  pencil:
-  { fontSize: normalize(28), 
-    marginTop: '4%', 
-    marginLeft: '1%', 
-    marginBottom: '1%' 
-  },
-  username:
-  { fontSize: normalize(14), 
-    color: hex,
-    fontWeight: 'bold' 
-  },
-  friends:
-  {
+  pencil: { fontSize: normalize(28), marginTop: '4%', marginLeft: '1%', marginBottom: '1%' },
+  username: { fontSize: normalize(14), color: hex, fontWeight: 'bold' },
+  friends: {
     marginTop: '5%',
     marginLeft: '7%',
     fontSize: normalize(20),
     fontWeight: 'bold',
   },
-  friendNum:
-  { marginLeft: '7%',
-    fontSize: normalize(17), 
-    fontFamily: 'CircularStd-Medium' 
+  friendNum: { marginLeft: '7%', fontSize: normalize(17), fontFamily: 'CircularStd-Medium' },
+  friendContainer: {
+    height: '50%',
+    marginTop: '1%',
   },
-  friendContainer: { 
-    height: '50%', 
-    marginTop: '1%' 
-  },
-  filler: 
-  { width: '7%', 
-    margin: '5%', 
-    textAlign: 'right' ,
-  },
-  infoContainer: { 
-    alignItems: 'center' 
+  filler: { width: '7%', margin: '5%', textAlign: 'right' },
+  infoContainer: {
+    alignItems: 'center',
   },
 })

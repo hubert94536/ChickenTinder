@@ -10,6 +10,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import colors from '../../styles/colors.js'
 import friendsApi from '../apis/friendsApi.js'
 import { ID } from 'react-native-dotenv'
 import imgStyles from '../../styles/cardImage.js'
@@ -188,7 +189,7 @@ const styles = StyleSheet.create({
     flex: 0.9,
   },
   text: { fontSize: normalize(15) },
-  username: { color: '#F15763' },
+  username: { color: colors.hex },
   invited: { flexDirection: 'row', marginLeft: '3%' },
   icon: { fontSize: normalize(20) },
   trashInvite: {
@@ -202,8 +203,8 @@ const styles = StyleSheet.create({
   trashWhite: { fontSize: normalize(20), color: 'white' },
   general: { flex: 1, flexDirection: 'row' },
   requested: {
-    borderColor: '#F15763',
-    backgroundColor: '#F15763',
+    borderColor: colors.hex,
+    backgroundColor: colors.hex,
     borderRadius: 30,
     borderWidth: 2,
     height: '40%',
@@ -218,7 +219,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(12),
   },
   confirmTextPressed: {
-    color: '#F15763',
+    color: colors.hex,
     alignSelf: 'center',
     fontSize: normalize(12),
   },
