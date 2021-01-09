@@ -329,7 +329,6 @@ module.exports = (io) => {
               let top3 = getTop3(filters.restaurants)
               io.in(data.code).emit('final', top3)
             }
-            delete socket.user.room
           } else {
             // Room is still in groups page and receives updated room
             io.in(data.code).emit('update', session)

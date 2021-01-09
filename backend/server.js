@@ -3,14 +3,14 @@ const express = require('express')
 const http = require('http')
 const io = require('socket.io')()
 const socketAuth = require('socketio-auth')
-const validateRoute = require('express-joi-validation').createValidator({})
+const _ = require('underscore')
 const accounts = require('./accountsQueries.js')
 const auth = require('./auth.js')
 const { hmset } = require('./config.js')
 const friends = require('./friendsQueries.js')
 const notifications = require('./notifsQueries.js')
 const schema = require('./schema.js')
-const _ = require('underscore')
+
 
 const app = express()
 const server = http.createServer(app)
@@ -18,9 +18,9 @@ const server = http.createServer(app)
 io.attach(server)
 require('./socketEvents.js')(io)
 
+// removes socket client from each namespace until authentication
 _.each(io.nsps, function(nsp){
   nsp.on('connect', function(socket){
-      console.log("removing socket from", nsp.name)
       delete nsp.connected[socket.id];
   });
 });
@@ -29,6 +29,7 @@ socketAuth(io, {
   authenticate: async (socket, data, callback) => {
     const { token } = data
     try {
+      // verify token passed in authentication
       const user = await auth.verifySocket(token)
       socket.user = user
       return callback(null, true)
@@ -38,12 +39,13 @@ socketAuth(io, {
   },
   postAuthenticate: async (socket) => {
     try {
+      // reconnect socket client to each namespace
       _.each(io.nsps, function(nsp) {
         if(_.findWhere(nsp.sockets, {id: socket.id})) {
-          console.log("restoring socket to", nsp.name);
           nsp.connected[socket.id] = socket;
         }
       });
+      // associate uid to socket id
       await hmset(`users:${socket.user.uid}`, 'client', socket.id)
     } catch (err) {
       console.log(err)

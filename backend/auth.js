@@ -1,6 +1,7 @@
 const { firebase } = require('./config.js')
 const { Accounts } = require('./models.js')
 
+// decode token by splicing Bearer and token
 const decodeToken = (req, res, next) => {
   if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
     req.authToken = req.headers.authorization.split(' ')[1]
@@ -10,6 +11,7 @@ const decodeToken = (req, res, next) => {
   next()
 }
 
+// authenticate incoming api requests
 const authenticate = (req, res, next) => {
   decodeToken(req, res, async () => {
     try {
@@ -23,6 +25,7 @@ const authenticate = (req, res, next) => {
   })
 }
 
+// verify token from socket connection
 const verifySocket = async (token) => {
   const userInfo = await firebase.auth().verifyIdToken(token)
   const user = await Accounts.findOne({ where: { uid: userInfo.uid } })
