@@ -69,9 +69,7 @@ export default class Time extends React.Component {
           />
           <View style={modalStyles.titleContainer}>
             <Text style={[screenStyles.text, modalStyles.titleText]}>Time</Text>
-            <Text style={[screenStyles.text, styles.black]}>
-              Set a time for your group to eat
-            </Text>
+            <Text style={[screenStyles.text, styles.black]}>Set a time for your group to eat</Text>
             <View style={modalStyles.error}>
               <TextInput
                 style={[modalStyles.textInput, styles.black]}

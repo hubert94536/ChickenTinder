@@ -98,18 +98,10 @@ export default class ChooseFriends extends React.Component {
               />
             </View>
             <View style={styles.header2}>
-              <Text
-                style={[
-                  screenStyles.text,
-                  styles.subHeaderText,
-                  styles.subHeaderMarginL,
-                ]}
-              >
+              <Text style={[screenStyles.text, styles.subHeaderText, styles.subHeaderMarginL]}>
                 Group PIN:
               </Text>
-              <Text style={[screenStyles.textBold, styles.subHeaderText]}>
-                {this.props.code}
-              </Text>
+              <Text style={[screenStyles.textBold, styles.subHeaderText]}>{this.props.code}</Text>
               <TouchableOpacity onPress={() => this.copyToClipboard()}>
                 <Ionicons name="copy-outline" style={styles.icon2} />
               </TouchableOpacity>
@@ -194,7 +186,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(25),
   },
   subHeaderText: {
-    color: "black",
+    color: 'black',
     fontSize: normalize(16),
   },
   subHeaderMarginL: {

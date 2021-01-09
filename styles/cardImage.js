@@ -1,5 +1,5 @@
 import { Dimensions, StyleSheet } from 'react-native'
-import colors from  './colors.js'
+import colors from './colors.js'
 import normalize from '../styles/normalize.js'
 
 const width = Dimensions.get('window').width
