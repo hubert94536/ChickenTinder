@@ -89,23 +89,21 @@ export default StyleSheet.create({
     alignSelf: 'center',
     margin: '1.5%',
   },
-  mainContainer:
-  { 
-    backgroundColor: 'white', 
-    flex: 1 
+  mainContainer: {
+    backgroundColor: 'white',
+    flex: 1,
   },
-  contentContainer:
-  { 
-    flexDirection: 'row', 
-    alignSelf: 'center' 
+  contentContainer: {
+    flexDirection: 'row',
+    alignSelf: 'center',
   },
   hex: {
     color: colors.hex,
   },
   book: {
-    fontFamily: 'CircularStd-Book'
+    fontFamily: 'CircularStd-Book',
   },
   medium: {
-    fontFamily: 'CircularStd-Medium'
-  }
+    fontFamily: 'CircularStd-Medium',
+  },
 })

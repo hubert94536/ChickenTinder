@@ -29,26 +29,13 @@ export default class MatchCard extends React.Component {
       <ImageBackground source={getCuisine(card.categories)} style={[styles.card]}>
         <View style={styles.container}>
           <Text style={styles.title}>{card.name}</Text>
-          <View
-            style={styles.top}
-          >
-            <Image
-              source={getStarPath(card.rating)}
-              style={styles.img}
-            />
-            <Text
-              style={[styles.review, styles.text]}
-            >
-              {card.reviewCount} reviews
-            </Text>
+          <View style={styles.top}>
+            <Image source={getStarPath(card.rating)} style={styles.img} />
+            <Text style={[styles.review, styles.text]}>{card.reviewCount} reviews</Text>
           </View>
           <View style={[styles.info, styles.center]}>
-            <Text style={[styles.text, styles. price]}>
-              {card.price}
-            </Text>
-            <Text
-              style={[styles.text, styles.categories]}
-            >
+            <Text style={[styles.text, styles.price]}>{card.price}</Text>
+            <Text style={[styles.text, styles.categories]}>
               • {this.evaluateCuisines(card.categories)}
             </Text>
           </View>
@@ -74,9 +61,9 @@ const styles = StyleSheet.create({
     marginLeft: '5%',
     justifyContent: 'center',
     flex: 1,
-    marginBottom: '4%'
+    marginBottom: '4%',
   },
-  center: {alignItems: 'center'},
+  center: { alignItems: 'center' },
   card: {
     backgroundColor: 'lightgray',
     borderTopRightRadius: 14,
@@ -96,7 +83,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'CircularStd-Book',
-    color: 'white'
+    color: 'white',
   },
   img: { marginRight: '2%', justifyContent: 'center' },
   price: { fontSize: normalize(23) },

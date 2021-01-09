@@ -93,34 +93,23 @@ export default class Round extends React.Component {
             backgroundColor="transparent"
             animateOverlayLabelsOpacity
           >
-            <Text
-              style={[ screenStyles.text, styles.title, styles.topMargin ]}
-            >
-              Get chews-ing!
-            </Text>
+            <Text style={[screenStyles.text, styles.title, styles.topMargin]}>Get chews-ing!</Text>
             <TouchableHighlight
               onPress={() => this.leaveGroup()}
               style={[styles.leaveButton, styles.topMargin]}
               underlayColor="transparent"
             >
               <View style={styles.centerAlign}>
-                <Icon5
-                  name="door-open"
-                  style={[screenStyles.text, styles.door]}
-                />
+                <Icon5 name="door-open" style={[screenStyles.text, styles.door]} />
                 <Text style={([screenStyles.text], styles.black)}>Leave</Text>
               </View>
             </TouchableHighlight>
-            <Text
-              style={[ screenStyles.text, styles.topMargin, styles.restaurant ]}
-            >
+            <Text style={[screenStyles.text, styles.topMargin, styles.restaurant]}>
               Restaurant {this.state.index}/{this.state.results.length}
             </Text>
           </Swiper>
         </View>
-        <View
-          style={styles.bottom}
-        >
+        <View style={styles.bottom}>
           <View>
             <Tooltip
               isVisible={this.state.instr}
@@ -129,10 +118,7 @@ export default class Round extends React.Component {
                   <Text style={[screenStyles.text, styles.white, styles.left]}>
                     swipe left to dislike
                   </Text>
-                  <Feather
-                    name="arrow-left"
-                    style={[styles.white, styles.leftArrow]}
-                  />
+                  <Feather name="arrow-left" style={[styles.white, styles.leftArrow]} />
                 </View>
               }
               placement="top"
@@ -155,10 +141,7 @@ export default class Round extends React.Component {
               isVisible={this.state.instr}
               content={
                 <View style={styles.rr}>
-                  <Feather
-                    name="arrow-right"
-                    style={[styles.rightArrow, styles.white]}
-                  />
+                  <Feather name="arrow-right" style={[styles.rightArrow, styles.white]} />
                   <Text style={[screenStyles.text, styles.white, styles.left]}>
                     swipe right to like
                   </Text>
@@ -174,7 +157,7 @@ export default class Round extends React.Component {
             <TouchableHighlight
               onPress={() => this.deck.swipeRight()}
               underlayColor="transparent"
-              style={styles.background, styles.swipeRight}
+              style={(styles.background, styles.swipeRight)}
             >
               <Icon name="heart" style={[screenStyles.text, styles.heart]} />
             </TouchableHighlight>
@@ -203,7 +186,7 @@ const styles = StyleSheet.create({
   },
   card: { justifyContent: 'center' },
   topMargin: { marginTop: '7%' },
-  title: { 
+  title: {
     fontSize: normalize(20),
     fontWeight: 'bold',
     textAlign: 'center',
@@ -228,7 +211,7 @@ const styles = StyleSheet.create({
   leftArrow: { fontSize: normalize(15), marginRight: '1%' },
   background: { backgroundColor: 'transparent' },
   x: { color: '#6A6A6A', fontSize: normalize(45) },
-  rightArrow: {fontSize: normalize(15), marginLeft: '1%' },
+  rightArrow: { fontSize: normalize(15), marginLeft: '1%' },
   swipeRight: { marginTop: '1%' },
-  heart: { fontSize: normalize(35) }
+  heart: { fontSize: normalize(35) },
 })

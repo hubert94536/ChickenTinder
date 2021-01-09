@@ -168,7 +168,9 @@ export default class Notif extends Component {
               underlayColor="#fff"
               style={[
                 // screenStyles.smallButton,
-                this.state.activity ? { borderBottomColor: colors.hex } : { borderBottomColor: 'white' },
+                this.state.activity
+                  ? { borderBottomColor: colors.hex }
+                  : { borderBottomColor: 'white' },
                 { marginLeft: '5%', flex: 0.5, borderBottomWidth: 2 },
               ]}
               onPress={() => this.refs.swiper.scrollBy(-1)}
@@ -188,7 +190,9 @@ export default class Notif extends Component {
               underlayColor="#fff"
               style={[
                 // screenStyles.smallButton,
-                !this.state.activity ? { borderBottomColor: colors.hex } : { borderBottomColor: 'white' },
+                !this.state.activity
+                  ? { borderBottomColor: colors.hex }
+                  : { borderBottomColor: 'white' },
                 { marginHorizontal: '5%', flex: 0.5, borderBottomWidth: 2 },
               ]}
               onPress={() => this.refs.swiper.scrollBy(1)}

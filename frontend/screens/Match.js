@@ -43,9 +43,7 @@ export default class Match extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer} /*Header for header text and heart icon */>
-          <Text style={[screenStyles.textBold, styles.title]}>
-            WeChews you!
-          </Text>
+          <Text style={[screenStyles.textBold, styles.title]}>WeChews you!</Text>
           <Icon name="heart" style={[styles.general, styles.heart]} />
         </View>
         <View style={styles.restaurantCardContainer} /*Restaurant card*/>
@@ -82,7 +80,9 @@ export default class Match extends React.Component {
           style={[screenStyles.bigButton, styles.callButton]}
           onPress={() => Linking.openURL(`tel:${restaurant.phone}`)}
         >
-          <Text style={[screenStyles.bigButtonText, { color: colors.hex }]}>Call: {restaurant.phone}</Text>
+          <Text style={[screenStyles.bigButtonText, { color: colors.hex }]}>
+            Call: {restaurant.phone}
+          </Text>
         </TouchableHighlight>
         <Text /* Link to exit round */
           style={[screenStyles.bigButtonText, styles.exitRoundText]}
@@ -182,5 +182,5 @@ const styles = StyleSheet.create({
     height: '4%',
     marginBottom: '4%',
   },
-  white: { color: 'white' }
+  white: { color: 'white' },
 })

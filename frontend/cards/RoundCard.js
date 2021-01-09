@@ -65,28 +65,15 @@ export default class RoundCard extends React.Component {
           <Text numberOfLines={2} style={styles.title}>
             {this.props.card.name}
           </Text>
-          <View
-            style={[styles.main, styles.row, styles.center]}
-          >
-            <Image
-              source={getStarPath(this.props.card.rating)}
-              style={styles.rating}
-            />
-            <Text
-              numberOfLines={2}
-              style={[styles.reviews, styles.text]}
-            >
+          <View style={[styles.main, styles.row, styles.center]}>
+            <Image source={getStarPath(this.props.card.rating)} style={styles.rating} />
+            <Text numberOfLines={2} style={[styles.reviews, styles.text]}>
               {this.props.card.reviewCount} reviews
             </Text>
           </View>
           <View style={[styles.info, styles.row, styles.center]}>
-            <Text style={[styles.price, styles.text]}>
-              {this.props.card.price}
-            </Text>
-            <Text
-              numberOfLines={2}
-              style={[styles.categories, styles.text]}
-            >
+            <Text style={[styles.price, styles.text]}>{this.props.card.price}</Text>
+            <Text numberOfLines={2} style={[styles.categories, styles.text]}>
               • {this.evaluateCuisines(this.props.card.categories)}
             </Text>
           </View>
@@ -164,19 +151,19 @@ const styles = StyleSheet.create({
   yelpText: {
     fontFamily: imgStyles.font.fontFamily,
     color: 'black',
-    fontSize: normalize(18)
+    fontSize: normalize(18),
   },
-  yelpIcon: { 
+  yelpIcon: {
     color: 'red',
     fontSize: normalize(20),
-    marginLeft: '1%'
+    marginLeft: '1%',
   },
   main: { marginRight: '3%' },
-  name: { 
+  name: {
     marginLeft: '5%',
     justifyContent: 'flex-end',
     flex: 1,
-    marginBottom: '5%'
+    marginBottom: '5%',
   },
   rating: { marginRight: '2%', justifyContent: 'center' },
   reviews: {
@@ -192,5 +179,5 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'CircularStd-Book',
     color: 'white',
-  }
+  },
 })

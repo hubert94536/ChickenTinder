@@ -73,14 +73,8 @@ export default class TopThree extends React.Component {
     return (
       <View>
         <View style={styles.container}>
-          <Text
-            style={[ screenStyles.text, styles.title ]}
-          >
-            Top 3 Options
-          </Text>
-          <Text
-            style={styles.subtitle}
-          >
+          <Text style={[screenStyles.text, styles.title]}>Top 3 Options</Text>
+          <Text style={styles.subtitle}>
             Majority was not reached! Chews a restaurant for the group or randomize!
           </Text>
         </View>
@@ -88,25 +82,27 @@ export default class TopThree extends React.Component {
           <TouchableHighlight
             disabled={!this.state.isHost}
             underlayColor="#F9E2C2"
-            style={[ styles.center, this.state.chosen === 0 ? styles.cardSelected : styles.cardUnselected ]}
+            style={[
+              styles.center,
+              this.state.chosen === 0 ? styles.cardSelected : styles.cardUnselected,
+            ]}
             onPress={() => this.setState({ chosen: 0 })}
           >
             <View style={styles.card}>
               <ImageBackground
                 source={getCuisine(this.state.restaurants[0].categories)}
-                style={[ styles.center, this.state.chosen === 0 ? styles.imageSelected : styles.imageUnselected ]}
+                style={[
+                  styles.center,
+                  this.state.chosen === 0 ? styles.imageSelected : styles.imageUnselected,
+                ]}
               />
               <TouchableHighlight
                 style={[
                   styles.tinyButton,
-                  this.state.chosen === 0
-                    ? styles.chosenBackground
-                    : styles.neutralBackground,
+                  this.state.chosen === 0 ? styles.chosenBackground : styles.neutralBackground,
                 ]}
               >
-                <View
-                  style={styles.button}
-                >
+                <View style={styles.button}>
                   <Icon name="heart" style={[styles.buttonIcon, styles.white]} />
                   <Text style={[screenStyles.text, styles.categories, styles.white]}>
                     {this.state.restaurants[0].likes} likes
@@ -122,19 +118,14 @@ export default class TopThree extends React.Component {
                   underlayColor="transparent"
                   onPress={() => Linking.openURL(this.state.restaurants[0].url)}
                 >
-                  <View
-                    style={styles.yelpInfo}
-                  >
+                  <View style={styles.yelpInfo}>
                     <Text style={styles.yelp}>
                       {this.state.restaurants[0].reviewCount} reviews on yelp
                     </Text>
                     <FA name="yelp" style={styles.red} />
                   </View>
                 </TouchableHighlight>
-                <Text
-                  numberOfLines={1}
-                  style={[screenStyles.medButtonText, styles.name]}
-                >
+                <Text numberOfLines={1} style={[screenStyles.medButtonText, styles.name]}>
                   {this.state.restaurants[0].name}
                 </Text>
                 <Text numberOfLines={1} style={[screenStyles.smallButtonText, styles.categories]}>
@@ -163,14 +154,10 @@ export default class TopThree extends React.Component {
               <TouchableHighlight
                 style={[
                   styles.tinyButton,
-                  this.state.chosen === 1
-                    ? styles.chosenBackground
-                    : styles.neutralBackground,
+                  this.state.chosen === 1 ? styles.chosenBackground : styles.neutralBackground,
                 ]}
               >
-                <View
-                  style={styles.button}
-                >
+                <View style={styles.button}>
                   <Icon name="heart" style={[styles.buttonIcon, styles.white]} />
                   <Text style={[screenStyles.text, styles.categories, styles.white]}>
                     {this.state.restaurants[1].likes} likes
@@ -186,19 +173,14 @@ export default class TopThree extends React.Component {
                   underlayColor="transparent"
                   onPress={() => Linking.openURL(this.state.restaurants[1].url)}
                 >
-                  <View
-                    style={styles.yelpInfo}
-                  >
+                  <View style={styles.yelpInfo}>
                     <Text style={styles.yelp}>
                       {this.state.restaurants[1].reviewCount} reviews on yelp
                     </Text>
                     <FA name="yelp" style={styles.red} />
                   </View>
                 </TouchableHighlight>
-                <Text
-                  numberOfLines={1}
-                  style={[screenStyles.medButtonText, styles.name]}
-                >
+                <Text numberOfLines={1} style={[screenStyles.medButtonText, styles.name]}>
                   {this.state.restaurants[1].name}
                 </Text>
                 <Text numberOfLines={1} style={[screenStyles.smallButtonText, { fontSize: 15 }]}>
@@ -227,14 +209,10 @@ export default class TopThree extends React.Component {
               <TouchableHighlight
                 style={[
                   styles.tinyButtonRight,
-                  this.state.chosen === 2
-                    ? styles.chosenBackground
-                    : styles.neutralBackground,
+                  this.state.chosen === 2 ? styles.chosenBackground : styles.neutralBackground,
                 ]}
               >
-                <View
-                  style={styles.button}
-                >
+                <View style={styles.button}>
                   <Icon name="heart" style={[styles.buttonIcon, styles.white]} />
                   <Text style={[screenStyles.text, styles.categories, styles.white]}>
                     {this.state.restaurants[2].likes} likes
@@ -250,19 +228,14 @@ export default class TopThree extends React.Component {
                   underlayColor="transparent"
                   onPress={() => Linking.openURL(this.state.restaurants[2].url)}
                 >
-                  <View
-                    style={styles.yelpInfo}
-                  >
+                  <View style={styles.yelpInfo}>
                     <Text style={styles.yelp}>
                       {this.state.restaurants[2].reviewCount} reviews on yelp
                     </Text>
                     <FA name="yelp" style={styles.red} />
                   </View>
                 </TouchableHighlight>
-                <Text
-                  numberOfLines={1}
-                  style={[screenStyles.medButtonText, styles.name]}
-                >
+                <Text numberOfLines={1} style={[screenStyles.medButtonText, styles.name]}>
                   {this.state.restaurants[2].name}
                 </Text>
                 <Text numberOfLines={1} style={[screenStyles.smallButtonText, styles.categories]}>
@@ -274,13 +247,9 @@ export default class TopThree extends React.Component {
         </View>
         {this.state.isHost && (
           <TouchableHighlight underlayColor="transparent" onPress={() => this.randomize()}>
-            <View
-              style={styles.randomButton}
-            >
+            <View style={styles.randomButton}>
               <Ion name="shuffle" style={styles.randomIcon} />
-              <Text style={[screenStyles.text, styles.randomText]}>
-                Randomize for me
-              </Text>
+              <Text style={[screenStyles.text, styles.randomText]}>Randomize for me</Text>
             </View>
           </TouchableHighlight>
         )}
@@ -288,23 +257,22 @@ export default class TopThree extends React.Component {
           <TouchableHighlight
             underlayColor="white"
             onPress={() => this.goMatch()}
-            style={[screenStyles.bigButton, { borderColor: colors.hex, backgroundColor: colors.hex }]}
+            style={[
+              screenStyles.bigButton,
+              { borderColor: colors.hex, backgroundColor: colors.hex },
+            ]}
           >
-            <Text
-              style={[ screenStyles.medButtonText, styles.submit, styles.white ]}
-            >
-              Submit
-            </Text>
+            <Text style={[screenStyles.medButtonText, styles.submit, styles.white]}>Submit</Text>
           </TouchableHighlight>
         )}
         {!this.state.isHost && (
           <TouchableHighlight
             disabled={!this.state.isHost}
             underlayColor="white"
-            style={[ screenStyles.bigButton, styles.waiting ]}
+            style={[screenStyles.bigButton, styles.waiting]}
           >
             <Text
-              style={[ screenStyles.medButtonText, styles.waitingText, styles.white, styles.submit ]}
+              style={[screenStyles.medButtonText, styles.waitingText, styles.white, styles.submit]}
             >
               Waiting for Host...
             </Text>
@@ -315,29 +283,29 @@ export default class TopThree extends React.Component {
   }
 }
 
-// TopThree.propTypes = {
-//   navigation: PropTypes.shape({
-//     navigate: PropTypes.func.isRequired,
-//     replace: PropTypes.func,
-//     state: PropTypes.shape({
-//       params: PropTypes.shape({
-//         top: PropTypes.array,
-//         random: PropTypes.number,
-//         host: PropTypes.string,
-//         code: PropTypes.number,
-//         isHost: PropTypes.bool,
-//       }),
-//     }),
-//   }),
-// }
+TopThree.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+    replace: PropTypes.func,
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        top: PropTypes.array,
+        random: PropTypes.number,
+        host: PropTypes.string,
+        code: PropTypes.number,
+        isHost: PropTypes.bool,
+      }),
+    }),
+  }),
+}
 
 const styles = StyleSheet.create({
   container: { margin: '7%' },
-  title: { 
+  title: {
     fontSize: normalize(33),
     textAlign: 'center',
     marginBottom: '3%',
-    fontWeight: 'bold' 
+    fontWeight: 'bold',
   },
   subtitle: {
     fontFamily: font,
@@ -349,41 +317,41 @@ const styles = StyleSheet.create({
   height: { height: '50%' },
   center: { alignSelf: 'center' },
   card: { flex: 1, justifyContent: 'space-between' },
-  white: {color:'white'},
+  white: { color: 'white' },
   chosenBackground: { backgroundColor: colors.hex },
   neutralBackground: { backgroundColor: '#c4c4c4' },
-  buttonIcon: { 
+  buttonIcon: {
     fontSize: normalize(18),
     margin: '1%',
-    marginRight:'3%' 
+    marginRight: '3%',
   },
   margin: { margin: '5%' },
-  yelpInfo: { 
+  yelpInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center' 
+    justifyContent: 'center',
   },
   yelp: { fontSize: normalize(12) },
   red: { color: 'red' },
   name: {
-    fontSize: normalize(20), 
-    fontWeight: 'bold'
+    fontSize: normalize(20),
+    fontWeight: 'bold',
   },
   categories: { fontSize: normalize(15) },
   left: {
     top: '30%',
     left: '5%',
-    alignSelf: 'flex-start'
+    alignSelf: 'flex-start',
   },
   right: {
     top: '30%',
     right: '5%',
-    alignSelf: 'flex-end'
+    alignSelf: 'flex-end',
   },
   randomIcon: {
     fontSize: normalize(50),
     color: colors.hex,
-    marginRight: '2%'
+    marginRight: '2%',
   },
   randomButton: {
     flexDirection: 'row',
@@ -394,16 +362,16 @@ const styles = StyleSheet.create({
   randomText: { fontSize: normalize(23), fontWeight: 'bold' },
   submit: {
     fontFamily: font,
-    padding: '2%'
+    padding: '2%',
   },
   waiting: {
     borderColor: colors.hex,
     backgroundColor: colors.hex,
     opacity: 0.8,
-    marginTop: '25%' 
+    marginTop: '25%',
   },
   waitingText: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   imageSelected: {
     height: height * 0.18,
