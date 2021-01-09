@@ -1,12 +1,11 @@
 import React from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { EMAIL, NAME, PHOTO, USERNAME, ID, PHONE, DEFPHOTO } from 'react-native-dotenv'
+import { EMAIL, NAME, PHOTO, USERNAME, PHONE } from 'react-native-dotenv'
 import { Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
+import PropTypes from 'prop-types'
 import accountsApi from '../apis/accountsApi.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
-import PropTypes from 'prop-types'
-import ImagePicker from 'react-native-image-crop-picker'
 import defImages from '../assets/images/defImages.js'
 
 const hex = screenStyles.hex.color
@@ -23,136 +22,92 @@ export default class createAccount extends React.Component {
       username: '',
       phone: '',
       email: '',
-      photo: '',
-      defImg: '',
-      defImgInd: 0,
-      validEmail: false,
-      validEmailFormat: false,
-      validUsername: false,
+      photo: defImages[Math.floor(Math.random() * defImages.length)].toString(),
+      validEmail: true,
+      validEmailFormat: true,
+      validUsername: true,
     }
-  }
-
-  componentDidMount() {
-    var index = Math.floor(Math.random() * defImages.length)
-    AsyncStorage.multiGet([EMAIL, ID, NAME, PHONE]).then((res) => {
-      this.setState(
-        {
+    AsyncStorage.multiGet([EMAIL, NAME, PHONE])
+      .then((res) => {
+        this.setState({
           email: res[0][1],
-          id: res[1][1],
-          name: res[2][1],
-          phone: res[3][1],
-          photo: defImages[index].toString(),
-        },
-        () => {
-          this.checkEmailValidity(this.state.email)
-          this.checkUsernameValidity(this.state.username)
-          // accountsApi.deleteUser(this.state.id)
-        },
-      )
-    })
-    AsyncStorage.setItem(DEFPHOTO, this.state.defImgInd.toString())
+          name: res[1][1],
+          phone: res[2][1],
+        })
+      })
+      .catch(() => {
+        this.setState({ errorAlert: true })
+      })
   }
 
   //  checks whether or not the username can be set
   handleClick() {
-    accountsApi
-      .checkUsername(this.state.username)
+    AsyncStorage.multiSet([
+      [USERNAME, this.state.username],
+      [PHOTO, this.state.photo],
+      [NAME, this.state.name],
+      [EMAIL, this.state.email],
+      [PHONE, this.state.phone],
+    ])
+    return accountsApi
+      .createFBUser(
+        this.state.name,
+        this.state.username,
+        this.state.email,
+        this.state.photo,
+        this.state.phone,
+      )
       .then(() => {
-        AsyncStorage.multiSet([
-          [USERNAME, this.state.username],
-          [PHOTO, this.state.photo],
-          [NAME, this.state.name],
-          [EMAIL, this.state.email],
-          [PHONE, this.state.phone],
-          [DEFPHOTO, this.state.defImgInd.toString()],
-        ])
-        return accountsApi.createFBUser(
-          this.state.name,
-          this.state.username,
-          this.state.email,
-          this.state.photo,
-          this.state.phone
-        )
-      })
-      .then(() => {
-        AsyncStorage.setItem(PHOTO, this.state.photo)
         this.props.navigation.replace('Home')
       })
-      .catch((error) => {
-        if (error === 404) {
-          this.setState({ takenAlert: true })
-        } else {
-          this.setState({ errorAlert: true })
-        }
+      .catch(() => {
+        this.setState({ errorAlert: true })
       })
   }
 
-  altHandleClick() {
-    this.props.navigation.replace('Home')
-  }
-
-  // TODO: Change from photo picker from phone gallery to our default photos
-  uploadPhoto() {
-    ImagePicker.openPicker({
-      width: 150,
-      height: 150,
-      cropping: true,
-    })
-      .then((image) => {
-        this.setState({
-          photo: image.path,
-          photoData: {
-            uri: image.path,
-            type: image.mime,
-            name: 'avatar',
-          },
-        })
-      })
-      .catch((error) => {
-        // handle this later on
-        console.log(error)
-      })
-  }
-
-  checkEmailValidity(email) {
+  checkEmailValidity() {
     const reg = /^[ ]*([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})[ ]*$/i
-    if (email !== null && reg.test(email) === false) {
+    if (this.state.email === '' || reg.test(this.state.email) === false) {
       this.setState({ validEmailFormat: false })
     } else {
       this.setState({ validEmailFormat: true })
+      accountsApi
+        .checkEmail(this.state.email)
+        .then(() => {
+          this.setState({ validEmail: true })
+        })
+        .catch(() => {
+          this.setState({ validEmail: false })
+        })
     }
-
-    accountsApi
-      .checkEmail(email)
-      .then(() => {
-        this.setState({ validEmail: true })
-      })
-      .catch((error) => {
-        this.setState({ validEmail: false })
-      })
   }
 
-  checkUsernameValidity(username) {
-    accountsApi
-      .checkUsername(username)
-      .then(() => {
-        this.setState({ validUsername: true })
-      })
-      .catch((error) => {
-        this.setState({ validUsername: false })
-      })
+  checkUsernameValidity() {
+    if (this.state.username === '') {
+      this.setState({ validUsername: false })
+    } else {
+      console.log
+      accountsApi
+        .checkUsername(this.state.username)
+        .then(() => {
+          this.setState({ validUsername: true })
+        })
+        .catch(() => {
+          this.setState({ validUsername: false })
+        })
+    }
   }
 
   render() {
     return (
       <View style={[screenStyles.mainContainer]}>
-        <Text
-          style={[screenStyles.textBold, screenStyles.title, styles.title]}
-        >
+        <Text style={[screenStyles.textBold, screenStyles.title, styles.title]}>
           Create Account
         </Text>
         <Text style={[screenStyles.textBook, styles.mediumText]}>Account Verified!</Text>
-        <Text style={[screenStyles.textBook, styles.mediumText]}>Finish setting up your account</Text>
+        <Text style={[screenStyles.textBook, styles.mediumText]}>
+          Finish setting up your account
+        </Text>
 
         {this.state.photo.includes('file') ? (
           <Image
@@ -165,7 +120,9 @@ export default class createAccount extends React.Component {
           <Image source={this.state.photo} style={screenStyles.avatar} />
         )}
 
-        <Text style={[screenStyles.textBook, styles.fieldName , {marginTop: '5%'}]}>Display Name</Text>
+        <Text style={[screenStyles.textBook, styles.fieldName, { marginTop: '5%' }]}>
+          Display Name
+        </Text>
         <TextInput
           style={[screenStyles.textBook, styles.fieldText]}
           textAlign="left"
@@ -173,16 +130,21 @@ export default class createAccount extends React.Component {
             this.setState({ name })
           }}
           value={this.state.name}
+          maxLength={15}
         />
 
-<Text style={[screenStyles.textBook, styles.fieldName]}>Username</Text>
+        <Text style={[screenStyles.textBook, styles.fieldName]}>Username</Text>
         <TextInput
-          style={[screenStyles.textBook, styles.fieldText, { marginBottom: this.state.validUsername ? '3%' : '0%' }]}
+          style={[
+            screenStyles.textBook,
+            styles.fieldText,
+            { marginBottom: this.state.validUsername ? '3%' : '0%' },
+          ]}
           textAlign="left"
           onChangeText={(username) => {
-            this.setState({ username })
-            this.checkUsernameValidity(username)
+            this.setState({ username: username.split(' ').join('_') })
           }}
+          onBlur={() => this.checkUsernameValidity()}
           value={this.state.username}
           maxLength={15}
         />
@@ -204,14 +166,15 @@ export default class createAccount extends React.Component {
         <Text style={[screenStyles.textBook, styles.fieldName]}>Email</Text>
         <TextInput
           style={[
-            screenStyles.textBook, styles.fieldText,
+            screenStyles.textBook,
+            styles.fieldText,
             { marginBottom: this.state.validEmail && this.state.validEmailFormat ? '3%' : '0%' },
           ]}
           textAlign="left"
           onChangeText={(email) => {
             this.setState({ email: email })
-            this.checkEmailValidity(email)
           }}
+          onBlur={() => this.checkEmailValidity()}
           value={this.state.email}
         />
 
@@ -250,8 +213,7 @@ createAccount.propTypes = {
   navigation: PropTypes.object,
 }
 const styles = StyleSheet.create({
-  title:
-  {
+  title: {
     fontSize: normalize(25),
     marginTop: '10%',
     marginBottom: '5%',

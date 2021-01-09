@@ -9,7 +9,7 @@ const Accounts = sequelize.define('accounts', {
     primaryKey: true,
   },
   name: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(15),
     allowNull: false,
   },
   username: {
@@ -29,7 +29,7 @@ const Accounts = sequelize.define('accounts', {
     type: DataTypes.STRING(15),
     unique: true,
   },
-  photo: DataTypes.INTEGER,
+  photo: DataTypes.STRING(3),
 })
 
 const Friends = sequelize.define('friends', {

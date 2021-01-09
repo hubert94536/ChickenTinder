@@ -21,7 +21,7 @@ const createNotif = async (req) => {
 // Delete a notification
 const deleteNotif = async (req, res) => {
   try {
-    const id = req.params.id
+    const id = req.body.id
     const destroyed = await Notifications.destroy({
       where: { id: id },
     })
@@ -56,7 +56,7 @@ const getAllNotifs = async (req, res) => {
 // Get all user notifications
 const getNotifs = async (req, res) => {
   try {
-    const uid = req.authId 
+    const uid = req.authId
     const notifs = await Notifications.findAll({
       where: { receiver_uid: uid },
       include: [

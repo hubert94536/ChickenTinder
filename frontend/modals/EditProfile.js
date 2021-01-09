@@ -48,22 +48,11 @@ export default class EditProfile extends React.Component {
           />
           <View style={styles.modalContent}>
             <Text style={[screenStyles.text, styles.titleText]}>Edit Profile</Text>
-
-            {this.props.image.includes('file') || this.props.image.includes('http') ? (
-              <Image
-                style={styles.pfp}
-                source={{
-                  uri: this.props.image,
-                }}
-              />
-            ) : (
-              <Image source={this.props.image} style={styles.pfp} />
-            )}
-            <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: '4%' }}>
-            </View>
-            <Text style={[screenStyles.text, styles.nameText]}>
-              Display name
-            </Text>
+            <Image source={this.props.image} style={styles.pfp} />
+            <View
+              style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: '4%' }}
+            ></View>
+            <Text style={[screenStyles.text, styles.nameText]}>Display name</Text>
             <TextInput
               style={[screenStyles.text, screenStyles.input, styles.input]}
               underlineColorAndroid="transparent"
@@ -72,7 +61,6 @@ export default class EditProfile extends React.Component {
               keyboardType="visible-password"
               value={this.state.nameValue}
               onChangeText={(text) => this.changeName(text)}
-              // onSubmitEditing={() => this.makeChanges()}
             />
             <Text style={[screenStyles.text, styles.nameText]}>Username</Text>
             <TextInput
@@ -82,26 +70,15 @@ export default class EditProfile extends React.Component {
               autoCorrect={false}
               keyboardType="visible-password"
               value={this.state.usernameValue}
-              onChangeText={(text) => this.changeUser(text)}
-              // onSubmitEditing={() => this.makeChanges()}
+              onChangeText={(text) => this.changeUser(text.split(' ').join('_'))}
             />
           </View>
           <TouchableHighlight
             style={[screenStyles.medButton, styles.saveButton]}
             onPress={() => this.props.makeChanges()}
             underlayColor="white"
-            // onShowUnderlay={() => this.setState({ changeName: true })}
-            // onHideUnderlay={() => this.setState({ changeName: false })}
           >
-            <Text
-              style={[
-                screenStyles.smallButtonText,
-                styles.saveText,
-                //this.state.changeName ? { color: hex } : { color: 'white' },
-              ]}
-            >
-              Save Changes
-            </Text>
+            <Text style={[screenStyles.smallButtonText, styles.saveText]}>Save Changes</Text>
           </TouchableHighlight>
         </View>
       </Modal>
@@ -155,12 +132,8 @@ EditProfile.propTypes = {
   name: PropTypes.string,
   username: PropTypes.string,
   image: PropTypes.string,
-  defImg: PropTypes.string,
   userChange: PropTypes.func,
   nameChange: PropTypes.func,
-  dontSave: PropTypes.func,
-  uploadPhoto: PropTypes.func,
-  removePhoto: PropTypes.func,
   makeChanges: PropTypes.func,
   visible: PropTypes.bool,
 }

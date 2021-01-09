@@ -7,7 +7,6 @@ import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
-const hex = '#F15763'
 const font = 'CircularStd-Medium'
 
 export default class Alert extends Component {

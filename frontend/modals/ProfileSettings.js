@@ -71,9 +71,7 @@ export default class Settings extends React.Component {
             </View>
           </View>
           <View style={[styles.bodyContainer, styles.bodyMargin]}>
-            <Text style={[styles.subTitle, screenStyles.text]}>
-              Phone Number
-            </Text>
+            <Text style={[styles.subTitle, screenStyles.text]}>Phone Number</Text>
             <TextInput
               style={[screenStyles.text, screenStyles.input, styles.textInput]}
               editable={false}
@@ -94,7 +92,6 @@ export default class Settings extends React.Component {
                   blurAmount={10}
                   reducedTransparencyFallbackColor="black"
                 />
-                ,
                 <Alert
                   title="Delete account?"
                   body="By deleting your account, you will lose all of your data"
@@ -105,7 +102,6 @@ export default class Settings extends React.Component {
                   press={() => this.handleDelete()}
                   cancel={() => this.cancelDelete()}
                 />
-                ,
               </View>
             )}
             {this.state.errorAlert && (

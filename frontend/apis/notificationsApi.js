@@ -1,22 +1,22 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { ID } from 'react-native-dotenv'
-import axios from 'axios'
+import Axios from 'axios'
+import Firebase from 'firebase'
 
-var myId = ''
-
-AsyncStorage.getItem(UID).then((res) => {
-  myId = res
+const notificationsApi = Axios.create({
+  // baseURL: 'https://wechews.herokuapp.com',
+  baseURL: 'http://172.16.0.10:5000',
 })
 
-const notificationsApi = axios.create({
-  // baseURL: 'https://wechews.herokuapp.com',
-  baseURL: 'http://172.16.0.10:5000'
+// Set the AUTH token for any request
+notificationsApi.interceptors.request.use(async function (config) {
+  const token = await Firebase.auth().currentUser.getIdToken()
+  config.headers.authorization = token ? `Bearer ${token}` : ''
+  return config
 })
 
 // gets a users friends/requests
 const getNotifs = async () => {
   return notificationsApi
-    .get(`/notifications/user/${myId}`)
+    .get(`/notifications`)
     .then((res) => {
       return {
         status: res.status,
@@ -42,7 +42,9 @@ const getNotifs = async () => {
 // remove a notification
 const removeNotif = async (id) => {
   return notificationsApi
-    .delete(`/notifications/${id}`)
+    .delete(`/notifications`, {
+      id: id,
+    })
     .then((res) => {
       return res.status
     })

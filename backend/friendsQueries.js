@@ -6,8 +6,8 @@ var attributes = ['username', 'photo', 'name']
 // Accept a friend request
 const acceptRequest = async (req, res) => {
   try {
-    const main = req.authId 
-    const friend = req.params.uid
+    const main = req.authId
+    const friend = req.body.friend
     // set status to friends for friend and main account uids
     const mainAccount = await Friends.update(
       { status: 'friends' },
@@ -55,7 +55,7 @@ const acceptRequest = async (req, res) => {
 const createFriends = async (req, res) => {
   try {
     const main = req.authId
-    const friend = req.params.uid
+    const friend = req.body.friend
     // create pending and requested friendship statuses
     await Friends.bulkCreate([
       { main_uid: main, status: 'requested', friend_uid: friend, include: [Accounts] },
@@ -79,7 +79,7 @@ const createFriends = async (req, res) => {
 const deleteFriendship = async (req, res) => {
   try {
     const main = req.authId
-    const friend = req.params.uid
+    const friend = req.body.friend
     // delete friendship rows for both main and friend
     const destroyed = await Friends.destroy({
       where: {
@@ -122,7 +122,7 @@ const getFriends = async (req, res) => {
 const createTestFriends = async (req, res) => {
   try {
     const main = req.body.uid
-    const friend = req.params.uid
+    const friend = req.body.friend
     // create pending and requested friendship statuses
     await Friends.bulkCreate([
       { main_uid: main, status: 'requested', friend_uid: friend, include: [Accounts] },
@@ -145,7 +145,7 @@ const createTestFriends = async (req, res) => {
 const acceptTestRequest = async (req, res) => {
   try {
     const main = req.body.uid
-    const friend = req.params.uid
+    const friend = req.body.friend
     // set status to friends for friend and main account uids
     const mainAccount = await Friends.update(
       { status: 'friends' },

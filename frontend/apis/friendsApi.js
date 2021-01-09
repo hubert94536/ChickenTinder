@@ -1,35 +1,22 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { UID } from 'react-native-dotenv'
-import axios from 'axios'
+import Axios from 'axios'
+import Firebase from 'firebase'
 
-var myId = ''
-
-AsyncStorage.getItem(UID).then((res) => {
-  myId = res
-})
-
-// uncomment when tokens are set up
-// var tokenHeaders = {};
-// AsyncStorage.multiGet([REFRESH_TOKEN, ACCESS_TOKEN]).then((res) => {
-//   tokenHeaders = {
-//     'x-access-token': res[0][1],
-//     'x-refresh-token': res[1][1]
-//   }
-// })
-
-const friendsApi = axios.create({
+const friendsApi = Axios.create({
   // baseURL: 'https://wechews.herokuapp.com',
   baseURL: 'http://192.168.0.23:5000',
-  
-  // uncomment when tokens are set up
-  // headers: tokenHeaders
+})
+// Set the AUTH token for any request
+friendsApi.interceptors.request.use(async function (config) {
+  const token = await Firebase.auth().currentUser.getIdToken()
+  config.headers.authorization = token ? `Bearer ${token}` : ''
+  return config
 })
 
 // creates friendship
 const createFriendshipTest = async (main, friend) => {
   return friendsApi
-    .post('/friendships', {
-      main: main,
+    .post(`/test/friendships`, {
+      uid: main,
       friend: friend,
     })
     .then((res) => {
@@ -40,9 +27,11 @@ const createFriendshipTest = async (main, friend) => {
     })
 }
 
-const createFriendship = async (uid, friend) => {
+const createFriendship = async (friend) => {
   return friendsApi
-    .post(`/friendships/${uid}/${friend}`)
+    .post(`/friendships`, {
+      friend: friend,
+    })
     .then((res) => {
       return res.status
     })
@@ -52,9 +41,9 @@ const createFriendship = async (uid, friend) => {
 }
 
 // gets a users friends/requests
-const getFriends = async (uid) => {
+const getFriends = async () => {
   return friendsApi
-    .get(`/friendships/${uid}`)
+    .get(`/friendships`)
     .then((res) => {
       return {
         status: res.status,
@@ -76,9 +65,11 @@ const getFriends = async (uid) => {
 }
 
 // accept a friend request
-const acceptFriendRequest = async (uid, friend) => {
+const acceptFriendRequest = async (friend) => {
   return friendsApi
-    .put(`/friendships/${uid}/${friend}`)
+    .put(`/friendships`, {
+      friend: friend,
+    })
     .then((res) => {
       return res.status
     })
@@ -88,9 +79,11 @@ const acceptFriendRequest = async (uid, friend) => {
 }
 
 // remove a friendship
-const removeFriendship = async (uid, friend) => {
+const removeFriendship = async (friend) => {
   return friendsApi
-    .delete(`/friendships/${uid}/${friend}`)
+    .delete(`/friendships`, {
+      friend: friend,
+    })
     .then((res) => {
       return res.status
     })

@@ -1,16 +1,13 @@
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
 import friendsApi from '../apis/friendsApi.js'
-import { ID } from 'react-native-dotenv'
 import imgStyles from '../../styles/cardImage.js'
 import normalize from '../../styles/normalize.js'
 
-var id = ''
 export default class Card extends React.Component {
   constructor(props) {
     super(props)
@@ -20,14 +17,11 @@ export default class Card extends React.Component {
       status: this.props.status,
       pressed: false,
     }
-    AsyncStorage.getItem(ID).then((res) => {
-      id = res
-    })
   }
 
   async deleteFriend() {
     friendsApi
-      .removeFriendship(id, this.props.id)
+      .removeFriendship(this.props.id)
       .then(() => {
         this.setState({ deleteFriend: false })
         var filteredArray = this.props.total.filter((item) => {
@@ -40,7 +34,7 @@ export default class Card extends React.Component {
 
   async acceptFriend() {
     friendsApi
-      .acceptFriendRequest(id, this.props.id)
+      .acceptFriendRequest(this.props.id)
       .then(() => {
         this.setState({ requested: 'friends' })
       })
@@ -49,7 +43,7 @@ export default class Card extends React.Component {
 
   async addFriend() {
     friendsApi
-      .createFriendship(id, this.props.id)
+      .createFriendship(this.props.id)
       .then(() => {
         this.setState({ requested: 'requested' })
       })
@@ -58,7 +52,7 @@ export default class Card extends React.Component {
 
   async rejectFriend() {
     friendsApi
-      .removeFriendship(id, this.props.id)
+      .removeFriendship(this.props.id)
       .then(() => {
         this.setState({ requested: 'add' })
       })
@@ -69,16 +63,7 @@ export default class Card extends React.Component {
     const renderOption = this.props.currentUser !== this.props.username
     return (
       <View style={styles.container}>
-        {this.props.image.includes('file') || this.props.image.includes('http') ? (
-          <Image
-            source={{
-              uri: this.props.image,
-            }}
-            style={imgStyles.button}
-          />
-        ) : (
-          <Image source={this.props.image} style={imgStyles.button} />
-        )}
+        <Image source={this.props.image} style={imgStyles.button} />
         <View style={styles.info}>
           <Text style={[imgStyles.font, styles.name]}>{this.props.name}</Text>
           <Text style={[imgStyles.font, imgStyles.hex]}>@{this.props.username}</Text>

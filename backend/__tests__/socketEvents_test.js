@@ -1,12 +1,10 @@
 const io = require('socket.io-client')
-const redis = require('redis') //
+const redis = require('redis')
 const { promisify } = require('util')
 
 jest.mock('../yelpQuery.js')
 /* Testing sockets functionality with Redis
-Disclaimer: if test cases fail, comment out expect.assertions()
-for more information. Test cases will occasionally fail, run test
-suite again to double check.
+WARNING: Tests are outdated with auth, need to mock auth
 */
 describe('socket with Redis', () => {
   var socket

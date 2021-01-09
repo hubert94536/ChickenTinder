@@ -4,10 +4,10 @@ const joi = require('joi')
 // Check request body for creating account
 function checkCreateAccounts(req, res, next) {
   const createAccountsSchema = joi.object().keys({
-    name: joi.string().required(),
-    username: joi.string().required(),
+    name: joi.string().max(15).required(),
+    username: joi.string().max(15).required(),
     email: joi.string().email().required(),
-    photo: joi.number().integer().required(),
+    photo: joi.string().max(3).required(),
     phone_number: joi.string().min(7).max(15),
   })
   validateRequest(req, next, createAccountsSchema)
@@ -18,46 +18,63 @@ function checkUpdateAccount(req, res, next) {
   const updateAccountSchema = joi
     .object()
     .keys({
-      name: joi.string(),
-      username: joi.string(),
+      name: joi.string().max(15),
+      username: joi.string().max(15),
       email: joi.string().email(),
-      photo: joi.number().integer(),
+      photo: joi.string().max(3),
       phone_number: joi.string().min(7).max(15),
     })
     .or('name', 'username', 'email', 'photo', 'phone_number')
   validateRequest(req, next, updateAccountSchema)
 }
 
-// Check email is passed in route
-const emailSchema = joi.object().keys({
-  email: joi.string().email().required(),
-})
+// Check request body for email
+function checkEmail(req, res, next) {
+  const emailSchema = joi.object().keys({
+    email: joi.string().email().required(),
+  })
+  validateRequest(req, next, emailSchema)
+}
 
-// Check phone number is passed in route
-const phoneNumberSchema = joi.object().keys({
-  phone_number: joi.string().min(7).max(15).required(),
-})
+// Check request body for phone number
+function checkPhoneNumber(req, res, next) {
+  const phoneNumberSchema = joi.object().keys({
+    phone_number: joi.string().min(7).max(15).required(),
+  })
+  validateRequest(req, next, phoneNumberSchema)
+}
 
-// Check string text is passed in route
-const textSchema = joi.object().keys({
-  text: joi.string().required(),
-})
+// Check request body for search string
+function checkSearch(req, res, next) {
+  const searchSchema = joi.object().keys({
+    text: joi.string().max(15).required(),
+  })
+  validateRequest(req, next, searchSchema)
+}
 
 // Check username is passed in route
-const usernameSchema = joi.object().keys({
-  username: joi.string().required(),
-})
-
+function checkUsername(req, res, next) {
+  const usernameSchema = joi.object().keys({
+    username: joi.string().max(15).required(),
+  })
+  validateRequest(req, next, usernameSchema)
+}
 // Friendship table schema
 // Check friend uid is passed in
-const uidSchema = joi.object().keys({
-  uid: joi.string().required(),
-})
+function checkFriendship(req, res, next) {
+  const friendshipSchema = joi.object().keys({
+    friend: joi.string().required(),
+  })
+  validateRequest(req, next, friendshipSchema)
+}
 
-// Check notification id is passed in route
-const idSchema = joi.object().keys({
-  id: joi.number().required(),
-})
+// Check notification id is passed in
+function checkNotif(req, res, next) {
+  const notifSchema = joi.object().keys({
+    id: joi.number().required(),
+  })
+  validateRequest(req, next, notifSchema)
+}
 
 //General helper function for validating schema
 function validateRequest(req, next, schema) {
@@ -79,11 +96,11 @@ function validateRequest(req, next, schema) {
 
 module.exports = {
   checkCreateAccounts,
+  checkEmail,
+  checkFriendship,
+  checkNotif,
+  checkPhoneNumber,
+  checkSearch,
   checkUpdateAccount,
-  emailSchema,
-  uidSchema,
-  idSchema,
-  phoneNumberSchema,
-  textSchema,
-  usernameSchema,
+  checkUsername,
 }

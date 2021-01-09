@@ -1,40 +1,34 @@
+import Firebase from 'firebase'
 import io from 'socket.io-client'
 
-var myId = ''
-var myName = ''
-var myPhoto = ''
-var myUsername = ''
 var socket = null
 
-const connect = (uid, name, photo, username) => {
-  myId = uid
-  myName = name
-  myPhoto = photo
-  myUsername = username
+const connect = () => {
   // socket = io('https://wechews.herokuapp.com', {
   //   query: `uid=${myId}`,
   // })
-  socket = io('http://192.168.0.23:5000', {
-    query: `uid=${myId}`,
+  socket = io('http://192.168.0.23:5000')
+  socket.on('connect', async () => {
+    console.log('connect')
+    const token = await Firebase.auth().currentUser.getIdToken()
+    socket.emit('authentication', { token: token })
+  })
+  socket.on('unauthorized', (reason) => {
+    console.log('Unauthorized:', reason)
+    socket.disconnect()
+  })
+  socket.on('disconnect', (reason) => {
+    console.log('Disconnect:', reason)
   })
 }
 
 const createRoom = () => {
-  socket.emit('create', {
-    uid: myId,
-    name: myName,
-    username: myUsername,
-    photo: myPhoto,
-  })
+  socket.emit('create')
 }
 
 // sends invite to an uid
 const sendInvite = (receiver, code) => {
   socket.emit('invite', {
-    uid: myId,
-    name: myName,
-    username: myUsername,
-    photo: myPhoto,
     receiver: receiver,
     code: code,
   })
@@ -42,10 +36,6 @@ const sendInvite = (receiver, code) => {
 
 const joinRoom = (code) => {
   socket.emit('join', {
-    uid: myId,
-    name: myName,
-    username: myUsername,
-    photo: myPhoto,
     code: code,
   })
 }
@@ -53,7 +43,6 @@ const joinRoom = (code) => {
 const leaveRoom = (code) => {
   socket.emit('leave', {
     code: code,
-    uid: myId,
   })
 }
 
@@ -73,7 +62,6 @@ const submitFilters = (code, categories) => {
   socket.emit('submit', {
     code: code,
     categories: categories,
-    uid: myId,
   })
 }
 
@@ -84,7 +72,7 @@ const likeRestaurant = (code, resId) => {
 
 // let everyone know you are done swiping
 const finishedRound = (code) => {
-  socket.emit('finished', { code: code, uid: myId })
+  socket.emit('finished', { code: code })
 }
 
 // send chosen restaurant

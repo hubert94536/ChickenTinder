@@ -88,15 +88,13 @@ export default StyleSheet.create({
     alignSelf: 'center',
     margin: '1.5%',
   },
-  mainContainer:
-  { 
-    backgroundColor: 'white', 
-    flex: 1 
+  mainContainer: {
+    backgroundColor: 'white',
+    flex: 1,
   },
-  contentContainer:
-  { 
-    flexDirection: 'row', 
-    alignSelf: 'center' 
+  contentContainer: {
+    flexDirection: 'row',
+    alignSelf: 'center',
   },
   hex: {
     color: '#F15763',

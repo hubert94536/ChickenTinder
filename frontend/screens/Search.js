@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
 import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native'
-import { ID, USERNAME } from 'react-native-dotenv'
+import { USERNAME } from 'react-native-dotenv'
 import { BlurView } from '@react-native-community/blur'
 import { SearchBar } from 'react-native-elements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
 import accountsApi from '../apis/accountsApi.js'
-// import Card from '../cards/SearchCard.js'
 import Card from '../cards/Card.js'
 import Alert from '../modals/Alert.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -15,7 +14,6 @@ import TabBar from '../Nav.js'
 
 const font = 'CircularStd-Medium'
 var username = ''
-var id = ''
 AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 
 export default class Search extends Component {
@@ -29,11 +27,10 @@ export default class Search extends Component {
       deleteFriendName: '',
       value: '',
     }
-    AsyncStorage.multiGet([ID, USERNAME]).then((res) => {
-      id = res[0][1]
-      username = res[1][1]
+    AsyncStorage.getItem(USERNAME).then((res) => {
+      username = res
       friendsApi
-        .getFriends(id)
+        .getFriends()
         .then((res) => {
           var friendsMap = new Object()
           for (var friend in res.friendList) {
@@ -87,7 +84,7 @@ export default class Search extends Component {
   async removeRequest(friend, newArr, status) {
     if (!status) {
       friendsApi
-        .removeFriendship(id, friend)
+        .removeFriendship(friend)
         .then(() => {
           this.setState({ friends: newArr })
         })

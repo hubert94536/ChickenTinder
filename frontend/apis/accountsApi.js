@@ -1,18 +1,36 @@
-import { ID_TOKEN } from 'react-native-dotenv'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import axios from 'axios'
+import Axios from 'axios'
+import Firebase from 'firebase'
 
-const accountsApi = axios.create({
+const accountsApi = Axios.create({
   // baseURL: 'https://wechews.herokuapp.com',
   baseURL: 'http://192.168.0.23:5000',
 })
 
 // Set the AUTH token for any request
 accountsApi.interceptors.request.use(async function (config) {
-  const token = await AsyncStorage.getItem(ID_TOKEN)
-  config.headers.authorization =  token ? `Bearer ${token}` : ''
+  const token = await Firebase.auth().currentUser.getIdToken()
+  config.headers.authorization = token ? `Bearer ${token}` : ''
   return config
-});
+})
+
+// creates user
+const createFBUserTest = async (name, uid, username, email, photo, phone) => {
+  return accountsApi
+    .post('/test/accounts', {
+      uid: uid,
+      name: name,
+      username: username,
+      email: email,
+      photo: photo,
+      phone_number: phone,
+    })
+    .then((res) => {
+      return res.status
+    })
+    .catch((error) => {
+      Promise.reject(error.response)
+    })
+}
 
 // creates user
 const createFBUser = async (name, username, email, photo, phone) => {
@@ -22,7 +40,7 @@ const createFBUser = async (name, username, email, photo, phone) => {
       username: username,
       email: email,
       photo: photo,
-      phone_number: phone
+      phone_number: phone,
     })
     .then((res) => {
       return res.status
@@ -58,7 +76,9 @@ const getAllUsers = async () => {
 // gets first 100 account usernames/names starting with text input
 const searchUsers = async (text) => {
   return accountsApi
-    .get(`/accounts/search/${text}`)
+    .post(`/accounts/search`, {
+      text: text,
+    })
     .then((res) => {
       return {
         count: res.data.users.count,
@@ -150,7 +170,7 @@ const updatePhoto = async (id, info) => {
 // updates user and returns status
 const updateUser = async (req) => {
   return accountsApi
-    .put(`/accounts/`, req)
+    .put(`/accounts`, req)
     .then((res) => {
       return {
         status: res.status,
@@ -164,7 +184,9 @@ const updateUser = async (req) => {
 // checks username and returns status
 const checkUsername = async (username) => {
   return accountsApi
-    .get(`/username/${username}`)
+    .post(`/username`, {
+      username: username,
+    })
     .then((res) => {
       return res.status
     })
@@ -176,7 +198,9 @@ const checkUsername = async (username) => {
 // checks phone number and returns status
 const checkPhoneNumber = async (phoneNumber) => {
   return accountsApi
-    .get(`/phoneNumber/${phoneNumber}`)
+    .post(`/phone_number`, {
+      phone_number: phoneNumber,
+    })
     .then((res) => {
       return res.status
     })
@@ -188,7 +212,9 @@ const checkPhoneNumber = async (phoneNumber) => {
 // checks email and returns status
 const checkEmail = async (email) => {
   return accountsApi
-    .get(`/email/${email}`)
+    .post(`/email`, {
+      email: email,
+    })
     .then((res) => {
       return res.status
     })
@@ -198,16 +224,18 @@ const checkEmail = async (email) => {
 }
 
 export default {
+  checkEmail,
+  checkPhoneNumber,
+  checkUsername,
   createFBUser,
-  getAllUsers,
   deleteUser,
+  getAllUsers,
   getUser,
   updateEmail,
-  updateUsername,
   updateName,
+  updatePhoto,
   updatePhoneNumber,
-  checkUsername,
-  checkPhoneNumber,
+  updateUsername,
   searchUsers,
-  checkEmail,
+  createFBUserTest,
 }

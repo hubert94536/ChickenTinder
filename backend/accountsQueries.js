@@ -4,7 +4,7 @@ const { Accounts, Friends, Notifications } = require('./models.js')
 // Check if email exists
 const checkEmail = async (req, res) => {
   try {
-    const { email } = req.params
+    const { email } = req.body
     const user = await Accounts.findOne({
       where: { email: email },
     })
@@ -21,7 +21,7 @@ const checkEmail = async (req, res) => {
 // Check if phone number exists
 const checkPhoneNumber = async (req, res) => {
   try {
-    const { phone_number } = req.params
+    const { phone_number } = req.body
     const user = await Accounts.findOne({
       where: { phone_number: phone_number },
     })
@@ -38,7 +38,7 @@ const checkPhoneNumber = async (req, res) => {
 // Check if username exists
 const checkUsername = async (req, res) => {
   try {
-    const { username } = req.params
+    const { username } = req.body
     const user = await Accounts.findOne({ where: { username: username } })
     if (user) {
       return res.status(404).send('Username unavailable')
@@ -54,7 +54,7 @@ const checkUsername = async (req, res) => {
 const createAccount = async (req, res) => {
   try {
     await Accounts.create({
-      uid: req.authId ,
+      uid: req.authId,
       name: req.body.name,
       username: req.body.username,
       email: req.body.email,
@@ -88,7 +88,7 @@ const createTestAccount = async (req, res) => {
 // Delete account by uid
 const deleteAccount = async (req, res) => {
   try {
-    const uid = req.authId 
+    const uid = req.authId
     await Friends.destroy({
       where: {
         [Op.or]: [
@@ -129,7 +129,7 @@ const deleteAccount = async (req, res) => {
 // Get the account by uid
 const getAccountByUID = async (req, res) => {
   try {
-    const uid = req.authId 
+    const uid = req.authId
     const user = await Accounts.findOne({ where: { uid: uid } })
     if (user) {
       return res.status(200).json({ user })
@@ -155,7 +155,7 @@ const getAllAccounts = async (req, res) => {
 // TODO: Transactions
 const updateAccount = async (req, res) => {
   try {
-    const uid = req.authId 
+    const uid = req.authId
     const updated = await Accounts.update(req.body, {
       where: { uid: uid },
     })
@@ -172,7 +172,7 @@ const updateAccount = async (req, res) => {
 // Get first 100 account usernames or names starting with input letters
 const searchAccounts = async (req, res) => {
   try {
-    const { text } = req.params
+    const { text } = req.body
     const users = await Accounts.findAndCountAll({
       limit: 100,
       where: {
