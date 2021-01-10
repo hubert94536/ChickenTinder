@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
-import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
+import { USERNAME, UID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
-// import friendsApi from '../apis/friendsApi.js'
-// import accountsApi from '../apis/accountsApi.js'
+import friendsApi from '../apis/friendsApi.js'
+import accountsApi from '../apis/accountsApi.js'
 import socket from '../apis/socket.js'
 import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
@@ -13,9 +13,7 @@ import Join from '../modals/Join.js'
 import TabBar from '../Nav.js'
 import screenStyles from '../../styles/screenStyles.js'
 
-var id = ''
-var name = ''
-var photo = ''
+var uid = ''
 var username = ''
 
 const width = Dimensions.get('window').width
@@ -33,42 +31,31 @@ class Home extends React.Component {
       friends: '',
       errorAlert: false,
     }
-    AsyncStorage.multiGet([ID, NAME, PHOTO, USERNAME]).then((res) => {
-      id = res[0][1]
-      name = res[1][1]
-      photo = res[2][1]
-      username = res[3][1]
-      socket.connect(id, name, photo, username)
+    AsyncStorage.multiGet([UID, USERNAME]).then((res) => {
+      uid = res[0][1]
+      username = res[1][1]
+      socket.connect()
       socket.getSocket().on('update', (res) => {
         this.setState({ invite: false })
         this.props.navigation.navigate('Group', {
           response: res,
-          id: id,
-          name: name,
-          photo: photo,
           username: username,
         })
       })
+      //uncomment if testing friends/requests
+      // accountsApi.createFBUserTest('Hubert', 2, 'hubesc', 'hubesc@gmail.com', '10', '45678907')
+      // accountsApi.createFBUserTest('Hanna', 3, 'hco', 'hco@gmail.com', '11', '45678901')
+      // accountsApi.createFBUserTest('Anna', 4, 'annax', 'annx@gmail.com', '12', '45678902')
+      // accountsApi.createFBUserTest('Helen', 5, 'helenthemelon', 'helenw@gmail.com', '13', '45678903')
+      // accountsApi.createFBUserTest('Kevin', 6, 'kevint', 'kevintang@gmail.com', '14', '45678904')
+      // friendsApi.createFriendshipTest(2, uid)
+      // friendsApi.createFriendshipTest(3, uid)
+      // friendsApi.createFriendshipTest(4, uid)
     })
   }
 
   createGroup() {
     socket.createRoom()
-  }
-
-  componentDidMount() {
-    //uncomment if testing friends/requests
-    // accountsApi.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
-    // accountsApi.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
-    // accountsApi.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
-    // accountsApi.createFBUser('Helen', 5, 'helenthemelon', 'helenw@gmail.com', 'sjdkf'),
-    // accountsApi.createFBUser('Kevin', 6, 'kevint', 'kevintang@gmail.com', 'sdfddf'),
-    // // console.log("My id:" + myId)
-    // friendsApi.createFriendshipTest(myId, 2),
-    // friendsApi.createFriendshipTest(4, 2),
-    // friendsApi.createFriendshipTest(myId, 3),
-    // friendsApi.createFriendshipTest(myId, 4)
-    // friendsApi.acceptFriendRequest(2)
   }
 
   componentWillUnmount() {

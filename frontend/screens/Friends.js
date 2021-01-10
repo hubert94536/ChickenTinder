@@ -1,19 +1,14 @@
 import React from 'react'
 import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
 import PropTypes from 'prop-types'
-import { ID } from 'react-native-dotenv'
 import { SearchBar } from 'react-native-elements'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Alert from '../modals/Alert.js'
-// import Card from '../cards/ProfileCard.js'
 import Card from '../cards/Card.js'
 import friendsApi from '../apis/friendsApi.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 
-const font = 'CircularStd-Medium'
-var id = ''
 // Used to make refreshing indicator appear/disappear
 const sleep = (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds))
@@ -30,17 +25,14 @@ export default class Friends extends React.Component {
       isFriends: this.props.isFriends, // For rendering friends (true) or requests (false)
       refreshing: false, // Are we currently refreshing the list?
     }
-    AsyncStorage.getItem(ID).then((res) => {
-      id = res
-      this.getFriends(id)
-    })
+    this.getFriends()
   }
 
   //  gets the users friends
-  async getFriends(id) {
+  getFriends() {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
-      .getFriends(id)
+      .getFriends()
       .then((res) => {
         var pushFriends = []
         var friendOrRequest = this.state.isFriends ? 'friends' : 'pending'
@@ -106,14 +98,13 @@ export default class Friends extends React.Component {
           <Card
             name={friendList[i].name}
             image={friendList[i].photo}
-            id={friendList[i].id}
+            uid={friendList[i].uid}
             username={friendList[i].username}
-            currentUser={id}
             total={this.state.friends}
             status={status}
             key={i}
             index={i}
-            press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
+            press={(uid, newArr) => this.removeRequest(uid, newArr)}
           />,
         )
       }

@@ -131,7 +131,6 @@ const styles = StyleSheet.create({
     height: normalize(248),
     marginTop: '12%',
   },
-
   slogan: {
     fontSize: normalize(30),
     marginTop: '2.5%',
