@@ -6,13 +6,12 @@ import { SearchBar } from 'react-native-elements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
 import accountsApi from '../apis/accountsApi.js'
-import Card from '../cards/Card.js'
 import Alert from '../modals/Alert.js'
-import screenStyles from '../../styles/screenStyles.js'
+import Card from '../cards/Card.js'
 import friendsApi from '../apis/friendsApi.js'
+import screenStyles from '../../styles/screenStyles.js'
 import TabBar from '../Nav.js'
 
-const font = 'CircularStd-Medium'
 var username = ''
 
 export default class Search extends Component {
@@ -100,7 +99,7 @@ export default class Search extends Component {
       <SearchBar
         containerStyle={styles.container}
         inputContainerStyle={styles.inputContainer}
-        inputStyle={[styles.input, { textAlignVertical: 'center' }]}
+        inputStyle={styles.input}
         placeholder="Search for friends"
         lightTheme={true}
         round={true}
@@ -113,8 +112,8 @@ export default class Search extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
-        <Text style={[screenStyles.icons, { marginTop: '10%', textAlign: 'center' }]}>
+      <View style={screenStyles.mainContainer}>
+        <Text style={[screenStyles.icons, styles.title]}>
           Find friends
         </Text>
         <FlatList
@@ -174,9 +173,9 @@ Search.propTypes = {
 }
 
 const styles = StyleSheet.create({
-  topIcons: {
-    marginLeft: '5%',
-    marginTop: '5%',
+  title: {
+    marginTop: '10%', 
+    textAlign: 'center',
   },
   container: {
     backgroundColor: 'white',
@@ -193,8 +192,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#e7e7e7',
   },
   input: {
-    textAlignVertical: 'bottom',
-    fontFamily: font,
+    textAlignVertical: 'center',
+    fontFamily: screenStyles.medium.fontFamily,
     fontSize: 18,
   },
 })
