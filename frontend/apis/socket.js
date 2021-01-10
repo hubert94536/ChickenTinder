@@ -4,10 +4,8 @@ import io from 'socket.io-client'
 var socket = null
 
 const connect = () => {
-  // socket = io('https://wechews.herokuapp.com', {
-  //   query: `uid=${myId}`,
-  // })
-  socket = io('http://192.168.0.23:5000')
+  // socket = io('http://192.168.0.23:5000')
+  socket = io('https://wechews.herokuapp.com')
   socket.on('connect', async () => {
     console.log('connect')
     const token = await Firebase.auth().currentUser.getIdToken()

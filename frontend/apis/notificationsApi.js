@@ -2,8 +2,8 @@ import Axios from 'axios'
 import Firebase from 'firebase'
 
 const notificationsApi = Axios.create({
-  // baseURL: 'https://wechews.herokuapp.com',
-  baseURL: 'http://172.16.0.10:5000',
+  baseURL: 'https://wechews.herokuapp.com',
+  // baseURL: 'http://172.16.0.10:5000',
 })
 
 // Set the AUTH token for any request
