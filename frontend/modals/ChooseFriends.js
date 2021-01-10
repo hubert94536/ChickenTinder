@@ -1,11 +1,9 @@
 import React from 'react'
 import { Dimensions, FlatList, Modal, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import { ID } from 'react-native-dotenv'
 import { SearchBar } from 'react-native-elements'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import Clipboard from '@react-native-community/clipboard'
 import PropTypes from 'prop-types'
 import Card from '../cards/Card.js'
@@ -15,7 +13,6 @@ import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
 
 const height = Dimensions.get('window').height
-var id = ''
 //  little pop up modal that is showed when you click choose friends in filters
 export default class ChooseFriends extends React.Component {
   constructor(props) {
@@ -26,17 +23,14 @@ export default class ChooseFriends extends React.Component {
       search: '',
       errorAlert: false,
     }
-    AsyncStorage.getItem(ID).then((res) => {
-      id = res
-      this.getFriends(id)
-    })
+    this.getFriends()
   }
 
   //  gets your friends
-  getFriends(id) {
+  getFriends() {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
-      .getFriends(id)
+      .getFriends()
       .then((res) => {
         let pushFriends = []
         for (var friend in res.friendList) {
@@ -109,7 +103,7 @@ export default class ChooseFriends extends React.Component {
             <SearchBar
               containerStyle={styles.searchBarContainer}
               inputContainerStyle={styles.searchBarInputContainer}
-              inputStyle={[screenStyles.text, styles.searchBarInput]}
+              inputStyle={[screenStyles.medium, styles.searchBarInput]}
               placeholder="Search for friends"
               onChangeText={(text) => this.searchFilterFunction(text)}
               value={this.state.search}
@@ -123,12 +117,11 @@ export default class ChooseFriends extends React.Component {
                 <Card
                   name={item.name}
                   image={item.photo}
-                  id={item.id}
+                  uid={item.uid}
                   username={item.username}
-                  currentUser={id}
                   total={this.state.data}
                   status="not added"
-                  key={item.id}
+                  key={item.uid}
                   press={() => this.sendInvite()}
                 />
               )}

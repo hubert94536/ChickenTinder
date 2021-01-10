@@ -1,19 +1,46 @@
-import axios from 'axios'
+import Axios from 'axios'
+import Firebase from 'firebase'
 
-const accountsApi = axios.create({
-  baseURL: 'https://wechews.herokuapp.com',
-  // baseURL: 'http://172.16.0.10:5000'
+const accountsApi = Axios.create({
+  // baseURL: 'https://wechews.herokuapp.com',
+  baseURL: 'http://192.168.0.23:5000',
 })
 
-// creates user and returns id
-const createFBUser = async (name, id, username, email, photo) => {
+// Set the AUTH token for any request
+accountsApi.interceptors.request.use(async function (config) {
+  const token = await Firebase.auth().currentUser.getIdToken()
+  config.headers.authorization = token ? `Bearer ${token}` : ''
+  return config
+})
+
+// creates user
+const createFBUserTest = async (name, uid, username, email, photo, phone) => {
   return accountsApi
-    .post('/accounts', {
-      id: id,
+    .post('/test/accounts', {
+      uid: uid,
       name: name,
       username: username,
       email: email,
       photo: photo,
+      phone_number: phone,
+    })
+    .then((res) => {
+      return res.status
+    })
+    .catch((error) => {
+      Promise.reject(error.response)
+    })
+}
+
+// creates user
+const createFBUser = async (name, username, email, photo, phone) => {
+  return accountsApi
+    .post('/accounts', {
+      name: name,
+      username: username,
+      email: email,
+      photo: photo,
+      phone_number: phone,
     })
     .then((res) => {
       return res.status
@@ -36,7 +63,7 @@ const getAllUsers = async () => {
             name: users.name,
             username: users.username,
             photo: users.photo,
-            id: users.id,
+            uid: users.uid,
           }
         }),
       }
@@ -49,7 +76,9 @@ const getAllUsers = async () => {
 // gets first 100 account usernames/names starting with text input
 const searchUsers = async (text) => {
   return accountsApi
-    .get(`/accounts/search/${text}`)
+    .post(`/accounts/search`, {
+      text: text,
+    })
     .then((res) => {
       return {
         count: res.data.users.count,
@@ -59,7 +88,7 @@ const searchUsers = async (text) => {
             name: users.name,
             username: users.username,
             photo: users.photo,
-            id: users.id,
+            uid: users.uid,
           }
         }),
       }
@@ -70,9 +99,9 @@ const searchUsers = async (text) => {
 }
 
 // deletes user and returns status
-const deleteUser = async (id) => {
+const deleteUser = async () => {
   return accountsApi
-    .delete(`/accounts/${id}`)
+    .delete(`/accounts`)
     .then((res) => {
       return res.status
     })
@@ -81,10 +110,10 @@ const deleteUser = async (id) => {
     })
 }
 
-// gets user by id and returns user info
-const getUser = async (id) => {
+// gets user and returns user info
+const getUser = async () => {
   return accountsApi
-    .get(`/accounts/${id}`)
+    .get(`/accounts`)
     .then((res) => {
       return {
         username: res.data.user.username,
@@ -92,7 +121,7 @@ const getUser = async (id) => {
         phone_number: res.data.user.phone_number,
         name: res.data.user.name,
         photo: res.data.user.photo,
-        id: res.data.user.id,
+        uid: res.data.user.uid,
       }
     })
     .catch((error) => {
@@ -101,35 +130,35 @@ const getUser = async (id) => {
 }
 
 // update email and returns status
-const updateEmail = async (id, info) => {
+const updateEmail = async (info) => {
   const req = {
     email: info,
   }
-  return updateUser(id, req)
+  return updateUser(req)
 }
 
 // update username and returns status
-const updateUsername = async (id, info) => {
+const updateUsername = async (info) => {
   const req = {
     username: info,
   }
-  return updateUser(id, req)
+  return updateUser(req)
 }
 
 // update username and returns status
-const updateName = async (id, info) => {
+const updateName = async (info) => {
   const req = {
     name: info,
   }
-  return updateUser(id, req)
+  return updateUser(req)
 }
 
 // update username and returns status
-const updatePhoneNumber = async (id, info) => {
+const updatePhoneNumber = async (info) => {
   const req = {
     phone_number: info,
   }
-  return updateUser(id, req)
+  return updateUser(req)
 }
 
 const updatePhoto = async (id, info) => {
@@ -140,9 +169,9 @@ const updatePhoto = async (id, info) => {
 }
 
 // updates user and returns status
-const updateUser = async (id, req) => {
+const updateUser = async (req) => {
   return accountsApi
-    .put(`/accounts/${id}`, req)
+    .put(`/accounts`, req)
     .then((res) => {
       return {
         status: res.status,
@@ -155,9 +184,10 @@ const updateUser = async (id, req) => {
 
 // checks username and returns status
 const checkUsername = async (username) => {
-  console.log('check')
   return accountsApi
-    .get(`/username/${username}`)
+    .post(`/username`, {
+      username: username,
+    })
     .then((res) => {
       return res.status
     })
@@ -169,7 +199,9 @@ const checkUsername = async (username) => {
 // checks phone number and returns status
 const checkPhoneNumber = async (phoneNumber) => {
   return accountsApi
-    .get(`/phoneNumber/${phoneNumber}`)
+    .post(`/phone_number`, {
+      phone_number: phoneNumber,
+    })
     .then((res) => {
       return res.status
     })
@@ -181,7 +213,9 @@ const checkPhoneNumber = async (phoneNumber) => {
 // checks email and returns status
 const checkEmail = async (email) => {
   return accountsApi
-    .get(`/email/${email}`)
+    .post(`/email`, {
+      email: email,
+    })
     .then((res) => {
       return res.status
     })
@@ -191,16 +225,18 @@ const checkEmail = async (email) => {
 }
 
 export default {
+  checkEmail,
+  checkPhoneNumber,
+  checkUsername,
   createFBUser,
-  getAllUsers,
   deleteUser,
+  getAllUsers,
   getUser,
   updateEmail,
-  updateUsername,
   updateName,
+  updatePhoto,
   updatePhoneNumber,
-  checkUsername,
-  checkPhoneNumber,
+  updateUsername,
   searchUsers,
-  checkEmail,
+  createFBUserTest,
 }
