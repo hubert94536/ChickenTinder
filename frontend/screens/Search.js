@@ -113,9 +113,7 @@ export default class Search extends Component {
   render() {
     return (
       <View style={screenStyles.mainContainer}>
-        <Text style={[screenStyles.icons, styles.title]}>
-          Find friends
-        </Text>
+        <Text style={[screenStyles.icons, styles.title]}>Find friends</Text>
         <FlatList
           data={this.state.data}
           renderItem={({ item }) => (
@@ -174,7 +172,7 @@ Search.propTypes = {
 
 const styles = StyleSheet.create({
   title: {
-    marginTop: '10%', 
+    marginTop: '10%',
     textAlign: 'center',
   },
   container: {
