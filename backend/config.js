@@ -34,6 +34,7 @@ firebase.initializeApp({
   credential: firebase.credential.cert({
     "private_key": process.env.FIREBASE_PRIVATE_KEY,
     "client_email": process.env.FIREBASE_CLIENT_EMAIL,
+    "project-id": process.env.FIREBASE_PROJECT_ID
   }),
   databaseURL: 'https://wechews-83255.firebaseio.com',
 })
