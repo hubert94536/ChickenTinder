@@ -8,7 +8,6 @@ import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
 
-const font = 'CircularStd-Medium'
 //  props are name, image url, and functions for cancel and go
 // invite alert
 

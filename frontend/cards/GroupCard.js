@@ -12,7 +12,7 @@ export default class GroupCard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      id: this.props.id,
+      uid: this.props.uid,
     }
   }
 
@@ -71,7 +71,7 @@ export default class GroupCard extends React.Component {
 }
 
 GroupCard.propTypes = {
-  id: PropTypes.number,
+  uid: PropTypes.string,
   image: PropTypes.string,
   filters: PropTypes.bool,
   name: PropTypes.string,

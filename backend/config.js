@@ -1,7 +1,9 @@
+const firebase = require('firebase-admin')
 const pg = require('pg')
 const { promisify } = require('util')
 const redis = require('redis')
 const { Sequelize } = require('sequelize')
+const serviceAccount = require('./wechews-83255-firebase-adminsdk-60u99-50c08765b3.json')
 
 // configuration for database
 const config = {
@@ -17,15 +19,21 @@ const config = {
 
 const pool = new pg.Pool(config)
 const sequelize = new Sequelize(config)
-// const redisClient = redis.createClient('redis://localhost:6379')
+const redisClient = redis.createClient('redis://localhost:6379')
 
-const redisClient = redis.createClient({
-  host: process.env.REDIS_HOST,
-  port: process.env.REDIS_PORT,
-  password: process.env.REDIS_PASSWORD,
-})
+// const redisClient = redis.createClient({
+//   host: process.env.REDIS_HOST,
+//   port: process.env.REDIS_PORT,
+//   password: process.env.REDIS_PASSWORD,
+// })
+
 const hgetAll = promisify(redisClient.hgetall).bind(redisClient)
 const hmset = promisify(redisClient.hmset).bind(redisClient)
 const sendCommand = promisify(redisClient.send_command).bind(redisClient)
+const hdel = promisify(redisClient.hdel).bind(redisClient)
+firebase.initializeApp({
+  credential: firebase.credential.cert(serviceAccount),
+  databaseURL: 'https://wechews-83255.firebaseio.com',
+})
 
-module.exports = { hgetAll, hmset, pool, redisClient, sendCommand, sequelize }
+module.exports = { firebase, hdel, hgetAll, hmset, pool, sendCommand, sequelize }

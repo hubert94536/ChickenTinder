@@ -9,34 +9,27 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import colors from '../../styles/colors.js'
 import friendsApi from '../apis/friendsApi.js'
-import { ID } from 'react-native-dotenv'
 import imgStyles from '../../styles/cardImage.js'
 import normalize from '../../styles/normalize.js'
-
-var id = ''
 
 export default class NotifCard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       isFriend: this.props.friends,
-      id: this.props.id,
+      uid: this.props.uid,
       confirmPressed: false,
       deletePressed: false,
       trash: false,
     }
-    AsyncStorage.getItem(ID).then((res) => {
-      id = res
-    })
   }
 
   // accept friend request and modify card
   async acceptFriend() {
     friendsApi
-      .acceptFriendRequest(id, this.state.id)
+      .acceptFriendRequest(this.state.uid)
       .then(() => {
         this.setState({ isFriend: true })
       })
@@ -46,13 +39,13 @@ export default class NotifCard extends React.Component {
   // delete friend and modify view
   async deleteFriend() {
     friendsApi
-      .removeFriendship(id, this.state.id)
+      .removeFriendship(this.state.uid)
       .then(() => {
         this.props.removeDelete()
         var filteredArray = this.props.total.filter((item) => {
           return item.username !== this.props.username
         })
-        this.props.press(this.props.id, filteredArray, true)
+        this.props.press(this.props.uid, filteredArray, true)
       })
       .catch(() => this.props.showError())
   }
@@ -139,7 +132,7 @@ export default class NotifCard extends React.Component {
                   var filteredArray = this.props.total.filter((item) => {
                     return item.username !== this.props.username
                   })
-                  this.props.press(this.props.id, filteredArray, false)
+                  this.props.press(this.props.uid, filteredArray, false)
                 }}
                 style={styles.blackButton}
               >
@@ -162,7 +155,7 @@ export default class NotifCard extends React.Component {
 
 NotifCard.propTypes = {
   friends: PropTypes.bool,
-  id: PropTypes.string,
+  uid: PropTypes.string,
   total: PropTypes.array,
   type: PropTypes.string,
   username: PropTypes.string,
