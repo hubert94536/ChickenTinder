@@ -6,7 +6,6 @@ import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'
 import screenStyles from '../../styles/screenStyles.js'
 import MatchCard from '../cards/MatchCard.js'
-// commented out during linting but socket is used in commented-out code below
 import normalize from '../../styles/normalize.js'
 import socket from '../apis/socket.js'
 
@@ -14,7 +13,6 @@ import socket from '../apis/socket.js'
 export default class Match extends React.Component {
   constructor(props) {
     super(props)
-
     this.state = {
       navigation: this.props.navigation,
       restaurant: this.props.navigation.state.params.restaurant,
