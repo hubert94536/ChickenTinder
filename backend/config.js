@@ -31,7 +31,7 @@ const hmset = promisify(redisClient.hmset).bind(redisClient)
 const sendCommand = promisify(redisClient.send_command).bind(redisClient)
 const hdel = promisify(redisClient.hdel).bind(redisClient)
 firebase.initializeApp({
-  credential: admin.credential.applicationDefault(),
+  credential: firebase.credential.applicationDefault(),
   databaseURL: 'https://wechews-83255.firebaseio.com',
 })
 
