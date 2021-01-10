@@ -4,7 +4,7 @@ const { Accounts, Friends, Notifications } = require('./models.js')
 // Check if email exists
 const checkEmail = async (req, res) => {
   try {
-    const { email } = req.params
+    const { email } = req.body
     const user = await Accounts.findOne({
       where: { email: email },
     })
@@ -21,7 +21,7 @@ const checkEmail = async (req, res) => {
 // Check if phone number exists
 const checkPhoneNumber = async (req, res) => {
   try {
-    const { phone_number } = req.params
+    const { phone_number } = req.body
     const user = await Accounts.findOne({
       where: { phone_number: phone_number },
     })
@@ -38,7 +38,7 @@ const checkPhoneNumber = async (req, res) => {
 // Check if username exists
 const checkUsername = async (req, res) => {
   try {
-    const { username } = req.params
+    const { username } = req.body
     const user = await Accounts.findOne({ where: { username: username } })
     if (user) {
       return res.status(404).send('Username unavailable')
@@ -54,7 +54,24 @@ const checkUsername = async (req, res) => {
 const createAccount = async (req, res) => {
   try {
     await Accounts.create({
-      id: req.body.id,
+      uid: req.authId,
+      name: req.body.name,
+      username: req.body.username,
+      email: req.body.email,
+      photo: req.body.photo,
+      phone_number: req.body.phone_number,
+    })
+    return res.status(201).send('Account created')
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({ error: error.message })
+  }
+}
+// TODO: for testing purposes only
+const createTestAccount = async (req, res) => {
+  try {
+    await Accounts.create({
+      uid: req.body.uid,
       name: req.body.name,
       username: req.body.username,
       email: req.body.email,
@@ -68,19 +85,18 @@ const createAccount = async (req, res) => {
   }
 }
 
-// Delete account by id
-// TODO: Delete their associated photo from S3
+// Delete account by uid
 const deleteAccount = async (req, res) => {
   try {
-    const { id } = req.params
+    const uid = req.authId
     await Friends.destroy({
       where: {
         [Op.or]: [
           {
-            main_id: id,
+            main_uid: uid,
           },
           {
-            friend_id: id,
+            friend_uid: uid,
           },
         ],
       },
@@ -89,36 +105,36 @@ const deleteAccount = async (req, res) => {
       where: {
         [Op.or]: [
           {
-            receiver_id: id,
+            receiver_uid: uid,
           },
           {
-            sender_id: id,
+            sender_uid: uid,
           },
         ],
       },
     })
     const deleted = await Accounts.destroy({
-      where: { id: id },
+      where: { uid: uid },
     })
     if (deleted) {
       return res.status(204).send('User deleted')
     }
-    return res.status(404).send('User with the specified ID does not exists')
+    return res.status(404).send('User with the specified UID does not exists')
   } catch (error) {
     console.log(error)
     return res.status(500).send(error.message)
   }
 }
 
-// Get the account by id
-const getAccountById = async (req, res) => {
+// Get the account by uid
+const getAccountByUID = async (req, res) => {
   try {
-    const { id } = req.params
-    const user = await Accounts.findOne({ where: { id: id } })
+    const uid = req.authId
+    const user = await Accounts.findOne({ where: { uid: uid } })
     if (user) {
       return res.status(200).json({ user })
     }
-    return res.status(404).send('User with the specified ID does not exists')
+    return res.status(404).send('User with the specified UID does not exists')
   } catch (error) {
     console.log(error)
     return res.status(500).send(error.message)
@@ -135,18 +151,18 @@ const getAllAccounts = async (req, res) => {
   }
 }
 
-// Update account by id
+// Update account by uid
 // TODO: Transactions
 const updateAccount = async (req, res) => {
   try {
-    const { id } = req.params
+    const uid = req.authId
     const updated = await Accounts.update(req.body, {
-      where: { id: id },
+      where: { uid: uid },
     })
     if (updated) {
       return res.status(200).send('Updated account info')
     }
-    return res.status(404).send('User with the specified ID does not exists')
+    return res.status(404).send('User with the specified UID does not exists')
   } catch (error) {
     console.log(error)
     return res.status(500).send(error.message)
@@ -156,7 +172,7 @@ const updateAccount = async (req, res) => {
 // Get first 100 account usernames or names starting with input letters
 const searchAccounts = async (req, res) => {
   try {
-    const { text } = req.params
+    const { text } = req.body
     const users = await Accounts.findAndCountAll({
       limit: 100,
       where: {
@@ -169,7 +185,7 @@ const searchAccounts = async (req, res) => {
           },
         ],
       },
-      attributes: ['id', 'name', 'username', 'photo'],
+      attributes: ['uid', 'name', 'username', 'photo'],
     })
     return res.status(200).json({ users })
   } catch (error) {
@@ -183,8 +199,9 @@ module.exports = {
   checkPhoneNumber,
   checkUsername,
   createAccount,
+  createTestAccount,
   deleteAccount,
-  getAccountById,
+  getAccountByUID,
   getAllAccounts,
   searchAccounts,
   updateAccount,
