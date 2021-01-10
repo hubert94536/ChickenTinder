@@ -1,15 +1,22 @@
-import axios from 'axios'
+import Axios from 'axios'
+import Firebase from 'firebase'
 
-const friendsApi = axios.create({
-  baseURL: 'https://wechews.herokuapp.com',
-  // baseURL: 'http://172.16.0.10:5000'
+const friendsApi = Axios.create({
+  // baseURL: 'https://wechews.herokuapp.com',
+  baseURL: 'http://192.168.0.23:5000',
+})
+// Set the AUTH token for any request
+friendsApi.interceptors.request.use(async function (config) {
+  const token = await Firebase.auth().currentUser.getIdToken()
+  config.headers.authorization = token ? `Bearer ${token}` : ''
+  return config
 })
 
 // creates friendship
 const createFriendshipTest = async (main, friend) => {
   return friendsApi
-    .post('/friendships', {
-      main: main,
+    .post(`/test/friendships`, {
+      uid: main,
       friend: friend,
     })
     .then((res) => {
@@ -20,9 +27,9 @@ const createFriendshipTest = async (main, friend) => {
     })
 }
 
-const createFriendship = async (id, friend) => {
+const createFriendship = async (friend) => {
   return friendsApi
-    .post(`/friendships/${id}/${friend}`)
+    .post(`/friendships`, { friend: friend })
     .then((res) => {
       return res.status
     })
@@ -32,16 +39,16 @@ const createFriendship = async (id, friend) => {
 }
 
 // gets a users friends/requests
-const getFriends = async (id) => {
+const getFriends = async () => {
   return friendsApi
-    .get(`/friendships/${id}`)
+    .get(`/friendships`)
     .then((res) => {
       return {
         status: res.status,
         friendList: res.data.friends.map(function (friends) {
           // returns individual user info
           return {
-            id: friends.friend_id,
+            uid: friends.friend_uid,
             name: friends.account.name,
             photo: friends.account.photo,
             username: friends.account.username,
@@ -56,9 +63,9 @@ const getFriends = async (id) => {
 }
 
 // accept a friend request
-const acceptFriendRequest = async (id, friend) => {
+const acceptFriendRequest = async (friend) => {
   return friendsApi
-    .put(`/friendships/${id}/${friend}`)
+    .put(`/friendships`, { friend: friend })
     .then((res) => {
       return res.status
     })
@@ -68,9 +75,9 @@ const acceptFriendRequest = async (id, friend) => {
 }
 
 // remove a friendship
-const removeFriendship = async (id, friend) => {
+const removeFriendship = async (friend) => {
   return friendsApi
-    .delete(`/friendships/${id}/${friend}`)
+    .delete(`/friendships`, { data: { friend: friend } })
     .then((res) => {
       return res.status
     })

@@ -92,7 +92,6 @@ export default class Settings extends React.Component {
                   blurAmount={10}
                   reducedTransparencyFallbackColor="black"
                 />
-                ,
                 <Alert
                   title="Delete account?"
                   body="By deleting your account, you will lose all of your data"
@@ -103,7 +102,6 @@ export default class Settings extends React.Component {
                   press={() => this.handleDelete()}
                   cancel={() => this.cancelDelete()}
                 />
-                ,
               </View>
             )}
             {this.state.errorAlert && (

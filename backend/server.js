@@ -2,8 +2,11 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const http = require('http')
 const io = require('socket.io')()
-const validateRoute = require('express-joi-validation').createValidator({})
+const socketAuth = require('socketio-auth')
+const _ = require('underscore')
 const accounts = require('./accountsQueries.js')
+const auth = require('./auth.js')
+const { hmset } = require('./config.js')
 const friends = require('./friendsQueries.js')
 const notifications = require('./notifsQueries.js')
 const schema = require('./schema.js')
@@ -14,6 +17,41 @@ const server = http.createServer(app)
 io.attach(server)
 require('./socketEvents.js')(io)
 
+// removes socket client from each namespace until authentication
+_.each(io.nsps, function (nsp) {
+  nsp.on('connect', function (socket) {
+    delete nsp.connected[socket.id]
+  })
+})
+
+socketAuth(io, {
+  authenticate: async (socket, data, callback) => {
+    const { token } = data
+    try {
+      // verify token passed in authentication
+      const user = await auth.verifySocket(token)
+      socket.user = user
+      return callback(null, true)
+    } catch (err) {
+      return callback({ message: 'UNAUTHORIZED' })
+    }
+  },
+  postAuthenticate: async (socket) => {
+    try {
+      // reconnect socket client to each namespace
+      _.each(io.nsps, function (nsp) {
+        if (_.findWhere(nsp.sockets, { id: socket.id })) {
+          nsp.connected[socket.id] = socket
+        }
+      })
+      // associate uid to socket id
+      await hmset(`users:${socket.user.uid}`, 'client', socket.id)
+    } catch (err) {
+      console.log(err)
+    }
+  },
+})
+
 var PORT = process.env.PORT || 5000
 
 app.use(bodyParser.json())
@@ -22,55 +60,51 @@ app.use(
     extended: true,
   }),
 )
-
 // if development mode, allow self-signed ssl
 if (app.get('env') === 'development') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 }
+/*-----TESTING ENDPTS------ */
+app.route('/test/accounts').get(accounts.getAllAccounts).post(accounts.createTestAccount)
+
+app
+  .route('/test/friendships')
+  .get(friends.getAllFriends)
+  .post(friends.createTestFriends)
+  .put(friends.acceptTestRequest)
+
+app.route('/test/notifs').get(notifications.getAllNotifs)
+/*------------------------- */
 
 // Accounts table
+app.route('/accounts/search').post(schema.checkSearch, accounts.searchAccounts)
+
 app
   .route('/accounts')
-  .get(accounts.getAllAccounts)
-  .post(schema.checkCreateAccounts, accounts.createAccount)
+  .get(auth.authenticate, accounts.getAccountByUID)
+  .post(schema.checkCreateAccounts, auth.authenticate, accounts.createAccount)
+  .put(schema.checkUpdateAccount, auth.authenticate, accounts.updateAccount)
+  .delete(auth.authenticate, accounts.deleteAccount)
 
-app
-  .route('/accounts/search/:text')
-  .get(validateRoute.params(schema.textSchema), accounts.searchAccounts)
+app.route('/username').post(schema.checkUsername, accounts.checkUsername)
 
-app
-  .route('/accounts/:id')
-  .get(validateRoute.params(schema.idSchema), accounts.getAccountById)
-  .put(schema.checkUpdateAccount, validateRoute.params(schema.idSchema), accounts.updateAccount)
-  .delete(validateRoute.params(schema.idSchema), accounts.deleteAccount)
+app.route('/phone_number').post(schema.checkPhoneNumber, accounts.checkPhoneNumber)
 
-app
-  .route('/username/:username')
-  .get(validateRoute.params(schema.usernameSchema), accounts.checkUsername)
-
-app
-  .route('/phoneNumber/:phone_number')
-  .get(validateRoute.params(schema.phoneNumberSchema), accounts.checkPhoneNumber)
-
-app.route('/email/:email').get(validateRoute.params(schema.emailSchema), accounts.checkEmail)
+app.route('/email').post(schema.checkEmail, accounts.checkEmail)
 
 // Friendships table
-app.route('/friendships/:id').get(validateRoute.params(schema.idSchema), friends.getFriends)
-
 app
-  .route('/friendships/:main/:friend')
-  .post(validateRoute.params(schema.friendshipSchema), friends.createFriends)
-  .delete(validateRoute.params(schema.friendshipSchema), friends.deleteFriendship)
-  .put(validateRoute.params(schema.friendshipSchema), friends.acceptRequest)
+  .route('/friendships')
+  .get(auth.authenticate, friends.getFriends)
+  .post(schema.checkFriendship, auth.authenticate, friends.createFriends)
+  .delete(schema.checkFriendship, auth.authenticate, friends.deleteFriendship)
+  .put(schema.checkFriendship, auth.authenticate, friends.acceptRequest)
 
 // Notifications table
 app
-  .route('/notifications/user/:id')
-  .get(validateRoute.params(schema.idSchema), notifications.getNotifs)
-
-app
-  .route('/notifications/:id')
-  .delete(validateRoute.params(schema.idSchema), notifications.deleteNotif)
+  .route('/notifications')
+  .get(auth.authenticate, notifications.getNotifs)
+  .delete(schema.checkNotif, auth.authenticate, notifications.deleteNotif)
 
 server.listen(PORT, () => {
   console.log(`App running on port ${PORT}.`)
