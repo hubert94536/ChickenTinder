@@ -7,9 +7,8 @@ import colors from '../../styles/colors.js'
 import screenStyles from '../../styles/screenStyles.js'
 import MatchCard from '../cards/MatchCard.js'
 // commented out during linting but socket is used in commented-out code below
+import normalize from '../../styles/normalize.js'
 import socket from '../apis/socket.js'
-
-const font = 'CircularStd-Medium'
 
 // the card for the restaurant match
 export default class Match extends React.Component {
@@ -44,10 +43,8 @@ export default class Match extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer} /*Header for header text and heart icon */>
-          <Text style={[screenStyles.textBold, { fontSize: 33, marginHorizontal: '3%' }]}>
-            WeChews you!
-          </Text>
-          <Icon name="heart" style={[styles.general, { fontSize: 35, paddingVertical: '1%' }]} />
+          <Text style={[screenStyles.textBold, styles.title]}>WeChews you!</Text>
+          <Icon name="heart" style={[styles.general, styles.heart]} />
         </View>
         <View style={styles.restaurantCardContainer} /*Restaurant card*/>
           <MatchCard card={restaurant} />
@@ -76,14 +73,16 @@ export default class Match extends React.Component {
           style={[screenStyles.bigButton, styles.yelpButton]}
           onPress={() => Linking.openURL(restaurant.url)}
         >
-          <Text style={[screenStyles.bigButtonText, { color: 'white' }]}>Open on Yelp</Text>
+          <Text style={[screenStyles.bigButtonText, styles.white]}>Open on Yelp</Text>
         </TouchableHighlight>
         <TouchableHighlight
           /* Button to call phone # */
           style={[screenStyles.bigButton, styles.callButton]}
           onPress={() => Linking.openURL(`tel:${restaurant.phone}`)}
         >
-          <Text style={[screenStyles.bigButtonText, { color: colors.hex }]}>Call: {restaurant.phone}</Text>
+          <Text style={[screenStyles.bigButtonText, { color: colors.hex }]}>
+            Call: {restaurant.phone}
+          </Text>
         </TouchableHighlight>
         <Text /* Link to exit round */
           style={[screenStyles.bigButtonText, styles.exitRoundText]}
@@ -116,8 +115,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     justifyContent: 'space-evenly',
   },
+  title: { fontSize: normalize(33), marginHorizontal: '3%' },
+  heart: { fontSize: normalize(35), paddingVertical: '1%' },
   general: {
-    fontFamily: font,
+    fontFamily: screenStyles.medium.fontFamily,
     color: colors.hex,
     textAlign: 'center',
   },
@@ -181,4 +182,5 @@ const styles = StyleSheet.create({
     height: '4%',
     marginBottom: '4%',
   },
+  white: { color: 'white' },
 })

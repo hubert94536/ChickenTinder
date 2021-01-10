@@ -72,15 +72,18 @@ export default class Friends extends React.Component {
   }
 
   async removeRequest(friend, newArr, status) {
-    friendsApi
-      .removeFriendship(id, friend)
-      .then(() => {
-        this.setState({ friends: newArr })
-      })
-      .catch((err) => {
-        console.log(err)
-        this.setState({ errorAlert: true })
-      })
+    if (!status) {
+      friendsApi
+        .removeFriendship(id, friend)
+        .then(() => {
+          this.setState({ friends: newArr })
+        })
+        .catch(() => {
+          this.setState({ errorAlert: true })
+        })
+    } else if (status) {
+      this.setState({ friends: newArr })
+    }
   }
 
   // Called on friends-list pulldown refresh
@@ -123,7 +126,7 @@ export default class Friends extends React.Component {
               <SearchBar
                 containerStyle={styles.container}
                 inputContainerStyle={styles.inputContainer}
-                inputStyle={styles.text, styles.input}
+                inputStyle={(styles.text, styles.input)}
                 placeholder="Search by username"
                 onChangeText={(text) => this.searchFilterFunction(text)}
                 value={this.state.search}
@@ -156,18 +159,9 @@ export default class Friends extends React.Component {
         )}
         {this.state.friends.length === 0 && ( //Show no friends view if there aren't any friends
           <View>
-            <Icon
-              name="emoticon-sad-outline"
-              style={[styles.sadFace]}
-            />
-            <Text
-              style={[screenStyles.text, styles.noFriendText1]}
-            >
-              No friends, yet
-            </Text>
-            <Text
-              style={[ screenStyles.textBook, styles.noFriendText2]}
-            >
+            <Icon name="emoticon-sad-outline" style={[styles.sadFace]} />
+            <Text style={[screenStyles.text, styles.noFriendText1]}>No friends, yet</Text>
+            <Text style={[screenStyles.textBook, styles.noFriendText2]}>
               You have no friends, yet. Add friends using the search feature below!
             </Text>
           </View>
@@ -200,13 +194,13 @@ const styles = StyleSheet.create({
   input: {
     fontSize: normalize(15),
   },
-  scrollView: { 
-    flexDirection: 'column' 
+  scrollView: {
+    flexDirection: 'column',
   },
   sadFace: {
-    fontSize: normalize(72), 
-    marginTop: '15%', 
-    alignSelf: 'center' 
+    fontSize: normalize(72),
+    marginTop: '15%',
+    alignSelf: 'center',
   },
   noFriendText1: {
     fontSize: normalize(20),

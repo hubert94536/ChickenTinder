@@ -10,6 +10,7 @@ import RoundCard from '../cards/RoundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Tooltip from 'react-native-walkthrough-tooltip'
+import normalize from '../../styles/normalize.js'
 
 export default class Round extends React.Component {
   constructor(props) {
@@ -45,20 +46,11 @@ export default class Round extends React.Component {
 
   componentDidMount() {
     this._isMounted = true
-    // console.log('round.js: ' + JSON.stringify(this.props.navigation.state.params.code))
-    // console.log('round.js ' + JSON.stringify(this.state.results))
   }
 
   componentWillUnmount() {
     this._isMounted = false
   }
-
-  // endGroup() {
-  //   socket.endSession()
-  //   socket.getSocket().on('leave', () => {
-  //     this.props.navigation.navigate('Home')
-  //   })
-  // }
 
   leaveGroup() {
     socket.leaveRoom(this.props.navigation.state.params.code)
@@ -72,7 +64,7 @@ export default class Round extends React.Component {
           <Swiper
             ref={(deck) => (this.deck = deck)}
             cards={this.state.results}
-            cardStyle={{ justifyContent: 'center' }}
+            cardStyle={styles.card}
             cardIndex={0}
             renderCard={(card) => <RoundCard card={card} />}
             stackSize={3}
@@ -101,60 +93,32 @@ export default class Round extends React.Component {
             backgroundColor="transparent"
             animateOverlayLabelsOpacity
           >
-            <Text
-              style={[
-                screenStyles.text,
-                { fontSize: 20, fontWeight: 'bold', textAlign: 'center', marginTop: '7%' },
-              ]}
-            >
-              Get chews-ing!
-            </Text>
+            <Text style={[screenStyles.text, styles.title, styles.topMargin]}>Get chews-ing!</Text>
             <TouchableHighlight
               onPress={() => this.leaveGroup()}
-              style={{ position: 'absolute', marginLeft: '5%', marginTop: '7%' }}
+              style={[styles.leaveButton, styles.topMargin]}
               underlayColor="transparent"
             >
-              <View style={{ alignItems: 'center' }}>
-                <Icon5
-                  name="door-open"
-                  style={[screenStyles.text, { color: 'black', fontSize: 20 }]}
-                />
-                <Text style={([screenStyles.text], { color: 'black' })}>Leave</Text>
+              <View style={styles.centerAlign}>
+                <Icon5 name="door-open" style={[screenStyles.text, styles.door]} />
+                <Text style={([screenStyles.text], styles.black)}>Leave</Text>
               </View>
             </TouchableHighlight>
-            <Text
-              style={[
-                screenStyles.text,
-                { textAlign: 'right', fontSize: 15, marginRight: '7%', marginTop: '7%' },
-              ]}
-            >
+            <Text style={[screenStyles.text, styles.topMargin, styles.restaurant]}>
               Restaurant {this.state.index}/{this.state.results.length}
             </Text>
           </Swiper>
         </View>
-        <View
-          style={{
-            flex: 0.05,
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            marginBottom: '7%',
-            marginRight: '10%',
-            marginLeft: '10%',
-          }}
-        >
+        <View style={styles.bottom}>
           <View>
             <Tooltip
               isVisible={this.state.instr}
               content={
-                <View style={{ flexDirection: 'row-reverse' }}>
-                  <Text style={[screenStyles.text, { color: 'white', fontSize: 12 }]}>
+                <View style={styles.rr}>
+                  <Text style={[screenStyles.text, styles.white, styles.left]}>
                     swipe left to dislike
                   </Text>
-                  <Feather
-                    name="arrow-left"
-                    style={{ color: 'white', fontSize: 15, marginRight: '1%' }}
-                  />
+                  <Feather name="arrow-left" style={[styles.white, styles.leftArrow]} />
                 </View>
               }
               placement="top"
@@ -167,23 +131,20 @@ export default class Round extends React.Component {
             <TouchableHighlight
               onPress={() => this.deck.swipeLeft()}
               underlayColor="transparent"
-              style={{ backgroundColor: 'transparent' }}
+              style={styles.background}
             >
-              <Feather name="x" style={[screenStyles.text, { color: '#6A6A6A', fontSize: 45 }]} />
+              <Feather name="x" style={[screenStyles.text, styles.x]} />
             </TouchableHighlight>
           </View>
           <View>
             <Tooltip
               isVisible={this.state.instr}
               content={
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={[screenStyles.text, { color: 'white', fontSize: 12 }]}>
+                <View style={styles.rr}>
+                  <Feather name="arrow-right" style={[styles.rightArrow, styles.white]} />
+                  <Text style={[screenStyles.text, styles.white, styles.left]}>
                     swipe right to like
                   </Text>
-                  <Feather
-                    name="arrow-right"
-                    style={{ color: 'white', fontSize: 15, marginLeft: '1%' }}
-                  />
                 </View>
               }
               placement="top"
@@ -196,9 +157,9 @@ export default class Round extends React.Component {
             <TouchableHighlight
               onPress={() => this.deck.swipeRight()}
               underlayColor="transparent"
-              style={{ backgroundColor: 'transparent', marginTop: '1%' }}
+              style={(styles.background, styles.swipeRight)}
             >
-              <Icon name="heart" style={[screenStyles.text, { fontSize: 35 }]} />
+              <Icon name="heart" style={[screenStyles.text, styles.heart]} />
             </TouchableHighlight>
           </View>
         </View>
@@ -223,4 +184,34 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: 'white',
   },
+  card: { justifyContent: 'center' },
+  topMargin: { marginTop: '7%' },
+  title: {
+    fontSize: normalize(20),
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  leaveButton: { position: 'absolute', marginLeft: '5%' },
+  centerAlign: { alignItems: 'center' },
+  door: { color: 'black', fontSize: normalize(20) },
+  black: { color: 'black' },
+  restaurant: { textAlign: 'right', fontSize: normalize(15), marginRight: '7%' },
+  bottom: {
+    flex: 0.05,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    marginBottom: '7%',
+    marginRight: '10%',
+    marginLeft: '10%',
+  },
+  rr: { flexDirection: 'row-reverse' },
+  white: { color: 'white' },
+  left: { fontSize: normalize(12) },
+  leftArrow: { fontSize: normalize(15), marginRight: '1%' },
+  background: { backgroundColor: 'transparent' },
+  x: { color: '#6A6A6A', fontSize: normalize(45) },
+  rightArrow: { fontSize: normalize(15), marginLeft: '1%' },
+  swipeRight: { marginTop: '1%' },
+  heart: { fontSize: normalize(35) },
 })

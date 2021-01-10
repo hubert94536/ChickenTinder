@@ -148,13 +148,13 @@ export default class createAccount extends React.Component {
   render() {
     return (
       <View style={[screenStyles.mainContainer]}>
-        <Text
-          style={[screenStyles.textBold, screenStyles.title, styles.title]}
-        >
+        <Text style={[screenStyles.textBold, screenStyles.title, styles.title]}>
           Create Account
         </Text>
         <Text style={[screenStyles.textBook, styles.mediumText]}>Account Verified!</Text>
-        <Text style={[screenStyles.textBook, styles.mediumText]}>Finish setting up your account</Text>
+        <Text style={[screenStyles.textBook, styles.mediumText]}>
+          Finish setting up your account
+        </Text>
 
         {this.state.photo.includes('file') ? (
           <Image
@@ -167,7 +167,9 @@ export default class createAccount extends React.Component {
           <Image source={this.state.photo} style={screenStyles.avatar} />
         )}
 
-        <Text style={[screenStyles.textBook, styles.fieldName , {marginTop: '5%'}]}>Display Name</Text>
+        <Text style={[screenStyles.textBook, styles.fieldName, { marginTop: '5%' }]}>
+          Display Name
+        </Text>
         <TextInput
           style={[screenStyles.textBook, styles.fieldText]}
           textAlign="left"
@@ -177,9 +179,13 @@ export default class createAccount extends React.Component {
           value={this.state.name}
         />
 
-<Text style={[screenStyles.textBook, styles.fieldName]}>Username</Text>
+        <Text style={[screenStyles.textBook, styles.fieldName]}>Username</Text>
         <TextInput
-          style={[screenStyles.textBook, styles.fieldText, { marginBottom: this.state.validUsername ? '3%' : '0%' }]}
+          style={[
+            screenStyles.textBook,
+            styles.fieldText,
+            { marginBottom: this.state.validUsername ? '3%' : '0%' },
+          ]}
           textAlign="left"
           onChangeText={(username) => {
             this.setState({ username })
@@ -206,7 +212,8 @@ export default class createAccount extends React.Component {
         <Text style={[screenStyles.textBook, styles.fieldName]}>Email</Text>
         <TextInput
           style={[
-            screenStyles.textBook, styles.fieldText,
+            screenStyles.textBook,
+            styles.fieldText,
             { marginBottom: this.state.validEmail && this.state.validEmailFormat ? '3%' : '0%' },
           ]}
           textAlign="left"
@@ -252,8 +259,7 @@ createAccount.propTypes = {
   navigation: PropTypes.object,
 }
 const styles = StyleSheet.create({
-  title:
-  {
+  title: {
     fontSize: normalize(25),
     marginTop: '10%',
     marginBottom: '5%',

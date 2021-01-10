@@ -71,9 +71,7 @@ export default class Settings extends React.Component {
             </View>
           </View>
           <View style={[styles.bodyContainer, styles.bodyMargin]}>
-            <Text style={[screenStyles.text, styles.subTitle]}>
-              Phone Number
-            </Text>
+            <Text style={[screenStyles.text, styles.subTitle]}>Phone Number</Text>
             <TextInput
               style={[screenStyles.text, screenStyles.input, styles.textInput]}
               editable={false}

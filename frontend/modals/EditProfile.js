@@ -59,11 +59,10 @@ export default class EditProfile extends React.Component {
             ) : (
               <Image source={this.props.image} style={styles.pfp} />
             )}
-            <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: '4%' }}>
-            </View>
-            <Text style={[screenStyles.text, styles.nameText]}>
-              Display name
-            </Text>
+            <View
+              style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: '4%' }}
+            ></View>
+            <Text style={[screenStyles.text, styles.nameText]}>Display name</Text>
             <TextInput
               style={[screenStyles.text, screenStyles.input, styles.input]}
               underlineColorAndroid="transparent"

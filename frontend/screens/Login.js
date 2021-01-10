@@ -42,13 +42,8 @@ export default class Login extends React.Component {
   render() {
     return (
       <View style={[screenStyles.mainContainer]}>
-        <Image
-          source={require('../assets/images/Logo.png')}
-          style={styles.logo}
-        />
-        <Text
-          style={[ screenStyles.text, screenStyles.title, styles.slogan]}
-        >
+        <Image source={require('../assets/images/Logo.png')} style={styles.logo} />
+        <Text style={[screenStyles.text, screenStyles.title, styles.slogan]}>
           Let&apos;s Get Chews-ing!
         </Text>
         <TouchableHighlight
@@ -60,10 +55,7 @@ export default class Login extends React.Component {
           style={[screenStyles.longButton, styles.phoneButton]}
         >
           <View style={screenStyles.contentContainer}>
-            <Icon
-              style={[imgStyles.icon, styles.buttonIcon]}
-              name="phone"
-            />
+            <Icon style={[imgStyles.icon, styles.buttonIcon]} name="phone" />
             <Text
               style={[
                 screenStyles.longButtonText,
@@ -80,13 +72,10 @@ export default class Login extends React.Component {
           activeOpacity={1}
           underlayColor="white"
           onPress={() => this.login()}
-          style={[ screenStyles.longButton, styles.fbButton]}
+          style={[screenStyles.longButton, styles.fbButton]}
         >
           <View style={[screenStyles.contentContainer]}>
-            <Icon
-              style={[imgStyles.icon, styles.buttonIcon]}
-              name="facebook-official"
-            />
+            <Icon style={[imgStyles.icon, styles.buttonIcon]} name="facebook-official" />
             <Text
               style={[
                 screenStyles.longButtonText,
@@ -98,9 +87,7 @@ export default class Login extends React.Component {
           </View>
         </TouchableHighlight>
 
-        <Text
-          style={[screenStyles.textBook, styles.termsText]}
-        >
+        <Text style={[screenStyles.textBook, styles.termsText]}>
           By clicking log in, you agree with our Terms and Conditions.
         </Text>
 
@@ -138,43 +125,27 @@ Login.propTypes = {
 }
 
 const styles = StyleSheet.create({
-  logo:
-  {
-    alignSelf: 'center', 
-    width: normalize(200), 
-    height: normalize(248), 
-    marginTop: '12%' },
-
-  slogan: 
-  {
+  logo: {
+    alignSelf: 'center',
+    width: normalize(200),
+    height: normalize(248),
+    marginTop: '12%',
+  },
+  slogan: {
     fontSize: normalize(30),
     marginTop: '2.5%',
     marginBottom: '10%',
     fontWeight: 'bold',
   },
-  phoneButton: 
-  { borderColor: colors.hex, 
-    backgroundColor: colors.hex, 
-    marginTop: '7%' 
-  },
-  buttonIcon:
-  { fontSize: normalize(22), 
-    color: 'white', 
-    marginRight: '5%' 
-  },
-  fbButton:
-  { borderColor: '#3b5998', 
-    backgroundColor: '#3b5998',
-    marginTop: '7%' 
-  },
-  termsText:
-  {
+  phoneButton: { borderColor: colors.hex, backgroundColor: colors.hex, marginTop: '7%' },
+  buttonIcon: { fontSize: normalize(22), color: 'white', marginRight: '5%' },
+  fbButton: { borderColor: '#3b5998', backgroundColor: '#3b5998', marginTop: '7%' },
+  termsText: {
     alignSelf: 'center',
     marginHorizontal: '15%',
     marginTop: '7.5%',
     fontSize: normalize(13),
     textAlign: 'center',
     lineHeight: normalize(17),
-  }
-  
+  },
 })
