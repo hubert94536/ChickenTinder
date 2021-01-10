@@ -103,7 +103,7 @@ export default class ChooseFriends extends React.Component {
             <SearchBar
               containerStyle={styles.searchBarContainer}
               inputContainerStyle={styles.searchBarInputContainer}
-              inputStyle={[screenStyles.text, styles.searchBarInput]}
+              inputStyle={[screenStyles.medium, styles.searchBarInput]}
               placeholder="Search for friends"
               onChangeText={(text) => this.searchFilterFunction(text)}
               value={this.state.search}
@@ -117,12 +117,11 @@ export default class ChooseFriends extends React.Component {
                 <Card
                   name={item.name}
                   image={item.photo}
-                  id={item.id}
+                  uid={item.uid}
                   username={item.username}
-                  currentUser={id}
                   total={this.state.data}
                   status="not added"
-                  key={item.id}
+                  key={item.uid}
                   press={() => this.sendInvite()}
                 />
               )}

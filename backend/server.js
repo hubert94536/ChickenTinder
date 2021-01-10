@@ -11,7 +11,6 @@ const friends = require('./friendsQueries.js')
 const notifications = require('./notifsQueries.js')
 const schema = require('./schema.js')
 
-
 const app = express()
 const server = http.createServer(app)
 
@@ -19,11 +18,11 @@ io.attach(server)
 require('./socketEvents.js')(io)
 
 // removes socket client from each namespace until authentication
-_.each(io.nsps, function(nsp){
-  nsp.on('connect', function(socket){
-      delete nsp.connected[socket.id];
-  });
-});
+_.each(io.nsps, function (nsp) {
+  nsp.on('connect', function (socket) {
+    delete nsp.connected[socket.id]
+  })
+})
 
 socketAuth(io, {
   authenticate: async (socket, data, callback) => {
@@ -40,11 +39,11 @@ socketAuth(io, {
   postAuthenticate: async (socket) => {
     try {
       // reconnect socket client to each namespace
-      _.each(io.nsps, function(nsp) {
-        if(_.findWhere(nsp.sockets, {id: socket.id})) {
-          nsp.connected[socket.id] = socket;
+      _.each(io.nsps, function (nsp) {
+        if (_.findWhere(nsp.sockets, { id: socket.id })) {
+          nsp.connected[socket.id] = socket
         }
-      });
+      })
       // associate uid to socket id
       await hmset(`users:${socket.user.uid}`, 'client', socket.id)
     } catch (err) {

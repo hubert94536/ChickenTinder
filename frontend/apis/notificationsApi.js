@@ -42,9 +42,7 @@ const getNotifs = async () => {
 // remove a notification
 const removeNotif = async (id) => {
   return notificationsApi
-    .delete(`/notifications`, {
-      id: id,
-    })
+    .delete(`/notifications`, { data: { id: id } })
     .then((res) => {
       return res.status
     })

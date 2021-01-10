@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import FBSDK from 'react-native-fbsdk'
 import Firebase from 'firebase'
 import accountsApi from './accountsApi.js'
+import socket from './socket.js'
 
 const { LoginManager, AccessToken } = FBSDK
 
@@ -44,6 +45,7 @@ const loginWithFacebook = async () => {
     // Get info from database if not new user
     if (!userCredential.additionalUserInfo.isNewUser) {
       const user = await accountsApi.getUser()
+      console.log(user)
       AsyncStorage.multiSet([
         [USERNAME, user.username],
         [NAME, user.name],
@@ -66,20 +68,23 @@ const loginWithFacebook = async () => {
   }
 }
 
-// Log out of Firebase and Facebook
+// Log out of Firebase and Facebook, disconnect socket
 const logoutWithFacebook = async () => {
+  socket.getSocket().disconnect()
   Firebase.auth()
     .signOut()
     .then(() => {
       LoginManager.logOut()
-      AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE])
+      AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
     })
     .catch((error) => {
       Promise.reject(error)
     })
 }
 
+// Deletes user from database, Firebase, and disconnects socket
 const deleteUser = async () => {
+  socket.getSocket().disconnect()
   accountsApi
     .deleteUser()
     .then(() => {
@@ -93,8 +98,9 @@ const deleteUser = async () => {
         Firebase.auth()
           .currentUser.reauthenticateWithCredential(credential)
           .then(() => {
+            // Delete user from firebase and remove information from AsyncStorage
             Firebase.auth().currentUser.delete()
-            AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE])
+            AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
           })
           .catch((error) => Promise.reject(error))
       })

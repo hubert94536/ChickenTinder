@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
+import colors from '../../styles/colors.js'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
 import normalize from '../../styles/normalize.js'
@@ -18,7 +19,7 @@ export default class NotifCard extends React.Component {
     super(props)
     this.state = {
       isFriend: this.props.friends,
-      id: this.props.id,
+      uid: this.props.uid,
       confirmPressed: false,
       deletePressed: false,
       trash: false,
@@ -28,7 +29,7 @@ export default class NotifCard extends React.Component {
   // accept friend request and modify card
   async acceptFriend() {
     friendsApi
-      .acceptFriendRequest(this.state.id)
+      .acceptFriendRequest(this.state.uid)
       .then(() => {
         this.setState({ isFriend: true })
       })
@@ -38,13 +39,13 @@ export default class NotifCard extends React.Component {
   // delete friend and modify view
   async deleteFriend() {
     friendsApi
-      .removeFriendship(this.state.id)
+      .removeFriendship(this.state.uid)
       .then(() => {
         this.props.removeDelete()
         var filteredArray = this.props.total.filter((item) => {
           return item.username !== this.props.username
         })
-        this.props.press(this.props.id, filteredArray, true)
+        this.props.press(this.props.uid, filteredArray, true)
       })
       .catch(() => this.props.showError())
   }
@@ -131,7 +132,7 @@ export default class NotifCard extends React.Component {
                   var filteredArray = this.props.total.filter((item) => {
                     return item.username !== this.props.username
                   })
-                  this.props.press(this.props.id, filteredArray, false)
+                  this.props.press(this.props.uid, filteredArray, false)
                 }}
                 style={styles.blackButton}
               >
@@ -154,7 +155,7 @@ export default class NotifCard extends React.Component {
 
 NotifCard.propTypes = {
   friends: PropTypes.bool,
-  id: PropTypes.string,
+  uid: PropTypes.string,
   total: PropTypes.array,
   type: PropTypes.string,
   username: PropTypes.string,
@@ -181,7 +182,7 @@ const styles = StyleSheet.create({
     flex: 0.9,
   },
   text: { fontSize: normalize(15) },
-  username: { color: '#F15763' },
+  username: { color: colors.hex },
   invited: { flexDirection: 'row', marginLeft: '3%' },
   icon: { fontSize: normalize(20) },
   trashInvite: {
@@ -195,8 +196,8 @@ const styles = StyleSheet.create({
   trashWhite: { fontSize: normalize(20), color: 'white' },
   general: { flex: 1, flexDirection: 'row' },
   requested: {
-    borderColor: '#F15763',
-    backgroundColor: '#F15763',
+    borderColor: colors.hex,
+    backgroundColor: colors.hex,
     borderRadius: 30,
     borderWidth: 2,
     height: '40%',
@@ -211,7 +212,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(12),
   },
   confirmTextPressed: {
-    color: '#F15763',
+    color: colors.hex,
     alignSelf: 'center',
     fontSize: normalize(12),
   },

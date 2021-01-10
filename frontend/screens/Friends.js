@@ -29,7 +29,7 @@ export default class Friends extends React.Component {
   }
 
   //  gets the users friends
-  async getFriends() {
+  getFriends() {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
       .getFriends()
@@ -94,14 +94,13 @@ export default class Friends extends React.Component {
           <Card
             name={friendList[i].name}
             image={friendList[i].photo}
-            id={friendList[i].id}
+            uid={friendList[i].uid}
             username={friendList[i].username}
-            currentUser={id}
             total={this.state.friends}
             status={status}
             key={i}
             index={i}
-            press={(id, newArr, status) => this.removeRequest(id, newArr)}
+            press={(uid, newArr) => this.removeRequest(uid, newArr)}
           />,
         )
       }

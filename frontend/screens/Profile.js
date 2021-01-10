@@ -365,37 +365,20 @@ const styles = StyleSheet.create({
     marginTop: '4%',
     fontWeight: 'bold',
   },
-  pencil: {
-    fontSize: normalize(28),
-    marginTop: '4%',
-    marginLeft: '1%',
-    marginBottom: '1%',
-  },
-  username: {
-    fontSize: normalize(14),
-    color: hex,
-    fontWeight: 'bold',
-  },
+  pencil: { fontSize: normalize(28), marginTop: '4%', marginLeft: '1%', marginBottom: '1%' },
+  username: { fontSize: normalize(14), color: hex, fontWeight: 'bold' },
   friends: {
     marginTop: '5%',
     marginLeft: '7%',
     fontSize: normalize(20),
     fontWeight: 'bold',
   },
-  friendNum: {
-    marginLeft: '7%',
-    fontSize: normalize(17),
-    fontFamily: 'CircularStd-Medium',
-  },
+  friendNum: { marginLeft: '7%', fontSize: normalize(17), fontFamily: 'CircularStd-Medium' },
   friendContainer: {
     height: '50%',
     marginTop: '1%',
   },
-  filler: {
-    width: '7%',
-    margin: '5%',
-    textAlign: 'right',
-  },
+  filler: { width: '7%', margin: '5%', textAlign: 'right' },
   infoContainer: {
     alignItems: 'center',
   },

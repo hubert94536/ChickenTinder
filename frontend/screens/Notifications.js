@@ -6,12 +6,13 @@ import { BlurView } from '@react-native-community/blur'
 import Swiper from 'react-native-swiper'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
+import accountsApi from '../apis/accountsApi.js'
+import colors from '../../styles/colors.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import NotifCard from '../cards/NotifCard.js'
 import TabBar from '../Nav.js'
 
-const hex = '#F15763'
 var img = ''
 var name = ''
 var username = ''
@@ -61,21 +62,21 @@ export default class Notif extends Component {
       {
         name: 'Hanna Co',
         username: 'hco',
-        id: '3',
+        uid: '3',
         image: '150',
         type: 'invited',
       },
       {
         name: 'Francis Feng',
         username: 'francis',
-        id: '8',
+        uid: '8',
         image: '167',
         type: 'invited',
       },
       {
         name: 'Hubert Chen',
         username: 'hubesc',
-        id: '5',
+        uid: '5',
         image: '165',
         type: 'requested',
       },
@@ -101,12 +102,12 @@ export default class Notif extends Component {
               total={this.state.notifs}
               name={notifList[i].name}
               username={notifList[i].username}
-              id={notifList[i].id}
+              uid={notifList[i].uid}
               image={notifList[i].image}
               type={notifList[i].type}
               key={i}
               index={i}
-              press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
+              press={(uid, newArr, status) => this.removeRequest(uid, newArr, status)}
               showError={() => this.setState({ errorAlert: true })}
               removeError={() => this.setState({ errorAlert: false })}
               showDelete={() => this.setState({ deleteFriend: true })}
@@ -119,12 +120,12 @@ export default class Notif extends Component {
               total={this.state.notifs}
               name={notifList[i].name}
               username={notifList[i].username}
-              id={notifList[i].id}
+              uid={notifList[i].uid}
               image={notifList[i].image}
               type={notifList[i].type}
               key={i}
               index={i}
-              press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
+              press={(uid, newArr, status) => this.removeRequest(uid, newArr, status)}
               showError={() => this.setState({ errorAlert: true })}
               removeError={() => this.setState({ errorAlert: false })}
               showDelete={() => this.setState({ deleteFriend: true })}
@@ -146,7 +147,9 @@ export default class Notif extends Component {
               underlayColor="#fff"
               style={[
                 // screenStyles.smallButton,
-                this.state.activity ? { borderBottomColor: hex } : { borderBottomColor: 'white' },
+                this.state.activity
+                  ? { borderBottomColor: colors.hex }
+                  : { borderBottomColor: 'white' },
                 { marginLeft: '5%', flex: 0.5, borderBottomWidth: 2 },
               ]}
               onPress={() => this.refs.swiper.scrollBy(-1)}
@@ -166,7 +169,9 @@ export default class Notif extends Component {
               underlayColor="#fff"
               style={[
                 // screenStyles.smallButton,
-                !this.state.activity ? { borderBottomColor: hex } : { borderBottomColor: 'white' },
+                !this.state.activity
+                  ? { borderBottomColor: colors.hex }
+                  : { borderBottomColor: 'white' },
                 { marginHorizontal: '5%', flex: 0.5, borderBottomWidth: 2 },
               ]}
               onPress={() => this.refs.swiper.scrollBy(1)}

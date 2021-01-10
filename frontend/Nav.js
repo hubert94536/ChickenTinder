@@ -2,10 +2,9 @@ import React from 'react'
 import { Dimensions, StyleSheet, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import colors from '../styles/colors.js'
 
 const height = Dimensions.get('window').height
-
-const hex = '#F15763'
 
 export default class TabBar extends React.Component {
   render() {
@@ -18,7 +17,7 @@ export default class TabBar extends React.Component {
         >
           <Icon
             name="location-arrow"
-            style={{ color: this.props.cur === 'Home' ? hex : '#8d8d8d', fontSize: 26 }}
+            style={{ color: this.props.cur === 'Home' ? colors.hex : '#8d8d8d', fontSize: 26 }}
           />
         </TouchableHighlight>
         <TouchableHighlight
@@ -28,7 +27,7 @@ export default class TabBar extends React.Component {
         >
           <Icon
             name="search"
-            style={{ color: this.props.cur === 'Search' ? hex : '#8d8d8d', fontSize: 26 }}
+            style={{ color: this.props.cur === 'Search' ? colors.hex : '#8d8d8d', fontSize: 26 }}
           />
         </TouchableHighlight>
         <TouchableHighlight
@@ -38,7 +37,7 @@ export default class TabBar extends React.Component {
         >
           <Icon
             name="bullhorn"
-            style={{ color: this.props.cur === 'Notifs' ? hex : '#8d8d8d', fontSize: 26 }}
+            style={{ color: this.props.cur === 'Notifs' ? colors.hex : '#8d8d8d', fontSize: 26 }}
           />
         </TouchableHighlight>
         <TouchableHighlight
@@ -48,7 +47,7 @@ export default class TabBar extends React.Component {
         >
           <Icon
             name="user"
-            style={{ color: this.props.cur === 'Profile' ? hex : '#8d8d8d', fontSize: 26 }}
+            style={{ color: this.props.cur === 'Profile' ? colors.hex : '#8d8d8d', fontSize: 26 }}
           />
         </TouchableHighlight>
       </View>

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { StyleSheet, View, Text, TouchableHighlight, Modal } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import PropTypes from 'prop-types'
+import colors from '../../styles/colors.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
     marginBottom: '3%',
   },
   bgHex: {
-    backgroundColor: screenStyles.hex.color,
+    backgroundColor: colors.hex,
   },
   white: {
     color: 'white',

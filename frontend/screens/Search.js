@@ -14,7 +14,6 @@ import TabBar from '../Nav.js'
 
 const font = 'CircularStd-Medium'
 var username = ''
-AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 
 export default class Search extends Component {
   constructor(props) {
@@ -34,7 +33,7 @@ export default class Search extends Component {
         .then((res) => {
           var friendsMap = new Object()
           for (var friend in res.friendList) {
-            friendsMap[res.friendList[friend].id] = res.friendList[friend].status
+            friendsMap[res.friendList[friend].uid] = res.friendList[friend].status
           }
           this.setState({ friends: friendsMap })
         })
@@ -58,14 +57,14 @@ export default class Search extends Component {
             var resultUsers = []
             for (var user in res.userList) {
               var status = 'add'
-              if (res.userList[user].id in this.state.friends) {
-                status = this.state.friends[res.userList[user].id]
+              if (res.userList[user].uid in this.state.friends) {
+                status = this.state.friends[res.userList[user].uid]
               }
               var person = {
                 name: res.userList[user].name,
                 username: res.userList[user].username,
                 image: res.userList[user].photo,
-                id: res.userList[user].id,
+                uid: res.userList[user].uid,
                 status: status,
               }
               if (person === undefined) {
@@ -124,13 +123,13 @@ export default class Search extends Component {
             <Card
               name={item.name}
               image={item.image}
-              id={item.id}
+              uid={item.uid}
               username={item.username}
               currentUser={username}
               total={this.state.data}
               status={item.status}
-              key={item.id}
-              press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
+              key={item.uid}
+              press={(uid, newArr, status) => this.removeRequest(uid, newArr, status)}
             />
           )}
           keyExtractor={(item) => item.username}

@@ -25,14 +25,11 @@ export default class Join extends React.Component {
     this.setState({ pressed: false })
     const code = this.state.code
     this.setState({ code: '' })
-    // const { code } = this.state
     socket.joinRoom(code)
     this.props.cancel()
   }
 
   handleCancel() {
-    const { username } = this.props
-    socket.declineInvite(username)
     this.props.cancel()
   }
 

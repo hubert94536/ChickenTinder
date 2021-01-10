@@ -19,42 +19,42 @@ export default class Card extends React.Component {
     }
   }
 
-  async deleteFriend() {
+  deleteFriend() {
     friendsApi
-      .removeFriendship(this.props.id)
+      .removeFriendship(this.props.uid)
       .then(() => {
-        this.setState({ deleteFriend: false })
+        this.setState({ deleteFriend: false, status: 'add' })
         var filteredArray = this.props.total.filter((item) => {
           return item.username !== this.props.username
         })
-        this.props.press(this.props.id, filteredArray, true)
+        this.props.press(this.props.uid, filteredArray, true)
       })
       .catch(() => this.setState({ errorAlert: true, deleteFriend: false }))
   }
 
-  async acceptFriend() {
+  acceptFriend() {
     friendsApi
-      .acceptFriendRequest(this.props.id)
+      .acceptFriendRequest(this.props.uid)
       .then(() => {
-        this.setState({ requested: 'friends' })
+        this.setState({ status: 'friends' })
       })
       .catch(() => this.setState({ errorAlert: true }))
   }
 
-  async addFriend() {
+  addFriend() {
     friendsApi
-      .createFriendship(this.props.id)
+      .createFriendship(this.props.uid)
       .then(() => {
-        this.setState({ requested: 'requested' })
+        this.setState({ status: 'requested' })
       })
       .catch(() => this.setState({ errorAlert: true }))
   }
 
-  async rejectFriend() {
+  rejectFriend() {
     friendsApi
-      .removeFriendship(this.props.id)
+      .removeFriendship(this.props.uid)
       .then(() => {
-        this.setState({ requested: 'add' })
+        this.setState({ status: 'add' })
       })
       .catch(() => this.setState({ errorAlert: true }))
   }
@@ -69,13 +69,13 @@ export default class Card extends React.Component {
           <Text style={[imgStyles.font, imgStyles.hex]}>@{this.props.username}</Text>
         </View>
         {/* if user is in a group */}
-        {this.props.status === 'in group' && (
+        {this.state.status === 'in group' && (
           <View style={imgStyles.card}>
             <Text style={[imgStyles.text, styles.text]}>Added!</Text>
           </View>
         )}
         {/* if user is not in a group */}
-        {this.props.status === 'not added' && (
+        {this.state.status === 'not added' && (
           <TouchableHighlight>
             <View style={imgStyles.card}>
               <Text style={[imgStyles.text, styles.topMargin]}>Add</Text>
@@ -91,14 +91,14 @@ export default class Card extends React.Component {
           </TouchableHighlight>
         )}
         {/* if user has requested to add them as a friend */}
-        {this.props.status === 'requested' && renderOption && (
+        {this.state.status === 'requested' && renderOption && (
           <View style={imgStyles.card}>
             <Text style={[imgStyles.text, styles.grey]}>Request Sent</Text>
             <Icon style={[imgStyles.icon, styles.icon, styles.grey]} name="hourglass-end" />
           </View>
         )}
         {/* if they are not friends */}
-        {this.props.status === 'add' && renderOption && (
+        {this.state.status === 'add' && renderOption && (
           <TouchableHighlight underlayColor="white" onPress={() => this.addFriend()}>
             <View style={imgStyles.card}>
               <Text style={[imgStyles.text, styles.black]}>Add Friend</Text>
@@ -107,7 +107,7 @@ export default class Card extends React.Component {
           </TouchableHighlight>
         )}
         {/* if they are friends */}
-        {this.props.status === 'friends' && renderOption && (
+        {this.state.status === 'friends' && renderOption && (
           <TouchableHighlight
             underlayColor="transparent"
             onPress={() => this.setState({ errorAlert: false, deleteFriend: true })}
@@ -119,24 +119,24 @@ export default class Card extends React.Component {
           </TouchableHighlight>
         )}
         {/* if they've requested you as a friend*/}
-        {this.props.status === 'pending' && renderOption && (
+        {this.state.status === 'pending' && renderOption && (
           <View style={imgStyles.card}>
             <Text style={[imgStyles.text, styles.black]}>Pending Request</Text>
             <Icon
               style={[imgStyles.icon, styles.pend]}
               name="check-circle"
-              onPress={() => this.acceptFriend}
+              onPress={() => this.acceptFriend()}
             />
             <AntDesign
               style={[imgStyles.icon, styles.pend, styles.black]}
               name="closecircleo"
-              onPress={() => this.rejectFriend}
+              onPress={() => this.rejectFriend()}
             />
           </View>
         )}
         {this.state.deleteFriend && (
           <Alert
-            title={'Unfriend ' + name}
+            title={'Unfriend ' + this.props.name}
             body="If you change your mind, you'll have to send a friends request again."
             buttonAff="Unfriend"
             buttonNeg="Cancel"
@@ -166,7 +166,7 @@ Card.propTypes = {
   currentUser: PropTypes.string,
   username: PropTypes.string,
   status: PropTypes.string,
-  id: PropTypes.string,
+  uid: PropTypes.string,
   total: PropTypes.array,
   image: PropTypes.string,
   press: PropTypes.func,

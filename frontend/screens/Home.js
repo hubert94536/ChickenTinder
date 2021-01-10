@@ -8,11 +8,12 @@ import friendsApi from '../apis/friendsApi.js'
 import accountsApi from '../apis/accountsApi.js'
 import socket from '../apis/socket.js'
 import Alert from '../modals/Alert.js'
+import colors from '../../styles/colors.js'
 import Join from '../modals/Join.js'
 import TabBar from '../Nav.js'
 import screenStyles from '../../styles/screenStyles.js'
 
-var id = ''
+var uid = ''
 var username = ''
 
 const width = Dimensions.get('window').width
@@ -31,7 +32,7 @@ class Home extends React.Component {
       errorAlert: false,
     }
     AsyncStorage.multiGet([UID, USERNAME]).then((res) => {
-      id = res[0][1]
+      uid = res[0][1]
       username = res[1][1]
       socket.connect()
       socket.getSocket().on('update', (res) => {
@@ -47,9 +48,9 @@ class Home extends React.Component {
       // accountsApi.createFBUserTest('Anna', 4, 'annax', 'annx@gmail.com', '12', '45678902')
       // accountsApi.createFBUserTest('Helen', 5, 'helenthemelon', 'helenw@gmail.com', '13', '45678903')
       // accountsApi.createFBUserTest('Kevin', 6, 'kevint', 'kevintang@gmail.com', '14', '45678904')
-      // friendsApi.createFriendshipTest(2, id)
-      // friendsApi.createFriendshipTest(3, id)
-      // friendsApi.createFriendshipTest(4, id)
+      // friendsApi.createFriendshipTest(2, uid)
+      // friendsApi.createFriendshipTest(3, uid)
+      // friendsApi.createFriendshipTest(4, uid)
     })
   }
 
@@ -86,7 +87,7 @@ class Home extends React.Component {
             activeOpacity={1}
             underlayColor="white"
             style={{
-              backgroundColor: '#F15763',
+              backgroundColor: colors.hex,
               borderRadius: 40,
               width: width * 0.5,
               height: 45,
@@ -99,7 +100,7 @@ class Home extends React.Component {
             <Text
               style={[
                 styles.buttonText,
-                this.state.createPressed ? { color: '#F15763' } : { color: 'white' },
+                this.state.createPressed ? { color: colors.hex } : { color: 'white' },
               ]}
             >
               Create Group
@@ -109,7 +110,7 @@ class Home extends React.Component {
             onShowUnderlay={() => this.setState({ joinPressed: true })}
             onHideUnderlay={() => this.setState({ joinPressed: false })}
             activeOpacity={1}
-            underlayColor="#F15763"
+            underlayColor={colors.hex}
             style={{
               backgroundColor: 'white',
               borderRadius: 40,
@@ -117,7 +118,7 @@ class Home extends React.Component {
               height: 45,
               justifyContent: 'center',
               alignSelf: 'center',
-              borderColor: '#F15763',
+              borderColor: colors.hex,
               borderWidth: 2,
             }}
             onPress={() => this.setState({ join: true })}
@@ -125,7 +126,7 @@ class Home extends React.Component {
             <Text
               style={[
                 styles.buttonText,
-                this.state.profilePressed ? { color: 'white' } : { color: '#F15763' },
+                this.state.profilePressed ? { color: 'white' } : { color: colors.hex },
               ]}
             >
               Join Group

@@ -29,9 +29,7 @@ const createFriendshipTest = async (main, friend) => {
 
 const createFriendship = async (friend) => {
   return friendsApi
-    .post(`/friendships`, {
-      friend: friend,
-    })
+    .post(`/friendships`, { friend: friend })
     .then((res) => {
       return res.status
     })
@@ -67,9 +65,7 @@ const getFriends = async () => {
 // accept a friend request
 const acceptFriendRequest = async (friend) => {
   return friendsApi
-    .put(`/friendships`, {
-      friend: friend,
-    })
+    .put(`/friendships`, { friend: friend })
     .then((res) => {
       return res.status
     })
@@ -81,9 +77,7 @@ const acceptFriendRequest = async (friend) => {
 // remove a friendship
 const removeFriendship = async (friend) => {
   return friendsApi
-    .delete(`/friendships`, {
-      friend: friend,
-    })
+    .delete(`/friendships`, { data: { friend: friend } })
     .then((res) => {
       return res.status
     })

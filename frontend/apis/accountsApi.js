@@ -121,6 +121,7 @@ const getUser = async () => {
         phone_number: res.data.user.phone_number,
         name: res.data.user.name,
         photo: res.data.user.photo,
+        uid: res.data.user.uid,
       }
     })
     .catch((error) => {

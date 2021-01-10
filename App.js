@@ -11,7 +11,6 @@ import Match from './frontend/screens/Match.js'
 import Notifications from './frontend/screens/Notifications.js'
 import Round from './frontend/screens/Round.js'
 import Search from './frontend/screens/Search.js'
-import Username from './frontend/screens/Username.js'
 import UserProfileView from './frontend/screens/Profile.js'
 import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
 import Loading from './frontend/screens/Loading.js'
@@ -47,9 +46,6 @@ export default class App extends React.Component {
           },
           Login: {
             screen: Login,
-          },
-          Username: {
-            screen: Username,
           },
           Profile: {
             screen: UserProfileView,
