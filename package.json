@@ -18,6 +18,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fortawesome/react-native-fontawesome": "^0.2.5",
+    "@react-native-async-storage/async-storage": "^1.13.2",
     "@react-native-community/blur": "^3.6.0",
     "@react-native-community/clipboard": "^1.5.1",
     "@react-native-community/masked-view": "^0.1.10",
@@ -30,6 +31,7 @@
     "express": "^4.17.1",
     "express-joi-validation": "^5.0.0",
     "firebase": "^7.21.1",
+    "firebase-admin": "^9.4.2",
     "http": "0.0.1-security",
     "joi": "^17.3.0",
     "mock-async-storage": "^2.2.0",
@@ -61,27 +63,24 @@
     "sequelize": "^6.3.5",
     "smartystreets-javascript-sdk": "^1.6.0",
     "socket.io": "^2.3.0",
+    "socketio-auth": "^0.1.1",
     "socket.io-client": "^2.3.0",
     "switch-button-react-native": "^1.0.3",
+    "underscore": "^1.12.0",
     "util": "^0.12.3"
   },
-  "devDependencies": {
-    "@react-native-async-storage/async-storage": "^1.13.2",
+  "devDependencies": { 
     "@testing-library/react-native": "^7.1.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.14.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.21.5",
-    "firebase-admin": "^9.4.2",
     "jest": "^24.9.0",
     "jest-cli": "^26.6.1",
-    "jsonwebtoken": "^8.5.1",
     "patch-package": "^6.2.2",
     "prettier": "^2.1.2",
-    "react-test-renderer": "^17.0.1",
-    "socketio-auth": "^0.1.1",
-    "underscore": "^1.12.0"
+    "react-test-renderer": "^17.0.1"
   },
   "jest": {
     "preset": "react-native",
