@@ -2,15 +2,15 @@
 import React from 'react'
 import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import PropTypes from 'prop-types'
-// import friendsApi from '../apis/friendsApi.js'
 // import accountsApi from '../apis/accountsApi.js'
-import socket from '../apis/socket.js'
 import Alert from '../modals/Alert.js'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+// import friendsApi from '../apis/friendsApi.js'
 import Join from '../modals/Join.js'
-import TabBar from '../Nav.js'
+import PropTypes from 'prop-types'
 import screenStyles from '../../styles/screenStyles.js'
+import socket from '../apis/socket.js'
+import TabBar from '../Nav.js'
 
 var id = ''
 var name = ''
@@ -76,21 +76,14 @@ class Home extends React.Component {
 
   render() {
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: 'white',
-          alignItems: 'center',
-          justifyContent: 'space-evenly',
-        }}
-      >
-        <Text style={[screenStyles.text, screenStyles.title, { fontSize: 30 }]}>
+      <View style={[screenStyles.mainContainer, screenStyles.background]}>
+        <Text style={[screenStyles.text, screenStyles.title, styles.slogan]}>
           Hungry? Chews wisely.
         </Text>
         {/* dummy image below */}
         <Image
           source={require('../assets/Icon_Transparent.png')}
-          style={{ width: height * 0.3, height: height * 0.3 }}
+          style={[screenStyles.image]}
         />
         <View>
           <TouchableHighlight
@@ -98,15 +91,7 @@ class Home extends React.Component {
             onHideUnderlay={() => this.setState({ createPressed: false })}
             activeOpacity={1}
             underlayColor="white"
-            style={{
-              backgroundColor: '#F15763',
-              borderRadius: 40,
-              width: width * 0.5,
-              height: 45,
-              justifyContent: 'center',
-              alignSelf: 'center',
-              margin: '3%',
-            }}
+            style={[screenStyles.groupCreate]}
             onPress={() => this.createGroup()}
           >
             <Text
@@ -123,16 +108,7 @@ class Home extends React.Component {
             onHideUnderlay={() => this.setState({ joinPressed: false })}
             activeOpacity={1}
             underlayColor="#F15763"
-            style={{
-              backgroundColor: 'white',
-              borderRadius: 40,
-              width: width * 0.5,
-              height: 45,
-              justifyContent: 'center',
-              alignSelf: 'center',
-              borderColor: '#F15763',
-              borderWidth: 2,
-            }}
+            style={[screenStyles.groupJoin]}
             onPress={() => this.setState({ join: true })}
           >
             <Text
@@ -177,6 +153,10 @@ Home.propTypes = {
   navigation: PropTypes.object,
 }
 const styles = StyleSheet.create({
+  background: {
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+  },
   button: {
     height: 65,
     margin: '3%',
@@ -187,6 +167,35 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'CircularStd-Bold',
     fontSize: 18,
+  },
+  createPressed: {
+
+  },
+  groupCreate: {
+    backgroundColor: '#F15763',
+    borderRadius: 40,
+    width: width * 0.5,
+    height: 45,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    margin: '3%',
+  },
+  groupJoin: {
+    backgroundColor: 'white',
+    borderRadius: 40,
+    width: width * 0.5,
+    height: 45,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    borderColor: '#F15763',
+    borderWidth: 2,
+  },
+  image: {
+    width: height * 0.3, 
+    height: height * 0.3,
+  },
+  slogan: {
+    fontSize: normalize(30),
   },
 })
 

@@ -14,15 +14,15 @@ exports[`renders login page correctly 1`] = `
   <Image
     source={
       Object {
-        "testUri": "../../../frontend/assets/images/logo2.png",
+        "testUri": "../../../frontend/assets/images/Logo.png",
       }
     }
     style={
       Object {
         "alignSelf": "center",
-        "height": 248,
+        "height": 517,
         "marginTop": "12%",
-        "width": 200,
+        "width": 417,
       }
     }
   />
@@ -38,8 +38,7 @@ exports[`renders login page correctly 1`] = `
           "textAlign": "center",
         },
         Object {
-          "fontFamily": "CircularStd-Bold",
-          "fontSize": 30,
+          "fontSize": 63,
           "fontWeight": "bold",
           "marginBottom": "10%",
           "marginTop": "2.5%",
@@ -98,11 +97,11 @@ exports[`renders login page correctly 1`] = `
                 "alignSelf": "center",
                 "color": "#F15763",
                 "fontFamily": "CircularStd-Medium",
-                "fontSize": 35,
+                "fontSize": 73,
               },
               Object {
                 "color": "white",
-                "fontSize": 22,
+                "fontSize": 46,
                 "marginRight": "5%",
               },
             ],
@@ -166,10 +165,12 @@ exports[`renders login page correctly 1`] = `
   >
     <View
       style={
-        Object {
-          "alignSelf": "center",
-          "flexDirection": "row",
-        }
+        Array [
+          Object {
+            "alignSelf": "center",
+            "flexDirection": "row",
+          },
+        ]
       }
     >
       <Text
@@ -185,11 +186,11 @@ exports[`renders login page correctly 1`] = `
                 "alignSelf": "center",
                 "color": "#F15763",
                 "fontFamily": "CircularStd-Medium",
-                "fontSize": 35,
+                "fontSize": 73,
               },
               Object {
                 "color": "white",
-                "fontSize": 22,
+                "fontSize": 46,
                 "marginRight": "5%",
               },
             ],
@@ -228,13 +229,12 @@ exports[`renders login page correctly 1`] = `
       Array [
         Object {
           "color": "#F15763",
-          "fontFamily": "CircularStd-Medium",
+          "fontFamily": "CircularStd-Book",
         },
         Object {
           "alignSelf": "center",
-          "fontFamily": "CircularStd-Book",
-          "fontSize": 13,
-          "lineHeight": 17,
+          "fontSize": 27,
+          "lineHeight": 36,
           "marginHorizontal": "15%",
           "marginTop": "7.5%",
           "textAlign": "center",
@@ -261,15 +261,15 @@ exports[`renders login with Facebook alert 1`] = `
   <Image
     source={
       Object {
-        "testUri": "../../../frontend/assets/images/logo2.png",
+        "testUri": "../../../frontend/assets/images/Logo.png",
       }
     }
     style={
       Object {
         "alignSelf": "center",
-        "height": 248,
+        "height": 517,
         "marginTop": "12%",
-        "width": 200,
+        "width": 417,
       }
     }
   />
@@ -285,8 +285,7 @@ exports[`renders login with Facebook alert 1`] = `
           "textAlign": "center",
         },
         Object {
-          "fontFamily": "CircularStd-Bold",
-          "fontSize": 30,
+          "fontSize": 63,
           "fontWeight": "bold",
           "marginBottom": "10%",
           "marginTop": "2.5%",
@@ -345,11 +344,11 @@ exports[`renders login with Facebook alert 1`] = `
                 "alignSelf": "center",
                 "color": "#F15763",
                 "fontFamily": "CircularStd-Medium",
-                "fontSize": 35,
+                "fontSize": 73,
               },
               Object {
                 "color": "white",
-                "fontSize": 22,
+                "fontSize": 46,
                 "marginRight": "5%",
               },
             ],
@@ -413,10 +412,12 @@ exports[`renders login with Facebook alert 1`] = `
   >
     <View
       style={
-        Object {
-          "alignSelf": "center",
-          "flexDirection": "row",
-        }
+        Array [
+          Object {
+            "alignSelf": "center",
+            "flexDirection": "row",
+          },
+        ]
       }
     >
       <Text
@@ -432,11 +433,11 @@ exports[`renders login with Facebook alert 1`] = `
                 "alignSelf": "center",
                 "color": "#F15763",
                 "fontFamily": "CircularStd-Medium",
-                "fontSize": 35,
+                "fontSize": 73,
               },
               Object {
                 "color": "white",
-                "fontSize": 22,
+                "fontSize": 46,
                 "marginRight": "5%",
               },
             ],
@@ -475,13 +476,12 @@ exports[`renders login with Facebook alert 1`] = `
       Array [
         Object {
           "color": "#F15763",
-          "fontFamily": "CircularStd-Medium",
+          "fontFamily": "CircularStd-Book",
         },
         Object {
           "alignSelf": "center",
-          "fontFamily": "CircularStd-Book",
-          "fontSize": 13,
-          "lineHeight": 17,
+          "fontSize": 27,
+          "lineHeight": 36,
           "marginHorizontal": "15%",
           "marginTop": "7.5%",
           "textAlign": "center",

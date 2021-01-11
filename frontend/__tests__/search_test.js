@@ -3,7 +3,7 @@ import { render, fireEvent, cleanup } from '@testing-library/react-native'
 import Renderer from 'react-test-renderer'
 import Search from '../screens/Search'
 import React from 'react'
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 jest.mock('../apis/friendsApi')
 jest.mock('../apis/accountsApi.js')
@@ -42,31 +42,31 @@ test('snapshot for search, no results', () => {
 
 // accept first, fail later
 
-// test('accept friend request calls API + changes button, failing case', () => {
-//   const tree = render(<Search />)
+test('accept friend request calls API + changes button, failing case', () => {
+  const tree = render(<Search />)
+  
+})
 
-// })
+test('accept friend request calls API + changes button', () => {
 
-// test('accept friend request calls API + changes button', () => {
+})
 
-// })
+test('delete friend request calls API + removes from view, failing case', () => {
 
-// test('delete friend request calls API + removes from view, failing case', () => {
+})
 
-// })
+test('delete friend request calls API + removes from view', () => {
 
-// test('delete friend request calls API + removes from view', () => {
+})
 
-// })
+test('status click if friends, failing case', () => {
+  // test if error alert renders
 
-// test('status click if friends, failing case', () => {
-//   // test if error alert renders
+  // clicking on cancel closes pop up
+})
 
-//   // clicking on cancel closes pop up
-// })
+test('status click if friends', () => {
+  // clicking on friend's status creates alert to confirm
 
-// test('status click if friends', () => {
-//   // clicking on friend's status creates alert to confirm
-
-//   // clicking on confirm calls Api function + closes pop up
-// })
+  // clicking on confirm calls Api function + closes pop up
+})
