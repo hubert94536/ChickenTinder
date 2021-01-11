@@ -1,12 +1,14 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
-import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
+import { NAME, PHOTO, USERNAME, UID } from 'react-native-dotenv'
 // import accountsApi from '../apis/accountsApi.js'
 import Alert from '../modals/Alert.js'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import colors from '../../styles/colors.js'
 // import friendsApi from '../apis/friendsApi.js'
 import Join from '../modals/Join.js'
+import normalize from '../../styles/normalize.js'
 import PropTypes from 'prop-types'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
@@ -68,10 +70,7 @@ class Home extends React.Component {
           Hungry? Chews wisely.
         </Text>
         {/* dummy image below */}
-        <Image
-          source={require('../assets/Icon_Transparent.png')}
-          style={[screenStyles.image]}
-        />
+        <Image source={require('../assets/Icon_Transparent.png')} style={[screenStyles.image]} />
         <View>
           <TouchableHighlight
             onShowUnderlay={() => this.setState({ createPressed: true })}
@@ -152,23 +151,23 @@ const styles = StyleSheet.create({
   buttonText: {
     textAlign: 'center',
     fontFamily: 'CircularStd-Bold',
-    fontSize: 18,
+    fontSize: normalize(18),
   },
   groupCreate: {
-    underlayColor="white",
+    underlayColor: 'white',
     backgroundColor: '#F15763',
     borderRadius: 40,
-    width: width * 0.5,
+    width: width(0.5),
     height: 45,
     justifyContent: 'center',
     alignSelf: 'center',
     margin: '3%',
   },
   groupJoin: {
-    underlayColor="#F15763",
+    underlayColor: '#F15763',
     backgroundColor: 'white',
     borderRadius: 40,
-    width: width * 0.5,
+    width: width(0.5),
     height: 45,
     justifyContent: 'center',
     alignSelf: 'center',
@@ -176,8 +175,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   image: {
-    width: height * 0.3, 
-    height: height * 0.3,
+    width: height(0.3),
+    height: height(0.3),
   },
   slogan: {
     fontSize: normalize(30),

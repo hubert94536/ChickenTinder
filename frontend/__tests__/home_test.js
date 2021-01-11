@@ -6,6 +6,6 @@ import React from 'react'
 import AsyncStorage from '@react-native-community/async-storage'
 
 test('renders home page correctly', () => {
-    const tree = render(<Home />)
-    expect(tree.toJSON()).toMatchSnapshot()
-  })
+  const tree = render(<Home />)
+  expect(tree.toJSON()).toMatchSnapshot()
+})

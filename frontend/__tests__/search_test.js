@@ -26,7 +26,7 @@ test('snapshot for search', () => {
   fireEvent.changeText(getByPlaceholderText('Search for friends'), 'John')
   expect(toJSON()).toMatchSnapshot()
   expect(getByText('John'))
-  
+
   // Test cards remain after deleting
   fireEvent.changeText(getByPlaceholderText('Search for friends'), '')
   expect(getByText('@j0hn'))
@@ -44,29 +44,20 @@ test('snapshot for search, no results', () => {
 
 test('accept friend request calls API + changes button, failing case', () => {
   const tree = render(<Search />)
-  
 })
 
-test('accept friend request calls API + changes button', () => {
+test('accept friend request calls API + changes button', () => {})
 
-})
+test('delete friend request calls API + removes from view, failing case', () => {})
 
-test('delete friend request calls API + removes from view, failing case', () => {
-
-})
-
-test('delete friend request calls API + removes from view', () => {
-
-})
+test('delete friend request calls API + removes from view', () => {})
 
 test('status click if friends, failing case', () => {
   // test if error alert renders
-
   // clicking on cancel closes pop up
 })
 
 test('status click if friends', () => {
   // clicking on friend's status creates alert to confirm
-
   // clicking on confirm calls Api function + closes pop up
 })
