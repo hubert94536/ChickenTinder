@@ -79,8 +79,7 @@ export default class Search extends Component {
     )
   }
 
-  async removeRequest(friend, newArr, status) {
-    if (!status) {
+  async removeRequest(friend, newArr) {
       friendsApi
         .removeFriendship(friend)
         .then(() => {
@@ -89,9 +88,6 @@ export default class Search extends Component {
         .catch(() => {
           this.setState({ errorAlert: true })
         })
-    } else if (status) {
-      this.setState({ friends: newArr })
-    }
   }
 
   renderHeader = () => {
@@ -113,9 +109,7 @@ export default class Search extends Component {
   render() {
     return (
       <View style={screenStyles.mainContainer}>
-        <Text style={[screenStyles.icons, styles.title]}>
-          Find friends
-        </Text>
+        <Text style={[screenStyles.icons, styles.title]}>Find friends</Text>
         <FlatList
           data={this.state.data}
           renderItem={({ item }) => (
@@ -128,7 +122,7 @@ export default class Search extends Component {
               total={this.state.data}
               status={item.status}
               key={item.uid}
-              press={(uid, newArr, status) => this.removeRequest(uid, newArr, status)}
+              press={(uid, newArr) => this.removeRequest(uid, newArr)}
             />
           )}
           keyExtractor={(item) => item.username}
@@ -174,7 +168,7 @@ Search.propTypes = {
 
 const styles = StyleSheet.create({
   title: {
-    marginTop: '10%', 
+    marginTop: '10%',
     textAlign: 'center',
   },
   container: {

@@ -64,13 +64,8 @@ export default class Loading extends React.Component {
     return (
       <View style={[modalStyles.modalContent, styles.container]}>
         <View style={styles.content}>
-          <Text style={[styles.general, styles.title]}>
-            Round done!
-          </Text>
-          <Image
-            source={require('../assets/loading.gif')}
-            style={styles.gif}
-          />
+          <Text style={[styles.general, styles.title]}>Round done!</Text>
+          <Image source={require('../assets/loading.gif')} style={styles.gif} />
           <Text style={styles.general}>
             Hang tight while others finish swiping and a match is found!
           </Text>
@@ -101,14 +96,14 @@ const styles = StyleSheet.create({
     width: '70%',
     alignSelf: 'center',
   },
-  title:{
-    fontSize: normalize(30), 
-    fontWeight: 'bold', 
+  title: {
+    fontSize: normalize(30),
+    fontWeight: 'bold',
     color: colors.hex,
   },
-  gif:{
-    alignSelf: 'center', 
-    width: height * 0.3, 
+  gif: {
+    alignSelf: 'center',
+    width: height * 0.3,
     height: height * 0.4,
   },
   general: {
@@ -117,11 +112,11 @@ const styles = StyleSheet.create({
     padding: 30,
     textAlign: 'center',
   },
-  leaveButton:{
-    alignSelf: 'center', 
+  leaveButton: {
+    alignSelf: 'center',
     width: '50%',
   },
-  leaveText:{
+  leaveText: {
     color: colors.darkGray,
     textAlign: 'center',
     fontFamily: screenStyles.book.fontFamily,
