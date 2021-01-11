@@ -32,9 +32,9 @@ const sendCommand = promisify(redisClient.send_command).bind(redisClient)
 const hdel = promisify(redisClient.hdel).bind(redisClient)
 firebase.initializeApp({
   credential: firebase.credential.cert({
-    "private_key": process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-    "client_email": process.env.FIREBASE_CLIENT_EMAIL,
-    "project_id": process.env.FIREBASE_PROJECT_ID
+    private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    client_email: process.env.FIREBASE_CLIENT_EMAIL,
+    project_id: process.env.FIREBASE_PROJECT_ID,
   }),
   databaseURL: 'https://wechews-83255.firebaseio.com',
 })
