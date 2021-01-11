@@ -12,9 +12,7 @@ import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
 import TabBar from '../Nav.js'
 
-var id = ''
-var name = ''
-var photo = ''
+var uid = ''
 var username = ''
 
 const width = Dimensions.get('window').width
@@ -32,42 +30,31 @@ class Home extends React.Component {
       friends: '',
       errorAlert: false,
     }
-    AsyncStorage.multiGet([ID, NAME, PHOTO, USERNAME]).then((res) => {
-      id = res[0][1]
-      name = res[1][1]
-      photo = res[2][1]
-      username = res[3][1]
-      socket.connect(id, name, photo, username)
+    AsyncStorage.multiGet([UID, USERNAME]).then((res) => {
+      uid = res[0][1]
+      username = res[1][1]
+      socket.connect()
       socket.getSocket().on('update', (res) => {
         this.setState({ invite: false })
         this.props.navigation.navigate('Group', {
           response: res,
-          id: id,
-          name: name,
-          photo: photo,
           username: username,
         })
       })
+      //uncomment if testing friends/requests
+      // accountsApi.createFBUserTest('Hubert', 2, 'hubesc', 'hubesc@gmail.com', '10', '45678907')
+      // accountsApi.createFBUserTest('Hanna', 3, 'hco', 'hco@gmail.com', '11', '45678901')
+      // accountsApi.createFBUserTest('Anna', 4, 'annax', 'annx@gmail.com', '12', '45678902')
+      // accountsApi.createFBUserTest('Helen', 5, 'helenthemelon', 'helenw@gmail.com', '13', '45678903')
+      // accountsApi.createFBUserTest('Kevin', 6, 'kevint', 'kevintang@gmail.com', '14', '45678904')
+      // friendsApi.createFriendshipTest(2, uid)
+      // friendsApi.createFriendshipTest(3, uid)
+      // friendsApi.createFriendshipTest(4, uid)
     })
   }
 
   createGroup() {
     socket.createRoom()
-  }
-
-  componentDidMount() {
-    //uncomment if testing friends/requests
-    // accountsApi.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
-    // accountsApi.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
-    // accountsApi.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
-    // accountsApi.createFBUser('Helen', 5, 'helenthemelon', 'helenw@gmail.com', 'sjdkf'),
-    // accountsApi.createFBUser('Kevin', 6, 'kevint', 'kevintang@gmail.com', 'sdfddf'),
-    // // console.log("My id:" + myId)
-    // friendsApi.createFriendshipTest(myId, 2),
-    // friendsApi.createFriendshipTest(4, 2),
-    // friendsApi.createFriendshipTest(myId, 3),
-    // friendsApi.createFriendshipTest(myId, 4)
-    // friendsApi.acceptFriendRequest(2)
   }
 
   componentWillUnmount() {
@@ -77,7 +64,7 @@ class Home extends React.Component {
   render() {
     return (
       <View style={[screenStyles.mainContainer, screenStyles.background]}>
-        <Text style={[screenStyles.text, screenStyles.title, styles.slogan]}>
+        <Text style={[screenStyles.text, screenStyles.title, screenStyles.slogan]}>
           Hungry? Chews wisely.
         </Text>
         {/* dummy image below */}
@@ -90,14 +77,13 @@ class Home extends React.Component {
             onShowUnderlay={() => this.setState({ createPressed: true })}
             onHideUnderlay={() => this.setState({ createPressed: false })}
             activeOpacity={1}
-            underlayColor="white"
             style={[screenStyles.groupCreate]}
             onPress={() => this.createGroup()}
           >
             <Text
               style={[
                 styles.buttonText,
-                this.state.createPressed ? { color: '#F15763' } : { color: 'white' },
+                this.state.createPressed ? { color: colors.hex } : { color: 'white' },
               ]}
             >
               Create Group
@@ -107,14 +93,13 @@ class Home extends React.Component {
             onShowUnderlay={() => this.setState({ joinPressed: true })}
             onHideUnderlay={() => this.setState({ joinPressed: false })}
             activeOpacity={1}
-            underlayColor="#F15763"
             style={[screenStyles.groupJoin]}
             onPress={() => this.setState({ join: true })}
           >
             <Text
               style={[
                 styles.buttonText,
-                this.state.profilePressed ? { color: 'white' } : { color: '#F15763' },
+                this.state.profilePressed ? { color: 'white' } : { color: colors.hex },
               ]}
             >
               Join Group
@@ -152,6 +137,7 @@ class Home extends React.Component {
 Home.propTypes = {
   navigation: PropTypes.object,
 }
+
 const styles = StyleSheet.create({
   background: {
     alignItems: 'center',
@@ -168,10 +154,8 @@ const styles = StyleSheet.create({
     fontFamily: 'CircularStd-Bold',
     fontSize: 18,
   },
-  createPressed: {
-
-  },
   groupCreate: {
+    underlayColor="white",
     backgroundColor: '#F15763',
     borderRadius: 40,
     width: width * 0.5,
@@ -181,6 +165,7 @@ const styles = StyleSheet.create({
     margin: '3%',
   },
   groupJoin: {
+    underlayColor="#F15763",
     backgroundColor: 'white',
     borderRadius: 40,
     width: width * 0.5,
