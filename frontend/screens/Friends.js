@@ -63,19 +63,15 @@ export default class Friends extends React.Component {
     this.setState({ friends: newData })
   }
 
-  async removeRequest(friend, newArr, status) {
-    if (!status) {
+  async removeRequest(friend, newArr) {
       friendsApi
-        .removeFriendship(id, friend)
+        .removeFriendship(friend)
         .then(() => {
           this.setState({ friends: newArr })
         })
         .catch(() => {
           this.setState({ errorAlert: true })
         })
-    } else if (status) {
-      this.setState({ friends: newArr })
-    }
   }
 
   // Called on friends-list pulldown refresh

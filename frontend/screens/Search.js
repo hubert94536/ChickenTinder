@@ -79,8 +79,7 @@ export default class Search extends Component {
     )
   }
 
-  async removeRequest(friend, newArr, status) {
-    if (!status) {
+  async removeRequest(friend, newArr) {
       friendsApi
         .removeFriendship(friend)
         .then(() => {
@@ -89,9 +88,6 @@ export default class Search extends Component {
         .catch(() => {
           this.setState({ errorAlert: true })
         })
-    } else if (status) {
-      this.setState({ friends: newArr })
-    }
   }
 
   renderHeader = () => {
@@ -126,7 +122,7 @@ export default class Search extends Component {
               total={this.state.data}
               status={item.status}
               key={item.uid}
-              press={(uid, newArr, status) => this.removeRequest(uid, newArr, status)}
+              press={(uid, newArr) => this.removeRequest(uid, newArr)}
             />
           )}
           keyExtractor={(item) => item.username}
