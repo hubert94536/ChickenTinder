@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
-import { NAME, PHOTO, USERNAME, UID } from 'react-native-dotenv'
+import { USERNAME, UID } from 'react-native-dotenv'
 // import accountsApi from '../apis/accountsApi.js'
 import Alert from '../modals/Alert.js'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   button: {
-    height: 65,
+    height: normalize(65),
     margin: '3%',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -155,28 +155,28 @@ const styles = StyleSheet.create({
   },
   groupCreate: {
     underlayColor: 'white',
-    backgroundColor: '#F15763',
-    borderRadius: 40,
-    width: width(0.5),
-    height: 45,
+    backgroundColor: colors.hex,
+    borderRadius: normalize(40),
+    width: '50%',
+    height: normalize(45),
     justifyContent: 'center',
     alignSelf: 'center',
     margin: '3%',
   },
   groupJoin: {
-    underlayColor: '#F15763',
+    underlayColor: colors.hex,
     backgroundColor: 'white',
-    borderRadius: 40,
-    width: width(0.5),
-    height: 45,
+    borderRadius: normalize(40),
+    width: '50%',
+    height: normalize(45),
     justifyContent: 'center',
     alignSelf: 'center',
-    borderColor: '#F15763',
-    borderWidth: 2,
+    borderColor: colors.hex,
+    borderWidth: normalize(2),
   },
   image: {
-    width: height(0.3),
-    height: height(0.3),
+    width: height('30%'),
+    height: '30%',
   },
   slogan: {
     fontSize: normalize(30),
