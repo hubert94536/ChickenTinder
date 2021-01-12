@@ -1,33 +1,26 @@
 import React, { Component } from 'react'
 import { Dimensions, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
-import { NAME, PHOTO, USERNAME, ID } from 'react-native-dotenv'
+import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Swiper from 'react-native-swiper'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
 import accountsApi from '../apis/accountsApi.js'
+import colors from '../../styles/colors.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
-import friendsApi from '../apis/friendsApi.js'
 import NotifCard from '../cards/NotifCard.js'
 import TabBar from '../Nav.js'
-// import Swipeout from 'react-native-swipeout';
 
-const hex = '#F15763'
 var img = ''
 var name = ''
 var username = ''
 
-//  gets user info
-AsyncStorage.getItem(USERNAME).then((res) => (username = res))
-AsyncStorage.getItem(PHOTO).then((res) => (img = res))
-AsyncStorage.getItem(NAME).then((res) => (name = res))
-
-var myId = ''
-
-AsyncStorage.getItem(ID).then((res) => {
-  myId = res
+AsyncStorage.multiGet([NAME, PHOTO, USERNAME]).then((res) => {
+  name = res[0][1]
+  img = res[1][1]
+  username = res[2][1]
 })
 
 export default class Notif extends Component {
@@ -59,21 +52,7 @@ export default class Notif extends Component {
   }
 
   componentDidMount() {
-    // uncomment if testing friends/requests
     this.getNotifs()
-    accountsApi.createFBUser('Hubert', 2, 'hubesc', 'hubesc@gmail.com', 'hjgkjgkjg'),
-      accountsApi.createFBUser('Hanna', 3, 'hco', 'hco@gmail.com', 'sfhkslfs'),
-      accountsApi.createFBUser('Anna', 4, 'annax', 'annx@gmail.com', 'ksflsfsf'),
-      accountsApi.createFBUser('Helen', 5, 'helenthemelon', 'helenw@gmail.com', '167'),
-      accountsApi.createFBUser('Hey', 12, 'itsme', 'me@gmail.com', '167'),
-      accountsApi.createFBUser('Kevin', 6, 'kevint', 'kevintang@gmail.com', 'sdfddf'),
-      console.log('My id:' + myId),
-      friendsApi.createFriendshipTest(myId, 2),
-      friendsApi.createFriendshipTest(4, 2),
-      friendsApi.createFriendshipTest(myId, 3),
-      friendsApi.createFriendshipTest(myId, 4),
-      friendsApi.createFriendshipTest(6, myId),
-      friendsApi.acceptFriendRequest(2)
   }
 
   async getNotifs() {
@@ -83,21 +62,21 @@ export default class Notif extends Component {
       {
         name: 'Hanna Co',
         username: 'hco',
-        id: '3',
+        uid: '3',
         image: '150',
         type: 'invited',
       },
       {
         name: 'Francis Feng',
         username: 'francis',
-        id: '8',
+        uid: '8',
         image: '167',
         type: 'invited',
       },
       {
         name: 'Hubert Chen',
         username: 'hubesc',
-        id: '5',
+        uid: '5',
         image: '165',
         type: 'requested',
       },
@@ -123,12 +102,12 @@ export default class Notif extends Component {
               total={this.state.notifs}
               name={notifList[i].name}
               username={notifList[i].username}
-              id={notifList[i].id}
+              uid={notifList[i].uid}
               image={notifList[i].image}
               type={notifList[i].type}
               key={i}
               index={i}
-              press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
+              press={(uid, newArr, status) => this.removeRequest(uid, newArr, status)}
               showError={() => this.setState({ errorAlert: true })}
               removeError={() => this.setState({ errorAlert: false })}
               showDelete={() => this.setState({ deleteFriend: true })}
@@ -141,12 +120,12 @@ export default class Notif extends Component {
               total={this.state.notifs}
               name={notifList[i].name}
               username={notifList[i].username}
-              id={notifList[i].id}
+              uid={notifList[i].uid}
               image={notifList[i].image}
               type={notifList[i].type}
               key={i}
               index={i}
-              press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
+              press={(uid, newArr, status) => this.removeRequest(uid, newArr, status)}
               showError={() => this.setState({ errorAlert: true })}
               removeError={() => this.setState({ errorAlert: false })}
               showDelete={() => this.setState({ deleteFriend: true })}
@@ -168,7 +147,9 @@ export default class Notif extends Component {
               underlayColor="#fff"
               style={[
                 // screenStyles.smallButton,
-                this.state.activity ? { borderBottomColor: hex } : { borderBottomColor: 'white' },
+                this.state.activity
+                  ? { borderBottomColor: colors.hex }
+                  : { borderBottomColor: 'white' },
                 { marginLeft: '5%', flex: 0.5, borderBottomWidth: 2 },
               ]}
               onPress={() => this.refs.swiper.scrollBy(-1)}
@@ -188,7 +169,9 @@ export default class Notif extends Component {
               underlayColor="#fff"
               style={[
                 // screenStyles.smallButton,
-                !this.state.activity ? { borderBottomColor: hex } : { borderBottomColor: 'white' },
+                !this.state.activity
+                  ? { borderBottomColor: colors.hex }
+                  : { borderBottomColor: 'white' },
                 { marginHorizontal: '5%', flex: 0.5, borderBottomWidth: 2 },
               ]}
               onPress={() => this.refs.swiper.scrollBy(1)}

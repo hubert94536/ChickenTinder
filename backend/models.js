@@ -2,18 +2,18 @@ const { DataTypes } = require('sequelize')
 const { sequelize } = require('./config.js')
 
 const Accounts = sequelize.define('accounts', {
-  id: {
-    type: DataTypes.BIGINT,
+  uid: {
+    type: DataTypes.STRING,
     allowNull: false,
     unique: true,
     primaryKey: true,
   },
   name: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(15),
     allowNull: false,
   },
   username: {
-    type: DataTypes.STRING(20),
+    type: DataTypes.STRING(15),
     unique: true,
     allowNull: false,
   },
@@ -29,12 +29,12 @@ const Accounts = sequelize.define('accounts', {
     type: DataTypes.STRING(15),
     unique: true,
   },
-  photo: DataTypes.INTEGER,
+  photo: DataTypes.STRING(3),
 })
 
 const Friends = sequelize.define('friends', {
-  main_id: {
-    type: DataTypes.BIGINT,
+  main_uid: {
+    type: DataTypes.STRING,
     allowNull: false,
     primaryKey: true,
   },
@@ -42,8 +42,8 @@ const Friends = sequelize.define('friends', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  friend_id: {
-    type: DataTypes.BIGINT,
+  friend_uid: {
+    type: DataTypes.STRING,
     allowNull: false,
     primaryKey: true,
   },
@@ -56,8 +56,8 @@ const Notifications = sequelize.define('notifications', {
     primaryKey: true,
     autoIncrement: true,
   },
-  receiver_id: {
-    type: DataTypes.BIGINT,
+  receiver_uid: {
+    type: DataTypes.STRING,
     allowNull: false,
   },
   type: {
@@ -67,14 +67,14 @@ const Notifications = sequelize.define('notifications', {
   content: {
     type: DataTypes.STRING(20),
   },
-  sender_id: {
-    type: DataTypes.BIGINT,
+  sender_uid: {
+    type: DataTypes.STRING,
     allowNull: false,
   },
 })
 
-Notifications.belongsTo(Accounts, { foreignKey: 'sender_id', foreignKeyConstraint: true })
-Friends.belongsTo(Accounts, { foreignKey: 'friend_id', foreignKeyConstraint: true })
+Notifications.belongsTo(Accounts, { foreignKey: 'sender_uid', foreignKeyConstraint: true })
+Friends.belongsTo(Accounts, { foreignKey: 'friend_uid', foreignKeyConstraint: true })
 
 // sequelize.sync({ force: true }).then(() => {
 //   // trigger function to return the newly inserted row and foreign key info
@@ -84,10 +84,10 @@ Friends.belongsTo(Accounts, { foreignKey: 'friend_id', foreignKeyConstraint: tru
 //       ' DECLARE ' +
 //       ' rec RECORD;' +
 //       ' BEGIN' +
-//       ' SELECT INTO rec NEW.id, NEW.receiver_id, NEW.type, NEW.content,' +
-//       ' NEW.sender_id, accounts.name, accounts.username, accounts.photo' +
+//       ' SELECT INTO rec NEW.id, NEW.receiver_uid, NEW.type, NEW.content,' +
+//       ' NEW.sender_uid, accounts.name, accounts.username, accounts.photo' +
 //       ' FROM accounts' +
-//       ' WHERE NEW.sender_id = accounts.id;' +
+//       ' WHERE NEW.sender_uid = accounts.uid;' +
 //       " PERFORM pg_notify(''notifications'', row_to_json(rec) ::text);" +
 //       ' RETURN NEW;' +
 //       ' END;' +

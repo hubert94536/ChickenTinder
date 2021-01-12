@@ -1,4 +1,4 @@
-const { hgetAll, sendCommand, redisClient } = require('./config.js')
+const { hdel, hgetAll, sendCommand } = require('./config.js')
 const notifs = require('./notifsQueries.js')
 const yelp = require('./yelpQuery.js')
 
@@ -48,66 +48,63 @@ const getTop3 = (restaurants) => {
 
 module.exports = (io) => {
   io.on('connection', async (socket) => {
-    try {
-      // update user with new socket id and info
-      let id = socket.handshake.query.id
-      redisClient.hmset(`users:${id}`, 'client', socket.id)
-      // create new socketId instance mapping to user id
-      redisClient.hmset(`clients:${socket.id}`, 'id', id)
-    } catch (err) {
-      socket.emit('exception', err.toString())
-      console.log(err)
-    }
-
     // disconnects user and removes them if in room
     socket.on('disconnect', async () => {
       try {
-        // retrieve user's last room and id from socket id
-        let client = await hgetAll(`clients:${socket.id}`)
         // delete old socket id
-        redisClient.hdel(`users:${client.id}`, 'client')
-        redisClient.hdel(`clients:${socket.id}`, 'id', 'room')
-        if (client.room) {
-          // retrieve session information
-          let session = await sendCommand('JSON.GET', [client.room])
-          session = JSON.parse(session)
-          // check if user was in a room and room still active
-          if (session) {
-            socket.leave(client.room)
-            delete session.members[client.id]
-            // delete room and its filters if this is last member in room
-            if (Object.keys(session.members).length === 0) {
-              sendCommand('JSON.DEL', [client.room])
-              sendCommand('JSON.DEL', [`filters:${client.room}`])
-            }
-            // update session with removed user and reduce majority in filters
-            else {
-              await sendCommand('JSON.DEL', [client.room, `.members['${client.id}']`])
-              // retreive a session's filters
-              let filters = await sendCommand('JSON.GET', [`filters:${client.room}`])
-              filters = JSON.parse(filters)
-              // check if the room is in a round (majority is only set when round starts)
-              if (filters.majority) {
-                // reduce majority and group size by 1
-                filters.majority -= 1
-                filters.groupSize -= 1
-                await sendCommand('JSON.NUMINCRBY', [`filters:${client.room}`, '.majority', -1])
-                await sendCommand('JSON.NUMINCRBY', [`filters:${client.room}`, '.groupSize', -1])
-                // delete user from finished list if finished
-                let index = filters.finished.indexOf(client.id)
-                if (index >= 0) {
-                  delete filters.finished[index]
+        if (socket.user) {
+          await hdel(`users:${socket.user.uid}`, 'client')
+          if (socket.user.room) {
+            // retrieve session information
+            let session = await sendCommand('JSON.GET', [socket.user.room])
+            session = JSON.parse(session)
+            // check if user was in a room and room still active
+            if (session) {
+              socket.leave(socket.user.room)
+              delete session.members[socket.user.uid]
+              // delete room and its filters if this is last member in room
+              if (Object.keys(session.members).length === 0) {
+                await sendCommand('JSON.DEL', [socket.user.room])
+                await sendCommand('JSON.DEL', [`filters:${socket.user.room}`])
+              }
+              // update session with removed user and reduce majority in filters
+              else {
+                await sendCommand('JSON.DEL', [socket.user.room, `.members['${socket.user.uid}']`])
+                // retreive a session's filters
+                let filters = await sendCommand('JSON.GET', [`filters:${socket.user.room}`])
+                filters = JSON.parse(filters)
+                // check if the room is in a round (majority is only set when round starts)
+                if (filters.majority) {
+                  // reduce majority and group size by 1
+                  filters.majority -= 1
+                  filters.groupSize -= 1
+                  await sendCommand('JSON.NUMINCRBY', [
+                    `filters:${socket.user.room}`,
+                    '.majority',
+                    -1,
+                  ])
+                  await sendCommand('JSON.NUMINCRBY', [
+                    `filters:${socket.user.room}`,
+                    '.groupSize',
+                    -1,
+                  ])
+                  // delete user from finished list if finished
+                  let index = filters.finished.indexOf(socket.user.uid)
+                  if (index >= 0) {
+                    delete filters.finished[index]
+                  }
+                  // if the removed user was last person to finish, get top 3 restaurants and emit
+                  if (filters.finished.length === filters.groupSize) {
+                    let top3 = getTop3(filters.restaurants)
+                    io.in(socket.user.room).emit('final', top3)
+                  }
+                } else {
+                  // Room is still in groups page and receives updated room
+                  io.in(socket.user.room).emit('update', session)
                 }
-                // if the removed user was last person to finish, get top 3 restaurants and emit
-                if (filters.finished.length === filters.groupSize) {
-                  let top3 = getTop3(filters.restaurants)
-                  io.in(client.room).emit('final', top3)
-                }
-              } else {
-                // Room is still in groups page and receives updated room
-                io.in(client.room).emit('update', session)
               }
             }
+            delete socket.user.room
           }
         }
       } catch (err) {
@@ -117,9 +114,9 @@ module.exports = (io) => {
     })
 
     // creates session and return session info to host
-    socket.on('create', async (data) => {
+    socket.on('create', async () => {
       try {
-        let host = data.id
+        let host = socket.user.uid
         let code = null
         let notUnique = true
         // create new 6 digit code while the random one generated isn't unique
@@ -137,9 +134,9 @@ module.exports = (io) => {
         session.code = code
         session.members = {}
         session.members[host] = {}
-        session.members[host].name = data.name
-        session.members[host].username = data.username
-        session.members[host].photo = data.photo
+        session.members[host].name = socket.user.name
+        session.members[host].username = socket.user.username
+        session.members[host].photo = socket.user.photo
         session.members[host].filters = false
         // set filters info
         let filters = {}
@@ -147,8 +144,8 @@ module.exports = (io) => {
         // set session and filters in cache and emit to user
         await sendCommand('JSON.SET', [code, '.', JSON.stringify(session)])
         await sendCommand('JSON.SET', [`filters:${code}`, '.', JSON.stringify(filters)])
-        // update user's socket id to hold room code
-        redisClient.hmset(`clients:${socket.id}`, 'room', code)
+        // update user's socket to hold room code
+        socket.user.room = code
         socket.join(code)
         socket.emit('update', session)
       } catch (err) {
@@ -163,10 +160,10 @@ module.exports = (io) => {
         // create request body
         let req = {}
         req.body = {}
-        req.body.receiver_id = data.receiver_id
+        req.body.receiver_uid = data.receiver_uid
         req.body.type = 'invite'
         req.body.content = data.code
-        req.body.sender_id = data.id
+        req.body.sender_uid = socket.user.uid
         await notifs.createNotif(req)
       } catch (err) {
         socket.emit('exception', err.toString())
@@ -183,18 +180,18 @@ module.exports = (io) => {
         if (session) {
           // initialize member object
           let member = {}
-          member.name = data.name
-          member.username = data.username
-          member.photo = data.photo
+          member.name = socket.user.name
+          member.username = socket.user.username
+          member.photo = socket.user.photo
           member.filters = false
-          session.members[data.id] = member
+          session.members[socket.user.uid] = member
           // update session info with member
           await sendCommand('JSON.SET', [
             data.code,
-            `.members['${data.id}']`,
+            `.members['${socket.user.uid}']`,
             JSON.stringify(member),
           ])
-          redisClient.hmset(`clients:${socket.id}`, 'room', data.code)
+          socket.user.room = data.code
           socket.join(data.code)
           io.in(data.code).emit('update', session)
         } else {
@@ -210,13 +207,13 @@ module.exports = (io) => {
     socket.on('submit', async (data) => {
       try {
         // append filters categories
-        sendCommand('JSON.STRAPPEND', [
+        await sendCommand('JSON.STRAPPEND', [
           `filters:${data.code}`,
           'categories',
           JSON.stringify(data.categories),
         ])
         // update member who submitted filters
-        await sendCommand('JSON.SET', [data.code, `.members['${data.id}'].filters`, true])
+        await sendCommand('JSON.SET', [data.code, `.members['${socket.user.uid}'].filters`, true])
         // retrieve session info
         let session = await sendCommand('JSON.GET', [data.code])
         session = JSON.parse(session)
@@ -301,17 +298,17 @@ module.exports = (io) => {
       try {
         socket.leave(data.code)
         // delete room associated to the user's socket id
-        redisClient.hdel(`clients:${socket.id}`, 'room')
-        // retreive session information
+        delete socket.user.room
+        // retrieve session information
         let session = await sendCommand('JSON.GET', [data.code])
         session = JSON.parse(session)
-        delete session.members[data.id]
+        delete session.members[socket.user.uid]
         // delete room and its filters if last member in room
         if (Object.keys(session.members).length === 0) {
           sendCommand('JSON.DEL', [data.code])
           sendCommand('JSON.DEL', [`filters:${data.code}`])
         } else {
-          await sendCommand('JSON.DEL', [data.code, `.members['${data.id}']`])
+          await sendCommand('JSON.DEL', [data.code, `.members['${socket.user.uid}']`])
           // retreive a session's filters
           let filters = await sendCommand('JSON.GET', [`filters:${data.code}`])
           filters = JSON.parse(filters)
@@ -323,7 +320,7 @@ module.exports = (io) => {
             await sendCommand('JSON.NUMINCRBY', [`filters:${data.code}`, '.majority', -1])
             await sendCommand('JSON.NUMINCRBY', [`filters:${data.code}`, '.groupSize', -1])
             // delete user from finished list if finished
-            let index = filters.finished.indexOf(data.id)
+            let index = filters.finished.indexOf(socket.user.uid)
             if (index >= 0) {
               delete filters.finished[index]
             }
@@ -346,8 +343,8 @@ module.exports = (io) => {
     // alert user to be kicked from room
     socket.on('kick', async (data) => {
       try {
-        // get socket id associated to user id
-        let user = await hgetAll(`users:${data.id}`)
+        // get socket id associated to user uid
+        let user = await hgetAll(`users:${data.uid}`)
         io.to(user.client).emit('kick')
       } catch (err) {
         socket.emit('exception', err.toString())
@@ -358,8 +355,12 @@ module.exports = (io) => {
     // lets server know user is done swiping, send top 3 matches if everyone's finished
     socket.on('finished', async (data) => {
       try {
-        // add user's id to finished array in filters
-        await sendCommand('JSON.ARRAPPEND', [`filters:${data.code}`, 'finished', data.id])
+        // add user's uid to finished array in filters
+        await sendCommand('JSON.ARRAPPEND', [
+          `filters:${data.code}`,
+          'finished',
+          JSON.stringify(socket.user.uid),
+        ])
         let filters = await sendCommand('JSON.GET', [`filters:${data.code}`])
         filters = JSON.parse(filters)
         // if everyone in room is finished swiping, get the top 3 restaurants and emit

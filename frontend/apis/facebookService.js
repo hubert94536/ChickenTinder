@@ -7,21 +7,20 @@ import {
   FIREBASE_PROJECT_ID,
   USERNAME,
   NAME,
-  ID,
-  UID,
   EMAIL,
   PHOTO,
   PHONE,
-  REGISTRATION_TOKEN
+  REGISTRATION_TOKEN,
+  UID,
 } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import FBSDK from 'react-native-fbsdk'
 import Firebase from 'firebase'
 import accountsApi from './accountsApi.js'
 import notificationsApi from './notificationsApi.js'
+import socket from './socket.js'
 
 const { LoginManager, AccessToken } = FBSDK
-// const { GraphRequest, GraphRequestManager } = FBSDK
 
 const config = {
   apiKey: FIREBASE_API_KEY, // Auth / General Use
@@ -35,81 +34,69 @@ const config = {
 if (!Firebase.apps.length) Firebase.initializeApp(config)
 
 const loginWithFacebook = async () => {
-  // Attempt a login using the Facebook login dialog asking for default permissions.
-  return LoginManager.logInWithPermissions(['public_profile', 'email'])
-    .then((login) => {
-      if (login.isCancelled) {
-        return Promise.reject(new Error('Cancelled request'))
-      }
-      return AccessToken.getCurrentAccessToken()
-    })
-    .then((data) => {
-      const credential = Firebase.auth.FacebookAuthProvider.credential(data.accessToken)
-      // Sign in with Firebase oauth using credential and authentication token
-      return Firebase.auth().signInWithCredential(credential)
-    })
-    .then((currentUser) => {
-      // Get info from database if not new user
-      if (!currentUser.additionalUserInfo.isNewUser) {
-        return accountsApi.getUser(currentUser.additionalUserInfo.profile.id).then((res) => {
-          AsyncStorage.multiSet([
-            [USERNAME, res.username],
-            [PHOTO, res.photo],
-            [NAME, res.name],
-            [EMAIL, res.email],
-            [ID, res.id],
-            [PHONE, ''],
-          ])
-          // Link user with their notification token
-          AsyncStorage.getItem(REGISTRATION_TOKEN)
-            .then((token) => notificationsApi.linkToken(res.id, token))
-            .then(() => {console.log("Token linked")})
-            .catch((err) => {console.log(err)})
-          return 'Home'
-        })
-      }
-      // Set user's info locally
+  try {
+    // Attempt a login using the Facebook login dialog asking for default permissions.
+    const login = await LoginManager.logInWithPermissions(['public_profile', 'email'])
+    if (login.isCancelled) {
+      return Promise.reject(new Error('Cancelled request'))
+    }
+    const token = await AccessToken.getCurrentAccessToken()
+    const credential = await Firebase.auth.FacebookAuthProvider.credential(token.accessToken)
+    // Sign in with Firebase oauth using credential and authentication token
+    const userCredential = await Firebase.auth().signInWithCredential(credential)
+    // Get info from database if not new user
+    if (!userCredential.additionalUserInfo.isNewUser) {
+      const user = await accountsApi.getUser()
+      console.log(user)
       AsyncStorage.multiSet([
-        [UID, Firebase.auth().currentUser.uid],
-        [NAME, currentUser.additionalUserInfo.profile.name],
-        [ID, currentUser.additionalUserInfo.profile.id],
-        [EMAIL, currentUser.additionalUserInfo.profile.email],
+        [USERNAME, user.username],
+        [NAME, user.name],
+        [EMAIL, user.email],
+        [PHOTO, user.photo],
+        [PHONE, user.phone_number],
+        [UID, user.uid],
       ])
-      return 'CreateAccount'
-    })
-    .catch((error) => {
-      //  Account linking will be needed with email/phone_number login
-      // if (errorCode === 'auth/account-exists-with-different-credential') {
-      //   alert('Email already associated with another account.');
-      //   // Handle account linking here, if using.
-      Promise.reject(error)
-    })
+      // Link user with their notification token
+      AsyncStorage.getItem(REGISTRATION_TOKEN)
+      .then((token) => notificationsApi.linkToken(res.id, token))
+      .then(() => {console.log("Token linked")})
+      .catch((err) => {console.log(err)})
+      return 'Home'
+    }
+    // Set user's info locally
+    await AsyncStorage.multiSet([
+      [NAME, userCredential.additionalUserInfo.profile.name],
+      [EMAIL, userCredential.additionalUserInfo.profile.email],
+      [UID, Firebase.auth().currentUser.uid],
+    ])
+    return 'CreateAccount'
+  } catch (error) {
+    Promise.reject(error)
+  }
 }
 
-// isSignedIn = () => {
-//   return Firebase.auth().currentUser;
-// }
-
-// Log out of Firebase and Facebook
-// TODO: Update with new async storage items
+// Log out of Firebase and Facebook, disconnect socket
 const logoutWithFacebook = async () => {
+  socket.getSocket().disconnect()
   Firebase.auth()
     .signOut()
     .then(() => {
       LoginManager.logOut()
-      AsyncStorage.getItem(ID)
-        .then((id) => notificationsApi.unlinkToken(id))
-        .catch((err) => {console.log(err)})
-      AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO])
+      AsyncStorage.getItem(UID)
+      .then((id) => notificationsApi.unlinkToken(id))
+      .catch((err) => {console.log(err)})
+      AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
     })
     .catch((error) => {
       Promise.reject(error)
     })
 }
 
-const deleteUser = async (id) => {
+// Deletes user from database, Firebase, and disconnects socket
+const deleteUser = async () => {
+  socket.getSocket().disconnect()
   accountsApi
-    .deleteUser(id)
+    .deleteUser()
     .then(() => {
       // Need to refresh access token since old one expired
       AccessToken.refreshCurrentAccessTokenAsync()
@@ -121,40 +108,17 @@ const deleteUser = async (id) => {
         Firebase.auth()
           .currentUser.reauthenticateWithCredential(credential)
           .then(() => {
+            // Delete user from firebase and remove information from AsyncStorage
             Firebase.auth().currentUser.delete()
-            AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO, PHONE])
+            AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
           })
+          .catch((error) => Promise.reject(error))
       })
     })
     .catch((error) => {
       Promise.reject(error)
     })
 }
-//  getUser if needed
-// getUser = (token) => {
-//   const PROFILE_REQUEST_PARAMS = {
-//     fields: {
-//       string: 'id,name,email',
-//     },
-//   };
-
-//   const profileRequest = new GraphRequest(
-//     '/me',
-//     { accessToken: token,
-//       parameters: PROFILE_REQUEST_PARAMS,
-//     },
-//     (error, user) => {
-//       if (error) {
-//         console.log('login info has error: ' + error);
-//       } else {
-//         console.log('result:', user.email);
-//         //fix below
-//         return user;
-//       }
-//     },
-//   );
-//   new GraphRequestManager().addRequest(profileRequest).start();
-// };
 
 export default {
   loginWithFacebook,
