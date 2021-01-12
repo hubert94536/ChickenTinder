@@ -7,6 +7,7 @@ const accounts = require('./accountsQueries.js')
 const friends = require('./friendsQueries.js')
 const notifications = require('./notifsQueries.js')
 const schema = require('./schema.js')
+const pushNotif = require('./pushNotif.js')
 
 const app = express()
 const server = http.createServer(app)
@@ -71,6 +72,16 @@ app
 app
   .route('/notifications/:id')
   .delete(validateRoute.params(schema.idSchema), notifications.deleteNotif)
+
+// TODO: validate params
+app
+  .route('/notifications/token')
+  .post(pushNotif.linkToken)
+  .delete(pushNotif.unlinkToken)
+
+app
+  .route('/notifications/test')
+  .post(pushNotif.testNotif)
 
 server.listen(PORT, () => {
   console.log(`App running on port ${PORT}.`)

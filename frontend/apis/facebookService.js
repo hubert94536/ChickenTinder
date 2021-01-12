@@ -12,11 +12,13 @@ import {
   EMAIL,
   PHOTO,
   PHONE,
+  REGISTRATION_TOKEN
 } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import FBSDK from 'react-native-fbsdk'
 import Firebase from 'firebase'
 import accountsApi from './accountsApi.js'
+import notificationsApi from './notificationsApi.js'
 
 const { LoginManager, AccessToken } = FBSDK
 // const { GraphRequest, GraphRequestManager } = FBSDK
@@ -58,6 +60,11 @@ const loginWithFacebook = async () => {
             [ID, res.id],
             [PHONE, ''],
           ])
+          // Link user with their notification token
+          AsyncStorage.getItem(REGISTRATION_TOKEN)
+            .then((token) => notificationsApi.linkToken(res.id, token))
+            .then(() => {console.log("Token linked")})
+            .catch((err) => {console.log(err)})
           return 'Home'
         })
       }
@@ -90,6 +97,9 @@ const logoutWithFacebook = async () => {
     .signOut()
     .then(() => {
       LoginManager.logOut()
+      AsyncStorage.getItem(ID)
+        .then((id) => notificationsApi.unlinkToken(id))
+        .catch((err) => {console.log(err)})
       AsyncStorage.multiRemove([NAME, USERNAME, ID, UID, EMAIL, PHOTO])
     })
     .catch((error) => {

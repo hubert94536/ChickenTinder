@@ -29,7 +29,7 @@ const Accounts = sequelize.define('accounts', {
     type: DataTypes.STRING(15),
     unique: true,
   },
-  photo: DataTypes.TINYINT,
+  photo: DataTypes.INTEGER,
 })
 
 const Friends = sequelize.define('friends', {
