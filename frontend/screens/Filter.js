@@ -19,6 +19,7 @@ import Socket from '../apis/socket.js'
 import TagsView from '../TagsView.js'
 import DynamicTags from '../TagsViewGenerator.js'
 import BackgroundButton from '../BackgroundButton.js'
+import colors from '../../styles/colors.js'
 import Location from '../modals/ChooseLocation.js'
 import Time from '../modals/ChooseTime.js'
 import Size from '../modals/ChooseSize.js'
@@ -29,9 +30,9 @@ import screenStyles from '../../styles/screenStyles.js'
 const font = 'CircularStd-Medium'
 
 const BACKGROUND_COLOR = 'white'
-const BORDER_COLOR = '#F15763'
-const TEXT_COLOR = '#F15763'
-const ACCENT_COLOR = '#F15763'
+const BORDER_COLOR = colors.hex
+const TEXT_COLOR = colors.hex
+const ACCENT_COLOR = colors.hex
 
 const tagsCuisine = [
   'American',

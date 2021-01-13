@@ -1,22 +1,18 @@
 import React, { Component } from 'react'
 import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native'
-import { ID, USERNAME } from 'react-native-dotenv'
+import { USERNAME } from 'react-native-dotenv'
 import { BlurView } from '@react-native-community/blur'
 import { SearchBar } from 'react-native-elements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
 import accountsApi from '../apis/accountsApi.js'
-// import Card from '../cards/SearchCard.js'
-import Card from '../cards/Card.js'
 import Alert from '../modals/Alert.js'
-import screenStyles from '../../styles/screenStyles.js'
+import Card from '../cards/Card.js'
 import friendsApi from '../apis/friendsApi.js'
+import screenStyles from '../../styles/screenStyles.js'
 import TabBar from '../Nav.js'
 
-const font = 'CircularStd-Medium'
 var username = ''
-var id = ''
-AsyncStorage.getItem(USERNAME).then((res) => (username = res))
 
 export default class Search extends Component {
   constructor(props) {
@@ -29,15 +25,14 @@ export default class Search extends Component {
       deleteFriendName: '',
       value: '',
     }
-    AsyncStorage.multiGet([ID, USERNAME]).then((res) => {
-      id = res[0][1]
-      username = res[1][1]
+    AsyncStorage.getItem(USERNAME).then((res) => {
+      username = res
       friendsApi
-        .getFriends(id)
+        .getFriends()
         .then((res) => {
           var friendsMap = new Object()
           for (var friend in res.friendList) {
-            friendsMap[res.friendList[friend].id] = res.friendList[friend].status
+            friendsMap[res.friendList[friend].uid] = res.friendList[friend].status
           }
           this.setState({ friends: friendsMap })
         })
@@ -61,14 +56,14 @@ export default class Search extends Component {
             var resultUsers = []
             for (var user in res.userList) {
               var status = 'add'
-              if (res.userList[user].id in this.state.friends) {
-                status = this.state.friends[res.userList[user].id]
+              if (res.userList[user].uid in this.state.friends) {
+                status = this.state.friends[res.userList[user].uid]
               }
               var person = {
                 name: res.userList[user].name,
                 username: res.userList[user].username,
                 image: res.userList[user].photo,
-                id: res.userList[user].id,
+                uid: res.userList[user].uid,
                 status: status,
               }
               if (person === undefined) {
@@ -84,19 +79,15 @@ export default class Search extends Component {
     )
   }
 
-  async removeRequest(friend, newArr, status) {
-    if (!status) {
+  async removeRequest(friend, newArr) {
       friendsApi
-        .removeFriendship(id, friend)
+        .removeFriendship(friend)
         .then(() => {
           this.setState({ friends: newArr })
         })
         .catch(() => {
           this.setState({ errorAlert: true })
         })
-    } else if (status) {
-      this.setState({ friends: newArr })
-    }
   }
 
   renderHeader = () => {
@@ -104,7 +95,7 @@ export default class Search extends Component {
       <SearchBar
         containerStyle={styles.container}
         inputContainerStyle={styles.inputContainer}
-        inputStyle={[styles.input, { textAlignVertical: 'center' }]}
+        inputStyle={styles.input}
         placeholder="Search for friends"
         lightTheme={true}
         round={true}
@@ -117,23 +108,21 @@ export default class Search extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
-        <Text style={[screenStyles.icons, { marginTop: '10%', textAlign: 'center' }]}>
-          Find friends
-        </Text>
+      <View style={screenStyles.mainContainer}>
+        <Text style={[screenStyles.icons, styles.title]}>Find friends</Text>
         <FlatList
           data={this.state.data}
           renderItem={({ item }) => (
             <Card
               name={item.name}
               image={item.image}
-              id={item.id}
+              uid={item.uid}
               username={item.username}
               currentUser={username}
               total={this.state.data}
               status={item.status}
-              key={item.id}
-              press={(id, newArr, status) => this.removeRequest(id, newArr, status)}
+              key={item.uid}
+              press={(uid, newArr) => this.removeRequest(uid, newArr)}
             />
           )}
           keyExtractor={(item) => item.username}
@@ -178,9 +167,9 @@ Search.propTypes = {
 }
 
 const styles = StyleSheet.create({
-  topIcons: {
-    marginLeft: '5%',
-    marginTop: '5%',
+  title: {
+    marginTop: '10%',
+    textAlign: 'center',
   },
   container: {
     backgroundColor: 'white',
@@ -197,8 +186,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#e7e7e7',
   },
   input: {
-    textAlignVertical: 'bottom',
-    fontFamily: font,
+    textAlignVertical: 'center',
+    fontFamily: screenStyles.medium.fontFamily,
     fontSize: 18,
   },
 })
