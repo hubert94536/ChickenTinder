@@ -22,6 +22,7 @@ export default class Round extends React.Component {
       instr: true,
       index: 1,
     }
+    console.log(this.state.results.length)
 
     socket.getSocket().on('match', (data) => {
       var res
@@ -71,7 +72,7 @@ export default class Round extends React.Component {
             disableBottomSwipe
             disableTopSwipe
             onSwiped={() => {
-              if (this.state.index !== 10) {
+              if (this.state.index !== this.state.results.length) {
                 this.setState({ index: this.state.index + 1 })
               }
             }}
