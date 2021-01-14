@@ -65,7 +65,6 @@ export default class TopThree extends React.Component {
   }
 
   goMatch() {
-    console.log(this.state.chosen)
     socket.choose(this.state.code, this.state.chosen)
   }
 

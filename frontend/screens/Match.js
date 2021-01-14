@@ -14,26 +14,15 @@ export default class Match extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      navigation: this.props.navigation,
       restaurant: this.props.navigation.state.params.restaurant,
       host: this.props.navigation.state.params.host,
       code: this.props.navigation.state.params.code,
     }
-    console.log(this.props.navigation.state.params.restaurant)
   }
 
   endRound() {
-    const { navigation, code } = this.state
-    navigation.popToTop()
-    socket.leaveRoom(code)
-  }
-
-  componentDidMount() {
-    this._isMounted = true
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false
+    this.props.navigation.replace('Home')
+    socket.leaveRoom(this.state.code)
   }
 
   render() {
@@ -96,6 +85,7 @@ export default class Match extends React.Component {
 Match.propTypes = {
   //navig should contain navigate fx + state, which contains params which contains the necessary restaurant arr
   navigation: PropTypes.shape({
+    replace: PropTypes.func,
     navigate: PropTypes.func,
     state: PropTypes.shape({
       params: PropTypes.shape({

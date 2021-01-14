@@ -22,7 +22,6 @@ export default class Round extends React.Component {
       instr: true,
       index: 1,
     }
-
     socket.getSocket().on('match', (data) => {
       var res
       for (var i = 0; i < this.state.results.length; i++) {
@@ -44,17 +43,13 @@ export default class Round extends React.Component {
     socket.likeRestaurant(this.props.navigation.state.params.code, resId)
   }
 
-  componentDidMount() {
-    this._isMounted = true
-  }
-
   componentWillUnmount() {
-    this._isMounted = false
+    socket.getSocket().off()
   }
 
   leaveGroup() {
     socket.leaveRoom(this.props.navigation.state.params.code)
-    this.props.navigation.popToTop()
+    this.props.navigation.replace('Home')
   }
 
   render() {

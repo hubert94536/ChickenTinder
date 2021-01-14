@@ -15,8 +15,6 @@ export default class Loading extends React.Component {
       code: this.props.navigation.state.params.code,
       isHost: this.props.navigation.state.params.isHost,
     }
-    console.log(this.state.isHost)
-
     socket.getSocket().on('match', (data) => {
       var res
       for (var i = 0; i < this.state.results.length; i++) {
@@ -31,7 +29,6 @@ export default class Loading extends React.Component {
         code: this.state.code,
       })
     })
-
     socket.getSocket().on('top 3', (res) => {
       var restaurants = []
       for (var i = 0; i < 3; i++) {
@@ -43,7 +40,7 @@ export default class Loading extends React.Component {
           }
         }
       }
-      this.props.navigation.push('TopThree', {
+      this.props.navigation.replace('TopThree', {
         top: restaurants,
         code: this.state.code,
         host: this.state.host,
@@ -54,16 +51,18 @@ export default class Loading extends React.Component {
 
   leaveGroup() {
     socket.leaveRoom(this.state.code)
-    this.props.navigation.popToTop()
+    this.props.navigation.replace('Home')
+  }
+
+  componentWillUnmount() {
+    socket.getSocket().off()
   }
 
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.content}>
-          <Text style={[styles.general, { fontSize: 30, fontWeight: 'bold', color: colors.hex }]}>
-            Round done!
-          </Text>
+          <Text style={[styles.general, { fontSize: 30, fontWeight: 'bold' }]}>Round done!</Text>
           <Image
             source={require('../assets/loading.gif')}
             style={{ alignSelf: 'center', width: height * 0.3, height: height * 0.4 }}

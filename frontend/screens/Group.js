@@ -34,7 +34,6 @@ const windowHeight = Dimensions.get('window').height
 export default class Group extends React.Component {
   constructor(props) {
     super(props)
-    this._isMounted = false
     const members = this.props.navigation.state.params.response.members
     this.filterRef = React.createRef()
     this.state = {
@@ -71,7 +70,6 @@ export default class Group extends React.Component {
 
     // listens for group updates
     socket.getSocket().on('update', (res) => {
-      // console.log('group.js: update')
       console.log('socket "update": ' + JSON.stringify(res))
       this.setState({
         members: res.members,
@@ -110,9 +108,7 @@ export default class Group extends React.Component {
     })
 
     socket.getSocket().on('exception', (error) => {
-      if (this._isMounted) {
-        console.log(error)
-      }
+      console.log(error)
     })
   }
 
@@ -167,13 +163,8 @@ export default class Group extends React.Component {
   }
 
   leaveGroup() {
-    if (this.state.hostName === this.state.myUsername) {
-      // socket.endRound(this.state.code)
-      socket.leaveRoom(this.state.code)
-    } else {
-      socket.leaveRoom(this.state.code)
-    }
-    this.props.navigation.popToTop()
+    socket.leaveRoom(this.state.code)
+    this.props.navigation.replace('Home')
   }
 
   // shows proper alert based on if user is host
@@ -183,20 +174,8 @@ export default class Group extends React.Component {
       : this.setState({ leaveAlert: false })
   }
 
-  // _handleChooseFriendsPress() {
-  //   console.log('added')
-  //   // add code to close choose friend modal
-  // }
-
-  componentDidMount() {
-    // console.log('Group - DidMount')
-    // console.log('Group.js: nav params ' + JSON.stringify(this.props.navigation.state.params))
-    this.setState({ _isMounted: true })
-  }
-
   componentWillUnmount() {
-    // console.log('Group - WillUnmount')
-    this.setState({ _isMounted: false })
+    socket.getSocket().off()
     // Todo - potentially add leave group?
   }
 
