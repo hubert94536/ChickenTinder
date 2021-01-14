@@ -232,7 +232,7 @@ export default class Notif extends Component {
         <TabBar
           goHome={() => this.props.navigation.navigate('Home')}
           goSearch={() => this.props.navigation.navigate('Search')}
-          goNotifs={() => this.props.navigation.navigate('Notifications')}
+          goNotifs={() => {}}
           goProfile={() => this.props.navigation.navigate('Profile')}
           cur="Notifs"
         />

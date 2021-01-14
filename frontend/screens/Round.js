@@ -22,8 +22,7 @@ export default class Round extends React.Component {
       instr: true,
       index: 1,
     }
-
-    socket.getSocket().on('match', (data) => {
+    socket.getSocket().once('match', (data) => {
       var res
       for (var i = 0; i < this.state.results.length; i++) {
         if (this.state.results[i].id === data) {
@@ -38,23 +37,18 @@ export default class Round extends React.Component {
         isHost: this.state.isHost,
       })
     })
+    socket.getSocket().once('leave', () => {
+      this.leaveGroup()
+    })
   }
 
   likeRestaurant(resId) {
     socket.likeRestaurant(this.props.navigation.state.params.code, resId)
   }
 
-  componentDidMount() {
-    this._isMounted = true
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false
-  }
-
   leaveGroup() {
     socket.leaveRoom(this.props.navigation.state.params.code)
-    this.props.navigation.popToTop()
+    this.props.navigation.replace('Home')
   }
 
   render() {
@@ -71,7 +65,7 @@ export default class Round extends React.Component {
             disableBottomSwipe
             disableTopSwipe
             onSwiped={() => {
-              if (this.state.index !== 10) {
+              if (this.state.index !== this.state.results.length) {
                 this.setState({ index: this.state.index + 1 })
               }
             }}
@@ -81,6 +75,7 @@ export default class Round extends React.Component {
             onSwipedAll={() => {
               //let backend know you're done
               socket.finishedRound(this.props.navigation.state.params.code)
+              socket.getSocket.off()
               //go to the loading page
               this.props.navigation.replace('Loading', {
                 restaurant: this.state.results,

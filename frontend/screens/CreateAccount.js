@@ -7,6 +7,7 @@ import accountsApi from '../apis/accountsApi.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import defImages from '../assets/images/defImages.js'
+import socket from '../apis/socket.js'
 
 const hex = screenStyles.hex.color
 const textColor = '#6A6A6A'
@@ -58,6 +59,7 @@ export default class createAccount extends React.Component {
         this.state.phone,
       )
       .then(() => {
+        socket.connect()
         this.props.navigation.replace('Home')
       })
       .catch(() => {

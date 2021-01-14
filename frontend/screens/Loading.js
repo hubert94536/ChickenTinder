@@ -18,9 +18,7 @@ export default class Loading extends React.Component {
       code: this.props.navigation.state.params.code,
       isHost: this.props.navigation.state.params.isHost,
     }
-    console.log(this.state.isHost)
-
-    socket.getSocket().on('match', (data) => {
+    socket.getSocket().once('match', (data) => {
       var res
       for (var i = 0; i < this.state.results.length; i++) {
         if (this.state.results[i].id === data) {
@@ -28,14 +26,14 @@ export default class Loading extends React.Component {
           break
         }
       }
+      socket.getSocket().off()
       this.props.navigation.replace('Match', {
         restaurant: res,
         host: this.state.host,
         code: this.state.code,
       })
     })
-
-    socket.getSocket().on('top 3', (res) => {
+    socket.getSocket().once('top 3', (res) => {
       var restaurants = []
       for (var i = 0; i < 3; i++) {
         for (var j = 0; j < this.state.restaurant.length; j++) {
@@ -46,31 +44,31 @@ export default class Loading extends React.Component {
           }
         }
       }
-      this.props.navigation.push('TopThree', {
+      socket.getSocket().off()
+      this.props.navigation.replace('TopThree', {
         top: restaurants,
         code: this.state.code,
         host: this.state.host,
         isHost: this.state.isHost,
       })
     })
+    socket.getSocket().once('leave', () => {
+      this.leaveGroup()
+    })
   }
 
   leaveGroup() {
+    socket.getSocket().off()
     socket.leaveRoom(this.state.code)
-    this.props.navigation.popToTop()
+    this.props.navigation.replace('Home')
   }
 
   render() {
     return (
       <View style={[modalStyles.modalContent, styles.container]}>
         <View style={styles.content}>
-          <Text style={[styles.general, styles.title]}>
-            Round done!
-          </Text>
-          <Image
-            source={require('../assets/loading.gif')}
-            style={styles.gif}
-          />
+          <Text style={[styles.general, styles.title]}>Round done!</Text>
+          <Image source={require('../assets/loading.gif')} style={styles.gif} />
           <Text style={styles.general}>
             Hang tight while others finish swiping and a match is found!
           </Text>
@@ -101,14 +99,14 @@ const styles = StyleSheet.create({
     width: '70%',
     alignSelf: 'center',
   },
-  title:{
-    fontSize: normalize(30), 
-    fontWeight: 'bold', 
+  title: {
+    fontSize: normalize(30),
+    fontWeight: 'bold',
     color: colors.hex,
   },
-  gif:{
-    alignSelf: 'center', 
-    width: height * 0.3, 
+  gif: {
+    alignSelf: 'center',
+    width: height * 0.3,
     height: height * 0.4,
   },
   general: {
@@ -117,11 +115,11 @@ const styles = StyleSheet.create({
     padding: 30,
     textAlign: 'center',
   },
-  leaveButton:{
-    alignSelf: 'center', 
+  leaveButton: {
+    alignSelf: 'center',
     width: '50%',
   },
-  leaveText:{
+  leaveText: {
     color: colors.darkGray,
     textAlign: 'center',
     fontFamily: screenStyles.book.fontFamily,

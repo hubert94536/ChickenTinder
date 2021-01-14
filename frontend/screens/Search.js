@@ -79,19 +79,15 @@ export default class Search extends Component {
     )
   }
 
-  async removeRequest(friend, newArr, status) {
-    if (!status) {
-      friendsApi
-        .removeFriendship(friend)
-        .then(() => {
-          this.setState({ friends: newArr })
-        })
-        .catch(() => {
-          this.setState({ errorAlert: true })
-        })
-    } else if (status) {
-      this.setState({ friends: newArr })
-    }
+  async removeRequest(friend, newArr) {
+    friendsApi
+      .removeFriendship(friend)
+      .then(() => {
+        this.setState({ friends: newArr })
+      })
+      .catch(() => {
+        this.setState({ errorAlert: true })
+      })
   }
 
   renderHeader = () => {
@@ -113,9 +109,7 @@ export default class Search extends Component {
   render() {
     return (
       <View style={screenStyles.mainContainer}>
-        <Text style={[screenStyles.icons, styles.title]}>
-          Find friends
-        </Text>
+        <Text style={[screenStyles.icons, styles.title]}>Find friends</Text>
         <FlatList
           data={this.state.data}
           renderItem={({ item }) => (
@@ -128,7 +122,7 @@ export default class Search extends Component {
               total={this.state.data}
               status={item.status}
               key={item.uid}
-              press={(uid, newArr, status) => this.removeRequest(uid, newArr, status)}
+              press={(uid, newArr) => this.removeRequest(uid, newArr)}
             />
           )}
           keyExtractor={(item) => item.username}
@@ -157,8 +151,8 @@ export default class Search extends Component {
           />
         )}
         <TabBar
-          goHome={() => this.props.navigation.popToTop()}
-          goSearch={() => this.props.navigation.navigate('Search')}
+          goHome={() => this.props.navigation.navigate('Home')}
+          goSearch={() => {}}
           goNotifs={() => this.props.navigation.navigate('Notifications')}
           goProfile={() => this.props.navigation.navigate('Profile')}
           cur="Search"
@@ -174,7 +168,7 @@ Search.propTypes = {
 
 const styles = StyleSheet.create({
   title: {
-    marginTop: '10%', 
+    marginTop: '10%',
     textAlign: 'center',
   },
   container: {

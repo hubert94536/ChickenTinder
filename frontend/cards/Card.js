@@ -27,7 +27,7 @@ export default class Card extends React.Component {
         var filteredArray = this.props.total.filter((item) => {
           return item.username !== this.props.username
         })
-        this.props.press(this.props.uid, filteredArray, true)
+        this.props.press(this.props.uid, filteredArray)
       })
       .catch(() => this.setState({ errorAlert: true, deleteFriend: false }))
   }
@@ -121,7 +121,7 @@ export default class Card extends React.Component {
         {/* if they've requested you as a friend*/}
         {this.state.status === 'pending' && renderOption && (
           <View style={imgStyles.card}>
-            <Text style={[imgStyles.text, styles.black]}>Pending Request</Text>
+            <Text style={[imgStyles.text, styles.black]}>Accept Request</Text>
             <Icon
               style={[imgStyles.icon, styles.pend]}
               name="check-circle"
