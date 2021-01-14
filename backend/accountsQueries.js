@@ -242,6 +242,7 @@ module.exports = {
   createAccount,
   createTestAccount,
   deleteAccount,
+  deleteTestAccount,
   getAccountByUID,
   getAllAccounts,
   searchAccounts,
