@@ -34,8 +34,7 @@ class Home extends React.Component {
     AsyncStorage.multiGet([UID, USERNAME]).then((res) => {
       uid = res[0][1]
       username = res[1][1]
-      socket.connect()
-      socket.getSocket().on('update', (res) => {
+      socket.getSocket().once('update', (res) => {
         this.setState({ invite: false })
         this.props.navigation.navigate('Group', {
           response: res,
@@ -56,10 +55,6 @@ class Home extends React.Component {
 
   createGroup() {
     socket.createRoom()
-  }
-
-  componentWillUnmount() {
-    // socket.off('update')
   }
 
   render() {
@@ -134,7 +129,7 @@ class Home extends React.Component {
           </TouchableHighlight>
         </View>
         <TabBar
-          goHome={() => this.props.navigation.replace('Home')}
+          goHome={() => {}}
           goSearch={() => this.props.navigation.navigate('Search')}
           goNotifs={() => this.props.navigation.navigate('Notifications')}
           goProfile={() => this.props.navigation.navigate('Profile')}
