@@ -29,13 +29,11 @@ export default class UserProfileView extends Component {
       username: '',
       usernameValue: '',
       image: null,
-      oldImage: '',
       friends: true,
       visible: false,
       edit: false,
       changeName: false,
       changeUser: false,
-      navigation: this.props.navigation,
       // button appearance
       logout: false,
       delete: false,
@@ -215,7 +213,6 @@ export default class UserProfileView extends Component {
       name,
       username,
       numFriends,
-      navigation,
       visible,
       edit,
       nameValue,
@@ -306,10 +303,10 @@ export default class UserProfileView extends Component {
           )}
         </View>
         <TabBar
-          goHome={() => navigation.popToTop()}
-          goSearch={() => navigation.navigate('Search')}
-          goNotifs={() => navigation.navigate('Notifications')}
-          goProfile={() => navigation.navigate('Profile')}
+          goHome={() => this.props.navigation.navigate('Home')}
+          goSearch={() => this.props.navigation.navigate('Search')}
+          goNotifs={() => this.props.navigation.navigate('Notifications')}
+          goProfile={() => {}}
           cur="Profile"
         />
       </View>

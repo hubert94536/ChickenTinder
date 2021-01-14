@@ -16,8 +16,8 @@ export default class GroupCard extends React.Component {
     }
   }
 
-  removeUser(username) {
-    socket.kickUser(username)
+  removeUser(uid) {
+    socket.kickUser(uid)
   }
 
   render() {

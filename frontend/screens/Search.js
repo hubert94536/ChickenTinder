@@ -151,8 +151,8 @@ export default class Search extends Component {
           />
         )}
         <TabBar
-          goHome={() => this.props.navigation.popToTop()}
-          goSearch={() => this.props.navigation.navigate('Search')}
+          goHome={() => this.props.navigation.navigate('Home')}
+          goSearch={() => {}}
           goNotifs={() => this.props.navigation.navigate('Notifications')}
           goProfile={() => this.props.navigation.navigate('Profile')}
           cur="Search"

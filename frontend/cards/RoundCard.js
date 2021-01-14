@@ -12,8 +12,8 @@ import {
 import { faMapMarkerAlt, faUtensils } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import getStarPath from '../assets/stars/star.js'
 import PropTypes from 'prop-types'
+import getStarPath from '../assets/stars/star.js'
 import imgStyles from '../../styles/cardImage.js'
 import getCuisine from '../assets/cards/foodImages.js'
 import normalize from '../../styles/normalize.js'
@@ -35,11 +35,9 @@ export default class RoundCard extends React.Component {
       if (i < transactions.length - 1) fork += ', '
     }
     return fork
-    //  return transactions.map((item) => item.charAt(0).toUpperCase() + item.slice(1)).join(', ')
   }
 
   evaluateCuisines(cuisines) {
-    // return cuisines.map((item) => item.title).join(', ')
     if (cuisines.length > 2) {
       return cuisines[0].title + ', ' + cuisines[1].title
     } else {
@@ -48,7 +46,6 @@ export default class RoundCard extends React.Component {
   }
 
   render() {
-    // console.log('roundCard: ' + JSON.stringify(this.props.card.categories))
     return (
       <ImageBackground source={getCuisine(this.props.card.categories)} style={[styles.card]}>
         <TouchableHighlight
