@@ -88,9 +88,7 @@ export default class Group extends React.Component {
 
     socket.getSocket().on('start', (restaurants) => {
       if (restaurants.length > 0) {
-        // console.log('group.js: ' + JSON.stringify(restaurants))
-        // let x = 10 // ROUND SIZE - implement once hubert changes backend
-
+        socket.getSocket().off()
         this.props.navigation.replace('Round', {
           results: restaurants,
           host: this.state.host,
@@ -105,10 +103,6 @@ export default class Group extends React.Component {
 
     socket.getSocket().on('leave', () => {
       this.leaveGroup()
-    })
-
-    socket.getSocket().on('exception', (error) => {
-      console.log(error)
     })
   }
 
@@ -163,6 +157,7 @@ export default class Group extends React.Component {
   }
 
   leaveGroup() {
+    socket.getSocket().off()
     socket.leaveRoom(this.state.code)
     this.props.navigation.replace('Home')
   }
@@ -172,11 +167,6 @@ export default class Group extends React.Component {
     this.state.hostName === this.state.myUsername
       ? this.setState({ endAlert: false })
       : this.setState({ leaveAlert: false })
-  }
-
-  componentWillUnmount() {
-    socket.getSocket().off()
-    // Todo - potentially add leave group?
   }
 
   firstName(str) {

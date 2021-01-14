@@ -27,7 +27,7 @@ export default class Card extends React.Component {
         var filteredArray = this.props.total.filter((item) => {
           return item.username !== this.props.username
         })
-        this.props.press(this.props.uid, filteredArray, true)
+        this.props.press(this.props.uid, filteredArray)
       })
       .catch(() => this.setState({ errorAlert: true, deleteFriend: false }))
   }

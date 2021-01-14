@@ -34,7 +34,7 @@ class Home extends React.Component {
     AsyncStorage.multiGet([UID, USERNAME]).then((res) => {
       uid = res[0][1]
       username = res[1][1]
-      socket.getSocket().on('update', (res) => {
+      socket.getSocket().once('update', (res) => {
         this.setState({ invite: false })
         this.props.navigation.navigate('Group', {
           response: res,
@@ -55,10 +55,6 @@ class Home extends React.Component {
 
   createGroup() {
     socket.createRoom()
-  }
-
-  componentWillUnmount() {
-    socket.getSocket().off('update')
   }
 
   render() {

@@ -27,10 +27,14 @@ export default class MatchCard extends React.Component {
     return (
       <ImageBackground source={getCuisine(card.categories)} style={[styles.card]}>
         <View style={styles.container}>
-          <Text style={styles.title}>{card.name}</Text>
+          <Text style={styles.title} numberOfLines={1}>
+            {card.name}
+          </Text>
           <View style={styles.top}>
             <Image source={getStarPath(card.rating)} style={styles.img} />
-            <Text style={[styles.review, styles.text]}>{card.reviewCount} reviews</Text>
+            <Text style={[styles.review, styles.text]} numberOfLines={1}>
+              {card.reviewCount} reviews
+            </Text>
           </View>
           <View style={[styles.info, styles.center]}>
             <Text style={[styles.text, styles.price]}>{card.price}</Text>
@@ -40,7 +44,7 @@ export default class MatchCard extends React.Component {
           </View>
           <View style={styles.info}>
             <FontAwesomeIcon icon={faMapMarkerAlt} style={styles.icon} />
-            <Text style={[styles.infoText, styles.text]}>
+            <Text style={[styles.infoText, styles.text]} numberOfLines={1}>
               {card.distance} miles away — {card.city}
             </Text>
           </View>

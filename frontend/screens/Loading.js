@@ -1,9 +1,12 @@
 import React from 'react'
 import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
+import colors from '../../styles/colors.js'
+import modalStyles from '../../styles/modalStyles.js'
+import normalize from '../../styles/normalize.js'
+import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
 
-const font = 'CircularStd-Book'
 const height = Dimensions.get('window').height
 
 export default class Loading extends React.Component {
@@ -15,7 +18,7 @@ export default class Loading extends React.Component {
       code: this.props.navigation.state.params.code,
       isHost: this.props.navigation.state.params.isHost,
     }
-    socket.getSocket().on('match', (data) => {
+    socket.getSocket().once('match', (data) => {
       var res
       for (var i = 0; i < this.state.results.length; i++) {
         if (this.state.results[i].id === data) {
@@ -23,13 +26,14 @@ export default class Loading extends React.Component {
           break
         }
       }
+      socket.getSocket().off()
       this.props.navigation.replace('Match', {
         restaurant: res,
         host: this.state.host,
         code: this.state.code,
       })
     })
-    socket.getSocket().on('top 3', (res) => {
+    socket.getSocket().once('top 3', (res) => {
       var restaurants = []
       for (var i = 0; i < 3; i++) {
         for (var j = 0; j < this.state.restaurant.length; j++) {
@@ -40,6 +44,7 @@ export default class Loading extends React.Component {
           }
         }
       }
+      socket.getSocket().off()
       this.props.navigation.replace('TopThree', {
         top: restaurants,
         code: this.state.code,
@@ -48,47 +53,28 @@ export default class Loading extends React.Component {
       })
     })
   }
-
   leaveGroup() {
+    socket.getSocket().off()
     socket.leaveRoom(this.state.code)
     this.props.navigation.replace('Home')
   }
 
-  componentWillUnmount() {
-    socket.getSocket().off()
-  }
-
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[modalStyles.modalContent, styles.container]}>
         <View style={styles.content}>
-          <Text style={[styles.general, { fontSize: 30, fontWeight: 'bold' }]}>Round done!</Text>
-          <Image
-            source={require('../assets/loading.gif')}
-            style={{ alignSelf: 'center', width: height * 0.3, height: height * 0.4 }}
-          />
-          <Text style={[styles.general, { color: 'black' }]}>
+          <Text style={[styles.general, styles.title]}>Round done!</Text>
+          <Image source={require('../assets/loading.gif')} style={styles.gif} />
+          <Text style={styles.general}>
             Hang tight while others finish swiping and a match is found!
           </Text>
         </View>
         <TouchableHighlight
-          style={{ alignSelf: 'center', width: '50%' }}
+          style={styles.leaveButton}
           underlayColor="transparent"
           onPress={() => this.leaveGroup()}
         >
-          <Text
-            style={[
-              {
-                color: '#6A6A6A',
-                textAlign: 'center',
-                fontFamily: font,
-                fontSize: 18,
-                padding: '3%',
-              },
-            ]}
-          >
-            Leave Round
-          </Text>
+          <Text style={styles.leaveText}>Leave Round</Text>
         </TouchableHighlight>
       </View>
     )
@@ -103,18 +89,37 @@ Loading.propTypes = {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: 'white',
-    justifyContent: 'space-evenly',
   },
   content: {
     width: '70%',
     alignSelf: 'center',
   },
+  title: {
+    fontSize: normalize(30),
+    fontWeight: 'bold',
+    color: colors.hex,
+  },
+  gif: {
+    alignSelf: 'center',
+    width: height * 0.3,
+    height: height * 0.4,
+  },
   general: {
-    fontFamily: font,
-    fontSize: 15,
+    fontFamily: screenStyles.book.fontFamily,
+    fontSize: normalize(16),
     padding: 30,
     textAlign: 'center',
+  },
+  leaveButton: {
+    alignSelf: 'center',
+    width: '50%',
+  },
+  leaveText: {
+    color: colors.darkGray,
+    textAlign: 'center',
+    fontFamily: screenStyles.book.fontFamily,
+    fontSize: normalize(18),
+    padding: '3%',
   },
 })

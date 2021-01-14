@@ -63,14 +63,14 @@ export default class Friends extends React.Component {
   }
 
   async removeRequest(friend, newArr) {
-    friendsApi
-      .removeFriendship(friend)
-      .then(() => {
-        this.setState({ friends: newArr })
-      })
-      .catch(() => {
-        this.setState({ errorAlert: true })
-      })
+      friendsApi
+        .removeFriendship(friend)
+        .then(() => {
+          this.setState({ friends: newArr })
+        })
+        .catch(() => {
+          this.setState({ errorAlert: true })
+        })
   }
 
   // Called on friends-list pulldown refresh
