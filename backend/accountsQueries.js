@@ -88,6 +88,47 @@ const createTestAccount = async (req, res) => {
 // Delete account by uid
 const deleteAccount = async (req, res) => {
   try {
+    const uid = req.body.uid
+    await Friends.destroy({
+      where: {
+        [Op.or]: [
+          {
+            main_uid: uid,
+          },
+          {
+            friend_uid: uid,
+          },
+        ],
+      },
+    })
+    await Notifications.destroy({
+      where: {
+        [Op.or]: [
+          {
+            receiver_uid: uid,
+          },
+          {
+            sender_uid: uid,
+          },
+        ],
+      },
+    })
+    const deleted = await Accounts.destroy({
+      where: { uid: uid },
+    })
+    if (deleted) {
+      return res.status(204).send('User deleted')
+    }
+    return res.status(404).send('User with the specified UID does not exists')
+  } catch (error) {
+    console.log(error)
+    return res.status(500).send(error.message)
+  }
+}
+
+// Delete account by uid
+const deleteAccount = async (req, res) => {
+  try {
     const uid = req.authId
     await Friends.destroy({
       where: {

@@ -52,7 +52,11 @@ export default class Loading extends React.Component {
         isHost: this.state.isHost,
       })
     })
+    socket.getSocket().once('leave', () => {
+      this.leaveGroup()
+    })
   }
+
   leaveGroup() {
     socket.getSocket().off()
     socket.leaveRoom(this.state.code)
