@@ -18,9 +18,7 @@ export default class Loading extends React.Component {
       code: this.props.navigation.state.params.code,
       isHost: this.props.navigation.state.params.isHost,
     }
-    console.log(this.state.isHost)
-
-    socket.getSocket().on('match', (data) => {
+    socket.getSocket().once('match', (data) => {
       var res
       for (var i = 0; i < this.state.results.length; i++) {
         if (this.state.results[i].id === data) {
@@ -28,14 +26,14 @@ export default class Loading extends React.Component {
           break
         }
       }
+      socket.getSocket().off()
       this.props.navigation.replace('Match', {
         restaurant: res,
         host: this.state.host,
         code: this.state.code,
       })
     })
-
-    socket.getSocket().on('top 3', (res) => {
+    socket.getSocket().once('top 3', (res) => {
       var restaurants = []
       for (var i = 0; i < 3; i++) {
         for (var j = 0; j < this.state.restaurant.length; j++) {
@@ -46,7 +44,8 @@ export default class Loading extends React.Component {
           }
         }
       }
-      this.props.navigation.push('TopThree', {
+      socket.getSocket().off()
+      this.props.navigation.replace('TopThree', {
         top: restaurants,
         code: this.state.code,
         host: this.state.host,
@@ -54,10 +53,10 @@ export default class Loading extends React.Component {
       })
     })
   }
-
   leaveGroup() {
+    socket.getSocket().off()
     socket.leaveRoom(this.state.code)
-    this.props.navigation.popToTop()
+    this.props.navigation.replace('Home')
   }
 
   render() {

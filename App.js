@@ -16,7 +16,7 @@ import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
 import Loading from './frontend/screens/Loading.js'
 import TopThree from './frontend/screens/TopThree.js'
 import CreateAccount from './frontend/screens/CreateAccount.js'
-
+import socket from './frontend/apis/socket.js'
 // class Notifications extends React.Component {
 
 export default class App extends React.Component {
@@ -34,6 +34,7 @@ export default class App extends React.Component {
       if (user === null) {
         start = 'Login'
       } else {
+        socket.connect()
         start = 'Home'
       }
       var RootStack = createStackNavigator(

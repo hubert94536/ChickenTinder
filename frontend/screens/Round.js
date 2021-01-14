@@ -22,9 +22,7 @@ export default class Round extends React.Component {
       instr: true,
       index: 1,
     }
-    console.log(this.state.results.length)
-
-    socket.getSocket().on('match', (data) => {
+    socket.getSocket().once('match', (data) => {
       var res
       for (var i = 0; i < this.state.results.length; i++) {
         if (this.state.results[i].id === data) {
@@ -45,17 +43,9 @@ export default class Round extends React.Component {
     socket.likeRestaurant(this.props.navigation.state.params.code, resId)
   }
 
-  componentDidMount() {
-    this._isMounted = true
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false
-  }
-
   leaveGroup() {
     socket.leaveRoom(this.props.navigation.state.params.code)
-    this.props.navigation.popToTop()
+    this.props.navigation.replace('Home')
   }
 
   render() {
@@ -82,6 +72,7 @@ export default class Round extends React.Component {
             onSwipedAll={() => {
               //let backend know you're done
               socket.finishedRound(this.props.navigation.state.params.code)
+              socket.getSocket.off()
               //go to the loading page
               this.props.navigation.replace('Loading', {
                 restaurant: this.state.results,
