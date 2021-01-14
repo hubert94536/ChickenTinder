@@ -231,11 +231,11 @@ export default class FilterSelector extends React.Component {
     if (this.state.asap) {
       unix = Math.floor(Date.now() / 1000)
     } else {
-      // const dd = date.getDate()
-      // const mm = date.getMonth()
-      // const yyyy = date.getFullYear()
-      // const timezone = date.getTimezoneOffset()
-      // unix = Date.UTC(yyyy, mm, dd, this.state.hour, this.state.minute + timezone) / 1000
+      const dd = date.getDate()
+      const mm = date.getMonth()
+      const yyyy = date.getFullYear()
+      const timezone = date.getTimezoneOffset()
+      unix = Date.UTC(yyyy, mm, dd, this.state.hour, this.state.minute + timezone) / 1000
     }
     console.log(unix)
     filters.open_at = unix
