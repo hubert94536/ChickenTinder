@@ -86,7 +86,7 @@ const createTestAccount = async (req, res) => {
 }
 
 // Delete account by uid
-const deleteAccount = async (req, res) => {
+const deleteTestAccount = async (req, res) => {
   try {
     const uid = req.body.uid
     await Friends.destroy({
