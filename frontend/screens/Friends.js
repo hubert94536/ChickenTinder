@@ -23,13 +23,12 @@ export default class Friends extends React.Component {
       data: [], // array for friends
       friends: [], // array of Profile components
       isFriends: this.props.isFriends, // For rendering friends (true) or requests (false)
-      refreshing: false, // Are we currently refreshing the list?
+      refreshing: true, // Are we currently refreshing the list?
     }
     this.getFriends()
   }
-
   //  gets the users friends
-  getFriends() {
+  async getFriends() {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
       .getFriends()
@@ -42,7 +41,7 @@ export default class Friends extends React.Component {
           }
         }
         //  need two so when you search it doesn't get rid of all the friends
-        this.setState({ friends: pushFriends, data: pushFriends })
+        this.setState({ friends: pushFriends, data: pushFriends, refreshing: false })
       })
       .catch(() => this.setState({ errorAlert: true }))
       .then(() => {
