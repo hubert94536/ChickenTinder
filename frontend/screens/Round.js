@@ -37,6 +37,9 @@ export default class Round extends React.Component {
         isHost: this.state.isHost,
       })
     })
+    socket.getSocket().once('leave', () => {
+      this.leaveGroup()
+    })
   }
 
   likeRestaurant(resId) {
