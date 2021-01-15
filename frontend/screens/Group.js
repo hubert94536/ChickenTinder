@@ -326,7 +326,6 @@ export default class Group extends React.Component {
                     zIndex: 30,
                     elevation: 30,
                     height: this.state.hostName == this.state.myUsername ? 400 : 350,
-
                   }}
                 >
                   <FilterSelector
@@ -347,9 +346,7 @@ export default class Group extends React.Component {
                   justifyContent: 'center',
                 }}
               >
-                <View
-                  style={styles.footerContainer}
-                >
+                <View style={styles.footerContainer}>
                   <Text
                     style={{
                       color: colors.hex,
@@ -429,7 +426,7 @@ export default class Group extends React.Component {
         {this.state.blur && (
           <BlurView
             blurType="dark"
-            blurAmount={5}
+            blurAmount={100}
             reducedTransparencyFallbackColor="white"
             style={modalStyles.blur}
           />
