@@ -24,7 +24,7 @@ export default class Match extends React.Component {
     this.props.navigation.replace('Home')
     socket.leaveRoom(this.state.code)
   }
-  
+
   render() {
     const { restaurant } = this.state
     return (

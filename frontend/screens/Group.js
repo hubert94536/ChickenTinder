@@ -10,7 +10,6 @@ import {
 } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import Clipboard from '@react-native-community/clipboard'
-// import { USERNAME } from 'react-native-dotenv'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
@@ -64,7 +63,7 @@ export default class Group extends React.Component {
     this.updateMemberList()
 
     // listens if user is to be kicked
-    socket.getSocket().on('kick', () => {
+    socket.getSocket().once('kick', () => {
       this.leaveGroup()
     })
 
@@ -86,7 +85,7 @@ export default class Group extends React.Component {
       this.updateMemberList()
     })
 
-    socket.getSocket().on('start', (restaurants) => {
+    socket.getSocket().once('start', (restaurants) => {
       if (restaurants.length > 0) {
         socket.getSocket().off()
         this.props.navigation.replace('Round', {
@@ -101,7 +100,7 @@ export default class Group extends React.Component {
       }
     })
 
-    socket.getSocket().on('leave', () => {
+    socket.getSocket().once('leave', () => {
       this.leaveGroup()
     })
   }

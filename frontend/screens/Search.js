@@ -80,14 +80,14 @@ export default class Search extends Component {
   }
 
   async removeRequest(friend, newArr) {
-      friendsApi
-        .removeFriendship(friend)
-        .then(() => {
-          this.setState({ friends: newArr })
-        })
-        .catch(() => {
-          this.setState({ errorAlert: true })
-        })
+    friendsApi
+      .removeFriendship(friend)
+      .then(() => {
+        this.setState({ friends: newArr })
+      })
+      .catch(() => {
+        this.setState({ errorAlert: true })
+      })
   }
 
   renderHeader = () => {
