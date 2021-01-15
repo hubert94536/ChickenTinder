@@ -22,6 +22,7 @@ import FilterSelector from './Filter.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
+import normalize from '../../styles/normalize.js'
 
 const font = 'CircularStd-Medium'
 let memberList = []
@@ -174,18 +175,7 @@ export default class Group extends React.Component {
     return (
       <View>
         <View style={styles.header}>
-          <View
-            style={{
-              alignSelf: 'center',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              backgroundColor: colors.hex,
-              height: 120,
-              width: '100%',
-              paddingBottom: 20,
-            }}
-          >
+          <View style={styles.headerFill}>
             <Text style={styles.groupTitle}>
               {this.state.hostName === this.state.myUsername
                 ? 'Your Group'
@@ -213,7 +203,7 @@ export default class Group extends React.Component {
           initialDrawerPos={100}
           renderContainerView={() => (
             <View style={styles.main}>
-              <View style={[styles.center, { flexDirection: 'row' }]}>
+              <View style={styles.center}>
                 <Icon name="user" style={[styles.icon, { color: colors.hex }]} />
                 <Text
                   style={{
@@ -224,8 +214,8 @@ export default class Group extends React.Component {
                 >
                   {memberList.length}
                 </Text>
-                <Text style={[styles.divider, { color: '#F15763' }]}>|</Text>
-                <Text style={[styles.waiting, { color: '#F15763' }]}>
+                <Text style={styles.divider}>|</Text>
+                <Text style={styles.waiting}>
                   waiting for {this.countNeedFilters(this.state.members)} member filters
                 </Text>
               </View>
@@ -247,10 +237,8 @@ export default class Group extends React.Component {
                             backgroundColor: '#DCDCDC',
                             borderRadius: 7,
                             alignSelf: 'center',
-                            width: 170,
+                            width: 160,
                             height: 35,
-                            padding: 0,
-                            margin: 5,
                           }}
                           onPress={() => this.setState({ chooseFriends: true, blur: true })}
                         >
@@ -259,23 +247,12 @@ export default class Group extends React.Component {
                               color: 'black',
                               textAlign: 'center',
                               width: '100%',
-                              lineHeight: 36,
+                              lineHeight: normalize(36),
                             }}
                           >
                             + Add Friends
                           </Text>
                         </TouchableHighlight>
-                        <View
-                          style={{
-                            width: 170,
-                            height: 30,
-                            padding: 0,
-                            margin: 5,
-                            display: 'none',
-                          }}
-                        >
-                          <Text>footer</Text>
-                        </View>
                       </View>
                     )
                   } else {
@@ -283,13 +260,12 @@ export default class Group extends React.Component {
                       <GroupCard
                         filters={item.filters}
                         host={this.state.host}
-                        // Placeholder image for null image
-                        image={item.photo == '' ? 'https://via.placeholder.com/150' : item.photo}
+                        image={item.photo}
                         isHost={this.state.hostName == item.username}
                         key={item.key}
                         name={item.name}
                         username={item.username}
-                        style={{ width: 170 }}
+                        style={{ width: 160 }}
                       />
                     )
                   }
@@ -335,11 +311,10 @@ export default class Group extends React.Component {
                   style={{
                     backgroundColor: 'white',
                     width: windowWidth,
-                    height: this.state.hostName == this.state.myUsername ? 400 : 350,
                     zIndex: 30,
                     elevation: 30,
-                    // borderColor: colors.hex,
-                    // borderWidth: 1,
+                    height: this.state.hostName == this.state.myUsername ? 400 : 350,
+
                   }}
                 >
                   <FilterSelector
@@ -361,22 +336,7 @@ export default class Group extends React.Component {
                 }}
               >
                 <View
-                  style={{
-                    color: 'white',
-                    fontFamily: font,
-                    height: 30,
-                    backgroundColor: 'white',
-                    padding: 15,
-                    paddingTop: 25,
-                    borderBottomLeftRadius: 15,
-                    borderBottomRightRadius: 15,
-                    // borderColor: colors.hex,
-                    // borderWidth: 1,
-                    flexDirection: 'column',
-                    justifyContent: 'flex-end',
-                    zIndex: 30,
-                    elevation: 30,
-                  }}
+                  style={styles.footerContainer}
                 >
                   <Text
                     style={{
@@ -491,6 +451,16 @@ const styles = StyleSheet.create({
     zIndex: 20,
     elevation: 20,
   },
+  headerFill: {
+    alignSelf: 'center',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.hex,
+    height: 120,
+    width: '100%',
+    paddingBottom: 20,
+  },
   groupTitle: {
     color: '#fff',
     fontSize: 30,
@@ -519,14 +489,14 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
   divider: {
-    color: '#aaa',
+    color: colors.hex,
     alignSelf: 'center',
     marginLeft: '3%',
     fontSize: 25,
     fontFamily: font,
   },
   waiting: {
-    color: '#aaa',
+    color: colors.hex,
     marginLeft: '3%',
     alignSelf: 'center',
     fontFamily: font,
@@ -567,6 +537,7 @@ const styles = StyleSheet.create({
     margin: 15,
     marginLeft: 25,
     marginRight: 25,
+    flexDirection: 'row',
   },
   bottom: {
     position: 'absolute',
@@ -607,5 +578,19 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
+  },
+  footerContainer: {
+    color: 'white',
+    fontFamily: font,
+    height: 30,
+    backgroundColor: 'white',
+    padding: 15,
+    paddingTop: 25,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    zIndex: 30,
+    elevation: 30,
   },
 })
