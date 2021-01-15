@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
   buttonCreate: {
     backgroundColor: colors.hex,
     borderRadius: normalize(40),
-    width: normalize(width * 0.5),
+    width: width * 0.5,
     height: normalize(45),
     justifyContent: 'center',
     alignSelf: 'center',
@@ -161,16 +161,17 @@ const styles = StyleSheet.create({
   buttonJoin: {
     backgroundColor: 'white',
     borderRadius: normalize(40),
-    width: normalize(width * 0.5),
+    width: width * 0.5,
     height: normalize(45),
     justifyContent: 'center',
     alignSelf: 'center',
     borderColor: colors.hex,
     borderWidth: 2,
+    //borderWidth: width * 0.005,
   },
   image: {
-    width: normalize(height * 0.3),
-    height: normalize(height * 0.3),
+    width: height * 0.3,
+    height: height * 0.3,
   },
   slogan: {
     fontSize: normalize(30),
