@@ -9,9 +9,12 @@ import {
   TextInput,
 } from 'react-native'
 import PropTypes from 'prop-types'
+import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
+import colors from '../../styles/colors.js'
+import Slider from '@react-native-community/slider'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { ZIP_ID, ZIP_TOKEN } from 'react-native-dotenv'
 
@@ -30,6 +33,7 @@ export default class Location extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      distance: 0,
       zip: '',
       zipValid: true,
       //style of the button
@@ -38,6 +42,7 @@ export default class Location extends Component {
   }
 
   validateZip() {
+    this.props.update(this.state.distance)
     //created Lookup for validating zip code
     let lookup = new Lookup()
     lookup.zipCode = this.state.zip
@@ -107,6 +112,49 @@ export default class Location extends Component {
                 </Text>
               </TouchableHighlight>
             </View>
+            <Text>({this.state.distance} miles)</Text>
+            <Slider
+              style={{
+                width: '85%',
+                height: 30,
+                alignSelf: 'center',
+              }}
+              minimumValue={5}
+              maximumValue={25}
+              value={5}
+              step={0.5}
+              minimumTrackTintColor={colors.hex}
+              maximumTrackTintColor={colors.hex}
+              thumbTintColor={colors.hex}
+              onValueChange={(value) => {
+                this.setState({ distance: value })
+              }}
+            />
+            <MapView
+              provider={PROVIDER_GOOGLE}
+              style={styles.map}
+              region={{
+                latitude: 34.06892,
+                longitude: -118.445183,
+                latitudeDelta: this.state.distance / 60 + 0.3,
+                longitudeDelta: this.state.distance / 60 + 0.3,
+              }}
+            >
+              <Marker
+                coordinate={{
+                  latitude: 34.06892,
+                  longitude: -118.445183,
+                }}
+              />
+              <Circle
+                center={{
+                  latitude: 34.06892,
+                  longitude: -118.445183,
+                }}
+                radius={this.state.distance * 1609.34}
+                fillColor={'rgba(241, 87, 99, 0.7)'}
+              />
+            </MapView>
           </View>
         </Modal>
       </View>
@@ -129,7 +177,7 @@ const styles = StyleSheet.create({
     padding: '1%',
   },
   modalHeight: {
-    height: height * 0.3,
+    height: height * 0.5,
   },
   icon: {
     flexDirection: 'row',
@@ -160,9 +208,25 @@ const styles = StyleSheet.create({
   white: {
     color: 'white',
   },
+  mapContainer: {
+    borderBottomLeftRadius: 14,
+    borderBottomRightRadius: 14,
+    overflow: 'hidden', //hides map overflow
+    alignSelf: 'center',
+    justifyContent: 'flex-end',
+    height: Dimensions.get('window').height * 0.4,
+    width: Dimensions.get('window').width * 0.4,
+  },
+  map: {
+    alignSelf: 'center',
+    justifyContent: 'flex-end',
+    height: Dimensions.get('window').height * 0.2,
+    width: Dimensions.get('window').width * 0.4,
+  },
 })
 
 Location.propTypes = {
+  update: PropTypes.func,
   press: PropTypes.func,
   cancel: PropTypes.func,
   visible: PropTypes.bool,

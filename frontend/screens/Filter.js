@@ -11,7 +11,6 @@ import {
 // import { BlurView } from '@react-native-community/blur'
 import Geolocation from 'react-native-geolocation-service'
 import PropTypes from 'prop-types'
-import Slider from '@react-native-community/slider'
 import Swiper from 'react-native-swiper'
 import Alert from '../modals/Alert.js'
 import ChooseFriends from '../modals/ChooseFriends.js'
@@ -452,7 +451,7 @@ export default class FilterSelector extends React.Component {
                     }}
                   />
                 </View>
-                <Slider
+                {/* <Slider
                   style={{
                     width: '85%',
                     height: 30,
@@ -466,7 +465,7 @@ export default class FilterSelector extends React.Component {
                   maximumTrackTintColor={TEXT_COLOR}
                   thumbTintColor={TEXT_COLOR}
                   onValueChange={(value) => this.setState({ distance: value })}
-                />
+                /> */}
               </View>
 
               {/* PRICE */}
@@ -657,6 +656,7 @@ export default class FilterSelector extends React.Component {
             this.setState({ chooseLocation: false })
             this.props.setBlur(false)
           }}
+          update={(value) => this.setState({ distance: value })}
         />
       </View>
     )
