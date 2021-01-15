@@ -2,17 +2,17 @@
 import React from 'react'
 import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { USERNAME, UID } from 'react-native-dotenv'
-// import accountsApi from '../apis/accountsApi.js'
-import Alert from '../modals/Alert.js'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import colors from '../../styles/colors.js'
-// import friendsApi from '../apis/friendsApi.js'
-import Join from '../modals/Join.js'
-import normalize from '../../styles/normalize.js'
 import PropTypes from 'prop-types'
-import screenStyles from '../../styles/screenStyles.js'
+import friendsApi from '../apis/friendsApi.js'
+import accountsApi from '../apis/accountsApi.js'
 import socket from '../apis/socket.js'
+import Alert from '../modals/Alert.js'
+import colors from '../../styles/colors.js'
+import normalize from '../../styles/normalize.js'
+import Join from '../modals/Join.js'
 import TabBar from '../Nav.js'
+import screenStyles from '../../styles/screenStyles.js'
 
 var uid = ''
 var username = ''
@@ -35,8 +35,7 @@ class Home extends React.Component {
     AsyncStorage.multiGet([UID, USERNAME]).then((res) => {
       uid = res[0][1]
       username = res[1][1]
-      socket.connect()
-      socket.getSocket().on('update', (res) => {
+      socket.getSocket().once('update', (res) => {
         this.setState({ invite: false })
         this.props.navigation.navigate('Group', {
           response: res,
@@ -59,24 +58,21 @@ class Home extends React.Component {
     socket.createRoom()
   }
 
-  componentWillUnmount() {
-    // socket.off('update')
-  }
-
   render() {
     return (
-      <View style={[screenStyles.mainContainer, screenStyles.background]}>
-        <Text style={[screenStyles.text, screenStyles.title, screenStyles.slogan]}>
+      <View style={[screenStyles.mainContainer, styles.background]}>
+        <Text style={[screenStyles.text, screenStyles.title, styles.slogan]}>
           Hungry? Chews wisely.
         </Text>
         {/* dummy image below */}
-        <Image source={require('../assets/Icon_Transparent.png')} style={[screenStyles.image]} />
+        <Image source={require('../assets/Icon_Transparent.png')} style={[styles.image]} />
         <View>
           <TouchableHighlight
             onShowUnderlay={() => this.setState({ createPressed: true })}
             onHideUnderlay={() => this.setState({ createPressed: false })}
             activeOpacity={1}
-            style={[screenStyles.groupCreate]}
+            underlayColor="white"
+            style={[styles.buttonCreate]}
             onPress={() => this.createGroup()}
           >
             <Text
@@ -92,7 +88,8 @@ class Home extends React.Component {
             onShowUnderlay={() => this.setState({ joinPressed: true })}
             onHideUnderlay={() => this.setState({ joinPressed: false })}
             activeOpacity={1}
-            style={[screenStyles.groupJoin]}
+            underlayColor={colors.hex}
+            style={[styles.buttonJoin]}
             onPress={() => this.setState({ join: true })}
           >
             <Text
@@ -106,7 +103,7 @@ class Home extends React.Component {
           </TouchableHighlight>
         </View>
         <TabBar
-          goHome={() => this.props.navigation.replace('Home')}
+          goHome={() => {}}
           goSearch={() => this.props.navigation.navigate('Search')}
           goNotifs={() => this.props.navigation.navigate('Notifications')}
           goProfile={() => this.props.navigation.navigate('Profile')}
@@ -136,7 +133,6 @@ class Home extends React.Component {
 Home.propTypes = {
   navigation: PropTypes.object,
 }
-
 const styles = StyleSheet.create({
   background: {
     alignItems: 'center',
@@ -153,30 +149,28 @@ const styles = StyleSheet.create({
     fontFamily: 'CircularStd-Bold',
     fontSize: normalize(18),
   },
-  groupCreate: {
-    underlayColor: 'white',
+  buttonCreate: {
     backgroundColor: colors.hex,
     borderRadius: normalize(40),
-    width: '50%',
+    width: normalize(width * 0.5),
     height: normalize(45),
     justifyContent: 'center',
     alignSelf: 'center',
     margin: '3%',
   },
-  groupJoin: {
-    underlayColor: colors.hex,
+  buttonJoin: {
     backgroundColor: 'white',
     borderRadius: normalize(40),
-    width: '50%',
+    width: normalize(width * 0.5),
     height: normalize(45),
     justifyContent: 'center',
     alignSelf: 'center',
     borderColor: colors.hex,
-    borderWidth: normalize(2),
+    borderWidth: 2,
   },
   image: {
-    width: height('30%'),
-    height: '30%',
+    width: normalize(height * 0.3),
+    height: normalize(height * 0.3),
   },
   slogan: {
     fontSize: normalize(30),
