@@ -1,23 +1,22 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { Text } from 'react-native'
-import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
 import { createAppContainer } from 'react-navigation'
+import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
 import firebase from 'firebase'
+import CreateAccount from './frontend/screens/CreateAccount.js'
 import Group from './frontend/screens/Group.js'
 import Home from './frontend/screens/Home.js'
+import Loading from './frontend/screens/Loading.js'
 import Login from './frontend/screens/Login.js'
 import Match from './frontend/screens/Match.js'
 import Notifications from './frontend/screens/Notifications.js'
+import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
 import Round from './frontend/screens/Round.js'
 import Search from './frontend/screens/Search.js'
-import UserProfileView from './frontend/screens/Profile.js'
-import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
-import Loading from './frontend/screens/Loading.js'
+import socket from './frontend/apis/socket.js'
 import TopThree from './frontend/screens/TopThree.js'
-import CreateAccount from './frontend/screens/CreateAccount.js'
-
-// class Notifications extends React.Component {
+import UserProfileView from './frontend/screens/Profile.js'
 
 export default class App extends React.Component {
   constructor() {
@@ -34,6 +33,7 @@ export default class App extends React.Component {
       if (user === null) {
         start = 'Login'
       } else {
+        socket.connect()
         start = 'Home'
       }
       var RootStack = createStackNavigator(

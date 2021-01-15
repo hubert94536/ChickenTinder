@@ -365,8 +365,12 @@ module.exports = (io) => {
         filters = JSON.parse(filters)
         // if everyone in room is finished swiping, get the top 3 restaurants and emit
         if (filters.finished.length === filters.groupSize) {
-          let top3 = getTop3(filters.restaurants)
-          io.in(data.code).emit('top 3', top3)
+          if (Object.keys(filters.restaurants).length == 1) {
+            io.in(data.code).emit('match', Object.keys(filters.restaurants)[0])
+          } else {
+            let top3 = getTop3(filters.restaurants)
+            io.in(data.code).emit('top 3', top3)
+          }
         }
       } catch (err) {
         socket.emit('exception', err.toString())
@@ -381,7 +385,7 @@ module.exports = (io) => {
 
     // alert all users to leave
     socket.on('end', (data) => {
-      io.in(data.code).emit('kick')
+      io.in(data.code).emit('leave')
     })
   })
 }
