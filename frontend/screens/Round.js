@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
 import Swiper from 'react-native-deck-swiper'
 import PropTypes from 'prop-types'
+import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
 import RoundCard from '../cards/RoundCard.js'
 import socket from '../apis/socket.js'
@@ -21,6 +22,7 @@ export default class Round extends React.Component {
       isHost: this.props.navigation.state.params.isHost,
       instr: true,
       index: 1,
+      leave: false,
     }
     socket.getSocket().once('match', (data) => {
       var res
@@ -48,6 +50,12 @@ export default class Round extends React.Component {
 
   leaveGroup() {
     socket.leaveRoom(this.props.navigation.state.params.code)
+    this.props.navigation.replace('Home')
+  }
+
+  endGroup() {
+    this.setState({ leave: false })
+    socket.endRound(this.props.navigation.state.params.code)
     this.props.navigation.replace('Home')
   }
 
@@ -89,16 +97,30 @@ export default class Round extends React.Component {
             animateOverlayLabelsOpacity
           >
             <Text style={[screenStyles.text, styles.title, styles.topMargin]}>Get chews-ing!</Text>
-            <TouchableHighlight
-              onPress={() => this.leaveGroup()}
-              style={[styles.leaveButton, styles.topMargin]}
-              underlayColor="transparent"
-            >
-              <View style={styles.centerAlign}>
-                <Icon5 name="door-open" style={[screenStyles.text, styles.door]} />
-                <Text style={([screenStyles.text], styles.black)}>Leave</Text>
-              </View>
-            </TouchableHighlight>
+            {!this.state.isHost && (
+              <TouchableHighlight
+                onPress={() => this.leaveGroup()}
+                style={[styles.leaveButton, styles.topMargin]}
+                underlayColor="transparent"
+              >
+                <View style={styles.centerAlign}>
+                  <Icon5 name="door-open" style={[screenStyles.text, styles.door]} />
+                  <Text style={([screenStyles.text], styles.black)}>Leave</Text>
+                </View>
+              </TouchableHighlight>
+            )}
+            {this.state.isHost && (
+              <TouchableHighlight
+                onPress={() => this.setState({ leave: true })}
+                style={[styles.leaveButton, styles.topMargin]}
+                underlayColor="transparent"
+              >
+                <View style={styles.centerAlign}>
+                  <Icon5 name="door-open" style={[screenStyles.text, styles.door]} />
+                  <Text style={([screenStyles.text], styles.black)}>End</Text>
+                </View>
+              </TouchableHighlight>
+            )}
             <Text style={[screenStyles.text, styles.topMargin, styles.restaurant]}>
               Restaurant {this.state.index}/{this.state.results.length}
             </Text>
@@ -158,6 +180,16 @@ export default class Round extends React.Component {
             </TouchableHighlight>
           </View>
         </View>
+        {this.state.leave && (
+          <Alert
+            title="Are you sure you want to leave?"
+            body="Leaving ends the group for everyone"
+            buttonAff="Close"
+            height="30%"
+            press={() => this.endGroup()}
+            cancel={() => this.setState({ leave: false })}
+          />
+        )}
       </View>
     )
   }
