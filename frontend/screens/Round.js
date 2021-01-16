@@ -83,7 +83,7 @@ export default class Round extends React.Component {
             onSwipedAll={() => {
               //let backend know you're done
               socket.finishedRound(this.props.navigation.state.params.code)
-              socket.getSocket.off()
+              socket.getSocket().off()
               //go to the loading page
               this.props.navigation.replace('Loading', {
                 restaurant: this.state.results,
@@ -149,6 +149,7 @@ export default class Round extends React.Component {
               onPress={() => this.deck.swipeLeft()}
               underlayColor="transparent"
               style={styles.background}
+              disabled={this.state.index > this.state.results.length}
             >
               <Feather name="x" style={[screenStyles.text, styles.x]} />
             </TouchableHighlight>
@@ -175,6 +176,7 @@ export default class Round extends React.Component {
               onPress={() => this.deck.swipeRight()}
               underlayColor="transparent"
               style={(styles.background, styles.swipeRight)}
+              disabled={this.state.index > this.state.results.length}
             >
               <Icon name="heart" style={[screenStyles.text, styles.heart]} />
             </TouchableHighlight>
