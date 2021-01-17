@@ -1,7 +1,8 @@
 const { pool } = require('./config.js')
 const { hmset, hdel, hgetAll, redisClient, firebase } = require('./config.js')
 const messaging = firebase.messaging();
-const { Accounts, Friends, Notifications } = require('./models.js')
+const { Notifications } = require('./models.js')
+const {v}
 
 pool.connect((err, client, release) => {
   if (err) {
@@ -37,9 +38,9 @@ const sendNotification = async (notif) => {
 // called on login
 const linkToken = async (req, res) => {
   try {
-    console.log(req.body.id)
-    await hmset(`users:${req.body.id}`, 'regtoken', req.body.token)
-    console.log(`${req.body.id} linked to ${req.body.token}`)
+    console.log(req.authId)
+    await hmset(`users:${req.authId}`, 'regtoken', req.body.token)
+    console.log(`${req.authId} linked to ${req.body.token}`)
     return res.status(200).send("linked");
   } catch (error) {
     return res.sendStatus(500);
@@ -50,8 +51,8 @@ const linkToken = async (req, res) => {
 // called on logout
 const unlinkToken = async (req, res) => {
   try {
-    console.log(req.body.id)
-    await hdel(`users:${req.body.id}`, 'regtoken')
+    console.log(req.authId)
+    await hdel(`users:${req.authId}`, 'regtoken')
     console.log(`${req.body.id} unlinked`)
     return res.status(200).send("unlinked");
   } catch (error) {
