@@ -2,7 +2,8 @@ const { pool } = require('./config.js')
 const { hmset, hdel, hgetAll, redisClient, firebase } = require('./config.js')
 const messaging = firebase.messaging();
 const { Notifications } = require('./models.js')
-const {v}
+
+// TODO: Remove debugging code when done
 
 pool.connect((err, client, release) => {
   if (err) {
@@ -53,21 +54,26 @@ const unlinkToken = async (req, res) => {
   try {
     console.log(req.authId)
     await hdel(`users:${req.authId}`, 'regtoken')
-    console.log(`${req.body.id} unlinked`)
+    console.log(`${req.authId} unlinked`)
     return res.status(200).send("unlinked");
   } catch (error) {
     return res.status(500).send(error.message);
   }
 }
 
+// for testing
+// send 'id' and 'type' in the body of the id
+// 'receiver_id' and 'sender_id' are the same for convenience
+// currently supported types: 'invite', 'pending', 'friends'
+// testing path: '/notifications/test' via POST request
 const testNotif = (req, res) => {
   try{
     Notifications.create({
       id: 2,
-      receiver_id: 3644699272284924,
-      type: "test",
+      receiver_id: req.body.id,
+      type: req.body.type,
       content: "message",
-      sender_id: 3644699272284924
+      sender_id: req.body.id
     })
     return res.status(200).send("test sent");
   } catch (error) {
