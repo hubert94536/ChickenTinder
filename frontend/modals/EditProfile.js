@@ -28,9 +28,18 @@ export default class EditProfile extends React.Component {
   }
 
   changeUser(text) {
-    this.setState({ usernameValue: text })
-    this.props.userChange(text)
+    let trimmedText = text
+    while(trimmedText.endsWith('_')) {
+      trimmedText = trimmedText.slice(0,-1)
+    }
+    this.setState({ usernameValue: trimmedText })
+    this.props.userChange(trimmedText)
   }
+
+  // changeUser(text) {
+  //   this.setState({ usernameValue: text })
+  //   this.props.userChange(text)
+  // }
 
   changeName(text) {
     this.setState({ nameValue: text })
@@ -69,8 +78,9 @@ export default class EditProfile extends React.Component {
               spellCheck={false}
               autoCorrect={false}
               keyboardType="visible-password"
+              maxLength={15}
               value={this.state.nameValue}
-              onChangeText={(text) => this.changeName(text)}
+              onChangeText={(text) => this.changeName(text.trimEnd())}
             />
             <Text style={[screenStyles.text, styles.nameText]}>Username</Text>
             <TextInput
@@ -78,6 +88,7 @@ export default class EditProfile extends React.Component {
               underlineColorAndroid="transparent"
               spellCheck={false}
               autoCorrect={false}
+              maxLength={15}
               keyboardType="visible-password"
               value={this.state.usernameValue}
               onChangeText={(text) => this.changeUser(text.split(' ').join('_'))}

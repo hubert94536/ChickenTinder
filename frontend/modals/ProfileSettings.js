@@ -91,7 +91,6 @@ export default class Settings extends React.Component {
                   blurType="dark"
                   blurAmount={10}
                   reducedTransparencyFallbackColor="black"
-                  style={modalStyles.blur}
                 />
                 <Alert
                   title="Delete account?"
