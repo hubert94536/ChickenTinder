@@ -21,7 +21,7 @@ const sendNotification = async (notif) => {
     console.log(notif)
     const user = await hgetAll(`users:${notif.receiver_uid}`)
     // only send notification if user exists or regtoken is attached to the user
-    if (user || user.regtoken){
+    if (user && user.regtoken){
       console.log("send notification")
       const message = {
         data: {
