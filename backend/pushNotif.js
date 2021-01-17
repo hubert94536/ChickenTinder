@@ -35,8 +35,8 @@ const sendNotification = async (notif) => {
 }
 
 
-// associate recipientToken with id
-// called on login / if App.js is (re)loaded
+// associate regtoken with id
+// called on login / if ID is in async storage when App.js is (re)loaded
 const linkToken = async (req, res) => {
   try {
     console.log(req.authId)
@@ -48,7 +48,7 @@ const linkToken = async (req, res) => {
   }
 }
 
-// disassociate recipientToken with id
+// disassociate regtoken with id
 // called on logout
 const unlinkToken = async (req, res) => {
   try {
