@@ -33,7 +33,11 @@ export default class Location extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      distance: 0,
+      location: {
+        latitude: 34.06892,
+        longitude: -118.445183,
+      },
+      distance: 5.5,
       zip: '',
       zipValid: true,
       //style of the button
@@ -57,6 +61,7 @@ export default class Location extends Component {
   }
   // function called when main button is pressed
   handlePress() {
+    this.props.update(this.state.distance)
     this.props.press(this.state.zip)
   }
 
@@ -112,7 +117,7 @@ export default class Location extends Component {
                 </Text>
               </TouchableHighlight>
             </View>
-            <Text>({this.state.distance} miles)</Text>
+            <Text style={styles.distanceText}>({this.state.distance} miles)</Text>
             <Slider
               style={{
                 width: '85%',
@@ -130,31 +135,38 @@ export default class Location extends Component {
                 this.setState({ distance: value })
               }}
             />
-            <MapView
-              provider={PROVIDER_GOOGLE}
-              style={styles.map}
-              region={{
-                latitude: 34.06892,
-                longitude: -118.445183,
-                latitudeDelta: this.state.distance / 60 + 0.3,
-                longitudeDelta: this.state.distance / 60 + 0.3,
-              }}
-            >
-              <Marker
-                coordinate={{
+            <View style={styles.mapContainer}>
+              <MapView
+                provider={PROVIDER_GOOGLE}
+                style={styles.map}
+                showsScale={true}
+                showsCompass={true}
+                showsBuildings={true}
+                showsMyLocationButton={true}
+                region={{
                   latitude: 34.06892,
                   longitude: -118.445183,
+                  latitudeDelta: this.state.distance / 60 + 0.3,
+                  longitudeDelta: this.state.distance / 60 + 0.3,
                 }}
-              />
-              <Circle
-                center={{
-                  latitude: 34.06892,
-                  longitude: -118.445183,
+                onMarkerDragEnd={(res) => {
+                  this.setState({ location: res.coordinate })
                 }}
-                radius={this.state.distance * 1609.34}
-                fillColor={'rgba(241, 87, 99, 0.7)'}
-              />
-            </MapView>
+              >
+                <Marker
+                  draggable
+                  coordinate={{
+                    latitude: 34.06892,
+                    longitude: -118.445183,
+                  }}
+                />
+                <Circle
+                  center={this.state.location}
+                  radius={this.state.distance * 1609.34}
+                  fillColor={'rgba(241, 87, 99, 0.7)'}
+                />
+              </MapView>
+            </View>
           </View>
         </Modal>
       </View>
@@ -177,7 +189,8 @@ const styles = StyleSheet.create({
     padding: '1%',
   },
   modalHeight: {
-    height: height * 0.5,
+    height: height * 0.8,
+    margin: '20%',
   },
   icon: {
     flexDirection: 'row',
@@ -214,15 +227,22 @@ const styles = StyleSheet.create({
     overflow: 'hidden', //hides map overflow
     alignSelf: 'center',
     justifyContent: 'flex-end',
-    height: Dimensions.get('window').height * 0.4,
-    width: Dimensions.get('window').width * 0.4,
+    height: Dimensions.get('window').height * 0.5,
+    width: Dimensions.get('window').width * 0.8,
   },
   map: {
+    borderBottomLeftRadius: 14,
+    borderBottomRightRadius: 14,
+    overflow: 'hidden', //hides map overflow
     alignSelf: 'center',
     justifyContent: 'flex-end',
-    height: Dimensions.get('window').height * 0.2,
-    width: Dimensions.get('window').width * 0.4,
+    height: Dimensions.get('window').height * 0.5,
+    width: Dimensions.get('window').width * 0.8,
   },
+  distanceText: {
+    color: '#747474',
+    alignSelf: 'center',
+  }
 })
 
 Location.propTypes = {
