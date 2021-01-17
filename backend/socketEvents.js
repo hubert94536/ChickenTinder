@@ -1,4 +1,7 @@
-const { hdel, hgetAll, sendCommand } = require('./config.js')
+const _ = require('underscore')
+const socketAuth = require('socketio-auth')
+const auth = require('./auth')
+const { hdel, hgetAll, hmset, sendCommand } = require('./config.js')
 const notifs = require('./notifsQueries.js')
 const yelp = require('./yelpQuery.js')
 
@@ -47,6 +50,41 @@ const getTop3 = (restaurants) => {
 }
 
 module.exports = (io) => {
+  // removes socket client from each namespace until authentication
+  _.each(io.nsps, function (nsp) {
+    nsp.on('connect', function (socket) {
+      delete nsp.connected[socket.id]
+    })
+  })
+
+  socketAuth(io, {
+    authenticate: async (socket, data, callback) => {
+      const { token } = data
+      try {
+        // verify token passed in authentication
+        const user = await auth.verifySocket(token)
+        socket.user = user
+        return callback(null, true)
+      } catch (err) {
+        return callback({ message: 'UNAUTHORIZED' })
+      }
+    },
+    postAuthenticate: async (socket) => {
+      try {
+        // reconnect socket client to each namespace
+        _.each(io.nsps, function (nsp) {
+          if (_.findWhere(nsp.sockets, { id: socket.id })) {
+            nsp.connected[socket.id] = socket
+          }
+        })
+        // associate uid to socket id
+        await hmset(`users:${socket.user.uid}`, 'client', socket.id)
+      } catch (err) {
+        console.log(err)
+      }
+    },
+  })
+
   io.on('connection', async (socket) => {
     // disconnects user and removes them if in room
     socket.on('disconnect', async () => {

@@ -110,18 +110,7 @@ export default class createAccount extends React.Component {
         <Text style={[screenStyles.textBook, styles.mediumText]}>
           Finish setting up your account
         </Text>
-
-        {this.state.photo.includes('file') ? (
-          <Image
-            source={{
-              uri: this.state.photo,
-            }}
-            style={[screenStyles.avatar]}
-          />
-        ) : (
-          <Image source={this.state.photo} style={screenStyles.avatar} />
-        )}
-
+        <Image source={{ uri: Image.resolveAssetSource(this.state.photo).uri }} style={screenStyles.avatar} />
         <Text style={[screenStyles.textBook, styles.fieldName, { marginTop: '5%' }]}>
           Display Name
         </Text>

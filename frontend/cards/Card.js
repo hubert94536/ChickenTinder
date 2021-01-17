@@ -63,7 +63,7 @@ export default class Card extends React.Component {
     const renderOption = this.props.currentUser !== this.props.username
     return (
       <View style={styles.container}>
-        <Image source={this.props.image} style={imgStyles.button} />
+        <Image source={{uri: Image.resolveAssetSource(this.props.image).uri}} style={imgStyles.button} />
         <View style={styles.info}>
           <Text style={[imgStyles.font, styles.name]}>{this.props.name}</Text>
           <Text style={[imgStyles.font, imgStyles.hex]}>@{this.props.username}</Text>

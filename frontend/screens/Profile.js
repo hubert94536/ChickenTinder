@@ -51,8 +51,8 @@ export default class UserProfileView extends Component {
       this.setState({
         name: res[1][1],
         nameValue: res[1][1],
-        image: res[2][1],
-        oldImage: res[2][1],
+        image: Image.resolveAssetSource(res[2][1]).uri,
+        oldImage: Image.resolveAssetSource(res[2][1]).uri,
         username: res[3][1],
         usernameValue: res[3][1],
       })
@@ -234,7 +234,7 @@ export default class UserProfileView extends Component {
                 onPress={() => this.setState({ visible: true })}
               />
             </View>
-            <Image source={image} style={screenStyles.avatar} />
+            <Image source={{uri: image}} style={screenStyles.avatar} />
             <View style={[styles.infoContainer]}>
               <View style={[styles.nameContainer]}>
                 <View style={[styles.nameFiller]}></View>
