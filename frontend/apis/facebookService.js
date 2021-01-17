@@ -77,30 +77,16 @@ const loginWithFacebook = async () => {
 
 // Log out of Firebase and Facebook, disconnect socket
 const logoutWithFacebook = async () => {
-<<<<<<< HEAD
-  socket.getSocket().disconnect()
-  Firebase.auth()
-    .signOut()
-    .then(() => {
-      LoginManager.logOut()
-      AsyncStorage.getItem(UID)
-      .then((id) => notificationsApi.unlinkToken(id))
-      .catch((err) => {console.log(err)})
-      AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
-    })
-    .catch((error) => {
-      Promise.reject(error)
-    })
-=======
   try {
     socket.getSocket().disconnect()
     await Firebase.auth().signOut()
     LoginManager.logOut()
+    AsyncStorage.getItem(UID)
+    .then((id) => notificationsApi.unlinkToken(id))
     await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
   } catch (err) {
     Promise.reject(err)
   }
->>>>>>> 04f3de4645603861b29449333c309d3dfb6fcdd4
 }
 
 // Deletes user from database, Firebase, and disconnects socket
