@@ -57,7 +57,7 @@ const loginWithFacebook = async () => {
       ])
       // Link user with their notification token
       AsyncStorage.getItem(REGISTRATION_TOKEN)
-      .then((token) => notificationsApi.linkToken(res.id, token))
+      .then((token) => notificationsApi.linkToken(token))
       .then(() => {console.log("Token linked")})
       .catch((err) => {console.log(err)})
       socket.connect()
@@ -81,8 +81,7 @@ const logoutWithFacebook = async () => {
     socket.getSocket().disconnect()
     await Firebase.auth().signOut()
     LoginManager.logOut()
-    AsyncStorage.getItem(UID)
-    .then((id) => notificationsApi.unlinkToken(id))
+    notificationsApi.unlinkToken()
     await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
   } catch (err) {
     Promise.reject(err)

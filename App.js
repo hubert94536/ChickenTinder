@@ -37,7 +37,7 @@ export default class App extends React.Component {
         AsyncStorage.setItem(REGISTRATION_TOKEN, token.token)
         AsyncStorage.getItem(ID).then((id) => {
           //send to back-end server to register with id
-          if (id) notificationsApi.linkToken(id, token.token); 
+          if (id) notificationsApi.linkToken(token.token); 
         })
       },
       onNotification: function(notification){
