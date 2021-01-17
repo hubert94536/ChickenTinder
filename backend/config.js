@@ -3,7 +3,6 @@ const pg = require('pg')
 const { promisify } = require('util')
 const redis = require('redis')
 const { Sequelize } = require('sequelize')
-var firebase = require("firebase-admin");
 
 // configuration for database
 const config = {
