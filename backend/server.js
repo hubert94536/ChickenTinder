@@ -110,8 +110,8 @@ app
 // TODO: validate params
 app
   .route('/notifications/token')
-  .post(pushNotif.linkToken)
-  .delete(pushNotif.unlinkToken)
+  .post(auth.authenticate, pushNotif.linkToken)
+  .delete(auth.authenticate, pushNotif.unlinkToken)
 
 app
   .route('/notifications/test')
