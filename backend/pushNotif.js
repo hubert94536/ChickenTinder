@@ -33,8 +33,8 @@ const sendNotification = async (notif) => {
         },
         token: user.regtoken
       }
+      messaging.send(message);
     }
-    messaging.send(message);
   } catch (error) {
     console.log(error)
   }
