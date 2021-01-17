@@ -29,15 +29,13 @@ export default class TopThree extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      chosen: 0,
-      restaurants: this.props.navigation.state.params.top,
+      chosen: this.props.navigation.state.params.top.length - 1,
+      restaurants: this.props.navigation.state.params.top.reverse(),
       host: this.props.navigation.state.params.host,
       code: this.props.navigation.state.params.code,
       isHost: this.props.navigation.state.params.isHost,
-      random: Math.floor(Math.random() * 3),
     }
-
-    socket.getSocket().on('choose', (ind) => {
+    socket.getSocket().once('choose', (ind) => {
       this.props.navigation.replace('Match', {
         restaurant: this.state.restaurants[ind],
         host: this.state.host,
@@ -45,13 +43,13 @@ export default class TopThree extends React.Component {
       })
     })
   }
-
   evaluateCuisines(cuisines) {
     return cuisines.map((item) => item.title).join(', ')
   }
 
   randomize() {
-    switch (this.state.random) {
+    var random = Math.floor(Math.random() * this.state.chosen.length)
+    switch (random) {
       case 0:
         this.setState({ chosen: 0 })
         break
@@ -65,7 +63,6 @@ export default class TopThree extends React.Component {
   }
 
   goMatch() {
-    console.log(this.state.chosen)
     socket.choose(this.state.code, this.state.chosen)
   }
 
@@ -79,61 +76,63 @@ export default class TopThree extends React.Component {
           </Text>
         </View>
         <View style={styles.height}>
-          <TouchableHighlight
-            disabled={!this.state.isHost}
-            underlayColor="#F9E2C2"
-            style={[
-              styles.center,
-              this.state.chosen === 0 ? styles.cardSelected : styles.cardUnselected,
-            ]}
-            onPress={() => this.setState({ chosen: 0 })}
-          >
-            <View style={styles.card}>
-              <ImageBackground
-                source={getCuisine(this.state.restaurants[0].categories)}
-                style={[
-                  styles.center,
-                  this.state.chosen === 0 ? styles.imageSelected : styles.imageUnselected,
-                ]}
-              />
-              <TouchableHighlight
-                style={[
-                  styles.tinyButton,
-                  this.state.chosen === 0 ? styles.chosenBackground : styles.neutralBackground,
-                ]}
-              >
-                <View style={styles.button}>
-                  <Icon name="heart" style={[styles.buttonIcon, styles.white]} />
-                  <Text style={[screenStyles.text, styles.categories, styles.white]}>
-                    {this.state.restaurants[0].likes} likes
-                  </Text>
-                </View>
-              </TouchableHighlight>
-              <View style={styles.margin}>
-                <Image
-                  source={getStarPath(this.state.restaurants[0].rating)}
-                  style={styles.center}
+          {this.state.restaurants.length > 2 && (
+            <TouchableHighlight
+              disabled={!this.state.isHost}
+              underlayColor="#F9E2C2"
+              style={[
+                styles.center,
+                this.state.chosen === 2 ? styles.cardSelected : styles.cardUnselected,
+              ]}
+              onPress={() => this.setState({ chosen: 2 })}
+            >
+              <View style={styles.card}>
+                <ImageBackground
+                  source={getCuisine(this.state.restaurants[2].categories)}
+                  style={[
+                    styles.center,
+                    this.state.chosen === 2 ? styles.imageSelected : styles.imageUnselected,
+                  ]}
                 />
                 <TouchableHighlight
-                  underlayColor="transparent"
-                  onPress={() => Linking.openURL(this.state.restaurants[0].url)}
+                  style={[
+                    styles.tinyButton,
+                    this.state.chosen === 2 ? styles.chosenBackground : styles.neutralBackground,
+                  ]}
                 >
-                  <View style={styles.yelpInfo}>
-                    <Text style={styles.yelp}>
-                      {this.state.restaurants[0].reviewCount} reviews on yelp
+                  <View style={styles.button}>
+                    <Icon name="heart" style={[styles.buttonIcon, styles.white]} />
+                    <Text style={[screenStyles.text, styles.categories, styles.white]}>
+                      {this.state.restaurants[2].likes} likes
                     </Text>
-                    <FA name="yelp" style={styles.red} />
                   </View>
                 </TouchableHighlight>
-                <Text numberOfLines={1} style={[screenStyles.medButtonText, styles.name]}>
-                  {this.state.restaurants[0].name}
-                </Text>
-                <Text numberOfLines={1} style={[screenStyles.smallButtonText, styles.categories]}>
-                  {this.evaluateCuisines(this.state.restaurants[0].categories)}
-                </Text>
+                <View style={styles.margin}>
+                  <Image
+                    source={getStarPath(this.state.restaurants[2].rating)}
+                    style={styles.center}
+                  />
+                  <TouchableHighlight
+                    underlayColor="transparent"
+                    onPress={() => Linking.openURL(this.state.restaurants[2].url)}
+                  >
+                    <View style={styles.yelpInfo}>
+                      <Text style={styles.yelp}>
+                        {this.state.restaurants[2].reviewCount} reviews on yelp
+                      </Text>
+                      <FA name="yelp" style={styles.red} />
+                    </View>
+                  </TouchableHighlight>
+                  <Text numberOfLines={1} style={[screenStyles.medButtonText, styles.name]}>
+                    {this.state.restaurants[2].name}
+                  </Text>
+                  <Text numberOfLines={1} style={[screenStyles.smallButtonText, styles.categories]}>
+                    {this.evaluateCuisines(this.state.restaurants[2].categories)}
+                  </Text>
+                </View>
               </View>
-            </View>
-          </TouchableHighlight>
+            </TouchableHighlight>
+          )}
           <TouchableHighlight
             disabled={!this.state.isHost}
             underlayColor="#F9E2C2"
@@ -194,52 +193,52 @@ export default class TopThree extends React.Component {
             underlayColor="#F9E2C2"
             style={[
               styles.right,
-              this.state.chosen === 2 ? styles.cardSelected : styles.cardUnselected,
+              this.state.chosen === 0 ? styles.cardSelected : styles.cardUnselected,
             ]}
-            onPress={() => this.setState({ chosen: 2 })}
+            onPress={() => this.setState({ chosen: 0 })}
           >
             <View style={styles.card}>
               <ImageBackground
-                source={getCuisine(this.state.restaurants[2].categories)}
+                source={getCuisine(this.state.restaurants[0].categories)}
                 style={[
-                  this.state.chosen === 2 ? styles.imageSelected : styles.imageUnselected,
+                  this.state.chosen === 0 ? styles.imageSelected : styles.imageUnselected,
                   styles.center,
                 ]}
               />
               <TouchableHighlight
                 style={[
                   styles.tinyButtonRight,
-                  this.state.chosen === 2 ? styles.chosenBackground : styles.neutralBackground,
+                  this.state.chosen === 0 ? styles.chosenBackground : styles.neutralBackground,
                 ]}
               >
                 <View style={styles.button}>
                   <Icon name="heart" style={[styles.buttonIcon, styles.white]} />
                   <Text style={[screenStyles.text, styles.categories, styles.white]}>
-                    {this.state.restaurants[2].likes} likes
+                    {this.state.restaurants[0].likes} likes
                   </Text>
                 </View>
               </TouchableHighlight>
               <View style={styles.margin}>
                 <Image
-                  source={getStarPath(this.state.restaurants[2].rating)}
+                  source={getStarPath(this.state.restaurants[0].rating)}
                   style={styles.center}
                 />
                 <TouchableHighlight
                   underlayColor="transparent"
-                  onPress={() => Linking.openURL(this.state.restaurants[2].url)}
+                  onPress={() => Linking.openURL(this.state.restaurants[0].url)}
                 >
                   <View style={styles.yelpInfo}>
                     <Text style={styles.yelp}>
-                      {this.state.restaurants[2].reviewCount} reviews on yelp
+                      {this.state.restaurants[0].reviewCount} reviews on yelp
                     </Text>
                     <FA name="yelp" style={styles.red} />
                   </View>
                 </TouchableHighlight>
                 <Text numberOfLines={1} style={[screenStyles.medButtonText, styles.name]}>
-                  {this.state.restaurants[2].name}
+                  {this.state.restaurants[0].name}
                 </Text>
                 <Text numberOfLines={1} style={[screenStyles.smallButtonText, styles.categories]}>
-                  {this.evaluateCuisines(this.state.restaurants[2].categories)}
+                  {this.evaluateCuisines(this.state.restaurants[0].categories)}
                 </Text>
               </View>
             </View>
@@ -290,7 +289,6 @@ TopThree.propTypes = {
     state: PropTypes.shape({
       params: PropTypes.shape({
         top: PropTypes.array,
-        random: PropTypes.number,
         host: PropTypes.string,
         code: PropTypes.number,
         isHost: PropTypes.bool,
