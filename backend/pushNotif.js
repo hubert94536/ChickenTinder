@@ -19,7 +19,7 @@ pool.connect((err, client, release) => {
 const sendNotification = async (notif) => {
   console.log("send notification")
   console.log(notif)
-  const user = await hgetAll(`users:${notif.receiver_id}`)
+  const user = await hgetAll(`users:${notif.receiver_uid}`)
   console.log(user.regtoken)
   const message = {
     data: {
