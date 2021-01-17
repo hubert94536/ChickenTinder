@@ -36,7 +36,7 @@ const sendNotification = async (notif) => {
 
 
 // associate recipientToken with id
-// called on login
+// called on login / if App.js is (re)loaded
 const linkToken = async (req, res) => {
   try {
     console.log(req.authId)
