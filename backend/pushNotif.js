@@ -17,21 +17,27 @@ pool.connect((err, client, release) => {
 })
 
 const sendNotification = async (notif) => {
-  console.log("send notification")
-  console.log(notif)
-  const user = await hgetAll(`users:${notif.receiver_uid}`)
-  console.log(user.regtoken)
-  const message = {
-    data: {
-        type: JSON.stringify(notif.type),
-        content: JSON.stringify(notif.content), 
-        name: JSON.stringify(notif.name),
-        username: JSON.stringify(notif.username), 
-        photo: JSON.stringify(notif.photo)
-    },
-    token: user.regtoken
+  try {
+    console.log(notif)
+    const user = await hgetAll(`users:${notif.receiver_uid}`)
+    // only send notification if user exists or regtoken is attached to the user
+    if (user && user.regtoken){
+      console.log("send notification")
+      const message = {
+        data: {
+            type: JSON.stringify(notif.type),
+            content: JSON.stringify(notif.content), 
+            name: JSON.stringify(notif.name),
+            username: JSON.stringify(notif.username), 
+            photo: JSON.stringify(notif.photo)
+        },
+        token: user.regtoken
+      }
+      messaging.send(message);
+    }
+  } catch (error) {
+    console.log(error)
   }
-  messaging.send(message);
 }
 
 
