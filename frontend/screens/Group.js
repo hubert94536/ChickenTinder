@@ -425,8 +425,9 @@ export default class Group extends React.Component {
         </View>
         {this.state.blur && (
           <BlurView
+            pointerEvents="none"
             blurType="dark"
-            blurAmount={100}
+            blurAmount={10}
             reducedTransparencyFallbackColor="white"
             style={modalStyles.blur}
           />
