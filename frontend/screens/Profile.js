@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { Image, Keyboard, StyleSheet, Text, View } from 'react-native'
-import { NAME, PHOTO, USERNAME, EMAIL } from 'react-native-dotenv'
+import { NAME, PHOTO, USERNAME, EMAIL, PHONE} from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Alert from '../modals/Alert.js'
 import accountsApi from '../apis/accountsApi.js'
+import colors from '../../styles/colors.js'
 import facebookService from '../apis/facebookService.js'
 import Friends from './Friends.js'
 import modalStyles from '../../styles/modalStyles.js'
@@ -17,8 +18,8 @@ import PropTypes from 'prop-types'
 import EditProfile from '../modals/EditProfile.js'
 import Settings from '../modals/ProfileSettings.js'
 
-const hex = screenStyles.hex.color
 var email = ''
+var phone = ''
 
 export default class UserProfileView extends Component {
   constructor(props) {
@@ -46,8 +47,9 @@ export default class UserProfileView extends Component {
       imageData: null,
     }
 
-    AsyncStorage.multiGet([EMAIL, NAME, PHOTO, USERNAME]).then((res) => {
+    AsyncStorage.multiGet([EMAIL, NAME, PHOTO, USERNAME, PHONE]).then((res) => {
       email = res[0][1]
+      phone = res[4][1]
       this.setState({
         name: res[1][1],
         nameValue: res[1][1],
@@ -254,6 +256,15 @@ export default class UserProfileView extends Component {
             {/* Contains the search bar and friends display if has friends, otherwise no friends view */}
             <Friends isFriends onFriendsChange={(n) => this.handleFriendsCount(n)} />
           </View>
+          
+          <TabBar
+            goHome={() => this.props.navigation.navigate('Home')}
+            goSearch={() => this.props.navigation.navigate('Search')}
+            goNotifs={() => this.props.navigation.navigate('Notifications')}
+            goProfile={() => {}}
+            cur="Profile"
+          />
+
           {(visible || edit) && (
             <BlurView
               blurType="dark"
@@ -262,13 +273,14 @@ export default class UserProfileView extends Component {
               style={modalStyles.blur}
             />
           )}
-
+          
           <Settings
             visible={visible}
             close={() => this.setState({ visible: false })}
             delete={() => this.handleDelete()}
             logout={() => this.handleLogout()}
             email={email}
+            phone={phone}
           />
 
           {edit && (
@@ -302,13 +314,6 @@ export default class UserProfileView extends Component {
             />
           )}
         </View>
-        <TabBar
-          goHome={() => this.props.navigation.navigate('Home')}
-          goSearch={() => this.props.navigation.navigate('Search')}
-          goNotifs={() => this.props.navigation.navigate('Notifications')}
-          goProfile={() => {}}
-          cur="Profile"
-        />
       </View>
     )
   }
@@ -321,7 +326,7 @@ UserProfileView.propTypes = {
 const styles = StyleSheet.create({
   background: {
     backgroundColor: 'white',
-    height: '90%',
+    height: '100%',
   },
   titleContainer: {
     flexDirection: 'row',
@@ -363,7 +368,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   pencil: { fontSize: normalize(28), marginTop: '4%', marginLeft: '1%', marginBottom: '1%' },
-  username: { fontSize: normalize(14), color: hex, fontWeight: 'bold' },
+  username: { fontSize: normalize(14), color: colors.hex, fontWeight: 'bold' },
   friends: {
     marginTop: '5%',
     marginLeft: '7%',

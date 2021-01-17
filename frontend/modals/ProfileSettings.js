@@ -75,7 +75,7 @@ export default class Settings extends React.Component {
             <TextInput
               style={[screenStyles.text, screenStyles.input, styles.textInput]}
               editable={false}
-              value={'+0 (770) 090-0461'}
+              value={this.props.phone}
             />
           </View>
           <View style={modalStyles.justifyCenter}>
@@ -91,6 +91,7 @@ export default class Settings extends React.Component {
                   blurType="dark"
                   blurAmount={10}
                   reducedTransparencyFallbackColor="black"
+                  style={modalStyles.blur}
                 />
                 <Alert
                   title="Delete account?"
