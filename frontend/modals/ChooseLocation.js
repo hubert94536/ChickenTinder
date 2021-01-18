@@ -37,6 +37,7 @@ export default class Location extends Component {
         latitude: 34.06892,
         longitude: -118.445183,
       },
+      city: null,
       distance: 5.5,
       zip: '',
       zipValid: true,
@@ -46,7 +47,6 @@ export default class Location extends Component {
   }
 
   validateZip() {
-    this.props.update(this.state.distance)
     //created Lookup for validating zip code
     let lookup = new Lookup()
     lookup.zipCode = this.state.zip
@@ -54,15 +54,48 @@ export default class Location extends Component {
     client
       .send(lookup)
       .then((res) => {
-        if (res.lookups[0].result[0].valid) this.handlePress()
-        else this.setState({ zipValid: false })
+        if (res.lookups[0].result[0].valid) {
+          console.log('valid zip: ' + this.state.zip.toString())
+          fetch(
+            'https://public.opendatasoft.com/api/records/1.0/search/?dataset=us-zip-code-latitude-and-longitude&rows=1&q=' +
+              this.state.zip.toString(),
+          )
+            .then((res) => {
+              res.json().then((data) => {
+                console.log(data)
+                if (data.nhits != 0) {
+                  let result = data.records[0].fields
+                  console.log(JSON.stringify(result))
+                  this.setState({
+                    city: result.city,
+                    location: {
+                      latitude: result.geopoint[0],
+                      longitude: result.geopoint[1],
+                    }
+                  })
+                } else {
+                  console.log('0 hits')
+                }
+              })
+            })
+            .catch((error) => {
+              console.error(error)
+              this.setState({ zipValid: false })
+            })
+          this.handlePress()
+        } else {
+          this.setState({ zipValid: false })
+          console.log('false')
+        }
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        console.log(err)
+        this.setState({ zipValid: false })
+      })
   }
-  // function called when main button is pressed
+  // function called when main button is pressed w/ valid ZIP
   handlePress() {
-    this.props.update(this.state.distance)
-    this.props.press(this.state.zip)
+    this.props.update(this.state.distance, this.state.location)
   }
 
   //  function called when 'x' is pressed
@@ -153,13 +186,7 @@ export default class Location extends Component {
                   this.setState({ location: res.coordinate })
                 }}
               >
-                <Marker
-                  draggable
-                  coordinate={{
-                    latitude: 34.06892,
-                    longitude: -118.445183,
-                  }}
-                />
+                <Marker coordinate={this.state.location} />
                 <Circle
                   center={this.state.location}
                   radius={this.state.distance * 1609.34}
@@ -242,12 +269,11 @@ const styles = StyleSheet.create({
   distanceText: {
     color: '#747474',
     alignSelf: 'center',
-  }
+  },
 })
 
 Location.propTypes = {
   update: PropTypes.func,
-  press: PropTypes.func,
   cancel: PropTypes.func,
   visible: PropTypes.bool,
 }
