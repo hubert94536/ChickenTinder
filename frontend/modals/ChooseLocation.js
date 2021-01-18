@@ -54,27 +54,29 @@ export default class Location extends Component {
     client
       .send(lookup)
       .then((res) => {
+        console.log(JSON.stringify(res.lookups[0].result[0]))
         if (res.lookups[0].result[0].valid) {
-          console.log('valid zip: ' + this.state.zip.toString())
+          // console.log('valid zip: ' + this.state.zip.toString())
           fetch(
             'https://public.opendatasoft.com/api/records/1.0/search/?dataset=us-zip-code-latitude-and-longitude&rows=1&q=' +
               this.state.zip.toString(),
           )
             .then((res) => {
               res.json().then((data) => {
-                console.log(data)
                 if (data.nhits != 0) {
                   let result = data.records[0].fields
-                  console.log(JSON.stringify(result))
+                  // console.log(JSON.stringify(result))
                   this.setState({
+                    zipValid: true,
                     city: result.city,
                     location: {
                       latitude: result.geopoint[0],
                       longitude: result.geopoint[1],
-                    }
+                    },
                   })
                 } else {
                   console.log('0 hits')
+                  this.setState({ zipValid: false })
                 }
               })
             })
@@ -82,7 +84,6 @@ export default class Location extends Component {
               console.error(error)
               this.setState({ zipValid: false })
             })
-          this.handlePress()
         } else {
           this.setState({ zipValid: false })
           console.log('false')
@@ -95,7 +96,7 @@ export default class Location extends Component {
   }
   // function called when main button is pressed w/ valid ZIP
   handlePress() {
-    this.props.update(this.state.distance, this.state.location)
+    if (this.state.zipValid) this.props.update(this.state.distance, this.state.location)
   }
 
   //  function called when 'x' is pressed
@@ -122,9 +123,12 @@ export default class Location extends Component {
               </Text>
               <TextInput
                 style={[screenStyles.input, screenStyles.textBook, styles.input]}
+                keyboardType="number-pad"
                 placeholderTextColor="#9F9F9F"
                 placeholder="Enter your zip code"
-                onChangeText={(text) => this.setState({ zip: text })}
+                onSubmitEditing={({ nativeEvent }) => {
+                  this.setState({ zip: nativeEvent.text }, () => this.validateZip())
+                }}
               />
               {this.state.zipValid && <Text style={{ textAlign: 'center' }}> </Text>}
               {!this.state.zipValid && (
@@ -133,22 +137,6 @@ export default class Location extends Component {
                   <Text style={[screenStyles.textBook, styles.errorText]}>Invalid zip code</Text>
                 </View>
               )}
-              <TouchableHighlight
-                underlayColor="white"
-                onHideUnderlay={() => this.setState({ buttonPressed: false })}
-                onShowUnderlay={() => this.setState({ buttonPressed: true })}
-                onPress={() => this.validateZip()}
-                style={[modalStyles.button, styles.buttonColor]}
-              >
-                <Text
-                  style={[
-                    modalStyles.text,
-                    this.state.buttonPressed ? screenStyles.hex : styles.white,
-                  ]}
-                >
-                  Done
-                </Text>
-              </TouchableHighlight>
             </View>
             <Text style={styles.distanceText}>({this.state.distance} miles)</Text>
             <Slider
@@ -186,13 +174,29 @@ export default class Location extends Component {
                   this.setState({ location: res.coordinate })
                 }}
               >
-                <Marker coordinate={this.state.location} />
+                {/* <Marker coordinate={this.state.location} /> */}
                 <Circle
                   center={this.state.location}
                   radius={this.state.distance * 1609.34}
                   fillColor={'rgba(241, 87, 99, 0.7)'}
                 />
               </MapView>
+              <TouchableHighlight
+                underlayColor="white"
+                onHideUnderlay={() => this.setState({ buttonPressed: false })}
+                onShowUnderlay={() => this.setState({ buttonPressed: true })}
+                onPress={() => this.handlePress()}
+                style={[modalStyles.button, styles.buttonColor, styles.doneButton]}
+              >
+                <Text
+                  style={[
+                    modalStyles.text,
+                    this.state.buttonPressed ? screenStyles.hex : styles.white,
+                  ]}
+                >
+                  Done
+                </Text>
+              </TouchableHighlight>
             </View>
           </View>
         </Modal>
@@ -269,6 +273,12 @@ const styles = StyleSheet.create({
   distanceText: {
     color: '#747474',
     alignSelf: 'center',
+  },
+  doneButton: {
+    position: 'absolute',
+    alignSelf: 'center',
+    bottom: 15,
+    height: normalize(25),
   },
 })
 
