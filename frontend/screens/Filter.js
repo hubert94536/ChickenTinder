@@ -84,12 +84,12 @@ export default class FilterSelector extends React.Component {
     this.state = {
       // Filters
       distance: 5,
-      zipcode: '',
       location: null,
-      useCurrentLocation: false,
+
       hour: date.getUTCHours(),
       minute: date.getUTCMinutes(),
       asap: true,
+
       lat: 0,
       long: 0,
       size: 10,
@@ -248,21 +248,14 @@ export default class FilterSelector extends React.Component {
     filters.limit = this.state.selectedSize[0]
     //  making sure we have a valid location
 
-    if (this.state.location === null && this.state.useCurrentLocation === false) {
+    if (this.state.location === null) {
       this.setState({ locationAlert: true })
       this.props.setBlur(true)
-    } else if (this.state.useCurrentLocation) {
-      filters.latitude = this.state.lat
-      filters.longitude = this.state.long
-      this.handlePress(filters)
     } else {
-      filters.location = this.state.location
+      filters.latitude = this.state.location.latitude
+      filters.longitude = this.state.location.longitude
       this.handlePress(filters)
     }
-  }
-
-  setLocation(zip) {
-    this.setState({ zipcode: zip, chooseLocation: false })
   }
 
   startSession() {
@@ -439,17 +432,6 @@ export default class FilterSelector extends React.Component {
                       Choose Location
                     </Text>
                   </TouchableHighlight>
-                  <Switch
-                    thumbColor={'white'}
-                    trackColor={{ true: '#eba2a8' }}
-                    style={{ marginTop: '1%', marginLeft: '3%' }}
-                    value={this.state.useCurrentLocation}
-                    onValueChange={(val) => {
-                      this.setState({
-                        useCurrentLocation: val,
-                      })
-                    }}
-                  />
                 </View>
                 {/* <Slider
                   style={{
@@ -648,15 +630,18 @@ export default class FilterSelector extends React.Component {
         />
         <Location
           visible={this.state.chooseLocation}
-          press={(zip) => {
-            this.setLocation(zip)
+          update={(dist, loc) => {
+            this.setState({ 
+              chooseLocation: false,
+              distance: dist,
+              location: loc,
+            })
             this.props.setBlur(false)
           }}
           cancel={() => {
             this.setState({ chooseLocation: false })
             this.props.setBlur(false)
           }}
-          update={(value) => this.setState({ distance: value })}
         />
       </View>
     )
