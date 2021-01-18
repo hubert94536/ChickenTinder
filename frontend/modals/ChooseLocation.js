@@ -177,8 +177,8 @@ export default class Location extends Component {
                 showsBuildings={true}
                 showsMyLocationButton={true}
                 region={{
-                  latitude: 34.06892,
-                  longitude: -118.445183,
+                  latitude: this.state.location.latitude,
+                  longitude: this.state.location.longitude,
                   latitudeDelta: this.state.distance / 60 + 0.3,
                   longitudeDelta: this.state.distance / 60 + 0.3,
                 }}
