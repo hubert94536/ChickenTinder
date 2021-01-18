@@ -205,6 +205,7 @@ export default class Group extends React.Component {
         <Drawer
           style={styles.drawer}
           initialDrawerPos={100}
+          pointerEvents={this.state.blur ? 'none' : 'auto'}
           renderContainerView={() => (
             <View style={styles.main}>
               <View style={styles.center}>
