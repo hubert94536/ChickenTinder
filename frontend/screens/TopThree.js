@@ -48,7 +48,8 @@ export default class TopThree extends React.Component {
   }
 
   randomize() {
-    var random = Math.floor(Math.random() * this.state.chosen.length)
+    var random = Math.floor(Math.random() * this.props.navigation.state.params.top.length)
+    console.log(random)
     switch (random) {
       case 0:
         this.setState({ chosen: 0 })
@@ -337,12 +338,12 @@ const styles = StyleSheet.create({
   },
   categories: { fontSize: normalize(15) },
   left: {
-    top: '30%',
+    top: '20%',
     left: '5%',
     alignSelf: 'flex-start',
   },
   right: {
-    top: '30%',
+    top: '20%',
     right: '5%',
     alignSelf: 'flex-end',
   },
