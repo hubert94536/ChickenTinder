@@ -10,6 +10,7 @@ const { hmset } = require('./config.js')
 const friends = require('./friendsQueries.js')
 const notifications = require('./notifsQueries.js')
 const schema = require('./schema.js')
+const pushNotif = require('./pushNotif.js')
 
 const app = express()
 const server = http.createServer(app)
@@ -109,6 +110,16 @@ app
   .route('/notifications')
   .get(auth.authenticate, notifications.getNotifs)
   .delete(schema.checkNotif, auth.authenticate, notifications.deleteNotif)
+
+// TODO: validate params
+app
+  .route('/notifications/token')
+  .post(auth.authenticate, pushNotif.linkToken)
+  .delete(auth.authenticate, pushNotif.unlinkToken)
+
+app
+  .route('/notifications/test')
+  .post(pushNotif.testNotif)
 
 server.listen(PORT, () => {
   console.log(`App running on port ${PORT}.`)

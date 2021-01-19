@@ -51,7 +51,37 @@ const removeNotif = async (id) => {
     })
 }
 
+// link a user to a notification token
+const linkToken = async (token) => {
+  return notificationsApi
+    .post('/notifications/token', {token: token})
+    .then((res) => {
+      console.log("Token linked")
+      return res.status
+    })
+    .catch((error) => {
+      console.log("-----ERROR linking token")
+      Promise.reject(error.response)
+    })
+}
+
+// unlink a user from a notification token
+const unlinkToken = async () => {
+  return notificationsApi
+    .delete('/notifications/token')
+    .then((res) => {
+      console.log("Token unlinked")
+      return res.status
+    })
+    .catch((error) => {
+      console.log("-----ERROR unlinking token")
+      Promise.reject(error.response)
+    })
+}
+
 export default {
   getNotifs,
   removeNotif,
+  linkToken,
+  unlinkToken
 }
