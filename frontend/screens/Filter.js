@@ -3,7 +3,6 @@ import React from 'react'
 import {
   PermissionsAndroid,
   StyleSheet,
-  Switch,
   Text,
   TouchableHighlight,
   View,

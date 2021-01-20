@@ -32,6 +32,7 @@ let client = clientBuilder.buildUsZipcodeClient()
 export default class Location extends Component {
   constructor(props) {
     super(props)
+    this.mapView = React.createRef()
     this.state = {
       location: {
         latitude: 34.06892,
@@ -74,6 +75,13 @@ export default class Location extends Component {
                       longitude: result.geopoint[1],
                     },
                   })
+                  let newRegion = {
+                    latitude: result.geopoint[0],
+                    longitude: result.geopoint[1],
+                    latitudeDelta: this.state.distance / 60 + 0.3,
+                    longitudeDelta: this.state.distance / 60 + 0.3,
+                  }
+                  this.mapView.current.animateToRegion(newRegion, 3000)
                 } else {
                   console.log('0 hits')
                   this.setState({ zipValid: false })
@@ -158,21 +166,22 @@ export default class Location extends Component {
             />
             <View style={styles.mapContainer}>
               <MapView
+                ref={this.mapView}
                 provider={PROVIDER_GOOGLE}
                 style={styles.map}
                 showsScale={true}
                 showsCompass={true}
                 showsBuildings={true}
                 showsMyLocationButton={true}
-                region={{
+                initialRegion={{
                   latitude: this.state.location.latitude,
                   longitude: this.state.location.longitude,
                   latitudeDelta: this.state.distance / 60 + 0.3,
                   longitudeDelta: this.state.distance / 60 + 0.3,
                 }}
-                onMarkerDragEnd={(res) => {
-                  this.setState({ location: res.coordinate })
-                }}
+                // onMarkerDragEnd={(res) => {
+                //   this.setState({ location: res.coordinate })
+                // }}
               >
                 {/* <Marker coordinate={this.state.location} /> */}
                 <Circle
