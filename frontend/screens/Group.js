@@ -304,7 +304,7 @@ export default class Group extends React.Component {
             </View>
           )}
           objectHeight={this.state.hostName == this.state.myUsername ? 400 : 350}
-          offset={windowWidth / 3}
+          offset={windowHeight / 6}
           renderDrawerView={() => (
             <View>
               <View>
@@ -456,7 +456,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: colors.hex,
-    height: windowWidth / 3,
+    height: windowHeight / 6,
     width: '100%',
     paddingBottom: 20,
   },
@@ -533,9 +533,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.hex,
   },
   center: {
-    margin: 15,
-    marginLeft: 25,
-    marginRight: 25,
+    margin: '3%',
+    marginLeft: '5%',
+    marginRight: '5%',
     flexDirection: 'row',
   },
   bottom: {
@@ -551,7 +551,7 @@ const styles = StyleSheet.create({
   },
   subheader: {
     color: '#FFF',
-    marginTop: 5,
+    marginTop: '1%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
   },
