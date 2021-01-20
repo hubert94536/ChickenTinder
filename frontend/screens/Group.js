@@ -304,7 +304,7 @@ export default class Group extends React.Component {
             </View>
           )}
           objectHeight={this.state.hostName == this.state.myUsername ? 400 : 350}
-          offset={120}
+          offset={windowWidth / 3}
           renderDrawerView={() => (
             <View>
               <View>
@@ -340,7 +340,7 @@ export default class Group extends React.Component {
                     style={{
                       color: colors.hex,
                       fontFamily: font,
-                      fontSize: 11,
+                      fontSize: normalize(11),
                     }}
                   >
                     {this.state.myUsername === this.state.hostName
@@ -456,13 +456,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: colors.hex,
-    height: 120,
+    height: windowWidth / 3,
     width: '100%',
     paddingBottom: 20,
   },
   groupTitle: {
     color: '#fff',
-    fontSize: 30,
+    fontSize: normalize(30),
     marginTop: '7%',
     fontWeight: 'bold',
     fontFamily: font,
@@ -477,7 +477,7 @@ const styles = StyleSheet.create({
   leaveText: {
     fontFamily: font,
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: normalize(16),
     paddingTop: '2%',
     paddingBottom: '2%',
   },
@@ -485,13 +485,13 @@ const styles = StyleSheet.create({
     color: '#aaa',
     marginLeft: '5%',
     marginTop: '2%',
-    fontSize: 30,
+    fontSize: normalize(30),
   },
   divider: {
     color: colors.hex,
     alignSelf: 'center',
     marginLeft: '3%',
-    fontSize: 25,
+    fontSize: normalize(25),
     fontFamily: font,
   },
   waiting: {
@@ -514,7 +514,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     alignSelf: 'center',
-    fontSize: 20,
+    fontSize: normalize(20),
     fontWeight: 'bold',
   },
   bottomText: {
@@ -557,7 +557,7 @@ const styles = StyleSheet.create({
   },
   pinText: {
     color: '#fff',
-    fontSize: 15,
+    fontSize: normalize(15),
     fontWeight: 'normal',
     fontFamily: font,
     alignSelf: 'center',
@@ -566,11 +566,11 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontFamily: font,
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: normalize(15),
   },
   copyIcon: {
     color: '#fff',
-    fontSize: 15,
+    fontSize: normalize(15),
     marginLeft: '7%',
   },
   drawer: {
