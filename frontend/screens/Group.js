@@ -103,10 +103,6 @@ export default class Group extends React.Component {
     })
   }
 
-  blur(isBlurred) {
-    this.setState({ blur: isBlurred })
-  }
-
   setUserSubmit() {
     this.setState({ userSubmitted: true })
   }
@@ -245,7 +241,7 @@ export default class Group extends React.Component {
                             width: 160,
                             height: 35,
                           }}
-                          onPress={() => this.setState({ chooseFriends: true })}
+                          onPress={() => this.setState({ chooseFriends: true, blur: true })}
                         >
                           <Text
                             style={{
@@ -299,19 +295,11 @@ export default class Group extends React.Component {
                   cancel={() => this.cancelAlert()}
                 />
               )}
-              {this.state.chooseFriends && (
-                <BlurView
-                  blurType="dark"
-                  blurAmount={10}
-                  reducedTransparencyFallbackColor="white"
-                  style={modalStyles.blur}
-                />
-              )}
               <ChooseFriends
                 code={this.props.navigation.state.params.response.code}
                 visible={this.state.chooseFriends}
                 members={memberList}
-                press={() => this.setState({ chooseFriends: false })}
+                press={() => this.setState({ chooseFriends: false, blur: false })}
               />
             </View>
           )}
@@ -336,7 +324,7 @@ export default class Group extends React.Component {
                     members={memberList}
                     ref={this.filterRef}
                     code={this.state.code}
-                    setBlur={(res) => this.blur(res)}
+                    setBlur={(res) => this.setState({ blur: res })}
                     style={{ elevation: 31 }}
                   />
                 </View>
