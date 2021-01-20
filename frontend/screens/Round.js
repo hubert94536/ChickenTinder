@@ -83,7 +83,7 @@ export default class Round extends React.Component {
             onSwipedAll={() => {
               //let backend know you're done
               socket.finishedRound(this.props.navigation.state.params.code)
-              // socket.getSocket.off()
+              socket.getSocket().off()
               //go to the loading page
               this.props.navigation.replace('Loading', {
                 restaurant: this.state.results,
