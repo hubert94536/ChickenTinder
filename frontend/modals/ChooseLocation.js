@@ -33,6 +33,7 @@ export default class Location extends Component {
   constructor(props) {
     super(props)
     this.mapView = React.createRef()
+    this.circle = React.createRef()
     this.state = {
       location: {
         latitude: 34.06892,
@@ -156,12 +157,19 @@ export default class Location extends Component {
               minimumValue={5}
               maximumValue={25}
               value={5}
-              step={0.5}
+              step={0.25}
               minimumTrackTintColor={colors.hex}
               maximumTrackTintColor={colors.hex}
               thumbTintColor={colors.hex}
               onValueChange={(value) => {
                 this.setState({ distance: value })
+                let newRegion = {
+                  latitude: this.state.location.latitude,
+                  longitude: this.state.location.longitude,
+                  latitudeDelta: value / 40 + 0.2,
+                  longitudeDelta: value / 40 + 0.2,
+                }
+                this.mapView.current.animateToRegion(newRegion, 100)
               }}
             />
             <View style={styles.mapContainer}>
@@ -185,6 +193,7 @@ export default class Location extends Component {
               >
                 {/* <Marker coordinate={this.state.location} /> */}
                 <Circle
+                  ref={this.circle}
                   center={this.state.location}
                   radius={this.state.distance * 1609.34}
                   fillColor={'rgba(241, 87, 99, 0.7)'}
