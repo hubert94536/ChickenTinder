@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
-import { USERNAME, UID } from 'react-native-dotenv'
+import { USERNAME, NAME, PHOTO, PHONE, EMAIL } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
 import friendsApi from '../apis/friendsApi.js'
@@ -12,6 +12,7 @@ import colors from '../../styles/colors.js'
 import Join from '../modals/Join.js'
 import TabBar from '../Nav.js'
 import screenStyles from '../../styles/screenStyles.js'
+import global from '../../global.js'
 
 var uid = ''
 var username = ''
@@ -31,14 +32,29 @@ class Home extends React.Component {
       friends: '',
       errorAlert: false,
     }
-    AsyncStorage.multiGet([UID, USERNAME]).then((res) => {
-      uid = res[0][1]
-      username = res[1][1]
+
+    socket.getSocket().once('update', (res) => {
+      this.setState({ invite: false })
+      global.host = res.members[res.host].username
+      global.code = res.code
+      global.isHost = res.members[res.host].username === global.username
+      this.props.navigation.navigate('Group', {
+        response: res,
+      })
+    })
+
+    AsyncStorage.multiGet([USERNAME, NAME, PHOTO, EMAIL, PHONE]).then((res) => {
+      global.username = res[0][1]
+      global.name = res[1][1]
+      global.photo = res[2][1]
+      global.email = res[3][1]
+      global.phone = res[4][1]
       socket.getSocket().once('update', (res) => {
         this.setState({ invite: false })
+        global.host = res.host
         this.props.navigation.navigate('Group', {
           response: res,
-          username: username,
+          username: global.username,
         })
       })
       //uncomment if testing friends/requests

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Image, Keyboard, StyleSheet, Text, View } from 'react-native'
-import { NAME, PHOTO, USERNAME, EMAIL } from 'react-native-dotenv'
+import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -16,19 +16,20 @@ import ImagePicker from 'react-native-image-crop-picker'
 import PropTypes from 'prop-types'
 import EditProfile from '../modals/EditProfile.js'
 import Settings from '../modals/ProfileSettings.js'
+import global from '../../global.js'
 
 const hex = screenStyles.hex.color
-var email = ''
+var email = global.email
 
 export default class UserProfileView extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      name: '',
-      nameValue: '',
-      username: '',
-      usernameValue: '',
-      image: null,
+      name: global.name,
+      nameValue: global.name,
+      username: global.username,
+      usernameValue: global.username,
+      image: global.photo,
       friends: true,
       visible: false,
       edit: false,
@@ -46,17 +47,17 @@ export default class UserProfileView extends Component {
       imageData: null,
     }
 
-    AsyncStorage.multiGet([EMAIL, NAME, PHOTO, USERNAME]).then((res) => {
-      email = res[0][1]
-      this.setState({
-        name: res[1][1],
-        nameValue: res[1][1],
-        image: res[2][1],
-        oldImage: res[2][1],
-        username: res[3][1],
-        usernameValue: res[3][1],
-      })
-    })
+    // AsyncStorage.multiGet([EMAIL, NAME, PHOTO, USERNAME]).then((res) => {
+    //   email = res[0][1]
+    //   this.setState({
+    //     name: res[1][1],
+    //     nameValue: res[1][1],
+    //     image: res[2][1],
+    //     oldImage: res[2][1],
+    //     username: res[3][1],
+    //     usernameValue: res[3][1],
+    //   })
+    // })
   }
 
   // getting current user's info
@@ -68,6 +69,7 @@ export default class UserProfileView extends Component {
         .then(() => {
           // update name locally
           AsyncStorage.setItem(NAME, name)
+          global.name = name
           this.setState({ name: this.state.nameValue })
           Keyboard.dismiss()
         })
@@ -90,6 +92,7 @@ export default class UserProfileView extends Component {
           // update username locally
           return accountsApi.updateUsername(user).then(() => {
             AsyncStorage.setItem(USERNAME, user)
+            global.username = user
             this.setState({ username: this.state.usernameValue })
             Keyboard.dismiss()
           })

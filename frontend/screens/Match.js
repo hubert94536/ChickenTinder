@@ -15,14 +15,12 @@ export default class Match extends React.Component {
     super(props)
     this.state = {
       restaurant: this.props.navigation.state.params.restaurant,
-      host: this.props.navigation.state.params.host,
-      code: this.props.navigation.state.params.code,
     }
   }
 
   endRound() {
     this.props.navigation.replace('Home')
-    socket.leaveRoom(this.state.code)
+    socket.leaveRoom(global.code)
   }
 
   render() {
@@ -90,8 +88,6 @@ Match.propTypes = {
     state: PropTypes.shape({
       params: PropTypes.shape({
         restaurant: PropTypes.object,
-        host: PropTypes.string,
-        code: PropTypes.number,
       }),
     }),
   }),

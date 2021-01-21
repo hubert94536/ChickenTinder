@@ -31,15 +31,12 @@ export default class TopThree extends React.Component {
     this.state = {
       chosen: this.props.navigation.state.params.top.length - 1,
       restaurants: this.props.navigation.state.params.top.reverse(),
-      host: this.props.navigation.state.params.host,
-      code: this.props.navigation.state.params.code,
-      isHost: this.props.navigation.state.params.isHost,
     }
     socket.getSocket().once('choose', (ind) => {
       this.props.navigation.replace('Match', {
         restaurant: this.state.restaurants[ind],
-        host: this.state.host,
-        code: this.state.code,
+        host: global.host,
+        code: global.code,
       })
     })
   }
@@ -64,7 +61,7 @@ export default class TopThree extends React.Component {
   }
 
   goMatch() {
-    socket.choose(this.state.code, this.state.chosen)
+    socket.choose(global.code, this.state.chosen)
   }
 
   render() {
@@ -79,7 +76,7 @@ export default class TopThree extends React.Component {
         <View style={styles.height}>
           {this.state.restaurants.length > 2 && (
             <TouchableHighlight
-              disabled={!this.state.isHost}
+              disabled={!global.isHost}
               underlayColor="#F9E2C2"
               style={[
                 styles.center,
@@ -135,7 +132,7 @@ export default class TopThree extends React.Component {
             </TouchableHighlight>
           )}
           <TouchableHighlight
-            disabled={!this.state.isHost}
+            disabled={!global.isHost}
             underlayColor="#F9E2C2"
             style={[
               styles.left,
@@ -190,7 +187,7 @@ export default class TopThree extends React.Component {
             </View>
           </TouchableHighlight>
           <TouchableHighlight
-            disabled={!this.state.isHost}
+            disabled={!global.isHost}
             underlayColor="#F9E2C2"
             style={[
               styles.right,
@@ -245,7 +242,7 @@ export default class TopThree extends React.Component {
             </View>
           </TouchableHighlight>
         </View>
-        {this.state.isHost && (
+        {global.isHost && (
           <TouchableHighlight underlayColor="transparent" onPress={() => this.randomize()}>
             <View style={styles.randomButton}>
               <Ion name="shuffle" style={styles.randomIcon} />
@@ -253,7 +250,7 @@ export default class TopThree extends React.Component {
             </View>
           </TouchableHighlight>
         )}
-        {this.state.isHost && (
+        {global.isHost && (
           <TouchableHighlight
             underlayColor="white"
             onPress={() => this.goMatch()}
@@ -265,9 +262,9 @@ export default class TopThree extends React.Component {
             <Text style={[screenStyles.medButtonText, styles.submit, styles.white]}>Submit</Text>
           </TouchableHighlight>
         )}
-        {!this.state.isHost && (
+        {!global.isHost && (
           <TouchableHighlight
-            disabled={!this.state.isHost}
+            disabled={!global.isHost}
             underlayColor="white"
             style={[screenStyles.bigButton, styles.waiting]}
           >
@@ -290,9 +287,9 @@ TopThree.propTypes = {
     state: PropTypes.shape({
       params: PropTypes.shape({
         top: PropTypes.array,
-        host: PropTypes.string,
-        code: PropTypes.number,
-        isHost: PropTypes.bool,
+        // host: PropTypes.string,
+        // code: PropTypes.number,
+        // isHost: PropTypes.bool,
       }),
     }),
   }),

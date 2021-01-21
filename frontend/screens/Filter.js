@@ -25,6 +25,7 @@ import Time from '../modals/ChooseTime.js'
 import Size from '../modals/ChooseSize.js'
 import Majority from '../modals/ChooseMajority.js'
 import screenStyles from '../../styles/screenStyles.js'
+import global from '../../global.js'
 // import modalStyles from '../../styles/modalStyles.js'
 
 const font = 'CircularStd-Medium'
@@ -218,8 +219,8 @@ export default class FilterSelector extends React.Component {
 
   // this will pass the filters to the groups page
   handlePress(setFilters) {
-    if (this.props.isHost) {
-      Socket.startSession(this.props.code, setFilters)
+    if (global.isHost) {
+      Socket.startSession(global.code, setFilters)
     }
   }
 
@@ -282,7 +283,7 @@ export default class FilterSelector extends React.Component {
     const selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
     filters.categories = this.categorize(selections)
     console.log('userfilters: ' + JSON.stringify(filters.categories))
-    Socket.submitFilters(this.props.code, filters.categories)
+    Socket.submitFilters(global.code, filters.categories)
     this.props.handleUpdate()
   }
 
@@ -300,7 +301,7 @@ export default class FilterSelector extends React.Component {
       <View style={styles.mainContainer}>
 
         {/* Title */}
-        {this.props.isHost && (
+        {global.isHost && (
           <View style={styles.titles}>
             <View style={styles.titleContainer}>
               <Text
@@ -326,7 +327,7 @@ export default class FilterSelector extends React.Component {
             </View>
           </View>
         )}
-        {!this.props.isHost && (
+        {!global.isHost && (
           <View style={
             styles.titleContainer,
             {
@@ -347,13 +348,13 @@ export default class FilterSelector extends React.Component {
         )}
         <Swiper
           loop={false}
-          showsPagination={this.props.isHost}
+          showsPagination={global.isHost}
           activeDotColor={ACCENT_COLOR}
           paginationStyle={{ bottom: -10 }}
           onIndexChanged={(index) => this.setState({ swiperIndex: index })}
           disableScrollViewPanResponder={true}
         >
-          {this.props.isHost && (
+          {global.isHost && (
             <View style={styles.swiperContainer}>
               {/* TODO: Update Buttom Label */}
               {/* Majority Rule */}
@@ -664,12 +665,12 @@ export default class FilterSelector extends React.Component {
 }
 
 FilterSelector.propTypes = {
-  host: PropTypes.string,
-  isHost: PropTypes.bool,
+  // host: PropTypes.string,
+  // isHost: PropTypes.bool,
   handleUpdate: PropTypes.func,
   setBlur: PropTypes.func,
   members: PropTypes.array,
-  code: PropTypes.number,
+  // code: PropTypes.number,
 }
 
 const styles = StyleSheet.create({
