@@ -1,9 +1,10 @@
 import React from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { EMAIL, NAME, PHOTO, USERNAME, PHONE } from 'react-native-dotenv'
+import { EMAIL, NAME, PHOTO, USERNAME, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
 import { Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
 import accountsApi from '../apis/accountsApi.js'
+import notificationsApi from '../apis/notificationsApi.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import defImages from '../assets/images/defImages.js'
@@ -58,6 +59,8 @@ export default class createAccount extends React.Component {
         this.state.photo,
         this.state.phone,
       )
+      .then(() => AsyncStorage.getItem(REGISTRATION_TOKEN))
+      .then((token) => notificationsApi.linkToken(token))
       .then(() => {
         socket.connect()
         this.props.navigation.replace('Home')
