@@ -246,7 +246,6 @@ export default class UserProfileView extends Component {
             close={() => this.setState({ visible: false })}
             delete={() => this.handleDelete()}
             logout={() => this.handleLogout()}
-            email={global.email}
           />
 
           {edit && (
