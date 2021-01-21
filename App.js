@@ -44,7 +44,7 @@ export default class App extends React.Component {
         console.log('Token generated')
         console.log(token)
         AsyncStorage.setItem(REGISTRATION_TOKEN, token.token)
-        AsyncStorage.getItem(ID).then((id) => {
+        AsyncStorage.getItem(UID).then((id) => {
           //send to back-end server to register with id
           if (id) notificationsApi.linkToken(token.token)
         })
