@@ -7,12 +7,12 @@ import Swiper from 'react-native-deck-swiper'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
+import global from '../../global.js'
 import RoundCard from '../cards/RoundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Tooltip from 'react-native-walkthrough-tooltip'
 import normalize from '../../styles/normalize.js'
-import global from '../../global.js'
 
 export default class Round extends React.Component {
   constructor(props) {
@@ -28,7 +28,6 @@ export default class Round extends React.Component {
       for (var i = 0; i < global.restaurants.length; i++) {
         if (global.restaurants[i].id === data) {
           res = global.restaurants[i]
-          console.log(res)
           break
         }
       }
@@ -47,12 +46,19 @@ export default class Round extends React.Component {
 
   leaveGroup() {
     socket.leaveRoom(global.code)
+    global.code = ''
+    global.host = ''
+    global.isHost = false
     this.props.navigation.replace('Home')
   }
 
   endGroup() {
     this.setState({ leave: false })
     socket.endRound(global.code)
+    global.code = ''
+    global.host = ''
+    global.isHost = false
+    global.restaurants = []
     this.props.navigation.replace('Home')
   }
 
@@ -82,12 +88,6 @@ export default class Round extends React.Component {
               socket.finishedRound(global.code)
               socket.getSocket().off()
               //go to the loading page
-              // this.props.navigation.replace('Loading', {
-              //   restaurant: global.restaurants,
-              //   host: global.host,
-              //   code: global.code,
-              //   isHost: global.isHost,
-              // })
               this.props.navigation.replace('Loading', {
                 restaurants: this.props.navigation.state.params.results,
               })
@@ -198,10 +198,6 @@ export default class Round extends React.Component {
 }
 
 Round.propTypes = {
-  // results: PropTypes.array,
-  // host: PropTypes.string,
-  // isHost: PropTypes.bool,
-  // code: PropTypes.number,
   navigation: PropTypes.object,
 }
 

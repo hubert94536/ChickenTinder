@@ -16,13 +16,13 @@ import PropTypes from 'prop-types'
 import Drawer from './Drawer.js'
 import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
+import global from '../../global.js'
 import GroupCard from '../cards/GroupCard.js'
 import ChooseFriends from '../modals/ChooseFriends.js'
 import FilterSelector from './Filter.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
-import global from '../../global.js'
 
 const font = 'CircularStd-Medium'
 let memberList = []
@@ -57,7 +57,7 @@ export default class Group extends React.Component {
       endAlert: false,
       chooseFriends: false,
     }
-
+    console.log(members)
     this.updateMemberList()
 
     // listens if user is to be kicked
@@ -88,13 +88,8 @@ export default class Group extends React.Component {
     socket.getSocket().once('start', (restaurants) => {
       if (restaurants.length > 0) {
         socket.getSocket().off()
-        // global.restaurants = restaurants
-        this.props.navigation.replace('Round', {
-          results: restaurants,
-          host: global.host,
-          isHost: global.isHost,
-          code: global.code,
-        })
+        global.restaurants = restaurants
+        this.props.navigation.replace('Round')
       } else {
         console.log('group.js: no restaurants found')
         // need to handle no restaurants returned
@@ -159,6 +154,9 @@ export default class Group extends React.Component {
   leaveGroup() {
     socket.getSocket().off()
     socket.leaveRoom(global.code)
+    global.code = ''
+    global.host = ''
+    global.isHost = false
     this.props.navigation.replace('Home')
   }
 

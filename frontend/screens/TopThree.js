@@ -14,6 +14,7 @@ import Ion from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'
+import global from '../../global.js'
 import getStarPath from '../assets/stars/star.js'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
@@ -35,8 +36,6 @@ export default class TopThree extends React.Component {
     socket.getSocket().once('choose', (ind) => {
       this.props.navigation.replace('Match', {
         restaurant: this.state.restaurants[ind],
-        host: global.host,
-        code: global.code,
       })
     })
   }
@@ -287,9 +286,6 @@ TopThree.propTypes = {
     state: PropTypes.shape({
       params: PropTypes.shape({
         top: PropTypes.array,
-        // host: PropTypes.string,
-        // code: PropTypes.number,
-        // isHost: PropTypes.bool,
       }),
     }),
   }),

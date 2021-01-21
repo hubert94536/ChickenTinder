@@ -20,12 +20,12 @@ import TagsView from '../TagsView.js'
 import DynamicTags from '../TagsViewGenerator.js'
 import BackgroundButton from '../BackgroundButton.js'
 import colors from '../../styles/colors.js'
+import global from '../../global.js'
 import Location from '../modals/ChooseLocation.js'
 import Time from '../modals/ChooseTime.js'
 import Size from '../modals/ChooseSize.js'
 import Majority from '../modals/ChooseMajority.js'
 import screenStyles from '../../styles/screenStyles.js'
-import global from '../../global.js'
 // import modalStyles from '../../styles/modalStyles.js'
 
 const font = 'CircularStd-Medium'
@@ -665,12 +665,9 @@ export default class FilterSelector extends React.Component {
 }
 
 FilterSelector.propTypes = {
-  // host: PropTypes.string,
-  // isHost: PropTypes.bool,
   handleUpdate: PropTypes.func,
   setBlur: PropTypes.func,
   members: PropTypes.array,
-  // code: PropTypes.number,
 }
 
 const styles = StyleSheet.create({

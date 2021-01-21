@@ -1,11 +1,11 @@
-var host = ''
-var code = 0
-var username = ''
-var name = ''
-var photo = ''
-var phone = ''
-var email = ''
-var id = ''
-var restaurants = []
-var isHost = false
-export default {}
+export default {
+  host: '',
+  code: 0,
+  username: '',
+  name: '',
+  photo: '',
+  phone: '',
+  email: '',
+  restaurants: [],
+  isHost: false,
+}

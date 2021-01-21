@@ -9,13 +9,10 @@ import accountsApi from '../apis/accountsApi.js'
 import socket from '../apis/socket.js'
 import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
+import global from '../../global.js'
 import Join from '../modals/Join.js'
 import TabBar from '../Nav.js'
 import screenStyles from '../../styles/screenStyles.js'
-import global from '../../global.js'
-
-var uid = ''
-var username = ''
 
 const width = Dimensions.get('window').width
 const height = Dimensions.get('window').height
@@ -43,30 +40,24 @@ class Home extends React.Component {
       })
     })
 
-    AsyncStorage.multiGet([USERNAME, NAME, PHOTO, EMAIL, PHONE]).then((res) => {
-      global.username = res[0][1]
-      global.name = res[1][1]
-      global.photo = res[2][1]
-      global.email = res[3][1]
-      global.phone = res[4][1]
-      socket.getSocket().once('update', (res) => {
-        this.setState({ invite: false })
-        global.host = res.host
-        this.props.navigation.navigate('Group', {
-          response: res,
-          username: global.username,
-        })
+    socket.getSocket().once('update', (res) => {
+      this.setState({ invite: false })
+      global.host = res.host
+      this.props.navigation.navigate('Group', {
+        response: res,
+        username: global.username,
       })
-      //uncomment if testing friends/requests
-      // accountsApi.createFBUserTest('Hubert', 2, 'hubesc', 'hubesc@gmail.com', '10', '45678907')
-      // accountsApi.createFBUserTest('Hanna', 3, 'hco', 'hco@gmail.com', '11', '45678901')
-      // accountsApi.createFBUserTest('Anna', 4, 'annax', 'annx@gmail.com', '12', '45678902')
-      // accountsApi.createFBUserTest('Helen', 5, 'helenthemelon', 'helenw@gmail.com', '13', '45678903')
-      // accountsApi.createFBUserTest('Kevin', 6, 'kevint', 'kevintang@gmail.com', '14', '45678904')
-      // friendsApi.createFriendshipTest(2, uid)
-      // friendsApi.createFriendshipTest(3, uid)
-      // friendsApi.createFriendshipTest(4, uid)
     })
+
+    //uncomment if testing friends/requests
+    // accountsApi.createFBUserTest('Hubert', 2, 'hubesc', 'hubesc@gmail.com', '10', '45678907')
+    // accountsApi.createFBUserTest('Hanna', 3, 'hco', 'hco@gmail.com', '11', '45678901')
+    // accountsApi.createFBUserTest('Anna', 4, 'annax', 'annx@gmail.com', '12', '45678902')
+    // accountsApi.createFBUserTest('Helen', 5, 'helenthemelon', 'helenw@gmail.com', '13', '45678903')
+    // accountsApi.createFBUserTest('Kevin', 6, 'kevint', 'kevintang@gmail.com', '14', '45678904')
+    // friendsApi.createFriendshipTest(2, uid)
+    // friendsApi.createFriendshipTest(3, uid)
+    // friendsApi.createFriendshipTest(4, uid)
   }
 
   createGroup() {

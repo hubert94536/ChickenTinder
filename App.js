@@ -6,6 +6,7 @@ import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
 import firebase from 'firebase'
 import PushNotification from 'react-native-push-notification'
 import CreateAccount from './frontend/screens/CreateAccount.js'
+import global from './global.js'
 import Group from './frontend/screens/Group.js'
 import Home from './frontend/screens/Home.js'
 import Loading from './frontend/screens/Loading.js'
@@ -20,7 +21,7 @@ import socket from './frontend/apis/socket.js'
 import TopThree from './frontend/screens/TopThree.js'
 import UserProfileView from './frontend/screens/Profile.js'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { ID, REGISTRATION_TOKEN } from 'react-native-dotenv'
+import { ID, NAME, USERNAME, PHOTO, EMAIL, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
 
 export default class App extends React.Component {
   constructor() {
@@ -29,6 +30,14 @@ export default class App extends React.Component {
       // can change to our loading screen
       appContainer: <Text />,
     }
+
+    AsyncStorage.multiGet([USERNAME, NAME, PHOTO, EMAIL, PHONE]).then((res) => {
+      global.username = res[0][1]
+      global.name = res[1][1]
+      global.photo = res[2][1]
+      global.email = res[3][1]
+      global.phone = res[4][1]
+    })
 
     PushNotification.configure({
       onRegister: function (token) {
