@@ -71,6 +71,11 @@ const Notifications = sequelize.define('notifications', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  read: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  }
 })
 
 Notifications.belongsTo(Accounts, { foreignKey: 'sender_uid', foreignKeyConstraint: true })
