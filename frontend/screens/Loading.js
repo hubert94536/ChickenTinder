@@ -2,6 +2,7 @@ import React from 'react'
 import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'
+import global from '../../global.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -13,32 +14,27 @@ export default class Loading extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      restaurant: this.props.navigation.state.params.restaurant,
-      host: this.props.navigation.state.params.host,
-      code: this.props.navigation.state.params.code,
-      isHost: this.props.navigation.state.params.isHost,
+      restaurants: this.props.navigation.state.params.restaurants,
     }
     socket.getSocket().once('match', (data) => {
       var res
-      for (var i = 0; i < this.state.results.length; i++) {
-        if (this.state.results[i].id === data) {
-          res = this.state.results[i]
+      for (var i = 0; i < this.state.restaurants.length; i++) {
+        if (this.state.restaurants[i].id === data) {
+          res = this.state.restaurants[i]
           break
         }
       }
       socket.getSocket().off()
       this.props.navigation.replace('Match', {
         restaurant: res,
-        host: this.state.host,
-        code: this.state.code,
       })
     })
     socket.getSocket().once('top 3', (res) => {
       var restaurants = []
       for (var i = 0; i < 3; i++) {
-        for (var j = 0; j < this.state.restaurant.length; j++) {
-          if (this.state.restaurant[j].id === res.choices[i]) {
-            restaurants[i] = this.state.restaurant[j]
+        for (var j = 0; j < this.state.restaurants.length; j++) {
+          if (this.state.restaurants[j].id === res.choices[i]) {
+            restaurants[i] = this.state.restaurants[j]
             restaurants[i].likes = res.likes[i]
             break
           }
@@ -47,11 +43,9 @@ export default class Loading extends React.Component {
       socket.getSocket().off()
       this.props.navigation.replace('TopThree', {
         top: restaurants,
-        code: this.state.code,
-        host: this.state.host,
-        isHost: this.state.isHost,
       })
     })
+
     socket.getSocket().once('leave', () => {
       this.leaveGroup()
     })
@@ -59,7 +53,10 @@ export default class Loading extends React.Component {
 
   leaveGroup() {
     socket.getSocket().off()
-    socket.leaveRoom(this.state.code)
+    socket.leaveRoom(global.code)
+    global.code = ''
+    global.host = ''
+    global.isHost = false
     this.props.navigation.replace('Home')
   }
 
@@ -88,7 +85,6 @@ export default class Loading extends React.Component {
 Loading.propTypes = {
   restaurant: PropTypes.array,
   navigation: PropTypes.object,
-  code: PropTypes.number,
 }
 
 const styles = StyleSheet.create({
