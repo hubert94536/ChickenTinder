@@ -10,12 +10,14 @@ import {
   EMAIL,
   PHOTO,
   PHONE,
+  REGISTRATION_TOKEN,
   UID,
 } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import FBSDK from 'react-native-fbsdk'
 import Firebase from 'firebase'
 import accountsApi from './accountsApi.js'
+import notificationsApi from './notificationsApi.js'
 import socket from './socket.js'
 
 const { LoginManager, AccessToken } = FBSDK
@@ -45,7 +47,6 @@ const loginWithFacebook = async () => {
     // Get info from database if not new user
     if (!userCredential.additionalUserInfo.isNewUser) {
       const user = await accountsApi.getUser()
-      console.log(user)
       AsyncStorage.multiSet([
         [USERNAME, user.username],
         [NAME, user.name],
@@ -54,6 +55,12 @@ const loginWithFacebook = async () => {
         [PHONE, user.phone_number],
         [UID, user.uid],
       ])
+      // Link user with their notification token
+      AsyncStorage.getItem(REGISTRATION_TOKEN)
+      .then((token) => notificationsApi.linkToken(token))
+      .then(() => {console.log("Token linked")})
+      .catch((err) => {console.log(err)})
+      socket.connect()
       return 'Home'
     }
     // Set user's info locally
@@ -70,48 +77,38 @@ const loginWithFacebook = async () => {
 
 // Log out of Firebase and Facebook, disconnect socket
 const logoutWithFacebook = async () => {
-  socket.getSocket().disconnect()
-  Firebase.auth()
-    .signOut()
-    .then(() => {
-      LoginManager.logOut()
-      AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
-    })
-    .catch((error) => {
-      Promise.reject(error)
-    })
+  try {
+    socket.getSocket().disconnect()
+    await Firebase.auth().signOut()
+    LoginManager.logOut()
+    notificationsApi.unlinkToken()
+    await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
+  } catch (err) {
+    Promise.reject(err)
+  }
 }
 
 // Deletes user from database, Firebase, and disconnects socket
 const deleteUser = async () => {
-  socket.getSocket().disconnect()
-  accountsApi
-    .deleteUser()
-    .then(() => {
-      // Need to refresh access token since old one expired
-      AccessToken.refreshCurrentAccessTokenAsync()
-    })
-    .then(() => {
-      // Retrieve accesstoken to delete use from Firebase
-      AccessToken.getCurrentAccessToken().then((accessToken) => {
-        const credential = Firebase.auth.FacebookAuthProvider.credential(accessToken)
-        Firebase.auth()
-          .currentUser.reauthenticateWithCredential(credential)
-          .then(() => {
-            // Delete user from firebase and remove information from AsyncStorage
-            Firebase.auth().currentUser.delete()
-            AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
-          })
-          .catch((error) => Promise.reject(error))
-      })
-    })
-    .catch((error) => {
-      Promise.reject(error)
-    })
+  try {
+    socket.getSocket().disconnect()
+    await accountsApi.deleteUser()
+    // Need to refresh access token since old one expired
+    await AccessToken.refreshCurrentAccessTokenAsync()
+    // Retrieve accesstoken to delete use from Firebase
+    const accessToken = await AccessToken.getCurrentAccessToken()
+    const credential = await Firebase.auth.FacebookAuthProvider.credential(accessToken)
+    await Firebase.auth().currentUser.reauthenticateWithCredential(credential)
+    // Delete user from firebase and remove information from AsyncStorage
+    await Firebase.auth().currentUser.delete()
+    await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
+  } catch (err) {
+    Promise.reject(err)
+  }
 }
 
 export default {
+  deleteUser,
   loginWithFacebook,
   logoutWithFacebook,
-  deleteUser,
 }

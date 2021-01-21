@@ -14,12 +14,7 @@ export default class MatchCard extends React.Component {
   }
 
   evaluateCuisines(cuisines) {
-    // return cuisines.map((item) => item.title).join(', ')
-    if (cuisines.length > 2) {
-      return cuisines[0].title + ', ' + cuisines[1].title
-    } else {
-      return cuisines[0].title
-    }
+    return cuisines[0].title
   }
 
   render() {
