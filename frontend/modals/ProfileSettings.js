@@ -12,6 +12,7 @@ import { BlurView } from '@react-native-community/blur'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
+import global from '../../global.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -66,7 +67,7 @@ export default class Settings extends React.Component {
               <TextInput
                 style={[screenStyles.text, screenStyles.input, styles.textInput]}
                 editable={false}
-                value={this.props.email}
+                value={global.email}
               />
             </View>
           </View>
@@ -75,7 +76,7 @@ export default class Settings extends React.Component {
             <TextInput
               style={[screenStyles.text, screenStyles.input, styles.textInput]}
               editable={false}
-              value={this.props.phone}
+              value={global.phone}
             />
           </View>
           <View style={modalStyles.justifyCenter}>

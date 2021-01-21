@@ -9,6 +9,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
+import global from '../../global.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -21,8 +22,8 @@ export default class EditProfile extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      nameValue: this.props.name,
-      usernameValue: this.props.username,
+      nameValue: global.name,
+      usernameValue: global.username,
       changeName: false,
     }
   }
@@ -58,15 +59,15 @@ export default class EditProfile extends React.Component {
           <View style={styles.modalContent}>
             <Text style={[screenStyles.text, styles.titleText]}>Edit Profile</Text>
 
-            {this.props.image.includes('file') || this.props.image.includes('http') ? (
+            {global.photo.includes('file') || global.photo.includes('http') ? (
               <Image
                 style={styles.pfp}
                 source={{
-                  uri: this.props.image,
+                  uri: global.photo,
                 }}
               />
             ) : (
-              <Image source={this.props.image} style={styles.pfp} />
+              <Image source={global.photo} style={styles.pfp} />
             )}
             <View
               style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: '4%' }}
@@ -150,9 +151,7 @@ const styles = StyleSheet.create({
 })
 
 EditProfile.propTypes = {
-  name: PropTypes.string,
-  username: PropTypes.string,
-  image: PropTypes.string,
+  dontSave: PropTypes.func,
   userChange: PropTypes.func,
   nameChange: PropTypes.func,
   makeChanges: PropTypes.func,
