@@ -2,40 +2,14 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const http = require('http')
 const io = require('socket.io')()
-const winston = require('winston')
-const winstonDailyRotateFile = require('winston-daily-rotate-file')
 const accounts = require('./accountsQueries.js')
 const auth = require('./auth.js')
 const friends = require('./friendsQueries.js')
 const notifications = require('./notifsQueries.js')
 const schema = require('./schema.js')
 
-
 const app = express()
 const server = http.createServer(app)
-
-const logFormat = winston.format.combine(
-  winston.format.colorize(),
-  winston.format.timestamp(),
-  winston.format.align(),
-  winston.format.json()
-)
-// configurations of error logger
-const logger = winston.createLogger({
-  level: 'info',
-  format: logFormat,
-  defaultMeta: { service: 'user-service' },
-  transports: [
-    new winstonDailyRotateFile({
-      filename: './logs/error-%DATE%.log',
-      datePattern: 'YYYY-MM-DD',
-      level: 'info'
-    })
-  ],
-  rejectionHandlers: [
-    new winston.transports.File({ filename: 'rejections.log' })
-  ]
-});
 
 io.attach(server)
 require('./socketEvents.js')(io)
@@ -51,9 +25,6 @@ app.use(
 // if development mode, allow self-signed ssl
 if (app.get('env') === 'development') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
-  logger.add(new winston.transports.Console({
-    format: winston.format.simple(),
-  }))
 }
 /*-----TESTING ENDPTS------ */
 app

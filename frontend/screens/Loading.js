@@ -26,7 +26,7 @@ export default class Loading extends React.Component {
           break
         }
       }
-      socket.getSocket().off()
+      socket.getSocket().off('top 3')
       this.props.navigation.replace('Match', {
         restaurant: res,
         host: this.state.host,
@@ -59,7 +59,7 @@ export default class Loading extends React.Component {
 
   leaveGroup() {
     socket.getSocket().off()
-    socket.leaveRoom(this.state.code)
+    socket.leaveRoom()
     this.props.navigation.replace('Home')
   }
 

@@ -45,17 +45,17 @@ export default class Round extends React.Component {
   }
 
   likeRestaurant(resId) {
-    socket.likeRestaurant(this.props.navigation.state.params.code, resId)
+    socket.likeRestaurant(resId)
   }
 
   leaveGroup() {
-    socket.leaveRoom(this.props.navigation.state.params.code)
+    socket.leaveRoom()
     this.props.navigation.replace('Home')
   }
 
   endGroup() {
     this.setState({ leave: false })
-    socket.endRound(this.props.navigation.state.params.code)
+    socket.endRound()
     this.props.navigation.replace('Home')
   }
 
@@ -82,7 +82,7 @@ export default class Round extends React.Component {
             }}
             onSwipedAll={() => {
               //let backend know you're done
-              socket.finishedRound(this.props.navigation.state.params.code)
+              socket.finishedRound()
               socket.getSocket().off()
               //go to the loading page
               this.props.navigation.replace('Loading', {

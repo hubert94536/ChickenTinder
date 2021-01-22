@@ -103,6 +103,10 @@ export default class Group extends React.Component {
     socket.getSocket().once('leave', () => {
       this.leaveGroup()
     })
+
+    socket.getSocket().once('reselect', () => {
+      console.log('reselect')
+    })
   }
 
   blur(isBlurred) {
@@ -157,7 +161,7 @@ export default class Group extends React.Component {
 
   leaveGroup() {
     socket.getSocket().off()
-    socket.leaveRoom(this.state.code)
+    socket.leaveRoom()
     this.props.navigation.replace('Home')
   }
 

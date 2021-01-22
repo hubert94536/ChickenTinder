@@ -22,7 +22,7 @@ export default class Match extends React.Component {
 
   endRound() {
     this.props.navigation.replace('Home')
-    socket.leaveRoom(this.state.code)
+    socket.leaveRoom()
   }
 
   render() {

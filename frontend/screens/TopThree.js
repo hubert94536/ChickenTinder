@@ -36,6 +36,7 @@ export default class TopThree extends React.Component {
       isHost: this.props.navigation.state.params.isHost,
     }
     socket.getSocket().once('choose', (ind) => {
+      socket.getSocket().off()
       this.props.navigation.replace('Match', {
         restaurant: this.state.restaurants[ind],
         host: this.state.host,
@@ -63,7 +64,7 @@ export default class TopThree extends React.Component {
   }
 
   goMatch() {
-    socket.choose(this.state.code, this.state.chosen)
+    socket.choose(this.state.chosen)
   }
 
   render() {

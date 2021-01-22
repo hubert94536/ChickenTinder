@@ -4,8 +4,8 @@ import io from 'socket.io-client'
 var socket = null
 
 const connect = () => {
-  // socket = io('http://192.168.0.23:5000')
-  socket = io('https://wechews.herokuapp.com')
+  socket = io('http://192.168.0.23:5000')
+  // socket = io('https://wechews.herokuapp.com')
   socket.on('connect', async () => {
     console.log('connect')
     const token = await Firebase.auth().currentUser.getIdToken()
@@ -38,10 +38,8 @@ const joinRoom = (code) => {
   })
 }
 
-const leaveRoom = (code) => {
-  socket.emit('leave', {
-    code: code,
-  })
+const leaveRoom = () => {
+  socket.emit('leave')
 }
 
 const kickUser = (uid) => {
@@ -51,36 +49,40 @@ const kickUser = (uid) => {
 // host starts a session
 // filters needs: radius, group size, majority, location or latitude/longitude
 // filters options: price, open_at, categories, limit
-const startSession = (code, filters) => {
-  socket.emit('start', { code: code, filters: filters })
+const startSession = (filters) => {
+  socket.emit('start', { filters: filters })
 }
 
 // submit categories array (append a ',' at end)
-const submitFilters = (code, categories) => {
+const submitFilters = (categories) => {
   socket.emit('submit', {
-    code: code,
     categories: categories,
   })
 }
 
 // pass restaurant id for a like
-const likeRestaurant = (code, resId) => {
-  socket.emit('like', { code: code, resId: resId })
+const likeRestaurant = (resId) => {
+  socket.emit('like', { resId: resId })
 }
 
 // let everyone know you are done swiping
-const finishedRound = (code) => {
-  socket.emit('finished', { code: code })
+const finishedRound = () => {
+  socket.emit('finished')
 }
 
 // send chosen restaurant
-const choose = (code, index) => {
-  socket.emit('choose', { code: code, index: index })
+const choose = (index) => {
+  socket.emit('choose', { index: index })
 }
 
 // end session
-const endRound = (code) => {
-  socket.emit('end', { code: code })
+const endRound = () => {
+  socket.emit('end')
+}
+
+// update user's socket info (name, username, photo)
+const updateUser = (dataObj) => {
+  socket.emit('update', dataObj)
 }
 
 const getSocket = () => {
@@ -101,4 +103,5 @@ export default {
   getSocket,
   choose,
   endRound,
+  updateUser
 }
