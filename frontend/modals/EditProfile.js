@@ -9,6 +9,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
+import colors from '../../styles/colors.js'
 import global from '../../global.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
@@ -24,22 +25,31 @@ export default class EditProfile extends React.Component {
     this.state = {
       nameValue: global.name,
       usernameValue: global.username,
-      changeName: false,
+      validNameFormat: true,
+      validUsernameFormat: true,
     }
   }
 
   changeUser(text) {
-    this.setState({ usernameValue: text })
+    this.setState({ usernameValue: text }, () => {
+      this.validateString()
+    })
     this.props.userChange(text)
   }
 
   changeName(text) {
-    this.setState({ nameValue: text })
+    this.setState({ nameValue: text }, () => {
+      this.validateString()
+    })
     this.props.nameChange(text)
   }
 
   //remove whitespaces before and after name and username
   finalCheck() {
+    if (!this.state.validNameFormat || !this.state.validUsernameFormat) {
+      this.props.dontSave()
+    }
+
     let trimmedName = this.state.nameValue
     trimmedName = trimmedName.trimStart().trimEnd()
 
@@ -57,6 +67,20 @@ export default class EditProfile extends React.Component {
 
     this.props.nameChange(trimmedName)
     this.props.userChange(trimmedUser)
+  }
+
+  validateString() {
+    const regex = /^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){0,13}[a-zA-Z0-9]$/
+    if (!regex.test(this.state.nameValue)) {
+      this.setState({ validNameFormat: false })
+    } else {
+      this.setState({ validNameFormat: true })
+    }
+    if (!regex.test(this.state.usernameValue)) {
+      this.setState({ validUsernameFormat: false })
+    } else {
+      this.setState({ validUsernameFormat: true })
+    }
   }
 
   render() {
@@ -86,7 +110,12 @@ export default class EditProfile extends React.Component {
             ></View>
             <Text style={[screenStyles.text, styles.nameText]}>Display name</Text>
             <TextInput
-              style={[screenStyles.text, screenStyles.input, styles.input]}
+              style={[
+                screenStyles.text,
+                screenStyles.input,
+                styles.input,
+                this.state.validNameFormat ? styles.inputMargin : styles.inputMarginWarning,
+              ]}
               underlineColorAndroid="transparent"
               spellCheck={false}
               autoCorrect={false}
@@ -95,9 +124,19 @@ export default class EditProfile extends React.Component {
               value={this.state.nameValue}
               onChangeText={(text) => this.changeName(text)}
             />
+            {!this.state.validNameFormat && (
+              <Text style={[screenStyles.text, styles.warningText]}>
+                Only letters, numbers, or . - _ are allowed.
+              </Text>
+            )}
             <Text style={[screenStyles.text, styles.nameText]}>Username</Text>
             <TextInput
-              style={[screenStyles.text, screenStyles.input, styles.input]}
+              style={[
+                screenStyles.text,
+                screenStyles.input,
+                styles.input,
+                this.state.validUsernameFormat ? styles.inputMargin : styles.inputMarginWarning,
+              ]}
               underlineColorAndroid="transparent"
               spellCheck={false}
               autoCorrect={false}
@@ -106,6 +145,11 @@ export default class EditProfile extends React.Component {
               value={this.state.usernameValue}
               onChangeText={(text) => this.changeUser(text.split(' ').join('_'))}
             />
+            {!this.state.validUsernameFormat && (
+              <Text style={[screenStyles.text, styles.warningText]}>
+                Only letters, numbers, or . - _ are allowed.
+              </Text>
+            )}
           </View>
           <TouchableHighlight
             style={[screenStyles.medButton, styles.saveButton]}
@@ -149,18 +193,28 @@ const styles = StyleSheet.create({
     color: '#7d7d7d',
     fontSize: normalize(15.5),
     borderBottomWidth: 1,
-    marginBottom: '7%',
     borderColor: '#7d7d7d',
   },
   saveButton: {
     backgroundColor: screenStyles.hex.color,
     borderColor: screenStyles.hex.color,
-    margin: '1.5%',
+    margin: '5%',
+    // margin: '1.5%',
     width: '50%',
   },
   saveText: {
     padding: '10%',
     color: 'white',
+  },
+  warningText: {
+    color: colors.hex,
+    fontSize: normalize(12),
+  },
+  inputMargin: {
+    marginBottom: '7%',
+  },
+  inputMarginWarning: {
+    marginBottom: '1%',
   },
 })
 

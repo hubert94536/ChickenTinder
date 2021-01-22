@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dimensions, Image, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
 import PropTypes from 'prop-types'
 import { SearchBar } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -161,11 +161,7 @@ export default class Friends extends React.Component {
               </Text>
             </View>
           )}
-        {!this.state.friendsApiCalled && (
-          <View>
-            <Image source={require('../assets/loading.gif')} style={styles.gif} />
-          </View>
-        )}
+        {!this.state.friendsApiCalled && <View></View>}
       </View>
     )
   }
