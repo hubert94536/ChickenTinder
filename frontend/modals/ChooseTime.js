@@ -9,13 +9,13 @@ import {
   View,
 } from 'react-native'
 import PropTypes from 'prop-types'
-import { Switch } from 'react-native-switch'
+// import { Switch } from 'react-native-switch'
 import colors from '../../styles/colors.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
-// import SwitchButton from 'switch-button-react-native'
+import SwitchButton from 'switch-button-react-native'
 
 export default class Time extends React.Component {
   constructor(props) {
@@ -92,7 +92,7 @@ export default class Time extends React.Component {
                 keyboardType="numeric"
               />
               <View style={styles.switchButton}>
-                <Switch
+                {/* <Switch
                   value={this.state.switch}
                   onValueChange={(val) =>
                     this.setState({ timeMode: val, switch: !this.state.switch })
@@ -118,8 +118,8 @@ export default class Time extends React.Component {
                   switchRightPx={2} // denominator for logic when sliding to FALSE position. Higher number = more space from LEFT of the circle to BEGINNING of the slider
                   switchWidthMultiplier={1.5} // multipled by the `circleSize` prop to calculate total width of the Switch
                   switchBorderRadius={30} // Sets the border Radius of the switch slider. If unset, it remains the circleSize.
-                />
-                {/* <SwitchButton
+                /> */}
+                <SwitchButton
                   onValueChange={(val) => this.setState({ timeMode: val })}
                   text1="pm"
                   text2="am"
@@ -131,7 +131,7 @@ export default class Time extends React.Component {
                   fontColor={screenStyles.hex.color}
                   activeFontColor="white"
                   style={styles.switchButton}
-                /> */}
+                />
               </View>
             </View>
             {this.state.invalidTime && (
