@@ -220,7 +220,7 @@ export default class FilterSelector extends React.Component {
   // this will pass the filters to the groups page
   handlePress(setFilters) {
     if (global.isHost) {
-      Socket.startSession(global.code, setFilters)
+      Socket.startSession(setFilters)
     }
   }
 
@@ -238,7 +238,6 @@ export default class FilterSelector extends React.Component {
       const timezone = date.getTimezoneOffset()
       unix = Date.UTC(yyyy, mm, dd, this.state.hour, this.state.minute + timezone) / 1000
     }
-    console.log(unix)
     filters.open_at = unix
     filters.price = this.state.selectedPrice.map((item) => item.length).sort().toString()
     // puts the cuisine and restrictions into one array
@@ -249,7 +248,6 @@ export default class FilterSelector extends React.Component {
     filters.groupSize = this.props.members.length
     filters.limit = this.state.selectedSize[0]
     //  making sure we have a valid location
-
     if (this.state.location === null && this.state.useCurrentLocation === false) {
       this.setState({ locationAlert: true })
       this.props.setBlur(true)
@@ -283,7 +281,7 @@ export default class FilterSelector extends React.Component {
     const selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
     filters.categories = this.categorize(selections)
     console.log('userfilters: ' + JSON.stringify(filters.categories))
-    Socket.submitFilters(global.code, filters.categories)
+    Socket.submitFilters(filters.categories)
     this.props.handleUpdate()
   }
 

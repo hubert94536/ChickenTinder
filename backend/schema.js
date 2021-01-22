@@ -3,13 +3,16 @@ const joi = require('joi')
 // Accounts table schema
 // Check request body for creating account
 function checkCreateAccounts(req, res, next) {
-  const createAccountsSchema = joi.object().keys({
-    name: joi.string().max(15).required(),
-    username: joi.string().max(15).required(),
-    email: joi.string().email().required(),
-    photo: joi.string().max(3).required(),
-    phone_number: joi.string().min(7).max(15),
-  })
+  const createAccountsSchema = joi
+    .object()
+    .keys({
+      name: joi.string().max(15).required(),
+      username: joi.string().max(15).required(),
+      email: joi.string().email(),
+      photo: joi.string().max(3).required(),
+      phone_number: joi.string().min(7).max(15),
+    })
+    .or('email', 'phone_number')
   validateRequest(req, next, createAccountsSchema)
 }
 
