@@ -77,8 +77,8 @@ module.exports = (io) => {
         }
       })
       // associate uid to socket id
-      hmset(`users:${socket.user.uid}`, 'client', socket.id).catch(err => console.error(err))
-    }
+      hmset(`users:${socket.user.uid}`, 'client', socket.id).catch((err) => console.error(err))
+    },
   })
 
   io.on('connection', async (socket) => {
@@ -87,7 +87,7 @@ module.exports = (io) => {
       try {
         if (socket.user) {
           // delete old socket id
-          hdel(`users:${socket.user.uid}`, 'client').catch(err => console.error(err))
+          hdel(`users:${socket.user.uid}`, 'client').catch((err) => console.error(err))
           if (socket.user.room) {
             // retrieve session information
             let session = await sendCommand('JSON.GET', [socket.user.room])
@@ -95,11 +95,13 @@ module.exports = (io) => {
             // check if user was in a room and room still active
             if (session) {
               socket.leave(socket.user.room)
-              delete session.members[socket.user.uid]
-              // delete room and its filters if this is last member in room
-              if (Object.keys(session.members).length === 0) {
-                sendCommand('JSON.DEL', [socket.user.room]).catch(err => console.error(err))
-                sendCommand('JSON.DEL', [`filters:${socket.user.room}`]).catch(err => console.error(err))
+              // delete room and its filters if the host disconnected
+              if (session.host === socket.user.uid) {
+                io.in(socket.user.room).emit('leave')
+                sendCommand('JSON.DEL', [socket.user.room]).catch((err) => console.error(err))
+                sendCommand('JSON.DEL', [`filters:${socket.user.room}`]).catch((err) =>
+                  console.error(err),
+                )
               }
               // update live session with removed user
               else {
@@ -109,27 +111,32 @@ module.exports = (io) => {
                 // check if the room is in a round (majority is only set when round starts)
                 if (filters.majority) {
                   let index = filters.finished.indexOf(socket.user.uid)
-                  // if user has not finished swiping, reduce majority and group size by 1
-                  if (index < 0) {
+                  // if user is still swiping in round, reduce majority and group size by 1
+                  if (index < 0 && !filters.match) {
                     // if the removed user was last person to finish, get top 3 restaurants and emit
                     if (filters.finished.length >= filters.groupSize - 1) {
                       let top3 = getTop3(filters.restaurants)
                       io.in(socket.user.room).emit('final', top3)
                     } else {
+                      // decrement majority and group size by 1 otherwise
                       sendCommand('JSON.NUMINCRBY', [
                         `filters:${socket.user.room}`,
                         '.majority',
                         -1,
-                      ]).catch(err => console.error(err))
+                      ]).catch((err) => console.error(err))
                       sendCommand('JSON.NUMINCRBY', [
                         `filters:${socket.user.room}`,
                         '.groupSize',
                         -1,
-                      ]).catch(err => console.error(err))
+                      ]).catch((err) => console.error(err))
                     }
                   }
                 } else {
-                  await sendCommand('JSON.DEL', [socket.user.room, `.members['${socket.user.uid}']`])
+                  delete session.members[socket.user.uid]
+                  await sendCommand('JSON.DEL', [
+                    socket.user.room,
+                    `.members['${socket.user.uid}']`,
+                  ])
                   // Room is still in groups page and receives updated room
                   io.in(socket.user.room).emit('update', session)
                 }
@@ -148,13 +155,14 @@ module.exports = (io) => {
       try {
         let host = socket.user.uid
         let code = null
+        let unique = false
         // create new 6 digit code while the random one generated isn't unique
-        while (true) {
+        while (!unique) {
           code = Math.floor(100000 + Math.random() * 900000) // set 6 digit code
           // check if code already exists
           let res = await sendCommand('JSON.GET', [code])
           if (!res) {
-            break
+            unique = true
           }
         }
         // intialize session info
@@ -192,7 +200,7 @@ module.exports = (io) => {
       req.body.type = 'invite'
       req.body.content = data.code
       req.body.sender_uid = socket.user.uid
-      notifs.createNotif(req).catch(err => console.error(err))
+      notifs.createNotif(req).catch((err) => console.error(err))
     })
 
     // updates room when someone joins
@@ -237,7 +245,11 @@ module.exports = (io) => {
           JSON.stringify(data.categories),
         ])
         // update member who submitted filters
-        await sendCommand('JSON.SET', [socket.user.room, `.members['${socket.user.uid}'].filters`, true])
+        await sendCommand('JSON.SET', [
+          socket.user.room,
+          `.members['${socket.user.uid}'].filters`,
+          true,
+        ])
         // retrieve session info
         let session = await sendCommand('JSON.GET', [socket.user.room])
         session = JSON.parse(session)
@@ -275,17 +287,23 @@ module.exports = (io) => {
         if (filters.categories.endsWith(',')) {
           filters.categories = filters.categories.slice(0, -1)
         }
+        // keep temporary categories in case no restaurants returned
         let tempCategories = filters.categories
         filters.categories = Array.from(new Set(filters.categories.split(','))).toString()
         // fetch restaurants from Yelp
         const resList = await yelp.getRestaurants(filters)
         // emit that no restaurants were found
-        if (resList.businessList.length == 0) {
+        if (!resList.businessList || resList.businessList.length == 0) {
           socket.emit('exception', 'no restaurants')
+          // reset filters except for group's categories
           filters = {}
           filters.categories = tempCategories
-          await sendCommand('JSON.SET', [`filters:${socket.user.room}`, '.', JSON.stringify(filters)])
-          io.in(socket.user.room).emit('reselect')
+          await sendCommand('JSON.SET', [
+            `filters:${socket.user.room}`,
+            '.',
+            JSON.stringify(filters),
+          ])
+          io.into(socket.user.room).emit('reselect')
         } else {
           // clear filters for getting restaurants and replace with group logistics
           filters = {}
@@ -297,7 +315,11 @@ module.exports = (io) => {
           for (let res in resList.businessList) {
             filters.restaurants[resList.businessList[res].id] = 0
           }
-          await sendCommand('JSON.SET', [`filters:${socket.user.room}`, '.', JSON.stringify(filters)])
+          await sendCommand('JSON.SET', [
+            `filters:${socket.user.room}`,
+            '.',
+            JSON.stringify(filters),
+          ])
           io.in(socket.user.room).emit('start', resList.businessList)
         }
       } catch (err) {
@@ -319,7 +341,7 @@ module.exports = (io) => {
         filters = JSON.parse(filters)
         // check if # likes = majority => match
         if (filters.restaurants[data.resId] >= filters.majority) {
-          // return restaurant info from cache
+          await sendCommand('JSON.SET', [`filters:${socket.user.room}`, `.match`, true])
           io.in(socket.user.room).emit('match', data.resId)
         }
       } catch (err) {
@@ -334,47 +356,44 @@ module.exports = (io) => {
         // retrieve session information
         let session = await sendCommand('JSON.GET', [socket.user.room])
         session = JSON.parse(session)
-        // delete room and its filters if last member in room
-        if (session) {
-          socket.leave(socket.user.room)
-          delete session.members[socket.user.uid]
-          // delete room and its filters if this is last member in room
-          if (Object.keys(session.members).length === 0) {
-            sendCommand('JSON.DEL', [socket.user.room]).catch(err => console.error(err))
-            sendCommand('JSON.DEL', [`filters:${socket.user.room}`]).catch(err => console.error(err))
-          }
-          // update live session with removed user
-          else {
-            // retrieve a session's filters
-            let filters = await sendCommand('JSON.GET', [`filters:${socket.user.room}`])
-            filters = JSON.parse(filters)
-            // check if the room is in a round (majority is only set when round starts)
-            if (filters.majority) {
-              let index = filters.finished.indexOf(socket.user.uid)
-              // if user has not finished swiping, reduce majority and group size by 1
-              if (index < 0) {
-                // if the removed user was last person to finish, get top 3 restaurants and emit
-                if (filters.finished.length >= filters.groupSize - 1) {
-                  let top3 = getTop3(filters.restaurants)
-                  io.in(socket.user.room).emit('final', top3)
-                } else {
-                  sendCommand('JSON.NUMINCRBY', [
-                    `filters:${socket.user.room}`,
-                    '.majority',
-                    -1,
-                  ]).catch(err => console.error(err))
-                  sendCommand('JSON.NUMINCRBY', [
-                    `filters:${socket.user.room}`,
-                    '.groupSize',
-                    -1,
-                  ]).catch(err => console.error(err))
-                }
+        if (session.host === socket.user.uid) {
+          io.in(socket.user.room).emit('leave')
+          sendCommand('JSON.DEL', [socket.user.room]).catch((err) => console.error(err))
+          sendCommand('JSON.DEL', [`filters:${socket.user.room}`]).catch((err) =>
+            console.error(err),
+          )
+        } else {
+          // retrieve a session's filters
+          let filters = await sendCommand('JSON.GET', [`filters:${socket.user.room}`])
+          filters = JSON.parse(filters)
+          // check if the room is in a round (majority is only set when round starts)
+          if (filters.majority) {
+            let index = filters.finished.indexOf(socket.user.uid)
+            // if user was swipipng in round, reduce majority and group size by 1
+            if (index < 0 && !filters.match) {
+              // if the removed user was last person to finish, get top 3 restaurants and emit
+              if (filters.finished.length === filters.groupSize - 1) {
+                let top3 = getTop3(filters.restaurants)
+                io.in(socket.user.room).emit('final', top3)
+              } else {
+                // decrease the majority and group size by 1
+                sendCommand('JSON.NUMINCRBY', [
+                  `filters:${socket.user.room}`,
+                  '.majority',
+                  -1,
+                ]).catch((err) => console.error(err))
+                sendCommand('JSON.NUMINCRBY', [
+                  `filters:${socket.user.room}`,
+                  '.groupSize',
+                  -1,
+                ]).catch((err) => console.error(err))
               }
-            } else {
-              await sendCommand('JSON.DEL', [socket.user.room, `.members['${socket.user.uid}']`])
-              // Room is still in groups page and receives updated room
-              io.in(socket.user.room).emit('update', session)
             }
+          } else {
+            delete session.members[socket.user.uid]
+            await sendCommand('JSON.DEL', [socket.user.room, `.members['${socket.user.uid}']`])
+            // Room is still in groups page and receives updated room
+            io.in(socket.user.room).emit('update', session)
           }
         }
         delete socket.user.room
@@ -411,6 +430,7 @@ module.exports = (io) => {
         // if everyone in room is finished swiping, get the top 3 restaurants and emit
         if (filters.finished.length >= filters.groupSize) {
           if (Object.keys(filters.restaurants).length == 1) {
+            await sendCommand('JSON.SET', [`filters:${socket.user.room}`, `.match`, true])
             io.in(socket.user.room).emit('match', Object.keys(filters.restaurants)[0])
           } else {
             let top3 = getTop3(filters.restaurants)
@@ -430,7 +450,15 @@ module.exports = (io) => {
 
     // alert all users to leave
     socket.on('end', () => {
+      sendCommand('JSON.DEL', [socket.user.room]).catch((err) => console.error(err))
+      sendCommand('JSON.DEL', [`filters:${socket.user.room}`]).catch((err) => console.error(err))
       io.in(socket.user.room).emit('leave')
+    })
+
+    // users left because host ended session
+    socket.on('end leave', () => {
+      socket.leave(socket.user.room)
+      delete socket.user.room
     })
 
     // update socket user info

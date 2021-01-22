@@ -4,8 +4,8 @@ import io from 'socket.io-client'
 var socket = null
 
 const connect = () => {
-  socket = io('http://192.168.0.23:5000')
-  // socket = io('https://wechews.herokuapp.com')
+  // socket = io('http://192.168.0.23:5000')
+  socket = io('https://wechews.herokuapp.com')
   socket.on('connect', async () => {
     console.log('connect')
     const token = await Firebase.auth().currentUser.getIdToken()
@@ -80,6 +80,11 @@ const endRound = () => {
   socket.emit('end')
 }
 
+// leaving a session due to end
+const endLeave = () => {
+  socket.emit('end leave')
+}
+
 // update user's socket info (name, username, photo)
 const updateUser = (dataObj) => {
   socket.emit('update', dataObj)
@@ -90,18 +95,19 @@ const getSocket = () => {
 }
 
 export default {
+  choose,
   connect,
   createRoom,
-  joinRoom,
-  sendInvite,
+  endLeave,
+  endRound,
   finishedRound,
-  leaveRoom,
+  getSocket,
+  joinRoom,
   kickUser,
+  leaveRoom,
+  likeRestaurant,
+  sendInvite,
   startSession,
   submitFilters,
-  likeRestaurant,
-  getSocket,
-  choose,
-  endRound,
-  updateUser
+  updateUser,
 }

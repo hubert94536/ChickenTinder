@@ -26,10 +26,7 @@ export default class GroupCard extends React.Component {
         <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
           <Image
             source={{ uri: Image.resolveAssetSource(this.props.image).uri }}
-            style={[
-              styles.image,
-              this.props.filters ? imgStyles.hexBorder : imgStyles.greyBorder,
-            ]}
+            style={[styles.image, this.props.filters ? imgStyles.hexBorder : imgStyles.greyBorder]}
           />
         </View>
         {this.props.filters ? (

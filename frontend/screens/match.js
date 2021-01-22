@@ -4,6 +4,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'
+import global from '../../global.js'
 import screenStyles from '../../styles/screenStyles.js'
 import MatchCard from '../cards/MatchCard.js'
 import normalize from '../../styles/normalize.js'
@@ -15,14 +16,16 @@ export default class Match extends React.Component {
     super(props)
     this.state = {
       restaurant: this.props.navigation.state.params.restaurant,
-      host: this.props.navigation.state.params.host,
-      code: this.props.navigation.state.params.code,
     }
   }
 
   endRound() {
-    this.props.navigation.replace('Home')
     socket.leaveRoom()
+    global.code = ''
+    global.host = ''
+    global.isHost = false
+    global.restaurants = []
+    this.props.navigation.replace('Home')
   }
 
   render() {
@@ -90,8 +93,6 @@ Match.propTypes = {
     state: PropTypes.shape({
       params: PropTypes.shape({
         restaurant: PropTypes.object,
-        host: PropTypes.string,
-        code: PropTypes.number,
       }),
     }),
   }),

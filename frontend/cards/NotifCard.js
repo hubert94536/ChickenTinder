@@ -54,7 +54,7 @@ export default class NotifCard extends React.Component {
     this.setState({ trash: true })
   }
 
-  handleClick() { }
+  handleClick() {}
 
   pressTrash() {
     this.setState({ trash: false })
@@ -64,7 +64,10 @@ export default class NotifCard extends React.Component {
     return (
       <TouchableWithoutFeedback onPress={() => this.handleHold()}>
         <View style={styles.container}>
-          <Image source={{ uri: Image.resolveAssetSource(this.props.image).uri }} style={imgStyles.button} />
+          <Image
+            source={{ uri: Image.resolveAssetSource(this.props.image).uri }}
+            style={imgStyles.button}
+          />
           <View style={styles.notif}>
             {this.props.type == 'invited' && (
               <Text style={[imgStyles.font, styles.text]}>
