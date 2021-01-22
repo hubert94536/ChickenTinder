@@ -14,6 +14,7 @@ import Ion from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'
+import global from '../../global.js'
 import getStarPath from '../assets/stars/star.js'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
@@ -31,15 +32,10 @@ export default class TopThree extends React.Component {
     this.state = {
       chosen: this.props.navigation.state.params.top.length - 1,
       restaurants: this.props.navigation.state.params.top.reverse(),
-      host: this.props.navigation.state.params.host,
-      code: this.props.navigation.state.params.code,
-      isHost: this.props.navigation.state.params.isHost,
     }
     socket.getSocket().once('choose', (ind) => {
       this.props.navigation.replace('Match', {
         restaurant: this.state.restaurants[ind],
-        host: this.state.host,
-        code: this.state.code,
       })
     })
   }
@@ -48,7 +44,8 @@ export default class TopThree extends React.Component {
   }
 
   randomize() {
-    var random = Math.floor(Math.random() * this.state.chosen.length)
+    var random = Math.floor(Math.random() * this.props.navigation.state.params.top.length)
+    console.log(random)
     switch (random) {
       case 0:
         this.setState({ chosen: 0 })
@@ -63,7 +60,7 @@ export default class TopThree extends React.Component {
   }
 
   goMatch() {
-    socket.choose(this.state.code, this.state.chosen)
+    socket.choose(global.code, this.state.chosen)
   }
 
   render() {
@@ -78,7 +75,7 @@ export default class TopThree extends React.Component {
         <View style={styles.height}>
           {this.state.restaurants.length > 2 && (
             <TouchableHighlight
-              disabled={!this.state.isHost}
+              disabled={!global.isHost}
               underlayColor="#F9E2C2"
               style={[
                 styles.center,
@@ -134,7 +131,7 @@ export default class TopThree extends React.Component {
             </TouchableHighlight>
           )}
           <TouchableHighlight
-            disabled={!this.state.isHost}
+            disabled={!global.isHost}
             underlayColor="#F9E2C2"
             style={[
               styles.left,
@@ -189,7 +186,7 @@ export default class TopThree extends React.Component {
             </View>
           </TouchableHighlight>
           <TouchableHighlight
-            disabled={!this.state.isHost}
+            disabled={!global.isHost}
             underlayColor="#F9E2C2"
             style={[
               styles.right,
@@ -244,7 +241,7 @@ export default class TopThree extends React.Component {
             </View>
           </TouchableHighlight>
         </View>
-        {this.state.isHost && (
+        {global.isHost && (
           <TouchableHighlight underlayColor="transparent" onPress={() => this.randomize()}>
             <View style={styles.randomButton}>
               <Ion name="shuffle" style={styles.randomIcon} />
@@ -252,7 +249,7 @@ export default class TopThree extends React.Component {
             </View>
           </TouchableHighlight>
         )}
-        {this.state.isHost && (
+        {global.isHost && (
           <TouchableHighlight
             underlayColor="white"
             onPress={() => this.goMatch()}
@@ -264,9 +261,9 @@ export default class TopThree extends React.Component {
             <Text style={[screenStyles.medButtonText, styles.submit, styles.white]}>Submit</Text>
           </TouchableHighlight>
         )}
-        {!this.state.isHost && (
+        {!global.isHost && (
           <TouchableHighlight
-            disabled={!this.state.isHost}
+            disabled={!global.isHost}
             underlayColor="white"
             style={[screenStyles.bigButton, styles.waiting]}
           >
@@ -289,9 +286,6 @@ TopThree.propTypes = {
     state: PropTypes.shape({
       params: PropTypes.shape({
         top: PropTypes.array,
-        host: PropTypes.string,
-        code: PropTypes.number,
-        isHost: PropTypes.bool,
       }),
     }),
   }),
@@ -337,12 +331,12 @@ const styles = StyleSheet.create({
   },
   categories: { fontSize: normalize(15) },
   left: {
-    top: '30%',
+    top: '20%',
     left: '5%',
     alignSelf: 'flex-start',
   },
   right: {
-    top: '30%',
+    top: '20%',
     right: '5%',
     alignSelf: 'flex-end',
   },
