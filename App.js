@@ -69,7 +69,7 @@ export default class App extends React.Component {
 
   componentDidMount() {
     var start
-    var unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+    var unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user === null) {
         start = 'Login'
       } else {

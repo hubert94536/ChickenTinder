@@ -46,7 +46,7 @@ const acceptRequest = async (req, res) => {
     }
     return res.status(404).send('Friendship not found')
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return res.status(500).send(error.message)
   }
 }
@@ -70,7 +70,7 @@ const createFriends = async (req, res) => {
     })
     return res.status(201).send('Friend requested')
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return res.status(500).json({ error: error.message })
   }
 }
@@ -94,7 +94,7 @@ const deleteFriendship = async (req, res) => {
     }
     return res.status(404).send('Friendship not found')
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return res.status(500).send(error.message)
   }
 }
@@ -137,7 +137,7 @@ const createTestFriends = async (req, res) => {
     })
     return res.status(201).send('Friend requested')
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return res.status(500).json({ error: error.message })
   }
 }
@@ -184,7 +184,7 @@ const acceptTestRequest = async (req, res) => {
     }
     return res.status(404).send('Friendship not found')
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return res.status(500).send(error.message)
   }
 }
