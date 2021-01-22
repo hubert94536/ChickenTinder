@@ -1,5 +1,5 @@
 import React from 'react'
-import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, Image, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
 import PropTypes from 'prop-types'
 import { SearchBar } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -14,6 +14,8 @@ const sleep = (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds))
 }
 
+const height = Dimensions.get('window').height
+
 export default class Friends extends React.Component {
   constructor(props) {
     super(props)
@@ -24,6 +26,7 @@ export default class Friends extends React.Component {
       friends: [], // array of Profile components
       isFriends: this.props.isFriends, // For rendering friends (true) or requests (false)
       refreshing: true, // Are we currently refreshing the list?
+      friendsApiCalled: false, //render loading gif when fetching friends
     }
     this.getFriends()
   }
@@ -41,7 +44,12 @@ export default class Friends extends React.Component {
           }
         }
         //  need two so when you search it doesn't get rid of all the friends
-        this.setState({ friends: pushFriends, data: pushFriends, refreshing: false })
+        this.setState({
+          friends: pushFriends,
+          data: pushFriends,
+          refreshing: false,
+          friendsApiCalled: true,
+        })
       })
       .catch(() => this.setState({ errorAlert: true }))
       .then(() => {
@@ -143,13 +151,19 @@ export default class Friends extends React.Component {
             )}
           </View>
         )}
-        {this.state.friends.length === 0 && ( //Show no friends view if there aren't any friends
+        {this.state.friends.length === 0 &&
+          this.state.friendsApiCalled && ( //Show no friends view if there aren't any friends
+            <View>
+              <Icon name="emoticon-sad-outline" style={[styles.sadFace]} />
+              <Text style={[screenStyles.text, styles.noFriendText1]}>No friends, yet</Text>
+              <Text style={[screenStyles.textBook, styles.noFriendText2]}>
+                You have no friends, yet. Add friends using the search feature below!
+              </Text>
+            </View>
+          )}
+        {!this.state.friendsApiCalled && (
           <View>
-            <Icon name="emoticon-sad-outline" style={[styles.sadFace]} />
-            <Text style={[screenStyles.text, styles.noFriendText1]}>No friends, yet</Text>
-            <Text style={[screenStyles.textBook, styles.noFriendText2]}>
-              You have no friends, yet. Add friends using the search feature below!
-            </Text>
+            <Image source={require('../assets/loading.gif')} style={styles.gif} />
           </View>
         )}
       </View>
@@ -202,5 +216,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: normalize(16),
     color: 'grey',
+  },
+  gif: {
+    alignSelf: 'center',
+    width: height * 0.3,
+    height: height * 0.4,
   },
 })
