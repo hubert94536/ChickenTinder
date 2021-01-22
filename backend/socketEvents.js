@@ -294,7 +294,6 @@ module.exports = (io) => {
         const resList = await yelp.getRestaurants(filters)
         // emit that no restaurants were found
         if (!resList.businessList || resList.businessList.length == 0) {
-          socket.emit('exception', 'no restaurants')
           // reset filters except for group's categories
           filters = {}
           filters.categories = tempCategories
@@ -303,7 +302,7 @@ module.exports = (io) => {
             '.',
             JSON.stringify(filters),
           ])
-          io.into(socket.user.room).emit('reselect')
+          socket.emit('reselect')
         } else {
           // clear filters for getting restaurants and replace with group logistics
           filters = {}
