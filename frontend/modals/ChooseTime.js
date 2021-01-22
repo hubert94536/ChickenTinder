@@ -94,7 +94,9 @@ export default class Time extends React.Component {
               <View style={styles.switchButton}>
                 <Switch
                   value={this.state.switch}
-                  onValueChange={(val) => this.setState({ timeMode: val, switch: !this.state.switch })}
+                  onValueChange={(val) =>
+                    this.setState({ timeMode: val, switch: !this.state.switch })
+                  }
                   disabled={false}
                   activeText={''}
                   inActiveText={''}
@@ -134,11 +136,7 @@ export default class Time extends React.Component {
             </View>
             {this.state.invalidTime && (
               <View style={[modalStyles.error, styles.errorMargin]}>
-                <Icon
-                  name="exclamationcircle"
-                  color={colors.hex}
-                  style={modalStyles.errorIcon}
-                />
+                <Icon name="exclamationcircle" color={colors.hex} style={modalStyles.errorIcon} />
                 <Text style={[screenStyles.text, modalStyles.errorText]}>
                   Invalid time. Please try again
                 </Text>
@@ -177,16 +175,16 @@ const styles = StyleSheet.create({
   switchButton: {
     marginLeft: '4%',
   },
-  switchButtonInner : {
-    alignItems: "center", 
-    justifyContent: "center", 
-    padding: 0, 
+  switchButtonInner: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0,
     margin: 0,
   },
-  switchButtonOuter : {
-    alignItems: "center", 
-    justifyContent: "center", 
-    padding: 0, 
+  switchButtonOuter: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0,
     margin: 0,
   },
   errorMargin: {

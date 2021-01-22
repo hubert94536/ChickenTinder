@@ -231,7 +231,7 @@ export default class UserProfileView extends Component {
             {/* Contains the search bar and friends display if has friends, otherwise no friends view */}
             <Friends isFriends onFriendsChange={(n) => this.handleFriendsCount(n)} />
           </View>
-          
+
           <TabBar
             goHome={() => this.props.navigation.navigate('Home')}
             goSearch={() => this.props.navigation.navigate('Search')}
@@ -248,7 +248,7 @@ export default class UserProfileView extends Component {
               style={modalStyles.blur}
             />
           )}
-          
+
           <Settings
             visible={visible}
             close={() => this.setState({ visible: false })}

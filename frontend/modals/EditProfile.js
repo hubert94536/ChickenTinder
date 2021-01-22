@@ -38,21 +38,21 @@ export default class EditProfile extends React.Component {
     this.props.nameChange(text)
   }
 
-  //remove whitespaces before and after name and username 
+  //remove whitespaces before and after name and username
   finalCheck() {
     let trimmedName = this.state.nameValue
     trimmedName = trimmedName.trimStart().trimEnd()
 
     let trimmedUser = this.state.usernameValue
-    while(trimmedUser.endsWith('_')) {
-      trimmedUser = trimmedUser.slice(0,-1)
+    while (trimmedUser.endsWith('_')) {
+      trimmedUser = trimmedUser.slice(0, -1)
     }
-    while(trimmedUser.startsWith('_')) {
+    while (trimmedUser.startsWith('_')) {
       trimmedUser = trimmedUser.slice(1)
     }
 
-    this.setState({nameValue: trimmedName, usernameValue:trimmedUser}, () =>{
-      this.props.makeChanges()  //must use callback in setState or states won't update properly
+    this.setState({ nameValue: trimmedName, usernameValue: trimmedUser }, () => {
+      this.props.makeChanges() //must use callback in setState or states won't update properly
     })
 
     this.props.nameChange(trimmedName)
@@ -109,7 +109,9 @@ export default class EditProfile extends React.Component {
           </View>
           <TouchableHighlight
             style={[screenStyles.medButton, styles.saveButton]}
-            onPress={() => {this.finalCheck()}}
+            onPress={() => {
+              this.finalCheck()
+            }}
             underlayColor="white"
           >
             <Text style={[screenStyles.smallButtonText, styles.saveText]}>Save Changes</Text>
