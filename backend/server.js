@@ -117,9 +117,7 @@ app
   .post(auth.authenticate, pushNotif.linkToken)
   .delete(auth.authenticate, pushNotif.unlinkToken)
 
-app
-  .route('/notifications/test')
-  .post(pushNotif.testNotif)
+app.route('/notifications/test').post(pushNotif.testNotif)
 
 server.listen(PORT, () => {
   console.log(`App running on port ${PORT}.`)

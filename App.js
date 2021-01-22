@@ -6,6 +6,7 @@ import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
 import firebase from 'firebase'
 import PushNotification from 'react-native-push-notification'
 import CreateAccount from './frontend/screens/CreateAccount.js'
+import global from './global.js'
 import Group from './frontend/screens/Group.js'
 import Home from './frontend/screens/Home.js'
 import Loading from './frontend/screens/Loading.js'
@@ -20,7 +21,7 @@ import socket from './frontend/apis/socket.js'
 import TopThree from './frontend/screens/TopThree.js'
 import UserProfileView from './frontend/screens/Profile.js'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { UID, REGISTRATION_TOKEN } from 'react-native-dotenv'
+import { UID, NAME, USERNAME, PHOTO, EMAIL, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
 
 export default class App extends React.Component {
   constructor() {
@@ -28,34 +29,42 @@ export default class App extends React.Component {
     this.state = {
       // can change to our loading screen
       appContainer: <Text />,
-    };
+    }
+
+    AsyncStorage.multiGet([USERNAME, NAME, PHOTO, EMAIL, PHONE]).then((res) => {
+      global.username = res[0][1]
+      global.name = res[1][1]
+      global.photo = res[2][1]
+      global.email = res[3][1]
+      global.phone = res[4][1]
+    })
 
     PushNotification.configure({
-      onRegister: function(token) {
-        console.log("Token generated")
-        console.log(token);
+      onRegister: function (token) {
+        console.log('Token generated')
+        console.log(token)
         AsyncStorage.setItem(REGISTRATION_TOKEN, token.token)
         AsyncStorage.getItem(UID).then((id) => {
           //send to back-end server to register with id
-          if (id) notificationsApi.linkToken(token.token); 
+          if (id) notificationsApi.linkToken(token.token)
         })
       },
-      onNotification: function(notification){
+      onNotification: function (notification) {
         // Consider sending only data, then constructing a notification here to display to the user (as FCM base notification construction is quite limited)
-        console.log("Notification received")
-        console.log(notification);
-        if (!notification.userInteraction){
+        console.log('Notification received')
+        console.log(notification)
+        if (!notification.userInteraction) {
           //construct using data
           buildNotification(notification.data)
         }
       },
-      onAction: function(notification){
-        console.log(notification);
-        if (notification.action === "open") PushNotification.invokeApp(notification); // figure this out later
+      onAction: function (notification) {
+        console.log(notification)
+        if (notification.action === 'open') PushNotification.invokeApp(notification) // figure this out later
       },
       popInitialNotification: true,
-      requestPermissions: true
-    });
+      requestPermissions: true,
+    })
   }
 
   componentDidMount() {
@@ -131,9 +140,8 @@ export default class App extends React.Component {
   }
 
   render() {
-    return this.state.appContainer;
+    return this.state.appContainer
   }
-
 }
 
 /*
@@ -146,20 +154,26 @@ data: {
 }
 */
 const buildNotification = (config) => {
-  var message = {title: 'Wechews Notification', message: 'Default Message'}
+  var message = { title: 'Wechews Notification', message: 'Default Message' }
   if (config.type == 'pending') {
-    message = {title: 'New Friend Request', message: `${config.name} has sent you a friend request!`}
+    message = {
+      title: 'New Friend Request',
+      message: `${config.name} has sent you a friend request!`,
+    }
   }
   if (config.type == 'friends') {
-    message = {title: 'Friend Request Accepted', message: `You are now friends with ${config.name}!`}
+    message = {
+      title: 'Friend Request Accepted',
+      message: `You are now friends with ${config.name}!`,
+    }
   }
   if (config.type == 'invite') {
-    message = {title: 'New Invite', message: `${config.name} has sent you an invite!`}
+    message = { title: 'New Invite', message: `${config.name} has sent you an invite!` }
   }
   PushNotification.localNotification({
     channelId: 'default-channel-id',
-    ...message
-  });
+    ...message,
+  })
 }
 
 /* Notification Template */
@@ -181,7 +195,7 @@ const buildNotification = (config) => {
 //   // ongoing: false, // (optional) set whether this is an "ongoing" notification
 //   // actions: ['Yes', 'No'], // (Android only) See the doc for notification actions to know more
 //   // invokeApp: true, // (optional) This enable click on actions to bring back the application to foreground or stay in background, default: true
-  
+
 //   // when: null, // (optionnal) Add a timestamp pertaining to the notification (usually the time the event occurred). For apps targeting Build.VERSION_CODES.N and above, this time is not shown anymore by default and must be opted into by using `showWhen`, default: null.
 //   // usesChronometer: false, // (optional) Show the `when` field as a stopwatch. Instead of presenting `when` as a timestamp, the notification will show an automatically updating display of the minutes and seconds since when. Useful when showing an elapsed time (like an ongoing phone call), default: false.
 //   // timeoutAfter: null, // (optional) Specifies a duration in milliseconds after which this notification should be canceled, if it is not already canceled, default: null
@@ -189,7 +203,7 @@ const buildNotification = (config) => {
 //   /* iOS only properties */
 //   // alertAction: 'view', // (optional) default: view
 //   // category: '', // (optional) default: empty string
-  
+
 //   /* iOS and Android properties */
 //   // id: this.lastId, // (optional) Valid unique 32 bit integer specified as string. default: Autogenerated Unique ID
 //   title: 'Wechews Notification', // (optional)

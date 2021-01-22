@@ -57,9 +57,13 @@ const loginWithFacebook = async () => {
       ])
       // Link user with their notification token
       AsyncStorage.getItem(REGISTRATION_TOKEN)
-      .then((token) => notificationsApi.linkToken(token))
-      .then(() => {console.log("Token linked")})
-      .catch((err) => {console.log(err)})
+        .then((token) => notificationsApi.linkToken(token))
+        .then(() => {
+          console.log('Token linked')
+        })
+        .catch((err) => {
+          console.log(err)
+        })
       socket.connect()
       return 'Home'
     }
