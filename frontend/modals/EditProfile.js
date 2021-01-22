@@ -29,22 +29,34 @@ export default class EditProfile extends React.Component {
   }
 
   changeUser(text) {
-    let trimmedText = text
-    while(trimmedText.endsWith('_')) {
-      trimmedText = trimmedText.slice(0,-1)
-    }
-    this.setState({ usernameValue: trimmedText })
-    this.props.userChange(trimmedText)
+    this.setState({ usernameValue: text })
+    this.props.userChange(text)
   }
-
-  // changeUser(text) {
-  //   this.setState({ usernameValue: text })
-  //   this.props.userChange(text)
-  // }
 
   changeName(text) {
     this.setState({ nameValue: text })
     this.props.nameChange(text)
+  }
+
+  //remove whitespaces before and after name and username 
+  finalCheck() {
+    let trimmedName = this.state.nameValue
+    trimmedName = trimmedName.trimStart().trimEnd()
+
+    let trimmedUser = this.state.usernameValue
+    while(trimmedUser.endsWith('_')) {
+      trimmedUser = trimmedUser.slice(0,-1)
+    }
+    while(trimmedUser.startsWith('_')) {
+      trimmedUser = trimmedUser.slice(1)
+    }
+
+    this.setState({nameValue: trimmedName, usernameValue:trimmedUser}, () =>{
+      this.props.makeChanges()  //must use callback in setState or states won't update properly
+    })
+
+    this.props.nameChange(trimmedName)
+    this.props.userChange(trimmedUser)
   }
 
   render() {
@@ -81,7 +93,7 @@ export default class EditProfile extends React.Component {
               keyboardType="visible-password"
               maxLength={15}
               value={this.state.nameValue}
-              onChangeText={(text) => this.changeName(text.trimEnd())}
+              onChangeText={(text) => this.changeName(text)}
             />
             <Text style={[screenStyles.text, styles.nameText]}>Username</Text>
             <TextInput
@@ -97,7 +109,7 @@ export default class EditProfile extends React.Component {
           </View>
           <TouchableHighlight
             style={[screenStyles.medButton, styles.saveButton]}
-            onPress={() => this.props.makeChanges()}
+            onPress={() => {this.finalCheck()}}
             underlayColor="white"
           >
             <Text style={[screenStyles.smallButtonText, styles.saveText]}>Save Changes</Text>
