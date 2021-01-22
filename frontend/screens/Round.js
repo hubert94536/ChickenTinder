@@ -36,16 +36,20 @@ export default class Round extends React.Component {
       })
     })
     socket.getSocket().once('leave', () => {
-      this.leaveGroup()
+      this.leaveGroup(true)
     })
   }
 
   likeRestaurant(resId) {
-    socket.likeRestaurant(global.code, resId)
+    socket.likeRestaurant(resId)
   }
 
-  leaveGroup() {
-    socket.leaveRoom(global.code)
+  leaveGroup(end) {
+    if (end) {
+      socket.endLeave()
+    } else {
+      socket.leaveRoom()
+    }
     global.code = ''
     global.host = ''
     global.isHost = false
@@ -54,7 +58,7 @@ export default class Round extends React.Component {
 
   endGroup() {
     this.setState({ leave: false })
-    socket.endRound(global.code)
+    socket.endRound()
     global.code = ''
     global.host = ''
     global.isHost = false
@@ -85,11 +89,11 @@ export default class Round extends React.Component {
             }}
             onSwipedAll={() => {
               //let backend know you're done
-              socket.finishedRound(global.code)
+              socket.finishedRound()
               socket.getSocket().off()
               //go to the loading page
               this.props.navigation.replace('Loading', {
-                restaurants: this.props.navigation.state.params.results,
+                restaurants: global.restaurants,
               })
             }}
             stackSeparation={0}
@@ -99,7 +103,7 @@ export default class Round extends React.Component {
             <Text style={[screenStyles.text, styles.title, styles.topMargin]}>Get chews-ing!</Text>
             {!global.isHost && (
               <TouchableHighlight
-                onPress={() => this.leaveGroup()}
+                onPress={() => this.leaveGroup(false)}
                 style={[styles.leaveButton, styles.topMargin]}
                 underlayColor="transparent"
               >
@@ -186,9 +190,9 @@ export default class Round extends React.Component {
           <Alert
             title="Are you sure you want to leave?"
             body="Leaving ends the group for everyone"
-            buttonAff="Close"
+            buttonAff="Leave"
             height="30%"
-            press={() => this.endGroup()}
+            press={() => socket.endRound()}
             cancel={() => this.setState({ leave: false })}
           />
         )}
