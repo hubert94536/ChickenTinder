@@ -7,6 +7,7 @@ import Swiper from 'react-native-deck-swiper'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
+import global from '../../global.js'
 import RoundCard from '../cards/RoundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -17,26 +18,21 @@ export default class Round extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      results: this.props.navigation.state.params.results,
-      host: this.props.navigation.state.params.host,
-      isHost: this.props.navigation.state.params.isHost,
       instr: true,
       index: 1,
       leave: false,
     }
+
     socket.getSocket().once('match', (data) => {
       var res
-      for (var i = 0; i < this.state.results.length; i++) {
-        if (this.state.results[i].id === data) {
-          res = this.state.results[i]
+      for (var i = 0; i < global.restaurants.length; i++) {
+        if (global.restaurants[i].id === data) {
+          res = global.restaurants[i]
           break
         }
       }
       this.props.navigation.replace('Match', {
         restaurant: res,
-        host: this.state.host,
-        code: this.props.navigation.state.params.code,
-        isHost: this.state.isHost,
       })
     })
     socket.getSocket().once('leave', () => {
@@ -45,17 +41,24 @@ export default class Round extends React.Component {
   }
 
   likeRestaurant(resId) {
-    socket.likeRestaurant(this.props.navigation.state.params.code, resId)
+    socket.likeRestaurant(global.code, resId)
   }
 
   leaveGroup() {
-    socket.leaveRoom(this.props.navigation.state.params.code)
+    socket.leaveRoom(global.code)
+    global.code = ''
+    global.host = ''
+    global.isHost = false
     this.props.navigation.replace('Home')
   }
 
   endGroup() {
     this.setState({ leave: false })
-    socket.endRound(this.props.navigation.state.params.code)
+    socket.endRound(global.code)
+    global.code = ''
+    global.host = ''
+    global.isHost = false
+    global.restaurants = []
     this.props.navigation.replace('Home')
   }
 
@@ -65,7 +68,7 @@ export default class Round extends React.Component {
         <View style={{ flex: 1 }}>
           <Swiper
             ref={(deck) => (this.deck = deck)}
-            cards={this.state.results}
+            cards={global.restaurants}
             cardStyle={styles.card}
             cardIndex={0}
             renderCard={(card) => <RoundCard card={card} />}
@@ -73,23 +76,20 @@ export default class Round extends React.Component {
             disableBottomSwipe
             disableTopSwipe
             onSwiped={() => {
-              if (this.state.index !== this.state.results.length) {
+              if (this.state.index !== global.restaurants.length) {
                 this.setState({ index: this.state.index + 1 })
               }
             }}
             onSwipedRight={(cardIndex) => {
-              this.likeRestaurant(this.state.results[cardIndex].id)
+              this.likeRestaurant(global.restaurants[cardIndex].id)
             }}
             onSwipedAll={() => {
               //let backend know you're done
-              socket.finishedRound(this.props.navigation.state.params.code)
+              socket.finishedRound(global.code)
               socket.getSocket().off()
               //go to the loading page
               this.props.navigation.replace('Loading', {
-                restaurant: this.state.results,
-                host: this.state.host,
-                code: this.props.navigation.state.params.code,
-                isHost: this.state.isHost,
+                restaurants: this.props.navigation.state.params.results,
               })
             }}
             stackSeparation={0}
@@ -97,7 +97,7 @@ export default class Round extends React.Component {
             animateOverlayLabelsOpacity
           >
             <Text style={[screenStyles.text, styles.title, styles.topMargin]}>Get chews-ing!</Text>
-            {!this.state.isHost && (
+            {!global.isHost && (
               <TouchableHighlight
                 onPress={() => this.leaveGroup()}
                 style={[styles.leaveButton, styles.topMargin]}
@@ -109,7 +109,7 @@ export default class Round extends React.Component {
                 </View>
               </TouchableHighlight>
             )}
-            {this.state.isHost && (
+            {global.isHost && (
               <TouchableHighlight
                 onPress={() => this.setState({ leave: true })}
                 style={[styles.leaveButton, styles.topMargin]}
@@ -122,7 +122,7 @@ export default class Round extends React.Component {
               </TouchableHighlight>
             )}
             <Text style={[screenStyles.text, styles.topMargin, styles.restaurant]}>
-              Restaurant {this.state.index}/{this.state.results.length}
+              Restaurant {this.state.index}/{global.restaurants.length}
             </Text>
           </Swiper>
         </View>
@@ -149,7 +149,7 @@ export default class Round extends React.Component {
               onPress={() => this.deck.swipeLeft()}
               underlayColor="transparent"
               style={styles.background}
-              disabled={this.state.index > this.state.results.length}
+              disabled={this.state.index > global.restaurants.length}
             >
               <Feather name="x" style={[screenStyles.text, styles.x]} />
             </TouchableHighlight>
@@ -176,7 +176,7 @@ export default class Round extends React.Component {
               onPress={() => this.deck.swipeRight()}
               underlayColor="transparent"
               style={(styles.background, styles.swipeRight)}
-              disabled={this.state.index > this.state.results.length}
+              disabled={this.state.index > global.restaurants.length}
             >
               <Icon name="heart" style={[screenStyles.text, styles.heart]} />
             </TouchableHighlight>
@@ -198,10 +198,6 @@ export default class Round extends React.Component {
 }
 
 Round.propTypes = {
-  results: PropTypes.array,
-  host: PropTypes.string,
-  isHost: PropTypes.bool,
-  code: PropTypes.number,
   navigation: PropTypes.object,
 }
 
