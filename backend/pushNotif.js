@@ -1,5 +1,5 @@
 const { pool } = require('./config.js')
-const { hmset, hdel, hgetAll, redisClient, firebase } = require('./config.js')
+const { hmset, hdel, hgetAll, firebase } = require('./config.js')
 const messaging = firebase.messaging()
 const { Notifications } = require('./models.js')
 
@@ -7,7 +7,7 @@ const { Notifications } = require('./models.js')
 
 pool.connect((err, client, release) => {
   if (err) {
-    console.log(err)
+    console.error(err)
   }
   client.on('notification', (msg) => {
     const notif = JSON.parse(msg.payload)
