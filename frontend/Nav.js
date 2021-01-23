@@ -16,19 +16,24 @@ export default class TabBar extends React.Component {
   }
 
   componentDidMount() {
-    notifsApi
-      .getNotifs()
-      .then((res) => {
 
-        console.log("Notifs")
-        console.log(res.notifs)
+    if(this.props.cur === 'Notifs')
+    {
+      this.setState({notif: false})
+    }
+    // notifsApi
+    //   .getNotifs()
+    //   .then((res) => {
 
-        if( res.notifs.length > 0)
-        {
-          this.setState({notif: true})
-        }
+    //     console.log("Notifs")
+    //     console.log(res.notifs)
+
+    //     if( res.notifs.length > 0)
+    //     {
+    //       this.setState({notif: true})
+    //     }
       
-      })
+    //   })
   
   }
 
