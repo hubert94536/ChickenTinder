@@ -62,7 +62,7 @@ export default class Group extends React.Component {
 
     // listens if user is to be kicked
     socket.getSocket().once('kick', () => {
-      this.leaveGroup()
+      this.leaveGroup(false)
     })
 
     // listens for group updates
@@ -97,7 +97,11 @@ export default class Group extends React.Component {
     })
 
     socket.getSocket().once('leave', () => {
-      this.leaveGroup()
+      this.leaveGroup(true)
+    })
+
+    socket.getSocket().once('reselect', () => {
+      console.log('reselect')
     })
   }
 
@@ -151,9 +155,13 @@ export default class Group extends React.Component {
     memberRenderList.push(footer)
   }
 
-  leaveGroup() {
+  leaveGroup(end) {
     socket.getSocket().off()
-    socket.leaveRoom(global.code)
+    if (end) {
+      socket.endLeave()
+    } else {
+      socket.leaveRoom()
+    }
     global.code = ''
     global.host = ''
     global.isHost = false
@@ -310,7 +318,7 @@ export default class Group extends React.Component {
                   body="You will will not be able to return without an invite"
                   buttonAff="Yes"
                   height="20%"
-                  press={() => this.leaveGroup()}
+                  press={() => this.leaveGroup(false)}
                   cancel={() => this.cancelAlert()}
                 />
               )}
@@ -320,7 +328,7 @@ export default class Group extends React.Component {
                   body="You will not be able to return"
                   buttonAff="Yes"
                   height="20%"
-                  press={() => this.leaveGroup()}
+                  press={() => socket.endRound()}
                   cancel={() => this.cancelAlert()}
                 />
               )}
