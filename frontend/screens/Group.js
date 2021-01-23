@@ -321,7 +321,6 @@ export default class Group extends React.Component {
                     height: global.isHost ? 400 : 350,
                     zIndex: 30,
                     elevation: 30,
-                    height: this.state.hostName == this.state.myUsername ? 400 : 350,
                   }}
                 >
                   <FilterSelector
@@ -330,9 +329,7 @@ export default class Group extends React.Component {
                     handleUpdate={() => this.setUserSubmit()}
                     members={memberList}
                     ref={this.filterRef}
-                    code={this.state.code}
                     setBlur={(res) => this.setState({ blur: res })}
-                    setBlur={(res) => this.blur(res)}
                     code={global.code}
                     style={{ elevation: 31 }}
                   />
