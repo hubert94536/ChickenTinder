@@ -16,6 +16,7 @@ import PropTypes from 'prop-types'
 import Drawer from './Drawer.js'
 import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
+import global from '../../global.js'
 import GroupCard from '../cards/GroupCard.js'
 import ChooseFriends from '../modals/ChooseFriends.js'
 import FilterSelector from './Filter.js'
@@ -36,18 +37,15 @@ export default class Group extends React.Component {
     const members = this.props.navigation.state.params.response.members
     this.filterRef = React.createRef()
     this.state = {
-      myUsername: this.props.navigation.state.params.username,
       // Group data
       // Member Dictionary
       members: members,
 
       host: this.props.navigation.state.params.response.host,
-      hostName: members[this.props.navigation.state.params.response.host].username,
       // hostName: "NOT YOU",
       needFilters: Object.keys(members).filter((user) => !user.filters).length - 1,
 
       filters: {},
-      code: this.props.navigation.state.params.response.code,
 
       // UI state
       canStart: false,
@@ -59,17 +57,19 @@ export default class Group extends React.Component {
       endAlert: false,
       chooseFriends: false,
     }
-
+    console.log(members)
     this.updateMemberList()
 
     // listens if user is to be kicked
     socket.getSocket().once('kick', () => {
-      this.leaveGroup()
+      this.leaveGroup(false)
     })
 
     // listens for group updates
     socket.getSocket().on('update', (res) => {
       console.log('socket "update": ' + JSON.stringify(res))
+      global.host = res.members[res.host].username
+      global.code = res.code
       this.setState({
         members: res.members,
         host: res.host,
@@ -88,12 +88,8 @@ export default class Group extends React.Component {
     socket.getSocket().once('start', (restaurants) => {
       if (restaurants.length > 0) {
         socket.getSocket().off()
-        this.props.navigation.replace('Round', {
-          results: restaurants,
-          host: this.state.host,
-          isHost: this.state.hostName === this.state.myUsername,
-          code: this.state.code,
-        })
+        global.restaurants = restaurants
+        this.props.navigation.replace('Round')
       } else {
         console.log('group.js: no restaurants found')
         // need to handle no restaurants returned
@@ -101,7 +97,11 @@ export default class Group extends React.Component {
     })
 
     socket.getSocket().once('leave', () => {
-      this.leaveGroup()
+      this.leaveGroup(true)
+    })
+
+    socket.getSocket().once('reselect', () => {
+      console.log('reselect')
     })
   }
 
@@ -144,7 +144,7 @@ export default class Group extends React.Component {
       a.photo = this.state.members[user].photo
       a.filters = this.state.members[user].filters
       a.host = this.state.host
-      a.isHost = this.state.hostName == this.state.myUsername
+      a.isHost = global.isHost
       a.key = user
       memberList.push(a)
       a.f = false
@@ -155,17 +155,22 @@ export default class Group extends React.Component {
     memberRenderList.push(footer)
   }
 
-  leaveGroup() {
+  leaveGroup(end) {
     socket.getSocket().off()
-    socket.leaveRoom(this.state.code)
+    if (end) {
+      socket.endLeave()
+    } else {
+      socket.leaveRoom()
+    }
+    global.code = ''
+    global.host = ''
+    global.isHost = false
     this.props.navigation.replace('Home')
   }
 
   // shows proper alert based on if user is host
   cancelAlert() {
-    this.state.hostName === this.state.myUsername
-      ? this.setState({ endAlert: false })
-      : this.setState({ leaveAlert: false })
+    global.isHost ? this.setState({ endAlert: false }) : this.setState({ leaveAlert: false })
   }
 
   firstName(str) {
@@ -174,7 +179,7 @@ export default class Group extends React.Component {
   }
 
   copyToClipboard() {
-    Clipboard.setString(this.state.code.toString())
+    Clipboard.setString(global.code.toString())
   }
 
   render() {
@@ -195,13 +200,13 @@ export default class Group extends React.Component {
             }}
           >
             <Text style={styles.groupTitle}>
-              {this.state.hostName === this.state.myUsername
+              {global.isHost
                 ? 'Your Group'
                 : `${this.firstName(this.state.members[this.state.host].name)}'s Group`}
             </Text>
             <View style={styles.subheader}>
               <Text style={styles.pinText}>Group PIN: </Text>
-              <Text style={styles.codeText}>{this.state.code + ' '}</Text>
+              <Text style={styles.codeText}>{global.code + ' '}</Text>
               <TouchableOpacity
                 style={{
                   flexDirection: 'column',
@@ -296,7 +301,7 @@ export default class Group extends React.Component {
                         image={item.photo == '' ? 'https://via.placeholder.com/150' : item.photo}
                         filters={item.filters}
                         host={this.state.host}
-                        isHost={this.state.hostName == item.username}
+                        isHost={global.isHost}
                         key={item.key}
                         style={{ width: 170 }}
                       />
@@ -313,7 +318,7 @@ export default class Group extends React.Component {
                   body="You will will not be able to return without an invite"
                   buttonAff="Yes"
                   height="20%"
-                  press={() => this.leaveGroup()}
+                  press={() => this.leaveGroup(false)}
                   cancel={() => this.cancelAlert()}
                 />
               )}
@@ -323,7 +328,7 @@ export default class Group extends React.Component {
                   body="You will not be able to return"
                   buttonAff="Yes"
                   height="20%"
-                  press={() => this.leaveGroup()}
+                  press={() => socket.endRound()}
                   cancel={() => this.cancelAlert()}
                 />
               )}
@@ -336,14 +341,14 @@ export default class Group extends React.Component {
                 />
               )}
               <ChooseFriends
-                code={this.props.navigation.state.params.response.code}
+                code={global.code}
                 visible={this.state.chooseFriends}
                 members={memberList}
                 press={() => this.setState({ chooseFriends: false })}
               />
             </View>
           )}
-          objectHeight={this.state.hostName == this.state.myUsername ? 400 : 350}
+          objectHeight={global.isHost ? 400 : 350}
           offset={120}
           renderDrawerView={() => (
             <View>
@@ -352,7 +357,7 @@ export default class Group extends React.Component {
                   style={{
                     backgroundColor: 'white',
                     width: windowWidth,
-                    height: this.state.hostName == this.state.myUsername ? 400 : 350,
+                    height: global.isHost ? 400 : 350,
                     zIndex: 30,
                     elevation: 30,
                     // borderColor: colors.hex,
@@ -360,12 +365,12 @@ export default class Group extends React.Component {
                   }}
                 >
                   <FilterSelector
-                    host={this.state.host}
-                    isHost={this.state.hostName == this.state.myUsername}
+                    host={global.host}
+                    isHost={global.isHost}
                     handleUpdate={() => this.setUserSubmit()}
                     members={memberList}
                     ref={this.filterRef}
-                    code={this.state.code}
+                    code={global.code}
                     setBlur={(res) => this.blur(res)}
                     style={{ elevation: 31 }}
                   />
@@ -402,9 +407,7 @@ export default class Group extends React.Component {
                       fontSize: 11,
                     }}
                   >
-                    {this.state.myUsername === this.state.hostName
-                      ? 'Pull down for host menu'
-                      : 'Pull down to set filters'}
+                    {global.isHost ? 'Pull down for host menu' : 'Pull down to set filters'}
                   </Text>
                 </View>
               </View>
@@ -416,7 +419,7 @@ export default class Group extends React.Component {
             When everyone has submitted filters, the round will begin!
           </Text>
           <View>
-            {this.state.hostName === this.state.myUsername && (
+            {global.isHost && (
               <TouchableHighlight
                 underlayColor={colors.hex}
                 activeOpacity={1}
@@ -431,7 +434,7 @@ export default class Group extends React.Component {
                 <Text style={styles.buttonText}>Start Round</Text>
               </TouchableHighlight>
             )}
-            {this.state.hostName !== this.state.myUsername && (
+            {!global.isHost && (
               <TouchableHighlight
                 style={[
                   screenStyles.bigButton,
@@ -453,7 +456,7 @@ export default class Group extends React.Component {
             activeOpacity={1}
             onPress={() => {
               // console.log('left')
-              this.state.hostName === this.state.myUsername
+              global.isHost
                 ? this.setState({ endAlert: true })
                 : this.setState({ leaveAlert: true })
             }}
@@ -465,7 +468,7 @@ export default class Group extends React.Component {
                 this.state.leaveGroup ? { color: colors.hex } : { color: '#6A6A6A' },
               ]}
             >
-              {this.state.hostName === this.state.myUsername ? 'Cancel Group' : 'Leave Group'}
+              {global.isHost ? 'Cancel Group' : 'Leave Group'}
             </Text>
           </TouchableHighlight>
         </View>
@@ -485,7 +488,6 @@ export default class Group extends React.Component {
 Group.propTypes = {
   navigation: PropTypes.object,
   members: PropTypes.array,
-  host: PropTypes.string,
 }
 
 const styles = StyleSheet.create({

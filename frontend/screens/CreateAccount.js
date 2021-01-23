@@ -51,6 +51,11 @@ export default class createAccount extends React.Component {
       [EMAIL, this.state.email],
       [PHONE, this.state.phone],
     ])
+    global.username = this.state.username
+    global.name = this.state.name
+    global.photo = this.state.photo
+    global.email = this.state.email
+    global.phone = this.state.phone
     return accountsApi
       .createFBUser(
         this.state.name,
@@ -113,18 +118,10 @@ export default class createAccount extends React.Component {
         <Text style={[screenStyles.textBook, styles.mediumText]}>
           Finish setting up your account
         </Text>
-
-        {this.state.photo.includes('file') ? (
-          <Image
-            source={{
-              uri: this.state.photo,
-            }}
-            style={[screenStyles.avatar]}
-          />
-        ) : (
-          <Image source={this.state.photo} style={screenStyles.avatar} />
-        )}
-
+        <Image
+          source={{ uri: Image.resolveAssetSource(this.state.photo).uri }}
+          style={screenStyles.avatar}
+        />
         <Text style={[screenStyles.textBook, styles.fieldName, { marginTop: '5%' }]}>
           Display Name
         </Text>
