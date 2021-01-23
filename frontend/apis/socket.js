@@ -38,8 +38,14 @@ const joinRoom = (code) => {
   })
 }
 
-const leaveRoom = () => {
-  socket.emit('leave')
+// leaving during swiping round
+const leaveRound = () => {
+  socket.emit('leave round')
+}
+
+// leaving while forming a group
+const leaveGroup =() => {
+  socket.emit('leave group')
 }
 
 const kickUser = (uid) => {
@@ -104,7 +110,8 @@ export default {
   getSocket,
   joinRoom,
   kickUser,
-  leaveRoom,
+  leaveGroup,
+  leaveRound,
   likeRestaurant,
   sendInvite,
   startSession,
