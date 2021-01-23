@@ -233,9 +233,9 @@ export default class UserProfileView extends Component {
           </View>
 
           <TabBar
-            goHome={() => this.props.navigation.navigate('Home')}
-            goSearch={() => this.props.navigation.navigate('Search')}
-            goNotifs={() => this.props.navigation.navigate('Notifications')}
+            goHome={() => this.props.navigation.replace('Home')}
+            goSearch={() => this.props.navigation.replace('Search')}
+            goNotifs={() => this.props.navigation.replace('Notifications')}
             goProfile={() => {}}
             cur="Profile"
           />
