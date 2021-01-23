@@ -47,7 +47,7 @@ export default class EditProfile extends React.Component {
   //remove whitespaces before and after name and username
   finalCheck() {
     if (!this.state.validNameFormat || !this.state.validUsernameFormat) {
-      this.props.dontSave()
+      return
     }
 
     let trimmedName = this.state.nameValue
