@@ -1,12 +1,38 @@
 import React from 'react'
-import { Dimensions, StyleSheet, TouchableHighlight, View } from 'react-native'
+import { Dimensions, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import colors from '../styles/colors.js'
+import notifsApi from './apis/notificationsApi.js'
 
 const height = Dimensions.get('window').height
 
 export default class TabBar extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      notif: false
+    }
+  }
+
+  componentDidMount() {
+    notifsApi
+      .getNotifs()
+      .then((res) => {
+
+        console.log("Notifs")
+        console.log(res.notifs)
+
+        if( res.notifs.length > 0)
+        {
+          this.setState({notif: true})
+        }
+      
+      })
+  
+  }
+
+  
   render() {
     return (
       <View style={styles.bar}>
@@ -35,10 +61,25 @@ export default class TabBar extends React.Component {
           style={{ width: '10%' }}
           underlayColor="transparent"
         >
+          <View style = {{flexDirection: 'column'}}>
+
+            
           <Icon
             name="bullhorn"
             style={{ color: this.props.cur === 'Notifs' ? colors.hex : '#8d8d8d', fontSize: 26 }}
           />
+
+        {this.state.notif && (
+          // <Text style={{ color: 'red', fontSize: 26, position: 'absolute', textAlign: 'left', alignSelf: 'flex-end'}}>*</Text>
+
+          <Icon
+            name="circle"
+            style={{ color: colors.hex, fontSize: 14, position: 'absolute', textAlign: 'left', alignSelf: 'flex-end'}}
+          />
+        )}
+
+          
+        </View>
         </TouchableHighlight>
         <TouchableHighlight
           onPress={() => this.props.goProfile()}

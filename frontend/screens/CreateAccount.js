@@ -1,10 +1,10 @@
 import React from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { EMAIL, NAME, PHOTO, USERNAME, PHONE } from 'react-native-dotenv'
-import { Image, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableHighlight, View,  } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { EMAIL, NAME, PHOTO, USERNAME, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
+import { Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
 import accountsApi from '../apis/accountsApi.js'
+import notificationsApi from '../apis/notificationsApi.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import defImages from '../assets/images/defImages.js'
@@ -59,6 +59,8 @@ export default class createAccount extends React.Component {
         this.state.photo,
         this.state.phone,
       )
+      .then(() => AsyncStorage.getItem(REGISTRATION_TOKEN))
+      .then((token) => notificationsApi.linkToken(token))
       .then(() => {
         socket.connect()
         this.props.navigation.replace('Home')
@@ -103,8 +105,7 @@ export default class createAccount extends React.Component {
 
   render() {
     return (
-      <View style={[screenStyles.mainContainer]}
-      behavior="padding">
+      <View style={[screenStyles.mainContainer]}>
         <Text style={[screenStyles.textBold, screenStyles.title, styles.title]}>
           Create Account
         </Text>
@@ -129,7 +130,6 @@ export default class createAccount extends React.Component {
         </Text>
         <TextInput
           style={[screenStyles.textBook, styles.fieldText]}
-          underlineColorAndroid="transparent"
           textAlign="left"
           onChangeText={(name) => {
             this.setState({ name })
@@ -146,14 +146,12 @@ export default class createAccount extends React.Component {
             { marginBottom: this.state.validUsername ? '3%' : '0%' },
           ]}
           textAlign="left"
-          underlineColorAndroid="transparent"
           onChangeText={(username) => {
             this.setState({ username: username.split(' ').join('_') })
           }}
           onBlur={() => this.checkUsernameValidity()}
           value={this.state.username}
           maxLength={15}
-
         />
 
         {!this.state.validUsername && (
@@ -163,15 +161,12 @@ export default class createAccount extends React.Component {
         <Text style={[screenStyles.textBook, styles.fieldName]}>Phone Number</Text>
         <TextInput
           style={[screenStyles.textBook, styles.fieldText]}
-          underlineColorAndroid="transparent"
           textAlign="left"
           onChangeText={(phone) => {
             this.setState({ phone })
           }}
           value={this.state.phone}
         />
-
-        
 
         <Text style={[screenStyles.textBook, styles.fieldName]}>Email</Text>
         <TextInput
@@ -180,7 +175,6 @@ export default class createAccount extends React.Component {
             styles.fieldText,
             { marginBottom: this.state.validEmail && this.state.validEmailFormat ? '3%' : '0%' },
           ]}
-          underlineColorAndroid="transparent"
           textAlign="left"
           onChangeText={(email) => {
             this.setState({ email: email })
@@ -243,13 +237,6 @@ const styles = StyleSheet.create({
   fieldText: {
     fontSize: normalize(18),
     color: textColor,
-    marginHorizontal: '12%',
-    marginBottom: '3%',
-    paddingVertical: '1%',
-    borderBottomColor: textColor,
-    borderBottomWidth: 1,
-  },
-  fieldBorder: {
     marginHorizontal: '12%',
     marginBottom: '3%',
     paddingVertical: '1%',

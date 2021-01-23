@@ -20,7 +20,7 @@ import socket from './frontend/apis/socket.js'
 import TopThree from './frontend/screens/TopThree.js'
 import UserProfileView from './frontend/screens/Profile.js'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { ID, REGISTRATION_TOKEN } from 'react-native-dotenv'
+import { UID, REGISTRATION_TOKEN } from 'react-native-dotenv'
 
 export default class App extends React.Component {
   constructor() {
@@ -35,7 +35,7 @@ export default class App extends React.Component {
         console.log("Token generated")
         console.log(token);
         AsyncStorage.setItem(REGISTRATION_TOKEN, token.token)
-        AsyncStorage.getItem(ID).then((id) => {
+        AsyncStorage.getItem(UID).then((id) => {
           //send to back-end server to register with id
           if (id) notificationsApi.linkToken(token.token); 
         })
