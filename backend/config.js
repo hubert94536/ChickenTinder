@@ -39,4 +39,4 @@ firebase.initializeApp({
   databaseURL: 'https://wechews-83255.firebaseio.com',
 })
 
-module.exports = { firebase, hdel, hgetAll, hmset, pool, sendCommand, sequelize }
+module.exports = { firebase, redisClient, hdel, hgetAll, hmset, pool, sendCommand, sequelize }
