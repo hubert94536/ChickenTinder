@@ -32,14 +32,14 @@ export default class EditProfile extends React.Component {
 
   changeUser(text) {
     this.setState({ usernameValue: text }, () => {
-      this.validateString()
+      this.validateUsername()
     })
     this.props.userChange(text)
   }
 
   changeName(text) {
     this.setState({ nameValue: text }, () => {
-      this.validateString()
+      this.validateName()
     })
     this.props.nameChange(text)
   }
@@ -47,19 +47,13 @@ export default class EditProfile extends React.Component {
   //remove whitespaces before and after name and username
   finalCheck() {
     if (!this.state.validNameFormat || !this.state.validUsernameFormat) {
-      this.props.dontSave()
+      return
     }
 
     let trimmedName = this.state.nameValue
     trimmedName = trimmedName.trimStart().trimEnd()
 
     let trimmedUser = this.state.usernameValue
-    while (trimmedUser.endsWith('_')) {
-      trimmedUser = trimmedUser.slice(0, -1)
-    }
-    while (trimmedUser.startsWith('_')) {
-      trimmedUser = trimmedUser.slice(1)
-    }
 
     this.setState({ nameValue: trimmedName, usernameValue: trimmedUser }, () => {
       this.props.makeChanges() //must use callback in setState or states won't update properly
@@ -69,17 +63,31 @@ export default class EditProfile extends React.Component {
     this.props.userChange(trimmedUser)
   }
 
-  validateString() {
-    const regex = /^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){0,13}[a-zA-Z0-9]$/
-    if (!regex.test(this.state.nameValue)) {
-      this.setState({ validNameFormat: false })
-    } else {
-      this.setState({ validNameFormat: true })
-    }
+  validateUsername() {
+    /*regex expression: 
+    - alphanumeric characters (lowercase or uppercase), dot (.), underscore (_), hyphen(-)
+    - must not start or end with space
+    - 2-15 characters
+    */
+    const regex = /^[a-zA-Z0-9._\-]([._\-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._\-]$/
     if (!regex.test(this.state.usernameValue)) {
       this.setState({ validUsernameFormat: false })
     } else {
       this.setState({ validUsernameFormat: true })
+    }
+  }
+
+  validateName() {
+    /*regex expression: 
+    - alphanumeric characters (lowercase or uppercase), dot (.), underscore (_), hyphen(-), space( )
+    - must not start or end with space
+    - 2-15 characters
+    */
+    const regex = /^[a-zA-Z0-9._\-]([ ._\-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._\-]$/
+    if (!regex.test(this.state.nameValue)) {
+      this.setState({ validNameFormat: false })
+    } else {
+      this.setState({ validNameFormat: true })
     }
   }
 
