@@ -57,42 +57,25 @@ export default class Location extends Component {
       .send(lookup)
       .then((res) => {
         console.log(JSON.stringify(res.lookups[0].result[0]))
-        if (res.lookups[0].result[0].valid) {
+        let result = res.lookups[0].result[0]
+        if (result.valid) {
           // console.log('valid zip: ' + this.state.zip.toString())
-          fetch(
-            'https://public.opendatasoft.com/api/records/1.0/search/?dataset=us-zip-code-latitude-and-longitude&rows=1&q=' +
-              this.state.zip.toString(),
-          )
-            .then((res) => {
-              res.json().then((data) => {
-                if (data.nhits != 0) {
-                  let result = data.records[0].fields
-                  // console.log(JSON.stringify(result))
-                  this.setState({
-                    zipValid: true,
-                    city: result.city,
-                    location: {
-                      latitude: result.geopoint[0],
-                      longitude: result.geopoint[1],
-                    },
-                  })
-                  let newRegion = {
-                    latitude: result.geopoint[0],
-                    longitude: result.geopoint[1],
-                    latitudeDelta: this.state.distance / 60 + 0.3,
-                    longitudeDelta: this.state.distance / 60 + 0.3,
-                  }
-                  this.mapView.current.animateToRegion(newRegion, 3000)
-                } else {
-                  console.log('0 hits')
-                  this.setState({ zipValid: false })
-                }
-              })
-            })
-            .catch((error) => {
-              console.error(error)
-              this.setState({ zipValid: false })
-            })
+          let data = result.zipcodes[0]
+          this.setState({
+            zipValid: true,
+            city: result.city,
+            location: {
+              latitude: data.latitude,
+              longitude: data.longitude,
+            },
+          })
+          let newRegion = {
+            latitude: data.latitude,
+            longitude: data.longitude,
+            latitudeDelta: this.state.distance / 60 + 0.3,
+            longitudeDelta: this.state.distance / 60 + 0.3,
+          }
+          this.mapView.current.animateToRegion(newRegion, 3000)
         } else {
           this.setState({ zipValid: false })
           console.log('false')
