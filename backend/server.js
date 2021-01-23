@@ -2,11 +2,8 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const http = require('http')
 const io = require('socket.io')()
-const socketAuth = require('socketio-auth')
-const _ = require('underscore')
 const accounts = require('./accountsQueries.js')
 const auth = require('./auth.js')
-const { hmset } = require('./config.js')
 const friends = require('./friendsQueries.js')
 const notifications = require('./notifsQueries.js')
 const schema = require('./schema.js')
@@ -17,41 +14,6 @@ const server = http.createServer(app)
 
 io.attach(server)
 require('./socketEvents.js')(io)
-
-// removes socket client from each namespace until authentication
-_.each(io.nsps, function (nsp) {
-  nsp.on('connect', function (socket) {
-    delete nsp.connected[socket.id]
-  })
-})
-
-socketAuth(io, {
-  authenticate: async (socket, data, callback) => {
-    const { token } = data
-    try {
-      // verify token passed in authentication
-      const user = await auth.verifySocket(token)
-      socket.user = user
-      return callback(null, true)
-    } catch (err) {
-      return callback({ message: 'UNAUTHORIZED' })
-    }
-  },
-  postAuthenticate: async (socket) => {
-    try {
-      // reconnect socket client to each namespace
-      _.each(io.nsps, function (nsp) {
-        if (_.findWhere(nsp.sockets, { id: socket.id })) {
-          nsp.connected[socket.id] = socket
-        }
-      })
-      // associate uid to socket id
-      await hmset(`users:${socket.user.uid}`, 'client', socket.id)
-    } catch (err) {
-      console.log(err)
-    }
-  },
-})
 
 var PORT = process.env.PORT || 5000
 
@@ -117,9 +79,7 @@ app
   .post(auth.authenticate, pushNotif.linkToken)
   .delete(auth.authenticate, pushNotif.unlinkToken)
 
-app
-  .route('/notifications/test')
-  .post(pushNotif.testNotif)
+app.route('/notifications/test').post(pushNotif.testNotif)
 
 server.listen(PORT, () => {
   console.log(`App running on port ${PORT}.`)

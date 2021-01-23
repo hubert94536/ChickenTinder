@@ -24,32 +24,10 @@ export default class GroupCard extends React.Component {
     return (
       <View style={styles.card}>
         <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-          {this.props.image.includes('file') || this.props.image.includes('http') ? (
-            <Image
-              source={{
-                uri: this.props.image,
-              }}
-              style={[
-                styles.image,
-                this.props.filters || this.props.isHost
-                  ? imgStyles.hexBorder
-                  : imgStyles.greyBorder,
-              ]}
-            />
-          ) : (
-            <Image
-              source={this.props.image}
-              style={[
-                styles.image,
-                this.props.filters || this.props.isHost
-                  ? imgStyles.hexBorder
-                  : imgStyles.greyBorder,
-              ]}
-            />
-          )}
-          {this.props.filters || this.props.isHost ? (
-            <Icon name="check-circle" style={[imgStyles.hex, styles.icon]} />
-          ) : null}
+          <Image
+            source={{ uri: Image.resolveAssetSource(this.props.image).uri }}
+            style={[styles.image, this.props.filters ? imgStyles.hexBorder : imgStyles.greyBorder]}
+          />
         </View>
 
         <View style={styles.none}>

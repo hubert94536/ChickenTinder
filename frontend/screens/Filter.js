@@ -18,6 +18,7 @@ import TagsView from '../TagsView.js'
 import DynamicTags from '../TagsViewGenerator.js'
 import BackgroundButton from '../BackgroundButton.js'
 import colors from '../../styles/colors.js'
+import global from '../../global.js'
 import Location from '../modals/ChooseLocation.js'
 import Time from '../modals/ChooseTime.js'
 import Size from '../modals/ChooseSize.js'
@@ -216,8 +217,8 @@ export default class FilterSelector extends React.Component {
 
   // this will pass the filters to the groups page
   handlePress(setFilters) {
-    if (this.props.isHost) {
-      Socket.startSession(this.props.code, setFilters)
+    if (global.isHost) {
+      Socket.startSession(setFilters)
     }
   }
 
@@ -235,7 +236,6 @@ export default class FilterSelector extends React.Component {
       const timezone = date.getTimezoneOffset()
       unix = Date.UTC(yyyy, mm, dd, this.state.hour, this.state.minute + timezone) / 1000
     }
-    console.log(unix)
     filters.open_at = unix
     filters.price = this.state.selectedPrice.map((item) => item.length).sort().toString()
     // puts the cuisine and restrictions into one array
@@ -273,7 +273,7 @@ export default class FilterSelector extends React.Component {
     const selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
     filters.categories = this.categorize(selections)
     console.log('userfilters: ' + JSON.stringify(filters.categories))
-    Socket.submitFilters(this.props.code, filters.categories)
+    Socket.submitFilters(filters.categories)
     this.props.handleUpdate()
   }
 
@@ -291,7 +291,7 @@ export default class FilterSelector extends React.Component {
       <View style={styles.mainContainer}>
 
         {/* Title */}
-        {this.props.isHost && (
+        {global.isHost && (
           <View style={styles.titles}>
             <View style={styles.titleContainer}>
               <Text
@@ -317,7 +317,7 @@ export default class FilterSelector extends React.Component {
             </View>
           </View>
         )}
-        {!this.props.isHost && (
+        {!global.isHost && (
           <View style={
             styles.titleContainer,
             {
@@ -338,13 +338,13 @@ export default class FilterSelector extends React.Component {
         )}
         <Swiper
           loop={false}
-          showsPagination={this.props.isHost}
+          showsPagination={global.isHost}
           activeDotColor={ACCENT_COLOR}
           paginationStyle={{ bottom: -10 }}
           onIndexChanged={(index) => this.setState({ swiperIndex: index })}
           disableScrollViewPanResponder={true}
         >
-          {this.props.isHost && (
+          {global.isHost && (
             <View style={styles.swiperContainer}>
               {/* TODO: Update Buttom Label */}
               {/* Majority Rule */}
@@ -648,12 +648,9 @@ export default class FilterSelector extends React.Component {
 }
 
 FilterSelector.propTypes = {
-  host: PropTypes.string,
-  isHost: PropTypes.bool,
   handleUpdate: PropTypes.func,
   setBlur: PropTypes.func,
   members: PropTypes.array,
-  code: PropTypes.number,
 }
 
 const styles = StyleSheet.create({

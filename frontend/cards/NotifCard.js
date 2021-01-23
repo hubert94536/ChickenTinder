@@ -64,17 +64,10 @@ export default class NotifCard extends React.Component {
     return (
       <TouchableWithoutFeedback onPress={() => this.handleHold()}>
         <View style={styles.container}>
-          {this.props.image.includes('file') || this.props.image.includes('http') ? (
-            <Image
-              source={{
-                uri: this.props.image,
-              }}
-              style={imgStyles.button}
-            />
-          ) : (
-            <Image source={this.props.image} style={imgStyles.button} />
-          )}
-
+          <Image
+            source={{ uri: Image.resolveAssetSource(this.props.image).uri }}
+            style={imgStyles.button}
+          />
           <View style={styles.notif}>
             {this.props.type == 'invited' && (
               <Text style={[imgStyles.font, styles.text]}>

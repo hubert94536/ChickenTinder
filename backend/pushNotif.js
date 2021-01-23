@@ -1,19 +1,19 @@
 const { pool } = require('./config.js')
-const { hmset, hdel, hgetAll, redisClient, firebase } = require('./config.js')
-const messaging = firebase.messaging();
+const { hmset, hdel, hgetAll, firebase } = require('./config.js')
+const messaging = firebase.messaging()
 const { Notifications } = require('./models.js')
 
 // TODO: Remove debugging code when done
 
 pool.connect((err, client, release) => {
   if (err) {
-    console.log(err)
+    console.error(err)
   }
   client.on('notification', (msg) => {
     const notif = JSON.parse(msg.payload)
-    sendNotification(notif);
+    sendNotification(notif)
   })
-  client.query('LISTEN notifications');
+  client.query('LISTEN notifications')
 })
 
 const sendNotification = async (notif) => {
@@ -21,25 +21,24 @@ const sendNotification = async (notif) => {
     console.log(notif)
     const user = await hgetAll(`users:${notif.receiver_uid}`)
     // only send notification if user exists or regtoken is attached to the user
-    if (user && user.regtoken){
-      console.log("send notification")
+    if (user && user.regtoken) {
+      console.log('send notification')
       const message = {
         data: {
-            type: JSON.stringify(notif.type),
-            content: JSON.stringify(notif.content), 
-            name: JSON.stringify(notif.name),
-            username: JSON.stringify(notif.username), 
-            photo: JSON.stringify(notif.photo)
+          type: JSON.stringify(notif.type),
+          content: JSON.stringify(notif.content),
+          name: JSON.stringify(notif.name),
+          username: JSON.stringify(notif.username),
+          photo: JSON.stringify(notif.photo),
         },
-        token: user.regtoken
+        token: user.regtoken,
       }
-      messaging.send(message);
+      messaging.send(message)
     }
   } catch (error) {
     console.log(error)
   }
 }
-
 
 // associate regtoken with id
 // called on login / if ID is in async storage when App.js is (re)loaded
@@ -48,9 +47,9 @@ const linkToken = async (req, res) => {
     console.log(req.authId)
     await hmset(`users:${req.authId}`, 'regtoken', req.body.token)
     console.log(`${req.authId} linked to ${req.body.token}`)
-    return res.status(200).send("linked");
+    return res.status(200).send('linked')
   } catch (error) {
-    return res.sendStatus(500);
+    return res.sendStatus(500)
   }
 }
 
@@ -61,9 +60,9 @@ const unlinkToken = async (req, res) => {
     console.log(req.authId)
     await hdel(`users:${req.authId}`, 'regtoken')
     console.log(`${req.authId} unlinked`)
-    return res.status(200).send("unlinked");
+    return res.status(200).send('unlinked')
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).send(error.message)
   }
 }
 
@@ -73,18 +72,17 @@ const unlinkToken = async (req, res) => {
 // currently supported types: 'invite', 'pending', 'friends'
 // testing path: '/notifications/test' via POST request
 const testNotif = (req, res) => {
-  try{
+  try {
     Notifications.create({
       receiver_id: req.body.id,
       type: req.body.type,
-      content: "message",
-      sender_id: req.body.id
+      content: 'message',
+      sender_id: req.body.id,
     })
-    return res.status(200).send("test sent");
+    return res.status(200).send('test sent')
   } catch (error) {
-    return res.status(500).send(error.message);
-
+    return res.status(500).send(error.message)
   }
 }
 
-module.exports = { linkToken, unlinkToken, testNotif };
+module.exports = { linkToken, unlinkToken, testNotif }
