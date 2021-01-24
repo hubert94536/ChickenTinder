@@ -196,7 +196,15 @@ export default class UserProfileView extends Component {
   }
 
   render() {
-    const { numFriends, visible, edit, logoutAlert, deleteAlert, errorAlert, takenAlert } = this.state
+    const {
+      numFriends,
+      visible,
+      edit,
+      logoutAlert,
+      deleteAlert,
+      errorAlert,
+      takenAlert,
+    } = this.state
 
     return (
       <View style={[screenStyles.mainContainer]}>
@@ -254,8 +262,8 @@ export default class UserProfileView extends Component {
             close={() => this.setState({ visible: false })}
             delete={() => this.handleDelete()}
             logout={() => this.handleLogout()}
-            logoutAlert={() => this.setState({ logoutAlert: true})}
-            deleteAlert={() => this.setState({ deleteAlert: true})}
+            logoutAlert={() => this.setState({ logoutAlert: true })}
+            deleteAlert={() => this.setState({ deleteAlert: true })}
           />
 
           {edit && (
@@ -268,30 +276,30 @@ export default class UserProfileView extends Component {
           )}
 
           {logoutAlert && (
-              <Alert
-                title="Log out"
-                body="Are you sure you want to log out?"
-                buttonAff="Logout"
-                buttonNeg="Go back"
-                height="25%"
-                twoButton
-                press={() => this.handleLogout()}
-                cancel={() => this.setState({ logoutAlert: false, visible: true})}
-              />
+            <Alert
+              title="Log out"
+              body="Are you sure you want to log out?"
+              buttonAff="Logout"
+              buttonNeg="Go back"
+              height="25%"
+              twoButton
+              press={() => this.handleLogout()}
+              cancel={() => this.setState({ logoutAlert: false, visible: true })}
+            />
           )}
 
           {deleteAlert && (
-                <Alert
-                  title="Delete account?"
-                  body="By deleting your account, you will lose all of your data"
-                  buttonAff="Delete"
-                  buttonNeg="Go back"
-                  twoButton
-                  height="25%"
-                  press={() => this.handleDelete()}
-                  cancel={() => this.cancelDelete()}
-                />
-            )}
+            <Alert
+              title="Delete account?"
+              body="By deleting your account, you will lose all of your data"
+              buttonAff="Delete"
+              buttonNeg="Go back"
+              twoButton
+              height="25%"
+              press={() => this.handleDelete()}
+              cancel={() => this.cancelDelete()}
+            />
+          )}
 
           {errorAlert && (
             <Alert

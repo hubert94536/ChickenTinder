@@ -161,7 +161,7 @@ export default class Group extends React.Component {
     if (end) {
       socket.endLeave()
     }
-    // normal user leaves 
+    // normal user leaves
     else {
       socket.leaveGroup()
     }

@@ -118,7 +118,7 @@ export default class Settings extends React.Component {
               onShowUnderlay={() => this.setState({ logout: true })}
               onHideUnderlay={() => this.setState({ logout: false })}
               onPress={() => {
-                this.setState({ logout: false}, () => {
+                this.setState({ logout: false }, () => {
                   this.props.close()
                   this.props.logoutAlert()
                 })

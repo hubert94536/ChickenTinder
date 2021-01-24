@@ -33,13 +33,13 @@ export default class Alert extends Component {
     return (
       <View>
         <Text />
-        { this.props.blur &&( 
+        {this.props.blur && (
           <BlurView
-              blurType="light"
-              blurAmount={20}
-              reducedTransparencyFallbackColor="white"
-              style={modalStyles.blur}
-            />
+            blurType="light"
+            blurAmount={20}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
         )}
         <Modal transparent animationType="none" visible={this.props.visible}>
           <View style={[modalStyles.modal, { height: this.props.height }]}>
