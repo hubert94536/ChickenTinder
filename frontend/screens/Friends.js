@@ -1,4 +1,7 @@
 import React from 'react'
+import { bindActionCreators } from 'redux'
+import { changeFriends, hideError, hideRefresh, showError, showRefresh } from '../redux/Actions.js'
+import { connect } from 'react-redux'
 import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
 import PropTypes from 'prop-types'
 import { SearchBar } from 'react-native-elements'
@@ -14,12 +17,11 @@ const sleep = (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds))
 }
 
-export default class Friends extends React.Component {
+class Friends extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       search: '',
-      errorAlert: false,
       data: [], // array for friends
       friends: [], // array of Profile components
       isFriends: this.props.isFriends, // For rendering friends (true) or requests (false)
@@ -41,7 +43,12 @@ export default class Friends extends React.Component {
           }
         }
         //  need two so when you search it doesn't get rid of all the friends
-        this.setState({ friends: pushFriends, data: pushFriends, refreshing: false })
+        this.setState({
+          friends: pushFriends,
+          data: pushFriends,
+          refreshing: false,
+          friendsApiCalled: true,
+        })
       })
       .catch(() => this.setState({ errorAlert: true }))
       .then(() => {
@@ -66,10 +73,10 @@ export default class Friends extends React.Component {
     friendsApi
       .removeFriendship(friend)
       .then(() => {
-        this.setState({ friends: newArr })
+        this.setState({ friends: newArr, data: newArr })
       })
       .catch(() => {
-        this.setState({ errorAlert: true })
+        this.props.showError()
       })
   }
 
@@ -132,13 +139,13 @@ export default class Friends extends React.Component {
             >
               {friends}
             </ScrollView>
-            {this.state.errorAlert && (
+            {this.props.error.error && (
               <Alert
                 title="Error, please try again"
                 buttonAff="Close"
                 height="20%"
-                press={() => this.setState({ errorAlert: false })}
-                cancel={() => this.setState({ errorAlert: false })}
+                press={() => this.props.hideError()}
+                cancel={() => this.props.hideError()}
               />
             )}
           </View>
@@ -157,9 +164,38 @@ export default class Friends extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  const { error } = state
+  const { refresh } = state
+  const { friends } = state
+  return { error, refresh, friends }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      showError,
+      hideError,
+      showRefresh,
+      hideRefresh,
+      changeFriends,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(Friends)
+
 Friends.propTypes = {
   isFriends: PropTypes.bool,
   onFriendsChange: PropTypes.func,
+  error: PropTypes.object,
+  friends: PropTypes.object,
+  refresh: PropTypes.object,
+  showError: PropTypes.func,
+  hideError: PropTypes.func,
+  showRefresh: PropTypes.func,
+  hideRefresh: PropTypes.func,
+  changeFriends: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

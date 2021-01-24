@@ -1,4 +1,7 @@
 import React, { Component } from 'react'
+import { bindActionCreators } from 'redux'
+import { changeFriends, hideError, hideRefresh, showError, showRefresh } from '../redux/Actions.js'
+import { connect } from 'react-redux'
 import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native'
 import { USERNAME } from 'react-native-dotenv'
 import { BlurView } from '@react-native-community/blur'
@@ -14,7 +17,7 @@ import TabBar from '../Nav.js'
 
 var username = ''
 
-export default class Search extends Component {
+class Search extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -162,8 +165,37 @@ export default class Search extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  const { error } = state
+  const { refresh } = state
+  const { friends } = state
+  return { error, refresh, friends }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      showError,
+      hideError,
+      showRefresh,
+      hideRefresh,
+      changeFriends,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(Search)
+
 Search.propTypes = {
   navigation: PropTypes.object,
+  error: PropTypes.object,
+  refresh: PropTypes.object,
+  friends: PropTypes.object,
+  showError: PropTypes.func,
+  showRefresh: PropTypes.func,
+  hideError: PropTypes.func,
+  hideRefresh: PropTypes.func,
+  changeFriends: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

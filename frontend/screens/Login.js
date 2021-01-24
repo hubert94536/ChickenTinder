@@ -1,4 +1,7 @@
 import React from 'react'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { hideError, showError } from '../redux/Actions.js'
 import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
@@ -9,13 +12,12 @@ import screenStyles from '../../styles/screenStyles.js'
 import normalize from '../../styles/normalize.js'
 import PropTypes from 'prop-types'
 
-export default class Login extends React.Component {
+class Login extends React.Component {
   constructor() {
     super()
     this.state = {
       pressed: false,
       alert: false,
-      errorAlert: false,
     }
   }
 
@@ -27,7 +29,7 @@ export default class Login extends React.Component {
         this.props.navigation.replace(result)
       })
       .catch(() => {
-        this.setState({ errorAlert: true })
+        this.props.showError()
       })
   }
 
@@ -103,13 +105,13 @@ export default class Login extends React.Component {
             cancel={() => this.cancelClick()}
           />
         )}
-        {this.state.errorAlert && (
+        {this.props.error.error && (
           <Alert
             title="Error, please try again"
             buttonAff="Close"
             height="20%"
-            press={() => this.setState({ errorAlert: false })}
-            cancel={() => this.setState({ errorAlert: false })}
+            press={() => this.props.hideError()}
+            cancel={() => this.props.hideError()}
           />
         )}
       </View>
@@ -117,11 +119,30 @@ export default class Login extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  const { error } = state
+  return { error }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      showError,
+      hideError,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)
+
 Login.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
     replace: PropTypes.func,
   }).isRequired,
+  error: PropTypes.object,
+  showError: PropTypes.func,
+  hideError: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

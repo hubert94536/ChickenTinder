@@ -5,6 +5,7 @@ import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
 import firebase from 'firebase'
 import PushNotification from 'react-native-push-notification'
+import PropTypes from 'prop-types'
 import CreateAccount from './frontend/screens/CreateAccount.js'
 import global from './global.js'
 import Group from './frontend/screens/Group.js'
@@ -23,7 +24,11 @@ import UserProfileView from './frontend/screens/Profile.js'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { UID, NAME, USERNAME, PHOTO, EMAIL, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
 
-export default class App extends React.Component {
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { changeName, changeUsername, changeImage } from './frontend/redux/Actions.js'
+
+class App extends React.Component {
   constructor() {
     super()
     this.state = {
@@ -32,9 +37,9 @@ export default class App extends React.Component {
     }
 
     AsyncStorage.multiGet([USERNAME, NAME, PHOTO, EMAIL, PHONE]).then((res) => {
-      global.username = res[0][1]
-      global.name = res[1][1]
-      global.photo = res[2][1]
+      this.props.changeUsername(res[0][1])
+      this.props.changeName(res[1][1])
+      this.props.changeImage(res[2][1])
       global.email = res[3][1]
       global.phone = res[4][1]
     })
@@ -140,8 +145,39 @@ export default class App extends React.Component {
   }
 
   render() {
-    return this.state.appContainer
+    return (
+      // <Provider store={store}>{this.state.appContainer}</Provider>
+      this.state.appContainer
+    )
   }
+}
+
+const mapStateToProps = (state) => {
+  const { name } = state
+  const { username } = state
+  const { image } = state
+  return { name, username, image }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      changeName,
+      changeUsername,
+      changeImage,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
+
+App.propTypes = {
+  name: PropTypes.object,
+  username: PropTypes.object,
+  image: PropTypes.object,
+  changeName: PropTypes.func,
+  changeUsername: PropTypes.func,
+  changeImage: PropTypes.func,
 }
 
 /*

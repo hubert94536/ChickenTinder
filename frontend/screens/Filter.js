@@ -1,5 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React from 'react'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux';
 import {
   PermissionsAndroid,
   StyleSheet,
@@ -10,6 +12,7 @@ import {
 } from 'react-native'
 // import { BlurView } from '@react-native-community/blur'
 import Geolocation from 'react-native-geolocation-service'
+import { hideError, showError } from '../redux/Actions.js'
 import PropTypes from 'prop-types'
 import Slider from '@react-native-community/slider'
 import Swiper from 'react-native-swiper'
@@ -78,7 +81,7 @@ const requestLocationPermission = async () => {
 
 const date = new Date()
 
-export default class FilterSelector extends React.Component {
+class FilterSelector extends React.Component {
   constructor(props) {
     super(props)
     const date = new Date()
@@ -110,7 +113,6 @@ export default class FilterSelector extends React.Component {
       chooseTime: false,
 
       // ALERTS
-      errorAlert: false,
       locationAlert: false,
 
       // SWIPER
@@ -579,20 +581,20 @@ export default class FilterSelector extends React.Component {
             visible={this.state.locationAlert}
           />
         )}
-        {this.state.errorAlert && (
+        {this.props.error.error && (
           <Alert
             title="Error, please try again"
             buttonAff="Close"
             height="20%"
             press={() => {
-              this.setState({ errorAlert: false })
+              this.props.hideError()
               this.props.setBlur(false)
             }}
             cancel={() => {
-              this.setState({ errorAlert: false })
+              this.props.hideError()
               this.props.setBlur(false)
             }}
-            visible={this.state.errorAlert}
+            visible={this.props.error.error}
           />
         )}
 
@@ -662,10 +664,26 @@ export default class FilterSelector extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  const { error } = state
+  return { error }
+};
+
+const mapDispatchToProps = dispatch => (
+  bindActionCreators({
+    showError, hideError
+  }, dispatch)
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(FilterSelector);
+
 FilterSelector.propTypes = {
   handleUpdate: PropTypes.func,
   setBlur: PropTypes.func,
   members: PropTypes.array,
+  error: PropTypes.object,
+  showError: PropTypes.func,
+  hideError: PropTypes.func
 }
 
 const styles = StyleSheet.create({

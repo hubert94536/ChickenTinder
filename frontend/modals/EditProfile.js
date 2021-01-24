@@ -9,7 +9,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
-import global from '../../global.js'
+import { connect } from 'react-redux'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -18,12 +18,12 @@ import PropTypes from 'prop-types'
 
 const height = Dimensions.get('window').height
 
-export default class EditProfile extends React.Component {
+class EditProfile extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      nameValue: global.name,
-      usernameValue: global.username,
+      nameValue: this.props.name.name,
+      usernameValue: this.props.username.username,
       changeName: false,
     }
   }
@@ -50,15 +50,15 @@ export default class EditProfile extends React.Component {
           <View style={styles.modalContent}>
             <Text style={[screenStyles.text, styles.titleText]}>Edit Profile</Text>
 
-            {global.photo.includes('file') || global.photo.includes('http') ? (
+            {this.props.image.image.includes('file') || this.props.image.image.includes('http') ? (
               <Image
                 style={styles.pfp}
                 source={{
-                  uri: global.photo,
+                  uri: this.props.image.image,
                 }}
               />
             ) : (
-              <Image source={global.photo} style={styles.pfp} />
+              <Image source={this.props.image.image} style={styles.pfp} />
             )}
             <View
               style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: '4%' }}
@@ -95,6 +95,28 @@ export default class EditProfile extends React.Component {
       </Modal>
     )
   }
+}
+
+const mapStateToProps = (state) => {
+  const { error } = state
+  const { name } = state
+  const { username } = state
+  const { image } = state
+  return { error, name, username, image }
+}
+
+export default connect(mapStateToProps)(EditProfile)
+
+EditProfile.propTypes = {
+  dontSave: PropTypes.func,
+  userChange: PropTypes.func,
+  nameChange: PropTypes.func,
+  makeChanges: PropTypes.func,
+  visible: PropTypes.bool,
+  error: PropTypes.object,
+  name: PropTypes.object,
+  username: PropTypes.object,
+  image: PropTypes.object,
 }
 
 const styles = StyleSheet.create({
@@ -138,11 +160,3 @@ const styles = StyleSheet.create({
     color: 'white',
   },
 })
-
-EditProfile.propTypes = {
-  dontSave: PropTypes.func,
-  userChange: PropTypes.func,
-  nameChange: PropTypes.func,
-  makeChanges: PropTypes.func,
-  visible: PropTypes.bool,
-}

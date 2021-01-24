@@ -1,4 +1,7 @@
 import React from 'react'
+import { bindActionCreators } from 'redux'
+import { changeFriends, hideError, showError } from '../redux/Actions.js'
+import { connect } from 'react-redux'
 import { Dimensions, FlatList, Modal, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { SearchBar } from 'react-native-elements'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -14,14 +17,12 @@ import socket from '../apis/socket.js'
 
 const height = Dimensions.get('window').height
 //  little pop up modal that is showed when you click choose friends in filters
-export default class ChooseFriends extends React.Component {
+class ChooseFriends extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       data: '',
-      friends: '',
       search: '',
-      errorAlert: false,
     }
     this.getFriends()
   }
@@ -48,9 +49,10 @@ export default class ChooseFriends extends React.Component {
             }
           }
         }
-        this.setState({ friends: pushFriends, data: pushFriends })
+        this.props.changeFriends(pushFriends)
+        this.setState({ data: pushFriends })
       })
-      .catch(() => this.setState({ errorAlert: true }))
+      .catch(() => this.showError())
   }
 
   // copies the room code
@@ -70,12 +72,12 @@ export default class ChooseFriends extends React.Component {
   //  function for searching your friends
   searchFilterFunction(text) {
     this.setState({ search: text })
-    const newData = this.state.data.filter((item) => {
+    const newData = this.props.friends.friends.filter((item) => {
       const itemData = `${item.name.toUpperCase()} ${item.username.toUpperCase()}`
       const textData = text.toUpperCase()
       return itemData.indexOf(textData) > -1
     })
-    this.setState({ friends: newData })
+    this.setState({ data: newData })
   }
 
   render() {
@@ -112,14 +114,14 @@ export default class ChooseFriends extends React.Component {
             />
             <FlatList
               style={styles.flatList}
-              data={this.state.friends}
+              data={this.state.data}
               renderItem={({ item }) => (
                 <Card
                   name={item.name}
                   image={item.photo}
                   uid={item.uid}
                   username={item.username}
-                  total={this.state.data}
+                  total={this.props.friends.friends}
                   status="not added"
                   key={item.uid}
                   press={() => this.sendInvite()}
@@ -133,6 +135,37 @@ export default class ChooseFriends extends React.Component {
       </Modal>
     )
   }
+}
+
+const mapStateToProps = (state) => {
+  const { friends } = state
+  const { error } = state
+  return { friends, error }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      changeFriends,
+      showError,
+      hideError,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChooseFriends)
+
+ChooseFriends.propTypes = {
+  members: PropTypes.array,
+  press: PropTypes.func,
+  visible: PropTypes.bool,
+  code: PropTypes.number,
+  username: PropTypes.string,
+  friends: PropTypes.object,
+  error: PropTypes.object,
+  showError: PropTypes.func,
+  hideError: PropTypes.func,
+  changeFriends: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
@@ -207,11 +240,3 @@ const styles = StyleSheet.create({
     marginBottom: '2%',
   },
 })
-
-ChooseFriends.propTypes = {
-  members: PropTypes.array,
-  press: PropTypes.func,
-  visible: PropTypes.bool,
-  code: PropTypes.number,
-  username: PropTypes.string,
-}
