@@ -2,7 +2,7 @@ import React from 'react'
 import { bindActionCreators } from 'redux'
 import { changeFriends, hideError, hideRefresh, showError, showRefresh } from '../redux/Actions.js'
 import { connect } from 'react-redux'
-import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
 import PropTypes from 'prop-types'
 import { SearchBar } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -17,6 +17,8 @@ const sleep = (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds))
 }
 
+const height = Dimensions.get('window').height
+
 class Friends extends React.Component {
   constructor(props) {
     super(props)
@@ -26,6 +28,7 @@ class Friends extends React.Component {
       friends: [], // array of Profile components
       isFriends: this.props.isFriends, // For rendering friends (true) or requests (false)
       refreshing: true, // Are we currently refreshing the list?
+      friendsApiCalled: false, //render loading gif when fetching friends
     }
     this.getFriends()
   }
@@ -150,15 +153,17 @@ class Friends extends React.Component {
             )}
           </View>
         )}
-        {this.state.friends.length === 0 && ( //Show no friends view if there aren't any friends
-          <View>
-            <Icon name="emoticon-sad-outline" style={[styles.sadFace]} />
-            <Text style={[screenStyles.text, styles.noFriendText1]}>No friends, yet</Text>
-            <Text style={[screenStyles.textBook, styles.noFriendText2]}>
-              You have no friends, yet. Add friends using the search feature below!
-            </Text>
-          </View>
-        )}
+        {this.state.friends.length === 0 &&
+          this.state.friendsApiCalled && ( //Show no friends view if there aren't any friends
+            <View>
+              <Icon name="emoticon-sad-outline" style={[styles.sadFace]} />
+              <Text style={[screenStyles.text, styles.noFriendText1]}>No friends, yet</Text>
+              <Text style={[screenStyles.textBook, styles.noFriendText2]}>
+                You have no friends, yet. Add friends using the search feature below!
+              </Text>
+            </View>
+          )}
+        {!this.state.friendsApiCalled && <View></View>}
       </View>
     )
   }
@@ -238,5 +243,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: normalize(16),
     color: 'grey',
+  },
+  gif: {
+    alignSelf: 'center',
+    width: height * 0.3,
+    height: height * 0.4,
   },
 })

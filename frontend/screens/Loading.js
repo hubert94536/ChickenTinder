@@ -49,21 +49,21 @@ export default class Loading extends React.Component {
     })
 
     socket.getSocket().once('leave', () => {
-      this.leaveGroup(true)
+      this.leaveGroup()
     })
   }
 
-  leaveGroup(end) {
-    socket.getSocket().off()
-    if (end) {
-      socket.endRound()
-    } else {
-      socket.leaveRoom()
-    }
+  leaveGroup() {
+    socket.endLeave()
     global.code = ''
     global.host = ''
     global.isHost = false
+    global.restaurants = []
     this.props.navigation.replace('Home')
+  }
+
+  endGroup() {
+    socket.endGroup()
   }
 
   render() {
@@ -80,7 +80,7 @@ export default class Loading extends React.Component {
           <TouchableHighlight
             style={styles.leaveButton}
             underlayColor="transparent"
-            onPress={() => this.leaveGroup(false)}
+            onPress={() => this.leaveGroup()}
           >
             <Text style={styles.leaveText}>Leave Round</Text>
           </TouchableHighlight>

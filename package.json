@@ -55,6 +55,7 @@
     "react-native-svg": "^12.1.0",
     "react-native-swipeout": "^2.3.6",
     "react-native-swiper": "^1.6.0",
+    "react-native-switch": "^2.0.0",
     "react-native-vector-icons": "^7.1.0",
     "react-native-walkthrough-tooltip": "^1.1.11",
     "react-navigation": "^4.4.1",

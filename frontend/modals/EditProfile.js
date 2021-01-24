@@ -9,6 +9,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
+import colors from '../../styles/colors.js'
 import { connect } from 'react-redux'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
@@ -24,18 +25,70 @@ class EditProfile extends React.Component {
     this.state = {
       nameValue: this.props.name.name,
       usernameValue: this.props.username.username,
-      changeName: false,
+      validNameFormat: true,
+      validUsernameFormat: true,
     }
   }
 
   changeUser(text) {
-    this.setState({ usernameValue: text })
+    this.setState({ usernameValue: text }, () => {
+      this.validateUsername()
+    })
     this.props.userChange(text)
   }
 
   changeName(text) {
-    this.setState({ nameValue: text })
+    this.setState({ nameValue: text }, () => {
+      this.validateName()
+    })
     this.props.nameChange(text)
+  }
+
+  //remove whitespaces before and after name and username
+  finalCheck() {
+    if (!this.state.validNameFormat || !this.state.validUsernameFormat) {
+      return
+    }
+
+    let trimmedName = this.state.nameValue
+    trimmedName = trimmedName.trimStart().trimEnd()
+
+    let trimmedUser = this.state.usernameValue
+
+    this.setState({ nameValue: trimmedName, usernameValue: trimmedUser }, () => {
+      this.props.makeChanges() //must use callback in setState or states won't update properly
+    })
+
+    this.props.nameChange(trimmedName)
+    this.props.userChange(trimmedUser)
+  }
+
+  validateUsername() {
+    /*regex expression: 
+    - alphanumeric characters (lowercase or uppercase), dot (.), underscore (_), hyphen(-)
+    - must not start or end with space
+    - 2-15 characters
+    */
+    const regex = /^[a-zA-Z0-9._\-]([._\-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._\-]$/
+    if (!regex.test(this.state.usernameValue)) {
+      this.setState({ validUsernameFormat: false })
+    } else {
+      this.setState({ validUsernameFormat: true })
+    }
+  }
+
+  validateName() {
+    /*regex expression: 
+    - alphanumeric characters (lowercase or uppercase), dot (.), underscore (_), hyphen(-), space( )
+    - must not start or end with space
+    - 2-15 characters
+    */
+    const regex = /^[a-zA-Z0-9._\-]([ ._\-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._\-]$/
+    if (!regex.test(this.state.nameValue)) {
+      this.setState({ validNameFormat: false })
+    } else {
+      this.setState({ validNameFormat: true })
+    }
   }
 
   render() {
@@ -65,28 +118,52 @@ class EditProfile extends React.Component {
             ></View>
             <Text style={[screenStyles.text, styles.nameText]}>Display name</Text>
             <TextInput
-              style={[screenStyles.text, screenStyles.input, styles.input]}
+              style={[
+                screenStyles.text,
+                screenStyles.input,
+                styles.input,
+                this.state.validNameFormat ? styles.inputMargin : styles.inputMarginWarning,
+              ]}
               underlineColorAndroid="transparent"
               spellCheck={false}
               autoCorrect={false}
               keyboardType="visible-password"
+              maxLength={15}
               value={this.state.nameValue}
               onChangeText={(text) => this.changeName(text)}
             />
+            {!this.state.validNameFormat && (
+              <Text style={[screenStyles.text, styles.warningText]}>
+                Only letters, numbers, or . - _ are allowed.
+              </Text>
+            )}
             <Text style={[screenStyles.text, styles.nameText]}>Username</Text>
             <TextInput
-              style={[screenStyles.text, screenStyles.input, styles.input]}
+              style={[
+                screenStyles.text,
+                screenStyles.input,
+                styles.input,
+                this.state.validUsernameFormat ? styles.inputMargin : styles.inputMarginWarning,
+              ]}
               underlineColorAndroid="transparent"
               spellCheck={false}
               autoCorrect={false}
+              maxLength={15}
               keyboardType="visible-password"
               value={this.state.usernameValue}
               onChangeText={(text) => this.changeUser(text.split(' ').join('_'))}
             />
+            {!this.state.validUsernameFormat && (
+              <Text style={[screenStyles.text, styles.warningText]}>
+                Only letters, numbers, or . - _ are allowed.
+              </Text>
+            )}
           </View>
           <TouchableHighlight
             style={[screenStyles.medButton, styles.saveButton]}
-            onPress={() => this.props.makeChanges()}
+            onPress={() => {
+              this.finalCheck()
+            }}
             underlayColor="white"
           >
             <Text style={[screenStyles.smallButtonText, styles.saveText]}>Save Changes</Text>
@@ -146,17 +223,27 @@ const styles = StyleSheet.create({
     color: '#7d7d7d',
     fontSize: normalize(15.5),
     borderBottomWidth: 1,
-    marginBottom: '7%',
     borderColor: '#7d7d7d',
   },
   saveButton: {
     backgroundColor: screenStyles.hex.color,
     borderColor: screenStyles.hex.color,
-    margin: '1.5%',
+    margin: '5%',
+    // margin: '1.5%',
     width: '50%',
   },
   saveText: {
     padding: '10%',
     color: 'white',
+  },
+  warningText: {
+    color: colors.hex,
+    fontSize: normalize(12),
+  },
+  inputMargin: {
+    marginBottom: '7%',
+  },
+  inputMarginWarning: {
+    marginBottom: '1%',
   },
 })
