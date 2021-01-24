@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import { Image, Keyboard, StyleSheet, Text, View } from 'react-native'
-import { NAME, PHOTO, USERNAME, EMAIL } from 'react-native-dotenv'
+import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Alert from '../modals/Alert.js'
 import accountsApi from '../apis/accountsApi.js'
+import colors from '../../styles/colors.js'
 import facebookService from '../apis/facebookService.js'
 import Friends from './Friends.js'
+import global from '../../global.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -17,18 +19,14 @@ import PropTypes from 'prop-types'
 import EditProfile from '../modals/EditProfile.js'
 import Settings from '../modals/ProfileSettings.js'
 
-const hex = screenStyles.hex.color
-var email = ''
-
 export default class UserProfileView extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      name: '',
-      nameValue: '',
-      username: '',
-      usernameValue: '',
-      image: null,
+      nameValue: global.name,
+      usernameValue: global.username,
+      name: global.name,
+      username: global.username,
       friends: true,
       visible: false,
       edit: false,
@@ -45,36 +43,25 @@ export default class UserProfileView extends Component {
       numFriends: 0,
       imageData: null,
     }
-
-    AsyncStorage.multiGet([EMAIL, NAME, PHOTO, USERNAME]).then((res) => {
-      email = res[0][1]
-      this.setState({
-        name: res[1][1],
-        nameValue: res[1][1],
-        image: res[2][1],
-        oldImage: res[2][1],
-        username: res[3][1],
-        usernameValue: res[3][1],
-      })
-    })
   }
 
   // getting current user's info
   async changeName() {
-    if (this.state.nameValue !== this.state.name) {
+    if (this.state.nameValue !== global.name) {
       const name = this.state.nameValue
       return accountsApi
         .updateName(name)
         .then(() => {
           // update name locally
           AsyncStorage.setItem(NAME, name)
-          this.setState({ name: this.state.nameValue })
+          global.name = name
+          this.setState({ name: name })
           Keyboard.dismiss()
         })
         .catch(() => {
           this.setState({ errorAlert: true })
           this.setState({
-            nameValue: this.state.name,
+            nameValue: global.name,
           })
           Keyboard.dismiss()
         })
@@ -82,7 +69,7 @@ export default class UserProfileView extends Component {
   }
 
   async changeUsername() {
-    if (this.state.username !== this.state.usernameValue) {
+    if (global.username !== this.state.usernameValue) {
       const user = this.state.usernameValue
       return accountsApi
         .checkUsername(user)
@@ -90,7 +77,8 @@ export default class UserProfileView extends Component {
           // update username locally
           return accountsApi.updateUsername(user).then(() => {
             AsyncStorage.setItem(USERNAME, user)
-            this.setState({ username: this.state.usernameValue })
+            global.username = user
+            this.setState({ username: user })
             Keyboard.dismiss()
           })
         })
@@ -100,7 +88,7 @@ export default class UserProfileView extends Component {
           } else {
             this.setState({ errorAlert: true })
           }
-          this.setState({ usernameValue: this.state.username })
+          this.setState({ usernameValue: global.username })
           Keyboard.dismiss()
         })
     }
@@ -152,10 +140,10 @@ export default class UserProfileView extends Component {
   }
 
   makeChanges() {
-    if (this.state.name !== this.state.nameValue) {
+    if (global.name !== this.state.nameValue) {
       this.changeName()
     }
-    if (this.state.username !== this.state.usernameValue) {
+    if (global.username !== this.state.usernameValue) {
       if (this.state.usernameValue[0] === '@') {
         var userTemp = this.state.usernameValue.slice(1)
         this.setState({ usernameValue: userTemp })
@@ -182,10 +170,11 @@ export default class UserProfileView extends Component {
           type: image.mime,
           name: 'avatar',
         },
-        oldImage: this.state.image,
+        oldImage: global.photo,
         image: image.path,
       })
-      AsyncStorage.setItem(PHOTO, this.state.image)
+      global.photo = image.path
+      AsyncStorage.setItem(PHOTO, global.image)
     })
   }
 
@@ -200,26 +189,14 @@ export default class UserProfileView extends Component {
   editProfile() {
     this.setState({
       edit: true,
-      nameValue: this.state.name,
-      usernameValue: this.state.username,
-      username: this.state.username,
+      nameValue: global.name,
+      usernameValue: global.username,
       changeName: false,
     })
   }
 
   render() {
-    const {
-      image,
-      name,
-      username,
-      numFriends,
-      visible,
-      edit,
-      nameValue,
-      usernameValue,
-      errorAlert,
-      takenAlert,
-    } = this.state
+    const { numFriends, visible, edit, errorAlert, takenAlert } = this.state
 
     return (
       <View style={[screenStyles.mainContainer]}>
@@ -234,18 +211,18 @@ export default class UserProfileView extends Component {
                 onPress={() => this.setState({ visible: true })}
               />
             </View>
-            <Image source={image} style={screenStyles.avatar} />
+            <Image source={global.photo} style={screenStyles.avatar} />
             <View style={[styles.infoContainer]}>
               <View style={[styles.nameContainer]}>
                 <View style={[styles.nameFiller]}></View>
-                <Text style={(screenStyles.text, styles.name)}>{name}</Text>
+                <Text style={(screenStyles.text, styles.name)}>{this.state.name}</Text>
                 <Icon
                   name="pencil-outline"
                   style={styles.pencil}
                   onPress={() => this.editProfile()}
                 />
               </View>
-              <Text style={(screenStyles.text, styles.username)}>{'@' + username}</Text>
+              <Text style={(screenStyles.text, styles.username)}>{'@' + this.state.username}</Text>
             </View>
             <Text style={(screenStyles.text, styles.friends)}>Your Friends</Text>
             <Text style={[screenStyles.text, styles.friendNum]}>{numFriends + ' friends'}</Text>
@@ -254,6 +231,15 @@ export default class UserProfileView extends Component {
             {/* Contains the search bar and friends display if has friends, otherwise no friends view */}
             <Friends isFriends onFriendsChange={(n) => this.handleFriendsCount(n)} />
           </View>
+
+          <TabBar
+            goHome={() => this.props.navigation.replace('Home')}
+            goSearch={() => this.props.navigation.replace('Search')}
+            goNotifs={() => this.props.navigation.replace('Notifications')}
+            goProfile={() => {}}
+            cur="Profile"
+          />
+
           {(visible || edit) && (
             <BlurView
               blurType="dark"
@@ -268,14 +254,10 @@ export default class UserProfileView extends Component {
             close={() => this.setState({ visible: false })}
             delete={() => this.handleDelete()}
             logout={() => this.handleLogout()}
-            email={email}
           />
 
           {edit && (
             <EditProfile
-              image={image}
-              name={nameValue}
-              username={usernameValue}
               dontSave={() => this.dontSave()}
               makeChanges={() => this.makeChanges()}
               userChange={(text) => this.setState({ usernameValue: text })}
@@ -302,13 +284,6 @@ export default class UserProfileView extends Component {
             />
           )}
         </View>
-        <TabBar
-          goHome={() => this.props.navigation.navigate('Home')}
-          goSearch={() => this.props.navigation.navigate('Search')}
-          goNotifs={() => this.props.navigation.navigate('Notifications')}
-          goProfile={() => {}}
-          cur="Profile"
-        />
       </View>
     )
   }
@@ -321,7 +296,7 @@ UserProfileView.propTypes = {
 const styles = StyleSheet.create({
   background: {
     backgroundColor: 'white',
-    height: '90%',
+    height: '100%',
   },
   titleContainer: {
     flexDirection: 'row',
@@ -363,7 +338,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   pencil: { fontSize: normalize(28), marginTop: '4%', marginLeft: '1%', marginBottom: '1%' },
-  username: { fontSize: normalize(14), color: hex, fontWeight: 'bold' },
+  username: { fontSize: normalize(14), color: colors.hex, fontWeight: 'bold' },
   friends: {
     marginTop: '5%',
     marginLeft: '7%',
