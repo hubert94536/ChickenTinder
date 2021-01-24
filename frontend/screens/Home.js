@@ -154,6 +154,7 @@ class Home extends React.Component {
             title="Error, please try again"
             buttonAff="Close"
             height="20%"
+            blur
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />

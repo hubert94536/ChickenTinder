@@ -216,6 +216,7 @@ export default class Notif extends Component {
             body={'You are about to remove @' + this.props.username + ' as a friend'}
             buttonAff="Delete"
             height="25%"
+            blur
             press={() => this.deleteFriend()}
             cancel={() => this.setState({ deleteFriend: false })}
           />
@@ -225,6 +226,7 @@ export default class Notif extends Component {
             title="Error, please try again"
             buttonAff="Close"
             height="20%"
+            blur
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />

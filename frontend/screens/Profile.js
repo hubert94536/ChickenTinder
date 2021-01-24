@@ -240,16 +240,7 @@ export default class UserProfileView extends Component {
             cur="Profile"
           />
 
-          {(visible || edit) && !logoutAlert && !deleteAlert && (
-            <BlurView
-              blurType="dark"
-              blurAmount={10}
-              reducedTransparencyFallbackColor="white"
-              style={modalStyles.blur}
-            />
-          )}
-
-          {(logoutAlert || deleteAlert) && !visible && !edit && (
+          {(visible || edit || logoutAlert || deleteAlert) && (
             <BlurView
               blurType="dark"
               blurAmount={10}

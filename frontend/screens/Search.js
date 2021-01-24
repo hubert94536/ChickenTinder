@@ -136,6 +136,7 @@ export default class Search extends Component {
             title="Error, please try again"
             buttonAff="Close"
             height="20%"
+            blur
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />
@@ -146,6 +147,7 @@ export default class Search extends Component {
             body={'You are about to remove @' + this.state.deleteFriendName + ' as a friend'}
             buttonAff="Delete"
             height="25%"
+            blur
             press={() => this.deleteFriend()}
             cancel={() => this.setState({ deleteFriend: false })}
           />

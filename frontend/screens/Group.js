@@ -327,6 +327,7 @@ export default class Group extends React.Component {
                   body="You will will not be able to return without an invite"
                   buttonAff="Yes"
                   height="20%"
+                  blur
                   press={() => this.leaveGroup(false)}
                   cancel={() => this.cancelAlert()}
                 />
@@ -337,6 +338,7 @@ export default class Group extends React.Component {
                   body="You will not be able to return"
                   buttonAff="Yes"
                   height="20%"
+                  blur
                   press={() => this.endGroup()}
                   cancel={() => this.cancelAlert()}
                 />

@@ -145,6 +145,7 @@ export default class Card extends React.Component {
             buttonNeg="Cancel"
             height="28%"
             twoButton
+            blur
             press={() => {
               this.deleteFriend()
             }}
@@ -156,6 +157,7 @@ export default class Card extends React.Component {
             title="Error, please try again"
             buttonAff="Close"
             height="20%"
+            blur
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}
           />

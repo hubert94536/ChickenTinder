@@ -568,6 +568,7 @@ export default class FilterSelector extends React.Component {
             body="Your location is required to find nearby restuarants"
             buttonAff="Close"
             height="23%"
+            blur
             press={() => {
               this.setState({ locationAlert: false })
               this.props.setBlur(false)
@@ -584,6 +585,7 @@ export default class FilterSelector extends React.Component {
             title="Error, please try again"
             buttonAff="Close"
             height="20%"
+            blur
             press={() => {
               this.setState({ errorAlert: false })
               this.props.setBlur(false)

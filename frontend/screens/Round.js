@@ -188,6 +188,7 @@ export default class Round extends React.Component {
             body="Leaving ends the group for everyone"
             buttonAff="Leave"
             height="30%"
+            blur
             press={() => socket.endRound()}
             cancel={() => this.setState({ leave: false })}
           />
