@@ -1,6 +1,6 @@
 import React from 'react'
 import { bindActionCreators } from 'redux'
-import { changeFriends, hideError, showError } from '../redux/Actions.js'
+import { changeFriends } from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import { Dimensions, FlatList, Modal, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { SearchBar } from 'react-native-elements'
@@ -24,35 +24,27 @@ class ChooseFriends extends React.Component {
       data: '',
       search: '',
     }
-    this.getFriends()
   }
 
   //  gets your friends
-  getFriends() {
-    // Pushing accepted friends or pending requests into this.state.friends
-    friendsApi
-      .getFriends()
-      .then((res) => {
-        let pushFriends = []
-        for (var friend in res.friendList) {
-          if (res.friendList[friend].status === 'friends') {
-            if (
-              this.props.members.some(
-                (member) => member.username === res.friendList[friend].username,
-              )
-            ) {
-              res.friendList[friend].added = true
-              pushFriends.push(res.friendList[friend])
-            } else {
-              res.friendList[friend].added = false
-              pushFriends.push(res.friendList[friend])
-            }
-          }
+  componentDidMount() {
+    let pushFriends = []
+    for (var friend in this.props.friends.friends) {
+      if (this.props.friends.friends[friend].status === 'friends') {
+        if (
+          this.props.members.some(
+            (member) => member.username === this.props.friends.friends[friend].username,
+          )
+        ) {
+          this.props.friends.friends[friend].added = true
+          pushFriends.push(this.props.friends.friends[friend])
+        } else {
+          this.props.friends.friends[friend].added = false
+          pushFriends.push(this.props.friends.friends[friend])
         }
-        this.props.changeFriends(pushFriends)
-        this.setState({ data: pushFriends })
-      })
-      .catch(() => this.showError())
+      }
+    }
+    this.setState({ data: pushFriends })
   }
 
   // copies the room code
@@ -72,7 +64,7 @@ class ChooseFriends extends React.Component {
   //  function for searching your friends
   searchFilterFunction(text) {
     this.setState({ search: text })
-    const newData = this.props.friends.friends.filter((item) => {
+    const newData = this.props.friends.filter((item) => {
       const itemData = `${item.name.toUpperCase()} ${item.username.toUpperCase()}`
       const textData = text.toUpperCase()
       return itemData.indexOf(textData) > -1
@@ -121,7 +113,7 @@ class ChooseFriends extends React.Component {
                   image={item.photo}
                   uid={item.uid}
                   username={item.username}
-                  total={this.props.friends.friends}
+                  total={this.props.friends}
                   status="not added"
                   key={item.uid}
                   press={() => this.sendInvite()}
@@ -139,16 +131,13 @@ class ChooseFriends extends React.Component {
 
 const mapStateToProps = (state) => {
   const { friends } = state
-  const { error } = state
-  return { friends, error }
+  return { friends }
 }
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       changeFriends,
-      showError,
-      hideError,
     },
     dispatch,
   )
@@ -162,7 +151,6 @@ ChooseFriends.propTypes = {
   code: PropTypes.number,
   username: PropTypes.string,
   friends: PropTypes.object,
-  error: PropTypes.object,
   showError: PropTypes.func,
   hideError: PropTypes.func,
   changeFriends: PropTypes.func,

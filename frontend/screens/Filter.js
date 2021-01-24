@@ -581,7 +581,7 @@ class FilterSelector extends React.Component {
             visible={this.state.locationAlert}
           />
         )}
-        {this.props.error.error && (
+        {this.props.error && (
           <Alert
             title="Error, please try again"
             buttonAff="Close"
@@ -594,7 +594,7 @@ class FilterSelector extends React.Component {
               this.props.hideError()
               this.props.setBlur(false)
             }}
-            visible={this.props.error.error}
+            visible={this.props.error}
           />
         )}
 
@@ -681,7 +681,7 @@ FilterSelector.propTypes = {
   handleUpdate: PropTypes.func,
   setBlur: PropTypes.func,
   members: PropTypes.array,
-  error: PropTypes.object,
+  error: PropTypes.bool,
   showError: PropTypes.func,
   hideError: PropTypes.func
 }

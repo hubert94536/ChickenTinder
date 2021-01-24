@@ -27,36 +27,41 @@ class Friends extends React.Component {
       data: [], // array for friends
       friends: [], // array of Profile components
       isFriends: this.props.isFriends, // For rendering friends (true) or requests (false)
-      refreshing: true, // Are we currently refreshing the list?
       friendsApiCalled: false, //render loading gif when fetching friends
     }
-    this.getFriends()
+    this.props.hideRefresh()
+    this.props.hideError()
   }
+
   //  gets the users friends
   async getFriends() {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
       .getFriends()
       .then((res) => {
-        var pushFriends = []
-        var friendOrRequest = this.state.isFriends ? 'friends' : 'pending'
-        for (var friend in res.friendList) {
-          if (res.friendList[friend].status === friendOrRequest) {
-            pushFriends.push(res.friendList[friend])
-          }
-        }
-        //  need two so when you search it doesn't get rid of all the friends
-        this.setState({
-          friends: pushFriends,
-          data: pushFriends,
-          refreshing: false,
-          friendsApiCalled: true,
-        })
+        this.props.changeFriends(res.friendList)
       })
-      .catch(() => this.setState({ errorAlert: true }))
-      .then(() => {
-        this.props.onFriendsChange(this.state.friends.length)
+      .catch(() => {
+        this.props.showError()
       })
+  }
+
+  componentDidMount() {
+    var pushFriends = []
+    var friendOrRequest = this.state.isFriends ? 'friends' : 'pending'
+    for (var friend in this.props.friends.friends) {
+      if (this.props.friends.friends[friend].status === friendOrRequest) {
+        pushFriends.push(this.props.friends.friends[friend])
+      }
+    }
+    //  need two so when you search it doesn't get rid of all the friends
+    this.setState({
+      friends: pushFriends,
+      data: pushFriends,
+      refreshing: false,
+      friendsApiCalled: true,
+    })
+    this.props.onFriendsChange(this.state.friends.length)
   }
 
   //  searches the users friends by username
@@ -76,6 +81,7 @@ class Friends extends React.Component {
     friendsApi
       .removeFriendship(friend)
       .then(() => {
+        this.props.changeFriends(newArr)
         this.setState({ friends: newArr, data: newArr })
       })
       .catch(() => {
@@ -85,8 +91,8 @@ class Friends extends React.Component {
 
   // Called on friends-list pulldown refresh
   onRefresh() {
-    this.setState({ refreshing: true })
-    sleep(2000).then(this.getFriends().then(this.setState({ refreshing: false })))
+    this.props.showRefresh()
+    sleep(2000).then(this.getFriends().then(this.props.hideRefresh()))
   }
 
   render() {
@@ -96,7 +102,6 @@ class Friends extends React.Component {
     if (Array.isArray(friendList) && friendList.length) {
       for (var i = 0; i < friendList.length; i++) {
         var status = ''
-        // if (this.props.isFriends) status = 'Friends'
         if (this.props.isFriends) status = 'friends'
         else status = 'Not Friends'
         friends.push(
@@ -135,14 +140,14 @@ class Friends extends React.Component {
               alwaysBounceVertical="true"
               refreshControl={
                 <RefreshControl
-                  refreshing={this.state.refreshing}
+                  refreshing={this.props.refresh}
                   onRefresh={this.onRefresh.bind(this)}
                 />
               }
             >
               {friends}
             </ScrollView>
-            {this.props.error.error && (
+            {this.props.error && (
               <Alert
                 title="Error, please try again"
                 buttonAff="Close"
@@ -193,9 +198,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(Friends)
 Friends.propTypes = {
   isFriends: PropTypes.bool,
   onFriendsChange: PropTypes.func,
-  error: PropTypes.object,
+  error: PropTypes.bool,
   friends: PropTypes.object,
-  refresh: PropTypes.object,
+  refresh: PropTypes.bool,
   showError: PropTypes.func,
   hideError: PropTypes.func,
   showRefresh: PropTypes.func,

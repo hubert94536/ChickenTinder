@@ -160,7 +160,7 @@ class Home extends React.Component {
           cancel={() => this.setState({ join: false })}
           onPress={() => this.setState({ join: false })}
         />
-        {this.props.error.error && (
+        {this.props.error && (
           <Alert
             title="Error, please try again"
             buttonAff="Close"
@@ -195,7 +195,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(Home)
 
 Home.propTypes = {
   navigation: PropTypes.object,
-  error: PropTypes.object,
+  error: PropTypes.bool,
   friends: PropTypes.object,
   username: PropTypes.object,
   showError: PropTypes.func,

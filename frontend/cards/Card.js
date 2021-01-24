@@ -159,7 +159,7 @@ class Card extends React.Component {
             cancel={() => this.setState({ deleteFriend: false })}
           />
         )}
-        {this.props.error.error && (
+        {this.props.error && (
           <Alert
             title="Error, please try again"
             buttonAff="Close"
@@ -200,7 +200,7 @@ Card.propTypes = {
   name: PropTypes.string,
   showError: PropTypes.func,
   hideError: PropTypes.func,
-  error: PropTypes.object,
+  error: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

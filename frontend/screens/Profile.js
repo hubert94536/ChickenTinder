@@ -316,7 +316,7 @@ UserProfileView.propTypes = {
   name: PropTypes.object,
   username: PropTypes.object,
   image: PropTypes.object,
-  error: PropTypes.object,
+  error: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

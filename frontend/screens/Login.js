@@ -105,7 +105,7 @@ class Login extends React.Component {
             cancel={() => this.cancelClick()}
           />
         )}
-        {this.props.error.error && (
+        {this.props.error && (
           <Alert
             title="Error, please try again"
             buttonAff="Close"
@@ -140,7 +140,7 @@ Login.propTypes = {
     navigate: PropTypes.func.isRequired,
     replace: PropTypes.func,
   }).isRequired,
-  error: PropTypes.object,
+  error: PropTypes.nool,
   showError: PropTypes.func,
   hideError: PropTypes.func,
 }
