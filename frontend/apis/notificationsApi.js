@@ -35,7 +35,7 @@ const getNotifs = async () => {
       }
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -47,7 +47,7 @@ const removeNotif = async (id) => {
       return res.status
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -61,7 +61,7 @@ const linkToken = async (token) => {
     })
     .catch((error) => {
       console.log('-----ERROR linking token')
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -75,7 +75,7 @@ const unlinkToken = async () => {
     })
     .catch((error) => {
       console.log('-----ERROR unlinking token')
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 

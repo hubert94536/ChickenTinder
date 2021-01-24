@@ -1,6 +1,9 @@
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { hideError, showError } from '../redux/Actions.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
@@ -8,11 +11,10 @@ import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
 import normalize from '../../styles/normalize.js'
 
-export default class Card extends React.Component {
+class Card extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      errorAlert: false,
       deleteFriend: false,
       status: this.props.status,
       pressed: false,
@@ -29,7 +31,10 @@ export default class Card extends React.Component {
         })
         this.props.press(this.props.uid, filteredArray)
       })
-      .catch(() => this.setState({ errorAlert: true, deleteFriend: false }))
+      .catch(() => {
+        this.props.showError()
+        this.setState({ deleteFriend: false })
+      })
   }
 
   acceptFriend() {
@@ -38,7 +43,7 @@ export default class Card extends React.Component {
       .then(() => {
         this.setState({ status: 'friends' })
       })
-      .catch(() => this.setState({ errorAlert: true }))
+      .catch(() => this.props.showError())
   }
 
   addFriend() {
@@ -47,7 +52,7 @@ export default class Card extends React.Component {
       .then(() => {
         this.setState({ status: 'requested' })
       })
-      .catch(() => this.setState({ errorAlert: true }))
+      .catch(() => this.props.showError())
   }
 
   rejectFriend() {
@@ -56,7 +61,7 @@ export default class Card extends React.Component {
       .then(() => {
         this.setState({ status: 'add' })
       })
-      .catch(() => this.setState({ errorAlert: true }))
+      .catch(() => this.props.showError())
   }
 
   render() {
@@ -113,7 +118,10 @@ export default class Card extends React.Component {
         {this.state.status === 'friends' && renderOption && (
           <TouchableHighlight
             underlayColor="transparent"
-            onPress={() => this.setState({ errorAlert: false, deleteFriend: true })}
+            onPress={() => {
+              this.props.hideError()
+              this.setState({ deleteFriend: true })
+            }}
           >
             <View style={imgStyles.card}>
               <Text style={[imgStyles.text]}>Friends</Text>
@@ -151,19 +159,35 @@ export default class Card extends React.Component {
             cancel={() => this.setState({ deleteFriend: false })}
           />
         )}
-        {this.state.errorAlert && (
+        {this.props.error && (
           <Alert
             title="Error, please try again"
             buttonAff="Close"
             height="20%"
-            press={() => this.setState({ errorAlert: false })}
-            cancel={() => this.setState({ errorAlert: false })}
+            press={() => this.props.hideError()}
+            cancel={() => this.props.hideError()}
           />
         )}
       </View>
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  const { error } = state
+  return { error }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      showError,
+      hideError,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(Card)
 
 Card.propTypes = {
   currentUser: PropTypes.string,
@@ -174,6 +198,9 @@ Card.propTypes = {
   image: PropTypes.string,
   press: PropTypes.func,
   name: PropTypes.string,
+  showError: PropTypes.func,
+  hideError: PropTypes.func,
+  // error: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({
