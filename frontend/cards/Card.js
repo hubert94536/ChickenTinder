@@ -200,7 +200,7 @@ Card.propTypes = {
   name: PropTypes.string,
   showError: PropTypes.func,
   hideError: PropTypes.func,
-  error: PropTypes.bool,
+  // error: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

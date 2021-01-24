@@ -140,7 +140,7 @@ Login.propTypes = {
     navigate: PropTypes.func.isRequired,
     replace: PropTypes.func,
   }).isRequired,
-  error: PropTypes.nool,
+  // error: PropTypes.bool,
   showError: PropTypes.func,
   hideError: PropTypes.func,
 }

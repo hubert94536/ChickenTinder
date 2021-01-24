@@ -313,10 +313,10 @@ UserProfileView.propTypes = {
   changeName: PropTypes.func,
   changeUsername: PropTypes.func,
   changeImage: PropTypes.func,
-  name: PropTypes.object,
-  username: PropTypes.object,
-  image: PropTypes.object,
-  error: PropTypes.bool,
+  // name: PropTypes.object,
+  // username: PropTypes.object,
+  // image: PropTypes.object,
+  // error: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

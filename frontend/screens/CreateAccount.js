@@ -235,6 +235,12 @@ export default connect(mapStateToProps, mapDispatchToProps)(createAccount)
 
 createAccount.propTypes = {
   navigation: PropTypes.object,
+  // name: PropTypes.object,
+  // username: PropTypes.object,
+  // image: PropTypes.object,
+  changeName: PropTypes.func,
+  changeUsername: PropTypes.func,
+  changeImagee: PropTypes.func,
 }
 const styles = StyleSheet.create({
   title: {

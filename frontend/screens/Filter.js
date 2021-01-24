@@ -681,7 +681,7 @@ FilterSelector.propTypes = {
   handleUpdate: PropTypes.func,
   setBlur: PropTypes.func,
   members: PropTypes.array,
-  error: PropTypes.bool,
+  // error: PropTypes.bool,
   showError: PropTypes.func,
   hideError: PropTypes.func
 }

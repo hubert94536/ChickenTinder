@@ -198,9 +198,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(Friends)
 Friends.propTypes = {
   isFriends: PropTypes.bool,
   onFriendsChange: PropTypes.func,
-  error: PropTypes.bool,
-  friends: PropTypes.object,
-  refresh: PropTypes.bool,
+  // error: PropTypes.bool,
+  // friends: PropTypes.object,
+  // refresh: PropTypes.bool,
   showError: PropTypes.func,
   hideError: PropTypes.func,
   showRefresh: PropTypes.func,

@@ -190,10 +190,10 @@ EditProfile.propTypes = {
   nameChange: PropTypes.func,
   makeChanges: PropTypes.func,
   visible: PropTypes.bool,
-  error: PropTypes.object,
-  name: PropTypes.object,
-  username: PropTypes.object,
-  image: PropTypes.object,
+  // error: PropTypes.object,
+  // name: PropTypes.object,
+  // username: PropTypes.object,
+  // image: PropTypes.object,
 }
 
 const styles = StyleSheet.create({

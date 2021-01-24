@@ -179,10 +179,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(Search)
 
 Search.propTypes = {
   navigation: PropTypes.object,
-  error: PropTypes.bool,
-  refresh: PropTypes.bool,
-  friends: PropTypes.object,
-  username: PropTypes.object,
+  // error: PropTypes.bool,
+  // refresh: PropTypes.bool,
+  // friends: PropTypes.object,
+  // username: PropTypes.object,
   showError: PropTypes.func,
   showRefresh: PropTypes.func,
   hideError: PropTypes.func,

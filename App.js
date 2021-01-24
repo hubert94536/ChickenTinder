@@ -172,9 +172,9 @@ const mapDispatchToProps = (dispatch) =>
 export default connect(mapStateToProps, mapDispatchToProps)(App)
 
 App.propTypes = {
-  name: PropTypes.object,
-  username: PropTypes.object,
-  image: PropTypes.object,
+  // name: PropTypes.object,
+  // username: PropTypes.object,
+  // image: PropTypes.object,
   changeName: PropTypes.func,
   changeUsername: PropTypes.func,
   changeImage: PropTypes.func,

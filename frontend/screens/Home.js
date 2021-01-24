@@ -60,15 +60,15 @@ class Home extends React.Component {
       })
     })
 
-    //uncomment if testing friends/requests
-    accountsApi.createFBUserTest('Hubert', 2, 'hubesc', 'hubesc@gmail.com', '10', '45678907')
-    accountsApi.createFBUserTest('Hanna', 3, 'hco', 'hco@gmail.com', '11', '45678901')
-    accountsApi.createFBUserTest('Anna', 4, 'annax', 'annx@gmail.com', '12', '45678902')
-    accountsApi.createFBUserTest('Helen', 5, 'helenthemelon', 'helenw@gmail.com', '13', '45678903')
-    accountsApi.createFBUserTest('Kevin', 6, 'kevint', 'kevintang@gmail.com', '14', '45678904')
-    friendsApi.createFriendshipTest(2, 'TB1v980OnuNJmRoJA0ZfOO65eL03')
-    friendsApi.createFriendshipTest(3, 'TB1v980OnuNJmRoJA0ZfOO65eL03')
-    friendsApi.createFriendshipTest(4, 'TB1v980OnuNJmRoJA0ZfOO65eL03')
+    // //uncomment if testing friends/requests
+    // accountsApi.createFBUserTest('Hubert', 2, 'hubesc', 'hubesc@gmail.com', '10', '45678907')
+    // accountsApi.createFBUserTest('Hanna', 3, 'hco', 'hco@gmail.com', '11', '45678901')
+    // accountsApi.createFBUserTest('Anna', 4, 'annax', 'annx@gmail.com', '12', '45678902')
+    // accountsApi.createFBUserTest('Helen', 5, 'helenthemelon', 'helenw@gmail.com', '13', '45678903')
+    // accountsApi.createFBUserTest('Kevin', 6, 'kevint', 'kevintang@gmail.com', '14', '45678904')
+    // friendsApi.createFriendshipTest(2, uid)
+    // friendsApi.createFriendshipTest(3, uid)
+    // friendsApi.createFriendshipTest(4, uid)
   }
 
   createGroup() {
@@ -195,9 +195,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(Home)
 
 Home.propTypes = {
   navigation: PropTypes.object,
-  error: PropTypes.bool,
-  friends: PropTypes.object,
-  username: PropTypes.object,
+  // error: PropTypes.bool,
+  // friends: PropTypes.object,
+  // username: PropTypes.object,
   showError: PropTypes.func,
   hideError: PropTypes.func,
   changeFriends: PropTypes.func,
