@@ -1,6 +1,7 @@
 import React from 'react'
 import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
+import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
 import global from '../../global.js'
 import modalStyles from '../../styles/modalStyles.js'
@@ -15,6 +16,7 @@ export default class Loading extends React.Component {
     super(props)
     this.state = {
       restaurants: this.props.navigation.state.params.restaurants,
+      leave: false,
     }
     socket.getSocket().once('match', (data) => {
       var res
@@ -47,21 +49,21 @@ export default class Loading extends React.Component {
     })
 
     socket.getSocket().once('leave', () => {
-      this.leaveGroup(true)
+      this.leaveGroup()
     })
   }
 
-  leaveGroup(end) {
-    socket.getSocket().off()
-    if (end) {
-      socket.endRound()
-    } else {
-      socket.leaveRoom()
-    }
+  leaveGroup() {
+    socket.endLeave()
     global.code = ''
     global.host = ''
     global.isHost = false
+    global.restaurants = []
     this.props.navigation.replace('Home')
+  }
+
+  endGroup() {
+    socket.endGroup()
   }
 
   render() {
@@ -74,13 +76,34 @@ export default class Loading extends React.Component {
             Hang tight while others finish swiping and a match is found!
           </Text>
         </View>
-        <TouchableHighlight
-          style={styles.leaveButton}
-          underlayColor="transparent"
-          onPress={() => this.leaveGroup(false)}
-        >
-          <Text style={styles.leaveText}>Leave Round</Text>
-        </TouchableHighlight>
+        {!global.isHost && (
+          <TouchableHighlight
+            style={styles.leaveButton}
+            underlayColor="transparent"
+            onPress={() => this.leaveGroup()}
+          >
+            <Text style={styles.leaveText}>Leave Round</Text>
+          </TouchableHighlight>
+        )}
+        {global.isHost && (
+          <TouchableHighlight
+            style={styles.leaveButton}
+            underlayColor="transparent"
+            onPress={() => this.setState({ leave: true })}
+          >
+            <Text style={styles.leaveText}>End Round</Text>
+          </TouchableHighlight>
+        )}
+        {this.state.leave && (
+          <Alert
+            title="Are you sure you want to leave?"
+            body="Leaving ends the group for everyone"
+            buttonAff="Leave"
+            height="30%"
+            press={() => socket.endRound()}
+            cancel={() => this.setState({ leave: false })}
+          />
+        )}
       </View>
     )
   }
