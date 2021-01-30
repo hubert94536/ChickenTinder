@@ -49,7 +49,7 @@ export default class Loading extends React.Component {
     })
 
     socket.getSocket().once('leave', () => {
-      this.leaveGroup()
+      this.leaveGroup(true)
     })
   }
 
