@@ -26,7 +26,13 @@ import { UID, NAME, USERNAME, PHOTO, EMAIL, PHONE, REGISTRATION_TOKEN } from 're
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { changeName, changeUsername, changeImage } from './frontend/redux/Actions.js'
+import {
+  changeName,
+  changeUsername,
+  changeImage,
+  newNotif,
+  noNotif,
+} from './frontend/redux/Actions.js'
 
 class App extends React.Component {
   constructor() {
@@ -57,6 +63,7 @@ class App extends React.Component {
       onNotification: function (notification) {
         // Consider sending only data, then constructing a notification here to display to the user (as FCM base notification construction is quite limited)
         console.log('Notification received')
+        this.props.newNotif()
         console.log(notification)
         if (!notification.userInteraction) {
           //construct using data
@@ -156,7 +163,8 @@ const mapStateToProps = (state) => {
   const { name } = state
   const { username } = state
   const { image } = state
-  return { name, username, image }
+  const { notif } = state
+  return { name, username, image, notif }
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -165,6 +173,8 @@ const mapDispatchToProps = (dispatch) =>
       changeName,
       changeUsername,
       changeImage,
+      newNotif,
+      noNotif,
     },
     dispatch,
   )
