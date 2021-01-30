@@ -7,6 +7,7 @@ import imgStyles from '../../styles/cardImage.js'
 import normalize from '../../styles/normalize.js'
 
 const height = Dimensions.get('window').height
+const width = Dimensions.get('window').width
 
 export default class GroupCard extends React.Component {
   constructor(props) {
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
     borderRadius: 7,
     alignSelf: 'center',
-    width: height * 0.22,
+    width: width * 0.4,
     height: height * 0.09,
     padding: 0,
     margin: '3%',

@@ -179,7 +179,7 @@ export default class Group extends React.Component {
   render() {
     this.updateMemberList()
     return (
-      <View>
+      <View style={styles.all}>
         <View style={styles.header}>
           <View style={styles.headerFill}>
             <Text style={styles.groupTitle}>
@@ -227,14 +227,13 @@ export default class Group extends React.Component {
                 </Text>
               </View>
               <FlatList
-                style={[styles.center, { marginTop: 0, height: 0.5 * windowHeight }]}
+                style={styles.memberContainer}
                 numColumns={2}
                 ListHeaderComponentStyle={{
                   color: colors.hex,
                   marginBottom: 10,
                 }}
                 data={memberRenderList}
-                contentContainerStyle={[styles.memberContainer]}
                 renderItem={({ item }) => {
                   if (item.f) {
                     return (
@@ -244,8 +243,11 @@ export default class Group extends React.Component {
                             backgroundColor: '#DCDCDC',
                             borderRadius: 7,
                             alignSelf: 'center',
-                            width: 160,
-                            height: 35,
+                            width: windowWidth * 0.4,
+                            height: windowHeight * 0.06,
+                            padding: 0,
+                            margin: '3%',
+                            flexDirection: 'row',
                           }}
                           onPress={() => this.setState({ chooseFriends: true, blur: true })}
                         >
@@ -272,7 +274,6 @@ export default class Group extends React.Component {
                         key={item.key}
                         name={item.name}
                         username={item.username}
-                        style={{ width: 160 }}
                       />
                     )
                   }
@@ -437,6 +438,10 @@ Group.propTypes = {
 
 const styles = StyleSheet.create({
   // Containers
+  all: {
+    height: '100%',
+    width: '100%',
+  },
   main: {
     marginTop: 35,
     flexDirection: 'column',
@@ -543,14 +548,20 @@ const styles = StyleSheet.create({
   },
   bottom: {
     position: 'absolute',
-    bottom: '0%',
+    bottom: '5%',
     left: 0,
     right: 0,
     flexDirection: 'column',
     color: '#aaa',
   },
   memberContainer: {
-    width: '100%',
+    marginLeft: '2%',
+    marginRight: '2%',
+    alignSelf: 'center',
+    height: '55%',
+    overflow: 'hidden',
+    width: '90%',
+    flexGrow: 0,
   },
   subheader: {
     color: '#FFF',
