@@ -237,32 +237,28 @@ export default class Group extends React.Component {
                 renderItem={({ item }) => {
                   if (item.f) {
                     return (
-                      <View>
-                        <TouchableHighlight
+                      <TouchableHighlight
+                        onPress={() => this.setState({ chooseFriends: true, blur: true })}
+                        style={{
+                          backgroundColor: '#ECECEC',
+                          borderRadius: 7,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: windowWidth * 0.4,
+                          height: windowHeight * 0.06,
+                          margin: '3%',
+                        }}
+                      >
+                        <Text
                           style={{
-                            backgroundColor: '#DCDCDC',
-                            borderRadius: 7,
-                            alignSelf: 'center',
-                            width: windowWidth * 0.4,
-                            height: windowHeight * 0.06,
-                            padding: 0,
-                            margin: '3%',
-                            flexDirection: 'row',
+                            color: 'black',
+                            textAlign: 'center',
+                            width: '100%',
                           }}
-                          onPress={() => this.setState({ chooseFriends: true, blur: true })}
                         >
-                          <Text
-                            style={{
-                              color: 'black',
-                              textAlign: 'center',
-                              width: '100%',
-                              lineHeight: normalize(36),
-                            }}
-                          >
-                            + Add Friends
-                          </Text>
-                        </TouchableHighlight>
-                      </View>
+                          + Add Friends
+                        </Text>
+                      </TouchableHighlight>
                     )
                   } else {
                     return (
