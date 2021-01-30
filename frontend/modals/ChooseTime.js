@@ -13,7 +13,7 @@ import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
-import SwitchButton from 'switch-button-react-native'
+import TimeSwitch from './TimeSwitch.js'
 
 export default class Time extends React.Component {
   constructor(props) {
@@ -89,7 +89,7 @@ export default class Time extends React.Component {
                 keyboardType="numeric"
               />
               <View style={styles.switchButton}>
-                <SwitchButton
+                <TimeSwitch
                   onValueChange={(val) => this.setState({ timeMode: val })}
                   text1="pm"
                   text2="am"
