@@ -401,52 +401,17 @@ export default class FilterSelector extends React.Component {
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={[screenStyles.text, styles.filterTitleText]}>Distance</Text>
                   <Text style={styles.filterSubtext}>({this.state.distance} miles)</Text>
-                  <TouchableHighlight
-                    underlayColor={'white'}
+                </View>
+                <BackgroundButton
+                    backgroundColor={this.state.asap ? BACKGROUND_COLOR : ACCENT_COLOR}
+                    textColor={this.state.asap ? ACCENT_COLOR : BACKGROUND_COLOR}
+                    borderColor={BORDER_COLOR}
                     onPress={() => {
                       this.setState({ chooseLocation: true })
                       this.props.setBlur(true)
                     }}
-                    style={[
-                      styles.filterSubtext,
-                      {
-                        backgroundColor: BACKGROUND_COLOR,
-                        borderRadius: 20,
-                        borderWidth: 1,
-                        borderColor: BORDER_COLOR,
-                      },
-                    ]}
-                  >
-                    <Text
-                      style={{
-                        color: TEXT_COLOR,
-                        fontFamily: font,
-                        fontSize: 12,
-                        paddingLeft: 5,
-                        paddingRight: 5,
-                        paddingTop: 3,
-                        paddingBottom: 3,
-                      }}
-                    >
-                      Choose Location
-                    </Text>
-                  </TouchableHighlight>
-                </View>
-                {/* <Slider
-                  style={{
-                    width: '85%',
-                    height: 30,
-                    alignSelf: 'center',
-                  }}
-                  minimumValue={5}
-                  maximumValue={25}
-                  value={5}
-                  step={0.5}
-                  minimumTrackTintColor={TEXT_COLOR}
-                  maximumTrackTintColor={TEXT_COLOR}
-                  thumbTintColor={TEXT_COLOR}
-                  onValueChange={(value) => this.setState({ distance: value })}
-                /> */}
+                    title={'Choose Location'}
+                />
               </View>
 
               {/* PRICE */}
