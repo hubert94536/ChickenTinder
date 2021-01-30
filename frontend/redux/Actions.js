@@ -50,6 +50,18 @@ const hideRefresh = () => {
   }
 }
 
+const newNotif = () => {
+  return {
+    type: 'NEW_NOTIF',
+  }
+}
+
+const noNotif = () => {
+  return {
+    type: 'NO_NOTIF',
+  }
+}
+
 export {
   showError,
   hideError,
@@ -59,4 +71,6 @@ export {
   changeFriends,
   showRefresh,
   hideRefresh,
+  newNotif,
+  noNotif,
 }
