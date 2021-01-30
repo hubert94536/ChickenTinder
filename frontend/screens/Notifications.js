@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 import { Dimensions, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from '@react-native-community/blur'
+import { newNotif, noNotif } from '../redux/Actions.js'
 import Swiper from 'react-native-swiper'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
@@ -23,7 +26,7 @@ AsyncStorage.multiGet([NAME, PHOTO, USERNAME]).then((res) => {
   username = res[2][1]
 })
 
-export default class Notif extends Component {
+class Notif extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -240,6 +243,26 @@ export default class Notif extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  const { notif } = state
+  return { notif }
+}
+//  access the state as this.props.notif
+//  if that's giving you errors, use this.props.notif.notif
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      newNotif,
+      noNotif,
+    },
+    dispatch,
+  )
+//  use as this.props.newNotif() or this.props.noNotif()
+//  if that's giving you errors, use this.props.notif.newNotif()
+
+export default connect(mapStateToProps, mapDispatchToProps)(Notif)
 
 Notif.propTypes = {
   navigation: PropTypes.shape({
