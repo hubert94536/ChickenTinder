@@ -376,6 +376,7 @@ module.exports = (io) => {
             ]).catch((err) => console.error(err))
           }
         }
+        delete socket.user.room
       } catch (err) {
         console.error(err)
       }
