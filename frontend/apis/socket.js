@@ -44,7 +44,7 @@ const leaveRound = () => {
 }
 
 // leaving while forming a group
-const leaveGroup =() => {
+const leaveGroup = () => {
   socket.emit('leave group')
 }
 
