@@ -102,7 +102,6 @@ export default class Group extends React.Component {
     socket.getSocket().once('reselect', () => {
       console.log('reselect')
     })
-  }
 
     socket.getSocket().once('reselect', () => {
       console.log('reselect')
@@ -453,7 +452,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   main: {
-    marginTop: 35,
+    marginTop: windowHeight * 0.05,
     flexDirection: 'column',
     height: '100%',
     flex: 1,
@@ -605,7 +604,7 @@ const styles = StyleSheet.create({
   footerContainer: {
     color: 'white',
     fontFamily: font,
-    height: 30,
+    height: windowHeight * 0.05,
     backgroundColor: 'white',
     padding: 15,
     paddingTop: 25,
