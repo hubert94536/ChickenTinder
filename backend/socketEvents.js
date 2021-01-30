@@ -132,11 +132,6 @@ module.exports = (io) => {
                     }
                   }
                 } else {
-                  delete session.members[socket.user.uid]
-                  await sendCommand('JSON.DEL', [
-                    socket.user.room,
-                    `.members['${socket.user.uid}']`,
-                  ])
                   // Room is still in groups page and receives updated room
                   delete session.members[socket.user.uid]
                   await sendCommand('JSON.DEL', [
@@ -381,7 +376,6 @@ module.exports = (io) => {
             ]).catch((err) => console.error(err))
           }
         }
-        delete socket.user.room
       } catch (err) {
         console.error(err)
       }
