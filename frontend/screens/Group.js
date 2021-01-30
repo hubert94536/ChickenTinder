@@ -221,7 +221,7 @@ export default class Group extends React.Component {
           style={styles.drawer}
           initialDrawerPos={100}
           pointerEvents={this.state.blur ? 'none' : 'auto'}
-          renderContainerView={() => (
+          renderContainerView={
             <View style={styles.main}>
               <View style={styles.center}>
                 <Icon name="user" style={[styles.icon, { color: colors.hex }]} />
@@ -318,10 +318,10 @@ export default class Group extends React.Component {
                 press={() => this.setState({ chooseFriends: false, blur: false })}
               />
             </View>
-          )}
+          }
           offset={windowHeight / 6}
           objectHeight={global.isHost ? 400 : 350}
-          renderDrawerView={() => (
+          renderDrawerView={
             <View>
               <View>
                 <View
@@ -364,7 +364,7 @@ export default class Group extends React.Component {
                 </View>
               </View>
             </View>
-          )}
+          }
         />
         <View style={styles.bottom}>
           <Text style={styles.bottomText}>

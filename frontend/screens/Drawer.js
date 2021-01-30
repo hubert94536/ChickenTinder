@@ -78,8 +78,8 @@ class Drawer extends Component {
   }
 
   render() {
-    const containerView = this.props.renderContainerView()
-    const drawerView = this.props.renderDrawerView()
+    const containerView = this.props.renderContainerView
+    const drawerView = this.props.renderDrawerView
 
     return (
       <View
@@ -190,8 +190,8 @@ Drawer.propTypes = {
   offset: PropTypes.number,
   onOpen: PropTypes.func,
   onClose: PropTypes.func,
-  renderContainerView: PropTypes.func,
-  renderDrawerView: PropTypes.func,
+  renderContainerView: PropTypes.object,
+  renderDrawerView: PropTypes.object,
 }
 
 Drawer.defaultProps = {

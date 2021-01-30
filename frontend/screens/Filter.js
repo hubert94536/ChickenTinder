@@ -217,13 +217,6 @@ class FilterSelector extends React.Component {
     else return categories.toString()
   }
 
-  // this will pass the filters to the groups page
-  handlePress(setFilters) {
-    if (global.isHost) {
-      Socket.startSession(setFilters)
-    }
-  }
-
   //  formats the filters to call yelp api
   evaluateFilters() {
     const filters = {}
@@ -255,15 +248,17 @@ class FilterSelector extends React.Component {
     } else {
       filters.latitude = this.state.location.latitude
       filters.longitude = this.state.location.longitude
-      this.handlePress(filters)
+      if (global.isHost) {
+        Socket.startSession(filters)
+      }
     }
   }
 
   startSession() {
-    if (this.state.useCurrentLocation === false && this.state.location === null) {
+    console.log('session-start')
+    if (this.state.location === null) {
       // this.props.setBlur(true)
       this.setState({ locationAlert: true })
-
     } else if (this.state.majority && this.state.distance) {
       this.evaluateFilters()
     }
@@ -527,7 +522,7 @@ class FilterSelector extends React.Component {
             visible={this.state.locationAlert}
           />
         )}
-        {this.props.error && (
+        {/* {this.props.error && (
           <Alert
             title="Error, please try again"
             buttonAff="Close"
@@ -540,9 +535,9 @@ class FilterSelector extends React.Component {
               this.props.hideError()
               this.props.setBlur(false)
             }}
-            visible={this.props.error}
+            visible={this.props.error} 
           />
-        )}
+        )}*/}
 
         {/* ------------------------------------------MODALS------------------------------------------ */}
         <ChooseFriends
@@ -614,18 +609,18 @@ class FilterSelector extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  const { error } = state
-  return { error }
-};
+// const mapStateToProps = (state) => {
+//   const { error } = state
+//   return { error }
+// };
 
-const mapDispatchToProps = dispatch => (
-  bindActionCreators({
-    showError, hideError
-  }, dispatch)
-);
+// const mapDispatchToProps = dispatch => (
+//   bindActionCreators({
+//     showError, hideError
+//   }, dispatch)
+// );
 
-export default connect(mapStateToProps, mapDispatchToProps)(FilterSelector);
+// export default connect(mapStateToProps, mapDispatchToProps)(FilterSelector);
 
 FilterSelector.propTypes = {
   handleUpdate: PropTypes.func,
@@ -722,3 +717,5 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
 })
+
+export default FilterSelector
