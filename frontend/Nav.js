@@ -1,12 +1,13 @@
 import React from 'react'
 import { Dimensions, StyleSheet, TouchableHighlight, View } from 'react-native'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import colors from '../styles/colors.js'
 
 const height = Dimensions.get('window').height
 
-export default class TabBar extends React.Component {
+class TabBar extends React.Component {
   render() {
     return (
       <View style={styles.bar}>
@@ -54,6 +55,14 @@ export default class TabBar extends React.Component {
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  const { notif } = state
+  return { notif }
+}
+//  access this as this.props.notif
+
+export default connect(mapStateToProps)(TabBar)
 
 const styles = StyleSheet.create({
   bar: {
