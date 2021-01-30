@@ -159,7 +159,6 @@ export default class TimeSwitch extends Component {
             </View>
           </View>
         </TouchableOpacity>
-        {this.props.children}
       </View>
     )
   }
@@ -201,5 +200,4 @@ TimeSwitch.propTypes = {
   btnBackgroundColor: PropTypes.string,
   fontColor: PropTypes.string,
   activeFontColor: PropTypes.string,
-  children: PropTypes.optionalObject,
 }
