@@ -97,8 +97,8 @@ export default class FilterSelector extends React.Component {
       selectedCuisine: [],
       selectedPrice: [],
       selectedRestriction: [],
-      selectedSize: [],
-      selectedMajority: [],
+      selectedSize: [ 10 ],
+      selectedMajority: ['All'],
 
       // MODALS
       chooseFriends: false,
