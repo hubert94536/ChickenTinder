@@ -48,22 +48,18 @@ export default class Round extends React.Component {
     if (end) {
       socket.endLeave()
     } else {
-      socket.leaveRoom()
+      socket.leaveRound()
     }
     global.code = ''
     global.host = ''
     global.isHost = false
+    global.restaurants = []
     this.props.navigation.replace('Home')
   }
 
   endGroup() {
     this.setState({ leave: false })
     socket.endRound()
-    global.code = ''
-    global.host = ''
-    global.isHost = false
-    global.restaurants = []
-    this.props.navigation.replace('Home')
   }
 
   render() {

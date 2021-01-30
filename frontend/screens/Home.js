@@ -1,5 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
+import { bindActionCreators } from 'redux'
+import { changeFriends, hideError, showError } from '../redux/Actions.js'
+import { connect } from 'react-redux'
 import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { USERNAME, NAME, PHOTO, PHONE, EMAIL } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -27,14 +30,22 @@ class Home extends React.Component {
       join: false,
       inviteInfo: '',
       friends: '',
-      errorAlert: false,
     }
+
+    friendsApi
+      .getFriends()
+      .then((res) => {
+        this.props.changeFriends(res.friendList)
+      })
+      .catch(() => {
+        this.props.showError()
+      })
 
     socket.getSocket().once('update', (res) => {
       this.setState({ invite: false })
       global.host = res.members[res.host].username
       global.code = res.code
-      global.isHost = res.members[res.host].username === global.username
+      global.isHost = res.members[res.host].username === this.props.username.username
       this.props.navigation.navigate('Group', {
         response: res,
       })
@@ -45,11 +56,11 @@ class Home extends React.Component {
       global.host = res.host
       this.props.navigation.navigate('Group', {
         response: res,
-        username: global.username,
+        username: this.props.username.username,
       })
     })
 
-    //uncomment if testing friends/requests
+    // //uncomment if testing friends/requests
     // accountsApi.createFBUserTest('Hubert', 2, 'hubesc', 'hubesc@gmail.com', '10', '45678907')
     // accountsApi.createFBUserTest('Hanna', 3, 'hco', 'hco@gmail.com', '11', '45678901')
     // accountsApi.createFBUserTest('Anna', 4, 'annax', 'annx@gmail.com', '12', '45678902')
@@ -149,13 +160,13 @@ class Home extends React.Component {
           cancel={() => this.setState({ join: false })}
           onPress={() => this.setState({ join: false })}
         />
-        {this.state.errorAlert && (
+        {this.props.error && (
           <Alert
             title="Error, please try again"
             buttonAff="Close"
             height="20%"
-            press={() => this.setState({ errorAlert: false })}
-            cancel={() => this.setState({ errorAlert: false })}
+            press={() => this.props.hideError()}
+            cancel={() => this.props.hideError()}
           />
         )}
       </View>
@@ -163,8 +174,33 @@ class Home extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  const { friends } = state
+  const { error } = state
+  const { username } = state
+  return { friends, error, username }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      changeFriends,
+      showError,
+      hideError,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home)
+
 Home.propTypes = {
   navigation: PropTypes.object,
+  // error: PropTypes.bool,
+  // friends: PropTypes.object,
+  // username: PropTypes.object,
+  showError: PropTypes.func,
+  hideError: PropTypes.func,
+  changeFriends: PropTypes.func,
 }
 const styles = StyleSheet.create({
   button: {
@@ -179,5 +215,3 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 })
-
-export default Home

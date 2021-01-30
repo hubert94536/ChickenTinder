@@ -104,6 +104,11 @@ export default class Group extends React.Component {
     })
   }
 
+    socket.getSocket().once('reselect', () => {
+      console.log('reselect')
+    })
+  }
+
   setUserSubmit() {
     this.setState({ userSubmitted: true })
   }
@@ -151,15 +156,24 @@ export default class Group extends React.Component {
 
   leaveGroup(end) {
     socket.getSocket().off()
+    // leaving due to host ending session
     if (end) {
       socket.endLeave()
-    } else {
-      socket.leaveRoom()
+    }
+    // normal user leaves
+    else {
+      socket.leaveGroup()
     }
     global.code = ''
     global.host = ''
     global.isHost = false
     this.props.navigation.replace('Home')
+  }
+
+  // host ends session
+  endGroup() {
+    this.setState({ endAlert: false })
+    socket.endRound()
   }
 
   // shows proper alert based on if user is host
@@ -294,7 +308,7 @@ export default class Group extends React.Component {
                   body="You will not be able to return"
                   buttonAff="Yes"
                   height="20%"
-                  press={() => socket.endRound()}
+                  press={() => this.endGroup()}
                   cancel={() => this.cancelAlert()}
                 />
               )}
