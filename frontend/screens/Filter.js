@@ -1,17 +1,18 @@
 /* eslint-disable prettier/prettier */
 import React from 'react'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux';
 import {
   PermissionsAndroid,
   StyleSheet,
-  Switch,
   Text,
   TouchableHighlight,
   View,
 } from 'react-native'
 // import { BlurView } from '@react-native-community/blur'
 import Geolocation from 'react-native-geolocation-service'
+import { hideError, showError } from '../redux/Actions.js'
 import PropTypes from 'prop-types'
-import Slider from '@react-native-community/slider'
 import Swiper from 'react-native-swiper'
 import Alert from '../modals/Alert.js'
 import ChooseFriends from '../modals/ChooseFriends.js'
@@ -52,7 +53,7 @@ const tagsDiet = ['Vegan', 'Vegetarian']
 
 const tagsPrice = ['$', '$$', '$$$', '$$$$']
 
-const tagsSizes = [10, 20, 30]
+const tagsSizes = [10, 20, 30, 40, 50]
 
 //  requests the users permission
 const requestLocationPermission = async () => {
@@ -78,7 +79,7 @@ const requestLocationPermission = async () => {
 
 const date = new Date()
 
-export default class FilterSelector extends React.Component {
+class FilterSelector extends React.Component {
   constructor(props) {
     super(props)
     const date = new Date()
@@ -86,12 +87,12 @@ export default class FilterSelector extends React.Component {
     this.state = {
       // Filters
       distance: 5,
-      zipcode: '',
       location: null,
-      useCurrentLocation: false,
+
       hour: date.getUTCHours(),
       minute: date.getUTCMinutes(),
       asap: true,
+
       lat: 0,
       long: 0,
       size: 10,
@@ -99,8 +100,8 @@ export default class FilterSelector extends React.Component {
       selectedCuisine: [],
       selectedPrice: [],
       selectedRestriction: [],
-      selectedSize: [],
-      selectedMajority: [],
+      selectedSize: [ 10 ],
+      selectedMajority: ['All'],
 
       // MODALS
       chooseFriends: false,
@@ -110,7 +111,6 @@ export default class FilterSelector extends React.Component {
       chooseTime: false,
 
       // ALERTS
-      errorAlert: false,
       locationAlert: false,
 
       // SWIPER
@@ -217,13 +217,6 @@ export default class FilterSelector extends React.Component {
     else return categories.toString()
   }
 
-  // this will pass the filters to the groups page
-  handlePress(setFilters) {
-    if (global.isHost) {
-      Socket.startSession(setFilters)
-    }
-  }
-
   //  formats the filters to call yelp api
   evaluateFilters() {
     const filters = {}
@@ -248,28 +241,24 @@ export default class FilterSelector extends React.Component {
     filters.groupSize = this.props.members.length
     filters.limit = this.state.selectedSize[0]
     //  making sure we have a valid location
-    if (this.state.location === null && this.state.useCurrentLocation === false) {
+
+    if (this.state.location === null) {
       this.setState({ locationAlert: true })
       this.props.setBlur(true)
-    } else if (this.state.useCurrentLocation) {
-      filters.latitude = this.state.lat
-      filters.longitude = this.state.long
-      this.handlePress(filters)
     } else {
-      filters.location = this.state.location
-      this.handlePress(filters)
+      filters.latitude = this.state.location.latitude
+      filters.longitude = this.state.location.longitude
+      if (global.isHost) {
+        Socket.startSession(filters)
+      }
     }
   }
 
-  setLocation(zip) {
-    this.setState({ zipcode: zip, chooseLocation: false })
-  }
-
   startSession() {
-    if (this.state.useCurrentLocation === false && this.state.location === null) {
+    console.log('session-start')
+    if (this.state.location === null) {
       // this.props.setBlur(true)
       this.setState({ locationAlert: true })
-
     } else if (this.state.majority && this.state.distance) {
       this.evaluateFilters()
     }
@@ -409,62 +398,16 @@ export default class FilterSelector extends React.Component {
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={[screenStyles.text, styles.filterTitleText]}>Distance</Text>
                   <Text style={styles.filterSubtext}>({this.state.distance} miles)</Text>
-                  <TouchableHighlight
-                    underlayColor={'white'}
+                </View>
+                <BackgroundButton
+                    backgroundColor={this.state.asap ? BACKGROUND_COLOR : ACCENT_COLOR}
+                    textColor={this.state.asap ? ACCENT_COLOR : BACKGROUND_COLOR}
+                    borderColor={BORDER_COLOR}
                     onPress={() => {
                       this.setState({ chooseLocation: true })
                       this.props.setBlur(true)
                     }}
-                    style={[
-                      styles.filterSubtext,
-                      {
-                        backgroundColor: BACKGROUND_COLOR,
-                        borderRadius: 20,
-                        borderWidth: 1,
-                        borderColor: BORDER_COLOR,
-                      },
-                    ]}
-                  >
-                    <Text
-                      style={{
-                        color: TEXT_COLOR,
-                        fontFamily: font,
-                        fontSize: 12,
-                        paddingLeft: 5,
-                        paddingRight: 5,
-                        paddingTop: 3,
-                        paddingBottom: 3,
-                      }}
-                    >
-                      Choose Location
-                    </Text>
-                  </TouchableHighlight>
-                  <Switch
-                    thumbColor={'white'}
-                    trackColor={{ true: '#eba2a8' }}
-                    style={{ marginTop: '1%', marginLeft: '3%' }}
-                    value={this.state.useCurrentLocation}
-                    onValueChange={(val) => {
-                      this.setState({
-                        useCurrentLocation: val,
-                      })
-                    }}
-                  />
-                </View>
-                <Slider
-                  style={{
-                    width: '85%',
-                    height: 30,
-                    alignSelf: 'center',
-                  }}
-                  minimumValue={5}
-                  maximumValue={25}
-                  value={5}
-                  step={0.5}
-                  minimumTrackTintColor={TEXT_COLOR}
-                  maximumTrackTintColor={TEXT_COLOR}
-                  thumbTintColor={TEXT_COLOR}
-                  onValueChange={(value) => this.setState({ distance: value })}
+                    title={'Choose Location'}
                 />
               </View>
 
@@ -580,23 +523,23 @@ export default class FilterSelector extends React.Component {
             visible={this.state.locationAlert}
           />
         )}
-        {this.state.errorAlert && (
+        {/* {this.props.error && (
           <Alert
             title="Error, please try again"
             buttonAff="Close"
             height="20%"
             blur
             press={() => {
-              this.setState({ errorAlert: false })
+              this.props.hideError()
               this.props.setBlur(false)
             }}
             cancel={() => {
-              this.setState({ errorAlert: false })
+              this.props.hideError()
               this.props.setBlur(false)
             }}
-            visible={this.state.errorAlert}
+            visible={this.props.error} 
           />
-        )}
+        )}*/}
 
         {/* ------------------------------------------MODALS------------------------------------------ */}
         <ChooseFriends
@@ -650,8 +593,12 @@ export default class FilterSelector extends React.Component {
         />
         <Location
           visible={this.state.chooseLocation}
-          press={(zip) => {
-            this.setLocation(zip)
+          update={(dist, loc) => {
+            this.setState({ 
+              chooseLocation: false,
+              distance: dist,
+              location: loc,
+            })
             this.props.setBlur(false)
           }}
           cancel={() => {
@@ -664,10 +611,26 @@ export default class FilterSelector extends React.Component {
   }
 }
 
+// const mapStateToProps = (state) => {
+//   const { error } = state
+//   return { error }
+// };
+
+// const mapDispatchToProps = dispatch => (
+//   bindActionCreators({
+//     showError, hideError
+//   }, dispatch)
+// );
+
+// export default connect(mapStateToProps, mapDispatchToProps)(FilterSelector);
+
 FilterSelector.propTypes = {
   handleUpdate: PropTypes.func,
   setBlur: PropTypes.func,
   members: PropTypes.array,
+  // error: PropTypes.bool,
+  showError: PropTypes.func,
+  hideError: PropTypes.func
 }
 
 const styles = StyleSheet.create({
@@ -756,3 +719,5 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
 })
+
+export default FilterSelector

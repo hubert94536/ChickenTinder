@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
+import { bindActionCreators } from 'redux'
+import { changeFriends, hideError, hideRefresh, showError, showRefresh } from '../redux/Actions.js'
+import { connect } from 'react-redux'
 import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native'
-import { USERNAME } from 'react-native-dotenv'
 import { BlurView } from '@react-native-community/blur'
 import { SearchBar } from 'react-native-elements'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
 import accountsApi from '../apis/accountsApi.js'
 import Alert from '../modals/Alert.js'
@@ -12,9 +13,7 @@ import friendsApi from '../apis/friendsApi.js'
 import screenStyles from '../../styles/screenStyles.js'
 import TabBar from '../Nav.js'
 
-var username = ''
-
-export default class Search extends Component {
+class Search extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -25,21 +24,14 @@ export default class Search extends Component {
       deleteFriendName: '',
       value: '',
     }
-    AsyncStorage.getItem(USERNAME).then((res) => {
-      username = res
-      friendsApi
-        .getFriends()
-        .then((res) => {
-          var friendsMap = new Object()
-          for (var friend in res.friendList) {
-            friendsMap[res.friendList[friend].uid] = res.friendList[friend].status
-          }
-          this.setState({ friends: friendsMap })
-        })
-        .catch(() => {
-          this.setState({ errorAlert: true })
-        })
-    })
+  }
+
+  componentDidMount() {
+    var friendsMap = new Object()
+    for (var friend in this.props.friends.friends) {
+      friendsMap[this.props.friends.friends[friend].uid] = this.props.friends.friends[friend].status
+    }
+    this.setState({ friends: friendsMap })
   }
 
   searchFilterFunction = (text) => {
@@ -83,6 +75,7 @@ export default class Search extends Component {
     friendsApi
       .removeFriendship(friend)
       .then(() => {
+        this.props.changeFriends(newArr)
         this.setState({ friends: newArr })
       })
       .catch(() => {
@@ -118,7 +111,7 @@ export default class Search extends Component {
               image={item.image}
               uid={item.uid}
               username={item.username}
-              currentUser={username}
+              currentUser={this.props.username.username}
               total={this.state.data}
               status={item.status}
               key={item.uid}
@@ -164,8 +157,39 @@ export default class Search extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  const { error } = state
+  const { refresh } = state
+  const { friends } = state
+  const { username } = state
+  return { error, refresh, friends, username }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      showError,
+      hideError,
+      showRefresh,
+      hideRefresh,
+      changeFriends,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(Search)
+
 Search.propTypes = {
   navigation: PropTypes.object,
+  // error: PropTypes.bool,
+  // refresh: PropTypes.bool,
+  // friends: PropTypes.object,
+  // username: PropTypes.object,
+  showError: PropTypes.func,
+  showRefresh: PropTypes.func,
+  hideError: PropTypes.func,
+  hideRefresh: PropTypes.func,
+  changeFriends: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

@@ -28,7 +28,7 @@ const createFBUserTest = async (name, uid, username, email, photo, phone) => {
       return res.status
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -46,7 +46,7 @@ const createFBUser = async (name, username, email, photo, phone) => {
       return res.status
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -69,7 +69,7 @@ const getAllUsers = async () => {
       }
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -94,7 +94,7 @@ const searchUsers = async (text) => {
       }
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -106,7 +106,7 @@ const deleteUser = async () => {
       return res.status
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -125,7 +125,7 @@ const getUser = async () => {
       }
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -178,7 +178,7 @@ const updateUser = async (req) => {
       }
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -192,7 +192,7 @@ const checkUsername = async (username) => {
       return res.status
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -206,7 +206,7 @@ const checkPhoneNumber = async (phoneNumber) => {
       return res.status
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -220,7 +220,7 @@ const checkEmail = async (email) => {
       return res.status
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 

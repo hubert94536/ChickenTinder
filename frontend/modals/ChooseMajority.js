@@ -38,8 +38,6 @@ export default class Majority extends React.Component {
     }
     let s = parseInt(this.state.selectedValue)
 
-    console.log(this.props.max)
-
     // Adjust min/max round lengths
     if (s < 1 || s > this.props.max || isNaN(s)) {
       this.setState({ invalidValue: true })

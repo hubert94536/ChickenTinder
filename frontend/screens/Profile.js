@@ -1,4 +1,7 @@
 import React, { Component } from 'react'
+import { bindActionCreators } from 'redux'
+import { changeImage, changeName, changeUsername, hideError, showError } from '../redux/Actions.js'
+import { connect } from 'react-redux'
 import { Image, Keyboard, StyleSheet, Text, View } from 'react-native'
 import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -19,14 +22,12 @@ import PropTypes from 'prop-types'
 import EditProfile from '../modals/EditProfile.js'
 import Settings from '../modals/ProfileSettings.js'
 
-export default class UserProfileView extends Component {
+class UserProfileView extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      nameValue: global.name,
-      usernameValue: global.username,
-      name: global.name,
-      username: global.username,
+      nameValue: this.props.name.name,
+      usernameValue: this.props.username.username,
       friends: true,
       visible: false,
       edit: false,
@@ -38,7 +39,6 @@ export default class UserProfileView extends Component {
       // show alert
       logoutAlert: false,
       deleteAlert: false,
-      errorAlert: false,
       // friends text
       numFriends: 0,
       imageData: null,
@@ -47,21 +47,20 @@ export default class UserProfileView extends Component {
 
   // getting current user's info
   async changeName() {
-    if (this.state.nameValue !== global.name) {
+    if (this.state.nameValue !== this.props.name.name) {
       const name = this.state.nameValue
       return accountsApi
         .updateName(name)
         .then(() => {
           // update name locally
           AsyncStorage.setItem(NAME, name)
-          global.name = name
-          this.setState({ name: name })
+          this.props.changeName(name)
           Keyboard.dismiss()
         })
         .catch(() => {
-          this.setState({ errorAlert: true })
+          this.props.showError()
           this.setState({
-            nameValue: global.name,
+            nameValue: this.props.name.name,
           })
           Keyboard.dismiss()
         })
@@ -69,26 +68,26 @@ export default class UserProfileView extends Component {
   }
 
   async changeUsername() {
-    if (global.username !== this.state.usernameValue) {
+    if (this.props.username.username !== this.state.usernameValue) {
       const user = this.state.usernameValue
-      return accountsApi
+      accountsApi
         .checkUsername(user)
         .then(() => {
           // update username locally
           return accountsApi.updateUsername(user).then(() => {
             AsyncStorage.setItem(USERNAME, user)
-            global.username = user
-            this.setState({ username: user })
+            this.props.changeUsername(user)
             Keyboard.dismiss()
           })
         })
         .catch((error) => {
-          if (error === 404) {
+          console.log(error.status === 404)
+          if (error.status === 404) {
             this.setState({ takenAlert: true })
           } else {
-            this.setState({ errorAlert: true })
+            this.props.hideError()
           }
-          this.setState({ usernameValue: global.username })
+          this.setState({ usernameValue: this.props.username.username })
           Keyboard.dismiss()
         })
     }
@@ -103,18 +102,13 @@ export default class UserProfileView extends Component {
         this.props.navigation.replace('Login')
       })
       .catch(() => {
-        this.setState({ errorAlert: true })
+        this.props.hideError()
       })
   }
 
   // close alert for taken username
   closeTaken() {
     this.setState({ takenAlert: false })
-  }
-
-  // close alert for error
-  closeError() {
-    this.setState({ errorAlert: false })
   }
 
   // cancel deleting your account
@@ -131,7 +125,7 @@ export default class UserProfileView extends Component {
         this.props.navigation.replace('Login')
       })
       .catch(() => {
-        this.setState({ errorAlert: true })
+        this.props.showError()
       })
   }
 
@@ -140,10 +134,10 @@ export default class UserProfileView extends Component {
   }
 
   makeChanges() {
-    if (global.name !== this.state.nameValue) {
+    if (this.props.name.name !== this.state.nameValue) {
       this.changeName()
     }
-    if (global.username !== this.state.usernameValue) {
+    if (this.props.username.username !== this.state.usernameValue) {
       if (this.state.usernameValue[0] === '@') {
         var userTemp = this.state.usernameValue.slice(1)
         this.setState({ usernameValue: userTemp })
@@ -170,11 +164,11 @@ export default class UserProfileView extends Component {
           type: image.mime,
           name: 'avatar',
         },
-        oldImage: global.photo,
+        oldImage: this.props.image.image,
         image: image.path,
       })
-      global.photo = image.path
-      AsyncStorage.setItem(PHOTO, global.image)
+      this.props.image.image = image.path
+      AsyncStorage.setItem(PHOTO, this.props.image.image)
     })
   }
 
@@ -189,22 +183,14 @@ export default class UserProfileView extends Component {
   editProfile() {
     this.setState({
       edit: true,
-      nameValue: global.name,
-      usernameValue: global.username,
+      nameValue: this.props.name.name,
+      usernameValue: this.props.username.username,
       changeName: false,
     })
   }
 
   render() {
-    const {
-      numFriends,
-      visible,
-      edit,
-      logoutAlert,
-      deleteAlert,
-      errorAlert,
-      takenAlert,
-    } = this.state
+    const { numFriends, visible, edit, logoutAlert, deleteAlert, takenAlert } = this.state
 
     return (
       <View style={[screenStyles.mainContainer]}>
@@ -219,18 +205,20 @@ export default class UserProfileView extends Component {
                 onPress={() => this.setState({ visible: true })}
               />
             </View>
-            <Image source={global.photo} style={screenStyles.avatar} />
+            <Image source={this.props.image.image} style={screenStyles.avatar} />
             <View style={[styles.infoContainer]}>
               <View style={[styles.nameContainer]}>
                 <View style={[styles.nameFiller]}></View>
-                <Text style={(screenStyles.text, styles.name)}>{this.state.name}</Text>
+                <Text style={(screenStyles.text, styles.name)}>{this.props.name.name}</Text>
                 <Icon
                   name="pencil-outline"
                   style={styles.pencil}
                   onPress={() => this.editProfile()}
                 />
               </View>
-              <Text style={(screenStyles.text, styles.username)}>{'@' + this.state.username}</Text>
+              <Text style={(screenStyles.text, styles.username)}>
+                {'@' + this.props.username.username}
+              </Text>
             </View>
             <Text style={(screenStyles.text, styles.friends)}>Your Friends</Text>
             <Text style={[screenStyles.text, styles.friendNum]}>{numFriends + ' friends'}</Text>
@@ -301,13 +289,13 @@ export default class UserProfileView extends Component {
             />
           )}
 
-          {errorAlert && (
+          {this.props.error && (
             <Alert
               title="Error, please try again"
               buttonAff="Close"
               height="20%"
-              press={() => this.setState({ errorAlert: false })}
-              cancel={() => this.setState({ errorAlert: false })}
+              press={() => this.props.hideError()}
+              cancel={() => this.props.hideError()}
             />
           )}
           {takenAlert && (
@@ -325,8 +313,39 @@ export default class UserProfileView extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  const { error } = state
+  const { name } = state
+  const { username } = state
+  const { image } = state
+  return { error, name, username, image }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      showError,
+      hideError,
+      changeName,
+      changeUsername,
+      changeImage,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserProfileView)
+
 UserProfileView.propTypes = {
   navigation: PropTypes.object,
+  showError: PropTypes.func,
+  hideError: PropTypes.func,
+  changeName: PropTypes.func,
+  changeUsername: PropTypes.func,
+  changeImage: PropTypes.func,
+  // name: PropTypes.object,
+  // username: PropTypes.object,
+  // image: PropTypes.object,
+  // error: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({
