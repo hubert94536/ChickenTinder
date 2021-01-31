@@ -74,10 +74,10 @@ const unlinkToken = async (req, res) => {
 const testNotif = (req, res) => {
   try {
     Notifications.create({
-      receiver_id: req.body.id,
+      receiver_uid: req.body.id,
       type: req.body.type,
       content: 'message',
-      sender_id: req.body.id,
+      sender_uid: req.body.id,
     })
     return res.status(200).send('test sent')
   } catch (error) {
