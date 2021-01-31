@@ -2,6 +2,7 @@ import React from 'react'
 import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { bindActionCreators } from 'redux'
+import { BlurView } from '@react-native-community/blur'
 import { connect } from 'react-redux'
 import { hideError, showError } from '../redux/Actions.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -9,6 +10,7 @@ import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
+import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 
 class Card extends React.Component {
@@ -145,7 +147,20 @@ class Card extends React.Component {
             />
           </View>
         )}
+
+{/* ============================================================== */}
+{this.state.deleteFriend && (
+        <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+          )}
+{/* Do this in search.js smh stupid */}
+{/* ======================================================================= */}
         {this.state.deleteFriend && (
+          
           <Alert
             title={'Unfriend ' + this.props.name}
             body="If you change your mind, you'll have to send a friends request again."
@@ -153,7 +168,7 @@ class Card extends React.Component {
             buttonNeg="Cancel"
             height="28%"
             twoButton
-            blur
+            blur = {false}
             press={() => {
               this.deleteFriend()
             }}
