@@ -15,7 +15,7 @@ import {
 } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import FBSDK from 'react-native-fbsdk'
-import Firebase from 'firebase'
+import Firebase from '@react-native-firebase/app'
 import accountsApi from './accountsApi.js'
 import notificationsApi from './notificationsApi.js'
 import socket from './socket.js'
@@ -33,17 +33,8 @@ const config = {
 
 if (!Firebase.apps.length) Firebase.initializeApp(config)
 
-const loginWithFacebook = async () => {
-  try {
-    // Attempt a login using the Facebook login dialog asking for default permissions.
-    const login = await LoginManager.logInWithPermissions(['public_profile', 'email'])
-    if (login.isCancelled) {
-      return Promise.reject(new Error('Cancelled request'))
-    }
-    const token = await AccessToken.getCurrentAccessToken()
-    const credential = await Firebase.auth.FacebookAuthProvider.credential(token.accessToken)
-    // Sign in with Firebase oauth using credential and authentication token
-    const userCredential = await Firebase.auth().signInWithCredential(credential)
+const loginWithCredential = async (userCredential) => {
+  try{ 
     // Get info from database if not new user
     if (!userCredential.additionalUserInfo.isNewUser) {
       const user = await accountsApi.getUser()
@@ -73,27 +64,46 @@ const loginWithFacebook = async () => {
       return 'Home'
     }
     // Set user's info locally
-    await AsyncStorage.multiSet([
-      [NAME, userCredential.additionalUserInfo.profile.name],
-      [EMAIL, userCredential.additionalUserInfo.profile.email],
-      [UID, Firebase.auth().currentUser.uid],
-    ])
+    await AsyncStorage.setItem(UID, userCredential.user.uid)
+    if (userCredential.user.providerId === "FacebookAuthProviderID") {
+      await AsyncStorage.multiSet([
+        [NAME, userCredential.additionalUserInfo.profile.name],
+        [EMAIL, userCredential.additionalUserInfo.profile.email]
+      ])
+    }
     return 'CreateAccount'
-  } catch (error) {
-    Promise.reject(error)
+  } catch (err) {
+    return Promise.reject(err)
+  }
+}
+
+const loginWithFacebook = async () => {
+  try {
+    // Attempt a login using the Facebook login dialog asking for default permissions.
+    const login = await LoginManager.logInWithPermissions(['public_profile', 'email'])
+    if (login.isCancelled) {
+      return Promise.reject(new Error('Cancelled request'))
+    }
+    const token = await AccessToken.getCurrentAccessToken()
+    const credential = await Firebase.auth.FacebookAuthProvider.credential(token.accessToken)
+    // Sign in with Firebase oauth using credential and authentication token
+    const userCredential = await Firebase.auth().signInWithCredential(credential)
+    return login(userCredential)
+  } catch (err) {
+    return Promise.reject(err)
   }
 }
 
 // Log out of Firebase and Facebook, disconnect socket
-const logoutWithFacebook = async () => {
+const logout = async () => {
   try {
     socket.getSocket().disconnect()
+    if ( Firebase.auth().currentUser.providerId === "FacebookAuthProviderID" ) { LoginManager.logOut() }
+    await notificationsApi.unlinkToken()
     await Firebase.auth().signOut()
-    LoginManager.logOut()
-    notificationsApi.unlinkToken()
     await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
   } catch (err) {
-    Promise.reject(err)
+    return Promise.reject(err)
   }
 }
 
@@ -112,12 +122,13 @@ const deleteUser = async () => {
     await Firebase.auth().currentUser.delete()
     await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
   } catch (err) {
-    Promise.reject(err)
+    return Promise.reject(err)
   }
 }
 
 export default {
   deleteUser,
   loginWithFacebook,
-  logoutWithFacebook,
+  logout,
+  loginWithCredential
 }

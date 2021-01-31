@@ -1,5 +1,5 @@
 import Axios from 'axios'
-import Firebase from 'firebase'
+import Firebase from '@react-native-firebase/app'
 
 const accountsApi = Axios.create({
   baseURL: 'https://wechews.herokuapp.com',
@@ -189,9 +189,11 @@ const checkUsername = async (username) => {
       username: username,
     })
     .then((res) => {
+      console.log(res);
       return res.status
     })
     .catch((error) => {
+      console.log(error)
       return Promise.reject(error.response)
     })
 }

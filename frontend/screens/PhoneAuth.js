@@ -5,6 +5,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
+import facebookService from '../apis/facebookService.js'
 
 const font = 'CircularStd-Bold'
 const fontMed = 'CirularStd-Medium'
@@ -23,16 +24,22 @@ class PhoneAuthScreen extends Component {
     }
   }
 
-  validatePhoneNumber() {
-    var regexp = /1?\W*([2-9][0-8][0-9])\W*([2-9][0-9]{2})\W*([0-9]{4})(\se?x?t?(\d*))?/
+  validatePhoneNumber = () => {
+    const regexp = /^\+?(\d{1,2})?\s?\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/
     return regexp.test(this.state.phone)
   }
 
-  async handleSendCode() {
+  formatPhoneNumber = (number) => {
+    const regexp = /^\+?(\d{1,2})?\s?\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/
+    const matches = number.match(regexp)
+    return `+${matches[1] || 1}${matches[2]}${matches[3]}${matches[4]}`
+  }
+
+  handleSendCode = async() => {
     // Request to send OTP
     if (this.validatePhoneNumber()) {
       auth()
-        .signInWithPhoneNumber(this.state.phone)
+        .signInWithPhoneNumber(this.formatPhoneNumber(this.state.phone))
         .then((res) => {
           this.setState({ confirmResult: res })
         })
@@ -45,21 +52,20 @@ class PhoneAuthScreen extends Component {
     }
   }
 
-  changePhoneNumber() {
+  changePhoneNumber = () => {
     this.setState({ confirmResult: null, verificationCode: '' })
   }
 
-  async handleVerifyCode() {
+  handleVerifyCode = async() => {
     // Request for OTP verification
     const { confirmResult, verificationCode } = this.state
     if (verificationCode.length === 6) {
       confirmResult
         .confirm(verificationCode)
-        .then((user) => {
-          console.log(user)
-          this.setState({ userId: user.uid })
-          this.props.navigation.navigate('Username')
-        })
+        .then((userCredential) => 
+          facebookService.loginWithCredential(userCredential)
+        )
+        .then((result) => this.props.navigation.replace(result))
         .catch((error) => {
           this.setState({ errorAlert: true })
           console.log(error)
@@ -94,7 +100,7 @@ class PhoneAuthScreen extends Component {
   }
 
   // Navigate to login
-  async handleBack() {
+  handleBack = async () => {
     this.props.navigation.navigate('Login')
   }
 

@@ -99,7 +99,6 @@ class createAccount extends React.Component {
     if (this.state.username === '') {
       this.setState({ validUsername: false })
     } else {
-      console.log
       accountsApi
         .checkUsername(this.state.username)
         .then(() => {

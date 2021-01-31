@@ -118,7 +118,7 @@ class UserProfileView extends Component {
 
   async handleLogout() {
     facebookService
-      .logoutWithFacebook()
+      .logout()
       .then(() => {
         // close settings and navigate to Login
         this.setState({ visible: false })

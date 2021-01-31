@@ -1,4 +1,4 @@
-import Firebase from 'firebase'
+import Firebase from '@react-native-firebase/app'
 import io from 'socket.io-client'
 
 var socket = null
