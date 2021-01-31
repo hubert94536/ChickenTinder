@@ -6,6 +6,7 @@ import { BlurView } from '@react-native-community/blur'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Alert from '../modals/Alert.js'
 import accountsApi from '../apis/accountsApi.js'
+import colors from '../../styles/colors.js'
 import facebookService from '../apis/facebookService.js'
 import Friends from './Friends.js'
 import global from '../../global.js'
@@ -17,8 +18,6 @@ import ImagePicker from 'react-native-image-crop-picker'
 import PropTypes from 'prop-types'
 import EditProfile from '../modals/EditProfile.js'
 import Settings from '../modals/ProfileSettings.js'
-
-const hex = screenStyles.hex.color
 
 export default class UserProfileView extends Component {
   constructor(props) {
@@ -232,6 +231,15 @@ export default class UserProfileView extends Component {
             {/* Contains the search bar and friends display if has friends, otherwise no friends view */}
             <Friends isFriends onFriendsChange={(n) => this.handleFriendsCount(n)} />
           </View>
+
+          <TabBar
+            goHome={() => this.props.navigation.replace('Home')}
+            goSearch={() => this.props.navigation.replace('Search')}
+            goNotifs={() => this.props.navigation.replace('Notifications')}
+            goProfile={() => {}}
+            cur="Profile"
+          />
+
           {(visible || edit) && (
             <BlurView
               blurType="dark"
@@ -276,13 +284,6 @@ export default class UserProfileView extends Component {
             />
           )}
         </View>
-        <TabBar
-          goHome={() => this.props.navigation.navigate('Home')}
-          goSearch={() => this.props.navigation.navigate('Search')}
-          goNotifs={() => this.props.navigation.navigate('Notifications')}
-          goProfile={() => {}}
-          cur="Profile"
-        />
       </View>
     )
   }
@@ -295,7 +296,7 @@ UserProfileView.propTypes = {
 const styles = StyleSheet.create({
   background: {
     backgroundColor: 'white',
-    height: '90%',
+    height: '100%',
   },
   titleContainer: {
     flexDirection: 'row',
@@ -337,7 +338,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   pencil: { fontSize: normalize(28), marginTop: '4%', marginLeft: '1%', marginBottom: '1%' },
-  username: { fontSize: normalize(14), color: hex, fontWeight: 'bold' },
+  username: { fontSize: normalize(14), color: colors.hex, fontWeight: 'bold' },
   friends: {
     marginTop: '5%',
     marginLeft: '7%',

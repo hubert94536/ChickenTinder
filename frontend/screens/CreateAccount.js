@@ -28,6 +28,7 @@ export default class createAccount extends React.Component {
       validEmail: true,
       validEmailFormat: true,
       validUsername: true,
+      validUsernameFormat: true,
     }
     AsyncStorage.multiGet([EMAIL, NAME, PHONE])
       .then((res) => {
@@ -108,6 +109,18 @@ export default class createAccount extends React.Component {
     }
   }
 
+  checkUsernameSyntax() {
+    
+    const regex = /^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){0,13}[a-zA-Z0-9]$/
+    if (!regex.test(this.state.username)) {
+      this.setState({ validUsernameFormat: false })
+    } else {
+      this.setState({ validUsernameFormat: true })
+    }
+  }
+
+ 
+
   render() {
     return (
       <View style={[screenStyles.mainContainer]}>
@@ -140,11 +153,12 @@ export default class createAccount extends React.Component {
           style={[
             screenStyles.textBook,
             styles.fieldText,
-            { marginBottom: this.state.validUsername ? '3%' : '0%' },
+            { marginBottom: this.state.validUsername && this.state.validUsernameFormat ? '3%' : '0%' },
           ]}
           textAlign="left"
           onChangeText={(username) => {
             this.setState({ username: username.split(' ').join('_') })
+            this.checkUsernameSyntax()
           }}
           onBlur={() => this.checkUsernameValidity()}
           value={this.state.username}
@@ -153,6 +167,9 @@ export default class createAccount extends React.Component {
 
         {!this.state.validUsername && (
           <Text style={[screenStyles.text, styles.warningText]}>This username is taken</Text>
+        )}
+        {!this.state.validUsernameFormat && (
+          <Text style={[screenStyles.text, styles.warningText]}>Invalid username format</Text>
         )}
 
         <Text style={[screenStyles.textBook, styles.fieldName]}>Phone Number</Text>
@@ -180,11 +197,11 @@ export default class createAccount extends React.Component {
           value={this.state.email}
         />
 
-        {!this.state.validEmail && this.state.validEmailFormat && (
+        {!this.state.validEmail && (
           <Text style={[screenStyles.text, styles.warningText]}>This email is taken</Text>
         )}
         {!this.state.validEmailFormat && (
-          <Text style={[screenStyles.text, styles.warningText]}>Input a valid email</Text>
+          <Text style={[screenStyles.text, styles.warningText]}>Invalid email</Text>
         )}
 
         <TouchableHighlight
