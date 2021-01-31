@@ -3,7 +3,7 @@ import React from 'react'
 import { Text } from 'react-native'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
-import firebase from 'firebase'
+import firebase from '@react-native-firebase/app'
 import PushNotification from 'react-native-push-notification'
 import PropTypes from 'prop-types'
 import CreateAccount from './frontend/screens/CreateAccount.js'
