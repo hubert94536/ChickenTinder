@@ -1,5 +1,8 @@
 import React from 'react'
-import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { bindActionCreators } from 'redux'
+import { changeFriends, hideError, hideRefresh, showError, showRefresh } from '../redux/Actions.js'
+import { connect } from 'react-redux'
+import { Dimensions, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
 import PropTypes from 'prop-types'
 import { SearchBar } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -14,39 +17,51 @@ const sleep = (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds))
 }
 
-export default class Friends extends React.Component {
+const height = Dimensions.get('window').height
+
+class Friends extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       search: '',
-      errorAlert: false,
       data: [], // array for friends
       friends: [], // array of Profile components
       isFriends: this.props.isFriends, // For rendering friends (true) or requests (false)
-      refreshing: true, // Are we currently refreshing the list?
+      friendsApiCalled: false, //render loading gif when fetching friends
     }
-    this.getFriends()
+    this.props.hideRefresh()
+    this.props.hideError()
   }
+
   //  gets the users friends
   async getFriends() {
     // Pushing accepted friends or pending requests into this.state.friends
     friendsApi
       .getFriends()
       .then((res) => {
-        var pushFriends = []
-        var friendOrRequest = this.state.isFriends ? 'friends' : 'pending'
-        for (var friend in res.friendList) {
-          if (res.friendList[friend].status === friendOrRequest) {
-            pushFriends.push(res.friendList[friend])
-          }
-        }
-        //  need two so when you search it doesn't get rid of all the friends
-        this.setState({ friends: pushFriends, data: pushFriends, refreshing: false })
+        this.props.changeFriends(res.friendList)
       })
-      .catch(() => this.setState({ errorAlert: true }))
-      .then(() => {
-        this.props.onFriendsChange(this.state.friends.length)
+      .catch(() => {
+        this.props.showError()
       })
+  }
+
+  componentDidMount() {
+    var pushFriends = []
+    var friendOrRequest = this.state.isFriends ? 'friends' : 'pending'
+    for (var friend in this.props.friends.friends) {
+      if (this.props.friends.friends[friend].status === friendOrRequest) {
+        pushFriends.push(this.props.friends.friends[friend])
+      }
+    }
+    //  need two so when you search it doesn't get rid of all the friends
+    this.setState({
+      friends: pushFriends,
+      data: pushFriends,
+      refreshing: false,
+      friendsApiCalled: true,
+    })
+    this.props.onFriendsChange(this.state.friends.length)
   }
 
   //  searches the users friends by username
@@ -66,17 +81,18 @@ export default class Friends extends React.Component {
     friendsApi
       .removeFriendship(friend)
       .then(() => {
-        this.setState({ friends: newArr })
+        this.props.changeFriends(newArr)
+        this.setState({ friends: newArr, data: newArr })
       })
       .catch(() => {
-        this.setState({ errorAlert: true })
+        this.props.showError()
       })
   }
 
   // Called on friends-list pulldown refresh
   onRefresh() {
-    this.setState({ refreshing: true })
-    sleep(2000).then(this.getFriends().then(this.setState({ refreshing: false })))
+    this.props.showRefresh()
+    sleep(2000).then(this.getFriends().then(this.props.hideRefresh()))
   }
 
   render() {
@@ -86,7 +102,6 @@ export default class Friends extends React.Component {
     if (Array.isArray(friendList) && friendList.length) {
       for (var i = 0; i < friendList.length; i++) {
         var status = ''
-        // if (this.props.isFriends) status = 'Friends'
         if (this.props.isFriends) status = 'friends'
         else status = 'Not Friends'
         friends.push(
@@ -125,41 +140,72 @@ export default class Friends extends React.Component {
               alwaysBounceVertical="true"
               refreshControl={
                 <RefreshControl
-                  refreshing={this.state.refreshing}
+                  refreshing={this.props.refresh}
                   onRefresh={this.onRefresh.bind(this)}
                 />
               }
             >
               {friends}
             </ScrollView>
-            {this.state.errorAlert && (
+            {this.props.error && (
               <Alert
                 title="Error, please try again"
                 buttonAff="Close"
                 height="20%"
-                press={() => this.setState({ errorAlert: false })}
-                cancel={() => this.setState({ errorAlert: false })}
+                press={() => this.props.hideError()}
+                cancel={() => this.props.hideError()}
               />
             )}
           </View>
         )}
-        {this.state.friends.length === 0 && ( //Show no friends view if there aren't any friends
-          <View>
-            <Icon name="emoticon-sad-outline" style={[styles.sadFace]} />
-            <Text style={[screenStyles.text, styles.noFriendText1]}>No friends, yet</Text>
-            <Text style={[screenStyles.textBook, styles.noFriendText2]}>
-              You have no friends, yet. Add friends using the search feature below!
-            </Text>
-          </View>
-        )}
+        {this.state.friends.length === 0 &&
+          this.state.friendsApiCalled && ( //Show no friends view if there aren't any friends
+            <View>
+              <Icon name="emoticon-sad-outline" style={[styles.sadFace]} />
+              <Text style={[screenStyles.text, styles.noFriendText1]}>No friends, yet</Text>
+              <Text style={[screenStyles.textBook, styles.noFriendText2]}>
+                You have no friends, yet. Add friends using the search feature below!
+              </Text>
+            </View>
+          )}
+        {!this.state.friendsApiCalled && <View></View>}
       </View>
     )
   }
 }
 
+const mapStateToProps = (state) => {
+  const { error } = state
+  const { refresh } = state
+  const { friends } = state
+  return { error, refresh, friends }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      showError,
+      hideError,
+      showRefresh,
+      hideRefresh,
+      changeFriends,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(Friends)
+
 Friends.propTypes = {
   isFriends: PropTypes.bool,
   onFriendsChange: PropTypes.func,
+  // error: PropTypes.bool,
+  // friends: PropTypes.object,
+  // refresh: PropTypes.bool,
+  showError: PropTypes.func,
+  hideError: PropTypes.func,
+  showRefresh: PropTypes.func,
+  hideRefresh: PropTypes.func,
+  changeFriends: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
@@ -202,5 +248,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: normalize(16),
     color: 'grey',
+  },
+  gif: {
+    alignSelf: 'center',
+    width: height * 0.3,
+    height: height * 0.4,
   },
 })

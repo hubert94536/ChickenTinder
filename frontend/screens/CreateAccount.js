@@ -1,5 +1,8 @@
 import React from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { bindActionCreators } from 'redux'
+import { changeImage, changeName, changeUsername } from '../redux/Actions.js'
+import { connect } from 'react-redux'
 import { EMAIL, NAME, PHOTO, USERNAME, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
 import { Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
@@ -13,7 +16,7 @@ import socket from '../apis/socket.js'
 const hex = screenStyles.hex.color
 const textColor = '#6A6A6A'
 
-export default class createAccount extends React.Component {
+class createAccount extends React.Component {
   constructor() {
     super()
     this.state = {
@@ -51,6 +54,11 @@ export default class createAccount extends React.Component {
       [EMAIL, this.state.email],
       [PHONE, this.state.phone],
     ])
+    changeUsername(this.state.username)
+    changeName(this.state.name)
+    changeImage(this.state.photo)
+    global.email = this.state.email
+    global.phone = this.state.phone
     return accountsApi
       .createFBUser(
         this.state.name,
@@ -113,18 +121,10 @@ export default class createAccount extends React.Component {
         <Text style={[screenStyles.textBook, styles.mediumText]}>
           Finish setting up your account
         </Text>
-
-        {this.state.photo.includes('file') ? (
-          <Image
-            source={{
-              uri: this.state.photo,
-            }}
-            style={[screenStyles.avatar]}
-          />
-        ) : (
-          <Image source={this.state.photo} style={screenStyles.avatar} />
-        )}
-
+        <Image
+          source={{ uri: Image.resolveAssetSource(this.state.photo).uri }}
+          style={screenStyles.avatar}
+        />
         <Text style={[screenStyles.textBook, styles.fieldName, { marginTop: '5%' }]}>
           Display Name
         </Text>
@@ -214,8 +214,33 @@ export default class createAccount extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  const { name } = state
+  const { username } = state
+  const { image } = state
+  return { name, username, image }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      changeName,
+      changeUsername,
+      changeImage,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(createAccount)
+
 createAccount.propTypes = {
   navigation: PropTypes.object,
+  // name: PropTypes.object,
+  // username: PropTypes.object,
+  // image: PropTypes.object,
+  changeName: PropTypes.func,
+  changeUsername: PropTypes.func,
+  changeImagee: PropTypes.func,
 }
 const styles = StyleSheet.create({
   title: {

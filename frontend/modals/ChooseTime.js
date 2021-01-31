@@ -9,11 +9,13 @@ import {
   View,
 } from 'react-native'
 import PropTypes from 'prop-types'
+// import { Switch } from 'react-native-switch'
+import colors from '../../styles/colors.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
-import SwitchButton from 'switch-button-react-native'
+import TimeSwitch from './TimeSwitch.js'
 
 export default class Time extends React.Component {
   constructor(props) {
@@ -23,6 +25,7 @@ export default class Time extends React.Component {
       selectedMinute: '',
       invalidTime: false,
       timeMode: 'pm',
+      switch: true,
     }
   }
 
@@ -89,7 +92,7 @@ export default class Time extends React.Component {
                 keyboardType="numeric"
               />
               <View style={styles.switchButton}>
-                <SwitchButton
+                <TimeSwitch
                   onValueChange={(val) => this.setState({ timeMode: val })}
                   text1="pm"
                   text2="am"
@@ -106,11 +109,7 @@ export default class Time extends React.Component {
             </View>
             {this.state.invalidTime && (
               <View style={[modalStyles.error, styles.errorMargin]}>
-                <Icon
-                  name="exclamationcircle"
-                  color={screenStyles.hex.color}
-                  style={modalStyles.errorIcon}
-                />
+                <Icon name="exclamationcircle" color={colors.hex} style={modalStyles.errorIcon} />
                 <Text style={[screenStyles.text, modalStyles.errorText]}>
                   Invalid time. Please try again
                 </Text>
@@ -148,6 +147,18 @@ const styles = StyleSheet.create({
   },
   switchButton: {
     marginLeft: '4%',
+  },
+  switchButtonInner: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0,
+    margin: 0,
+  },
+  switchButtonOuter: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0,
+    margin: 0,
   },
   errorMargin: {
     marginTop: '3%',

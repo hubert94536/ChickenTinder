@@ -7,6 +7,7 @@ import imgStyles from '../../styles/cardImage.js'
 import normalize from '../../styles/normalize.js'
 
 const height = Dimensions.get('window').height
+const width = Dimensions.get('window').width
 
 export default class GroupCard extends React.Component {
   constructor(props) {
@@ -24,29 +25,12 @@ export default class GroupCard extends React.Component {
     return (
       <View style={styles.card}>
         <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-          {this.props.image.includes('file') || this.props.image.includes('http') ? (
-            <Image
-              source={{
-                uri: this.props.image,
-              }}
-              style={[
-                styles.image,
-                this.props.filters ? imgStyles.hexBorder : imgStyles.greyBorder,
-              ]}
-            />
-          ) : (
-            <Image
-              source={this.props.image}
-              style={[
-                styles.image,
-                this.props.filters ? imgStyles.hexBorder : imgStyles.greyBorder,
-              ]}
-            />
-          )}
+          <Image
+            source={{ uri: Image.resolveAssetSource(this.props.image).uri }}
+            style={[styles.image, this.props.filters ? imgStyles.hexBorder : imgStyles.greyBorder]}
+          />
         </View>
-        {this.props.filters ? (
-          <Icon name="check-circle" style={[imgStyles.hex, styles.icon]} />
-        ) : null}
+
         <View style={styles.none}>
           <Text style={[imgStyles.font, styles.name]}>{this.props.name}</Text>
           <Text style={[imgStyles.hex, imgStyles.font, styles.username]}>
@@ -74,9 +58,10 @@ GroupCard.propTypes = {
   uid: PropTypes.string,
   image: PropTypes.string,
   filters: PropTypes.bool,
+  host: PropTypes.string,
+  isHost: PropTypes.bool,
   name: PropTypes.string,
   username: PropTypes.string,
-  host: PropTypes.string,
 }
 
 const styles = StyleSheet.create({
@@ -84,7 +69,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
     borderRadius: 7,
     alignSelf: 'center',
-    width: height * 0.22,
+    width: width * 0.4,
     height: height * 0.09,
     padding: 0,
     margin: '3%',
@@ -104,8 +89,8 @@ const styles = StyleSheet.create({
   icon: {
     fontSize: normalize(20),
     position: 'absolute',
-    marginLeft: '31%',
-    marginTop: '5%',
+    right: '7%',
+    top: '7%',
     backgroundColor: '#F5F5F5',
     borderRadius: 30,
     overflow: 'hidden',
