@@ -1,5 +1,6 @@
 import React from 'react'
-import { Dimensions, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Dimensions, StyleSheet, TouchableHighlight, View } from 'react-native'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import colors from '../styles/colors.js'
@@ -7,37 +8,7 @@ import notifsApi from './apis/notificationsApi.js'
 
 const height = Dimensions.get('window').height
 
-export default class TabBar extends React.Component {
-  constructor() {
-    super()
-    this.state = {
-      notif: false
-    }
-  }
-
-  componentDidMount() {
-
-    if(this.props.cur === 'Notifs')
-    {
-      this.setState({notif: false})
-    }
-    // notifsApi
-    //   .getNotifs()
-    //   .then((res) => {
-
-    //     console.log("Notifs")
-    //     console.log(res.notifs)
-
-    //     if( res.notifs.length > 0)
-    //     {
-    //       this.setState({notif: true})
-    //     }
-      
-    //   })
-  
-  }
-
-  
+class TabBar extends React.Component {
   render() {
     return (
       <View style={styles.bar}>
@@ -100,6 +71,14 @@ export default class TabBar extends React.Component {
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  const { notif } = state
+  return { notif }
+}
+//  access this as this.props.notif
+
+export default connect(mapStateToProps)(TabBar)
 
 const styles = StyleSheet.create({
   bar: {
