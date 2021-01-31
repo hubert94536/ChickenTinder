@@ -8,6 +8,7 @@ const friends = require('./friendsQueries.js')
 const notifications = require('./notifsQueries.js')
 const schema = require('./schema.js')
 const pushNotif = require('./pushNotif.js')
+const rateLimit = require('./rateLimit.js')
 
 const app = express()
 const server = http.createServer(app)
@@ -41,45 +42,46 @@ app
   .put(friends.acceptTestRequest)
 
 app.route('/test/notifs').get(notifications.getAllNotifs)
+app.route('/notifications/test').post(pushNotif.testNotif)
 /*------------------------- */
 
+// TODO: Decide which limiters to use
+
 // Accounts table
-app.route('/accounts/search').post(schema.checkSearch, accounts.searchAccounts)
+app.route('/accounts/search').post(rateLimit.frequentLimiter, schema.checkSearch, accounts.searchAccounts)
 
 app
   .route('/accounts')
-  .get(auth.authenticate, accounts.getAccountByUID)
-  .post(schema.checkCreateAccounts, auth.authenticate, accounts.createAccount)
-  .put(schema.checkUpdateAccount, auth.authenticate, accounts.updateAccount)
-  .delete(auth.authenticate, accounts.deleteAccount)
+  .get(rateLimit.accountsLimiter. auth.authenticate, accounts.getAccountByUID)
+  .post(rateLimit.accountsLimiter, schema.checkCreateAccounts, auth.authenticate, accounts.createAccount)
+  .put(rateLimit.accountsLimiter, schema.checkUpdateAccount, auth.authenticate, accounts.updateAccount)
+  .delete(rateLimit.accountsLimiter, auth.authenticate, accounts.deleteAccount)
 
-app.route('/username').post(schema.checkUsername, accounts.checkUsername)
+app.route('/username').post(rateLimit.accountsLimiter, schema.checkUsername, accounts.checkUsername)
 
-app.route('/phone_number').post(schema.checkPhoneNumber, accounts.checkPhoneNumber)
+app.route('/phone_number').post(rateLimit.accountsLimiter, schema.checkPhoneNumber, accounts.checkPhoneNumber)
 
-app.route('/email').post(schema.checkEmail, accounts.checkEmail)
+app.route('/email').post(rateLimit.accountsLimiter, schema.checkEmail, accounts.checkEmail)
 
 // Friendships table
 app
   .route('/friendships')
-  .get(auth.authenticate, friends.getFriends)
-  .post(schema.checkFriendship, auth.authenticate, friends.createFriends)
-  .delete(schema.checkFriendship, auth.authenticate, friends.deleteFriendship)
-  .put(schema.checkFriendship, auth.authenticate, friends.acceptRequest)
+  .get(rateLimit.defaultLimiter, auth.authenticate, friends.getFriends)
+  .post(rateLimit.defaultLimiter, schema.checkFriendship, auth.authenticate, friends.createFriends)
+  .delete(rateLimit.defaultLimiter, schema.checkFriendship, auth.authenticate, friends.deleteFriendship)
+  .put(rateLimit.defaultLimiter, schema.checkFriendship, auth.authenticate, friends.acceptRequest)
 
 // Notifications table
 app
   .route('/notifications')
-  .get(auth.authenticate, notifications.getNotifs)
-  .delete(schema.checkNotif, auth.authenticate, notifications.deleteNotif)
+  .get(rateLimit.defaultLimiter, auth.authenticate, notifications.getNotifs)
+  .delete(rateLimit.frequentLimiter, schema.checkNotif, auth.authenticate, notifications.deleteNotif)
 
 // TODO: validate params
 app
   .route('/notifications/token')
   .post(auth.authenticate, pushNotif.linkToken)
   .delete(auth.authenticate, pushNotif.unlinkToken)
-
-app.route('/notifications/test').post(pushNotif.testNotif)
 
 server.listen(PORT, () => {
   console.log(`App running on port ${PORT}.`)
