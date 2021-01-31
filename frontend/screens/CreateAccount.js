@@ -32,6 +32,7 @@ class createAccount extends React.Component {
       validEmailFormat: true,
       validUsername: true,
       validUsernameFormat: true,
+      facebook: false
     }
     AsyncStorage.multiGet([EMAIL, NAME, PHONE])
       .then((res) => {
@@ -39,12 +40,22 @@ class createAccount extends React.Component {
           email: res[0][1],
           name: res[1][1],
           phone: res[2][1],
-        })
+          
+      }, () => {
+          if(this.state.email)
+          {
+            this.setState({
+              facebook: true,
+            })
+          }
+      });
       })
       .catch(() => {
         this.setState({ errorAlert: true })
       })
   }
+
+  
 
   //  checks whether or not the username can be set
   handleClick() {
@@ -131,12 +142,12 @@ class createAccount extends React.Component {
           Create Account
         </Text>
         <Text style={[screenStyles.textBook, styles.mediumText]}>Account Verified!</Text>
-        <Text style={[screenStyles.textBook, styles.mediumText]}>
+        <Text style={[screenStyles.textBook, styles.mediumText, { marginBottom: '5%' }]}>
           Finish setting up your account
         </Text>
         <Image
           source={{ uri: Image.resolveAssetSource(this.state.photo).uri }}
-          style={screenStyles.avatar}
+          style={styles.avatar}
         />
         <Text style={[screenStyles.textBook, styles.fieldName, { marginTop: '5%' }]}>
           Display Name
@@ -156,7 +167,7 @@ class createAccount extends React.Component {
           style={[
             screenStyles.textBook,
             styles.fieldText,
-            { marginBottom: this.state.validUsername && this.state.validUsernameFormat ? '3%' : '0%' },
+            { marginBottom: this.state.validUsername && this.state.validUsernameFormat ? '7%' : '0%' },
           ]}
           textAlign="left"
           onChangeText={(username) => {
@@ -175,37 +186,47 @@ class createAccount extends React.Component {
           <Text style={[screenStyles.text, styles.warningText]}>Invalid username format</Text>
         )}
 
-        <Text style={[screenStyles.textBook, styles.fieldName]}>Phone Number</Text>
-        <TextInput
-          style={[screenStyles.textBook, styles.fieldText]}
-          textAlign="left"
-          onChangeText={(phone) => {
-            this.setState({ phone })
-          }}
-          value={this.state.phone}
-        />
+        
 
-        <Text style={[screenStyles.textBook, styles.fieldName]}>Email</Text>
-        <TextInput
+        
+
+        {!this.state.facebook && (
+
+          <View>
+
+          <Text style={[screenStyles.textBook, styles.fieldName]}>Phone Number</Text>
+          
+          <Text
           style={[
             screenStyles.textBook,
             styles.fieldText,
-            { marginBottom: this.state.validEmail && this.state.validEmailFormat ? '3%' : '0%' },
+            styles.fixedText,
           ]}
           textAlign="left"
-          onChangeText={(email) => {
-            this.setState({ email: email })
-          }}
-          onBlur={() => this.checkEmailValidity()}
-          value={this.state.email}
-        />
+          >{this.state.phone}</Text>
 
-        {!this.state.validEmail && (
-          <Text style={[screenStyles.text, styles.warningText]}>This email is taken</Text>
+          </View>
+        
         )}
-        {!this.state.validEmailFormat && (
-          <Text style={[screenStyles.text, styles.warningText]}>Invalid email</Text>
+        
+        {this.state.facebook && (
+
+          <View>
+        <Text style={[screenStyles.textBook, styles.fieldName]}>Email</Text>
+        
+        <Text
+        style={[
+          screenStyles.textBook,
+          styles.fieldText,
+          styles.fixedText,
+        ]}
+        textAlign="left"
+        >{this.state.email}</Text>
+
+        </View>
         )}
+        
+
 
         <TouchableHighlight
           onShowUnderlay={() => this.setState({ finishPressed: true })}
@@ -265,11 +286,19 @@ const styles = StyleSheet.create({
     marginTop: '10%',
     marginBottom: '5%',
   },
+  avatar: {
+    width: 150,
+    height: 150,
+    borderRadius: 94.5,
+    borderWidth: 4,
+    alignSelf: 'center',
+    margin: '1.5%',
+  },
   button: {
     borderColor: hex,
     backgroundColor: hex,
-    width: '20%',
-    marginTop: '3%',
+    // width: '20%',
+    marginTop: '7%',
   },
   mediumText: {
     alignSelf: 'center',
@@ -280,10 +309,15 @@ const styles = StyleSheet.create({
     fontSize: normalize(18),
     color: textColor,
     marginHorizontal: '12%',
-    marginBottom: '3%',
+    marginBottom: '7%',
     paddingVertical: '1%',
     borderBottomColor: textColor,
     borderBottomWidth: 1,
+  },
+  fixedText: {
+    paddingVertical: '2%', 
+    paddingHorizontal: '2%',
+
   },
   fieldName: {
     fontSize: normalize(18.5),
