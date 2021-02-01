@@ -6,6 +6,7 @@ import {
   imageReducer,
   refreshReducer,
   friendsReducer,
+  notifReducer,
 } from './Reducer.js'
 
 const rootReducer = combineReducers({
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   image: imageReducer,
   refresh: refreshReducer,
   friends: friendsReducer,
+  notif: notifReducer,
 })
 
 const configureStore = () => {
