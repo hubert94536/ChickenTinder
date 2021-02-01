@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { bindActionCreators } from 'redux'
+import { BlurView } from '@react-native-community/blur'
 import { changeFriends, hideError, showError } from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
@@ -15,6 +16,7 @@ import colors from '../../styles/colors.js'
 import global from '../../global.js'
 import Join from '../modals/Join.js'
 import TabBar from '../Nav.js'
+import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 
 const width = Dimensions.get('window').width
@@ -66,9 +68,10 @@ class Home extends React.Component {
     // accountsApi.createFBUserTest('Anna', 4, 'annax', 'annx@gmail.com', '12', '45678902')
     // accountsApi.createFBUserTest('Helen', 5, 'helenthemelon', 'helenw@gmail.com', '13', '45678903')
     // accountsApi.createFBUserTest('Kevin', 6, 'kevint', 'kevintang@gmail.com', '14', '45678904')
-    // friendsApi.createFriendshipTest(2, uid)
-    // friendsApi.createFriendshipTest(3, uid)
-    // friendsApi.createFriendshipTest(4, uid)
+    // friendsApi.createFriendshipTest(requester, accepter)
+    // friendsApi.createFriendshipTest(6, "vK2MbePJAjhffVzNrnxi6RANF1A3")
+    // friendsApi.createFriendshipTest(3, "vK2MbePJAjhffVzNrnxi6RANF1A3")
+    // friendsApi.createFriendshipTest(4, "vK2MbePJAjhffVzNrnxi6RANF1A3")
   }
 
   createGroup() {
@@ -160,12 +163,20 @@ class Home extends React.Component {
           cancel={() => this.setState({ join: false })}
           onPress={() => this.setState({ join: false })}
         />
+
+        {this.props.error && (
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
         {this.props.error && (
           <Alert
             title="Error, please try again"
             buttonAff="Close"
             height="20%"
-            blur
             press={() => this.props.hideError()}
             cancel={() => this.props.hideError()}
           />

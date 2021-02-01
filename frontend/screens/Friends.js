@@ -115,6 +115,7 @@ class Friends extends React.Component {
             key={i}
             index={i}
             press={(uid, newArr) => this.removeRequest(uid, newArr)}
+            unfriendAlert={this.props.unfriendAlert}
           />,
         )
       }
@@ -152,7 +153,6 @@ class Friends extends React.Component {
                 title="Error, please try again"
                 buttonAff="Close"
                 height="20%"
-                blur
                 press={() => this.props.hideError()}
                 cancel={() => this.props.hideError()}
               />

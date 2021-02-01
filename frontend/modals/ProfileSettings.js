@@ -89,18 +89,6 @@ export default class Settings extends React.Component {
             >
               Delete account...
             </Text>
-            {/* {this.state.deleteAlert && (
-                <Alert
-                  title="Delete account?"
-                  body="By deleting your account, you will lose all of your data"
-                  buttonAff="Delete"
-                  buttonNeg="Go back"
-                  twoButton
-                  height="27%"
-                  press={() => this.handleDelete()}
-                  cancel={() => this.cancelDelete()}
-                />
-            )} */}
             {this.state.errorAlert && (
               <Alert
                 title="Error, please try again"
@@ -134,18 +122,6 @@ export default class Settings extends React.Component {
                 Logout
               </Text>
             </TouchableHighlight>
-            {/* {this.state.logoutAlert && (
-              <Alert
-                title="Log out"
-                body="Are you sure you want to log out?"
-                buttonAff="Logout"
-                buttonNeg="Go back"
-                height="25%"
-                twoButton
-                press={() => this.handleLogout()}
-                cancel={() => this.setState({ logoutAlert: false })}
-              />
-            )} */}
           </View>
         </View>
       </Modal>

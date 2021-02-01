@@ -10,6 +10,7 @@ import accountsApi from '../apis/accountsApi.js'
 import Alert from '../modals/Alert.js'
 import Card from '../cards/Card.js'
 import friendsApi from '../apis/friendsApi.js'
+import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 import TabBar from '../Nav.js'
 
@@ -116,13 +117,19 @@ class Search extends Component {
               status={item.status}
               key={item.uid}
               press={(uid, newArr) => this.removeRequest(uid, newArr)}
+              unfriendAlert={(bool) => this.setState({ deleteFriend: bool })}
             />
           )}
           keyExtractor={(item) => item.username}
           ListHeaderComponent={this.renderHeader}
         />
         {(this.state.errorAlert || this.state.deleteFriend) && (
-          <BlurView blurType="dark" blurAmount={10} reducedTransparencyFallbackColor="black" />
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="black"
+            style={modalStyles.blur}
+          />
         )}
         {this.state.errorAlert && (
           <Alert
@@ -134,22 +141,11 @@ class Search extends Component {
             cancel={() => this.setState({ errorAlert: false })}
           />
         )}
-        {this.state.deleteFriend && (
-          <Alert
-            title="Are you sure?"
-            body={'You are about to remove @' + this.state.deleteFriendName + ' as a friend'}
-            buttonAff="Delete"
-            height="25%"
-            blur
-            press={() => this.deleteFriend()}
-            cancel={() => this.setState({ deleteFriend: false })}
-          />
-        )}
         <TabBar
-          goHome={() => this.props.navigation.navigate('Home')}
+          goHome={() => this.props.navigation.replace('Home')}
           goSearch={() => {}}
-          goNotifs={() => this.props.navigation.navigate('Notifications')}
-          goProfile={() => this.props.navigation.navigate('Profile')}
+          goNotifs={() => this.props.navigation.replace('Notifications')}
+          goProfile={() => this.props.navigation.replace('Profile')}
           cur="Search"
         />
       </View>

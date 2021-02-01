@@ -27,14 +27,17 @@ class Card extends React.Component {
     friendsApi
       .removeFriendship(this.props.uid)
       .then(() => {
+        this.props.unfriendAlert(false)
         this.setState({ deleteFriend: false, status: 'add' })
         var filteredArray = this.props.total.filter((item) => {
           return item.username !== this.props.username
         })
         this.props.press(this.props.uid, filteredArray)
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err)
         this.props.showError()
+        this.props.unfriendAlert(false)
         this.setState({ deleteFriend: false })
       })
   }
@@ -123,6 +126,7 @@ class Card extends React.Component {
             onPress={() => {
               this.props.hideError()
               this.setState({ deleteFriend: true })
+              this.props.unfriendAlert(true)
             }}
           >
             <View style={imgStyles.card}>
@@ -147,20 +151,7 @@ class Card extends React.Component {
             />
           </View>
         )}
-
-{/* ============================================================== */}
-{this.state.deleteFriend && (
-        <BlurView
-            blurType="dark"
-            blurAmount={10}
-            reducedTransparencyFallbackColor="white"
-            style={modalStyles.blur}
-          />
-          )}
-{/* Do this in search.js smh stupid */}
-{/* ======================================================================= */}
         {this.state.deleteFriend && (
-          
           <Alert
             title={'Unfriend ' + this.props.name}
             body="If you change your mind, you'll have to send a friends request again."
@@ -168,14 +159,16 @@ class Card extends React.Component {
             buttonNeg="Cancel"
             height="28%"
             twoButton
-            blur = {false}
             press={() => {
               this.deleteFriend()
             }}
-            cancel={() => this.setState({ deleteFriend: false })}
+            cancel={() => {
+              this.props.unfriendAlert(false)
+              this.setState({ deleteFriend: false })
+            }}
           />
         )}
-        {this.props.error && (
+        {/* {this.props.error && (
           <Alert
             title="Error, please try again"
             buttonAff="Close"
@@ -184,7 +177,7 @@ class Card extends React.Component {
             press={() => this.props.hideError()}
             cancel={() => this.props.hideError()}
           />
-        )}
+        )} */}
       </View>
     )
   }

@@ -39,6 +39,7 @@ class UserProfileView extends Component {
       // show alert
       logoutAlert: false,
       deleteAlert: false,
+      blur: false,
       // friends text
       numFriends: 0,
       imageData: null,
@@ -190,7 +191,7 @@ class UserProfileView extends Component {
   }
 
   render() {
-    const { numFriends, visible, edit, logoutAlert, deleteAlert, takenAlert } = this.state
+    const { numFriends, visible, edit, logoutAlert, deleteAlert, blur, takenAlert } = this.state
 
     return (
       <View style={[screenStyles.mainContainer]}>
@@ -225,7 +226,11 @@ class UserProfileView extends Component {
           </View>
           <View style={[styles.friendContainer]}>
             {/* Contains the search bar and friends display if has friends, otherwise no friends view */}
-            <Friends isFriends onFriendsChange={(n) => this.handleFriendsCount(n)} />
+            <Friends
+              isFriends
+              onFriendsChange={(n) => this.handleFriendsCount(n)}
+              unfriendAlert={(bool) => this.setState({ blur: bool })}
+            />
           </View>
 
           <TabBar
@@ -236,7 +241,7 @@ class UserProfileView extends Component {
             cur="Profile"
           />
 
-          {(visible || edit || logoutAlert || deleteAlert) && (
+          {(visible || edit || logoutAlert || deleteAlert || blur) && (
             <BlurView
               blurType="dark"
               blurAmount={10}

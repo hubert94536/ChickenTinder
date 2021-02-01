@@ -171,13 +171,15 @@ export default class Group extends React.Component {
 
   // host ends session
   endGroup() {
-    this.setState({ endAlert: false })
+    this.setState({ endAlert: false, blur: false })
     socket.endRound()
   }
 
   // shows proper alert based on if user is host
   cancelAlert() {
-    global.isHost ? this.setState({ endAlert: false }) : this.setState({ leaveAlert: false })
+    global.isHost
+      ? this.setState({ endAlert: false, blur: false })
+      : this.setState({ leaveAlert: false, blur: false })
   }
 
   firstName(str) {
@@ -297,7 +299,6 @@ export default class Group extends React.Component {
                   body="You will will not be able to return without an invite"
                   buttonAff="Yes"
                   height="20%"
-                  blur
                   press={() => this.leaveGroup(false)}
                   cancel={() => this.cancelAlert()}
                 />
@@ -308,7 +309,6 @@ export default class Group extends React.Component {
                   body="You will not be able to return"
                   buttonAff="Yes"
                   height="20%"
-                  blur
                   press={() => this.endGroup()}
                   cancel={() => this.cancelAlert()}
                 />
@@ -412,6 +412,7 @@ export default class Group extends React.Component {
             activeOpacity={1}
             onPress={() => {
               // console.log('left')
+              this.setState({ blur: true })
               global.isHost
                 ? this.setState({ endAlert: true })
                 : this.setState({ leaveAlert: true })
