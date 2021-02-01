@@ -2,6 +2,7 @@ import React from 'react'
 import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
+import { BlurView } from '@react-native-community/blur'
 import colors from '../../styles/colors.js'
 import global from '../../global.js'
 import modalStyles from '../../styles/modalStyles.js'
@@ -93,6 +94,14 @@ export default class Loading extends React.Component {
           >
             <Text style={styles.leaveText}>End Round</Text>
           </TouchableHighlight>
+        )}
+        {this.state.leave && (
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
         )}
         {this.state.leave && (
           <Alert
