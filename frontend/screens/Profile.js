@@ -39,6 +39,7 @@ class UserProfileView extends Component {
       // show alert
       logoutAlert: false,
       deleteAlert: false,
+      blur: false,
       // friends text
       numFriends: 0,
       imageData: null,
@@ -113,7 +114,7 @@ class UserProfileView extends Component {
 
   // cancel deleting your account
   cancelDelete() {
-    this.setState({ deleteAlert: false })
+    this.setState({ deleteAlert: false, visible: true })
   }
 
   async handleLogout() {
@@ -190,7 +191,7 @@ class UserProfileView extends Component {
   }
 
   render() {
-    const { numFriends, visible, edit, takenAlert } = this.state
+    const { numFriends, visible, edit, logoutAlert, deleteAlert, blur, takenAlert } = this.state
 
     return (
       <View style={[screenStyles.mainContainer]}>
@@ -225,7 +226,11 @@ class UserProfileView extends Component {
           </View>
           <View style={[styles.friendContainer]}>
             {/* Contains the search bar and friends display if has friends, otherwise no friends view */}
-            <Friends isFriends onFriendsChange={(n) => this.handleFriendsCount(n)} />
+            <Friends
+              isFriends
+              onFriendsChange={(n) => this.handleFriendsCount(n)}
+              unfriendAlert={(bool) => this.setState({ blur: bool })}
+            />
           </View>
 
           <TabBar
@@ -236,7 +241,7 @@ class UserProfileView extends Component {
             cur="Profile"
           />
 
-          {(visible || edit) && (
+          {(visible || edit || logoutAlert || deleteAlert || blur) && (
             <BlurView
               blurType="dark"
               blurAmount={10}
@@ -250,6 +255,8 @@ class UserProfileView extends Component {
             close={() => this.setState({ visible: false })}
             delete={() => this.handleDelete()}
             logout={() => this.handleLogout()}
+            logoutAlert={() => this.setState({ logoutAlert: true })}
+            deleteAlert={() => this.setState({ deleteAlert: true })}
           />
 
           {edit && (
@@ -258,6 +265,32 @@ class UserProfileView extends Component {
               makeChanges={() => this.makeChanges()}
               userChange={(text) => this.setState({ usernameValue: text })}
               nameChange={(text) => this.setState({ nameValue: text })}
+            />
+          )}
+
+          {logoutAlert && (
+            <Alert
+              title="Log out"
+              body="Are you sure you want to log out?"
+              buttonAff="Logout"
+              buttonNeg="Go back"
+              height="25%"
+              twoButton
+              press={() => this.handleLogout()}
+              cancel={() => this.setState({ logoutAlert: false, visible: true })}
+            />
+          )}
+
+          {deleteAlert && (
+            <Alert
+              title="Delete account?"
+              body="By deleting your account, you will lose all of your data"
+              buttonAff="Delete"
+              buttonNeg="Go back"
+              twoButton
+              height="25%"
+              press={() => this.handleDelete()}
+              cancel={() => this.cancelDelete()}
             />
           )}
 

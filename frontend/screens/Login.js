@@ -4,12 +4,14 @@ import { connect } from 'react-redux'
 import { hideError, showError } from '../redux/Actions.js'
 import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import Alert from '../modals/Alert.js'
+import { BlurView } from '@react-native-community/blur'
 import colors from '../../styles/colors.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import imgStyles from '../../styles/cardImage.js'
 import facebookService from '../apis/facebookService.js'
-import screenStyles from '../../styles/screenStyles.js'
+import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
+import screenStyles from '../../styles/screenStyles.js'
 import PropTypes from 'prop-types'
 
 class Login extends React.Component {
@@ -92,7 +94,14 @@ class Login extends React.Component {
         <Text style={[screenStyles.textBook, styles.termsText]}>
           By clicking log in, you agree with our Terms and Conditions.
         </Text>
-
+        {(this.state.alert || this.state.error) && (
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
         {this.state.alert && (
           <Alert
             title='Open "Facebook?"'
