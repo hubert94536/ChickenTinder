@@ -142,14 +142,14 @@ class createAccount extends React.Component {
           Create Account
         </Text>
         <Text style={[screenStyles.textBook, styles.mediumText]}>Account Verified!</Text>
-        <Text style={[screenStyles.textBook, styles.mediumText, { marginBottom: '5%' }]}>
+        <Text style={[screenStyles.textBook, styles.mediumText, styles.instr]}>
           Finish setting up your account
         </Text>
         <Image
           source={{ uri: Image.resolveAssetSource(this.state.photo).uri }}
           style={styles.avatar}
         />
-        <Text style={[screenStyles.textBook, styles.fieldName, { marginTop: '5%' }]}>
+        <Text style={[screenStyles.textBook, styles.fieldName, styles.display]}>
           Display Name
         </Text>
         <TextInput
@@ -281,6 +281,12 @@ createAccount.propTypes = {
   changeImagee: PropTypes.func,
 }
 const styles = StyleSheet.create({
+  display: { 
+    marginTop: '5%' 
+  },
+  instr: { 
+    marginBottom: '5%' 
+  },
   title: {
     fontSize: normalize(25),
     marginTop: '10%',
