@@ -11,8 +11,11 @@ import normalize from '../../styles/normalize.js'
 export default class MatchCard extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      press: false,
+      displayCity: this.props.card.city.length <= 12,
+    }
   }
-
   evaluateCuisines(cuisines) {
     return cuisines[0].title
   }
@@ -40,9 +43,16 @@ export default class MatchCard extends React.Component {
           </View>
           <View style={styles.info}>
             <FontAwesomeIcon icon={faMapMarkerAlt} style={styles.icon} />
-            <Text style={[styles.infoText, styles.text]} numberOfLines={1}>
-              {card.distance} miles away — {card.city}
-            </Text>
+            {this.state.displayCity && (
+              <Text style={[styles.infoText, styles.text]} numberOfLines={1}>
+                {card.distance} miles away — {card.city}
+              </Text>
+            )}
+            {!this.state.displayCity && (
+              <Text style={[styles.infoText, styles.text]} numberOfLines={1}>
+                {card.distance} miles away
+              </Text>
+            )}
           </View>
         </View>
       </ImageBackground>

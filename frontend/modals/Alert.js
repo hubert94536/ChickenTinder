@@ -30,7 +30,7 @@ export default class Alert extends Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.main}>
         <Text />
         <Modal transparent animationType="none" visible={this.props.visible}>
           <View style={[modalStyles.modal, { height: this.props.height }]}>
@@ -91,6 +91,7 @@ export default class Alert extends Component {
 }
 
 const styles = StyleSheet.create({
+  main: { position: 'absolute' },
   title: {
     fontFamily: font,
     fontWeight: 'bold',
