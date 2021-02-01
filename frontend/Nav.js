@@ -45,7 +45,7 @@ class TabBar extends React.Component {
             style={{ color: this.props.cur === 'Notifs' ? colors.hex : '#8d8d8d', fontSize: 26 }}
           />
 
-        {this.state.notif && (
+        {this.props.notif && (
           // <Text style={{ color: 'red', fontSize: 26, position: 'absolute', textAlign: 'left', alignSelf: 'flex-end'}}>*</Text>
 
           <Icon
