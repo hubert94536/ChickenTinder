@@ -257,7 +257,7 @@ class FilterSelector extends React.Component {
   startSession() {
     console.log('session-start')
     if (this.state.location === null) {
-      // this.props.setBlur(true)
+      this.props.setBlur(true)
       this.setState({ locationAlert: true })
     } else if (this.state.majority && this.state.distance) {
       this.evaluateFilters()
@@ -527,6 +527,7 @@ class FilterSelector extends React.Component {
             title="Error, please try again"
             buttonAff="Close"
             height="20%"
+            blur
             press={() => {
               this.props.hideError()
               this.props.setBlur(false)

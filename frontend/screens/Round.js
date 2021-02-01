@@ -1,5 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { BlurView } from '@react-native-community/blur'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
@@ -8,6 +9,7 @@ import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
 import global from '../../global.js'
+import modalStyles from '../../styles/modalStyles.js'
 import RoundCard from '../cards/RoundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -147,6 +149,14 @@ export default class Round extends React.Component {
             </TouchableHighlight>
           </View>
         </View>
+        {this.state.leave && (
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
         {this.state.leave && (
           <Alert
             title="Are you sure you want to leave?"
