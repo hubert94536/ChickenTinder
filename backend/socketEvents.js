@@ -98,7 +98,7 @@ module.exports = (io) => {
               // delete room and its filters if the host disconnected
               if (session.host === socket.user.uid) {
                 io.in(socket.user.room).emit('leave')
-                sendCommand('JSON.DEL', [socket.user.room]).catch((err) => console.error(err))
+                sendCommand('JSON.DEL', [`${socket.user.room}`]).catch((err) => console.error(err))
                 sendCommand('JSON.DEL', [`filters:${socket.user.room}`]).catch((err) =>
                   console.error(err),
                 )
@@ -390,7 +390,7 @@ module.exports = (io) => {
         session = JSON.parse(session)
         if (session) {
           delete session.members[socket.user.uid]
-          await sendCommand('JSON.DEL', [socket.user.room, `.members['${socket.user.uid}']`])
+          await sendCommand('JSON.DEL', [`${socket.user.room}`, `.members['${socket.user.uid}']`])
           // Room is still in groups page and receives updated room
           io.in(socket.user.room).emit('update', session)
           delete socket.user.room
@@ -448,7 +448,7 @@ module.exports = (io) => {
 
     // alert all users to leave
     socket.on('end', () => {
-      sendCommand('JSON.DEL', [socket.user.room]).catch((err) => console.error(err))
+      sendCommand('JSON.DEL', [`${socket.user.room}`]).catch((err) => console.error(err))
       sendCommand('JSON.DEL', [`filters:${socket.user.room}`]).catch((err) => console.error(err))
       io.in(socket.user.room).emit('leave')
     })
