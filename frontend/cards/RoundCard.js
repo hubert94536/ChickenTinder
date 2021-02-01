@@ -23,6 +23,7 @@ export default class RoundCard extends React.Component {
     super(props)
     this.state = {
       press: false,
+      displayCity: true,
     }
   }
 
@@ -43,6 +44,10 @@ export default class RoundCard extends React.Component {
     } else {
       return cuisines[0].title
     }
+  }
+
+  componentDidMount() {
+    if (this.props.card.city.length > 12) this.setState({ displayCity: false })
   }
 
   render() {
@@ -76,9 +81,16 @@ export default class RoundCard extends React.Component {
           </View>
           <View style={[styles.info, styles.row, styles.center]}>
             <FontAwesomeIcon icon={faMapMarkerAlt} style={styles.icon} />
-            <Text numberOfLines={1} style={[styles.infoText, styles.text]}>
-              {this.props.card.distance} miles away — {this.props.card.city}
-            </Text>
+            {this.state.displayCity && (
+              <Text numberOfLines={1} style={[styles.infoText, styles.text]}>
+                {this.props.card.distance} miles away — {this.props.card.city}
+              </Text>
+            )}
+            {!this.state.displayCity && (
+              <Text numberOfLines={1} style={[styles.infoText, styles.text]}>
+                {this.props.card.distance} miles away
+              </Text>
+            )}
           </View>
           {this.props.card.transactions.length > 0 && (
             <View style={[styles.info, styles.center, styles.row]}>

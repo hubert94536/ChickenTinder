@@ -31,7 +31,7 @@ export default class Alert extends Component {
 
   render() {
     return (
-      <View>
+      <View style={{ position: 'absolute' }}>
         <Text />
         <BlurView
           blurType="light"
