@@ -79,10 +79,10 @@ class Search extends Component {
                 }
                 this.setState({ data: resultUsers })
               })
-              .catch(() => { })
+              .catch(() => {})
           }
         },
-        300,  //0.3 seconds, adjust as necessary
+        300, //0.3 seconds, adjust as necessary
       )
     }
   }
@@ -109,10 +109,9 @@ class Search extends Component {
         lightTheme={true}
         round={true}
         onChangeText={(text) => {
-          this.updateText(text)
-            .then(() => {
-              this.searchFilterFunction()
-            })
+          this.updateText(text).then(() => {
+            this.searchFilterFunction()
+          })
         }}
         autoCorrect={false}
         value={this.state.value}
@@ -123,9 +122,7 @@ class Search extends Component {
   // Called on search-list pulldown refresh
   onRefresh() {
     this.props.showRefresh()
-    sleep(2000)
-      .then(this.searchFilterFunction(this.state.value)
-        .then(this.props.hideRefresh()))
+    sleep(2000).then(this.searchFilterFunction(this.state.value).then(this.props.hideRefresh()))
   }
 
   render() {
@@ -173,7 +170,7 @@ class Search extends Component {
         )}
         <TabBar
           goHome={() => this.props.navigation.replace('Home')}
-          goSearch={() => { }}
+          goSearch={() => {}}
           goNotifs={() => this.props.navigation.replace('Notifications')}
           goProfile={() => this.props.navigation.replace('Profile')}
           cur="Search"

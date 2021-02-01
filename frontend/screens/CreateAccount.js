@@ -32,22 +32,24 @@ class createAccount extends React.Component {
       validEmailFormat: true,
       validUsername: true,
       validUsernameFormat: true,
-      facebook: false
+      facebook: false,
     }
     AsyncStorage.multiGet([EMAIL, NAME, PHONE])
       .then((res) => {
-        this.setState({
-          email: res[0][1],
-          name: res[1][1],
-          phone: res[2][1],
-
-        }, () => {
-          if (this.state.email) {
-            this.setState({
-              facebook: true,
-            })
-          }
-        });
+        this.setState(
+          {
+            email: res[0][1],
+            name: res[1][1],
+            phone: res[2][1],
+          },
+          () => {
+            if (this.state.email) {
+              this.setState({
+                facebook: true,
+              })
+            }
+          },
+        )
       })
       .catch(() => {
         this.setState({ errorAlert: true })
@@ -72,12 +74,7 @@ class createAccount extends React.Component {
     global.email = this.state.email
     global.phone = this.state.phone
     return accountsApi
-      .createFBUser(
-        this.state.name,
-        this.state.username,
-        this.state.email,
-        this.state.photo
-      )
+      .createFBUser(this.state.name, this.state.username, this.state.email, this.state.photo)
       .then(() => AsyncStorage.getItem(REGISTRATION_TOKEN))
       .then((token) => notificationsApi.linkToken(token))
       .then(() => {
@@ -127,9 +124,7 @@ class createAccount extends React.Component {
           source={{ uri: Image.resolveAssetSource(this.state.photo).uri }}
           style={styles.avatar}
         />
-        <Text style={[screenStyles.textBook, styles.fieldName, styles.display]}>
-          Display Name
-        </Text>
+        <Text style={[screenStyles.textBook, styles.fieldName, styles.display]}>Display Name</Text>
         <TextInput
           style={[screenStyles.textBook, styles.fieldText]}
           textAlign="left"
@@ -144,7 +139,10 @@ class createAccount extends React.Component {
           style={[
             screenStyles.textBook,
             styles.fieldText,
-            { marginBottom: this.state.validUsername && this.state.validUsernameFormat ? '7%' : '0%' },
+            {
+              marginBottom:
+                this.state.validUsername && this.state.validUsernameFormat ? '7%' : '0%',
+            },
           ]}
           textAlign="left"
           onChangeText={(username) => {
@@ -167,13 +165,11 @@ class createAccount extends React.Component {
           <View>
             <Text style={[screenStyles.textBook, styles.fieldName]}>Phone Number</Text>
             <Text
-              style={[
-                screenStyles.textBook,
-                styles.fieldText,
-                styles.fixedText,
-              ]}
+              style={[screenStyles.textBook, styles.fieldText, styles.fixedText]}
               textAlign="left"
-            >{this.state.phone}</Text>
+            >
+              {this.state.phone}
+            </Text>
           </View>
         )}
         {this.state.facebook && (
@@ -181,13 +177,11 @@ class createAccount extends React.Component {
             <Text style={[screenStyles.textBook, styles.fieldName]}>Email</Text>
 
             <Text
-              style={[
-                screenStyles.textBook,
-                styles.fieldText,
-                styles.fixedText,
-              ]}
+              style={[screenStyles.textBook, styles.fieldText, styles.fixedText]}
               textAlign="left"
-            >{this.state.email}</Text>
+            >
+              {this.state.email}
+            </Text>
           </View>
         )}
         <TouchableHighlight
@@ -244,10 +238,10 @@ createAccount.propTypes = {
 }
 const styles = StyleSheet.create({
   display: {
-    marginTop: '5%'
+    marginTop: '5%',
   },
   instr: {
-    marginBottom: '5%'
+    marginBottom: '5%',
   },
   title: {
     fontSize: normalize(25),
@@ -285,7 +279,6 @@ const styles = StyleSheet.create({
   fixedText: {
     paddingVertical: '2%',
     paddingHorizontal: '2%',
-
   },
   fieldName: {
     fontSize: normalize(18.5),

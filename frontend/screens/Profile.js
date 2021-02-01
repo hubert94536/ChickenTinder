@@ -76,13 +76,12 @@ class UserProfileView extends Component {
         .checkUsername(user)
         .then(() => {
           // update username locally
-          return accountsApi.updateUsername(user)
-            .then(() => {
-              socket.updateUser({username: user})
-              AsyncStorage.setItem(USERNAME, user)
-              this.props.changeUsername(user)
-              Keyboard.dismiss()
-            })
+          return accountsApi.updateUsername(user).then(() => {
+            socket.updateUser({ username: user })
+            AsyncStorage.setItem(USERNAME, user)
+            this.props.changeUsername(user)
+            Keyboard.dismiss()
+          })
         })
         .catch((error) => {
           console.log(error.status === 404)
@@ -211,7 +210,10 @@ class UserProfileView extends Component {
                 onPress={() => this.setState({ visible: true })}
               />
             </View>
-            <Image source={{ uri: Image.resolveAssetSource(this.props.image.image).uri }} style={screenStyles.avatar} />
+            <Image
+              source={{ uri: Image.resolveAssetSource(this.props.image.image).uri }}
+              style={screenStyles.avatar}
+            />
             <View style={[styles.infoContainer]}>
               <View style={[styles.nameContainer]}>
                 <View style={[styles.nameFiller]}></View>
@@ -242,7 +244,7 @@ class UserProfileView extends Component {
             goHome={() => this.props.navigation.replace('Home')}
             goSearch={() => this.props.navigation.replace('Search')}
             goNotifs={() => this.props.navigation.replace('Notifications')}
-            goProfile={() => { }}
+            goProfile={() => {}}
             cur="Profile"
           />
 
