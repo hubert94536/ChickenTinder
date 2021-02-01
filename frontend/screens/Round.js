@@ -11,7 +11,6 @@ import global from '../../global.js'
 import RoundCard from '../cards/RoundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
-import Tooltip from 'react-native-walkthrough-tooltip'
 import normalize from '../../styles/normalize.js'
 
 export default class Round extends React.Component {
@@ -128,23 +127,6 @@ export default class Round extends React.Component {
         </View>
         <View style={styles.bottom}>
           <View>
-            <Tooltip
-              isVisible={this.state.instr}
-              content={
-                <View style={styles.rr}>
-                  <Text style={[screenStyles.text, styles.white, styles.left]}>
-                    swipe left to dislike
-                  </Text>
-                  <Feather name="arrow-left" style={[styles.white, styles.leftArrow]} />
-                </View>
-              }
-              placement="top"
-              backgroundColor="transparent"
-              contentStyle={{ backgroundColor: '#6A6A6A' }}
-              onClose={() => this.setState({ instr: false })}
-            >
-              <Text> </Text>
-            </Tooltip>
             <TouchableHighlight
               onPress={() => this.deck.swipeLeft()}
               underlayColor="transparent"
@@ -155,27 +137,10 @@ export default class Round extends React.Component {
             </TouchableHighlight>
           </View>
           <View>
-            <Tooltip
-              isVisible={this.state.instr}
-              content={
-                <View style={styles.rr}>
-                  <Feather name="arrow-right" style={[styles.rightArrow, styles.white]} />
-                  <Text style={[screenStyles.text, styles.white, styles.left]}>
-                    swipe right to like
-                  </Text>
-                </View>
-              }
-              placement="top"
-              backgroundColor="transparent"
-              contentStyle={{ backgroundColor: colors.hex }}
-              onClose={() => this.setState({ instr: false })}
-            >
-              <Text> </Text>
-            </Tooltip>
             <TouchableHighlight
               onPress={() => this.deck.swipeRight()}
               underlayColor="transparent"
-              style={(styles.background, styles.swipeRight)}
+              style={[styles.background]}
               disabled={this.state.index > global.restaurants.length}
             >
               <Icon name="heart" style={[screenStyles.text, styles.heart]} />
@@ -208,6 +173,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     backgroundColor: 'white',
+    zIndex: 2,
   },
   card: { justifyContent: 'center' },
   topMargin: { marginTop: '7%' },
@@ -237,6 +203,5 @@ const styles = StyleSheet.create({
   background: { backgroundColor: 'transparent' },
   x: { color: '#6A6A6A', fontSize: normalize(45) },
   rightArrow: { fontSize: normalize(15), marginLeft: '1%' },
-  swipeRight: { marginTop: '1%' },
   heart: { fontSize: normalize(35) },
 })
