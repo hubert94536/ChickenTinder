@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { changeFriends, hideError, hideRefresh, showError, showRefresh } from '../redux/Actions.js'
 import { connect } from 'react-redux'
-import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import { SearchBar } from 'react-native-elements'
 import PropTypes from 'prop-types'
@@ -14,6 +14,11 @@ import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 import TabBar from '../Nav.js'
 
+// Used to make refreshing indicator appear/disappear
+const sleep = (milliseconds) => {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds))
+}
+
 class Search extends Component {
   constructor(props) {
     super(props)
@@ -24,6 +29,7 @@ class Search extends Component {
       deleteFriend: false,
       deleteFriendName: '',
       value: '',
+      refresh: false,
     }
   }
 
@@ -35,11 +41,18 @@ class Search extends Component {
     this.setState({ friends: friendsMap })
   }
 
-  searchFilterFunction = (text) => {
+  updateText = (text) => {
     this.setState({
       value: text,
     })
+  }
 
+  searchFilterFunction = (text) => {
+    if (text == '') {
+      var emptyArray = []
+      this.setState({data: emptyArray})
+      return
+    }
     clearTimeout(this.timeout) // clears the old timer
     this.timeout = setTimeout(
       () =>
@@ -68,7 +81,7 @@ class Search extends Component {
             this.setState({ data: resultUsers })
           })
           .catch(() => {}),
-      100,
+      500,  //0.5 seconds, adjust as necessary
     )
   }
 
@@ -93,11 +106,24 @@ class Search extends Component {
         placeholder="Search for friends"
         lightTheme={true}
         round={true}
-        onChangeText={(text) => this.searchFilterFunction(text)}
+        onChangeText={(text) => {
+          this.updateText(text)
+          this.searchFilterFunction(text)
+        }}
         autoCorrect={false}
         value={this.state.value}
       />
     )
+  }
+
+  // Called on search-list pulldown refresh
+  onRefresh() {
+    this.setState({refresh: true})
+    this.props.showRefresh()
+    sleep(2000)
+    .then(this.searchFilterFunction(this.state.value)
+    .then(this.props.hideRefresh()))
+    .then(this.setState({refresh: false}))
   }
 
   render() {
@@ -122,6 +148,8 @@ class Search extends Component {
           )}
           keyExtractor={(item) => item.username}
           ListHeaderComponent={this.renderHeader}
+          onRefresh={() => this.onRefresh()}
+          refreshing={this.state.refresh}
         />
         {(this.state.errorAlert || this.state.deleteFriend) && (
           <BlurView
