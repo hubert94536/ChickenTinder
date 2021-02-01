@@ -31,7 +31,7 @@ export default class Alert extends Component {
 
   render() {
     return (
-      <View style={{ position: 'absolute' }}>
+      <View style={styles.main}>
         <Text />
         <BlurView
           blurType="light"
@@ -98,6 +98,7 @@ export default class Alert extends Component {
 }
 
 const styles = StyleSheet.create({
+  main: { position: 'absolute' },
   title: {
     fontFamily: font,
     fontWeight: 'bold',

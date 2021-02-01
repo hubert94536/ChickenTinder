@@ -13,14 +13,9 @@ export default class MatchCard extends React.Component {
     super(props)
     this.state = {
       press: false,
-      displayCity: true,
+      displayCity: this.props.card.city.length <= 12,
     }
   }
-
-  componentDidMount() {
-    if (this.props.card.city.length > 12) this.setState({ displayCity: false })
-  }
-
   evaluateCuisines(cuisines) {
     return cuisines[0].title
   }

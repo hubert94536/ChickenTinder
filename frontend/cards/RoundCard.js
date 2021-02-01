@@ -23,7 +23,7 @@ export default class RoundCard extends React.Component {
     super(props)
     this.state = {
       press: false,
-      displayCity: true,
+      displayCity: this.props.card.city.length <= 12,
     }
   }
 
@@ -44,10 +44,6 @@ export default class RoundCard extends React.Component {
     } else {
       return cuisines[0].title
     }
-  }
-
-  componentDidMount() {
-    if (this.props.card.city.length > 12) this.setState({ displayCity: false })
   }
 
   render() {
