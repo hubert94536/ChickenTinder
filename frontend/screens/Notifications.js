@@ -219,6 +219,7 @@ class Notif extends Component {
             body={'You are about to remove @' + this.props.username + ' as a friend'}
             buttonAff="Delete"
             height="25%"
+            blur
             press={() => this.deleteFriend()}
             cancel={() => this.setState({ deleteFriend: false })}
           />

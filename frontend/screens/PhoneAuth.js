@@ -4,7 +4,9 @@ import auth from '@react-native-firebase/auth'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
+import { BlurView } from '@react-native-community/blur'
 import colors from '../../styles/colors.js'
+import modalStyles from '../../styles/modalStyles.js'
 
 const font = 'CircularStd-Bold'
 const fontMed = 'CirularStd-Medium'
@@ -171,6 +173,14 @@ class PhoneAuthScreen extends Component {
 
           {this.state.confirmResult ? this.renderConfirmationCodeView() : null}
         </View>
+        {(this.state.errorAlert || this.state.invalidNumberAlert || this.state.badCodeAlert) && (
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
         {this.state.errorAlert && (
           <Alert
             title="Error, please try again"
