@@ -2,6 +2,7 @@ import React from 'react'
 import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { bindActionCreators } from 'redux'
+import { BlurView } from '@react-native-community/blur'
 import { connect } from 'react-redux'
 import { hideError, showError } from '../redux/Actions.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -9,6 +10,7 @@ import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
+import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 
 class Card extends React.Component {
@@ -25,14 +27,17 @@ class Card extends React.Component {
     friendsApi
       .removeFriendship(this.props.uid)
       .then(() => {
+        this.props.unfriendAlert(false)
         this.setState({ deleteFriend: false, status: 'add' })
         var filteredArray = this.props.total.filter((item) => {
           return item.username !== this.props.username
         })
         this.props.press(this.props.uid, filteredArray)
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err)
         this.props.showError()
+        this.props.unfriendAlert(false)
         this.setState({ deleteFriend: false })
       })
   }
@@ -121,6 +126,7 @@ class Card extends React.Component {
             onPress={() => {
               this.props.hideError()
               this.setState({ deleteFriend: true })
+              this.props.unfriendAlert(true)
             }}
           >
             <View style={imgStyles.card}>
@@ -156,18 +162,22 @@ class Card extends React.Component {
             press={() => {
               this.deleteFriend()
             }}
-            cancel={() => this.setState({ deleteFriend: false })}
+            cancel={() => {
+              this.props.unfriendAlert(false)
+              this.setState({ deleteFriend: false })
+            }}
           />
         )}
-        {this.props.error && (
+        {/* {this.props.error && (
           <Alert
             title="Error, please try again"
             buttonAff="Close"
             height="20%"
+            blur
             press={() => this.props.hideError()}
             cancel={() => this.props.hideError()}
           />
-        )}
+        )} */}
       </View>
     )
   }

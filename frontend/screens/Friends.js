@@ -115,6 +115,7 @@ class Friends extends React.Component {
             key={i}
             index={i}
             press={(uid, newArr) => this.removeRequest(uid, newArr)}
+            unfriendAlert={this.props.unfriendAlert}
           />,
         )
       }
