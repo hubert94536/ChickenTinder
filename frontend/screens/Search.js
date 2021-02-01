@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { changeFriends, hideError, hideRefresh, showError, showRefresh } from '../redux/Actions.js'
 import { connect } from 'react-redux'
-import { Dimensions, FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import { SearchBar } from 'react-native-elements'
 import PropTypes from 'prop-types'
@@ -29,7 +29,6 @@ class Search extends Component {
       deleteFriend: false,
       deleteFriendName: '',
       value: '',
-      refresh: false,
     }
   }
 
@@ -41,48 +40,51 @@ class Search extends Component {
     this.setState({ friends: friendsMap })
   }
 
-  updateText = (text) => {
+  updateText = async (text) => {
     this.setState({
       value: text,
     })
   }
 
-  searchFilterFunction = (text) => {
-    if (text == '') {
-      var emptyArray = []
-      this.setState({data: emptyArray})
-      return
-    }
+  searchFilterFunction = async () => {
     clearTimeout(this.timeout) // clears the old timer
-    this.timeout = setTimeout(
-      () =>
-        accountsApi
-          .searchUsers(text)
-          .then((res) => {
-            var resultUsers = []
-            for (var user in res.userList) {
-              var status = 'add'
-              if (res.userList[user].uid in this.state.friends) {
-                status = this.state.friends[res.userList[user].uid]
-              }
-              var person = {
-                name: res.userList[user].name,
-                username: res.userList[user].username,
-                image: res.userList[user].photo,
-                uid: res.userList[user].uid,
-                status: status,
-              }
-              if (person === undefined) {
-                this.setState({ errorAlert: true })
-                return
-              }
-              resultUsers.push(person)
-            }
-            this.setState({ data: resultUsers })
-          })
-          .catch(() => {}),
-      500,  //0.5 seconds, adjust as necessary
-    )
+    if (!this.state.value) {
+      var emptyArray = []
+      this.setState({ data: emptyArray })
+    } else {
+      this.timeout = setTimeout(
+        () => {
+          if (this.state.value) {
+            accountsApi
+              .searchUsers(this.state.value)
+              .then((res) => {
+                var resultUsers = []
+                for (var user in res.userList) {
+                  var status = 'add'
+                  if (res.userList[user].uid in this.state.friends) {
+                    status = this.state.friends[res.userList[user].uid]
+                  }
+                  var person = {
+                    name: res.userList[user].name,
+                    username: res.userList[user].username,
+                    image: res.userList[user].photo,
+                    uid: res.userList[user].uid,
+                    status: status,
+                  }
+                  if (person === undefined) {
+                    this.setState({ errorAlert: true })
+                    return
+                  }
+                  resultUsers.push(person)
+                }
+                this.setState({ data: resultUsers })
+              })
+              .catch(() => { })
+          }
+        },
+        300,  //0.3 seconds, adjust as necessary
+      )
+    }
   }
 
   async removeRequest(friend, newArr) {
@@ -108,7 +110,9 @@ class Search extends Component {
         round={true}
         onChangeText={(text) => {
           this.updateText(text)
-          this.searchFilterFunction(text)
+            .then(() => {
+              this.searchFilterFunction()
+            })
         }}
         autoCorrect={false}
         value={this.state.value}
@@ -118,12 +122,10 @@ class Search extends Component {
 
   // Called on search-list pulldown refresh
   onRefresh() {
-    this.setState({refresh: true})
     this.props.showRefresh()
     sleep(2000)
-    .then(this.searchFilterFunction(this.state.value)
-    .then(this.props.hideRefresh()))
-    .then(this.setState({refresh: false}))
+      .then(this.searchFilterFunction(this.state.value)
+        .then(this.props.hideRefresh()))
   }
 
   render() {
@@ -149,7 +151,7 @@ class Search extends Component {
           keyExtractor={(item) => item.username}
           ListHeaderComponent={this.renderHeader}
           onRefresh={() => this.onRefresh()}
-          refreshing={this.state.refresh}
+          refreshing={this.props.refresh}
         />
         {(this.state.errorAlert || this.state.deleteFriend) && (
           <BlurView
@@ -171,7 +173,7 @@ class Search extends Component {
         )}
         <TabBar
           goHome={() => this.props.navigation.replace('Home')}
-          goSearch={() => {}}
+          goSearch={() => { }}
           goNotifs={() => this.props.navigation.replace('Notifications')}
           goProfile={() => this.props.navigation.replace('Profile')}
           cur="Search"
