@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import colors from '../styles/colors.js'
+import notifsApi from './apis/notificationsApi.js'
 
 const height = Dimensions.get('window').height
 
@@ -36,10 +37,25 @@ class TabBar extends React.Component {
           style={{ width: '10%' }}
           underlayColor="transparent"
         >
+          <View style = {{flexDirection: 'column'}}>
+
+            
           <Icon
             name="bullhorn"
             style={{ color: this.props.cur === 'Notifs' ? colors.hex : '#8d8d8d', fontSize: 26 }}
           />
+
+        {this.state.notif && (
+          // <Text style={{ color: 'red', fontSize: 26, position: 'absolute', textAlign: 'left', alignSelf: 'flex-end'}}>*</Text>
+
+          <Icon
+            name="circle"
+            style={{ color: colors.hex, fontSize: 14, position: 'absolute', textAlign: 'left', alignSelf: 'flex-end'}}
+          />
+        )}
+
+          
+        </View>
         </TouchableHighlight>
         <TouchableHighlight
           onPress={() => this.props.goProfile()}
