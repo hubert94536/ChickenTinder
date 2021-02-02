@@ -31,14 +31,25 @@ class createAccount extends React.Component {
       validEmail: true,
       validEmailFormat: true,
       validUsername: true,
+      validUsernameFormat: true,
+      facebook: false,
     }
     AsyncStorage.multiGet([EMAIL, NAME, PHONE])
       .then((res) => {
-        this.setState({
-          email: res[0][1],
-          name: res[1][1],
-          phone: res[2][1],
-        })
+        this.setState(
+          {
+            email: res[0][1],
+            name: res[1][1],
+            phone: res[2][1],
+          },
+          () => {
+            if (this.state.email) {
+              this.setState({
+                facebook: true,
+              })
+            }
+          },
+        )
       })
       .catch(() => {
         this.setState({ errorAlert: true })
@@ -51,22 +62,19 @@ class createAccount extends React.Component {
       [USERNAME, this.state.username],
       [PHOTO, this.state.photo],
       [NAME, this.state.name],
-      [EMAIL, this.state.email],
-      [PHONE, this.state.phone],
     ])
+    if (this.state.phone) {
+      AsyncStorage.setItem(PHONE, this.state.phone)
+    } else {
+      AsyncStorage.setItem(EMAIL, this.state.email)
+    }
     changeUsername(this.state.username)
     changeName(this.state.name)
     changeImage(this.state.photo)
     global.email = this.state.email
     global.phone = this.state.phone
     return accountsApi
-      .createFBUser(
-        this.state.name,
-        this.state.username,
-        this.state.email,
-        this.state.photo,
-        this.state.phone,
-      )
+      .createFBUser(this.state.name, this.state.username, this.state.email, this.state.photo)
       .then(() => AsyncStorage.getItem(REGISTRATION_TOKEN))
       .then((token) => notificationsApi.linkToken(token))
       .then(() => {
@@ -76,23 +84,6 @@ class createAccount extends React.Component {
       .catch(() => {
         this.setState({ errorAlert: true })
       })
-  }
-
-  checkEmailValidity() {
-    const reg = /^[ ]*([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})[ ]*$/i
-    if (this.state.email === '' || reg.test(this.state.email) === false) {
-      this.setState({ validEmailFormat: false })
-    } else {
-      this.setState({ validEmailFormat: true })
-      accountsApi
-        .checkEmail(this.state.email)
-        .then(() => {
-          this.setState({ validEmail: true })
-        })
-        .catch(() => {
-          this.setState({ validEmail: false })
-        })
-    }
   }
 
   checkUsernameValidity() {
@@ -110,6 +101,15 @@ class createAccount extends React.Component {
     }
   }
 
+  checkUsernameSyntax() {
+    const regex = /^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){0,13}[a-zA-Z0-9]$/
+    if (!regex.test(this.state.username)) {
+      this.setState({ validUsernameFormat: false })
+    } else {
+      this.setState({ validUsernameFormat: true })
+    }
+  }
+
   render() {
     return (
       <View style={[screenStyles.mainContainer]}>
@@ -117,16 +117,14 @@ class createAccount extends React.Component {
           Create Account
         </Text>
         <Text style={[screenStyles.textBook, styles.mediumText]}>Account Verified!</Text>
-        <Text style={[screenStyles.textBook, styles.mediumText]}>
+        <Text style={[screenStyles.textBook, styles.mediumText, styles.instr]}>
           Finish setting up your account
         </Text>
         <Image
           source={{ uri: Image.resolveAssetSource(this.state.photo).uri }}
-          style={screenStyles.avatar}
+          style={styles.avatar}
         />
-        <Text style={[screenStyles.textBook, styles.fieldName, { marginTop: '5%' }]}>
-          Display Name
-        </Text>
+        <Text style={[screenStyles.textBook, styles.fieldName, styles.display]}>Display Name</Text>
         <TextInput
           style={[screenStyles.textBook, styles.fieldText]}
           textAlign="left"
@@ -136,17 +134,21 @@ class createAccount extends React.Component {
           value={this.state.name}
           maxLength={15}
         />
-
         <Text style={[screenStyles.textBook, styles.fieldName]}>Username</Text>
         <TextInput
           style={[
             screenStyles.textBook,
             styles.fieldText,
-            { marginBottom: this.state.validUsername ? '3%' : '0%' },
+            {
+              marginBottom:
+                this.state.validUsername && this.state.validUsernameFormat ? '7%' : '0%',
+            },
           ]}
           textAlign="left"
           onChangeText={(username) => {
-            this.setState({ username: username.split(' ').join('_') })
+            this.setState({ username: username.split(' ').join('_') }, () => {
+              this.checkUsernameSyntax()
+            })
           }}
           onBlur={() => this.checkUsernameValidity()}
           value={this.state.username}
@@ -156,39 +158,32 @@ class createAccount extends React.Component {
         {!this.state.validUsername && (
           <Text style={[screenStyles.text, styles.warningText]}>This username is taken</Text>
         )}
-
-        <Text style={[screenStyles.textBook, styles.fieldName]}>Phone Number</Text>
-        <TextInput
-          style={[screenStyles.textBook, styles.fieldText]}
-          textAlign="left"
-          onChangeText={(phone) => {
-            this.setState({ phone })
-          }}
-          value={this.state.phone}
-        />
-
-        <Text style={[screenStyles.textBook, styles.fieldName]}>Email</Text>
-        <TextInput
-          style={[
-            screenStyles.textBook,
-            styles.fieldText,
-            { marginBottom: this.state.validEmail && this.state.validEmailFormat ? '3%' : '0%' },
-          ]}
-          textAlign="left"
-          onChangeText={(email) => {
-            this.setState({ email: email })
-          }}
-          onBlur={() => this.checkEmailValidity()}
-          value={this.state.email}
-        />
-
-        {!this.state.validEmail && this.state.validEmailFormat && (
-          <Text style={[screenStyles.text, styles.warningText]}>This email is taken</Text>
+        {!this.state.validUsernameFormat && (
+          <Text style={[screenStyles.text, styles.warningText]}>Invalid username format</Text>
         )}
-        {!this.state.validEmailFormat && (
-          <Text style={[screenStyles.text, styles.warningText]}>Input a valid email</Text>
+        {!this.state.facebook && (
+          <View>
+            <Text style={[screenStyles.textBook, styles.fieldName]}>Phone Number</Text>
+            <Text
+              style={[screenStyles.textBook, styles.fieldText, styles.fixedText]}
+              textAlign="left"
+            >
+              {this.state.phone}
+            </Text>
+          </View>
         )}
+        {this.state.facebook && (
+          <View>
+            <Text style={[screenStyles.textBook, styles.fieldName]}>Email</Text>
 
+            <Text
+              style={[screenStyles.textBook, styles.fieldText, styles.fixedText]}
+              textAlign="left"
+            >
+              {this.state.email}
+            </Text>
+          </View>
+        )}
         <TouchableHighlight
           onShowUnderlay={() => this.setState({ finishPressed: true })}
           onHideUnderlay={() => this.setState({ finishPressed: false })}
@@ -242,16 +237,30 @@ createAccount.propTypes = {
   changeImagee: PropTypes.func,
 }
 const styles = StyleSheet.create({
+  display: {
+    marginTop: '5%',
+  },
+  instr: {
+    marginBottom: '5%',
+  },
   title: {
     fontSize: normalize(25),
     marginTop: '10%',
     marginBottom: '5%',
   },
+  avatar: {
+    width: 150,
+    height: 150,
+    borderRadius: 94.5,
+    borderWidth: 4,
+    alignSelf: 'center',
+    margin: '1.5%',
+  },
   button: {
     borderColor: hex,
     backgroundColor: hex,
-    width: '20%',
-    marginTop: '3%',
+    // width: '20%',
+    marginTop: '7%',
   },
   mediumText: {
     alignSelf: 'center',
@@ -262,10 +271,14 @@ const styles = StyleSheet.create({
     fontSize: normalize(18),
     color: textColor,
     marginHorizontal: '12%',
-    marginBottom: '3%',
+    marginBottom: '7%',
     paddingVertical: '1%',
     borderBottomColor: textColor,
     borderBottomWidth: 1,
+  },
+  fixedText: {
+    paddingVertical: '2%',
+    paddingHorizontal: '2%',
   },
   fieldName: {
     fontSize: normalize(18.5),

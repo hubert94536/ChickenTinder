@@ -12,10 +12,10 @@ import accountsApi from '../apis/accountsApi.js'
 import colors from '../../styles/colors.js'
 import facebookService from '../apis/facebookService.js'
 import Friends from './Friends.js'
-import global from '../../global.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
+import socket from '../apis/socket.js'
 import TabBar from '../Nav.js'
 import ImagePicker from 'react-native-image-crop-picker'
 import PropTypes from 'prop-types'
@@ -39,6 +39,7 @@ class UserProfileView extends Component {
       // show alert
       logoutAlert: false,
       deleteAlert: false,
+      blur: false,
       // friends text
       numFriends: 0,
       imageData: null,
@@ -52,6 +53,7 @@ class UserProfileView extends Component {
       return accountsApi
         .updateName(name)
         .then(() => {
+          socket.updateUser({ name: name })
           // update name locally
           AsyncStorage.setItem(NAME, name)
           this.props.changeName(name)
@@ -75,6 +77,7 @@ class UserProfileView extends Component {
         .then(() => {
           // update username locally
           return accountsApi.updateUsername(user).then(() => {
+            socket.updateUser({ username: user })
             AsyncStorage.setItem(USERNAME, user)
             this.props.changeUsername(user)
             Keyboard.dismiss()
@@ -97,6 +100,7 @@ class UserProfileView extends Component {
     facebookService
       .deleteUser()
       .then(() => {
+        socket.getSocket().disconnect()
         // close settings and navigate to Login
         this.setState({ visible: false })
         this.props.navigation.replace('Login')
@@ -113,13 +117,14 @@ class UserProfileView extends Component {
 
   // cancel deleting your account
   cancelDelete() {
-    this.setState({ deleteAlert: false })
+    this.setState({ deleteAlert: false, visible: true })
   }
 
   async handleLogout() {
     facebookService
       .logout()
       .then(() => {
+        socket.getSocket().disconnect()
         // close settings and navigate to Login
         this.setState({ visible: false })
         this.props.navigation.replace('Login')
@@ -190,7 +195,7 @@ class UserProfileView extends Component {
   }
 
   render() {
-    const { numFriends, visible, edit, takenAlert } = this.state
+    const { numFriends, visible, edit, logoutAlert, deleteAlert, blur, takenAlert } = this.state
 
     return (
       <View style={[screenStyles.mainContainer]}>
@@ -205,7 +210,10 @@ class UserProfileView extends Component {
                 onPress={() => this.setState({ visible: true })}
               />
             </View>
-            <Image source={this.props.image.image} style={screenStyles.avatar} />
+            <Image
+              source={{ uri: Image.resolveAssetSource(this.props.image.image).uri }}
+              style={screenStyles.avatar}
+            />
             <View style={[styles.infoContainer]}>
               <View style={[styles.nameContainer]}>
                 <View style={[styles.nameFiller]}></View>
@@ -225,7 +233,11 @@ class UserProfileView extends Component {
           </View>
           <View style={[styles.friendContainer]}>
             {/* Contains the search bar and friends display if has friends, otherwise no friends view */}
-            <Friends isFriends onFriendsChange={(n) => this.handleFriendsCount(n)} />
+            <Friends
+              isFriends
+              onFriendsChange={(n) => this.handleFriendsCount(n)}
+              unfriendAlert={(bool) => this.setState({ blur: bool })}
+            />
           </View>
 
           <TabBar
@@ -236,7 +248,7 @@ class UserProfileView extends Component {
             cur="Profile"
           />
 
-          {(visible || edit) && (
+          {(visible || edit || logoutAlert || deleteAlert || blur) && (
             <BlurView
               blurType="dark"
               blurAmount={10}
@@ -250,6 +262,8 @@ class UserProfileView extends Component {
             close={() => this.setState({ visible: false })}
             delete={() => this.handleDelete()}
             logout={() => this.handleLogout()}
+            logoutAlert={() => this.setState({ logoutAlert: true })}
+            deleteAlert={() => this.setState({ deleteAlert: true })}
           />
 
           {edit && (
@@ -258,6 +272,32 @@ class UserProfileView extends Component {
               makeChanges={() => this.makeChanges()}
               userChange={(text) => this.setState({ usernameValue: text })}
               nameChange={(text) => this.setState({ nameValue: text })}
+            />
+          )}
+
+          {logoutAlert && (
+            <Alert
+              title="Log out"
+              body="Are you sure you want to log out?"
+              buttonAff="Logout"
+              buttonNeg="Go back"
+              height="25%"
+              twoButton
+              press={() => this.handleLogout()}
+              cancel={() => this.setState({ logoutAlert: false, visible: true })}
+            />
+          )}
+
+          {deleteAlert && (
+            <Alert
+              title="Delete account?"
+              body="By deleting your account, you will lose all of your data"
+              buttonAff="Delete"
+              buttonNeg="Go back"
+              twoButton
+              height="25%"
+              press={() => this.handleDelete()}
+              cancel={() => this.cancelDelete()}
             />
           )}
 
