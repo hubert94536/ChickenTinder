@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import auth from '@react-native-firebase/auth'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
@@ -8,7 +7,6 @@ import { BlurView } from '@react-native-community/blur'
 import colors from '../../styles/colors.js'
 import facebookService from '../apis/facebookService.js'
 import modalStyles from '../../styles/modalStyles.js'
-import { error } from 'winston'
 
 const font = 'CircularStd-Bold'
 const fontMed = 'CirularStd-Medium'
@@ -27,17 +25,6 @@ class PhoneAuthScreen extends Component {
     }
   }
 
-  // validatePhoneNumber = () => {
-  //   const regexp = /^\+?(\d{1,2})?\s?\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/
-  //   return regexp.test(this.state.phone)
-  // }
-
-  // formatPhoneNumber = (number) => {
-  //   const regexp = /^\+?(\d{1,2})?\s?\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/
-  //   const matches = number.match(regexp)
-  //   return `+${matches[1] || 1}${matches[2]}${matches[3]}${matches[4]}`
-  // }
-
   handleSendCode = async () => {
     // Request to send OTP
     try {
@@ -47,19 +34,6 @@ class PhoneAuthScreen extends Component {
       if (err.message == "Invalid phone number") this.setState({ invalidNumberAlert: true });
       else this.setState({ errorAlert: true });
     }
-    // if (this.validatePhoneNumber()) {
-    //   auth()
-    //     .signInWithPhoneNumber(this.formatPhoneNumber(this.state.phone))
-    //     .then((res) => {
-    //       this.setState({ confirmResult: res })
-    //     })
-    //     .catch((error) => {
-    //       this.setState({ errorAlert: true })
-    //       console.log(error)
-    //     })
-    // } else {
-    //   this.setState({ invalidNumberAlert: true })
-    // }
   }
 
   changePhoneNumber = () => {

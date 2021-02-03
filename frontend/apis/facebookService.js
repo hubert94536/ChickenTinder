@@ -22,16 +22,16 @@ import socket from './socket.js'
 
 const { LoginManager, AccessToken } = FBSDK
 
-const config = {
-  apiKey: FIREBASE_API_KEY, // Auth / General Use
-  applicationId: FIREBASE_APPLICATION_ID, // General Use
-  projectId: FIREBASE_PROJECT_ID, // General Use
-  authDomain: FIREBASE_AUTH_DOMAIN, // Auth with popup/redirect
-  databaseURL: FIREBASE_DATABASE, // Realtime Database
-  storageBucket: FIREBASE_STORAGE_BUCKET, // Storage
-}
+// const config = {
+//   apiKey: FIREBASE_API_KEY, // Auth / General Use
+//   applicationId: FIREBASE_APPLICATION_ID, // General Use
+//   projectId: FIREBASE_PROJECT_ID, // General Use
+//   authDomain: FIREBASE_AUTH_DOMAIN, // Auth with popup/redirect
+//   databaseURL: FIREBASE_DATABASE, // Realtime Database
+//   storageBucket: FIREBASE_STORAGE_BUCKET, // Storage
+// }
 
-if (!Firebase.apps.length) Firebase.initializeApp(config)
+// if (!Firebase.apps.length) Firebase.initializeApp(config)
 
 // TODO: Move phone auth
 
@@ -44,7 +44,7 @@ const loginWithCredential = async (userCredential) => {
   try{ 
     // Get info from database if not new user
     console.log(userCredential);
-    if (!userCredential.additionalUserInfo.isNewUser) {
+    if (!userCredential.additionalUserInfo.isNewUser && userCredential.user.displayName != null) {
       const user = await accountsApi.getUser()
       AsyncStorage.multiSet([
         [USERNAME, user.username],
@@ -62,13 +62,12 @@ const loginWithCredential = async (userCredential) => {
       // Link user with their notification token
       const token = await AsyncStorage.getItem(REGISTRATION_TOKEN)
       await notificationsApi.linkToken(token)
-      console.log('Token linked')
       socket.connect()
       return 'Home'
     }
     // Set user's info locally
     await AsyncStorage.setItem(UID, userCredential.user.uid)
-    
+    Firebase.auth().currentUser.updateProfile({displayName: null})
     switch (userCredential.user.providerId){
       case "FacebookAuthProviderID":
         await AsyncStorage.multiSet([
@@ -77,9 +76,10 @@ const loginWithCredential = async (userCredential) => {
         ])
         break;
       case "PhoneAuthProviderID":
-        // await AsyncStorage.multiSet([
-        //   [PHONE, ]
-        // ])
+      case "firebase":
+        await AsyncStorage.multiSet([
+          [PHONE, userCredential.user.phoneNumber]
+        ])
         break;
       default:
         break;

@@ -33,7 +33,7 @@ const createFBUserTest = async (name, uid, username, email, photo, phone) => {
 }
 
 // creates user
-const createFBUser = async (name, username, email, photo) => {
+const createUser = async (name, username, email, photo) => {
   return accountsApi
     .post('/accounts', {
       name: name,
@@ -42,6 +42,7 @@ const createFBUser = async (name, username, email, photo) => {
       photo: photo,
     })
     .then((res) => {
+      Firebase.auth().currentUser.updateProfile({displayName: username})
       return res.status
     })
     .catch((error) => {
@@ -172,6 +173,7 @@ const updateUser = async (req) => {
   return accountsApi
     .put(`/accounts`, req)
     .then((res) => {
+      if ("username" in req) Firebase.auth().currentUser.updateProfile({displayName: req.username});
       return {
         status: res.status,
       }
@@ -229,7 +231,7 @@ export default {
   checkEmail,
   checkPhoneNumber,
   checkUsername,
-  createFBUser,
+  createUser,
   deleteUser,
   getAllUsers,
   getUser,
