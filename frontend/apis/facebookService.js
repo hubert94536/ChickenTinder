@@ -33,9 +33,17 @@ const config = {
 
 if (!Firebase.apps.length) Firebase.initializeApp(config)
 
+// TODO: Move phone auth
+
+// TODO: On login, check user displayname
+// On login for new user, set display name to null
+// If user provider ID is phone, set async storage phone to number
+// If account finishes creation, set display name to display name
+
 const loginWithCredential = async (userCredential) => {
   try{ 
     // Get info from database if not new user
+    console.log(userCredential);
     if (!userCredential.additionalUserInfo.isNewUser) {
       const user = await accountsApi.getUser()
       AsyncStorage.multiSet([
@@ -52,25 +60,31 @@ const loginWithCredential = async (userCredential) => {
       global.email = user.email
       global.phone = user.photo
       // Link user with their notification token
-      AsyncStorage.getItem(REGISTRATION_TOKEN)
-        .then((token) => notificationsApi.linkToken(token))
-        .then(() => {
-          console.log('Token linked')
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+      const token = await AsyncStorage.getItem(REGISTRATION_TOKEN)
+      await notificationsApi.linkToken(token)
+      console.log('Token linked')
       socket.connect()
       return 'Home'
     }
     // Set user's info locally
     await AsyncStorage.setItem(UID, userCredential.user.uid)
-    if (userCredential.user.providerId === "FacebookAuthProviderID") {
-      await AsyncStorage.multiSet([
-        [NAME, userCredential.additionalUserInfo.profile.name],
-        [EMAIL, userCredential.additionalUserInfo.profile.email]
-      ])
+    
+    switch (userCredential.user.providerId){
+      case "FacebookAuthProviderID":
+        await AsyncStorage.multiSet([
+          [NAME, userCredential.additionalUserInfo.profile.name],
+          [EMAIL, userCredential.additionalUserInfo.profile.email]
+        ])
+        break;
+      case "PhoneAuthProviderID":
+        // await AsyncStorage.multiSet([
+        //   [PHONE, ]
+        // ])
+        break;
+      default:
+        break;
     }
+
     return 'CreateAccount'
   } catch (err) {
     return Promise.reject(err)
@@ -94,6 +108,27 @@ const loginWithFacebook = async () => {
   }
 }
 
+validatePhoneNumber = (number) => {
+  const regexp = /^\+?(\d{1,2})?\s?\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/
+  return regexp.test(number)
+}
+
+formatPhoneNumber = (number) => {
+  const regexp = /^\+?(\d{1,2})?\s?\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/
+  const matches = number.match(regexp)
+  return `+${matches[1] || 1}${matches[2]}${matches[3]}${matches[4]}`
+}
+
+const loginWithPhone = async(number) => {
+  try {
+    if (!validatePhoneNumber(number)) throw new Error("Invalid phone number")
+    const confirm = await Firebase.auth().signInWithPhoneNumber(formatPhoneNumber(number))
+    return confirm
+  } catch (err) {
+    return Promise.reject(err)
+  }
+}
+
 // Log out of Firebase and Facebook, disconnect socket
 const logout = async () => {
   try {
@@ -106,6 +141,8 @@ const logout = async () => {
     return Promise.reject(err)
   }
 }
+
+// TODO: Generalize
 
 // Deletes user from database, Firebase, and disconnects socket
 const deleteUser = async () => {
@@ -130,5 +167,6 @@ export default {
   deleteUser,
   loginWithFacebook,
   logout,
-  loginWithCredential
+  loginWithCredential,
+  loginWithPhone
 }

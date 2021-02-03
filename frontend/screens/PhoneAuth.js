@@ -8,6 +8,7 @@ import { BlurView } from '@react-native-community/blur'
 import colors from '../../styles/colors.js'
 import facebookService from '../apis/facebookService.js'
 import modalStyles from '../../styles/modalStyles.js'
+import { error } from 'winston'
 
 const font = 'CircularStd-Bold'
 const fontMed = 'CirularStd-Medium'
@@ -26,32 +27,39 @@ class PhoneAuthScreen extends Component {
     }
   }
 
-  validatePhoneNumber = () => {
-    const regexp = /^\+?(\d{1,2})?\s?\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/
-    return regexp.test(this.state.phone)
-  }
+  // validatePhoneNumber = () => {
+  //   const regexp = /^\+?(\d{1,2})?\s?\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/
+  //   return regexp.test(this.state.phone)
+  // }
 
-  formatPhoneNumber = (number) => {
-    const regexp = /^\+?(\d{1,2})?\s?\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/
-    const matches = number.match(regexp)
-    return `+${matches[1] || 1}${matches[2]}${matches[3]}${matches[4]}`
-  }
+  // formatPhoneNumber = (number) => {
+  //   const regexp = /^\+?(\d{1,2})?\s?\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/
+  //   const matches = number.match(regexp)
+  //   return `+${matches[1] || 1}${matches[2]}${matches[3]}${matches[4]}`
+  // }
 
-  handleSendCode = async() => {
+  handleSendCode = async () => {
     // Request to send OTP
-    if (this.validatePhoneNumber()) {
-      auth()
-        .signInWithPhoneNumber(this.formatPhoneNumber(this.state.phone))
-        .then((res) => {
-          this.setState({ confirmResult: res })
-        })
-        .catch((error) => {
-          this.setState({ errorAlert: true })
-          console.log(error)
-        })
-    } else {
-      this.setState({ invalidNumberAlert: true })
+    try {
+      const confirm = await facebookService.loginWithPhone(this.state.phone);
+      this.setState({ confirmResult: confirm })
+    } catch (err) {
+      if (err.message == "Invalid phone number") this.setState({ invalidNumberAlert: true });
+      else this.setState({ errorAlert: true });
     }
+    // if (this.validatePhoneNumber()) {
+    //   auth()
+    //     .signInWithPhoneNumber(this.formatPhoneNumber(this.state.phone))
+    //     .then((res) => {
+    //       this.setState({ confirmResult: res })
+    //     })
+    //     .catch((error) => {
+    //       this.setState({ errorAlert: true })
+    //       console.log(error)
+    //     })
+    // } else {
+    //   this.setState({ invalidNumberAlert: true })
+    // }
   }
 
   changePhoneNumber = () => {
