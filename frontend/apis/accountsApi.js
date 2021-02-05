@@ -33,14 +33,13 @@ const createFBUserTest = async (name, uid, username, email, photo, phone) => {
 }
 
 // creates user
-const createFBUser = async (name, username, email, photo, phone) => {
+const createFBUser = async (name, username, email, photo) => {
   return accountsApi
     .post('/accounts', {
       name: name,
       username: username,
       email: email,
       photo: photo,
-      phone_number: phone,
     })
     .then((res) => {
       return res.status
