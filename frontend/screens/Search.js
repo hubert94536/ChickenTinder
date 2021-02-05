@@ -118,12 +118,11 @@ class Search extends Component {
 
   // Called on search-list pulldown refresh
   onRefresh() {
-    this.setState({refresh: true})
+    this.setState({ refresh: true })
     this.props.showRefresh()
     sleep(2000)
-    .then(this.searchFilterFunction(this.state.value)
-    .then(this.props.hideRefresh()))
-    .then(this.setState({refresh: false}))
+      .then(this.searchFilterFunction(this.state.value).then(this.props.hideRefresh()))
+      .then(this.setState({ refresh: false }))
   }
 
   render() {
