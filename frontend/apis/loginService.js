@@ -16,6 +16,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import FBSDK from 'react-native-fbsdk'
 import Firebase from '@react-native-firebase/app'
+import auth from '@react-native-firebase/auth'
 import accountsApi from './accountsApi.js'
 import notificationsApi from './notificationsApi.js'
 import socket from './socket.js'
@@ -82,6 +83,7 @@ const loginWithCredential = async (userCredential) => {
         ])
         break;
       default:
+        console.log(Firebase.auth().currentUser.providerId);
         break;
     }
 
@@ -99,7 +101,7 @@ const loginWithFacebook = async () => {
       return Promise.reject(new Error('Cancelled request'))
     }
     const token = await AccessToken.getCurrentAccessToken()
-    const credential = await Firebase.auth.FacebookAuthProvider.credential(token.accessToken)
+    const credential = await auth.FacebookAuthProvider.credential(token.accessToken)
     // Sign in with Firebase oauth using credential and authentication token
     const userCredential = await Firebase.auth().signInWithCredential(credential)
     return login(userCredential)
@@ -133,7 +135,7 @@ const loginWithPhone = async(number) => {
 const logout = async () => {
   try {
     socket.getSocket().disconnect()
-    if ( Firebase.auth().currentUser.providerId === "FacebookAuthProviderID" ) { LoginManager.logOut() }
+    if (Firebase.auth().currentUser.providerId === "FacebookAuthProviderID") { LoginManager.logOut() }
     await notificationsApi.unlinkToken()
     await Firebase.auth().signOut()
     await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
@@ -147,14 +149,38 @@ const logout = async () => {
 // Deletes user from database, Firebase, and disconnects socket
 const deleteUser = async () => {
   try {
-    socket.getSocket().disconnect()
-    await accountsApi.deleteUser()
-    // Need to refresh access token since old one expired
-    await AccessToken.refreshCurrentAccessTokenAsync()
-    // Retrieve accesstoken to delete use from Firebase
-    const accessToken = await AccessToken.getCurrentAccessToken()
-    const credential = await Firebase.auth.FacebookAuthProvider.credential(accessToken)
+    // Get credential for reauthentication
+    var credential;
+    switch (Firebase.auth().currentUser.providerId){
+      case "FacebookAuthProviderID":
+        // Need to refresh access token since old one expired
+        await AccessToken.refreshCurrentAccessTokenAsync()
+        // Retrieve accesstoken to delete use from Firebase
+        const accessToken = await AccessToken.getCurrentAccessToken()
+        credential = await auth.FacebookAuthProvider.credential(accessToken)
+        break;
+      case "PhoneAuthProviderID":
+      case "firebase":
+        const snapshot = await Firebase.auth().verifyPhoneNumber('foo')
+          .on('state_changed', (phoneAuthSnapshot) => {
+            console.log('State: ', phoneAuthSnapshot.state);
+            if (phoneAuthSnapshot.state === auth.PhoneAuthState.CODE_SENT) { return Promise.resolve(); } 
+            else { return Promise.reject(new Error('Code not sent!')); }
+          });
+        console.log(snapshot);   
+        credential = auth.PhoneAuthProvider.credential(snapshot.verificationId, snapshot.code);
+        break;
+      default:
+        console.log(Firebase.auth().currentUser.providerId);
+        break;
+    }
+
+    // Reauthnticate current user
     await Firebase.auth().currentUser.reauthenticateWithCredential(credential)
+    // Disconnect from socket
+    socket.getSocket().disconnect()
+    // Delete user from database
+    await accountsApi.deleteUser()
     // Delete user from firebase and remove information from AsyncStorage
     await Firebase.auth().currentUser.delete()
     await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
@@ -162,6 +188,8 @@ const deleteUser = async () => {
     return Promise.reject(err)
   }
 }
+
+
 
 export default {
   deleteUser,

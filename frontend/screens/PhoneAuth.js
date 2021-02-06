@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
 import { BlurView } from '@react-native-community/blur'
 import colors from '../../styles/colors.js'
-import facebookService from '../apis/facebookService.js'
+import loginService from '../apis/loginService.js'
 import modalStyles from '../../styles/modalStyles.js'
 
 const font = 'CircularStd-Bold'
@@ -28,7 +28,7 @@ class PhoneAuthScreen extends Component {
   handleSendCode = async () => {
     // Request to send OTP
     try {
-      const confirm = await facebookService.loginWithPhone(this.state.phone);
+      const confirm = await loginService.loginWithPhone(this.state.phone);
       this.setState({ confirmResult: confirm })
     } catch (err) {
       if (err.message == "Invalid phone number") this.setState({ invalidNumberAlert: true });
@@ -47,7 +47,7 @@ class PhoneAuthScreen extends Component {
       confirmResult
         .confirm(verificationCode)
         .then((userCredential) => 
-          facebookService.loginWithCredential(userCredential)
+        loginService.loginWithCredential(userCredential)
         )
         .then((result) => this.props.navigation.replace(result))
         .catch((error) => {
