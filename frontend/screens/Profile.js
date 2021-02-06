@@ -12,10 +12,10 @@ import accountsApi from '../apis/accountsApi.js'
 import colors from '../../styles/colors.js'
 import facebookService from '../apis/facebookService.js'
 import Friends from './Friends.js'
-import global from '../../global.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
+import socket from '../apis/socket.js'
 import TabBar from '../Nav.js'
 import ImagePicker from 'react-native-image-crop-picker'
 import PropTypes from 'prop-types'
@@ -53,6 +53,7 @@ class UserProfileView extends Component {
       return accountsApi
         .updateName(name)
         .then(() => {
+          socket.updateUser({ name: name })
           // update name locally
           AsyncStorage.setItem(NAME, name)
           this.props.changeName(name)
@@ -76,6 +77,7 @@ class UserProfileView extends Component {
         .then(() => {
           // update username locally
           return accountsApi.updateUsername(user).then(() => {
+            socket.updateUser({ username: user })
             AsyncStorage.setItem(USERNAME, user)
             this.props.changeUsername(user)
             Keyboard.dismiss()
@@ -98,6 +100,7 @@ class UserProfileView extends Component {
     facebookService
       .deleteUser()
       .then(() => {
+        socket.getSocket().disconnect()
         // close settings and navigate to Login
         this.setState({ visible: false })
         this.props.navigation.replace('Login')
@@ -121,6 +124,7 @@ class UserProfileView extends Component {
     facebookService
       .logoutWithFacebook()
       .then(() => {
+        socket.getSocket().disconnect()
         // close settings and navigate to Login
         this.setState({ visible: false })
         this.props.navigation.replace('Login')
@@ -206,7 +210,10 @@ class UserProfileView extends Component {
                 onPress={() => this.setState({ visible: true })}
               />
             </View>
-            <Image source={this.props.image.image} style={screenStyles.avatar} />
+            <Image
+              source={{ uri: Image.resolveAssetSource(this.props.image.image).uri }}
+              style={screenStyles.avatar}
+            />
             <View style={[styles.infoContainer]}>
               <View style={[styles.nameContainer]}>
                 <View style={[styles.nameFiller]}></View>

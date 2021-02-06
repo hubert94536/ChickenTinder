@@ -37,25 +37,27 @@ class TabBar extends React.Component {
           style={{ width: '10%' }}
           underlayColor="transparent"
         >
-          <View style = {{flexDirection: 'column'}}>
+          <View style={{ flexDirection: 'column' }}>
+            <Icon
+              name="bullhorn"
+              style={{ color: this.props.cur === 'Notifs' ? colors.hex : '#8d8d8d', fontSize: 26 }}
+            />
 
-            
-          <Icon
-            name="bullhorn"
-            style={{ color: this.props.cur === 'Notifs' ? colors.hex : '#8d8d8d', fontSize: 26 }}
-          />
+            {this.props.notif && (
+              // <Text style={{ color: 'red', fontSize: 26, position: 'absolute', textAlign: 'left', alignSelf: 'flex-end'}}>*</Text>
 
-        {this.state.notif && (
-          // <Text style={{ color: 'red', fontSize: 26, position: 'absolute', textAlign: 'left', alignSelf: 'flex-end'}}>*</Text>
-
-          <Icon
-            name="circle"
-            style={{ color: colors.hex, fontSize: 14, position: 'absolute', textAlign: 'left', alignSelf: 'flex-end'}}
-          />
-        )}
-
-          
-        </View>
+              <Icon
+                name="circle"
+                style={{
+                  color: colors.hex,
+                  fontSize: 14,
+                  position: 'absolute',
+                  textAlign: 'left',
+                  alignSelf: 'flex-end',
+                }}
+              />
+            )}
+          </View>
         </TouchableHighlight>
         <TouchableHighlight
           onPress={() => this.props.goProfile()}
