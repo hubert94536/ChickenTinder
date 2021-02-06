@@ -32,23 +32,24 @@ class createAccount extends React.Component {
       validEmailFormat: true,
       validUsername: true,
       validUsernameFormat: true,
-      facebook: false
+      facebook: false,
     }
     AsyncStorage.multiGet([EMAIL, NAME, PHONE])
       .then((res) => {
-        this.setState({
-          email: res[0][1],
-          name: res[1][1],
-          phone: res[2][1],
-          
-      }, () => {
-          if(this.state.email)
+        this.setState(
           {
-            this.setState({
-              facebook: true,
-            })
-          }
-      });
+            email: res[0][1],
+            name: res[1][1],
+            phone: res[2][1],
+          },
+          () => {
+            if (this.state.email) {
+              this.setState({
+                facebook: true,
+              })
+            }
+          },
+        )
       })
       .catch(() => {
         this.setState({ errorAlert: true })
@@ -63,22 +64,19 @@ class createAccount extends React.Component {
       [USERNAME, this.state.username],
       [PHOTO, this.state.photo],
       [NAME, this.state.name],
-      [EMAIL, this.state.email],
-      [PHONE, this.state.phone],
     ])
+    if (this.state.phone) {
+      AsyncStorage.setItem(PHONE, this.state.phone)
+    } else {
+      AsyncStorage.setItem(EMAIL, this.state.email)
+    }
     changeUsername(this.state.username)
     changeName(this.state.name)
     changeImage(this.state.photo)
     global.email = this.state.email
     global.phone = this.state.phone
     return accountsApi
-      .createFBUser(
-        this.state.name,
-        this.state.username,
-        this.state.email,
-        this.state.photo,
-        this.state.phone,
-      )
+      .createFBUser(this.state.name, this.state.username, this.state.email, this.state.photo)
       .then(() => AsyncStorage.getItem(REGISTRATION_TOKEN))
       .then((token) => notificationsApi.linkToken(token))
       .then(() => {
@@ -90,28 +88,10 @@ class createAccount extends React.Component {
       })
   }
 
-  checkEmailValidity() {
-    const reg = /^[ ]*([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})[ ]*$/i
-    if (this.state.email === '' || reg.test(this.state.email) === false) {
-      this.setState({ validEmailFormat: false })
-    } else {
-      this.setState({ validEmailFormat: true })
-      accountsApi
-        .checkEmail(this.state.email)
-        .then(() => {
-          this.setState({ validEmail: true })
-        })
-        .catch(() => {
-          this.setState({ validEmail: false })
-        })
-    }
-  }
-
   checkUsernameValidity() {
     if (this.state.username === '') {
       this.setState({ validUsername: false })
     } else {
-      console.log
       accountsApi
         .checkUsername(this.state.username)
         .then(() => {
@@ -124,7 +104,6 @@ class createAccount extends React.Component {
   }
 
   checkUsernameSyntax() {
-    
     const regex = /^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){0,13}[a-zA-Z0-9]$/
     if (!regex.test(this.state.username)) {
       this.setState({ validUsernameFormat: false })
@@ -132,8 +111,6 @@ class createAccount extends React.Component {
       this.setState({ validUsernameFormat: true })
     }
   }
-
- 
 
   render() {
     return (
@@ -149,9 +126,7 @@ class createAccount extends React.Component {
           source={{ uri: Image.resolveAssetSource(this.state.photo).uri }}
           style={styles.avatar}
         />
-        <Text style={[screenStyles.textBook, styles.fieldName, styles.display]}>
-          Display Name
-        </Text>
+        <Text style={[screenStyles.textBook, styles.fieldName, styles.display]}>Display Name</Text>
         <TextInput
           style={[screenStyles.textBook, styles.fieldText]}
           textAlign="left"
@@ -161,18 +136,21 @@ class createAccount extends React.Component {
           value={this.state.name}
           maxLength={15}
         />
-
         <Text style={[screenStyles.textBook, styles.fieldName]}>Username</Text>
         <TextInput
           style={[
             screenStyles.textBook,
             styles.fieldText,
-            { marginBottom: this.state.validUsername && this.state.validUsernameFormat ? '7%' : '0%' },
+            {
+              marginBottom:
+                this.state.validUsername && this.state.validUsernameFormat ? '7%' : '0%',
+            },
           ]}
           textAlign="left"
           onChangeText={(username) => {
-            this.setState({ username: username.split(' ').join('_') })
-            this.checkUsernameSyntax()
+            this.setState({ username: username.split(' ').join('_') }, () => {
+              this.checkUsernameSyntax()
+            })
           }}
           onBlur={() => this.checkUsernameValidity()}
           value={this.state.username}
@@ -185,49 +163,29 @@ class createAccount extends React.Component {
         {!this.state.validUsernameFormat && (
           <Text style={[screenStyles.text, styles.warningText]}>Invalid username format</Text>
         )}
-
-        
-
-        
-
         {!this.state.facebook && (
-
           <View>
-
-          <Text style={[screenStyles.textBook, styles.fieldName]}>Phone Number</Text>
-          
-          <Text
-          style={[
-            screenStyles.textBook,
-            styles.fieldText,
-            styles.fixedText,
-          ]}
-          textAlign="left"
-          >{this.state.phone}</Text>
-
+            <Text style={[screenStyles.textBook, styles.fieldName]}>Phone Number</Text>
+            <Text
+              style={[screenStyles.textBook, styles.fieldText, styles.fixedText]}
+              textAlign="left"
+            >
+              {this.state.phone}
+            </Text>
           </View>
-        
         )}
-        
         {this.state.facebook && (
-
           <View>
-        <Text style={[screenStyles.textBook, styles.fieldName]}>Email</Text>
-        
-        <Text
-        style={[
-          screenStyles.textBook,
-          styles.fieldText,
-          styles.fixedText,
-        ]}
-        textAlign="left"
-        >{this.state.email}</Text>
+            <Text style={[screenStyles.textBook, styles.fieldName]}>Email</Text>
 
-        </View>
+            <Text
+              style={[screenStyles.textBook, styles.fieldText, styles.fixedText]}
+              textAlign="left"
+            >
+              {this.state.email}
+            </Text>
+          </View>
         )}
-        
-
-
         <TouchableHighlight
           onShowUnderlay={() => this.setState({ finishPressed: true })}
           onHideUnderlay={() => this.setState({ finishPressed: false })}
@@ -281,11 +239,11 @@ createAccount.propTypes = {
   changeImagee: PropTypes.func,
 }
 const styles = StyleSheet.create({
-  display: { 
-    marginTop: '5%' 
+  display: {
+    marginTop: '5%',
   },
-  instr: { 
-    marginBottom: '5%' 
+  instr: {
+    marginBottom: '5%',
   },
   title: {
     fontSize: normalize(25),
@@ -321,9 +279,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   fixedText: {
-    paddingVertical: '2%', 
+    paddingVertical: '2%',
     paddingHorizontal: '2%',
-
   },
   fieldName: {
     fontSize: normalize(18.5),
