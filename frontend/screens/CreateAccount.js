@@ -74,7 +74,7 @@ class createAccount extends React.Component {
     global.email = this.state.email
     global.phone = this.state.phone
     return accountsApi
-      .createFBUser(this.state.name, this.state.username, this.state.email, this.state.photo)
+      .createUser(this.state.name, this.state.username, this.state.email, this.state.phone, this.state.photo)
       .then(() => AsyncStorage.getItem(REGISTRATION_TOKEN))
       .then((token) => notificationsApi.linkToken(token))
       .then(() => {

@@ -50,16 +50,13 @@ const loginWithCredential = async (userCredential) => {
       AsyncStorage.multiSet([
         [USERNAME, user.username],
         [NAME, user.name],
-        [EMAIL, user.email],
         [PHOTO, user.photo],
-        [PHONE, user.phone_number],
         [UID, user.uid],
       ])
-      global.username = user.username
-      global.name = user.name
-      global.photo = user.photo
+      if (user.email) await AsyncStorage.setItem(EMAIL, user.email)
+      if (user.phone_number) await AsyncStorage.setItem(PHONE, user.phone_number)
       global.email = user.email
-      global.phone = user.photo
+      global.phone = user.phone_number
       // Link user with their notification token
       const token = await AsyncStorage.getItem(REGISTRATION_TOKEN)
       await notificationsApi.linkToken(token)

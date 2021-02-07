@@ -54,24 +54,12 @@ class App extends React.Component {
       global.phone = res[4][1]
     })
 
-    friendsApi
-      .getFriends()
-      .then((res) => {
-        this.props.changeFriends(res.friendList)
-      })
-      .catch(() => {
-        this.props.showError()
-      })
-
     PushNotification.configure({
       onRegister: function (token) {
         console.log('Token generated')
         console.log(token)
         AsyncStorage.setItem(REGISTRATION_TOKEN, token.token)
-        AsyncStorage.getItem(UID).then((id) => {
-          //send to back-end server to register with id
-          if (id) notificationsApi.linkToken(token.token)
-        })
+        // if (firebase.auth().currentUser) notificationsApi.linkToken(token.token)
       },
       onNotification: this.onNotification,
       onAction: function (notification) {
@@ -96,10 +84,16 @@ class App extends React.Component {
 
   componentDidMount() {
     var start
-    var unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+    var unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
       if (user === null) {
         start = 'Login'
       } else {
+        try {
+          const friends = await friendsApi.getFriends()
+          this.props.changeFriends(friends)
+        } catch (error) {
+          console.log(error)
+        }
         socket.connect()
         start = 'Home'
       }
