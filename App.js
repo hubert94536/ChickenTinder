@@ -221,7 +221,7 @@ const buildNotification = (config) => {
       message: `${config.name} has sent you a friend request!`,
     }
   }
-  if (config.type == 'friends') {
+  if (config.type == 'accepted') {
     message = {
       title: 'Friend Request Accepted',
       message: `You are now friends with ${config.name}!`,
