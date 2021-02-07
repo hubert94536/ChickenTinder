@@ -60,16 +60,7 @@ class App extends React.Component {
           if (id) notificationsApi.linkToken(token.token)
         })
       },
-      onNotification: function (notification) {
-        // Consider sending only data, then constructing a notification here to display to the user (as FCM base notification construction is quite limited)
-        console.log('Notification received')
-        this.props.newNotif()
-        console.log(notification)
-        if (!notification.userInteraction) {
-          //construct using data
-          buildNotification(notification.data)
-        }
-      },
+      onNotification: this.onNotification,
       onAction: function (notification) {
         console.log(notification)
         if (notification.action === 'open') PushNotification.invokeApp(notification) // figure this out later
@@ -77,6 +68,16 @@ class App extends React.Component {
       popInitialNotification: true,
       requestPermissions: true,
     })
+  }
+
+  onNotification = (notification) => {
+    console.log('Notification received')
+    this.props.newNotif()
+    console.log(notification)
+    if (!notification.userInteraction) {
+      //construct using data
+      buildNotification(notification.data)
+    }
   }
 
   componentDidMount() {
