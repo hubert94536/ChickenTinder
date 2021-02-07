@@ -29,6 +29,7 @@ class Search extends Component {
       deleteFriend: false,
       deleteFriendName: '',
       value: '',
+      refresh: false,
     }
   }
 
@@ -38,6 +39,23 @@ class Search extends Component {
       friendsMap[this.props.friends.friends[friend].uid] = this.props.friends.friends[friend].status
     }
     this.setState({ friends: friendsMap })
+  }
+
+  async getFriends() {
+    friendsApi.getFriends()
+      .then((res) =>{
+        this.props.changeFriends(res.friendList)
+    })
+    .then(() => {
+      var friendsMap = new Object()
+      for (var friend in this.props.friends.friends) {
+        friendsMap[this.props.friends.friends[friend].uid] = this.props.friends.friends[friend].status
+      }
+      this.setState({ friends: friendsMap })
+    })
+    .catch(() => {
+      this.props.showError()
+    })
   }
 
   updateText = async (text) => {
@@ -122,8 +140,11 @@ class Search extends Component {
   // Called on search-list pulldown refresh
   onRefresh() {
     console.log(this.props.refresh)
-    // this.props.showRefresh()
-    // sleep(2000).then(this.searchFilterFunction(this.state.value).then(this.props.hideRefresh()))
+    this.props.showRefresh()
+    sleep(2000)
+    .then(this.getFriends())
+    .then(this.searchFilterFunction(this.state.value))
+    .then(this.props.hideRefresh())
   }
 
   render() {

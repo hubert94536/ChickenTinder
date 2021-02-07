@@ -53,16 +53,7 @@ class App extends React.Component {
       global.email = res[3][1]
       global.phone = res[4][1]
     })
-
-    friendsApi
-      .getFriends()
-      .then((res) => {
-        this.props.changeFriends(res.friendList)
-      })
-      .catch(() => {
-        this.props.showError()
-      })
-
+    
     PushNotification.configure({
       onRegister: function (token) {
         console.log('Token generated')
@@ -95,10 +86,17 @@ class App extends React.Component {
 
   componentDidMount() {
     var start
-    var unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+    var unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
       if (user === null) {
         start = 'Login'
       } else {
+        try {
+          const friends = await friendsApi.getFriends()
+          this.props.changeFriends(friends.friendList)
+          console.log(friends)
+        } catch (error) {
+          console.log(error)
+        }
         socket.connect()
         start = 'Home'
       }
