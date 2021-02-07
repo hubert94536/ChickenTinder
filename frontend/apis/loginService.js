@@ -151,6 +151,7 @@ const deleteUser = async () => {
   try {
     // Get credential for reauthentication
     var credential;
+    console.log(Firebase.auth().currentUser.providerId);
     switch (Firebase.auth().currentUser.providerId){
       case "FacebookAuthProviderID":
         // Need to refresh access token since old one expired
@@ -171,11 +172,10 @@ const deleteUser = async () => {
         credential = auth.PhoneAuthProvider.credential(snapshot.verificationId, snapshot.code);
         break;
       default:
-        console.log(Firebase.auth().currentUser.providerId);
         break;
     }
-
-    // Reauthnticate current user
+    console.log("REAUTHENTICATED")
+    // Reauthenticate current user
     await Firebase.auth().currentUser.reauthenticateWithCredential(credential)
     // Disconnect from socket
     socket.getSocket().disconnect()
@@ -185,6 +185,7 @@ const deleteUser = async () => {
     await Firebase.auth().currentUser.delete()
     await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
   } catch (err) {
+    console.log("------ERROR DELETING USER")
     return Promise.reject(err)
   }
 }
