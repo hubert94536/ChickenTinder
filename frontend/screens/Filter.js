@@ -237,11 +237,10 @@ class FilterSelector extends React.Component {
     const selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
     filters.categories = this.categorize(selections)
     filters.radius = this.state.distance * 1600
-    filters.majority = this.state.majority
+    filters.majority = this.state.selectedMajority == ['All'] ? this.props.members.length : this.state.majority
     filters.groupSize = this.props.members.length
     filters.limit = this.state.selectedSize[0]
     //  making sure we have a valid location
-
     if (this.state.location === null) {
       this.setState({ locationAlert: true })
       this.props.setBlur(true)
@@ -278,7 +277,7 @@ class FilterSelector extends React.Component {
     let tagsMajority = []
     let size = this.props.members.length
     let half = Math.ceil(size * 0.5)
-    let twoThirds = Math.ceil(size * 0.66)
+    let twoThirds = Math.ceil(size * 0.67)
     tagsMajority.push(half)
     if (twoThirds != half) tagsMajority.push(twoThirds)
     tagsMajority.push('All')
@@ -359,11 +358,8 @@ class FilterSelector extends React.Component {
                     if (event[0] === 'Custom: ') {
                       this.setState({ chooseMajority: true })
                       this.props.setBlur(true)
-                    } else if (event[0] === 'All') {
-                      this.setState({ majority: this.props.members.length })
-                    } else {
+                    } else if (event[0] != 'All') {
                       this.setState({ majority: parseInt(event[0]) })
-                      // console.log(this.state.majority)
                     }
                     this.setState({ selectedMajority: event })
                   }}
