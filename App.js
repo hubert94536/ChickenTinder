@@ -53,7 +53,7 @@ class App extends React.Component {
       global.email = res[3][1]
       global.phone = res[4][1]
     })
-
+    
     PushNotification.configure({
       onRegister: function (token) {
         console.log('Token generated')
@@ -90,7 +90,7 @@ class App extends React.Component {
       } else {
         try {
           const friends = await friendsApi.getFriends()
-          this.props.changeFriends(friends)
+          this.props.changeFriends(friends.friendList)
         } catch (error) {
           console.log(error)
         }
