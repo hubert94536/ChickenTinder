@@ -81,30 +81,14 @@ export default class Settings extends React.Component {
           </View>
           <View style={modalStyles.justifyCenter}>
             <Text
-              onPress={() => this.setState({ deleteAlert: true })}
+              onPress={() => {
+                this.props.close()
+                this.props.deleteAlert()
+              }}
               style={[screenStyles.textBold, styles.deleteText]}
             >
               Delete account...
             </Text>
-            {this.state.deleteAlert && (
-              <View>
-                <BlurView
-                  blurType="dark"
-                  blurAmount={10}
-                  reducedTransparencyFallbackColor="black"
-                />
-                <Alert
-                  title="Delete account?"
-                  body="By deleting your account, you will lose all of your data"
-                  buttonAff="Delete"
-                  buttonNeg="Go back"
-                  twoButton
-                  height="27%"
-                  press={() => this.handleDelete()}
-                  cancel={() => this.cancelDelete()}
-                />
-              </View>
-            )}
             {this.state.errorAlert && (
               <Alert
                 title="Error, please try again"
@@ -121,7 +105,12 @@ export default class Settings extends React.Component {
               underlayColor="white"
               onShowUnderlay={() => this.setState({ logout: true })}
               onHideUnderlay={() => this.setState({ logout: false })}
-              onPress={() => this.setState({ logoutAlert: true })}
+              onPress={() => {
+                this.setState({ logout: false }, () => {
+                  this.props.close()
+                  this.props.logoutAlert()
+                })
+              }}
             >
               <Text
                 style={[
@@ -133,18 +122,6 @@ export default class Settings extends React.Component {
                 Logout
               </Text>
             </TouchableHighlight>
-            {this.state.logoutAlert && (
-              <Alert
-                title="Log out"
-                body="Are you sure you want to log out?"
-                buttonAff="Logout"
-                buttonNeg="Go back"
-                height="25%"
-                twoButton
-                press={() => this.handleLogout()}
-                cancel={() => this.setState({ logoutAlert: false })}
-              />
-            )}
           </View>
         </View>
       </Modal>
