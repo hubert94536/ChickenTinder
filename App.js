@@ -81,8 +81,6 @@ class App extends React.Component {
     }
   }
 
-  
-
   componentDidMount() {
     var start
     var unsubscribe = firebase.auth().onAuthStateChanged((user) => {

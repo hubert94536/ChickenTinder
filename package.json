@@ -12,7 +12,8 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "hard-start": "cd android && gradlew clean && cd .. && react-native start --reset-cache"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.30",

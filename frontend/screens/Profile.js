@@ -99,8 +99,8 @@ class UserProfileView extends Component {
   async handleDelete() {
     loginService
       .deleteUser()
+      // TODO: Disastrous phone auth code...
       .then(() => {
-        socket.getSocket().disconnect()
         // close settings and navigate to Login
         this.setState({ visible: false })
         this.props.navigation.replace('Login')

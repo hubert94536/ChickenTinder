@@ -146,6 +146,24 @@ const logout = async () => {
 
 // TODO: Generalize
 
+const deleteUserWithCredential = async (credential) => {
+  try{ 
+    console.log("REAUTHENTICATED")
+    // Reauthenticate current user
+    await Firebase.auth().currentUser.reauthenticateWithCredential(credential)
+    // Disconnect from socket
+    socket.getSocket().disconnect()
+    // Delete user from database
+    await accountsApi.deleteUser()
+    // Delete user from firebase and remove information from AsyncStorage
+    await Firebase.auth().currentUser.delete()
+    await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
+  } catch (err) {
+    console.log("------ERROR DELETING USER")
+    return Promise.reject(err)
+  }
+}
+
 // Deletes user from database, Firebase, and disconnects socket
 const deleteUser = async () => {
   try {
@@ -162,28 +180,19 @@ const deleteUser = async () => {
         break;
       case "PhoneAuthProviderID":
       case "firebase":
-        const snapshot = await Firebase.auth().verifyPhoneNumber('foo')
+        return Firebase.auth().verifyPhoneNumber(Firebase.auth().currentUser.phoneNumber)
           .on('state_changed', (phoneAuthSnapshot) => {
             console.log('State: ', phoneAuthSnapshot.state);
-            if (phoneAuthSnapshot.state === auth.PhoneAuthState.CODE_SENT) { return Promise.resolve(); } 
-            else { return Promise.reject(new Error('Code not sent!')); }
+            switch (phoneAuthSnapshot.state){
+              case auth.PhoneAuthState.CODE_SENT:
+                break;
+              case auth.PhoneAuthState.ERROR:
+                break;
+            }
           });
-        console.log(snapshot);   
-        credential = auth.PhoneAuthProvider.credential(snapshot.verificationId, snapshot.code);
-        break;
-      default:
         break;
     }
-    console.log("REAUTHENTICATED")
-    // Reauthenticate current user
-    await Firebase.auth().currentUser.reauthenticateWithCredential(credential)
-    // Disconnect from socket
-    socket.getSocket().disconnect()
-    // Delete user from database
-    await accountsApi.deleteUser()
-    // Delete user from firebase and remove information from AsyncStorage
-    await Firebase.auth().currentUser.delete()
-    await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
+    deleteUserWithCredential(credential);
   } catch (err) {
     console.log("------ERROR DELETING USER")
     return Promise.reject(err)
