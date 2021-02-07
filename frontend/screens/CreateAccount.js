@@ -35,6 +35,7 @@ class createAccount extends React.Component {
     }
     AsyncStorage.multiGet([EMAIL, NAME, PHONE])
       .then((res) => {
+        console.log(res[0][1])
         this.setState(
           {
             email: res[0][1],

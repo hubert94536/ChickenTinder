@@ -65,14 +65,14 @@ const loginWithCredential = async (userCredential) => {
     // Set user's info locally
     await AsyncStorage.setItem(UID, userCredential.user.uid)
     Firebase.auth().currentUser.updateProfile({displayName: null})
-    switch (userCredential.user.providerId){
-      case "FacebookAuthProviderID":
+    switch (Firebase.auth().currentUser.providerData[0].providerId){
+      case "facebook.com":
         await AsyncStorage.multiSet([
           [NAME, userCredential.additionalUserInfo.profile.name],
           [EMAIL, userCredential.additionalUserInfo.profile.email]
         ])
         break;
-      case "PhoneAuthProviderID":
+      case "phone":
       case "firebase":
         await AsyncStorage.multiSet([
           [PHONE, userCredential.user.phoneNumber]
@@ -100,7 +100,7 @@ const loginWithFacebook = async () => {
     const credential = await auth.FacebookAuthProvider.credential(token.accessToken)
     // Sign in with Firebase oauth using credential and authentication token
     const userCredential = await Firebase.auth().signInWithCredential(credential)
-    return login(userCredential)
+    return loginWithCredential(userCredential)
   } catch (err) {
     return Promise.reject(err)
   }
