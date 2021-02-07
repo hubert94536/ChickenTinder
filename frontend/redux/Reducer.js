@@ -31,7 +31,7 @@ export const nameReducer = (state = INITIAL_STATE.name, action) => {
   }
 }
 
-export const usernameReducer = (state = INITIAL_STATE.name, action) => {
+export const usernameReducer = (state = INITIAL_STATE.username, action) => {
   switch (action.type) {
     case 'CHANGE_USERNAME':
       return {
@@ -43,7 +43,7 @@ export const usernameReducer = (state = INITIAL_STATE.name, action) => {
   }
 }
 
-export const imageReducer = (state = INITIAL_STATE.name, action) => {
+export const imageReducer = (state = INITIAL_STATE.image, action) => {
   switch (action.type) {
     case 'CHANGE_IMAGE':
       return {
@@ -55,7 +55,7 @@ export const imageReducer = (state = INITIAL_STATE.name, action) => {
   }
 }
 
-export const refreshReducer = (state = INITIAL_STATE.name, action) => {
+export const refreshReducer = (state = INITIAL_STATE.refresh, action) => {
   switch (action.type) {
     case 'SHOW_REFRESH':
       return true
@@ -66,7 +66,7 @@ export const refreshReducer = (state = INITIAL_STATE.name, action) => {
   }
 }
 
-export const friendsReducer = (state = INITIAL_STATE.name, action) => {
+export const friendsReducer = (state = INITIAL_STATE.friends, action) => {
   switch (action.type) {
     case 'CHANGE_FRIENDS':
       return {
@@ -78,7 +78,7 @@ export const friendsReducer = (state = INITIAL_STATE.name, action) => {
   }
 }
 
-export const notifReducer = (state = INITIAL_STATE.error, action) => {
+export const notifReducer = (state = INITIAL_STATE.notif, action) => {
   switch (action.type) {
     case 'NEW_NOTIF':
       return true
