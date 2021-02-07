@@ -80,7 +80,8 @@ class App extends React.Component {
         console.log(notification)
         if (!notification.userInteraction) {
           //construct using data
-          buildNotification(notification.data)
+          const data = JSON.parse(notification.data.config)
+          buildNotification(data)
         }
       },
       onAction: function (notification) {

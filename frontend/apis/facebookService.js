@@ -47,19 +47,25 @@ const loginWithFacebook = async () => {
     // Get info from database if not new user
     if (!userCredential.additionalUserInfo.isNewUser) {
       const user = await accountsApi.getUser()
-      AsyncStorage.multiSet([
-        [USERNAME, user.username],
-        [NAME, user.name],
-        [EMAIL, user.email],
-        [PHOTO, user.photo],
-        [PHONE, user.phone_number],
-        [UID, user.uid],
-      ])
-      global.username = user.username
-      global.name = user.name
-      global.photo = user.photo
+      if (user.email) {
+        AsyncStorage.multiSet([
+          [USERNAME, user.username],
+          [NAME, user.name],
+          [EMAIL, user.email],
+          [PHOTO, user.photo],
+          [UID, user.uid],
+        ])
+      } else {
+        AsyncStorage.multiSet([
+          [USERNAME, user.username],
+          [NAME, user.name],
+          [PHOTO, user.photo],
+          [PHONE, user.phone_number],
+          [UID, user.uid],
+        ])
+      }
       global.email = user.email
-      global.phone = user.photo
+      global.phone = user.phone
       // Link user with their notification token
       AsyncStorage.getItem(REGISTRATION_TOKEN)
         .then((token) => notificationsApi.linkToken(token))
