@@ -1,5 +1,14 @@
 import React, { Component } from 'react'
-import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import {
+  ImageBackground,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native'
+import auth from '@react-native-firebase/auth'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
@@ -90,118 +99,126 @@ class PhoneAuthScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.page}>
-          <AntDesign
-            name="arrowleft"
-            style={{
-              fontSize: 30,
-              color: colors.hex,
-              flexDirection: 'row',
-              alignSelf: 'flex-start',
-              marginTop: '5%',
-              marginLeft: '5%',
-            }}
-            onPress={() => {
-              this.handleBack()
-            }}
-          />
-          <View alignItems="center">
-            <Text style={{ fontFamily: font, fontSize: 30, color: colors.hex }}>
-              Enter your number
-            </Text>
-            <Text
+      <ImageBackground
+        source={require('../assets/backgrounds/Login_Input_Phone.png')}
+        style={styles.background}
+      >
+        <SafeAreaView style={styles.container}>
+          <View style={styles.page}>
+            <AntDesign
+              name="arrowleft"
               style={{
-                textAlign: 'center',
+                fontSize: 30,
+                color: colors.hex,
                 flexDirection: 'row',
-                fontFamily: fontMed,
-                fontSize: 20,
-                color: '#6A6A6A',
+                alignSelf: 'flex-start',
                 marginTop: '5%',
-                marginBottom: '40%',
+                marginLeft: '5%',
               }}
-            >
-              Enter your phone number for a text message verification code
-            </Text>
+              onPress={() => {
+                this.handleBack()
+              }}
+            />
+            <View alignItems="center">
+              <Text style={{ fontFamily: font, fontSize: 30, color: colors.hex }}>
+                Enter your number
+              </Text>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  flexDirection: 'row',
+                  fontFamily: fontMed,
+                  fontSize: 20,
+                  color: '#6A6A6A',
+                  marginTop: '5%',
+                  marginBottom: '40%',
+                }}
+              >
+                Enter your phone number for a text message verification code
+              </Text>
+            </View>
+            <TextInput
+              style={[styles.textInput, { marginTop: '0%', marginBottom: '50%' }]}
+              placeholder="Phone Number (+1 xxx xxx xxxx)"
+              placeholderTextColor="#6A6A6A"
+              keyboardType="phone-pad"
+              value={this.state.phone}
+              onChangeText={(num) => {
+                this.setState({ phone: num })
+              }}
+              maxLength={15}
+              editable={!this.state.confirmResult}
+            />
+
+            {this.state.confirmResult && (
+              <TouchableOpacity
+                style={[styles.themeButton, { marginTop: 20 }]}
+                onPress={() => this.changePhoneNumber()}
+              >
+                <Text style={styles.themeButtonTitle}>
+                  {this.state.confirmResult ? 'Change Phone Number' : 'Send Code'}
+                </Text>
+              </TouchableOpacity>
+            )}
+
+            {!this.state.confirmResult && (
+              <TouchableOpacity
+                style={[styles.themeButton, { marginTop: 0, marginBottom: '10%' }]}
+                onPress={() => this.handleSendCode()}
+              >
+                <Text style={styles.themeButtonTitle}>
+                  {this.state.confirmResult ? 'Change Phone Number' : 'Submit'}
+                </Text>
+              </TouchableOpacity>
+            )}
+
+            {this.state.confirmResult ? this.renderConfirmationCodeView() : null}
           </View>
-          <TextInput
-            style={[styles.textInput, { marginTop: '0%', marginBottom: '50%' }]}
-            placeholder="Phone Number (+1 xxx xxx xxxx)"
-            placeholderTextColor="#6A6A6A"
-            keyboardType="phone-pad"
-            value={this.state.phone}
-            onChangeText={(num) => {
-              this.setState({ phone: num })
-            }}
-            maxLength={15}
-            editable={!this.state.confirmResult}
-          />
-
-          {this.state.confirmResult && (
-            <TouchableOpacity
-              style={[styles.themeButton, { marginTop: 20 }]}
-              onPress={() => this.changePhoneNumber()}
-            >
-              <Text style={styles.themeButtonTitle}>
-                {this.state.confirmResult ? 'Change Phone Number' : 'Send Code'}
-              </Text>
-            </TouchableOpacity>
+          {(this.state.errorAlert || this.state.invalidNumberAlert || this.state.badCodeAlert) && (
+            <BlurView
+              blurType="dark"
+              blurAmount={10}
+              reducedTransparencyFallbackColor="white"
+              style={modalStyles.blur}
+            />
           )}
-
-          {!this.state.confirmResult && (
-            <TouchableOpacity
-              style={[styles.themeButton, { marginTop: 0, marginBottom: '10%' }]}
-              onPress={() => this.handleSendCode()}
-            >
-              <Text style={styles.themeButtonTitle}>
-                {this.state.confirmResult ? 'Change Phone Number' : 'Submit'}
-              </Text>
-            </TouchableOpacity>
+          {this.state.errorAlert && (
+            <Alert
+              title="Error, please try again"
+              buttonAff="Close"
+              height="20%"
+              press={() => this.setState({ errorAlert: false })}
+              cancel={() => this.setState({ errorAlert: false })}
+            />
           )}
-
-          {this.state.confirmResult ? this.renderConfirmationCodeView() : null}
-        </View>
-        {(this.state.errorAlert || this.state.invalidNumberAlert || this.state.badCodeAlert) && (
-          <BlurView
-            blurType="dark"
-            blurAmount={10}
-            reducedTransparencyFallbackColor="white"
-            style={modalStyles.blur}
-          />
-        )}
-        {this.state.errorAlert && (
-          <Alert
-            title="Error, please try again"
-            buttonAff="Close"
-            height="20%"
-            press={() => this.setState({ errorAlert: false })}
-            cancel={() => this.setState({ errorAlert: false })}
-          />
-        )}
-        {this.state.invalidNumberAlert && (
-          <Alert
-            title="Invalid Phone Number"
-            buttonAff="Close"
-            height="20%"
-            press={() => this.setState({ invalidNumberAlert: false })}
-            cancel={() => this.setState({ invalidNumberAlert: false })}
-          />
-        )}
-        {this.state.badCodeAlert && (
-          <Alert
-            title="Please enter a 6 digit OTP code."
-            buttonAff="Close"
-            height="20%"
-            press={() => this.setState({ badCodeAlert: false })}
-            cancel={() => this.setState({ badCodeAlert: false })}
-          />
-        )}
-      </SafeAreaView>
+          {this.state.invalidNumberAlert && (
+            <Alert
+              title="Invalid Phone Number"
+              buttonAff="Close"
+              height="20%"
+              press={() => this.setState({ invalidNumberAlert: false })}
+              cancel={() => this.setState({ invalidNumberAlert: false })}
+            />
+          )}
+          {this.state.badCodeAlert && (
+            <Alert
+              title="Please enter a 6 digit OTP code."
+              buttonAff="Close"
+              height="20%"
+              press={() => this.setState({ badCodeAlert: false })}
+              cancel={() => this.setState({ badCodeAlert: false })}
+            />
+          )}
+        </SafeAreaView>
+      </ImageBackground>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',

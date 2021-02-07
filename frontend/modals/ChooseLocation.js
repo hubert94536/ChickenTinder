@@ -192,7 +192,7 @@ export default class Location extends Component {
                 <Text
                   style={[
                     modalStyles.text,
-                    this.state.buttonPressed ? screenStyles.hex : styles.white,
+                    styles.white,
                   ]}
                 >
                   Done

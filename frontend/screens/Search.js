@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { changeFriends, hideError, hideRefresh, showError, showRefresh } from '../redux/Actions.js'
 import { connect } from 'react-redux'
-import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, FlatList, ImageBackground, StyleSheet, Text } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import { SearchBar } from 'react-native-elements'
 import PropTypes from 'prop-types'
@@ -121,13 +121,14 @@ class Search extends Component {
 
   // Called on search-list pulldown refresh
   onRefresh() {
-    this.props.showRefresh()
-    sleep(2000).then(this.searchFilterFunction(this.state.value).then(this.props.hideRefresh()))
+    console.log(this.props.refresh)
+    // this.props.showRefresh()
+    // sleep(2000).then(this.searchFilterFunction(this.state.value).then(this.props.hideRefresh()))
   }
 
   render() {
     return (
-      <View style={screenStyles.mainContainer}>
+      <ImageBackground source={require('../assets/backgrounds/Search.png')} style={{ flex: 1 }}>
         <Text style={[screenStyles.icons, styles.title]}>Find friends</Text>
         <FlatList
           data={this.state.data}
@@ -175,7 +176,7 @@ class Search extends Component {
           goProfile={() => this.props.navigation.replace('Profile')}
           cur="Search"
         />
-      </View>
+      </ImageBackground>
     )
   }
 }
@@ -217,8 +218,9 @@ Search.propTypes = {
 
 const styles = StyleSheet.create({
   title: {
-    marginTop: '10%',
+    marginTop: '7%',
     textAlign: 'center',
+    color: 'white',
   },
   container: {
     backgroundColor: 'white',
@@ -227,6 +229,7 @@ const styles = StyleSheet.create({
     width: '95%',
     height: Dimensions.get('window').height * 0.08,
     alignSelf: 'center',
+    marginTop: '13%',
   },
   inputContainer: {
     height: Dimensions.get('window').height * 0.05,

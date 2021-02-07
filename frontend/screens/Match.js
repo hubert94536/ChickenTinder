@@ -23,7 +23,7 @@ export default class Match extends React.Component {
     if (global.isHost) {
       socket.endRound()
     } else {
-      socket.leaveRoom()
+      socket.endLeave()
     }
     global.code = ''
     global.host = ''
