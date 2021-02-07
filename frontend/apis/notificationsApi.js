@@ -1,5 +1,5 @@
 import Axios from 'axios'
-import Firebase from 'firebase'
+import Firebase from '@react-native-firebase/app'
 
 const notificationsApi = Axios.create({
   baseURL: 'https://wechews.herokuapp.com',
