@@ -14,6 +14,7 @@ import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
 import { BlurView } from '@react-native-community/blur'
 import colors from '../../styles/colors.js'
+import loginService from '../apis/loginService.js'
 import modalStyles from '../../styles/modalStyles.js'
 
 const font = 'CircularStd-Bold'
@@ -33,43 +34,31 @@ class PhoneAuthScreen extends Component {
     }
   }
 
-  validatePhoneNumber() {
-    var regexp = /1?\W*([2-9][0-8][0-9])\W*([2-9][0-9]{2})\W*([0-9]{4})(\se?x?t?(\d*))?/
-    return regexp.test(this.state.phone)
-  }
-
-  async handleSendCode() {
+  handleSendCode = async () => {
     // Request to send OTP
-    if (this.validatePhoneNumber()) {
-      auth()
-        .signInWithPhoneNumber(this.state.phone)
-        .then((res) => {
-          this.setState({ confirmResult: res })
-        })
-        .catch((error) => {
-          this.setState({ errorAlert: true })
-          console.log(error)
-        })
-    } else {
-      this.setState({ invalidNumberAlert: true })
+    try {
+      const confirm = await loginService.loginWithPhone(this.state.phone);
+      this.setState({ confirmResult: confirm })
+    } catch (err) {
+      if (err.message == "Invalid phone number") this.setState({ invalidNumberAlert: true });
+      else this.setState({ errorAlert: true });
     }
   }
 
-  changePhoneNumber() {
+  changePhoneNumber = () => {
     this.setState({ confirmResult: null, verificationCode: '' })
   }
 
-  async handleVerifyCode() {
+  handleVerifyCode = async() => {
     // Request for OTP verification
     const { confirmResult, verificationCode } = this.state
     if (verificationCode.length === 6) {
       confirmResult
         .confirm(verificationCode)
-        .then((user) => {
-          console.log(user)
-          this.setState({ userId: user.uid })
-          this.props.navigation.navigate('Username')
-        })
+        .then((userCredential) => 
+        loginService.loginWithCredential(userCredential)
+        )
+        .then((result) => this.props.navigation.replace(result))
         .catch((error) => {
           this.setState({ errorAlert: true })
           console.log(error)
@@ -104,7 +93,7 @@ class PhoneAuthScreen extends Component {
   }
 
   // Navigate to login
-  async handleBack() {
+  handleBack = async () => {
     this.props.navigation.navigate('Login')
   }
 

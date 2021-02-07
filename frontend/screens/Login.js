@@ -8,7 +8,7 @@ import { BlurView } from '@react-native-community/blur'
 import colors from '../../styles/colors.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import imgStyles from '../../styles/cardImage.js'
-import facebookService from '../apis/facebookService.js'
+import loginService from '../apis/loginService.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -24,7 +24,7 @@ class Login extends React.Component {
   }
 
   async handleClick() {
-    facebookService
+    loginService
       .loginWithFacebook()
       .then((result) => {
         this.setState({ alert: false })
