@@ -7,6 +7,7 @@ import firebase from 'firebase'
 import PushNotification from 'react-native-push-notification'
 import PropTypes from 'prop-types'
 import CreateAccount from './frontend/screens/CreateAccount.js'
+import friendsApi from './frontend/apis/friendsApi.js'
 import global from './global.js'
 import Group from './frontend/screens/Group.js'
 import Home from './frontend/screens/Home.js'
@@ -27,11 +28,14 @@ import { UID, NAME, USERNAME, PHOTO, EMAIL, PHONE, REGISTRATION_TOKEN } from 're
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
+  changeFriends,
   changeName,
   changeUsername,
   changeImage,
   newNotif,
   noNotif,
+  hideError,
+  showError,
 } from './frontend/redux/Actions.js'
 
 class App extends React.Component {
@@ -49,6 +53,15 @@ class App extends React.Component {
       global.email = res[3][1]
       global.phone = res[4][1]
     })
+
+    friendsApi
+      .getFriends()
+      .then((res) => {
+        this.props.changeFriends(res.friendList)
+      })
+      .catch(() => {
+        this.props.showError()
+      })
 
     PushNotification.configure({
       onRegister: function (token) {
@@ -165,17 +178,22 @@ const mapStateToProps = (state) => {
   const { username } = state
   const { image } = state
   const { notif } = state
-  return { name, username, image, notif }
+  const { error } = state
+  const { friends } = state
+  return { name, username, image, notif, error, friends }
 }
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
+      changeFriends,
       changeName,
       changeUsername,
       changeImage,
       newNotif,
       noNotif,
+      showError,
+      hideError,
     },
     dispatch,
   )

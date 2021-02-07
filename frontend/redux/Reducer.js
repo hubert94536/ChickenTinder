@@ -5,7 +5,7 @@ const INITIAL_STATE = {
   image: '',
   refresh: false,
   friends: [],
-  notif: true,
+  notif: false,
 }
 
 export const errorReducer = (state = INITIAL_STATE.error, action) => {
