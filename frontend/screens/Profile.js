@@ -100,7 +100,6 @@ class UserProfileView extends Component {
     facebookService
       .deleteUser()
       .then(() => {
-        socket.getSocket().disconnect()
         // close settings and navigate to Login
         this.setState({ visible: false })
         this.props.navigation.replace('Login')
@@ -124,7 +123,6 @@ class UserProfileView extends Component {
     facebookService
       .logoutWithFacebook()
       .then(() => {
-        socket.getSocket().disconnect()
         // close settings and navigate to Login
         this.setState({ visible: false })
         this.props.navigation.replace('Login')
