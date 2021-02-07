@@ -15,7 +15,6 @@ import Loading from './frontend/screens/Loading.js'
 import Login from './frontend/screens/Login.js'
 import Match from './frontend/screens/Match.js'
 import Notifications from './frontend/screens/Notifications.js'
-import notificationsApi from './frontend/apis/notificationsApi.js'
 import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
 import Round from './frontend/screens/Round.js'
 import Search from './frontend/screens/Search.js'
@@ -23,7 +22,7 @@ import socket from './frontend/apis/socket.js'
 import TopThree from './frontend/screens/TopThree.js'
 import UserProfileView from './frontend/screens/Profile.js'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { UID, NAME, USERNAME, PHOTO, EMAIL, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
+import { NAME, USERNAME, PHOTO, EMAIL, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -53,7 +52,7 @@ class App extends React.Component {
       global.email = res[3][1]
       global.phone = res[4][1]
     })
-    
+
     PushNotification.configure({
       onRegister: function (token) {
         console.log('Token generated')
@@ -71,20 +70,10 @@ class App extends React.Component {
     })
   }
 
-  onNotification = (notification) => {
-    console.log('Notification received')
-    this.props.newNotif()
-    console.log(notification)
-    if (!notification.userInteraction) {
-      //construct using data
-    const config = JSON.parse(notification.data.config)
-    buildNotification(config)
-    }
-  }
-
   componentDidMount() {
     var start
     var unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+      unsubscribe()
       if (user === null) {
         start = 'Login'
       } else {
@@ -154,10 +143,20 @@ class App extends React.Component {
           animationEnabled: false,
         },
       )
-      unsubscribe()
       var AppContainer = createAppContainer(RootStack)
       this.setState({ appContainer: <AppContainer /> })
     })
+  }
+
+  onNotification = (notification) => {
+    console.log('Notification received')
+    this.props.newNotif()
+    console.log(notification)
+    if (!notification.userInteraction) {
+      //construct using data
+      const config = JSON.parse(notification.data.config)
+      buildNotification(config)
+    }
   }
 
   render() {

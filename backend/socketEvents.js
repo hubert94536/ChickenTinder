@@ -246,13 +246,15 @@ module.exports = (io) => {
     // merge user's filters to master list, send updated session back
     socket.on('submit', async (data) => {
       try {
-        if (socket.user.room && data.categories) {
-          // append filters categories
-          await sendCommand('JSON.STRAPPEND', [
-            `filters:${socket.user.room}`,
-            'categories',
-            JSON.stringify(data.categories),
-          ])
+        if (socket.user.room) {
+          if (data.categories) {
+            // append filters categories
+            await sendCommand('JSON.STRAPPEND', [
+              `filters:${socket.user.room}`,
+              'categories',
+              JSON.stringify(data.categories),
+            ])
+          }
           // update member who submitted filters
           await sendCommand('JSON.SET', [
             socket.user.room,

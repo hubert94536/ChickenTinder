@@ -85,7 +85,7 @@ export default class Group extends React.Component {
       this.updateMemberList()
     })
 
-    socket.getSocket().once('start', (restaurants) => {
+    socket.getSocket().on('start', (restaurants) => {
       if (restaurants.length > 0) {
         socket.getSocket().off()
         global.restaurants = restaurants
@@ -96,17 +96,14 @@ export default class Group extends React.Component {
       }
     })
 
-    socket.getSocket().once('leave', () => {
+    socket.getSocket().on('leave', () => {
       this.leaveGroup(true)
     })
 
-    socket.getSocket().once('reselect', () => {
+    socket.getSocket().on('reselect', () => {
       console.log('reselect')
     })
 
-    socket.getSocket().once('reselect', () => {
-      console.log('reselect')
-    })
   }
 
   setUserSubmit() {

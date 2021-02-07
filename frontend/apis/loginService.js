@@ -100,7 +100,7 @@ const loginWithFacebook = async () => {
     const credential = await auth.FacebookAuthProvider.credential(token.accessToken)
     // Sign in with Firebase oauth using credential and authentication token
     const userCredential = await Firebase.auth().signInWithCredential(credential)
-    return login(userCredential)
+    return loginWithCredential(userCredential)
   } catch (err) {
     return Promise.reject(err)
   }

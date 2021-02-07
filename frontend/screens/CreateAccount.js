@@ -67,9 +67,9 @@ class createAccount extends React.Component {
     } else {
       AsyncStorage.setItem(EMAIL, this.state.email)
     }
-    changeUsername(this.state.username)
-    changeName(this.state.name)
-    changeImage(this.state.photo)
+    this.props.changeUsername(this.state.username)
+    this.props.changeName(this.state.name)
+    this.props.changeImage(this.state.photo)
     global.email = this.state.email
     global.phone = this.state.phone
     return accountsApi

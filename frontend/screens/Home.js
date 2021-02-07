@@ -52,15 +52,6 @@ class Home extends React.Component {
       })
     })
 
-    socket.getSocket().once('update', (res) => {
-      this.setState({ invite: false })
-      global.host = res.host
-      this.props.navigation.navigate('Group', {
-        response: res,
-        username: this.props.username.username,
-      })
-    })
-
     // //uncomment if testing friends/requests
     // accountsApi.createFBUserTest('Hubert', 2, 'hubesc', 'hubesc@gmail.com', '10', '45678907')
     // accountsApi.createFBUserTest('Hanna', 3, 'hco', 'hco@gmail.com', '11', '45678901')
@@ -127,7 +118,7 @@ class Home extends React.Component {
                 height: 45,
                 justifyContent: 'center',
                 alignSelf: 'center',
-                borderColor: colors.hex,
+                borderColor: 'white',
                 borderWidth: 2,
               }}
               onPress={() => this.setState({ join: true })}
