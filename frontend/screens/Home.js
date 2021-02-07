@@ -4,7 +4,15 @@ import { bindActionCreators } from 'redux'
 import { BlurView } from '@react-native-community/blur'
 import { changeFriends, hideError, showError } from '../redux/Actions.js'
 import { connect } from 'react-redux'
-import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import {
+  Dimensions,
+  Image,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
+} from 'react-native'
 import { USERNAME, NAME, PHOTO, PHONE, EMAIL } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
@@ -33,15 +41,6 @@ class Home extends React.Component {
       inviteInfo: '',
       friends: '',
     }
-
-    friendsApi
-      .getFriends()
-      .then((res) => {
-        this.props.changeFriends(res.friendList)
-      })
-      .catch(() => {
-        this.props.showError()
-      })
 
     socket.getSocket().once('update', (res) => {
       this.setState({ invite: false })
@@ -80,108 +79,103 @@ class Home extends React.Component {
 
   render() {
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: 'white',
-          alignItems: 'center',
-          justifyContent: 'space-evenly',
-        }}
-      >
-        <Text style={[screenStyles.text, screenStyles.title, { fontSize: 30 }]}>
-          Hungry? Chews wisely.
-        </Text>
-        {/* dummy image below */}
-        <Image
-          source={require('../assets/Icon_Transparent.png')}
-          style={{ width: height * 0.3, height: height * 0.3 }}
-        />
-        <View>
-          <TouchableHighlight
-            onShowUnderlay={() => this.setState({ createPressed: true })}
-            onHideUnderlay={() => this.setState({ createPressed: false })}
-            activeOpacity={1}
-            underlayColor="white"
-            style={{
-              backgroundColor: colors.hex,
-              borderRadius: 40,
-              width: width * 0.5,
-              height: 45,
-              justifyContent: 'center',
-              alignSelf: 'center',
-              margin: '3%',
-            }}
-            onPress={() => this.createGroup()}
-          >
-            <Text
-              style={[
-                styles.buttonText,
-                this.state.createPressed ? { color: colors.hex } : { color: 'white' },
-              ]}
+      <ImageBackground source={require('../assets/backgrounds/Home.png')} style={styles.background}>
+        <View style={styles.main}>
+          <Text style={[screenStyles.text, screenStyles.title, { fontSize: 30 }]}>
+            Hungry? Chews wisely.
+          </Text>
+          {/* dummy image below */}
+          <Image
+            source={require('../assets/Icon_Transparent.png')}
+            style={{ width: height * 0.3, height: height * 0.3 }}
+          />
+          <View>
+            <TouchableHighlight
+              onShowUnderlay={() => this.setState({ createPressed: true })}
+              onHideUnderlay={() => this.setState({ createPressed: false })}
+              activeOpacity={1}
+              underlayColor="white"
+              style={{
+                backgroundColor: colors.hex,
+                borderRadius: 40,
+                width: width * 0.5,
+                height: 45,
+                justifyContent: 'center',
+                alignSelf: 'center',
+                margin: '3%',
+              }}
+              onPress={() => this.createGroup()}
             >
-              Create Group
-            </Text>
-          </TouchableHighlight>
-          <TouchableHighlight
-            onShowUnderlay={() => this.setState({ joinPressed: true })}
-            onHideUnderlay={() => this.setState({ joinPressed: false })}
-            activeOpacity={1}
-            underlayColor={colors.hex}
-            style={{
-              backgroundColor: 'white',
-              borderRadius: 40,
-              width: width * 0.5,
-              height: 45,
-              justifyContent: 'center',
-              alignSelf: 'center',
-              borderColor: colors.hex,
-              borderWidth: 2,
-            }}
-            onPress={() => this.setState({ join: true })}
-          >
-            <Text
-              style={[
-                styles.buttonText,
-                this.state.profilePressed ? { color: 'white' } : { color: colors.hex },
-              ]}
+              <Text
+                style={[
+                  styles.buttonText,
+                  this.state.createPressed ? { color: colors.hex } : { color: 'white' },
+                ]}
+              >
+                Create Group
+              </Text>
+            </TouchableHighlight>
+            <TouchableHighlight
+              onShowUnderlay={() => this.setState({ joinPressed: true })}
+              onHideUnderlay={() => this.setState({ joinPressed: false })}
+              activeOpacity={1}
+              underlayColor={colors.hex}
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 40,
+                width: width * 0.5,
+                height: 45,
+                justifyContent: 'center',
+                alignSelf: 'center',
+                borderColor: colors.hex,
+                borderWidth: 2,
+              }}
+              onPress={() => this.setState({ join: true })}
             >
-              Join Group
-            </Text>
-          </TouchableHighlight>
-        </View>
-        <TabBar
-          goHome={() => {}}
-          goSearch={() => this.props.navigation.navigate('Search')}
-          goNotifs={() => this.props.navigation.navigate('Notifications')}
-          goProfile={() => this.props.navigation.navigate('Profile')}
-          cur="Home"
-        />
-        <Join
-          visible={this.state.join}
-          username={this.state.inviteInfo.username}
-          name={this.state.inviteInfo.name}
-          cancel={() => this.setState({ join: false })}
-          onPress={() => this.setState({ join: false })}
-        />
+              <Text
+                style={[
+                  styles.buttonText,
+                  this.state.profilePressed ? { color: 'white' } : { color: colors.hex },
+                ]}
+              >
+                Join Group
+              </Text>
+            </TouchableHighlight>
+          </View>
+          <TabBar
+            goHome={() => {}}
+            goSearch={() => this.props.navigation.navigate('Search')}
+            goNotifs={() => this.props.navigation.navigate('Notifications')}
+            goProfile={() => this.props.navigation.navigate('Profile')}
+            cur="Home"
+          />
+          <Join
+            visible={this.state.join}
+            username={this.state.inviteInfo.username}
+            name={this.state.inviteInfo.name}
+            cancel={() => this.setState({ join: false })}
+            onPress={() => this.setState({ join: false })}
+          />
 
-        {this.props.error && (
-          <BlurView
-            blurType="dark"
-            blurAmount={10}
-            reducedTransparencyFallbackColor="white"
-            style={modalStyles.blur}
-          />
-        )}
-        {this.props.error && (
-          <Alert
-            title="Error, please try again"
-            buttonAff="Close"
-            height="20%"
-            press={() => this.props.hideError()}
-            cancel={() => this.props.hideError()}
-          />
-        )}
-      </View>
+          {this.props.error && (
+            <BlurView
+              blurType="dark"
+              blurAmount={10}
+              reducedTransparencyFallbackColor="white"
+              style={modalStyles.blur}
+            />
+          )}
+          {this.props.error && (
+            <Alert
+              title="Error, please try again"
+              buttonAff="Close"
+              height="20%"
+              press={() => this.props.hideError()}
+              cancel={() => this.props.hideError()}
+            />
+          )}
+        </View>
+      </ImageBackground>
     )
   }
 }
@@ -215,6 +209,14 @@ Home.propTypes = {
   changeFriends: PropTypes.func,
 }
 const styles = StyleSheet.create({
+  main: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+  },
+  background: {
+    flex: 1,
+  },
   button: {
     height: 65,
     margin: '3%',
