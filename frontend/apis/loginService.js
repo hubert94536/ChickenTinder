@@ -44,7 +44,6 @@ const { LoginManager, AccessToken } = FBSDK
 const loginWithCredential = async (userCredential) => {
   try{ 
     // Get info from database if not new user
-    console.log(userCredential);
     if (!userCredential.additionalUserInfo.isNewUser && userCredential.user.displayName != null) {
       const user = await accountsApi.getUser()
       AsyncStorage.multiSet([
