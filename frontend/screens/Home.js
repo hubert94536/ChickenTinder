@@ -23,12 +23,15 @@ import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
 import global from '../../global.js'
 import Join from '../modals/Join.js'
+import normalize from '../../styles/normalize.js'
 import TabBar from '../Nav.js'
 import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 
 const width = Dimensions.get('window').width
 const height = Dimensions.get('window').height
+const home = '../assets/backgrounds/Home.png'
+const homedark = '../assets/backgrounds/Home_Blur.png'
 
 class Home extends React.Component {
   constructor() {
@@ -79,16 +82,11 @@ class Home extends React.Component {
 
   render() {
     return (
-      <ImageBackground source={require('../assets/backgrounds/Home.png')} style={styles.background}>
+      <ImageBackground source={this.state.join ? require(homedark) : require(home)} style={styles.background}>
         <View style={styles.main}>
-          <Text style={[screenStyles.text, screenStyles.title, { fontSize: 30 }]}>
-            Hungry? Chews wisely.
+          <Text style={[screenStyles.text, styles.title]}>
+          Let&apos;s Get Chews-ing
           </Text>
-          {/* dummy image below */}
-          <Image
-            source={require('../assets/Icon_Transparent.png')}
-            style={{ width: height * 0.3, height: height * 0.3 }}
-          />
           <View>
             <TouchableHighlight
               onShowUnderlay={() => this.setState({ createPressed: true })}
@@ -121,13 +119,13 @@ class Home extends React.Component {
               activeOpacity={1}
               underlayColor={colors.hex}
               style={{
-                backgroundColor: 'white',
+                backgroundColor: 'transparent',
                 borderRadius: 40,
                 width: width * 0.5,
                 height: 45,
                 justifyContent: 'center',
                 alignSelf: 'center',
-                borderColor: colors.hex,
+                borderColor: 'white',
                 borderWidth: 2,
               }}
               onPress={() => this.setState({ join: true })}
@@ -135,7 +133,7 @@ class Home extends React.Component {
               <Text
                 style={[
                   styles.buttonText,
-                  this.state.profilePressed ? { color: 'white' } : { color: colors.hex },
+                  {color: 'white'},
                 ]}
               >
                 Join Group
@@ -211,11 +209,20 @@ Home.propTypes = {
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
     justifyContent: 'space-evenly',
   },
   background: {
     flex: 1,
+  },
+  title:{
+    fontSize: normalize(30),
+    margin:'15%',
+    marginTop:'35%',
+    width:'50%',
+    textAlign:'left',
+    fontFamily:'CircularStd-Bold',
+    lineHeight:width*0.11
   },
   button: {
     height: 65,
@@ -226,6 +233,6 @@ const styles = StyleSheet.create({
   buttonText: {
     textAlign: 'center',
     fontFamily: 'CircularStd-Bold',
-    fontSize: 18,
+    fontSize: normalize(18),
   },
 })

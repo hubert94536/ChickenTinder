@@ -4,7 +4,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import { bindActionCreators } from 'redux'
 import { BlurView } from '@react-native-community/blur'
 import { connect } from 'react-redux'
-import { hideError, showError } from '../redux/Actions.js'
+import { changeFriends, hideError, showError } from '../redux/Actions.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
@@ -47,6 +47,16 @@ class Card extends React.Component {
       .acceptFriendRequest(this.props.uid)
       .then(() => {
         this.setState({ status: 'friends' })
+        console.log(this.props.friends)
+        var list = this.props.friends
+        for(var i = 0; i < list.length; i++){
+          if(list[i].uid === this.props.uid){
+            list.status = 'friends'
+            this.props.changeFriends(list)
+            break
+          }
+        }
+        console.log(this.props.friends)
       })
       .catch(() => this.props.showError())
   }
@@ -56,6 +66,16 @@ class Card extends React.Component {
       .createFriendship(this.props.uid)
       .then(() => {
         this.setState({ status: 'requested' })
+        console.log(this.props.friends)
+        var list = this.props.friends
+        for(var i = 0; i < list.length; i++){
+          if(list[i].uid === this.props.uid){
+            list.status = 'requested'
+            this.props.changeFriends(list)
+            break
+          }
+        }
+        console.log(this.props.friends)
       })
       .catch(() => this.props.showError())
   }
@@ -185,7 +205,8 @@ class Card extends React.Component {
 
 const mapStateToProps = (state) => {
   const { error } = state
-  return { error }
+  const { friends } = state
+  return { error, friends }
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -193,6 +214,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       showError,
       hideError,
+      changeFriends,
     },
     dispatch,
   )
