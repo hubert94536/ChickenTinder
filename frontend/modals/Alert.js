@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, Text, TouchableHighlight, Modal } from 'react-native'
-import { BlurView } from '@react-native-community/blur'
 import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'
 import modalStyles from '../../styles/modalStyles.js'
@@ -31,14 +30,8 @@ export default class Alert extends Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.main}>
         <Text />
-        <BlurView
-          blurType="light"
-          blurAmount={20}
-          reducedTransparencyFallbackColor="white"
-          style={modalStyles.blur}
-        />
         <Modal transparent animationType="none" visible={this.props.visible}>
           <View style={[modalStyles.modal, { height: this.props.height }]}>
             <View style={modalStyles.topRightIcon}>
@@ -98,6 +91,7 @@ export default class Alert extends Component {
 }
 
 const styles = StyleSheet.create({
+  main: { position: 'absolute' },
   title: {
     fontFamily: font,
     fontWeight: 'bold',
