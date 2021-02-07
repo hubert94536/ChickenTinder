@@ -31,7 +31,7 @@ const sendNotification = async (notif) => {
         photo: notif.photo,
       }
       const message = {
-        data: JSON.stringify(data),
+        data: { config: JSON.stringify(data) },
         token: user.regtoken,
       }
       messaging.send(message)
