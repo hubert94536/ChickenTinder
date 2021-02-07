@@ -155,24 +155,46 @@ export default class Location extends Component {
                 this.mapView.current.animateToRegion(newRegion, 100)
               }}
             />
-            <View style={styles.mapContainer}>
-              <MapView
-                ref={this.mapView}
-                provider={PROVIDER_GOOGLE}
-                style={styles.map}
-                showsScale={true}
-                showsCompass={true}
-                showsBuildings={true}
-                showsMyLocationButton={true}
-                initialRegion={{
-                  latitude: this.state.location.latitude,
-                  longitude: this.state.location.longitude,
-                  latitudeDelta: this.state.distance / 60 + 0.3,
-                  longitudeDelta: this.state.distance / 60 + 0.3,
-                }}
-                // onMarkerDragEnd={(res) => {
-                //   this.setState({ location: res.coordinate })
-                // }}
+          </View>
+          <View style={styles.mapContainer}>
+            <MapView
+              ref={this.mapView}
+              provider={PROVIDER_GOOGLE}
+              style={styles.map}
+              showsScale={true}
+              showsCompass={true}
+              showsBuildings={true}
+              showsMyLocationButton={true}
+              initialRegion={{
+                latitude: this.state.location.latitude,
+                longitude: this.state.location.longitude,
+                latitudeDelta: this.state.distance / 60 + 0.3,
+                longitudeDelta: this.state.distance / 60 + 0.3,
+              }}
+              // onMarkerDragEnd={(res) => {
+              //   this.setState({ location: res.coordinate })
+              // }}
+            >
+              {/* <Marker coordinate={this.state.location} /> */}
+              <Circle
+                ref={this.circle}
+                center={this.state.location}
+                radius={this.state.distance * 1609.34}
+                fillColor={'rgba(241, 87, 99, 0.7)'}
+              />
+            </MapView>
+            <TouchableHighlight
+              underlayColor="white"
+              onHideUnderlay={() => this.setState({ buttonPressed: false })}
+              onShowUnderlay={() => this.setState({ buttonPressed: true })}
+              onPress={() => this.handlePress()}
+              style={[modalStyles.button, styles.buttonColor, styles.doneButton]}
+            >
+              <Text
+                style={[
+                  modalStyles.text,
+                  this.state.buttonPressed ? screenStyles.hex : styles.white,
+                ]}
               >
                 {/* <Marker coordinate={this.state.location} /> */}
                 <Circle
