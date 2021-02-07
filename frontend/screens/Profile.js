@@ -213,10 +213,10 @@ class UserProfileView extends Component {
                   onPress={() => this.setState({ visible: true })}
                 />
               </View>
-              <Image
+              {/* <Image
                 source={{ uri: Image.resolveAssetSource(this.props.image.image).uri }}
                 style={screenStyles.avatar}
-              />
+              /> */}
               <View style={[styles.infoContainer]}>
                 <View style={[styles.nameContainer]}>
                   <Text style={(screenStyles.text, styles.name)}>{this.props.name.name}</Text>
