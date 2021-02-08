@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
     marginBottom:'10%'
   },
   selectText:{
-    color:hex,
+    color: colors.hex,
   },
   button: {
     borderColor: colors.hex,

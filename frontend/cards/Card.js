@@ -47,16 +47,17 @@ class Card extends React.Component {
       .acceptFriendRequest(this.props.uid)
       .then(() => {
         this.setState({ status: 'friends' })
-        console.log(this.props.friends)
-        var list = this.props.friends
-        for(var i = 0; i < list.length; i++){
-          if(list[i].uid === this.props.uid){
-            list.status = 'friends'
-            this.props.changeFriends(list)
-            break
-          }
-        }
-        console.log(this.props.friends)
+        // console.log(this.props.friends)
+        // var list = this.props.friends
+        // for(var i = 0; i < list.length; i++){
+        //   if(list[i].uid === this.props.uid)
+        //   {
+        //     list[i].status='friends'
+        //     this.props.changeFriends(list)
+        //     break;
+        //   }
+        // }
+        // console.log(this.props.friends)
       })
       .catch(() => this.props.showError())
   }
@@ -66,16 +67,9 @@ class Card extends React.Component {
       .createFriendship(this.props.uid)
       .then(() => {
         this.setState({ status: 'requested' })
-        console.log(this.props.friends)
-        var list = this.props.friends
-        for(var i = 0; i < list.length; i++){
-          if(list[i].uid === this.props.uid){
-            list.status = 'requested'
-            this.props.changeFriends(list)
-            break
-          }
-        }
-        console.log(this.props.friends)
+        // console.log(this.props.friends)
+        // this.props.refresh()
+        // console.log(this.props.friends)
       })
       .catch(() => this.props.showError())
   }
@@ -85,6 +79,19 @@ class Card extends React.Component {
       .removeFriendship(this.props.uid)
       .then(() => {
         this.setState({ status: 'add' })
+        // console.log(this.props.friends)
+        // var list = this.props.friends
+        // for(var i = 0; i < list.length; i++){
+        //   if(list[i].uid === this.props.uid)
+        //   {
+        //     var first = list.slice(0, i)
+        //     var second = list.slice(i+1, list.length)
+        //     list = first.concat(second)
+        //     this.props.changeFriends(list)
+        //     break;
+        //   }
+        // }
+        // console.log(this.props.friends)
       })
       .catch(() => this.props.showError())
   }
