@@ -209,7 +209,6 @@ Home.propTypes = {
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-    // alignItems: 'center',
     justifyContent: 'space-evenly',
   },
   background: {

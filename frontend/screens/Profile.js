@@ -10,7 +10,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Alert from '../modals/Alert.js'
 import accountsApi from '../apis/accountsApi.js'
 import colors from '../../styles/colors.js'
-import facebookService from '../apis/facebookService.js'
+import loginService from '../apis/loginService.js'
 import Friends from './Friends.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
@@ -97,10 +97,10 @@ class UserProfileView extends Component {
   }
 
   async handleDelete() {
-    facebookService
+    loginService
       .deleteUser()
+      // TODO: Disastrous phone auth code...
       .then(() => {
-        socket.getSocket().disconnect()
         // close settings and navigate to Login
         this.setState({ visible: false })
         this.props.navigation.replace('Login')
@@ -121,10 +121,9 @@ class UserProfileView extends Component {
   }
 
   async handleLogout() {
-    facebookService
-      .logoutWithFacebook()
+    loginService
+      .logout()
       .then(() => {
-        socket.getSocket().disconnect()
         // close settings and navigate to Login
         this.setState({ visible: false })
         this.props.navigation.replace('Login')

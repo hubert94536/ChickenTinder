@@ -3,7 +3,7 @@ import React from 'react'
 import { Text } from 'react-native'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
-import firebase from 'firebase'
+import firebase from '@react-native-firebase/app'
 import PushNotification from 'react-native-push-notification'
 import PropTypes from 'prop-types'
 import CreateAccount from './frontend/screens/CreateAccount.js'
@@ -53,37 +53,15 @@ class App extends React.Component {
       global.email = res[3][1]
       global.phone = res[4][1]
     })
-
-    friendsApi
-      .getFriends()
-      .then((res) => {
-        this.props.changeFriends(res.friendList)
-      })
-      .catch(() => {
-        this.props.showError()
-      })
-
+    
     PushNotification.configure({
       onRegister: function (token) {
         console.log('Token generated')
         console.log(token)
         AsyncStorage.setItem(REGISTRATION_TOKEN, token.token)
-        AsyncStorage.getItem(UID).then((id) => {
-          //send to back-end server to register with id
-          if (id) notificationsApi.linkToken(token.token)
-        })
+        // if (firebase.auth().currentUser) notificationsApi.linkToken(token.token)
       },
-      onNotification: function (notification) {
-        // Consider sending only data, then constructing a notification here to display to the user (as FCM base notification construction is quite limited)
-        console.log('Notification received')
-        this.props.newNotif()
-        console.log(notification)
-        if (!notification.userInteraction) {
-          //construct using data
-          const data = JSON.parse(notification.data.config)
-          buildNotification(data)
-        }
-      },
+      onNotification: this.onNotification,
       onAction: function (notification) {
         console.log(notification)
         if (notification.action === 'open') PushNotification.invokeApp(notification) // figure this out later
@@ -93,12 +71,29 @@ class App extends React.Component {
     })
   }
 
+  onNotification = (notification) => {
+    console.log('Notification received')
+    this.props.newNotif()
+    console.log(notification)
+    if (!notification.userInteraction) {
+      //construct using data
+    const config = JSON.parse(notification.data.config)
+    buildNotification(config)
+    }
+  }
+
   componentDidMount() {
     var start
-    var unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+    var unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
       if (user === null) {
         start = 'Login'
       } else {
+        try {
+          const friends = await friendsApi.getFriends()
+          this.props.changeFriends(friends.friendList)
+        } catch (error) {
+          console.log(error)
+        }
         socket.connect()
         start = 'Home'
       }
@@ -226,7 +221,7 @@ const buildNotification = (config) => {
       message: `${config.name} has sent you a friend request!`,
     }
   }
-  if (config.type == 'friends') {
+  if (config.type == 'accepted') {
     message = {
       title: 'Friend Request Accepted',
       message: `You are now friends with ${config.name}!`,
