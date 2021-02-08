@@ -47,17 +47,8 @@ class Home extends React.Component {
       global.host = res.members[res.host].username
       global.code = res.code
       global.isHost = res.members[res.host].username === this.props.username.username
-      this.props.navigation.navigate('Group', {
+      this.props.navigation.replace('Group', {
         response: res,
-      })
-    })
-
-    socket.getSocket().once('update', (res) => {
-      this.setState({ invite: false })
-      global.host = res.host
-      this.props.navigation.navigate('Group', {
-        response: res,
-        username: this.props.username.username,
       })
     })
 
@@ -127,7 +118,7 @@ class Home extends React.Component {
                 height: 45,
                 justifyContent: 'center',
                 alignSelf: 'center',
-                borderColor: colors.hex,
+                borderColor: 'white',
                 borderWidth: 2,
               }}
               onPress={() => this.setState({ join: true })}
@@ -144,9 +135,18 @@ class Home extends React.Component {
           </View>
           <TabBar
             goHome={() => {}}
-            goSearch={() => this.props.navigation.navigate('Search')}
-            goNotifs={() => this.props.navigation.navigate('Notifications')}
-            goProfile={() => this.props.navigation.navigate('Profile')}
+            goSearch={() => {
+              socket.getSocket().off()
+              this.props.navigation.replace('Search')
+            }}
+            goNotifs={() => {
+              socket.getSocket().off()
+              this.props.navigation.replace('Notifications')
+            }}
+            goProfile={() => {
+              socket.getSocket().off()
+              this.props.navigation.replace('Profile')
+            }}
             cur="Home"
           />
           <Join

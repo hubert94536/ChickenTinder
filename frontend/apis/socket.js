@@ -1,4 +1,4 @@
-import Firebase from 'firebase'
+import Firebase from '@react-native-firebase/app'
 import io from 'socket.io-client'
 
 var socket = null
@@ -25,10 +25,9 @@ const createRoom = () => {
 }
 
 // sends invite to an uid
-const sendInvite = (receiver, code) => {
+const sendInvite = (receiver) => {
   socket.emit('invite', {
-    receiver: receiver,
-    code: code,
+    uid: receiver
   })
 }
 

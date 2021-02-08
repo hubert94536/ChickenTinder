@@ -67,13 +67,13 @@ class createAccount extends React.Component {
     } else {
       AsyncStorage.setItem(EMAIL, this.state.email)
     }
-    changeUsername(this.state.username)
-    changeName(this.state.name)
-    changeImage(this.state.photo)
+    this.props.changeUsername(this.state.username)
+    this.props.changeName(this.state.name)
+    this.props.changeImage(this.state.photo)
     global.email = this.state.email
     global.phone = this.state.phone
     return accountsApi
-      .createFBUser(this.state.name, this.state.username, this.state.email, this.state.photo)
+      .createUser(this.state.name, this.state.username, this.state.email, this.state.phone, this.state.photo)
       .then(() => AsyncStorage.getItem(REGISTRATION_TOKEN))
       .then((token) => notificationsApi.linkToken(token))
       .then(() => {

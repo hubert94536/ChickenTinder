@@ -139,7 +139,11 @@ class Search extends Component {
 
   // Called on search-list pulldown refresh
   onRefresh() {
+<<<<<<< HEAD
     console.log("Search refreshed!")
+=======
+    console.log(this.props.refresh)
+>>>>>>> ea3943b40dad172590c37db4f8b0355ea77d3c85
     this.props.showRefresh()
     sleep(2000)
     .then(this.getFriends())
