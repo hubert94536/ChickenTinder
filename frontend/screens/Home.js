@@ -135,9 +135,18 @@ class Home extends React.Component {
           </View>
           <TabBar
             goHome={() => {}}
-            goSearch={() => this.props.navigation.replace('Search')}
-            goNotifs={() => this.props.navigation.replace('Notifications')}
-            goProfile={() => this.props.navigation.replace('Profile')}
+            goSearch={() => {
+              socket.getSocket().off()
+              this.props.navigation.replace('Search')
+            }}
+            goNotifs={() => {
+              socket.getSocket().off()
+              this.props.navigation.replace('Notifications')
+            }}
+            goProfile={() => {
+              socket.getSocket().off()
+              this.props.navigation.replace('Profile')
+            }}
             cur="Home"
           />
           <Join
