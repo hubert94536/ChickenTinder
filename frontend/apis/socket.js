@@ -25,10 +25,9 @@ const createRoom = () => {
 }
 
 // sends invite to an uid
-const sendInvite = (receiver, code) => {
+const sendInvite = (receiver) => {
   socket.emit('invite', {
-    receiver: receiver,
-    code: code,
+    uid: receiver
   })
 }
 

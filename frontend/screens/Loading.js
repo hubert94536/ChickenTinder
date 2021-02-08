@@ -35,7 +35,6 @@ export default class Loading extends React.Component {
           break
         }
       }
-      socket.getSocket().off('top 3')
       this.props.navigation.replace('Match', {
         restaurant: res,
       })
@@ -51,7 +50,6 @@ export default class Loading extends React.Component {
           }
         }
       }
-      socket.getSocket().off()
       this.props.navigation.replace('TopThree', {
         top: restaurants,
       })
