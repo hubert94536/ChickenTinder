@@ -51,6 +51,7 @@ export default class Round extends React.Component {
     } else {
       socket.leaveRound()
     }
+    socket.getSocket().off()
     global.code = ''
     global.host = ''
     global.isHost = false
@@ -87,7 +88,6 @@ export default class Round extends React.Component {
             onSwipedAll={() => {
               //let backend know you're done
               socket.finishedRound()
-              socket.getSocket().off()
               //go to the loading page
               this.props.navigation.replace('Loading', {
                 restaurants: global.restaurants,

@@ -262,10 +262,10 @@ class Notif extends Component {
           />
         )}
         <TabBar
-          goHome={() => this.props.navigation.navigate('Home')}
-          goSearch={() => this.props.navigation.navigate('Search')}
+          goHome={() => this.props.navigation.replace('Home')}
+          goSearch={() => this.props.navigation.replace('Search')}
           goNotifs={() => {}}
-          goProfile={() => this.props.navigation.navigate('Profile')}
+          goProfile={() => this.props.navigation.replace('Profile')}
           cur="Notifs"
         />
       </ImageBackground>
