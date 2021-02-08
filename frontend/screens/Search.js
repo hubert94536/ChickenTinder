@@ -139,7 +139,7 @@ class Search extends Component {
 
   // Called on search-list pulldown refresh
   onRefresh() {
-    console.log(this.props.refresh)
+    console.log("Search refreshed!")
     this.props.showRefresh()
     sleep(2000)
     .then(this.getFriends())
@@ -170,7 +170,8 @@ class Search extends Component {
           keyExtractor={(item) => item.username}
           ListHeaderComponent={this.renderHeader}
           onRefresh={() => this.onRefresh()}
-          refreshing={this.props.refresh}
+          // refreshing={this.props.refresh}
+          refreshing={this.state.refresh}
         />
         {(this.state.errorAlert || this.state.deleteFriend) && (
           <BlurView
