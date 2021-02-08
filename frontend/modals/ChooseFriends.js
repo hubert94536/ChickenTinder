@@ -57,7 +57,6 @@ class ChooseFriends extends React.Component {
   }
 
   sendInvite(uid) {
-    console.log(uid)
     socket.sendInvite(uid)
   }
 
