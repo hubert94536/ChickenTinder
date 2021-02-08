@@ -3,10 +3,11 @@ import React from 'react'
 import { Text } from 'react-native'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
-import firebase from 'firebase'
+import firebase from '@react-native-firebase/app'
 import PushNotification from 'react-native-push-notification'
 import PropTypes from 'prop-types'
 import CreateAccount from './frontend/screens/CreateAccount.js'
+import friendsApi from './frontend/apis/friendsApi.js'
 import global from './global.js'
 import Group from './frontend/screens/Group.js'
 import Home from './frontend/screens/Home.js'
@@ -27,11 +28,14 @@ import { UID, NAME, USERNAME, PHOTO, EMAIL, PHONE, REGISTRATION_TOKEN } from 're
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {
+  changeFriends,
   changeName,
   changeUsername,
   changeImage,
   newNotif,
   noNotif,
+  hideError,
+  showError,
 } from './frontend/redux/Actions.js'
 
 class App extends React.Component {
@@ -49,16 +53,13 @@ class App extends React.Component {
       global.email = res[3][1]
       global.phone = res[4][1]
     })
-
+    
     PushNotification.configure({
       onRegister: function (token) {
         console.log('Token generated')
         console.log(token)
         AsyncStorage.setItem(REGISTRATION_TOKEN, token.token)
-        AsyncStorage.getItem(UID).then((id) => {
-          //send to back-end server to register with id
-          if (id) notificationsApi.linkToken(token.token)
-        })
+        // if (firebase.auth().currentUser) notificationsApi.linkToken(token.token)
       },
       onNotification: this.onNotification,
       onAction: function (notification) {
@@ -76,16 +77,23 @@ class App extends React.Component {
     console.log(notification)
     if (!notification.userInteraction) {
       //construct using data
-      buildNotification(notification.data)
+    const config = JSON.parse(notification.data.config)
+    buildNotification(config)
     }
   }
 
   componentDidMount() {
     var start
-    var unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+    var unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
       if (user === null) {
         start = 'Login'
       } else {
+        try {
+          const friends = await friendsApi.getFriends()
+          this.props.changeFriends(friends.friendList)
+        } catch (error) {
+          console.log(error)
+        }
         socket.connect()
         start = 'Home'
       }
@@ -165,17 +173,22 @@ const mapStateToProps = (state) => {
   const { username } = state
   const { image } = state
   const { notif } = state
-  return { name, username, image, notif }
+  const { error } = state
+  const { friends } = state
+  return { name, username, image, notif, error, friends }
 }
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
+      changeFriends,
       changeName,
       changeUsername,
       changeImage,
       newNotif,
       noNotif,
+      showError,
+      hideError,
     },
     dispatch,
   )
@@ -208,7 +221,7 @@ const buildNotification = (config) => {
       message: `${config.name} has sent you a friend request!`,
     }
   }
-  if (config.type == 'friends') {
+  if (config.type == 'accepted') {
     message = {
       title: 'Friend Request Accepted',
       message: `You are now friends with ${config.name}!`,

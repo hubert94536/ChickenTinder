@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   FlatList,
+  ImageBackground,
   StyleSheet,
   Text,
   TouchableHighlight,
@@ -196,7 +197,11 @@ export default class Group extends React.Component {
     return (
       <View style={styles.all}>
         <View style={styles.header}>
-          <View style={styles.headerFill}>
+          {/* <View style={styles.headerFill}> */}
+          <ImageBackground
+            source={require('../assets/backgrounds/Gradient.png')}
+            style={styles.headerFill}
+          >
             <Text style={styles.groupTitle}>
               {global.isHost
                 ? 'Your Group'
@@ -217,7 +222,8 @@ export default class Group extends React.Component {
                 <Ionicons name="copy-outline" style={styles.copyIcon} />
               </TouchableOpacity>
             </View>
-          </View>
+          </ImageBackground>
+          {/* </View> */}
         </View>
         <Drawer
           style={styles.drawer}
@@ -474,9 +480,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: colors.hex,
-    height: windowHeight / 6,
+    // justifyContent: 'space-between',
+    // backgroundColor: colors.hex,
+    height: windowHeight / 5.1,
     width: '100%',
     paddingBottom: 20,
   },

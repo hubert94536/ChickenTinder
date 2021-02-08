@@ -1,7 +1,15 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { Dimensions, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import {
+  Dimensions,
+  ImageBackground,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
+} from 'react-native'
 import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from '@react-native-community/blur'
@@ -10,6 +18,7 @@ import Swiper from 'react-native-swiper'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
 import accountsApi from '../apis/accountsApi.js'
+import notificationsApi from '../apis/notificationsApi.js'
 import colors from '../../styles/colors.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
@@ -58,6 +67,14 @@ class Notif extends Component {
     this.getNotifs()
   }
 
+  // id: notif.id,
+  //           type: notif.type,
+  //           updatedAt: notif.updatedAt,
+  //           sender: notif.sender_uid,
+  //           senderUsername: notif.account.username,
+  //           senderPhoto: notif.account.photo,
+  //           senderName: notif.account.name,
+
   async getNotifs() {
     // Pushing notifs into this.state.notif
     var pushNotifs = []
@@ -85,11 +102,21 @@ class Notif extends Component {
       },
     ]
 
-    console.log(notifList)
-    for (var notif in notifList) {
-      pushNotifs.push(notifList[notif])
-    }
-    this.setState({ notifs: pushNotifs })
+    notificationsApi
+      .getNotifs()
+      .then((res) => {
+        notifList = res.notifs
+        console.log(notifList)
+        for (var notif in notifList) {
+          pushNotifs.push(notifList[notif])
+        }
+        this.setState({ notifs: pushNotifs })
+
+      })
+      .catch(() => {
+        this.props.showError()
+      })
+
   }
 
   render() {
@@ -99,14 +126,14 @@ class Notif extends Component {
     // Create all friend/request cards
     if (Array.isArray(notifList) && notifList.length) {
       for (var i = 0; i < notifList.length; i++) {
-        if (notifList[i].type == 'requested') {
+        if (notifList[i].type == 'pending' || notifList[i].type == 'friends' || notifList[i].type == 'accepted'  ) {
           requestNotifs.push(
             <NotifCard
               total={this.state.notifs}
-              name={notifList[i].name}
-              username={notifList[i].username}
-              uid={notifList[i].uid}
-              image={notifList[i].image}
+              name={notifList[i].senderName}
+              username={notifList[i].senderUsername}
+              uid={notifList[i].sender}
+              image={notifList[i].senderPhoto}
               type={notifList[i].type}
               key={i}
               index={i}
@@ -121,10 +148,10 @@ class Notif extends Component {
           activityNotifs.push(
             <NotifCard
               total={this.state.notifs}
-              name={notifList[i].name}
-              username={notifList[i].username}
-              uid={notifList[i].uid}
-              image={notifList[i].image}
+              name={notifList[i].senderName}
+              username={notifList[i].senderUsername}
+              uid={notifList[i].sender}
+              image={notifList[i].senderPhoto}
               type={notifList[i].type}
               key={i}
               index={i}
@@ -139,11 +166,12 @@ class Notif extends Component {
       }
     }
     return (
-      <View style={{ backgroundColor: 'white', flex: 1 }}>
+      <ImageBackground
+        source={require('../assets/backgrounds/Search.png')}
+        style={styles.container}
+      >
         <View>
-          <Text style={[screenStyles.text, styles.NotifTitle, { fontFamily: 'CircularStd-Bold' }]}>
-            Notifications
-          </Text>
+          <Text style={[screenStyles.text, styles.NotifTitle]}>Notifications</Text>
 
           <View style={{ flexDirection: 'row' }}>
             <TouchableHighlight
@@ -240,7 +268,7 @@ class Notif extends Component {
           goProfile={() => this.props.navigation.navigate('Profile')}
           cur="Notifs"
         />
-      </View>
+      </ImageBackground>
     )
   }
 }
@@ -272,12 +300,18 @@ Notif.propTypes = {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   NotifTitle: {
     fontSize: 30,
     paddingTop: '5%',
     paddingLeft: '5%',
     paddingBottom: '5%',
     alignSelf: 'center',
+    fontFamily: 'CircularStd-Bold',
+    marginBottom: '10%',
+    color: 'white',
   },
   avatar: {
     width: 100,

@@ -7,14 +7,12 @@ import { EMAIL, NAME, PHOTO, USERNAME, PHONE, REGISTRATION_TOKEN } from 'react-n
 import { Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
 import accountsApi from '../apis/accountsApi.js'
+import colors from '../../styles/colors.js'
+import defImages from '../assets/images/defImages.js'
 import notificationsApi from '../apis/notificationsApi.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
-import defImages from '../assets/images/defImages.js'
 import socket from '../apis/socket.js'
-
-const hex = screenStyles.hex.color
-const textColor = '#6A6A6A'
 
 class createAccount extends React.Component {
   constructor() {
@@ -30,12 +28,14 @@ class createAccount extends React.Component {
       photo: defImages[Math.floor(Math.random() * defImages.length)].toString(),
       validEmail: true,
       validEmailFormat: true,
+      validNameFormat: true,
       validUsername: true,
       validUsernameFormat: true,
       facebook: false,
     }
     AsyncStorage.multiGet([EMAIL, NAME, PHONE])
       .then((res) => {
+        console.log(res[0][1])
         this.setState(
           {
             email: res[0][1],
@@ -76,7 +76,7 @@ class createAccount extends React.Component {
     global.email = this.state.email
     global.phone = this.state.phone
     return accountsApi
-      .createFBUser(this.state.name, this.state.username, this.state.email, this.state.photo)
+      .createUser(this.state.name, this.state.username, this.state.email, this.state.phone, this.state.photo)
       .then(() => AsyncStorage.getItem(REGISTRATION_TOKEN))
       .then((token) => notificationsApi.linkToken(token))
       .then(() => {
@@ -103,8 +103,22 @@ class createAccount extends React.Component {
     }
   }
 
+  checkNameSyntax() {
+    /*regex expression: 
+    - alphanumeric characters (lowercase or uppercase), dot (.), underscore (_), hyphen(-), space( )
+    - must not start or end with space
+    - 2-15 characters
+    */
+    const regex = /^[a-zA-Z0-9._\-]([ ._\-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._\-]$/
+    if (!regex.test(this.state.name)) {
+      this.setState({ validNameFormat: false })
+    } else {
+      this.setState({ validNameFormat: true })
+    }
+  }
+
   checkUsernameSyntax() {
-    const regex = /^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){0,13}[a-zA-Z0-9]$/
+    const regex = /^[a-zA-Z0-9]([._-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9]$/
     if (!regex.test(this.state.username)) {
       this.setState({ validUsernameFormat: false })
     } else {
@@ -198,7 +212,7 @@ class createAccount extends React.Component {
             <Text
               style={[
                 screenStyles.longButtonText,
-                this.state.phonePressed ? { color: hex } : { color: 'white' },
+                this.state.phonePressed ? { color: colors.hex } : { color: 'white' },
               ]}
             >
               Finish
@@ -259,23 +273,23 @@ const styles = StyleSheet.create({
     margin: '1.5%',
   },
   button: {
-    borderColor: hex,
-    backgroundColor: hex,
+    borderColor: colors.hex,
+    backgroundColor: colors.hex,
     // width: '20%',
     marginTop: '7%',
   },
   mediumText: {
     alignSelf: 'center',
     fontSize: normalize(18.5),
-    color: textColor,
+    color: colors.darkGray,
   },
   fieldText: {
     fontSize: normalize(18),
-    color: textColor,
+    color: colors.darkGray,
     marginHorizontal: '12%',
     marginBottom: '7%',
     paddingVertical: '1%',
-    borderBottomColor: textColor,
+    borderBottomColor: colors.darkGray,
     borderBottomWidth: 1,
   },
   fixedText: {
@@ -289,7 +303,7 @@ const styles = StyleSheet.create({
     marginLeft: '10%',
   },
   warningText: {
-    color: hex,
+    color: colors.hex,
     fontSize: normalize(12),
     marginHorizontal: '12%',
     alignSelf: 'flex-start',

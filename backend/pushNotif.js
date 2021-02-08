@@ -23,14 +23,15 @@ const sendNotification = async (notif) => {
     // only send notification if user exists or regtoken is attached to the user
     if (user && user.regtoken) {
       console.log('send notification')
+      const data = {
+        type: notif.type,
+        content: notif.content,
+        name: notif.name,
+        username: notif.username,
+        photo: notif.photo,
+      }
       const message = {
-        data: {
-          type: JSON.stringify(notif.type),
-          content: JSON.stringify(notif.content),
-          name: JSON.stringify(notif.name),
-          username: JSON.stringify(notif.username),
-          photo: JSON.stringify(notif.photo),
-        },
+        data: { config: JSON.stringify(data) },
         token: user.regtoken,
       }
       messaging.send(message)

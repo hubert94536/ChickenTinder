@@ -75,7 +75,7 @@ export default class NotifCard extends React.Component {
               </Text>
             )}
 
-            {this.props.type == 'requested' && (
+            {this.props.type == 'pending' && (
               <Text style={[imgStyles.font, styles.text]}>{this.props.name}</Text>
             )}
 
@@ -98,7 +98,7 @@ export default class NotifCard extends React.Component {
             </View>
           )}
 
-          {this.props.type == 'requested' && (
+          {this.props.type == 'pending' && (
             <View style={styles.general}>
               <TouchableHighlight
                 underlayColor="#E5E5E5"
