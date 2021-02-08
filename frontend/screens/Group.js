@@ -87,7 +87,6 @@ export default class Group extends React.Component {
 
     socket.getSocket().once('start', (restaurants) => {
       if (restaurants.length > 0) {
-        socket.getSocket().off()
         global.restaurants = restaurants
         this.props.navigation.replace('Round')
       } else {
@@ -96,19 +95,16 @@ export default class Group extends React.Component {
       }
     })
 
-    socket.getSocket().once('leave', () => {
+    socket.getSocket().on('leave', () => {
       this.leaveGroup(true)
     })
 
-    socket.getSocket().once('reselect', () => {
+    socket.getSocket().on('reselect', () => {
       console.log('reselect')
     })
 
-    socket.getSocket().once('reselect', () => {
-      console.log('reselect')
-    })
   }
-
+  
   setUserSubmit() {
     this.setState({ userSubmitted: true })
   }
@@ -244,7 +240,10 @@ export default class Group extends React.Component {
                 </Text>
                 <Text style={styles.divider}>|</Text>
                 <Text style={styles.waiting}>
-                  waiting for {this.countNeedFilters(this.state.members)} member filters
+                  {this.countNeedFilters(this.state.members) == 0
+                    ? 'waiting for host to start'
+                    : `waiting for ${this.countNeedFilters(this.state.members)} member filters`
+                  }
                 </Text>
               </View>
               <FlatList
