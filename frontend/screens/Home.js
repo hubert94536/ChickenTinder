@@ -47,7 +47,7 @@ class Home extends React.Component {
       global.host = res.members[res.host].username
       global.code = res.code
       global.isHost = res.members[res.host].username === this.props.username.username
-      this.props.navigation.navigate('Group', {
+      this.props.navigation.replace('Group', {
         response: res,
       })
     })
@@ -135,9 +135,9 @@ class Home extends React.Component {
           </View>
           <TabBar
             goHome={() => {}}
-            goSearch={() => this.props.navigation.navigate('Search')}
-            goNotifs={() => this.props.navigation.navigate('Notifications')}
-            goProfile={() => this.props.navigation.navigate('Profile')}
+            goSearch={() => this.props.navigation.replace('Search')}
+            goNotifs={() => this.props.navigation.replace('Notifications')}
+            goProfile={() => this.props.navigation.replace('Profile')}
             cur="Home"
           />
           <Join

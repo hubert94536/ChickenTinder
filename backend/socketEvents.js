@@ -196,13 +196,13 @@ module.exports = (io) => {
 
     // send invite with host info to join a room
     socket.on('invite', async (data) => {
-      if (data.receiver_uid && data.code) {
+      if (data.uid && socket.user.room) {
         // create request body
         let req = {}
         req.body = {}
-        req.body.receiver_uid = data.receiver_uid
+        req.body.receiver_uid = data.uid
         req.body.type = 'invite'
-        req.body.content = data.code
+        req.body.content = socket.user.room
         req.body.sender_uid = socket.user.uid
         notifs.createNotif(req).catch((err) => console.error(err))
       }

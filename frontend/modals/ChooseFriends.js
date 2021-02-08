@@ -10,7 +10,6 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Clipboard from '@react-native-community/clipboard'
 import PropTypes from 'prop-types'
 import Card from '../cards/Card.js'
-import friendsApi from '../apis/friendsApi.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
@@ -57,8 +56,9 @@ class ChooseFriends extends React.Component {
     this.props.press()
   }
 
-  sendInvite() {
-    socket.sendInvite(this.props.username)
+  sendInvite(uid) {
+    console.log(uid)
+    socket.sendInvite(uid)
   }
 
   //  function for searching your friends
@@ -116,7 +116,7 @@ class ChooseFriends extends React.Component {
                   total={this.props.friends}
                   status="not added"
                   key={item.uid}
-                  press={() => this.sendInvite()}
+                  press={() => this.sendInvite(item.uid)}
                 />
               )}
               keyExtractor={(item) => item.username}
