@@ -79,6 +79,11 @@ class App extends React.Component {
       } else {
         try {
           const friends = await friendsApi.getFriends()
+          // for(var i = 0; i < friends.friendList.length; i++)
+          // {
+          //   if(friends.friendList[i].status === 'requested')
+          //     friendsApi.removeFriendship(friends.friendList[i].uid)
+          // }
           this.props.changeFriends(friends.friendList)
         } catch (error) {
           console.log(error)
