@@ -109,17 +109,14 @@ class Search extends Component {
   }
 
   async removeRequest(newArr) {
-    this.props.changeFriends(newArr)
     this.setState({ friends: newArr })
   }
 
   async acceptFriend(newArr) {
-    this.props.changeFriends(newArr)
     this.setState({ friends: newArr })
   }
 
   async addFriend(newArr) {
-    this.props.changeFriends(newArr)
     this.setState({ friends: newArr })
   }
 
