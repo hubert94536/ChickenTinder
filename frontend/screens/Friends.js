@@ -26,7 +26,6 @@ class Friends extends React.Component {
       search: '',
       data: [], // array for friends
       friends: [], // array of Profile components
-      isFriends: this.props.isFriends, // For rendering friends (true) or requests (false)
       friendsApiCalled: false, //render loading gif when fetching friends
     }
     this.props.hideRefresh()
@@ -48,9 +47,8 @@ class Friends extends React.Component {
 
   componentDidMount() {
     var pushFriends = []
-    var friendOrRequest = this.state.isFriends ? 'friends' : 'pending'
     for (var friend in this.props.friends.friends) {
-      if (this.props.friends.friends[friend].status === friendOrRequest) {
+      if (this.props.friends.friends[friend].status === "friends") {
         pushFriends.push(this.props.friends.friends[friend])
       }
     }
@@ -61,7 +59,7 @@ class Friends extends React.Component {
       refreshing: false,
       friendsApiCalled: true,
     })
-    this.props.onFriendsChange(this.state.friends.length)
+    this.props.onFriendsChange(pushFriends.length)
   }
 
   //  searches the users friends by username

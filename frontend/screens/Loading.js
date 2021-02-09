@@ -1,5 +1,13 @@
 import React from 'react'
-import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import {
+  Dimensions,
+  Image,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
+} from 'react-native'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
 import { BlurView } from '@react-native-community/blur'
@@ -27,7 +35,6 @@ export default class Loading extends React.Component {
           break
         }
       }
-      socket.getSocket().off('top 3')
       this.props.navigation.replace('Match', {
         restaurant: res,
       })
@@ -43,7 +50,6 @@ export default class Loading extends React.Component {
           }
         }
       }
-      socket.getSocket().off()
       this.props.navigation.replace('TopThree', {
         top: restaurants,
       })
@@ -69,51 +75,56 @@ export default class Loading extends React.Component {
 
   render() {
     return (
-      <View style={[modalStyles.modalContent, styles.container]}>
-        <View style={styles.content}>
-          <Text style={[styles.general, styles.title]}>Round done!</Text>
-          <Image source={require('../assets/loading.gif')} style={styles.gif} />
-          <Text style={styles.general}>
-            Hang tight while others finish swiping and a match is found!
-          </Text>
+      <ImageBackground
+        source={require('../assets/backgrounds/Loading.png')}
+        style={styles.background}
+      >
+        <View style={[modalStyles.modalContent]}>
+          <View style={styles.content}>
+            <Text style={[styles.general, styles.title]}>Round done!</Text>
+            <Image source={require('../assets/loading.gif')} style={styles.gif} />
+            <Text style={styles.general}>
+              Hang tight while others finish swiping and a match is found!
+            </Text>
+          </View>
+          {!global.isHost && (
+            <TouchableHighlight
+              style={styles.leaveButton}
+              underlayColor="transparent"
+              onPress={() => this.leaveGroup()}
+            >
+              <Text style={styles.leaveText}>Leave Round</Text>
+            </TouchableHighlight>
+          )}
+          {global.isHost && (
+            <TouchableHighlight
+              style={styles.leaveButton}
+              underlayColor="transparent"
+              onPress={() => this.setState({ leave: true })}
+            >
+              <Text style={styles.leaveText}>End Round</Text>
+            </TouchableHighlight>
+          )}
+          {this.state.leave && (
+            <BlurView
+              blurType="dark"
+              blurAmount={10}
+              reducedTransparencyFallbackColor="white"
+              style={modalStyles.blur}
+            />
+          )}
+          {this.state.leave && (
+            <Alert
+              title="Are you sure you want to leave?"
+              body="Leaving ends the group for everyone"
+              buttonAff="Leave"
+              height="30%"
+              press={() => socket.endRound()}
+              cancel={() => this.setState({ leave: false })}
+            />
+          )}
         </View>
-        {!global.isHost && (
-          <TouchableHighlight
-            style={styles.leaveButton}
-            underlayColor="transparent"
-            onPress={() => this.leaveGroup()}
-          >
-            <Text style={styles.leaveText}>Leave Round</Text>
-          </TouchableHighlight>
-        )}
-        {global.isHost && (
-          <TouchableHighlight
-            style={styles.leaveButton}
-            underlayColor="transparent"
-            onPress={() => this.setState({ leave: true })}
-          >
-            <Text style={styles.leaveText}>End Round</Text>
-          </TouchableHighlight>
-        )}
-        {this.state.leave && (
-          <BlurView
-            blurType="dark"
-            blurAmount={10}
-            reducedTransparencyFallbackColor="white"
-            style={modalStyles.blur}
-          />
-        )}
-        {this.state.leave && (
-          <Alert
-            title="Are you sure you want to leave?"
-            body="Leaving ends the group for everyone"
-            buttonAff="Leave"
-            height="30%"
-            press={() => socket.endRound()}
-            cancel={() => this.setState({ leave: false })}
-          />
-        )}
-      </View>
+      </ImageBackground>
     )
   }
 }
@@ -124,8 +135,8 @@ Loading.propTypes = {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
+  background: {
+    flex: 1,
   },
   content: {
     width: '70%',
@@ -146,6 +157,8 @@ const styles = StyleSheet.create({
     fontSize: normalize(16),
     padding: 30,
     textAlign: 'center',
+    marginTop: '10%',
+    color: 'white',
   },
   leaveButton: {
     alignSelf: 'center',

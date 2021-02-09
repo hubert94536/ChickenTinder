@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   FlatList,
+  ImageBackground,
   StyleSheet,
   Text,
   TouchableHighlight,
@@ -86,7 +87,6 @@ export default class Group extends React.Component {
 
     socket.getSocket().once('start', (restaurants) => {
       if (restaurants.length > 0) {
-        socket.getSocket().off()
         global.restaurants = restaurants
         this.props.navigation.replace('Round')
       } else {
@@ -95,19 +95,16 @@ export default class Group extends React.Component {
       }
     })
 
-    socket.getSocket().once('leave', () => {
+    socket.getSocket().on('leave', () => {
       this.leaveGroup(true)
     })
 
-    socket.getSocket().once('reselect', () => {
+    socket.getSocket().on('reselect', () => {
       console.log('reselect')
     })
 
-    socket.getSocket().once('reselect', () => {
-      console.log('reselect')
-    })
   }
-
+  
   setUserSubmit() {
     this.setState({ userSubmitted: true })
   }
@@ -196,7 +193,11 @@ export default class Group extends React.Component {
     return (
       <View style={styles.all}>
         <View style={styles.header}>
-          <View style={styles.headerFill}>
+          {/* <View style={styles.headerFill}> */}
+          <ImageBackground
+            source={require('../assets/backgrounds/Gradient.png')}
+            style={styles.headerFill}
+          >
             <Text style={styles.groupTitle}>
               {global.isHost
                 ? 'Your Group'
@@ -217,7 +218,8 @@ export default class Group extends React.Component {
                 <Ionicons name="copy-outline" style={styles.copyIcon} />
               </TouchableOpacity>
             </View>
-          </View>
+          </ImageBackground>
+          {/* </View> */}
         </View>
         <Drawer
           style={styles.drawer}
@@ -238,7 +240,10 @@ export default class Group extends React.Component {
                 </Text>
                 <Text style={styles.divider}>|</Text>
                 <Text style={styles.waiting}>
-                  waiting for {this.countNeedFilters(this.state.members)} member filters
+                  {this.countNeedFilters(this.state.members) == 0
+                    ? 'waiting for host to start'
+                    : `waiting for ${this.countNeedFilters(this.state.members)} member filters`
+                  }
                 </Text>
               </View>
               <FlatList
@@ -474,9 +479,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: colors.hex,
-    height: windowHeight / 6,
+    // justifyContent: 'space-between',
+    // backgroundColor: colors.hex,
+    height: windowHeight / 5.1,
     width: '100%',
     paddingBottom: 20,
   },

@@ -196,13 +196,13 @@ module.exports = (io) => {
 
     // send invite with host info to join a room
     socket.on('invite', async (data) => {
-      if (data.receiver_uid && data.code) {
+      if (data.uid && socket.user.room) {
         // create request body
         let req = {}
         req.body = {}
-        req.body.receiver_uid = data.receiver_uid
+        req.body.receiver_uid = data.uid
         req.body.type = 'invite'
-        req.body.content = data.code
+        req.body.content = socket.user.room
         req.body.sender_uid = socket.user.uid
         notifs.createNotif(req).catch((err) => console.error(err))
       }
@@ -246,13 +246,15 @@ module.exports = (io) => {
     // merge user's filters to master list, send updated session back
     socket.on('submit', async (data) => {
       try {
-        if (socket.user.room && data.categories) {
-          // append filters categories
-          await sendCommand('JSON.STRAPPEND', [
-            `filters:${socket.user.room}`,
-            'categories',
-            JSON.stringify(data.categories),
-          ])
+        if (socket.user.room) {
+          if (data.categories) {
+            // append filters categories
+            await sendCommand('JSON.STRAPPEND', [
+              `filters:${socket.user.room}`,
+              'categories',
+              JSON.stringify(data.categories),
+            ])
+          }
           // update member who submitted filters
           await sendCommand('JSON.SET', [
             socket.user.room,
