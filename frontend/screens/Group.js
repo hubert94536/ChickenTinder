@@ -102,9 +102,8 @@ export default class Group extends React.Component {
     socket.getSocket().on('reselect', () => {
       console.log('reselect')
     })
-
   }
-  
+
   setUserSubmit() {
     this.setState({ userSubmitted: true })
   }
@@ -242,8 +241,7 @@ export default class Group extends React.Component {
                 <Text style={styles.waiting}>
                   {this.countNeedFilters(this.state.members) == 0
                     ? 'waiting for host to start'
-                    : `waiting for ${this.countNeedFilters(this.state.members)} member filters`
-                  }
+                    : `waiting for ${this.countNeedFilters(this.state.members)} member filters`}
                 </Text>
               </View>
               <FlatList

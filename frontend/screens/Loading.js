@@ -89,7 +89,7 @@ export default class Loading extends React.Component {
           </View>
           {!global.isHost && (
             <TouchableHighlight
-              style={styles.leaveButton}
+              style={[styles.leaveButton, screenStyles.medButton]}
               underlayColor="transparent"
               onPress={() => this.leaveGroup()}
             >
@@ -98,7 +98,7 @@ export default class Loading extends React.Component {
           )}
           {global.isHost && (
             <TouchableHighlight
-              style={styles.leaveButton}
+              style={[styles.leaveButton, screenStyles.medButton]}
               underlayColor="transparent"
               onPress={() => this.setState({ leave: true })}
             >
@@ -146,29 +146,31 @@ const styles = StyleSheet.create({
     fontSize: normalize(30),
     fontWeight: 'bold',
     color: colors.hex,
+    marginTop: '10%',
   },
   gif: {
     alignSelf: 'center',
-    width: height * 0.3,
-    height: height * 0.4,
+    width: height * 0.28,
+    height: height * 0.35,
   },
   general: {
     fontFamily: screenStyles.book.fontFamily,
     fontSize: normalize(16),
     padding: 30,
     textAlign: 'center',
-    marginTop: '10%',
+    marginTop: '20%',
     color: 'white',
   },
   leaveButton: {
     alignSelf: 'center',
     width: '50%',
+    borderColor: 'white',
   },
   leaveText: {
-    color: colors.darkGray,
+    color: 'white',
     textAlign: 'center',
     fontFamily: screenStyles.book.fontFamily,
     fontSize: normalize(18),
-    padding: '3%',
+    padding: '5%',
   },
 })
