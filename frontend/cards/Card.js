@@ -30,12 +30,13 @@ class Card extends React.Component {
     friendsApi
       .removeFriendship(this.props.uid)
       .then(() => {
-        this.setState({ status: 'add' })
         console.log(this.props.friends.friends)
         var filteredArray = this.props.friends.friends.filter((item) => {
           return item.username !== this.props.username
         })
+        this.props.changeFriends(newArr)
         this.props.press(filteredArray)
+        this.setState({ status: 'add' })
       })
       .catch(() => {
         this.props.showError()
@@ -46,23 +47,25 @@ class Card extends React.Component {
     friendsApi
       .removeFriendship(this.props.uid)
       .then(() => {
-        this.setState({ status: 'add' })
         var filteredArray = this.props.friends.friends.filter((item) => {
           return item.username !== this.props.username
         })
+        this.props.changeFriends(newArr)
         this.props.press(filteredArray)
+        this.setState({ status: 'add' })
       })
       .catch(() => this.props.showError())
   }
 
   acceptFriend() {
     friendsApi.acceptFriendRequest(this.props.uid).then(() => {
-      this.setState({ status: 'friends' })
       var newArr = this.props.friends.friends.filter((item) => {
         if (item.username === this.props.username) item.status = 'friends'
         return item
       })
+      this.props.changeFriends(newArr)
       this.props.accept(newArr)
+      this.setState({ status: 'friends' })
     })
     this.props.showError
     console.log(this.props.friends.friends)
@@ -70,7 +73,6 @@ class Card extends React.Component {
 
   addFriend() {
     friendsApi.createFriendship(this.props.uid).then(() => {
-      this.setState({ status: 'requested' })
       var newArr = []
       var addElem = this.props.total.filter((item) => {
         return item.username === this.props.username
@@ -79,7 +81,7 @@ class Card extends React.Component {
         var person = {
           name: this.props.friends.friends[i].name,
           username: this.props.friends.friends[i].username,
-          image: this.props.friends.friends[i].photo,
+          photo: this.props.friends.friends[i].photo,
           uid: this.props.friends.friends[i].uid,
           status: this.props.friends.friends[i].status,
         }
@@ -88,15 +90,16 @@ class Card extends React.Component {
       var addPerson = {
         name: addElem[0].name,
         username: addElem[0].username,
-        image: addElem[0].photo,
+        photo: addElem[0].photo,
         uid: addElem[0].uid,
         status: 'requested',
       }
       newArr.push(addPerson)
+      this.props.changeFriends(newArr)
       this.props.accept(newArr)
+      this.setState({ status: 'requested' })
     })
     this.props.showError()
-    console.log(this.props.friends.friends)
   }
 
   render() {
