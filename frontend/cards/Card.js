@@ -59,7 +59,6 @@ class Card extends React.Component {
 
   acceptFriend() {
     friendsApi.acceptFriendRequest(this.props.uid).then(() => {
-
       var newArr = this.props.friends.friends.filter((item) => {
         if (item.username === this.props.username) item.status = 'friends'
         return item
