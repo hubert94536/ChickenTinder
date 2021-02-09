@@ -42,7 +42,7 @@ const { LoginManager, AccessToken } = FBSDK
 // If account finishes creation, set display name to display name
 
 const loginWithCredential = async (userCredential) => {
-  try{ 
+  try {
     // Get info from database if not new user
     if (!userCredential.additionalUserInfo.isNewUser && userCredential.user.displayName != null) {
       const user = await accountsApi.getUser()
@@ -64,23 +64,21 @@ const loginWithCredential = async (userCredential) => {
     }
     // Set user's info locally
     await AsyncStorage.setItem(UID, userCredential.user.uid)
-    Firebase.auth().currentUser.updateProfile({displayName: null})
-    switch (Firebase.auth().currentUser.providerData[0].providerId){
-      case "facebook.com":
+    Firebase.auth().currentUser.updateProfile({ displayName: null })
+    switch (Firebase.auth().currentUser.providerData[0].providerId) {
+      case 'facebook.com':
         await AsyncStorage.multiSet([
           [NAME, userCredential.additionalUserInfo.profile.name],
-          [EMAIL, userCredential.additionalUserInfo.profile.email]
+          [EMAIL, userCredential.additionalUserInfo.profile.email],
         ])
-        break;
-      case "phone":
-      case "firebase":
-        await AsyncStorage.multiSet([
-          [PHONE, userCredential.user.phoneNumber]
-        ])
-        break;
+        break
+      case 'phone':
+      case 'firebase':
+        await AsyncStorage.multiSet([[PHONE, userCredential.user.phoneNumber]])
+        break
       default:
-        console.log(Firebase.auth().currentUser.providerId);
-        break;
+        console.log(Firebase.auth().currentUser.providerId)
+        break
     }
 
     return 'CreateAccount'
@@ -117,9 +115,9 @@ formatPhoneNumber = (number) => {
   return `+${matches[1] || 1}${matches[2]}${matches[3]}${matches[4]}`
 }
 
-const loginWithPhone = async(number) => {
+const loginWithPhone = async (number) => {
   try {
-    if (!validatePhoneNumber(number)) throw new Error("Invalid phone number")
+    if (!validatePhoneNumber(number)) throw new Error('Invalid phone number')
     const confirm = await Firebase.auth().signInWithPhoneNumber(formatPhoneNumber(number))
     return confirm
   } catch (err) {
@@ -131,7 +129,9 @@ const loginWithPhone = async(number) => {
 const logout = async () => {
   try {
     socket.getSocket().disconnect()
-    if (Firebase.auth().currentUser.providerId === "FacebookAuthProviderID") { LoginManager.logOut() }
+    if (Firebase.auth().currentUser.providerId === 'FacebookAuthProviderID') {
+      LoginManager.logOut()
+    }
     await notificationsApi.unlinkToken()
     await Firebase.auth().signOut()
     await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
@@ -143,8 +143,8 @@ const logout = async () => {
 // TODO: Generalize
 
 const deleteUserWithCredential = async (credential) => {
-  try{ 
-    console.log("REAUTHENTICATED")
+  try {
+    console.log('REAUTHENTICATED')
     // Reauthenticate current user
     await Firebase.auth().currentUser.reauthenticateWithCredential(credential)
     // Disconnect from socket
@@ -155,7 +155,7 @@ const deleteUserWithCredential = async (credential) => {
     await Firebase.auth().currentUser.delete()
     await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
   } catch (err) {
-    console.log("------ERROR DELETING USER")
+    console.log('------ERROR DELETING USER')
     return Promise.reject(err)
   }
 }
@@ -164,43 +164,42 @@ const deleteUserWithCredential = async (credential) => {
 const deleteUser = async () => {
   try {
     // Get credential for reauthentication
-    var credential;
-    console.log(Firebase.auth().currentUser.providerId);
-    switch (Firebase.auth().currentUser.providerId){
-      case "FacebookAuthProviderID":
+    var credential
+    console.log(Firebase.auth().currentUser.providerId)
+    switch (Firebase.auth().currentUser.providerId) {
+      case 'FacebookAuthProviderID':
         // Need to refresh access token since old one expired
         await AccessToken.refreshCurrentAccessTokenAsync()
         // Retrieve accesstoken to delete use from Firebase
         const accessToken = await AccessToken.getCurrentAccessToken()
         credential = await auth.FacebookAuthProvider.credential(accessToken)
-        break;
-      case "PhoneAuthProviderID":
-      case "firebase":
-        return Firebase.auth().verifyPhoneNumber(Firebase.auth().currentUser.phoneNumber)
+        break
+      case 'PhoneAuthProviderID':
+      case 'firebase':
+        return Firebase.auth()
+          .verifyPhoneNumber(Firebase.auth().currentUser.phoneNumber)
           .on('state_changed', (phoneAuthSnapshot) => {
-            console.log('State: ', phoneAuthSnapshot.state);
-            switch (phoneAuthSnapshot.state){
+            console.log('State: ', phoneAuthSnapshot.state)
+            switch (phoneAuthSnapshot.state) {
               case auth.PhoneAuthState.CODE_SENT:
-                break;
+                break
               case auth.PhoneAuthState.ERROR:
-                break;
+                break
             }
-          });
-        break;
+          })
+        break
     }
-    deleteUserWithCredential(credential);
+    deleteUserWithCredential(credential)
   } catch (err) {
-    console.log("------ERROR DELETING USER")
+    console.log('------ERROR DELETING USER')
     return Promise.reject(err)
   }
 }
-
-
 
 export default {
   deleteUser,
   loginWithFacebook,
   logout,
   loginWithCredential,
-  loginWithPhone
+  loginWithPhone,
 }
