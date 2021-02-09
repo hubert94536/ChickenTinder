@@ -24,7 +24,7 @@ app.use(
   }),
 )
 
-app.set('etag', false);
+app.set('etag', false)
 
 // if development mode, allow self-signed ssl
 if (app.get('env') === 'development') {

@@ -4,7 +4,15 @@ import { bindActionCreators } from 'redux'
 import { changeImage, changeName, changeUsername } from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import { EMAIL, NAME, PHOTO, USERNAME, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
-import { Image, ImageBackground, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
+import {
+  Image,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  View,
+} from 'react-native'
 import PropTypes from 'prop-types'
 import accountsApi from '../apis/accountsApi.js'
 import colors from '../../styles/colors.js'
@@ -73,7 +81,13 @@ class createAccount extends React.Component {
     global.email = this.state.email
     global.phone = this.state.phone
     return accountsApi
-      .createUser(this.state.name, this.state.username, this.state.email, this.state.phone, this.state.photo)
+      .createUser(
+        this.state.name,
+        this.state.username,
+        this.state.email,
+        this.state.phone,
+        this.state.photo,
+      )
       .then(() => AsyncStorage.getItem(REGISTRATION_TOKEN))
       .then((token) => notificationsApi.linkToken(token))
       .then(() => {
@@ -125,7 +139,10 @@ class createAccount extends React.Component {
 
   render() {
     return (
-      <ImageBackground source={require('../assets/backgrounds/CreateAccount.png')} style={styles.main}>
+      <ImageBackground
+        source={require('../assets/backgrounds/CreateAccount.png')}
+        style={styles.main}
+      >
         <Text style={[screenStyles.textBold, screenStyles.title, styles.title]}>
           Create Account
         </Text>
@@ -137,13 +154,8 @@ class createAccount extends React.Component {
           source={{ uri: Image.resolveAssetSource(this.state.photo).uri }}
           style={styles.avatar}
         />
-        <TouchableHighlight 
-          style={styles.select}
-          underlayColor='transparent'
-        >
-          <Text style={[styles.selectText, screenStyles.textBold]}>
-            Select a Profile Icon
-          </Text>
+        <TouchableHighlight style={styles.select} underlayColor="transparent">
+          <Text style={[styles.selectText, screenStyles.textBold]}>Select a Profile Icon</Text>
         </TouchableHighlight>
         <Text style={[screenStyles.textBook, styles.fieldName, styles.display]}>Display Name</Text>
         <TextInput
@@ -258,8 +270,8 @@ createAccount.propTypes = {
   changeImagee: PropTypes.func,
 }
 const styles = StyleSheet.create({
-  main:{
-    flex: 1
+  main: {
+    flex: 1,
   },
   display: {
     marginTop: '5%',
@@ -280,12 +292,12 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     alignSelf: 'center',
   },
-  select:{
-    alignItems:'center',
-    marginTop:'2%',
-    marginBottom:'10%'
+  select: {
+    alignItems: 'center',
+    marginTop: '2%',
+    marginBottom: '10%',
   },
-  selectText:{
+  selectText: {
     color: colors.hex,
   },
   button: {

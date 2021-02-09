@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(30),
     fontWeight: 'bold',
     color: colors.hex,
-    marginTop:'10%'
+    marginTop: '10%',
   },
   gif: {
     alignSelf: 'center',
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   leaveButton: {
     alignSelf: 'center',
     width: '50%',
-    borderColor:'white'
+    borderColor: 'white',
   },
   leaveText: {
     color: 'white',

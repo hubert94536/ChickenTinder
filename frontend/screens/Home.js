@@ -73,11 +73,12 @@ class Home extends React.Component {
 
   render() {
     return (
-      <ImageBackground source={this.state.join ? require(homedark) : require(home)} style={styles.background}>
+      <ImageBackground
+        source={this.state.join ? require(homedark) : require(home)}
+        style={styles.background}
+      >
         <View style={styles.main}>
-          <Text style={[screenStyles.text, styles.title]}>
-          Let&apos;s Get Chews-ing
-          </Text>
+          <Text style={[screenStyles.text, styles.title]}>Let&apos;s Get Chews-ing</Text>
           <View>
             <TouchableHighlight
               onShowUnderlay={() => this.setState({ createPressed: true })}
@@ -121,14 +122,7 @@ class Home extends React.Component {
               }}
               onPress={() => this.setState({ join: true })}
             >
-              <Text
-                style={[
-                  styles.buttonText,
-                  {color: 'white'},
-                ]}
-              >
-                Join Group
-              </Text>
+              <Text style={[styles.buttonText, { color: 'white' }]}>Join Group</Text>
             </TouchableHighlight>
           </View>
           <TabBar
@@ -214,14 +208,14 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
   },
-  title:{
+  title: {
     fontSize: normalize(30),
-    margin:'15%',
-    marginTop:'35%',
-    width:'50%',
-    textAlign:'left',
-    fontFamily:'CircularStd-Bold',
-    lineHeight:width*0.11
+    margin: '15%',
+    marginTop: '35%',
+    width: '50%',
+    textAlign: 'left',
+    fontFamily: 'CircularStd-Bold',
+    lineHeight: width * 0.11,
   },
   button: {
     height: 65,

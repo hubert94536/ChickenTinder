@@ -38,11 +38,11 @@ class PhoneAuthScreen extends Component {
   handleSendCode = async () => {
     // Request to send OTP
     try {
-      const confirm = await loginService.loginWithPhone(this.state.phone);
+      const confirm = await loginService.loginWithPhone(this.state.phone)
       this.setState({ confirmResult: confirm })
     } catch (err) {
-      if (err.message == "Invalid phone number") this.setState({ invalidNumberAlert: true });
-      else this.setState({ errorAlert: true });
+      if (err.message == 'Invalid phone number') this.setState({ invalidNumberAlert: true })
+      else this.setState({ errorAlert: true })
     }
   }
 
@@ -50,15 +50,13 @@ class PhoneAuthScreen extends Component {
     this.setState({ confirmResult: null, verificationCode: '' })
   }
 
-  handleVerifyCode = async() => {
+  handleVerifyCode = async () => {
     // Request for OTP verification
     const { confirmResult, verificationCode } = this.state
     if (verificationCode.length === 6) {
       confirmResult
         .confirm(verificationCode)
-        .then((userCredential) => 
-        loginService.loginWithCredential(userCredential)
-        )
+        .then((userCredential) => loginService.loginWithCredential(userCredential))
         .then((result) => this.props.navigation.replace(result))
         .catch((error) => {
           this.setState({ errorAlert: true })
@@ -120,8 +118,15 @@ class PhoneAuthScreen extends Component {
                 this.handleBack()
               }}
             />
-            <View style={{width:'70%'}}>
-              <Text style={{ textAlign: 'left', fontFamily: font, fontSize: normalize(30), color: 'white' }}>
+            <View style={{ width: '70%' }}>
+              <Text
+                style={{
+                  textAlign: 'left',
+                  fontFamily: font,
+                  fontSize: normalize(30),
+                  color: 'white',
+                }}
+              >
                 Enter your number
               </Text>
               <Text

@@ -189,14 +189,7 @@ export default class Location extends Component {
                 onPress={() => this.handlePress()}
                 style={[modalStyles.button, styles.buttonColor, styles.doneButton]}
               >
-                <Text
-                  style={[
-                    modalStyles.text,
-                    styles.white,
-                  ]}
-                >
-                  Done
-                </Text>
+                <Text style={[modalStyles.text, styles.white]}>Done</Text>
               </TouchableHighlight>
             </View>
           </View>

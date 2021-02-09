@@ -12,6 +12,7 @@ import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
+import { faGlasses } from '@fortawesome/free-solid-svg-icons'
 
 class Card extends React.Component {
   constructor(props) {
@@ -24,54 +25,21 @@ class Card extends React.Component {
   }
 
   deleteFriend() {
+    this.props.unfriendAlert(false)
+    this.setState({ deleteFriend: false })
     friendsApi
       .removeFriendship(this.props.uid)
       .then(() => {
-        this.props.unfriendAlert(false)
-        this.setState({ deleteFriend: false, status: 'add' })
-        var filteredArray = this.props.total.filter((item) => {
+        this.setState({ status: 'add' })
+        console.log(this.props.friends.friends)
+        var filteredArray = this.props.friends.friends.filter((item) => {
           return item.username !== this.props.username
         })
-        this.props.press(this.props.uid, filteredArray)
+        this.props.press(filteredArray)
       })
-      .catch((err) => {
-        console.log(err)
+      .catch(() => {
         this.props.showError()
-        this.props.unfriendAlert(false)
-        this.setState({ deleteFriend: false })
       })
-  }
-
-  acceptFriend() {
-    friendsApi
-      .acceptFriendRequest(this.props.uid)
-      .then(() => {
-        this.setState({ status: 'friends' })
-        // console.log(this.props.friends)
-        // var list = this.props.friends
-        // for(var i = 0; i < list.length; i++){
-        //   if(list[i].uid === this.props.uid)
-        //   {
-        //     list[i].status='friends'
-        //     this.props.changeFriends(list)
-        //     break;
-        //   }
-        // }
-        // console.log(this.props.friends)
-      })
-      .catch(() => this.props.showError())
-  }
-
-  addFriend() {
-    friendsApi
-      .createFriendship(this.props.uid)
-      .then(() => {
-        this.setState({ status: 'requested' })
-        // console.log(this.props.friends)
-        // this.props.refresh()
-        // console.log(this.props.friends)
-      })
-      .catch(() => this.props.showError())
   }
 
   rejectFriend() {
@@ -79,21 +47,56 @@ class Card extends React.Component {
       .removeFriendship(this.props.uid)
       .then(() => {
         this.setState({ status: 'add' })
-        // console.log(this.props.friends)
-        // var list = this.props.friends
-        // for(var i = 0; i < list.length; i++){
-        //   if(list[i].uid === this.props.uid)
-        //   {
-        //     var first = list.slice(0, i)
-        //     var second = list.slice(i+1, list.length)
-        //     list = first.concat(second)
-        //     this.props.changeFriends(list)
-        //     break;
-        //   }
-        // }
-        // console.log(this.props.friends)
+        var filteredArray = this.props.friends.friends.filter((item) => {
+          return item.username !== this.props.username
+        })
+        this.props.press(filteredArray)
       })
       .catch(() => this.props.showError())
+  }
+
+  acceptFriend() {
+    friendsApi.acceptFriendRequest(this.props.uid).then(() => {
+      this.setState({ status: 'friends' })
+      var newArr = this.props.friends.friends.filter((item) => {
+        if (item.username === this.props.username) item.status = 'friends'
+        return item
+      })
+      this.props.accept(newArr)
+    })
+    this.props.showError
+    console.log(this.props.friends.friends)
+  }
+
+  addFriend() {
+    friendsApi.createFriendship(this.props.uid).then(() => {
+      this.setState({ status: 'requested' })
+      var newArr = []
+      var addElem = this.props.total.filter((item) => {
+        return item.username === this.props.username
+      })
+      for (var i = 0; i < this.props.friends.friends.length; i++) {
+        var person = {
+          name: this.props.friends.friends[i].name,
+          username: this.props.friends.friends[i].username,
+          image: this.props.friends.friends[i].photo,
+          uid: this.props.friends.friends[i].uid,
+          status: this.props.friends.friends[i].status,
+        }
+        newArr.push(person)
+      }
+      var addPerson = {
+        name: addElem[0].name,
+        username: addElem[0].username,
+        image: addElem[0].photo,
+        uid: addElem[0].uid,
+        status: 'requested',
+      }
+      newArr.push(addPerson)
+      this.props.accept(newArr)
+    })
+    this.props.showError()
+    console.log(this.props.friends.friends)
   }
 
   render() {

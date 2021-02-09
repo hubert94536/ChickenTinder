@@ -47,51 +47,52 @@ class Login extends React.Component {
     return (
       <ImageBackground source={require('../assets/backgrounds/Login.png')} style={styles.main}>
         <Image source={require('../assets/Icon_White.png')} style={styles.logo} />
-        <View style={styles.bottom}> 
-        <TouchableHighlight
-          onShowUnderlay={() => this.setState({ phonePressed: true })}
-          onHideUnderlay={() => this.setState({ phonePressed: false })}
-          activeOpacity={1}
-          underlayColor={'white'}
-          onPress={() => this.props.navigation.replace('Phone')}
-          style={[screenStyles.longButton, styles.phoneButton]}
-        >
-          <View style={screenStyles.contentContainer}>
-            <Icon style={[imgStyles.icon, styles.buttonIcon]} name="phone" />
-            <Text
-              style={[
-                screenStyles.longButtonText,
-                this.state.phonePressed ? { color: colors.hex } : { color: 'white' },
-              ]}
-            >
-              Login with Phone
-            </Text>
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight
-          onShowUnderlay={() => this.setState({ pressed: true })}
-          onHideUnderlay={() => this.setState({ pressed: false })}
-          activeOpacity={1}
-          underlayColor="white"
-          onPress={() => this.login()}
-          style={[screenStyles.longButton, styles.fbButton]}
-        >
-          <View style={[screenStyles.contentContainer]}>
-            <Icon style={[imgStyles.icon, styles.buttonIcon]} name="facebook-official" />
-            <Text
-              style={[
-                screenStyles.longButtonText,
-                this.state.pressed ? { color: '#3b5998' } : { color: 'white' },
-              ]}
-            >
-              Login with Facebook
-            </Text>
-          </View>
-        </TouchableHighlight>
+        <View style={styles.bottom}>
+          <TouchableHighlight
+            onShowUnderlay={() => this.setState({ phonePressed: true })}
+            onHideUnderlay={() => this.setState({ phonePressed: false })}
+            activeOpacity={1}
+            underlayColor={'white'}
+            onPress={() => this.props.navigation.replace('Phone')}
+            style={[screenStyles.longButton, styles.phoneButton]}
+          >
+            <View style={screenStyles.contentContainer}>
+              <Icon style={[imgStyles.icon, styles.buttonIcon]} name="phone" />
+              <Text
+                style={[
+                  screenStyles.longButtonText,
+                  this.state.phonePressed ? { color: colors.hex } : { color: 'white' },
+                ]}
+              >
+                Login with Phone
+              </Text>
+            </View>
+          </TouchableHighlight>
+          <TouchableHighlight
+            onShowUnderlay={() => this.setState({ pressed: true })}
+            onHideUnderlay={() => this.setState({ pressed: false })}
+            activeOpacity={1}
+            underlayColor="white"
+            onPress={() => this.login()}
+            style={[screenStyles.longButton, styles.fbButton]}
+          >
+            <View style={[screenStyles.contentContainer]}>
+              <Icon style={[imgStyles.icon, styles.buttonIcon]} name="facebook-official" />
+              <Text
+                style={[
+                  screenStyles.longButtonText,
+                  this.state.pressed ? { color: '#3b5998' } : { color: 'white' },
+                ]}
+              >
+                Login with Facebook
+              </Text>
+            </View>
+          </TouchableHighlight>
 
-        <Text style={[screenStyles.textBook, styles.termsText]}>
-          By clicking log in, you agree with our Terms and Conditions. Learn how we process your data in our Privacy Policy and Cookies Policy
-        </Text>
+          <Text style={[screenStyles.textBook, styles.termsText]}>
+            By clicking log in, you agree with our Terms and Conditions. Learn how we process your
+            data in our Privacy Policy and Cookies Policy
+          </Text>
         </View>
         {(this.state.alert || this.state.error) && (
           <BlurView
@@ -154,15 +155,15 @@ Login.propTypes = {
 }
 
 const styles = StyleSheet.create({
-  main:{
+  main: {
     flex: 1,
-    justifyContent:'space-evenly'
+    justifyContent: 'space-evenly',
   },
   logo: {
     alignSelf: 'center',
     width: normalize(200),
     height: normalize(248),
-    marginTop:'5%'
+    marginTop: '5%',
   },
   phoneButton: { borderColor: colors.hex, backgroundColor: colors.hex, marginTop: '5%' },
   buttonIcon: { fontSize: normalize(22), color: 'white', marginRight: '5%' },
@@ -175,7 +176,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: normalize(17),
   },
-  bottom:{
-    marginTop:'30%'
-  }
+  bottom: {
+    marginTop: '30%',
+  },
 })
