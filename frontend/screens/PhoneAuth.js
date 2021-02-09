@@ -16,6 +16,7 @@ import { BlurView } from '@react-native-community/blur'
 import colors from '../../styles/colors.js'
 import loginService from '../apis/loginService.js'
 import modalStyles from '../../styles/modalStyles.js'
+import normalize from '../../styles/normalize.js'
 
 const font = 'CircularStd-Bold'
 const fontMed = 'CirularStd-Medium'
@@ -37,11 +38,11 @@ class PhoneAuthScreen extends Component {
   handleSendCode = async () => {
     // Request to send OTP
     try {
-      const confirm = await loginService.loginWithPhone(this.state.phone);
+      const confirm = await loginService.loginWithPhone(this.state.phone)
       this.setState({ confirmResult: confirm })
     } catch (err) {
-      if (err.message == "Invalid phone number") this.setState({ invalidNumberAlert: true });
-      else this.setState({ errorAlert: true });
+      if (err.message == 'Invalid phone number') this.setState({ invalidNumberAlert: true })
+      else this.setState({ errorAlert: true })
     }
   }
 
@@ -49,15 +50,13 @@ class PhoneAuthScreen extends Component {
     this.setState({ confirmResult: null, verificationCode: '' })
   }
 
-  handleVerifyCode = async() => {
+  handleVerifyCode = async () => {
     // Request for OTP verification
     const { confirmResult, verificationCode } = this.state
     if (verificationCode.length === 6) {
       confirmResult
         .confirm(verificationCode)
-        .then((userCredential) => 
-        loginService.loginWithCredential(userCredential)
-        )
+        .then((userCredential) => loginService.loginWithCredential(userCredential))
         .then((result) => this.props.navigation.replace(result))
         .catch((error) => {
           this.setState({ errorAlert: true })
@@ -109,7 +108,7 @@ class PhoneAuthScreen extends Component {
               name="arrowleft"
               style={{
                 fontSize: 30,
-                color: colors.hex,
+                color: 'white',
                 flexDirection: 'row',
                 alignSelf: 'flex-start',
                 marginTop: '5%',
@@ -119,17 +118,24 @@ class PhoneAuthScreen extends Component {
                 this.handleBack()
               }}
             />
-            <View alignItems="center">
-              <Text style={{ fontFamily: font, fontSize: 30, color: colors.hex }}>
+            <View style={{ width: '70%' }}>
+              <Text
+                style={{
+                  textAlign: 'left',
+                  fontFamily: font,
+                  fontSize: normalize(30),
+                  color: 'white',
+                }}
+              >
                 Enter your number
               </Text>
               <Text
                 style={{
-                  textAlign: 'center',
+                  textAlign: 'left',
                   flexDirection: 'row',
                   fontFamily: fontMed,
-                  fontSize: 20,
-                  color: '#6A6A6A',
+                  fontSize: normalize(18),
+                  color: 'white',
                   marginTop: '5%',
                   marginBottom: '40%',
                 }}
@@ -138,7 +144,7 @@ class PhoneAuthScreen extends Component {
               </Text>
             </View>
             <TextInput
-              style={[styles.textInput, { marginTop: '0%', marginBottom: '50%' }]}
+              style={[styles.textInput, { marginTop: '20%', marginBottom: '10%' }]}
               placeholder="Phone Number (+1 xxx xxx xxxx)"
               placeholderTextColor="#6A6A6A"
               keyboardType="phone-pad"
@@ -221,7 +227,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    // backgroundColor: '#FFFFFF',
   },
   page: {
     flex: 1,
@@ -232,10 +238,10 @@ const styles = StyleSheet.create({
   textInput: {
     fontFamily: fontMed,
     marginTop: 20,
-    width: '90%',
+    width: '80%',
     borderColor: '#A5A5A5',
     borderWidth: 0,
-    borderBottomWidth: 2,
+    borderBottomWidth: 1.5,
     paddingLeft: 10,
     color: '#6A6A6A',
     fontSize: 20,
