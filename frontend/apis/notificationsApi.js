@@ -1,5 +1,5 @@
 import Axios from 'axios'
-import Firebase from '@react-native-firebase/app'
+import auth from '@react-native-firebase/auth'
 
 const notificationsApi = Axios.create({
   baseURL: 'https://wechews.herokuapp.com',
@@ -8,7 +8,7 @@ const notificationsApi = Axios.create({
 
 // Set the AUTH token for any request
 notificationsApi.interceptors.request.use(async function (config) {
-  const token = await Firebase.auth().currentUser.getIdToken()
+  const token = await auth().currentUser.getIdToken()
   config.headers.authorization = token ? `Bearer ${token}` : ''
   return config
 })
