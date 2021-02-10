@@ -126,7 +126,7 @@ class Home extends React.Component {
             </TouchableHighlight>
           </View>
           <TabBar
-            goHome={() => {}}
+            goHome={() => { }}
             goSearch={() => {
               socket.getSocket().off()
               this.props.navigation.replace('Search')
@@ -149,7 +149,7 @@ class Home extends React.Component {
             onPress={() => this.setState({ join: false })}
           />
 
-          {this.props.error && (
+          {(this.state.join || this.props.error) && (
             <BlurView
               blurType="dark"
               blurAmount={10}
