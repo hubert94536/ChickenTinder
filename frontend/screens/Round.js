@@ -32,7 +32,7 @@ export default class Round extends React.Component {
           break
         }
       }
-      this.props.navigation.replace('Home', {
+      this.props.navigation.replace('Match', {
         restaurant: res,
       })
     })
