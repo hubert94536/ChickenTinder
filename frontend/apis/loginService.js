@@ -15,7 +15,6 @@ import {
 } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import FBSDK from 'react-native-fbsdk'
-import Firebase from '@react-native-firebase/app'
 import auth from '@react-native-firebase/auth'
 import accountsApi from './accountsApi.js'
 import notificationsApi from './notificationsApi.js'
@@ -64,12 +63,17 @@ const loginWithCredential = async (userCredential) => {
     }
     // Set user's info locally
     await AsyncStorage.setItem(UID, userCredential.user.uid)
-    Firebase.auth().currentUser.updateProfile({ displayName: null })
-    switch (Firebase.auth().currentUser.providerData[0].providerId) {
-      case 'facebook.com':
+    auth().currentUser.updateProfile({displayName: null})
+    switch (auth().currentUser.providerData[0].providerId){
+      case "facebook.com":
         await AsyncStorage.multiSet([
           [NAME, userCredential.additionalUserInfo.profile.name],
-          [EMAIL, userCredential.additionalUserInfo.profile.email],
+          [EMAIL, userCredential.additionalUserInfo.profile.email]
+        ])
+        break;
+      case "phone":
+        await AsyncStorage.multiSet([
+          [PHONE, userCredential.user.phoneNumber]
         ])
         break
       case 'phone':
@@ -77,8 +81,7 @@ const loginWithCredential = async (userCredential) => {
         await AsyncStorage.multiSet([[PHONE, userCredential.user.phoneNumber]])
         break
       default:
-        console.log(Firebase.auth().currentUser.providerId)
-        break
+        throw new Error("Could not determine provider")
     }
 
     return 'CreateAccount'
@@ -97,7 +100,7 @@ const loginWithFacebook = async () => {
     const token = await AccessToken.getCurrentAccessToken()
     const credential = await auth.FacebookAuthProvider.credential(token.accessToken)
     // Sign in with Firebase oauth using credential and authentication token
-    const userCredential = await Firebase.auth().signInWithCredential(credential)
+    const userCredential = await auth().signInWithCredential(credential)
     return loginWithCredential(userCredential)
   } catch (err) {
     return Promise.reject(err)
@@ -117,8 +120,8 @@ formatPhoneNumber = (number) => {
 
 const loginWithPhone = async (number) => {
   try {
-    if (!validatePhoneNumber(number)) throw new Error('Invalid phone number')
-    const confirm = await Firebase.auth().signInWithPhoneNumber(formatPhoneNumber(number))
+    if (!validatePhoneNumber(number)) throw new Error("Invalid phone number")
+    const confirm = await auth().signInWithPhoneNumber(formatPhoneNumber(number))
     return confirm
   } catch (err) {
     return Promise.reject(err)
@@ -129,11 +132,9 @@ const loginWithPhone = async (number) => {
 const logout = async () => {
   try {
     socket.getSocket().disconnect()
-    if (Firebase.auth().currentUser.providerId === 'FacebookAuthProviderID') {
-      LoginManager.logOut()
-    }
+    if (auth().currentUser.providerData[0].providerId === "facebook.com") { LoginManager.logOut() }
     await notificationsApi.unlinkToken()
-    await Firebase.auth().signOut()
+    await auth().signOut()
     await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
   } catch (err) {
     return Promise.reject(err)
@@ -143,16 +144,15 @@ const logout = async () => {
 // TODO: Generalize
 
 const deleteUserWithCredential = async (credential) => {
-  try {
-    console.log('REAUTHENTICATED')
+  try{ 
     // Reauthenticate current user
-    await Firebase.auth().currentUser.reauthenticateWithCredential(credential)
+    await auth().currentUser.reauthenticateWithCredential(credential)
     // Disconnect from socket
     socket.getSocket().disconnect()
     // Delete user from database
     await accountsApi.deleteUser()
     // Delete user from firebase and remove information from AsyncStorage
-    await Firebase.auth().currentUser.delete()
+    await auth().currentUser.delete()
     await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
   } catch (err) {
     console.log('------ERROR DELETING USER')
@@ -164,30 +164,29 @@ const deleteUserWithCredential = async (credential) => {
 const deleteUser = async () => {
   try {
     // Get credential for reauthentication
-    var credential
-    console.log(Firebase.auth().currentUser.providerId)
-    switch (Firebase.auth().currentUser.providerId) {
-      case 'FacebookAuthProviderID':
+    var credential;
+    switch (auth().currentUser.providerData[0].providerId){
+      case "facebook.com":
         // Need to refresh access token since old one expired
         await AccessToken.refreshCurrentAccessTokenAsync()
         // Retrieve accesstoken to delete use from Firebase
-        const accessToken = await AccessToken.getCurrentAccessToken()
-        credential = await auth.FacebookAuthProvider.credential(accessToken)
-        break
-      case 'PhoneAuthProviderID':
-      case 'firebase':
-        return Firebase.auth()
-          .verifyPhoneNumber(Firebase.auth().currentUser.phoneNumber)
-          .on('state_changed', (phoneAuthSnapshot) => {
-            console.log('State: ', phoneAuthSnapshot.state)
-            switch (phoneAuthSnapshot.state) {
-              case auth.PhoneAuthState.CODE_SENT:
-                break
-              case auth.PhoneAuthState.ERROR:
-                break
-            }
-          })
-        break
+        const data = await AccessToken.getCurrentAccessToken()
+        credential = await auth.FacebookAuthProvider.credential(data.accessToken)
+        break;
+      case "phone":
+        // return auth().verifyPhoneNumber(auth().currentUser.phoneNumber)
+        //   .on('state_changed', (phoneAuthSnapshot) => {
+        //     console.log('State: ', phoneAuthSnapshot.state);
+        //     switch (phoneAuthSnapshot.state){
+        //       case auth.PhoneAuthState.CODE_SENT:
+        //         break;
+        //       case auth.PhoneAuthState.ERROR:
+        //         break;
+        //     }
+        //   });
+        break;
+      default:
+        throw new Error("Could not determine provider")
     }
     deleteUserWithCredential(credential)
   } catch (err) {

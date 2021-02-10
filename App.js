@@ -3,7 +3,7 @@ import React from 'react'
 import { Text } from 'react-native'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
-import firebase from '@react-native-firebase/app'
+import auth from '@react-native-firebase/auth'
 import PushNotification from 'react-native-push-notification'
 import PropTypes from 'prop-types'
 import CreateAccount from './frontend/screens/CreateAccount.js'
@@ -72,13 +72,18 @@ class App extends React.Component {
 
   componentDidMount() {
     var start
-    var unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+    var unsubscribe = auth().onAuthStateChanged(async (user) => {
       unsubscribe()
       if (user === null) {
         start = 'Login'
       } else {
         try {
           const friends = await friendsApi.getFriends()
+          // for(var i = 0; i < friends.friendList.length; i++)
+          // {
+          //   if(friends.friendList[i].status === 'requested')
+          //     friendsApi.removeFriendship(friends.friendList[i].uid)
+          // }
           this.props.changeFriends(friends.friendList)
         } catch (error) {
           console.log(error)
@@ -204,13 +209,14 @@ App.propTypes = {
 }
 
 /*
-data: {
-  type: type,
-  content: content, 
-  name: name,
-  username: username, 
-  photo: photo
-}
+data: 
+  config: "{
+      type: type,
+      content: content, 
+      name: name,
+      username: username, 
+      photo: photo
+    }" : string
 */
 const buildNotification = (config) => {
   var message = { title: 'Wechews Notification', message: 'Default Message' }
