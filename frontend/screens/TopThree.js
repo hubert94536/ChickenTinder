@@ -85,7 +85,7 @@ export default class TopThree extends React.Component {
             >
               <View style={styles.card}>
                 <ImageBackground
-                  source={getCuisine(this.state.restaurants[2].categories)}
+                  source={getCuisine(this.state.restaurants[2].categories, this.state.restaurants[2].price)}
                   style={[
                     styles.center,
                     this.state.chosen === 2 ? styles.imageSelected : styles.imageUnselected,
@@ -141,7 +141,7 @@ export default class TopThree extends React.Component {
           >
             <View style={styles.card}>
               <ImageBackground
-                source={getCuisine(this.state.restaurants[1].categories)}
+                source={getCuisine(this.state.restaurants[1].categories, this.state.restaurants[1].price)}
                 style={[
                   this.state.chosen === 1 ? styles.imageSelected : styles.imageUnselected,
                   styles.center,
@@ -196,7 +196,7 @@ export default class TopThree extends React.Component {
           >
             <View style={styles.card}>
               <ImageBackground
-                source={getCuisine(this.state.restaurants[0].categories)}
+                source={getCuisine(this.state.restaurants[0].categories, this.state.restaurants[0].price)}
                 style={[
                   this.state.chosen === 0 ? styles.imageSelected : styles.imageUnselected,
                   styles.center,

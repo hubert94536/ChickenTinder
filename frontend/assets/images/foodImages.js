@@ -14,10 +14,9 @@ export default function getCuisine(categories, price) {
     if (categories[i] === 'Island Pub') return foodImages['Irish']
     else if (categories[i].title) {
       const temp = foodImages[categories[i].title]
-      console.log(typeof temp)
       if (typeof temp === "string") return foodImages[temp];
-      else if ('$' in temp) return foodImages[temp[price]];
-      else return temp;
+      else if (typeof temp === "object" && '$' in temp) return foodImages[temp[price]];
+      else if (typeof temp != "undefined") return temp;
     }
   }
   if (categories[i] !== undefined && letters1.includes(categories[i].title.substring(0, 1)))

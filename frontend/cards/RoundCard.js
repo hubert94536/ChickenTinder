@@ -48,7 +48,7 @@ export default class RoundCard extends React.Component {
 
   render() {
     return (
-      <ImageBackground source={getCuisine(this.props.card.categories)} style={[styles.card]}>
+      <ImageBackground source={getCuisine(this.props.card.categories, this.props.card.price)} style={[styles.card]}>
         <TouchableHighlight
           underlayColor="transparent"
           onPress={() => Linking.openURL(this.props.card.url)}

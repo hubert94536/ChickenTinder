@@ -108,5 +108,4 @@ const foodImages = {
     '$$$$': 'Sushi Bars'
   }
 }
-
 export default foodImages

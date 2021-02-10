@@ -24,7 +24,7 @@ export default class MatchCard extends React.Component {
     const { card } = this.props
 
     return (
-      <ImageBackground source={getCuisine(card.categories)} style={[styles.card]}>
+      <ImageBackground source={getCuisine(card.categories, card.price)} style={[styles.card]}>
         <View style={styles.container}>
           <Text style={styles.title} numberOfLines={1}>
             {card.name}
