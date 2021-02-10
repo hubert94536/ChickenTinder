@@ -205,13 +205,14 @@ App.propTypes = {
 }
 
 /*
-data: {
-  type: type,
-  content: content, 
-  name: name,
-  username: username, 
-  photo: photo
-}
+data: 
+  config: "{
+      type: type,
+      content: content, 
+      name: name,
+      username: username, 
+      photo: photo
+    }" : string
 */
 const buildNotification = (config) => {
   var message = { title: 'Wechews Notification', message: 'Default Message' }
