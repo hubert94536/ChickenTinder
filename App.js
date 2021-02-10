@@ -3,7 +3,7 @@ import React from 'react'
 import { Text } from 'react-native'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
-import firebase from '@react-native-firebase/app'
+import auth from '@react-native-firebase/auth'
 import PushNotification from 'react-native-push-notification'
 import PropTypes from 'prop-types'
 import CreateAccount from './frontend/screens/CreateAccount.js'
@@ -15,7 +15,6 @@ import Loading from './frontend/screens/Loading.js'
 import Login from './frontend/screens/Login.js'
 import Match from './frontend/screens/Match.js'
 import Notifications from './frontend/screens/Notifications.js'
-import notificationsApi from './frontend/apis/notificationsApi.js'
 import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
 import Round from './frontend/screens/Round.js'
 import Search from './frontend/screens/Search.js'
@@ -23,7 +22,7 @@ import socket from './frontend/apis/socket.js'
 import TopThree from './frontend/screens/TopThree.js'
 import UserProfileView from './frontend/screens/Profile.js'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { UID, NAME, USERNAME, PHOTO, EMAIL, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
+import { NAME, USERNAME, PHOTO, EMAIL, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -84,7 +83,7 @@ class App extends React.Component {
 
   componentDidMount() {
     var start
-    var unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+    var unsubscribe = auth().onAuthStateChanged(async (user) => {
       if (user === null) {
         start = 'Login'
       } else {

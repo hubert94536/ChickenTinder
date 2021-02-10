@@ -1,4 +1,4 @@
-import Firebase from '@react-native-firebase/app'
+import auth from '@react-native-firebase/auth'
 import io from 'socket.io-client'
 
 var socket = null
@@ -8,7 +8,7 @@ const connect = () => {
   socket = io('https://wechews.herokuapp.com')
   socket.on('connect', async () => {
     console.log('connect')
-    const token = await Firebase.auth().currentUser.getIdToken()
+    const token = await auth().currentUser.getIdToken()
     socket.emit('authentication', { token: token })
   })
   socket.on('unauthorized', (reason) => {
