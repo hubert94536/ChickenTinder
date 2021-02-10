@@ -477,6 +477,7 @@ module.exports = (io) => {
         sendCommand('JSON.DEL', [`${socket.user.room}`]).catch((err) => console.error(err))
         sendCommand('JSON.DEL', [`filters:${socket.user.room}`]).catch((err) => console.error(err))
         io.in(socket.user.room).emit('leave')
+        delete socket.user.room
       }
     })
 

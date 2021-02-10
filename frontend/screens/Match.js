@@ -20,6 +20,7 @@ export default class Match extends React.Component {
   }
 
   endRound() {
+    socket.getSocket().off()
     if (global.isHost) {
       socket.endRound()
     } else {
