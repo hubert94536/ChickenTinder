@@ -1,5 +1,5 @@
 import Axios from 'axios'
-import Firebase from 'firebase'
+import Firebase from '@react-native-firebase/app'
 
 const notificationsApi = Axios.create({
   baseURL: 'https://wechews.herokuapp.com',
@@ -30,12 +30,14 @@ const getNotifs = async () => {
             senderUsername: notif.account.username,
             senderPhoto: notif.account.photo,
             senderName: notif.account.name,
+            content: notif.content,
+            read: notif.read,
           }
         }),
       }
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -47,7 +49,7 @@ const removeNotif = async (id) => {
       return res.status
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -61,7 +63,7 @@ const linkToken = async (token) => {
     })
     .catch((error) => {
       console.log('-----ERROR linking token')
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -75,7 +77,7 @@ const unlinkToken = async () => {
     })
     .catch((error) => {
       console.log('-----ERROR unlinking token')
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 

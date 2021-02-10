@@ -1,8 +1,19 @@
 import React, { Component } from 'react'
-import { Dimensions, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import {
+  Dimensions,
+  ImageBackground,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
+} from 'react-native'
 import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from '@react-native-community/blur'
+import { newNotif, noNotif } from '../redux/Actions.js'
 import Swiper from 'react-native-swiper'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
@@ -23,7 +34,7 @@ AsyncStorage.multiGet([NAME, PHOTO, USERNAME]).then((res) => {
   username = res[2][1]
 })
 
-export default class Notif extends Component {
+class Notif extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -136,11 +147,12 @@ export default class Notif extends Component {
       }
     }
     return (
-      <View style={{ backgroundColor: 'white', flex: 1 }}>
+      <ImageBackground
+        source={require('../assets/backgrounds/Search.png')}
+        style={styles.container}
+      >
         <View>
-          <Text style={[screenStyles.text, styles.NotifTitle, { fontFamily: 'CircularStd-Bold' }]}>
-            Notifications
-          </Text>
+          <Text style={[screenStyles.text, styles.NotifTitle]}>Notifications</Text>
 
           <View style={{ flexDirection: 'row' }}>
             <TouchableHighlight
@@ -216,6 +228,7 @@ export default class Notif extends Component {
             body={'You are about to remove @' + this.props.username + ' as a friend'}
             buttonAff="Delete"
             height="25%"
+            blur
             press={() => this.deleteFriend()}
             cancel={() => this.setState({ deleteFriend: false })}
           />
@@ -230,16 +243,36 @@ export default class Notif extends Component {
           />
         )}
         <TabBar
-          goHome={() => this.props.navigation.navigate('Home')}
-          goSearch={() => this.props.navigation.navigate('Search')}
+          goHome={() => this.props.navigation.replace('Home')}
+          goSearch={() => this.props.navigation.replace('Search')}
           goNotifs={() => {}}
-          goProfile={() => this.props.navigation.navigate('Profile')}
+          goProfile={() => this.props.navigation.replace('Profile')}
           cur="Notifs"
         />
-      </View>
+      </ImageBackground>
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  const { notif } = state
+  return { notif }
+}
+//  access the state as this.props.notif
+//  if that's giving you errors, use this.props.notif.notif
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      newNotif,
+      noNotif,
+    },
+    dispatch,
+  )
+//  use as this.props.newNotif() or this.props.noNotif()
+//  if that's giving you errors, use this.props.notif.newNotif()
+
+export default connect(mapStateToProps, mapDispatchToProps)(Notif)
 
 Notif.propTypes = {
   navigation: PropTypes.shape({
@@ -248,12 +281,18 @@ Notif.propTypes = {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   NotifTitle: {
     fontSize: 30,
     paddingTop: '5%',
     paddingLeft: '5%',
     paddingBottom: '5%',
     alignSelf: 'center',
+    fontFamily: 'CircularStd-Bold',
+    marginBottom: '10%',
+    color: 'white',
   },
   avatar: {
     width: 100,

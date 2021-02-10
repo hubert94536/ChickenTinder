@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native'
 import colors from '../../styles/colors.js'
-import global from '../../global.js'
+import { connect } from 'react-redux'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -19,12 +19,12 @@ import PropTypes from 'prop-types'
 
 const height = Dimensions.get('window').height
 
-export default class EditProfile extends React.Component {
+class EditProfile extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      nameValue: global.name,
-      usernameValue: global.username,
+      nameValue: this.props.name.name,
+      usernameValue: this.props.username.username,
       validNameFormat: true,
       validUsernameFormat: true,
     }
@@ -32,14 +32,14 @@ export default class EditProfile extends React.Component {
 
   changeUser(text) {
     this.setState({ usernameValue: text }, () => {
-      this.validateString()
+      this.validateUsername()
     })
     this.props.userChange(text)
   }
 
   changeName(text) {
     this.setState({ nameValue: text }, () => {
-      this.validateString()
+      this.validateName()
     })
     this.props.nameChange(text)
   }
@@ -47,19 +47,13 @@ export default class EditProfile extends React.Component {
   //remove whitespaces before and after name and username
   finalCheck() {
     if (!this.state.validNameFormat || !this.state.validUsernameFormat) {
-      this.props.dontSave()
+      return
     }
 
     let trimmedName = this.state.nameValue
     trimmedName = trimmedName.trimStart().trimEnd()
 
     let trimmedUser = this.state.usernameValue
-    while (trimmedUser.endsWith('_')) {
-      trimmedUser = trimmedUser.slice(0, -1)
-    }
-    while (trimmedUser.startsWith('_')) {
-      trimmedUser = trimmedUser.slice(1)
-    }
 
     this.setState({ nameValue: trimmedName, usernameValue: trimmedUser }, () => {
       this.props.makeChanges() //must use callback in setState or states won't update properly
@@ -69,17 +63,31 @@ export default class EditProfile extends React.Component {
     this.props.userChange(trimmedUser)
   }
 
-  validateString() {
-    const regex = /^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){0,13}[a-zA-Z0-9]$/
-    if (!regex.test(this.state.nameValue)) {
-      this.setState({ validNameFormat: false })
-    } else {
-      this.setState({ validNameFormat: true })
-    }
+  validateUsername() {
+    /*regex expression: 
+    - alphanumeric characters (lowercase or uppercase), dot (.), underscore (_), hyphen(-)
+    - must not start or end with space
+    - 2-15 characters
+    */
+    const regex = /^[a-zA-Z0-9._\-]([._\-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._\-]$/
     if (!regex.test(this.state.usernameValue)) {
       this.setState({ validUsernameFormat: false })
     } else {
       this.setState({ validUsernameFormat: true })
+    }
+  }
+
+  validateName() {
+    /*regex expression: 
+    - alphanumeric characters (lowercase or uppercase), dot (.), underscore (_), hyphen(-), space( )
+    - must not start or end with space
+    - 2-15 characters
+    */
+    const regex = /^[a-zA-Z0-9._\-]([ ._\-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._\-]$/
+    if (!regex.test(this.state.nameValue)) {
+      this.setState({ validNameFormat: false })
+    } else {
+      this.setState({ validNameFormat: true })
     }
   }
 
@@ -94,17 +102,10 @@ export default class EditProfile extends React.Component {
           />
           <View style={styles.modalContent}>
             <Text style={[screenStyles.text, styles.titleText]}>Edit Profile</Text>
-
-            {global.photo.includes('file') || global.photo.includes('http') ? (
-              <Image
-                style={styles.pfp}
-                source={{
-                  uri: global.photo,
-                }}
-              />
-            ) : (
-              <Image source={global.photo} style={styles.pfp} />
-            )}
+            <Image
+              source={{ uri: Image.resolveAssetSource(this.props.image.image).uri }}
+              style={styles.pfp}
+            />
             <View
               style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: '4%' }}
             ></View>
@@ -166,6 +167,28 @@ export default class EditProfile extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  const { error } = state
+  const { name } = state
+  const { username } = state
+  const { image } = state
+  return { error, name, username, image }
+}
+
+export default connect(mapStateToProps)(EditProfile)
+
+EditProfile.propTypes = {
+  dontSave: PropTypes.func,
+  userChange: PropTypes.func,
+  nameChange: PropTypes.func,
+  makeChanges: PropTypes.func,
+  visible: PropTypes.bool,
+  // error: PropTypes.object,
+  // name: PropTypes.object,
+  // username: PropTypes.object,
+  // image: PropTypes.object,
+}
+
 const styles = StyleSheet.create({
   mainContainerHeight: {
     height: height * 0.5,
@@ -217,11 +240,3 @@ const styles = StyleSheet.create({
     marginBottom: '1%',
   },
 })
-
-EditProfile.propTypes = {
-  dontSave: PropTypes.func,
-  userChange: PropTypes.func,
-  nameChange: PropTypes.func,
-  makeChanges: PropTypes.func,
-  visible: PropTypes.bool,
-}

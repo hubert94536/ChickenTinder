@@ -136,6 +136,9 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
+        //blurview
+        renderscriptTargetApi 20
+        renderscriptSupportModeEnabled true
     }
     splits {
         abi {

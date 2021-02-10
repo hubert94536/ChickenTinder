@@ -9,9 +9,12 @@ import {
   TextInput,
 } from 'react-native'
 import PropTypes from 'prop-types'
+import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
+import colors from '../../styles/colors.js'
+import Slider from '@react-native-community/slider'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { ZIP_ID, ZIP_TOKEN } from 'react-native-dotenv'
 
@@ -29,7 +32,15 @@ let client = clientBuilder.buildUsZipcodeClient()
 export default class Location extends Component {
   constructor(props) {
     super(props)
+    this.mapView = React.createRef()
+    this.circle = React.createRef()
     this.state = {
+      location: {
+        latitude: 34.06892,
+        longitude: -118.445183,
+      },
+      city: null,
+      distance: 5.5,
       zip: '',
       zipValid: true,
       //style of the button
@@ -45,14 +56,39 @@ export default class Location extends Component {
     client
       .send(lookup)
       .then((res) => {
-        if (res.lookups[0].result[0].valid) this.handlePress()
-        else this.setState({ zipValid: false })
+        console.log(JSON.stringify(res.lookups[0].result[0]))
+        let result = res.lookups[0].result[0]
+        if (result.valid) {
+          // console.log('valid zip: ' + this.state.zip.toString())
+          let data = result.zipcodes[0]
+          this.setState({
+            zipValid: true,
+            city: result.city,
+            location: {
+              latitude: data.latitude,
+              longitude: data.longitude,
+            },
+          })
+          let newRegion = {
+            latitude: data.latitude,
+            longitude: data.longitude,
+            latitudeDelta: this.state.distance / 60 + 0.3,
+            longitudeDelta: this.state.distance / 60 + 0.3,
+          }
+          this.mapView.current.animateToRegion(newRegion, 3000)
+        } else {
+          this.setState({ zipValid: false })
+          console.log('false')
+        }
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        console.log(err)
+        this.setState({ zipValid: false })
+      })
   }
-  // function called when main button is pressed
+  // function called when main button is pressed w/ valid ZIP
   handlePress() {
-    this.props.press(this.state.zip)
+    if (this.state.zipValid) this.props.update(this.state.distance, this.state.location)
   }
 
   //  function called when 'x' is pressed
@@ -79,9 +115,12 @@ export default class Location extends Component {
               </Text>
               <TextInput
                 style={[screenStyles.input, screenStyles.textBook, styles.input]}
+                keyboardType="number-pad"
                 placeholderTextColor="#9F9F9F"
                 placeholder="Enter your zip code"
-                onChangeText={(text) => this.setState({ zip: text })}
+                onSubmitEditing={({ nativeEvent }) => {
+                  this.setState({ zip: nativeEvent.text }, () => this.validateZip())
+                }}
               />
               {this.state.zipValid && <Text style={{ textAlign: 'center' }}> </Text>}
               {!this.state.zipValid && (
@@ -90,21 +129,67 @@ export default class Location extends Component {
                   <Text style={[screenStyles.textBook, styles.errorText]}>Invalid zip code</Text>
                 </View>
               )}
+            </View>
+            <Text style={styles.distanceText}>({this.state.distance} miles)</Text>
+            <Slider
+              style={{
+                width: '85%',
+                height: 30,
+                alignSelf: 'center',
+              }}
+              minimumValue={5}
+              maximumValue={25}
+              value={5}
+              step={0.25}
+              minimumTrackTintColor={colors.hex}
+              maximumTrackTintColor={colors.hex}
+              thumbTintColor={colors.hex}
+              onValueChange={(value) => {
+                this.setState({ distance: value })
+                let newRegion = {
+                  latitude: this.state.location.latitude,
+                  longitude: this.state.location.longitude,
+                  latitudeDelta: value / 40 + 0.2,
+                  longitudeDelta: value / 40 + 0.2,
+                }
+                this.mapView.current.animateToRegion(newRegion, 100)
+              }}
+            />
+            <View style={styles.mapContainer}>
+              <MapView
+                ref={this.mapView}
+                provider={PROVIDER_GOOGLE}
+                style={styles.map}
+                showsScale={true}
+                showsCompass={true}
+                showsBuildings={true}
+                showsMyLocationButton={true}
+                initialRegion={{
+                  latitude: this.state.location.latitude,
+                  longitude: this.state.location.longitude,
+                  latitudeDelta: this.state.distance / 60 + 0.3,
+                  longitudeDelta: this.state.distance / 60 + 0.3,
+                }}
+                // onMarkerDragEnd={(res) => {
+                //   this.setState({ location: res.coordinate })
+                // }}
+              >
+                {/* <Marker coordinate={this.state.location} /> */}
+                <Circle
+                  ref={this.circle}
+                  center={this.state.location}
+                  radius={this.state.distance * 1609.34}
+                  fillColor={'rgba(241, 87, 99, 0.7)'}
+                />
+              </MapView>
               <TouchableHighlight
                 underlayColor="white"
                 onHideUnderlay={() => this.setState({ buttonPressed: false })}
                 onShowUnderlay={() => this.setState({ buttonPressed: true })}
-                onPress={() => this.validateZip()}
-                style={[modalStyles.button, styles.buttonColor]}
+                onPress={() => this.handlePress()}
+                style={[modalStyles.button, styles.buttonColor, styles.doneButton]}
               >
-                <Text
-                  style={[
-                    modalStyles.text,
-                    this.state.buttonPressed ? screenStyles.hex : styles.white,
-                  ]}
-                >
-                  Done
-                </Text>
+                <Text style={[modalStyles.text, styles.white]}>Done</Text>
               </TouchableHighlight>
             </View>
           </View>
@@ -129,7 +214,8 @@ const styles = StyleSheet.create({
     padding: '1%',
   },
   modalHeight: {
-    height: height * 0.3,
+    height: height * 0.8,
+    margin: '20%',
   },
   icon: {
     flexDirection: 'row',
@@ -160,10 +246,38 @@ const styles = StyleSheet.create({
   white: {
     color: 'white',
   },
+  mapContainer: {
+    borderBottomLeftRadius: 14,
+    borderBottomRightRadius: 14,
+    overflow: 'hidden', //hides map overflow
+    alignSelf: 'center',
+    justifyContent: 'flex-end',
+    height: Dimensions.get('window').height * 0.5,
+    width: Dimensions.get('window').width * 0.8,
+  },
+  map: {
+    borderBottomLeftRadius: 14,
+    borderBottomRightRadius: 14,
+    overflow: 'hidden', //hides map overflow
+    alignSelf: 'center',
+    justifyContent: 'flex-end',
+    height: Dimensions.get('window').height * 0.5,
+    width: Dimensions.get('window').width * 0.8,
+  },
+  distanceText: {
+    color: '#747474',
+    alignSelf: 'center',
+  },
+  doneButton: {
+    position: 'absolute',
+    alignSelf: 'center',
+    bottom: 15,
+    height: normalize(25),
+  },
 })
 
 Location.propTypes = {
-  press: PropTypes.func,
+  update: PropTypes.func,
   cancel: PropTypes.func,
   visible: PropTypes.bool,
 }

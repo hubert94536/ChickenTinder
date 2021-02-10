@@ -3,9 +3,11 @@ import React from 'react'
 import { Text } from 'react-native'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
-import firebase from 'firebase'
+import firebase from '@react-native-firebase/app'
 import PushNotification from 'react-native-push-notification'
+import PropTypes from 'prop-types'
 import CreateAccount from './frontend/screens/CreateAccount.js'
+import friendsApi from './frontend/apis/friendsApi.js'
 import global from './global.js'
 import Group from './frontend/screens/Group.js'
 import Home from './frontend/screens/Home.js'
@@ -13,7 +15,6 @@ import Loading from './frontend/screens/Loading.js'
 import Login from './frontend/screens/Login.js'
 import Match from './frontend/screens/Match.js'
 import Notifications from './frontend/screens/Notifications.js'
-import notificationsApi from './frontend/apis/notificationsApi.js'
 import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
 import Round from './frontend/screens/Round.js'
 import Search from './frontend/screens/Search.js'
@@ -21,9 +22,22 @@ import socket from './frontend/apis/socket.js'
 import TopThree from './frontend/screens/TopThree.js'
 import UserProfileView from './frontend/screens/Profile.js'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { UID, NAME, USERNAME, PHOTO, EMAIL, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
+import { NAME, USERNAME, PHOTO, EMAIL, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
 
-export default class App extends React.Component {
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import {
+  changeFriends,
+  changeName,
+  changeUsername,
+  changeImage,
+  newNotif,
+  noNotif,
+  hideError,
+  showError,
+} from './frontend/redux/Actions.js'
+
+class App extends React.Component {
   constructor() {
     super()
     this.state = {
@@ -32,9 +46,9 @@ export default class App extends React.Component {
     }
 
     AsyncStorage.multiGet([USERNAME, NAME, PHOTO, EMAIL, PHONE]).then((res) => {
-      global.username = res[0][1]
-      global.name = res[1][1]
-      global.photo = res[2][1]
+      this.props.changeUsername(res[0][1])
+      this.props.changeName(res[1][1])
+      this.props.changeImage(res[2][1])
       global.email = res[3][1]
       global.phone = res[4][1]
     })
@@ -44,20 +58,9 @@ export default class App extends React.Component {
         console.log('Token generated')
         console.log(token)
         AsyncStorage.setItem(REGISTRATION_TOKEN, token.token)
-        AsyncStorage.getItem(UID).then((id) => {
-          //send to back-end server to register with id
-          if (id) notificationsApi.linkToken(token.token)
-        })
+        // if (firebase.auth().currentUser) notificationsApi.linkToken(token.token)
       },
-      onNotification: function (notification) {
-        // Consider sending only data, then constructing a notification here to display to the user (as FCM base notification construction is quite limited)
-        console.log('Notification received')
-        console.log(notification)
-        if (!notification.userInteraction) {
-          //construct using data
-          buildNotification(notification.data)
-        }
-      },
+      onNotification: this.onNotification,
       onAction: function (notification) {
         console.log(notification)
         if (notification.action === 'open') PushNotification.invokeApp(notification) // figure this out later
@@ -69,10 +72,22 @@ export default class App extends React.Component {
 
   componentDidMount() {
     var start
-    var unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+    var unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+      unsubscribe()
       if (user === null) {
         start = 'Login'
       } else {
+        try {
+          const friends = await friendsApi.getFriends()
+          // for(var i = 0; i < friends.friendList.length; i++)
+          // {
+          //   if(friends.friendList[i].status === 'requested')
+          //     friendsApi.removeFriendship(friends.friendList[i].uid)
+          // }
+          this.props.changeFriends(friends.friendList)
+        } catch (error) {
+          console.log(error)
+        }
         socket.connect()
         start = 'Home'
       }
@@ -133,15 +148,64 @@ export default class App extends React.Component {
           animationEnabled: false,
         },
       )
-      unsubscribe()
       var AppContainer = createAppContainer(RootStack)
       this.setState({ appContainer: <AppContainer /> })
     })
   }
 
-  render() {
-    return this.state.appContainer
+  onNotification = (notification) => {
+    console.log('Notification received')
+    this.props.newNotif()
+    console.log(notification)
+    if (!notification.userInteraction) {
+      //construct using data
+      const config = JSON.parse(notification.data.config)
+      buildNotification(config)
+    }
   }
+
+  render() {
+    return (
+      // <Provider store={store}>{this.state.appContainer}</Provider>
+      this.state.appContainer
+    )
+  }
+}
+
+const mapStateToProps = (state) => {
+  const { name } = state
+  const { username } = state
+  const { image } = state
+  const { notif } = state
+  const { error } = state
+  const { friends } = state
+  return { name, username, image, notif, error, friends }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      changeFriends,
+      changeName,
+      changeUsername,
+      changeImage,
+      newNotif,
+      noNotif,
+      showError,
+      hideError,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
+
+App.propTypes = {
+  // name: PropTypes.object,
+  // username: PropTypes.object,
+  // image: PropTypes.object,
+  changeName: PropTypes.func,
+  changeUsername: PropTypes.func,
+  changeImage: PropTypes.func,
 }
 
 /*
@@ -161,7 +225,7 @@ const buildNotification = (config) => {
       message: `${config.name} has sent you a friend request!`,
     }
   }
-  if (config.type == 'friends') {
+  if (config.type == 'accepted') {
     message = {
       title: 'Friend Request Accepted',
       message: `You are now friends with ${config.name}!`,

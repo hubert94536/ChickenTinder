@@ -1,5 +1,5 @@
 import Axios from 'axios'
-import Firebase from 'firebase'
+import Firebase from '@react-native-firebase/app'
 
 const accountsApi = Axios.create({
   baseURL: 'https://wechews.herokuapp.com',
@@ -28,25 +28,30 @@ const createFBUserTest = async (name, uid, username, email, photo, phone) => {
       return res.status
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
 // creates user
-const createFBUser = async (name, username, email, photo, phone) => {
+const createUser = async (name, username, email, phone, photo) => {
+  console.log('creating')
+  const data = {
+    name: name,
+    username: username,
+    photo: photo,
+  }
+  if (email) data['email'] = email
+  if (phone) data['phone_number'] = phone
   return accountsApi
-    .post('/accounts', {
-      name: name,
-      username: username,
-      email: email,
-      photo: photo,
-      phone_number: phone,
-    })
+    .post('/accounts', data)
     .then((res) => {
+      console.log('created')
+      Firebase.auth().currentUser.updateProfile({ displayName: username })
       return res.status
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      console.log('failed to create')
+      return Promise.reject(error.response)
     })
 }
 
@@ -69,7 +74,7 @@ const getAllUsers = async () => {
       }
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -94,7 +99,7 @@ const searchUsers = async (text) => {
       }
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -106,7 +111,7 @@ const deleteUser = async () => {
       return res.status
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -125,7 +130,7 @@ const getUser = async () => {
       }
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -173,12 +178,14 @@ const updateUser = async (req) => {
   return accountsApi
     .put(`/accounts`, req)
     .then((res) => {
+      if ('username' in req)
+        Firebase.auth().currentUser.updateProfile({ displayName: req.username })
       return {
         status: res.status,
       }
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -189,10 +196,12 @@ const checkUsername = async (username) => {
       username: username,
     })
     .then((res) => {
+      console.log(res)
       return res.status
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      console.log(error)
+      return Promise.reject(error.response)
     })
 }
 
@@ -206,7 +215,7 @@ const checkPhoneNumber = async (phoneNumber) => {
       return res.status
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -220,7 +229,7 @@ const checkEmail = async (email) => {
       return res.status
     })
     .catch((error) => {
-      Promise.reject(error.response)
+      return Promise.reject(error.response)
     })
 }
 
@@ -228,7 +237,7 @@ export default {
   checkEmail,
   checkPhoneNumber,
   checkUsername,
-  createFBUser,
+  createUser,
   deleteUser,
   getAllUsers,
   getUser,

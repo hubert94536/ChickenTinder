@@ -1,4 +1,7 @@
 import React from 'react'
+import { bindActionCreators } from 'redux'
+import { changeFriends } from '../redux/Actions.js'
+import { connect } from 'react-redux'
 import { Dimensions, FlatList, Modal, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { SearchBar } from 'react-native-elements'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -7,50 +10,40 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Clipboard from '@react-native-community/clipboard'
 import PropTypes from 'prop-types'
 import Card from '../cards/Card.js'
-import friendsApi from '../apis/friendsApi.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
 
 const height = Dimensions.get('window').height
 //  little pop up modal that is showed when you click choose friends in filters
-export default class ChooseFriends extends React.Component {
+class ChooseFriends extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       data: '',
-      friends: '',
       search: '',
-      errorAlert: false,
     }
-    this.getFriends()
   }
 
   //  gets your friends
-  getFriends() {
-    // Pushing accepted friends or pending requests into this.state.friends
-    friendsApi
-      .getFriends()
-      .then((res) => {
-        let pushFriends = []
-        for (var friend in res.friendList) {
-          if (res.friendList[friend].status === 'friends') {
-            if (
-              this.props.members.some(
-                (member) => member.username === res.friendList[friend].username,
-              )
-            ) {
-              res.friendList[friend].added = true
-              pushFriends.push(res.friendList[friend])
-            } else {
-              res.friendList[friend].added = false
-              pushFriends.push(res.friendList[friend])
-            }
-          }
+  componentDidMount() {
+    let pushFriends = []
+    for (var friend in this.props.friends.friends) {
+      if (this.props.friends.friends[friend].status === 'friends') {
+        if (
+          this.props.members.some(
+            (member) => member.username === this.props.friends.friends[friend].username,
+          )
+        ) {
+          this.props.friends.friends[friend].added = true
+          pushFriends.push(this.props.friends.friends[friend])
+        } else {
+          this.props.friends.friends[friend].added = false
+          pushFriends.push(this.props.friends.friends[friend])
         }
-        this.setState({ friends: pushFriends, data: pushFriends })
-      })
-      .catch(() => this.setState({ errorAlert: true }))
+      }
+    }
+    this.setState({ data: pushFriends })
   }
 
   // copies the room code
@@ -63,19 +56,19 @@ export default class ChooseFriends extends React.Component {
     this.props.press()
   }
 
-  sendInvite() {
-    socket.sendInvite(this.props.username)
+  sendInvite(uid) {
+    socket.sendInvite(uid)
   }
 
   //  function for searching your friends
   searchFilterFunction(text) {
     this.setState({ search: text })
-    const newData = this.state.data.filter((item) => {
+    const newData = this.props.friends.filter((item) => {
       const itemData = `${item.name.toUpperCase()} ${item.username.toUpperCase()}`
       const textData = text.toUpperCase()
       return itemData.indexOf(textData) > -1
     })
-    this.setState({ friends: newData })
+    this.setState({ data: newData })
   }
 
   render() {
@@ -112,17 +105,17 @@ export default class ChooseFriends extends React.Component {
             />
             <FlatList
               style={styles.flatList}
-              data={this.state.friends}
+              data={this.state.data}
               renderItem={({ item }) => (
                 <Card
                   name={item.name}
                   image={item.photo}
                   uid={item.uid}
                   username={item.username}
-                  total={this.state.data}
+                  total={this.props.friends}
                   status="not added"
                   key={item.uid}
-                  press={() => this.sendInvite()}
+                  press={() => this.sendInvite(item.uid)}
                 />
               )}
               keyExtractor={(item) => item.username}
@@ -133,6 +126,33 @@ export default class ChooseFriends extends React.Component {
       </Modal>
     )
   }
+}
+
+const mapStateToProps = (state) => {
+  const { friends } = state
+  return { friends }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      changeFriends,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChooseFriends)
+
+ChooseFriends.propTypes = {
+  members: PropTypes.array,
+  press: PropTypes.func,
+  visible: PropTypes.bool,
+  code: PropTypes.number,
+  // username: PropTypes.string,
+  // friends: PropTypes.object,
+  showError: PropTypes.func,
+  hideError: PropTypes.func,
+  changeFriends: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
@@ -207,11 +227,3 @@ const styles = StyleSheet.create({
     marginBottom: '2%',
   },
 })
-
-ChooseFriends.propTypes = {
-  members: PropTypes.array,
-  press: PropTypes.func,
-  visible: PropTypes.bool,
-  code: PropTypes.number,
-  username: PropTypes.string,
-}
