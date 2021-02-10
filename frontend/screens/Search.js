@@ -42,20 +42,23 @@ class Search extends Component {
   }
 
   async getFriends() {
-    friendsApi.getFriends()
-      .then((res) =>{
+    friendsApi
+      .getFriends()
+      .then((res) => {
         this.props.changeFriends(res.friendList)
-    })
-    .then(() => {
-      var friendsMap = new Object()
-      for (var friend in this.props.friends.friends) {
-        friendsMap[this.props.friends.friends[friend].uid] = this.props.friends.friends[friend].status
-      }
-      this.setState({ friends: friendsMap })
-    })
-    .catch(() => {
-      this.props.showError()
-    })
+      })
+      .then(() => {
+        var friendsMap = new Object()
+        for (var friend in this.props.friends.friends) {
+          friendsMap[this.props.friends.friends[friend].uid] = this.props.friends.friends[
+            friend
+          ].status
+        }
+        this.setState({ friends: friendsMap })
+      })
+      .catch(() => {
+        this.props.showError()
+      })
   }
 
   updateText = async (text) => {
@@ -105,16 +108,16 @@ class Search extends Component {
     }
   }
 
-  async removeRequest(friend, newArr) {
-    friendsApi
-      .removeFriendship(friend)
-      .then(() => {
-        this.props.changeFriends(newArr)
-        this.setState({ friends: newArr })
-      })
-      .catch(() => {
-        this.setState({ errorAlert: true })
-      })
+  async removeRequest(newArr) {
+    this.setState({ friends: newArr })
+  }
+
+  async acceptFriend(newArr) {
+    this.setState({ friends: newArr })
+  }
+
+  async addFriend(newArr) {
+    this.setState({ friends: newArr })
   }
 
   renderHeader = () => {
@@ -142,9 +145,9 @@ class Search extends Component {
     console.log(this.props.refresh)
     this.props.showRefresh()
     sleep(2000)
-    .then(this.getFriends())
-    .then(this.searchFilterFunction(this.state.value))
-    .then(this.props.hideRefresh())
+      .then(this.getFriends())
+      .then(this.searchFilterFunction(this.state.value))
+      .then(this.props.hideRefresh())
   }
 
   render() {
@@ -163,8 +166,10 @@ class Search extends Component {
               total={this.state.data}
               status={item.status}
               key={item.uid}
-              press={(uid, newArr) => this.removeRequest(uid, newArr)}
+              press={(newArr) => this.removeRequest(newArr)}
               unfriendAlert={(bool) => this.setState({ deleteFriend: bool })}
+              accept={(newArr) => this.acceptFriend(newArr)}
+              add={(newArr) => this.addFriend(newArr)}
             />
           )}
           keyExtractor={(item) => item.username}

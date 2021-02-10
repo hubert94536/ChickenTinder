@@ -34,14 +34,14 @@ const createFBUserTest = async (name, uid, username, email, photo, phone) => {
 
 // creates user
 const createUser = async (name, username, email, phone, photo) => {
-  console.log("creating")
+  console.log('creating')
   const data = {
     name: name,
     username: username,
-    photo: photo
+    photo: photo,
   }
-  if (email) data["email"] = email
-  if (phone) data["phone_number"] = phone
+  if (email) data['email'] = email
+  if (phone) data['phone_number'] = phone
   return accountsApi
     .post('/accounts', data)
     .then((res) => {
@@ -50,7 +50,7 @@ const createUser = async (name, username, email, phone, photo) => {
       return res.status
     })
     .catch((error) => {
-      console.log("failed to create")
+      console.log('failed to create')
       return Promise.reject(error.response)
     })
 }
@@ -195,7 +195,7 @@ const checkUsername = async (username) => {
       username: username,
     })
     .then((res) => {
-      console.log(res);
+      console.log(res)
       return res.status
     })
     .catch((error) => {

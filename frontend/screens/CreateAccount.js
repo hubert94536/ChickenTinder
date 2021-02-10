@@ -4,7 +4,15 @@ import { bindActionCreators } from 'redux'
 import { changeImage, changeName, changeUsername } from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import { EMAIL, NAME, PHOTO, USERNAME, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
-import { Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
+import {
+  Image,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  View,
+} from 'react-native'
 import PropTypes from 'prop-types'
 import accountsApi from '../apis/accountsApi.js'
 import colors from '../../styles/colors.js'
@@ -68,13 +76,19 @@ class createAccount extends React.Component {
     } else {
       AsyncStorage.setItem(EMAIL, this.state.email)
     }
-    changeUsername(this.state.username)
-    changeName(this.state.name)
-    changeImage(this.state.photo)
+    this.props.changeUsername(this.state.username)
+    this.props.changeName(this.state.name)
+    this.props.changeImage(this.state.photo)
     global.email = this.state.email
     global.phone = this.state.phone
     return accountsApi
-      .createUser(this.state.name, this.state.username, this.state.email, this.state.phone, this.state.photo)
+      .createUser(
+        this.state.name,
+        this.state.username,
+        this.state.email,
+        this.state.phone,
+        this.state.photo,
+      )
       .then(() => AsyncStorage.getItem(REGISTRATION_TOKEN))
       .then((token) => notificationsApi.linkToken(token))
       .then(() => {
@@ -126,7 +140,10 @@ class createAccount extends React.Component {
 
   render() {
     return (
-      <View style={[screenStyles.mainContainer]}>
+      <ImageBackground
+        source={require('../assets/backgrounds/CreateAccount.png')}
+        style={styles.main}
+      >
         <Text style={[screenStyles.textBold, screenStyles.title, styles.title]}>
           Create Account
         </Text>
@@ -138,6 +155,9 @@ class createAccount extends React.Component {
           source={{ uri: Image.resolveAssetSource(this.state.photo).uri }}
           style={styles.avatar}
         />
+        <TouchableHighlight style={styles.select} underlayColor="transparent">
+          <Text style={[styles.selectText, screenStyles.textBold]}>Select a Profile Icon</Text>
+        </TouchableHighlight>
         <Text style={[screenStyles.textBook, styles.fieldName, styles.display]}>Display Name</Text>
         <TextInput
           style={[screenStyles.textBook, styles.fieldText]}
@@ -217,7 +237,7 @@ class createAccount extends React.Component {
             </Text>
           </View>
         </TouchableHighlight>
-      </View>
+      </ImageBackground>
     )
   }
 }
@@ -251,6 +271,9 @@ createAccount.propTypes = {
   changeImagee: PropTypes.func,
 }
 const styles = StyleSheet.create({
+  main: {
+    flex: 1,
+  },
   display: {
     marginTop: '5%',
   },
@@ -259,16 +282,24 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: normalize(25),
+    color: 'white',
     marginTop: '10%',
-    marginBottom: '5%',
+    marginBottom: '3%',
   },
   avatar: {
-    width: 150,
-    height: 150,
+    width: 110,
+    height: 110,
     borderRadius: 94.5,
     borderWidth: 4,
     alignSelf: 'center',
-    margin: '1.5%',
+  },
+  select: {
+    alignItems: 'center',
+    marginTop: '2%',
+    marginBottom: '10%',
+  },
+  selectText: {
+    color: colors.hex,
   },
   button: {
     borderColor: colors.hex,
@@ -279,7 +310,7 @@ const styles = StyleSheet.create({
   mediumText: {
     alignSelf: 'center',
     fontSize: normalize(18.5),
-    color: colors.darkGray,
+    color: 'white',
   },
   fieldText: {
     fontSize: normalize(18),

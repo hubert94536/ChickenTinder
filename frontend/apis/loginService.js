@@ -41,7 +41,7 @@ const { LoginManager, AccessToken } = FBSDK
 // If account finishes creation, set display name to display name
 
 const loginWithCredential = async (userCredential) => {
-  try{ 
+  try {
     // Get info from database if not new user
     if (!userCredential.additionalUserInfo.isNewUser && userCredential.user.displayName != null) {
       const user = await accountsApi.getUser()
@@ -75,7 +75,11 @@ const loginWithCredential = async (userCredential) => {
         await AsyncStorage.multiSet([
           [PHONE, userCredential.user.phoneNumber]
         ])
-        break;
+        break
+      case 'phone':
+      case 'firebase':
+        await AsyncStorage.multiSet([[PHONE, userCredential.user.phoneNumber]])
+        break
       default:
         throw new Error("Could not determine provider")
     }
@@ -114,7 +118,7 @@ formatPhoneNumber = (number) => {
   return `+${matches[1] || 1}${matches[2]}${matches[3]}${matches[4]}`
 }
 
-const loginWithPhone = async(number) => {
+const loginWithPhone = async (number) => {
   try {
     if (!validatePhoneNumber(number)) throw new Error("Invalid phone number")
     const confirm = await auth().signInWithPhoneNumber(formatPhoneNumber(number))
@@ -151,7 +155,7 @@ const deleteUserWithCredential = async (credential) => {
     await auth().currentUser.delete()
     await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
   } catch (err) {
-    console.log("------ERROR DELETING USER")
+    console.log('------ERROR DELETING USER')
     return Promise.reject(err)
   }
 }
@@ -184,19 +188,17 @@ const deleteUser = async () => {
       default:
         throw new Error("Could not determine provider")
     }
-    deleteUserWithCredential(credential);
+    deleteUserWithCredential(credential)
   } catch (err) {
-    console.log("------ERROR DELETING USER")
+    console.log('------ERROR DELETING USER')
     return Promise.reject(err)
   }
 }
-
-
 
 export default {
   deleteUser,
   loginWithFacebook,
   logout,
   loginWithCredential,
-  loginWithPhone
+  loginWithPhone,
 }

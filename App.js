@@ -52,7 +52,7 @@ class App extends React.Component {
       global.email = res[3][1]
       global.phone = res[4][1]
     })
-    
+
     PushNotification.configure({
       onRegister: function (token) {
         console.log('Token generated')
@@ -70,25 +70,20 @@ class App extends React.Component {
     })
   }
 
-  onNotification = (notification) => {
-    console.log('Notification received')
-    this.props.newNotif()
-    console.log(notification)
-    if (!notification.userInteraction) {
-      //construct using data
-    const config = JSON.parse(notification.data.config)
-    buildNotification(config)
-    }
-  }
-
   componentDidMount() {
     var start
     var unsubscribe = auth().onAuthStateChanged(async (user) => {
+      unsubscribe()
       if (user === null) {
         start = 'Login'
       } else {
         try {
           const friends = await friendsApi.getFriends()
+          // for(var i = 0; i < friends.friendList.length; i++)
+          // {
+          //   if(friends.friendList[i].status === 'requested')
+          //     friendsApi.removeFriendship(friends.friendList[i].uid)
+          // }
           this.props.changeFriends(friends.friendList)
         } catch (error) {
           console.log(error)
@@ -153,10 +148,20 @@ class App extends React.Component {
           animationEnabled: false,
         },
       )
-      unsubscribe()
       var AppContainer = createAppContainer(RootStack)
       this.setState({ appContainer: <AppContainer /> })
     })
+  }
+
+  onNotification = (notification) => {
+    console.log('Notification received')
+    this.props.newNotif()
+    console.log(notification)
+    if (!notification.userInteraction) {
+      //construct using data
+      const config = JSON.parse(notification.data.config)
+      buildNotification(config)
+    }
   }
 
   render() {

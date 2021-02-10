@@ -30,6 +30,8 @@ const getNotifs = async () => {
             senderUsername: notif.account.username,
             senderPhoto: notif.account.photo,
             senderName: notif.account.name,
+            content: notif.content,
+            read: notif.read,
           }
         }),
       }
