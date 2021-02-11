@@ -4,12 +4,12 @@ import { connect } from 'react-redux'
 import {
   Dimensions,
   ImageBackground,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableHighlight,
   View,
 } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
 import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from '@react-native-community/blur'
@@ -18,10 +18,12 @@ import Swiper from 'react-native-swiper'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
 import accountsApi from '../apis/accountsApi.js'
+import notificationsApi from '../apis/notificationsApi.js'
 import colors from '../../styles/colors.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import NotifCard from '../cards/NotifCard.js'
+import socket from '../apis/socket.js'
 import TabBar from '../Nav.js'
 
 var img = ''
@@ -33,6 +35,7 @@ AsyncStorage.multiGet([NAME, PHOTO, USERNAME]).then((res) => {
   img = res[1][1]
   username = res[2][1]
 })
+const height = Dimensions.get('window').height
 
 class Notif extends Component {
   constructor(props) {
@@ -60,11 +63,31 @@ class Notif extends Component {
       errorAlert: false,
       deleteFriend: false,
     }
+
+    socket.getSocket().once('update', (res) => {
+      console.log("Update")
+      global.host = res.members[res.host].username
+      global.code = res.code
+      global.isHost = res.members[res.host].username === this.props.username.username
+      this.props.navigation.replace('Group', {
+        response: res,
+      })
+    })
   }
+
+
 
   componentDidMount() {
     this.getNotifs()
   }
+
+  // id: notif.id,
+  //           type: notif.type,
+  //           updatedAt: notif.updatedAt,
+  //           sender: notif.sender_uid,
+  //           senderUsername: notif.account.username,
+  //           senderPhoto: notif.account.photo,
+  //           senderName: notif.account.name,
 
   async getNotifs() {
     // Pushing notifs into this.state.notif
@@ -93,29 +116,45 @@ class Notif extends Component {
       },
     ]
 
-    console.log(notifList)
-    for (var notif in notifList) {
-      pushNotifs.push(notifList[notif])
-    }
-    this.setState({ notifs: pushNotifs })
+    notificationsApi
+      .getNotifs()
+      .then((res) => {
+        notifList = res.notifs
+        console.log(notifList)
+        for (var notif in notifList) {
+          pushNotifs.push(notifList[notif])
+        }
+        this.setState({ notifs: pushNotifs })
+
+      })
+      .catch(() => {
+        this.props.showError()
+      })
+
   }
 
   render() {
     var activityNotifs = []
     var requestNotifs = []
     var notifList = this.state.notifs
+    // var String1 = "hello"
+    // var String2 = "hello"
+    // var result = String1.localeCompare(String2)
+    // notifList.sort( (x,y) => x.updatedAt.localeCompare(y.updatedAt));
+    notifList.sort( (x,y) => new Date(x.updatedAt).valueOf() < new Date(y.updatedAt).valueOf() );
     // Create all friend/request cards
     if (Array.isArray(notifList) && notifList.length) {
       for (var i = 0; i < notifList.length; i++) {
-        if (notifList[i].type == 'requested') {
+        if (notifList[i].type == 'pending' || notifList[i].type == 'friends' || notifList[i].type == 'accepted'  ) {
           requestNotifs.push(
             <NotifCard
               total={this.state.notifs}
-              name={notifList[i].name}
-              username={notifList[i].username}
-              uid={notifList[i].uid}
-              image={notifList[i].image}
+              name={notifList[i].senderName}
+              username={notifList[i].senderUsername}
+              uid={notifList[i].sender}
+              image={notifList[i].senderPhoto}
               type={notifList[i].type}
+              content = {notifList[i].content}
               key={i}
               index={i}
               press={(uid, newArr, status) => this.removeRequest(uid, newArr, status)}
@@ -129,11 +168,12 @@ class Notif extends Component {
           activityNotifs.push(
             <NotifCard
               total={this.state.notifs}
-              name={notifList[i].name}
-              username={notifList[i].username}
-              uid={notifList[i].uid}
-              image={notifList[i].image}
+              name={notifList[i].senderName}
+              username={notifList[i].senderUsername}
+              uid={notifList[i].sender}
+              image={notifList[i].senderPhoto}
               type={notifList[i].type}
+              content = {notifList[i].content}
               key={i}
               index={i}
               press={(uid, newArr, status) => this.removeRequest(uid, newArr, status)}
@@ -152,7 +192,7 @@ class Notif extends Component {
         style={styles.container}
       >
         <View>
-          <Text style={[screenStyles.text, styles.NotifTitle]}>Notifications</Text>
+          <Text style={[screenStyles.icons, styles.NotifTitle]}>Notifications</Text>
 
           <View style={{ flexDirection: 'row' }}>
             <TouchableHighlight
@@ -200,19 +240,21 @@ class Notif extends Component {
             </TouchableHighlight>
           </View>
         </View>
-        <View style={{ height: '100%', marginTop: '5%' }}>
+        <View style={{ height: '70%', marginTop: '5%', }}>
           <Swiper
             ref="swiper"
             loop={false}
+            showsPagination={false}
             onIndexChanged={() => this.setState({ activity: !this.state.activity })}
           >
             {/* <Friends isFriends /> */}
             {/* <View /> */}
-            <ScrollView style={{ flexDirection: 'column' }}>{activityNotifs}</ScrollView>
-            <ScrollView style={{ flexDirection: 'column' }}>{requestNotifs}</ScrollView>
+            <ScrollView style={{ flexDirection: 'column' }} nestedScrollEnabled = {true}>{activityNotifs}</ScrollView>
+            <ScrollView style={{ flexDirection: 'column'}} nestedScrollEnabled = {true}>{requestNotifs}</ScrollView>
             {/* <Friends isFriends={false} /> */}
           </Swiper>
         </View>
+        {/* <View style={styles.bar}/> */}
 
         {(this.state.visible || this.state.errorAlert || this.state.deleteFriend) && (
           <BlurView
@@ -256,7 +298,9 @@ class Notif extends Component {
 
 const mapStateToProps = (state) => {
   const { notif } = state
-  return { notif }
+  const { error } = state
+  const { username } = state
+  return { notif, error, username }
 }
 //  access the state as this.props.notif
 //  if that's giving you errors, use this.props.notif.notif
@@ -285,14 +329,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   NotifTitle: {
-    fontSize: 30,
-    paddingTop: '5%',
-    paddingLeft: '5%',
-    paddingBottom: '5%',
-    alignSelf: 'center',
-    fontFamily: 'CircularStd-Bold',
-    marginBottom: '10%',
+
+    marginTop: '7%',
+    textAlign: 'center',
     color: 'white',
+    marginBottom: '15%',
   },
   avatar: {
     width: 100,
@@ -324,5 +365,16 @@ const styles = StyleSheet.create({
     width: '35%',
     marginRight: '5%',
     marginTop: '5%',
+  },
+  bar: {
+    marginBottom: '2%',
+    alignSelf: 'center',
+    height: height * 0.07,
+    borderRadius: 10,
+    borderWidth: 0,
+    position: 'absolute',
+    bottom: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
   },
 })
