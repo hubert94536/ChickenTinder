@@ -194,6 +194,7 @@ export default class Group extends React.Component {
         <View style={styles.header}>
           {/* <View style={styles.headerFill}> */}
           <ImageBackground
+            pointerEvents="box-none"
             source={require('../assets/backgrounds/Gradient.png')}
             style={styles.headerFill}
           >
@@ -362,6 +363,7 @@ export default class Group extends React.Component {
                       color: colors.hex,
                       fontFamily: font,
                       fontSize: normalize(11),
+                      elevation: 32,
                     }}
                   >
                     {global.isHost ? 'Pull down for host menu' : 'Pull down to set filters'}
@@ -479,9 +481,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // justifyContent: 'space-between',
     // backgroundColor: colors.hex,
-    height: windowHeight / 5.1,
+    overflow: 'hidden',
+    height: windowHeight / 6,
     width: '100%',
-    paddingBottom: 20,
   },
   groupTitle: {
     color: '#fff',

@@ -211,7 +211,8 @@ module.exports = (io) => {
     // updates room when someone joins
     socket.on('join', async (data) => {
       try {
-        if (data.code && !socket.user.room) {
+        console.log(socket.user.room)
+        if (data.code) {
           // check if the session exists
           let session = await sendCommand('JSON.GET', [data.code])
           session = JSON.parse(session)
