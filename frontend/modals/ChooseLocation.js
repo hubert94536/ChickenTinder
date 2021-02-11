@@ -116,8 +116,7 @@ export default class Location extends Component {
 
   // function called when main button is pressed w/ valid ZIP
   handlePress() {
-    console.log(this.state.city)
-    // if (this.state.zipValid) this.props.update(this.state.distance, this.state.location)
+    this.props.update(this.state.distance, this.state.location)
   }
 
   //  function called when 'x' is pressed
