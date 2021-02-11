@@ -193,9 +193,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(Home)
 
 Home.propTypes = {
   navigation: PropTypes.object,
-  // error: PropTypes.bool,
+  error: PropTypes.bool,
   // friends: PropTypes.object,
-  // username: PropTypes.object,
+  username: PropTypes.object,
   showError: PropTypes.func,
   hideError: PropTypes.func,
   changeFriends: PropTypes.func,
