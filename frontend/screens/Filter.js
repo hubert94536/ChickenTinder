@@ -133,6 +133,8 @@ class FilterSelector extends React.Component {
         },
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
       )
+    } else {
+      console.log('Filter.js: Failed to get location')
     }
   }
 
