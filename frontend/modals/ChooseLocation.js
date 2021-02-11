@@ -193,7 +193,7 @@ export default class Location extends Component {
               left: '7%',
               right: '7%',
               alignSelf: 'center',
-              height: '30%',
+              height: '25%',
               borderRadius: 7,
               backgroundColor: 'white',
 
@@ -262,7 +262,14 @@ export default class Location extends Component {
               }}
             />
             {/* Bottom - slider & info text */}
-            <View>
+            <View
+              style={{
+                flex: 0.25,
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
               <Slider
                 style={styles.sliderStyle}
                 minimumValue={5}
@@ -360,7 +367,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     fontSize: normalize(14),
     width: '85%',
-    height: '25%',
+    height: '30%',
   },
   locationText: {
     fontSize: normalize(14),
