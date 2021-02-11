@@ -32,7 +32,7 @@ export default class Round extends React.Component {
           break
         }
       }
-      this.props.navigation.replace('Match', {
+      this.props.navigation.replace('Home', {
         restaurant: res,
       })
     })
@@ -40,18 +40,18 @@ export default class Round extends React.Component {
       this.leaveGroup(true)
     })
   }
-
+  
   likeRestaurant(resId) {
     socket.likeRestaurant(resId)
   }
 
   leaveGroup(end) {
+    socket.getSocket().off()
     if (end) {
       socket.endLeave()
     } else {
       socket.leaveRound()
     }
-    socket.getSocket().off()
     global.code = ''
     global.host = ''
     global.isHost = false

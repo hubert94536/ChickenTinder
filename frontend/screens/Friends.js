@@ -48,7 +48,7 @@ class Friends extends React.Component {
   componentDidMount() {
     var pushFriends = []
     for (var friend in this.props.friends.friends) {
-      if (this.props.friends.friends[friend].status === "friends") {
+      if (this.props.friends.friends[friend].status === 'friends') {
         pushFriends.push(this.props.friends.friends[friend])
       }
     }
