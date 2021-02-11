@@ -13,6 +13,7 @@ import colors from '../../styles/colors.js'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
 import normalize from '../../styles/normalize.js'
+import socket from '../apis/socket.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
 export default class NotifCard extends React.Component {
@@ -55,7 +56,18 @@ export default class NotifCard extends React.Component {
     this.setState({ trash: true })
   }
 
-  handleClick() {}
+  handleClick() {
+
+    console.log("Pressed")
+    if(this.props.type == 'invite')
+    {
+      console.log(this.props.content)
+      socket.joinRoom(this.props.content)
+    }
+
+
+
+  }
 
   pressTrash() {
     this.setState({ trash: false })
@@ -63,7 +75,7 @@ export default class NotifCard extends React.Component {
 
   render() {
     return (
-      <TouchableWithoutFeedback onPress={() => this.handleHold()}>
+      <TouchableWithoutFeedback onPress={() => this.handleClick()}>
         <View style={styles.container}>
           <Image
             source={{ uri: Image.resolveAssetSource(this.props.image).uri }}
@@ -135,6 +147,7 @@ NotifCard.propTypes = {
   uid: PropTypes.string,
   total: PropTypes.array,
   type: PropTypes.string,
+  content: PropTypes.string,
   username: PropTypes.string,
   press: PropTypes.func,
   name: PropTypes.string,
@@ -219,7 +232,8 @@ const styles = StyleSheet.create({
      marginHorizontal: '3%'
      },
   request: {
-    flexDirection: 'row', justifyContent: 'flex-end', borderColor: 'black', borderWidth: 2
+    flexDirection: 'row', justifyContent: 'flex-end', 
+    // borderColor: 'black', borderWidth: 2
   }
 
 })
