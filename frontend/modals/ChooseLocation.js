@@ -19,7 +19,9 @@ import Slider from '@react-native-community/slider'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { ZIP_ID, ZIP_TOKEN } from 'react-native-dotenv'
 
-const height = Dimensions.get('window').height
+const fullWidth = Dimensions.get('window').width
+const fullHeight = Dimensions.get('window').height
+const ratio = fullHeight / fullWidth
 
 const SmartyStreetsSDK = require('smartystreets-javascript-sdk')
 const SmartyStreetsCore = SmartyStreetsSDK.core
@@ -100,47 +102,12 @@ export default class Location extends Component {
   render() {
     return (
       <Modal transparent animationType="none" visible={this.props.visible} style={styles.main}>
-        {/* <View style={[modalStyles.modal, styles.modalHeight]}>
-          <View style={styles.icon}>
-            <AntDesign
-              name="closecircleo"
-              style={modalStyles.icon}
-              onPress={() => this.handleCancel()}
-            />
-          </View>
-          <View style={styles.modalStyle}>
-            <Text style={[styles.title, screenStyles.textBook, screenStyles.hex]}>
-              Choose a starting location
-            </Text>
-            <TextInput
-              style={[screenStyles.input, screenStyles.textBook, styles.input]}
-              keyboardType="number-pad"
-              placeholderTextColor="#9F9F9F"
-              placeholder="Enter your zip code"
-              onSubmitEditing={({ nativeEvent }) => {
-                this.setState({ zip: nativeEvent.text }, () => this.validateZip())
-              }}
-            />
-            {this.state.zipValid && <Text style={{ textAlign: 'center' }}> </Text>}
-            {!this.state.zipValid && (
-              <View style={styles.error}>
-                <AntDesign name="exclamationcircle" style={styles.errorIcon} />
-                <Text style={[screenStyles.textBook, styles.errorText]}>Invalid zip code</Text>
-              </View>
-            )}
-          </View>
-          <Text style={styles.distanceText}>({this.state.distance} miles)</Text>
-        </View> */}
         <View style={styles.mapContainer}>
           <MapView
             ref={this.mapView}
             provider={PROVIDER_GOOGLE}
             style={styles.map}
             customMapStyle={mapStyle}
-            showsScale={true}
-            showsCompass={true}
-            showsBuildings={true}
-            showsMyLocationButton={true}
             initialRegion={{
               latitude: this.state.location.latitude,
               longitude: this.state.location.longitude,
@@ -162,14 +129,20 @@ export default class Location extends Component {
               strokeWidth={0}
             />
           </MapView>
-          <Slider
+          <View
             style={{
-              width: '85%',
-              height: 30,
-              alignSelf: 'center',
               position: 'absolute',
-              bottom: height * 0.1,
+              top: '5%',
+              left: '7%',
+              right: '7%',
+              alignSelf: 'center',
+              height: '20%',
+              borderRadius: 7,
+              backgroundColor: 'green',
             }}
+          ></View>
+          <Slider
+            style={styles.sliderStyle}
             minimumValue={5}
             maximumValue={25}
             value={5}
@@ -205,50 +178,21 @@ export default class Location extends Component {
 
 const styles = StyleSheet.create({
   main: {
+    // technically uneeded
     alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-    width: '100%',
   },
-  title: {
-    fontSize: normalize(20),
-    marginLeft: '7.5%',
-  },
-  input: {
-    color: 'black',
-    fontSize: normalize(18),
-    backgroundColor: '#E0E0E0',
-    width: '85%',
+  mapContainer: {
     alignSelf: 'center',
-    borderRadius: 5,
-    padding: '1%',
+    borderRadius: 14,
+    overflow: 'hidden',
+    marginTop: fullHeight * 0.15,
+    marginBottom: fullHeight * 0.15,
+    height: fullHeight * 0.7,
+    width: fullWidth * 0.8,
   },
-  modalHeight: {
-    height: height * 0.8,
-    margin: '20%',
-  },
-  icon: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  modalStyle: {
-    flexDirection: 'column',
-    flex: 1,
-    justifyContent: 'space-evenly',
-  },
-  error: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: '8%',
-  },
-  errorIcon: {
-    color: 'red',
-    marginRight: '2%',
-    fontSize: normalize(15),
-  },
-  errorText: {
-    textAlign: 'center',
-    color: 'red',
+  map: {
+    height: fullHeight * 0.7,
+    width: fullWidth * 0.8,
   },
   buttonColor: {
     backgroundColor: screenStyles.hex.color,
@@ -256,23 +200,12 @@ const styles = StyleSheet.create({
   white: {
     color: 'white',
   },
-  mapContainer: {
-    position: 'relative',
-    borderRadius: 14,
-    overflow: 'hidden', //hides map overflow
+  sliderStyle: {
+    width: '85%',
+    height: 30,
     alignSelf: 'center',
-    justifyContent: 'center',
-    height: Dimensions.get('window').height * 0.5,
-    width: Dimensions.get('window').width * 0.8,
-  },
-  map: {
-    borderBottomLeftRadius: 14,
-    borderBottomRightRadius: 14,
-    overflow: 'hidden', //hides map overflow
-    alignSelf: 'center',
-    justifyContent: 'flex-end',
-    height: Dimensions.get('window').height * 0.5,
-    width: Dimensions.get('window').width * 0.8,
+    position: 'absolute',
+    bottom: fullHeight * 0.1,
   },
   distanceText: {
     color: '#747474',
