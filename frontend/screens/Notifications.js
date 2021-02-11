@@ -4,12 +4,12 @@ import { connect } from 'react-redux'
 import {
   Dimensions,
   ImageBackground,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableHighlight,
   View,
 } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
 import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from '@react-native-community/blur'
@@ -171,7 +171,7 @@ class Notif extends Component {
         style={styles.container}
       >
         <View>
-          <Text style={[screenStyles.text, styles.NotifTitle]}>Notifications</Text>
+          <Text style={[screenStyles.icons, styles.NotifTitle]}>Notifications</Text>
 
           <View style={{ flexDirection: 'row' }}>
             <TouchableHighlight
@@ -227,8 +227,8 @@ class Notif extends Component {
           >
             {/* <Friends isFriends /> */}
             {/* <View /> */}
-            <ScrollView style={{ flexDirection: 'column' }}>{activityNotifs}</ScrollView>
-            <ScrollView style={{ flexDirection: 'column' }}>{requestNotifs}</ScrollView>
+            <ScrollView style={{ flexDirection: 'column' }} nestedScrollEnabled = {true}>{activityNotifs}</ScrollView>
+            <ScrollView style={{ flexDirection: 'column' }} nestedScrollEnabled = {true}>{requestNotifs}</ScrollView>
             {/* <Friends isFriends={false} /> */}
           </Swiper>
         </View>
@@ -304,14 +304,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   NotifTitle: {
-    fontSize: 30,
-    paddingTop: '5%',
-    paddingLeft: '5%',
-    paddingBottom: '5%',
-    alignSelf: 'center',
-    fontFamily: 'CircularStd-Bold',
-    marginBottom: '10%',
+
+    marginTop: '7%',
+    textAlign: 'center',
     color: 'white',
+    marginBottom: '15%',
   },
   avatar: {
     width: 100,
