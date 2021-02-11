@@ -65,8 +65,6 @@ export default class NotifCard extends React.Component {
       socket.joinRoom(this.props.content)
     }
 
-
-
   }
 
   pressTrash() {

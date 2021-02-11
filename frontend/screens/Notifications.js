@@ -35,6 +35,7 @@ AsyncStorage.multiGet([NAME, PHOTO, USERNAME]).then((res) => {
   img = res[1][1]
   username = res[2][1]
 })
+const height = Dimensions.get('window').height
 
 class Notif extends Component {
   constructor(props) {
@@ -140,7 +141,7 @@ class Notif extends Component {
     // var String2 = "hello"
     // var result = String1.localeCompare(String2)
     // notifList.sort( (x,y) => x.updatedAt.localeCompare(y.updatedAt));
-    notifList.sort( (x,y) => new Date(x.updatedAt).valueOf() <  new Date(y.updatedAt).valueOf() );
+    notifList.sort( (x,y) => new Date(x.updatedAt).valueOf() < new Date(y.updatedAt).valueOf() );
     // Create all friend/request cards
     if (Array.isArray(notifList) && notifList.length) {
       for (var i = 0; i < notifList.length; i++) {
@@ -239,10 +240,11 @@ class Notif extends Component {
             </TouchableHighlight>
           </View>
         </View>
-        <View style={{ height: '100%',marginTop: '5%', }}>
+        <View style={{ height: '70%', marginTop: '5%', }}>
           <Swiper
             ref="swiper"
             loop={false}
+            showsPagination={false}
             onIndexChanged={() => this.setState({ activity: !this.state.activity })}
           >
             {/* <Friends isFriends /> */}
@@ -252,6 +254,7 @@ class Notif extends Component {
             {/* <Friends isFriends={false} /> */}
           </Swiper>
         </View>
+        {/* <View style={styles.bar}/> */}
 
         {(this.state.visible || this.state.errorAlert || this.state.deleteFriend) && (
           <BlurView
@@ -295,7 +298,9 @@ class Notif extends Component {
 
 const mapStateToProps = (state) => {
   const { notif } = state
-  return { notif }
+  const { error } = state
+  const { username } = state
+  return { notif, error, username }
 }
 //  access the state as this.props.notif
 //  if that's giving you errors, use this.props.notif.notif
@@ -360,5 +365,16 @@ const styles = StyleSheet.create({
     width: '35%',
     marginRight: '5%',
     marginTop: '5%',
+  },
+  bar: {
+    marginBottom: '2%',
+    alignSelf: 'center',
+    height: height * 0.07,
+    borderRadius: 10,
+    borderWidth: 0,
+    position: 'absolute',
+    bottom: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
   },
 })
