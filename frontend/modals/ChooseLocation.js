@@ -14,6 +14,7 @@ import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import colors from '../../styles/colors.js'
+import mapStyle from '../../styles/mapStyle.json'
 import Slider from '@react-native-community/slider'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { ZIP_ID, ZIP_TOKEN } from 'react-native-dotenv'
@@ -98,130 +99,117 @@ export default class Location extends Component {
 
   render() {
     return (
-      <View>
-        <Text />
-        <Modal transparent animationType="none" visible={this.props.visible}>
-          <View style={[modalStyles.modal, styles.modalHeight]}>
-            <View style={styles.icon}>
-              <AntDesign
-                name="closecircleo"
-                style={modalStyles.icon}
-                onPress={() => this.handleCancel()}
-              />
-            </View>
-            <View style={styles.modalStyle}>
-              <Text style={[styles.title, screenStyles.textBook, screenStyles.hex]}>
-                Choose a starting location
-              </Text>
-              <TextInput
-                style={[screenStyles.input, screenStyles.textBook, styles.input]}
-                keyboardType="number-pad"
-                placeholderTextColor="#9F9F9F"
-                placeholder="Enter your zip code"
-                onSubmitEditing={({ nativeEvent }) => {
-                  this.setState({ zip: nativeEvent.text }, () => this.validateZip())
-                }}
-              />
-              {this.state.zipValid && <Text style={{ textAlign: 'center' }}> </Text>}
-              {!this.state.zipValid && (
-                <View style={styles.error}>
-                  <AntDesign name="exclamationcircle" style={styles.errorIcon} />
-                  <Text style={[screenStyles.textBook, styles.errorText]}>Invalid zip code</Text>
-                </View>
-              )}
-            </View>
-            <Text style={styles.distanceText}>({this.state.distance} miles)</Text>
-            <Slider
-              style={{
-                width: '85%',
-                height: 30,
-                alignSelf: 'center',
-              }}
-              minimumValue={5}
-              maximumValue={25}
-              value={5}
-              step={0.25}
-              minimumTrackTintColor={colors.hex}
-              maximumTrackTintColor={colors.hex}
-              thumbTintColor={colors.hex}
-              onValueChange={(value) => {
-                this.setState({ distance: value })
-                let newRegion = {
-                  latitude: this.state.location.latitude,
-                  longitude: this.state.location.longitude,
-                  latitudeDelta: value / 40 + 0.2,
-                  longitudeDelta: value / 40 + 0.2,
-                }
-                this.mapView.current.animateToRegion(newRegion, 100)
-              }}
+      <Modal transparent animationType="none" visible={this.props.visible} style={styles.main}>
+        {/* <View style={[modalStyles.modal, styles.modalHeight]}>
+          <View style={styles.icon}>
+            <AntDesign
+              name="closecircleo"
+              style={modalStyles.icon}
+              onPress={() => this.handleCancel()}
             />
           </View>
-          <View style={styles.mapContainer}>
-            <MapView
-              ref={this.mapView}
-              provider={PROVIDER_GOOGLE}
-              style={styles.map}
-              showsScale={true}
-              showsCompass={true}
-              showsBuildings={true}
-              showsMyLocationButton={true}
-              initialRegion={{
+          <View style={styles.modalStyle}>
+            <Text style={[styles.title, screenStyles.textBook, screenStyles.hex]}>
+              Choose a starting location
+            </Text>
+            <TextInput
+              style={[screenStyles.input, screenStyles.textBook, styles.input]}
+              keyboardType="number-pad"
+              placeholderTextColor="#9F9F9F"
+              placeholder="Enter your zip code"
+              onSubmitEditing={({ nativeEvent }) => {
+                this.setState({ zip: nativeEvent.text }, () => this.validateZip())
+              }}
+            />
+            {this.state.zipValid && <Text style={{ textAlign: 'center' }}> </Text>}
+            {!this.state.zipValid && (
+              <View style={styles.error}>
+                <AntDesign name="exclamationcircle" style={styles.errorIcon} />
+                <Text style={[screenStyles.textBook, styles.errorText]}>Invalid zip code</Text>
+              </View>
+            )}
+          </View>
+          <Text style={styles.distanceText}>({this.state.distance} miles)</Text>
+        </View> */}
+        <View style={styles.mapContainer}>
+          <MapView
+            ref={this.mapView}
+            provider={PROVIDER_GOOGLE}
+            style={styles.map}
+            customMapStyle={mapStyle}
+            showsScale={true}
+            showsCompass={true}
+            showsBuildings={true}
+            showsMyLocationButton={true}
+            initialRegion={{
+              latitude: this.state.location.latitude,
+              longitude: this.state.location.longitude,
+              latitudeDelta: this.state.distance / 60 + 0.3,
+              longitudeDelta: this.state.distance / 60 + 0.3,
+            }}
+          >
+            <Circle
+              ref={this.circle}
+              center={this.state.location}
+              radius={this.state.distance * 1609.34}
+              fillColor={'rgba(0, 0, 0, 0.1)'}
+              strokeWidth={0}
+            />
+            <Circle
+              center={this.state.location}
+              radius={1000}
+              fillColor={'rgba(0, 0, 0, 0.2)'}
+              strokeWidth={0}
+            />
+          </MapView>
+          <Slider
+            style={{
+              width: '85%',
+              height: 30,
+              alignSelf: 'center',
+              position: 'absolute',
+              bottom: height * 0.1,
+            }}
+            minimumValue={5}
+            maximumValue={25}
+            value={5}
+            step={0.25}
+            minimumTrackTintColor={colors.hex}
+            maximumTrackTintColor={colors.hex}
+            thumbTintColor={colors.hex}
+            onValueChange={(value) => {
+              this.setState({ distance: value })
+              let newRegion = {
                 latitude: this.state.location.latitude,
                 longitude: this.state.location.longitude,
-                latitudeDelta: this.state.distance / 60 + 0.3,
-                longitudeDelta: this.state.distance / 60 + 0.3,
-              }}
-              // onMarkerDragEnd={(res) => {
-              //   this.setState({ location: res.coordinate })
-              // }}
-            >
-              {/* <Marker coordinate={this.state.location} /> */}
-              <Circle
-                ref={this.circle}
-                center={this.state.location}
-                radius={this.state.distance * 1609.34}
-                fillColor={'rgba(241, 87, 99, 0.7)'}
-              />
-            </MapView>
-            <TouchableHighlight
-              underlayColor="white"
-              onHideUnderlay={() => this.setState({ buttonPressed: false })}
-              onShowUnderlay={() => this.setState({ buttonPressed: true })}
-              onPress={() => this.handlePress()}
-              style={[modalStyles.button, styles.buttonColor, styles.doneButton]}
-            >
-              <Text
-                style={[
-                  modalStyles.text,
-                  this.state.buttonPressed ? screenStyles.hex : styles.white,
-                ]}
-              >
-                {/* <Marker coordinate={this.state.location} /> */}
-                <Circle
-                  ref={this.circle}
-                  center={this.state.location}
-                  radius={this.state.distance * 1609.34}
-                  fillColor={'rgba(241, 87, 99, 0.7)'}
-                />
-              </MapView>
-              <TouchableHighlight
-                underlayColor="white"
-                onHideUnderlay={() => this.setState({ buttonPressed: false })}
-                onShowUnderlay={() => this.setState({ buttonPressed: true })}
-                onPress={() => this.handlePress()}
-                style={[modalStyles.button, styles.buttonColor, styles.doneButton]}
-              >
-                <Text style={[modalStyles.text, styles.white]}>Done</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
-      </View>
+                latitudeDelta: value / 40 + 0.2,
+                longitudeDelta: value / 40 + 0.2,
+              }
+              this.mapView.current.animateToRegion(newRegion, 100)
+            }}
+          />
+          <TouchableHighlight
+            underlayColor="white"
+            onHideUnderlay={() => this.setState({ buttonPressed: false })}
+            onShowUnderlay={() => this.setState({ buttonPressed: true })}
+            onPress={() => this.handlePress()}
+            style={[modalStyles.button, styles.buttonColor, styles.doneButton]}
+          >
+            <Text style={[modalStyles.text, styles.white]}>Done</Text>
+          </TouchableHighlight>
+        </View>
+      </Modal>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  main: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    width: '100%',
+  },
   title: {
     fontSize: normalize(20),
     marginLeft: '7.5%',
@@ -269,11 +257,11 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   mapContainer: {
-    borderBottomLeftRadius: 14,
-    borderBottomRightRadius: 14,
+    position: 'relative',
+    borderRadius: 14,
     overflow: 'hidden', //hides map overflow
     alignSelf: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     height: Dimensions.get('window').height * 0.5,
     width: Dimensions.get('window').width * 0.8,
   },
