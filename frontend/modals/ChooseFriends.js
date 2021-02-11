@@ -1,6 +1,6 @@
 import React from 'react'
 import { bindActionCreators } from 'redux'
-import { changeFriends } from '../redux/Actions.js'
+import { changeFriends, setCode } from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import { Dimensions, FlatList, Modal, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { SearchBar } from 'react-native-elements'
@@ -48,7 +48,7 @@ class ChooseFriends extends React.Component {
 
   // copies the room code
   copyToClipboard() {
-    Clipboard.setString(this.props.code.toString())
+    Clipboard.setString(this.props.code.code.toString())
   }
 
   //  closes the choose friends modal in filters
@@ -88,7 +88,7 @@ class ChooseFriends extends React.Component {
               <Text style={[screenStyles.text, styles.subHeaderText, styles.subHeaderMarginL]}>
                 Group PIN:
               </Text>
-              <Text style={[screenStyles.textBold, styles.subHeaderText]}>{this.props.code}</Text>
+              <Text style={[screenStyles.textBold, styles.subHeaderText]}>{this.props.code.code}</Text>
               <TouchableOpacity onPress={() => this.copyToClipboard()}>
                 <Ionicons name="copy-outline" style={styles.icon2} />
               </TouchableOpacity>
@@ -130,13 +130,15 @@ class ChooseFriends extends React.Component {
 
 const mapStateToProps = (state) => {
   const { friends } = state
-  return { friends }
+  const { code } = state
+  return { friends, code }
 }
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       changeFriends,
+      setCode
     },
     dispatch,
   )
@@ -147,7 +149,6 @@ ChooseFriends.propTypes = {
   members: PropTypes.array,
   press: PropTypes.func,
   visible: PropTypes.bool,
-  code: PropTypes.number,
   // username: PropTypes.string,
   // friends: PropTypes.object,
   showError: PropTypes.func,

@@ -6,6 +6,7 @@ const INITIAL_STATE = {
   refresh: false,
   friends: [],
   notif: false,
+  code: 0
 }
 
 export const errorReducer = (state = INITIAL_STATE.error, action) => {
@@ -84,6 +85,18 @@ export const notifReducer = (state = INITIAL_STATE.notif, action) => {
       return true
     case 'NO_NOTIF':
       return false
+    default:
+      return state
+  }
+}
+
+export const codeReducer = (state = INITIAL_STATE.code, action) => {
+  switch (action.type) {
+    case 'SET_CODE':
+      return {
+        ...state,
+        code: action.payload,
+      }
     default:
       return state
   }

@@ -2,7 +2,7 @@
 import React from 'react'
 import { bindActionCreators } from 'redux'
 import { BlurView } from '@react-native-community/blur'
-import { changeFriends, hideError, showError } from '../redux/Actions.js'
+import { changeFriends, hideError, showError, setCode } from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import {
   Dimensions,
@@ -48,13 +48,12 @@ class Home extends React.Component {
     socket.getSocket().once('update', (res) => {
       this.setState({ invite: false })
       global.host = res.members[res.host].username
-      global.code = res.code
+      this.props.setCode(res.code)
       global.isHost = res.members[res.host].username === this.props.username.username
       this.props.navigation.replace('Group', {
         response: res,
       })
     })
-
     // //uncomment if testing friends/requests
     // accountsApi.createFBUserTest('Hubes2', 32, 'hbc', 'hhcc@gmail.com', '50', '35434354')
     // accountsApi.createFBUserTest('Hanna2', 33, 'hannaaa', 'hannco@gmail.com', '51', '17891234')
@@ -176,7 +175,8 @@ const mapStateToProps = (state) => {
   const { friends } = state
   const { error } = state
   const { username } = state
-  return { friends, error, username }
+  const { code } = state
+  return { friends, error, username, code }
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -185,6 +185,7 @@ const mapDispatchToProps = (dispatch) =>
       changeFriends,
       showError,
       hideError,
+      setCode
     },
     dispatch,
   )

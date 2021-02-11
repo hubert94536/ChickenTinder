@@ -1,4 +1,6 @@
 import React from 'react'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 import { Dimensions, Linking, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -8,10 +10,11 @@ import global from '../../global.js'
 import screenStyles from '../../styles/screenStyles.js'
 import MatchCard from '../cards/MatchCard.js'
 import normalize from '../../styles/normalize.js'
+import { setCode } from '../redux/Actions.js'
 import socket from '../apis/socket.js'
 
 // the card for the restaurant match
-export default class Match extends React.Component {
+class Match extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -26,7 +29,7 @@ export default class Match extends React.Component {
     } else {
       socket.endLeave()
     }
-    global.code = ''
+    this.props.setCode(0)
     global.host = ''
     global.isHost = false
     global.restaurants = []
@@ -89,6 +92,21 @@ export default class Match extends React.Component {
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  const { code } = state
+  return { code }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      setCode
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(Match)
 
 Match.propTypes = {
   //navig should contain navigate fx + state, which contains params which contains the necessary restaurant arr
