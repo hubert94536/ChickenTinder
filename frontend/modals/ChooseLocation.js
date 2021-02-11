@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
     width: fullWidth * 0.8,
   },
   map: {
-    height: fullHeight * 0.78,
+    height: fullHeight * 0.98,
     width: fullWidth * 0.8,
   },
   buttonColor: {
