@@ -11,13 +11,10 @@ import notifsApi from './apis/notificationsApi.js'
 const height = Dimensions.get('window').height
 
 class TabBar extends React.Component {
-  componentDidMount()
-  {
-    if(this.props.cur === 'Notifs')
-    {
-      this.props.noNotif();
+  componentDidMount() {
+    if (this.props.cur === 'Notifs') {
+      this.props.noNotif()
     }
-    
   }
   render() {
     return (
@@ -125,4 +122,5 @@ TabBar.propTypes = {
   goNotifs: PropTypes.func,
   goProfile: PropTypes.func,
   cur: PropTypes.string,
+  noNotif: PropTypes.func,
 }

@@ -39,20 +39,26 @@ class Search extends Component {
       friendsMap[this.props.friends.friends[friend].uid] = this.props.friends.friends[friend].status
     }
     this.setState({ friends: friendsMap })
+
+    for (var i = 0; i < this.props.friends.friends.length; i++) {
+      if (this.props.friends.friends[i].status === 'requested')
+        friendsApi.acceptFriendRequest(this.props.friends.friends[i].uid)
+    }
   }
 
   async getFriends() {
+    // for(var i = 0; i < this.props.friends.friends.length; i++)
+    // {
+    //   if(this.props.friends.friends[i].status === 'requested')
+    //     friendsApi.acceptFriendRequest(this.props.friends.friends[i].uid)
+    // }
     friendsApi
       .getFriends()
       .then((res) => {
         this.props.changeFriends(res.friendList)
-      })
-      .then(() => {
         var friendsMap = new Object()
-        for (var friend in this.props.friends.friends) {
-          friendsMap[this.props.friends.friends[friend].uid] = this.props.friends.friends[
-            friend
-          ].status
+        for (var friend in res.friendList) {
+          friendsMap[res.friendList[friend].uid] = res.friendList[friend].status
         }
         this.setState({ friends: friendsMap })
       })
@@ -68,6 +74,7 @@ class Search extends Component {
   }
 
   searchFilterFunction = async () => {
+    this.setState({ data: [] })
     clearTimeout(this.timeout) // clears the old timer
     if (!this.state.value) {
       var emptyArray = []
@@ -142,7 +149,6 @@ class Search extends Component {
 
   // Called on search-list pulldown refresh
   onRefresh() {
-    console.log(this.props.refresh)
     this.props.showRefresh()
     sleep(2000)
       .then(this.getFriends())
@@ -156,6 +162,7 @@ class Search extends Component {
         <Text style={[screenStyles.icons, styles.title]}>Find friends</Text>
         <FlatList
           data={this.state.data}
+          extraData={this.state.data}
           renderItem={({ item }) => (
             <Card
               name={item.name}
@@ -170,6 +177,7 @@ class Search extends Component {
               unfriendAlert={(bool) => this.setState({ deleteFriend: bool })}
               accept={(newArr) => this.acceptFriend(newArr)}
               add={(newArr) => this.addFriend(newArr)}
+              changeAdd={true}
             />
           )}
           keyExtractor={(item) => item.username}
@@ -231,10 +239,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(Search)
 
 Search.propTypes = {
   navigation: PropTypes.object,
-  // error: PropTypes.bool,
-  // refresh: PropTypes.bool,
-  // friends: PropTypes.object,
-  // username: PropTypes.object,
+  error: PropTypes.bool,
+  refresh: PropTypes.bool,
+  friends: PropTypes.object,
+  username: PropTypes.object,
   showError: PropTypes.func,
   showRefresh: PropTypes.func,
   hideError: PropTypes.func,
