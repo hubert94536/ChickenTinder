@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: '-10%'
+    marginBottom: '-10%',
   },
   text: {
     fontSize: normalize(20),

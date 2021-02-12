@@ -39,13 +39,14 @@ class Friends extends React.Component {
       .getFriends()
       .then((res) => {
         this.props.changeFriends(res.friendList)
+        this.editFriends()
       })
       .catch(() => {
         this.props.showError()
       })
   }
 
-  componentDidMount() {
+  editFriends() {
     var pushFriends = []
     for (var friend in this.props.friends.friends) {
       if (this.props.friends.friends[friend].status === 'friends') {
@@ -56,10 +57,18 @@ class Friends extends React.Component {
     this.setState({
       friends: pushFriends,
       data: pushFriends,
-      refreshing: false,
       friendsApiCalled: true,
     })
     this.props.onFriendsChange(pushFriends.length)
+  }
+
+  componentDidMount() {
+    this.editFriends()
+    // for(var i = 0; i < this.props.friends.friends.length; i++)
+    // {
+    //   if(this.props.friends.friends[i].status === 'requested')
+    //     friendsApi.acceptFriendRequest(this.props.friends.friends[i].uid)
+    // }
   }
 
   //  searches the users friends by username
@@ -75,16 +84,10 @@ class Friends extends React.Component {
     this.setState({ friends: newData })
   }
 
-  async removeRequest(friend, newArr) {
-    friendsApi
-      .removeFriendship(friend)
-      .then(() => {
-        this.props.changeFriends(newArr)
-        this.setState({ friends: newArr, data: newArr })
-      })
-      .catch(() => {
-        this.props.showError()
-      })
+  async removeRequest(newArr) {
+    this.props.changeFriends(newArr)
+    this.setState({ friends: newArr, data: newArr })
+    console.log(newArr)
   }
 
   // Called on friends-list pulldown refresh
@@ -112,8 +115,9 @@ class Friends extends React.Component {
             status={status}
             key={i}
             index={i}
-            press={(uid, newArr) => this.removeRequest(uid, newArr)}
+            press={(newArr) => this.removeRequest(newArr)}
             unfriendAlert={this.props.unfriendAlert}
+            changeAdd={false}
           />,
         )
       }
@@ -197,14 +201,15 @@ export default connect(mapStateToProps, mapDispatchToProps)(Friends)
 Friends.propTypes = {
   isFriends: PropTypes.bool,
   onFriendsChange: PropTypes.func,
-  // error: PropTypes.bool,
-  // friends: PropTypes.object,
-  // refresh: PropTypes.bool,
+  error: PropTypes.bool,
+  friends: PropTypes.object,
+  refresh: PropTypes.bool,
   showError: PropTypes.func,
   hideError: PropTypes.func,
   showRefresh: PropTypes.func,
   hideRefresh: PropTypes.func,
   changeFriends: PropTypes.func,
+  unfriendAlert: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

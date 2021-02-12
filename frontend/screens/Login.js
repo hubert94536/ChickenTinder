@@ -2,7 +2,14 @@ import React from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { changeImage, changeName, changeUsername, changeFriends, hideError, showError } from '../redux/Actions.js'
+import {
+  changeImage,
+  changeName,
+  changeUsername,
+  changeFriends,
+  hideError,
+  showError,
+} from '../redux/Actions.js'
 import { Image, ImageBackground, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import Alert from '../modals/Alert.js'
 import { BlurView } from '@react-native-community/blur'
@@ -26,7 +33,7 @@ class Login extends React.Component {
     }
   }
 
-  async setInfo(){
+  async setInfo() {
     AsyncStorage.multiGet([USERNAME, NAME, PHOTO, EMAIL, PHONE]).then((res) => {
       this.props.changeUsername(res[0][1])
       this.props.changeName(res[1][1])
@@ -36,7 +43,7 @@ class Login extends React.Component {
     })
   }
 
-  async setFriends(){
+  async setFriends() {
     friendsApi
       .getFriends()
       .then((res) => {
@@ -160,7 +167,7 @@ const mapStateToProps = (state) => {
   const { username } = state
   const { image } = state
   const { friends } = state
-  return { error , name, username, image, friends}
+  return { error, name, username, image, friends }
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -183,9 +190,13 @@ Login.propTypes = {
     navigate: PropTypes.func.isRequired,
     replace: PropTypes.func,
   }).isRequired,
-  // error: PropTypes.bool,
+  error: PropTypes.bool,
   showError: PropTypes.func,
   hideError: PropTypes.func,
+  changeName: PropTypes.func,
+  changeUsername: PropTypes.func,
+  changeImage: PropTypes.func,
+  changeFriends: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

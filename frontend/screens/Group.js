@@ -459,7 +459,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      setCode
+      setCode,
     },
     dispatch,
   )
@@ -469,6 +469,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(Group)
 Group.propTypes = {
   navigation: PropTypes.object,
   members: PropTypes.array,
+  code: PropTypes.object,
+  setCode: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

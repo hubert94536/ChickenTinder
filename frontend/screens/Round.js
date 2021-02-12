@@ -43,7 +43,7 @@ class Round extends React.Component {
       this.leaveGroup(true)
     })
   }
-  
+
   likeRestaurant(resId) {
     socket.likeRestaurant(resId)
   }
@@ -183,7 +183,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      setCode
+      setCode,
     },
     dispatch,
   )
@@ -192,6 +192,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(Round)
 
 Round.propTypes = {
   navigation: PropTypes.object,
+  setCode: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

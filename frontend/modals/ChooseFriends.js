@@ -35,10 +35,10 @@ class ChooseFriends extends React.Component {
             (member) => member.username === this.props.friends.friends[friend].username,
           )
         ) {
-          this.props.friends.friends[friend].added = true
+          this.props.friends.friends[friend].added = 'in group'
           pushFriends.push(this.props.friends.friends[friend])
         } else {
-          this.props.friends.friends[friend].added = false
+          this.props.friends.friends[friend].added = 'not added'
           pushFriends.push(this.props.friends.friends[friend])
         }
       }
@@ -58,6 +58,11 @@ class ChooseFriends extends React.Component {
 
   sendInvite(uid) {
     socket.sendInvite(uid)
+    var newArr = this.state.data.filter((item) => {
+      if (item.uid === uid) item.status = 'in group'
+      return item
+    })
+    this.setState({ data: newArr })
   }
 
   //  function for searching your friends
@@ -88,7 +93,9 @@ class ChooseFriends extends React.Component {
               <Text style={[screenStyles.text, styles.subHeaderText, styles.subHeaderMarginL]}>
                 Group PIN:
               </Text>
-              <Text style={[screenStyles.textBold, styles.subHeaderText]}>{this.props.code.code}</Text>
+              <Text style={[screenStyles.textBold, styles.subHeaderText]}>
+                {this.props.code.code}
+              </Text>
               <TouchableOpacity onPress={() => this.copyToClipboard()}>
                 <Ionicons name="copy-outline" style={styles.icon2} />
               </TouchableOpacity>
@@ -112,8 +119,8 @@ class ChooseFriends extends React.Component {
                   image={item.photo}
                   uid={item.uid}
                   username={item.username}
-                  total={this.props.friends}
-                  status="not added"
+                  total={this.state.data}
+                  status={item.added}
                   key={item.uid}
                   press={() => this.sendInvite(item.uid)}
                 />
@@ -138,7 +145,7 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       changeFriends,
-      setCode
+      setCode,
     },
     dispatch,
   )
@@ -149,11 +156,12 @@ ChooseFriends.propTypes = {
   members: PropTypes.array,
   press: PropTypes.func,
   visible: PropTypes.bool,
-  // username: PropTypes.string,
-  // friends: PropTypes.object,
+  username: PropTypes.object,
+  friends: PropTypes.object,
   showError: PropTypes.func,
   hideError: PropTypes.func,
   changeFriends: PropTypes.func,
+  code: PropTypes.object,
 }
 
 const styles = StyleSheet.create({

@@ -101,7 +101,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      setCode
+      setCode,
     },
     dispatch,
   )
@@ -119,6 +119,7 @@ Match.propTypes = {
       }),
     }),
   }),
+  setCode: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

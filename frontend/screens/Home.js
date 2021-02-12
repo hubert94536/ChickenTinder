@@ -125,7 +125,7 @@ class Home extends React.Component {
             </TouchableHighlight>
           </View>
           <TabBar
-            goHome={() => { }}
+            goHome={() => {}}
             goSearch={() => {
               socket.getSocket().off()
               this.props.navigation.replace('Search')
@@ -185,7 +185,7 @@ const mapDispatchToProps = (dispatch) =>
       changeFriends,
       showError,
       hideError,
-      setCode
+      setCode,
     },
     dispatch,
   )
@@ -195,11 +195,12 @@ export default connect(mapStateToProps, mapDispatchToProps)(Home)
 Home.propTypes = {
   navigation: PropTypes.object,
   error: PropTypes.bool,
-  // friends: PropTypes.object,
+  friends: PropTypes.object,
   username: PropTypes.object,
   showError: PropTypes.func,
   hideError: PropTypes.func,
   changeFriends: PropTypes.func,
+  setCode: PropTypes.func,
 }
 const styles = StyleSheet.create({
   main: {
