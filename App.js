@@ -82,7 +82,7 @@ class App extends React.Component {
           // for(var i = 0; i < friends.friendList.length; i++)
           // {
           //   if(friends.friendList[i].status === 'requested')
-          //     friendsApi.removeFriendship(friends.friendList[i].uid)
+          //     friendsApi.acceptFriendRequest(friends.friendList[i].uid)
           // }
           this.props.changeFriends(friends.friendList)
         } catch (error) {
@@ -206,6 +206,8 @@ App.propTypes = {
   changeName: PropTypes.func,
   changeUsername: PropTypes.func,
   changeImage: PropTypes.func,
+  changeFriends: PropTypes.func,
+  newNotif: PropTypes.func,
 }
 
 /*

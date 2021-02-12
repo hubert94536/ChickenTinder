@@ -45,8 +45,8 @@ const createUser = async (name, username, email, phone, photo) => {
   return accountsApi
     .post('/accounts', data)
     .then((res) => {
-      console.log("created")
-      auth().currentUser.updateProfile({displayName: username})
+      console.log('created')
+      auth().currentUser.updateProfile({ displayName: username })
       return res.status
     })
     .catch((error) => {
@@ -178,7 +178,7 @@ const updateUser = async (req) => {
   return accountsApi
     .put(`/accounts`, req)
     .then((res) => {
-      if ("username" in req) auth().currentUser.updateProfile({displayName: req.username});
+      if ('username' in req) auth().currentUser.updateProfile({ displayName: req.username })
       return {
         status: res.status,
       }
