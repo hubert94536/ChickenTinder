@@ -13,6 +13,8 @@ import colors from '../../styles/colors.js'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
 import normalize from '../../styles/normalize.js'
+import socket from '../apis/socket.js'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 
 export default class NotifCard extends React.Component {
   constructor(props) {
@@ -54,7 +56,13 @@ export default class NotifCard extends React.Component {
     this.setState({ trash: true })
   }
 
-  handleClick() {}
+  handleClick() {
+    console.log('Pressed')
+    if (this.props.type == 'invite') {
+      console.log(this.props.content)
+      socket.joinRoom(this.props.content)
+    }
+  }
 
   pressTrash() {
     this.setState({ trash: false })
@@ -62,33 +70,46 @@ export default class NotifCard extends React.Component {
 
   render() {
     return (
-      <TouchableWithoutFeedback onPress={() => this.handleHold()}>
+      <TouchableWithoutFeedback onPress={() => this.handleClick()}>
         <View style={styles.container}>
           <Image
             source={{ uri: Image.resolveAssetSource(this.props.image).uri }}
             style={imgStyles.button}
           />
           <View style={styles.notif}>
-            {this.props.type == 'invited' && (
-              <Text style={[imgStyles.font, styles.text]}>
+            {this.props.type == 'invite' && (
+              <Text style={[imgStyles.bookFont, styles.text]}>
                 {this.props.name} has invited you to a group!
               </Text>
             )}
-
-            {this.props.type == 'requested' && (
-              <Text style={[imgStyles.font, styles.text]}>{this.props.name}</Text>
+            {this.props.type == 'accepted' && (
+              <Text style={[imgStyles.bookFont, styles.text]}>
+                {this.props.name} accepted your friend request!
+              </Text>
             )}
 
-            <Text style={[imgStyles.font, styles.username]}>@{this.props.username}</Text>
+            {this.props.type == 'friends' && (
+              <Text style={[imgStyles.bookFont, styles.text]}>
+                {this.props.name} is friends with you!
+              </Text>
+            )}
+
+            {this.props.type == 'pending' && (
+              <Text style={[imgStyles.bookFont, styles.text]}>
+                {this.props.name} sent you a friend request!
+              </Text>
+            )}
+
+            <Text style={[imgStyles.bookFont, styles.username]}>@{this.props.username}</Text>
           </View>
 
-          {this.props.type == 'invited' && !this.state.trash && (
+          {this.props.type == 'invite' && !this.state.trash && (
             <View style={styles.invited}>
               <Icon style={[imgStyles.icon, styles.icon]} name="chevron-right" />
             </View>
           )}
 
-          {this.props.type == 'invited' && this.state.trash && (
+          {this.props.type == 'invite' && this.state.trash && (
             <View style={styles.trashInvite}>
               <Icon
                 style={[imgStyles.icon, styles.trashWhite]}
@@ -98,46 +119,18 @@ export default class NotifCard extends React.Component {
             </View>
           )}
 
-          {this.props.type == 'requested' && (
-            <View style={styles.general}>
-              <TouchableHighlight
-                underlayColor="#E5E5E5"
-                onHideUnderlay={() => this.setState({ confirmPressed: false })}
-                onShowUnderlay={() => this.setState({ confirmPressed: true })}
+          {this.props.type == 'pending' && (
+            <View style={styles.request}>
+              <Icon
+                style={[imgStyles.icon, styles.pend]}
+                name="check-circle"
                 onPress={() => this.acceptFriend()}
-                style={styles.requested}
-              >
-                <Text
-                  style={[
-                    imgStyles.font,
-                    this.state.confirmPressed ? styles.confirmTextPressed : styles.confirmText,
-                  ]}
-                >
-                  Confirm
-                </Text>
-              </TouchableHighlight>
-
-              <TouchableHighlight
-                underlayColor="black"
-                onHideUnderlay={() => this.setState({ deletePressed: false })}
-                onShowUnderlay={() => this.setState({ deletePressed: true })}
-                onPress={() => {
-                  var filteredArray = this.props.total.filter((item) => {
-                    return item.username !== this.props.username
-                  })
-                  this.props.press(this.props.uid, filteredArray, false)
-                }}
-                style={styles.blackButton}
-              >
-                <Text
-                  style={[
-                    imgStyles.font,
-                    this.state.deletePressed ? styles.deleteTextPressed : styles.deleteText,
-                  ]}
-                >
-                  Delete
-                </Text>
-              </TouchableHighlight>
+              />
+              <AntDesign
+                style={[imgStyles.icon, styles.pend, styles.black]}
+                name="closecircleo"
+                onPress={() => this.rejectFriend()}
+              />
             </View>
           )}
         </View>
@@ -151,6 +144,7 @@ NotifCard.propTypes = {
   uid: PropTypes.string,
   total: PropTypes.array,
   type: PropTypes.string,
+  content: PropTypes.string,
   username: PropTypes.string,
   press: PropTypes.func,
   name: PropTypes.string,
@@ -165,7 +159,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginVertical: '1.5%',
     marginHorizontal: '5%',
-    backgroundColor: '#E5E5E5',
+    backgroundColor: '#F1F1F1',
     borderRadius: 5,
     paddingVertical: '1.5%',
   },
@@ -229,5 +223,12 @@ const styles = StyleSheet.create({
     color: 'white',
     alignSelf: 'center',
     fontSize: normalize(12),
+  },
+  black: { color: 'black' },
+  pend: { fontSize: normalize(25), marginHorizontal: '3%' },
+  request: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    // borderColor: 'black', borderWidth: 2
   },
 })

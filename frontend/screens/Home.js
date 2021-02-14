@@ -2,7 +2,7 @@
 import React from 'react'
 import { bindActionCreators } from 'redux'
 import { BlurView } from '@react-native-community/blur'
-import { changeFriends, hideError, showError } from '../redux/Actions.js'
+import { changeFriends, hideError, showError, setCode } from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import {
   Dimensions,
@@ -23,12 +23,15 @@ import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
 import global from '../../global.js'
 import Join from '../modals/Join.js'
+import normalize from '../../styles/normalize.js'
 import TabBar from '../Nav.js'
 import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 
 const width = Dimensions.get('window').width
 const height = Dimensions.get('window').height
+const home = '../assets/backgrounds/Home.png'
+const homedark = '../assets/backgrounds/Home_Blur.png'
 
 class Home extends React.Component {
   constructor() {
@@ -45,23 +48,22 @@ class Home extends React.Component {
     socket.getSocket().once('update', (res) => {
       this.setState({ invite: false })
       global.host = res.members[res.host].username
-      global.code = res.code
+      this.props.setCode(res.code)
       global.isHost = res.members[res.host].username === this.props.username.username
       this.props.navigation.replace('Group', {
         response: res,
       })
     })
-
     // //uncomment if testing friends/requests
-    // accountsApi.createFBUserTest('Hubert', 2, 'hubesc', 'hubesc@gmail.com', '10', '45678907')
-    // accountsApi.createFBUserTest('Hanna', 3, 'hco', 'hco@gmail.com', '11', '45678901')
-    // accountsApi.createFBUserTest('Anna', 4, 'annax', 'annx@gmail.com', '12', '45678902')
-    // accountsApi.createFBUserTest('Helen', 5, 'helenthemelon', 'helenw@gmail.com', '13', '45678903')
-    // accountsApi.createFBUserTest('Kevin', 6, 'kevint', 'kevintang@gmail.com', '14', '45678904')
-    // friendsApi.createFriendshipTest(requester, accepter)
-    // friendsApi.createFriendshipTest(6, "2OAFRR5srASbLLhkXmU62FyD1yI2")
-    // friendsApi.createFriendshipTest(3, "2OAFRR5srASbLLhkXmU62FyD1yI2")
-    // friendsApi.createFriendshipTest(4, "2OAFRR5srASbLLhkXmU62FyD1yI2")
+    // accountsApi.createFBUserTest('Hubes2', 32, 'hbc', 'hhcc@gmail.com', '50', '35434354')
+    // accountsApi.createFBUserTest('Hanna2', 33, 'hannaaa', 'hannco@gmail.com', '51', '17891234')
+    // accountsApi.createFBUserTest('Anna2', 34, 'annaxand', 'annaxand@yahoo.com', '52', '17891235')
+    // accountsApi.createFBUserTest('Helen2', 35, 'helennn', 'helennn@gmail.com', '53', '45678903')
+    // accountsApi.createFBUserTest('Kevin2', 36, 'kev', 'kevi@gmail.com', '54', '45678904')
+    // // // friendsApi.createFriendshipTest(requester, accepter)
+    // friendsApi.createFriendshipTest(32, "7eqhoZrbfVOKJwJ1UeBjQg6BZdE2")
+    // friendsApi.createFriendshipTest(33, "7eqhoZrbfVOKJwJ1UeBjQg6BZdE2")
+    // friendsApi.createFriendshipTest(34, "7eqhoZrbfVOKJwJ1UeBjQg6BZdE2")
   }
 
   createGroup() {
@@ -70,16 +72,12 @@ class Home extends React.Component {
 
   render() {
     return (
-      <ImageBackground source={require('../assets/backgrounds/Home.png')} style={styles.background}>
+      <ImageBackground
+        source={this.state.join ? require(homedark) : require(home)}
+        style={styles.background}
+      >
         <View style={styles.main}>
-          <Text style={[screenStyles.text, screenStyles.title, { fontSize: 30 }]}>
-            Hungry? Chews wisely.
-          </Text>
-          {/* dummy image below */}
-          <Image
-            source={require('../assets/Icon_Transparent.png')}
-            style={{ width: height * 0.3, height: height * 0.3 }}
-          />
+          <Text style={[screenStyles.text, styles.title]}>Let&apos;s Get Chews-ing</Text>
           <View>
             <TouchableHighlight
               onShowUnderlay={() => this.setState({ createPressed: true })}
@@ -112,7 +110,7 @@ class Home extends React.Component {
               activeOpacity={1}
               underlayColor={colors.hex}
               style={{
-                backgroundColor: 'white',
+                backgroundColor: 'transparent',
                 borderRadius: 40,
                 width: width * 0.5,
                 height: 45,
@@ -123,14 +121,7 @@ class Home extends React.Component {
               }}
               onPress={() => this.setState({ join: true })}
             >
-              <Text
-                style={[
-                  styles.buttonText,
-                  this.state.profilePressed ? { color: 'white' } : { color: colors.hex },
-                ]}
-              >
-                Join Group
-              </Text>
+              <Text style={[styles.buttonText, { color: 'white' }]}>Join Group</Text>
             </TouchableHighlight>
           </View>
           <TabBar
@@ -157,7 +148,7 @@ class Home extends React.Component {
             onPress={() => this.setState({ join: false })}
           />
 
-          {this.props.error && (
+          {(this.state.join || this.props.error) && (
             <BlurView
               blurType="dark"
               blurAmount={10}
@@ -184,7 +175,8 @@ const mapStateToProps = (state) => {
   const { friends } = state
   const { error } = state
   const { username } = state
-  return { friends, error, username }
+  const { code } = state
+  return { friends, error, username, code }
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -193,6 +185,7 @@ const mapDispatchToProps = (dispatch) =>
       changeFriends,
       showError,
       hideError,
+      setCode,
     },
     dispatch,
   )
@@ -201,21 +194,30 @@ export default connect(mapStateToProps, mapDispatchToProps)(Home)
 
 Home.propTypes = {
   navigation: PropTypes.object,
-  // error: PropTypes.bool,
-  // friends: PropTypes.object,
-  // username: PropTypes.object,
+  error: PropTypes.bool,
+  friends: PropTypes.object,
+  username: PropTypes.object,
   showError: PropTypes.func,
   hideError: PropTypes.func,
   changeFriends: PropTypes.func,
+  setCode: PropTypes.func,
 }
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'space-evenly',
   },
   background: {
     flex: 1,
+  },
+  title: {
+    fontSize: normalize(30),
+    margin: '15%',
+    marginTop: '35%',
+    width: '50%',
+    textAlign: 'left',
+    fontFamily: 'CircularStd-Bold',
+    lineHeight: width * 0.11,
   },
   button: {
     height: 65,
@@ -226,6 +228,6 @@ const styles = StyleSheet.create({
   buttonText: {
     textAlign: 'center',
     fontFamily: 'CircularStd-Bold',
-    fontSize: 18,
+    fontSize: normalize(18),
   },
 })

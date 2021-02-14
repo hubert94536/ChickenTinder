@@ -1,17 +1,13 @@
 /* eslint-disable prettier/prettier */
 import React from 'react'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux';
 import {
   PermissionsAndroid,
   StyleSheet,
   Text,
-  TouchableHighlight,
   View,
 } from 'react-native'
 // import { BlurView } from '@react-native-community/blur'
 import Geolocation from 'react-native-geolocation-service'
-import { hideError, showError } from '../redux/Actions.js'
 import PropTypes from 'prop-types'
 import Swiper from 'react-native-swiper'
 import Alert from '../modals/Alert.js'
@@ -133,6 +129,8 @@ class FilterSelector extends React.Component {
         },
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
       )
+    } else {
+      console.log('Filter.js: Failed to get location')
     }
   }
 

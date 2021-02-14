@@ -1,4 +1,6 @@
 import React from 'react'
+import { bindActionCreators } from 'redux'
+import { newNotif, noNotif } from './redux/Actions.js'
 import { Dimensions, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
@@ -9,6 +11,11 @@ import notifsApi from './apis/notificationsApi.js'
 const height = Dimensions.get('window').height
 
 class TabBar extends React.Component {
+  componentDidMount() {
+    if (this.props.cur === 'Notifs') {
+      this.props.noNotif()
+    }
+  }
   render() {
     return (
       <View style={styles.bar}>
@@ -80,7 +87,16 @@ const mapStateToProps = (state) => {
 }
 //  access this as this.props.notif
 
-export default connect(mapStateToProps)(TabBar)
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      newNotif,
+      noNotif,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(TabBar)
 
 const styles = StyleSheet.create({
   bar: {
@@ -106,4 +122,5 @@ TabBar.propTypes = {
   goNotifs: PropTypes.func,
   goProfile: PropTypes.func,
   cur: PropTypes.string,
+  noNotif: PropTypes.func,
 }

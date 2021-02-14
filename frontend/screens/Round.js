@@ -1,6 +1,8 @@
 import React from 'react'
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { bindActionCreators } from 'redux'
 import { BlurView } from '@react-native-community/blur'
+import { connect } from 'react-redux'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
@@ -14,8 +16,9 @@ import RoundCard from '../cards/RoundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import normalize from '../../styles/normalize.js'
+import { setCode } from '../redux/Actions.js'
 
-export default class Round extends React.Component {
+class Round extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -46,13 +49,13 @@ export default class Round extends React.Component {
   }
 
   leaveGroup(end) {
+    socket.getSocket().off()
     if (end) {
       socket.endLeave()
     } else {
       socket.leaveRound()
     }
-    socket.getSocket().off()
-    global.code = ''
+    this.props.setCode(0)
     global.host = ''
     global.isHost = false
     global.restaurants = []
@@ -172,8 +175,24 @@ export default class Round extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  const { code } = state
+  return { code }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      setCode,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(Round)
+
 Round.propTypes = {
   navigation: PropTypes.object,
+  setCode: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

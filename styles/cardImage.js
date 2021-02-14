@@ -8,6 +8,9 @@ export default StyleSheet.create({
   font: {
     fontFamily: 'CircularStd-Medium',
   },
+  bookFont: {
+    fontFamily: 'CircularStd-Book',
+  },
   hex: {
     color: colors.hex,
   },
