@@ -41,6 +41,7 @@ class Home extends React.Component {
       joinPressed: false,
       searchPressed: false,
       join: false,
+      kick: false,
       inviteInfo: '',
       friends: '',
     }
@@ -73,7 +74,7 @@ class Home extends React.Component {
   render() {
     return (
       <ImageBackground
-        source={this.state.join ? require(homedark) : require(home)}
+        source={(this.state.join || this.props.error || this.state.kick) ? require(homedark) : require(home)}
         style={styles.background}
       >
         <View style={styles.main}>
@@ -148,14 +149,14 @@ class Home extends React.Component {
             onPress={() => this.setState({ join: false })}
           />
 
-          {(this.state.join || this.props.error) && (
+          {/* {(this.state.join || this.props.error) && (
             <BlurView
               blurType="dark"
               blurAmount={10}
               reducedTransparencyFallbackColor="white"
               style={modalStyles.blur}
             />
-          )}
+          )} */}
           {this.props.error && (
             <Alert
               title="Error, please try again"
@@ -163,6 +164,15 @@ class Home extends React.Component {
               height="20%"
               press={() => this.props.hideError()}
               cancel={() => this.props.hideError()}
+            />
+          )}
+          {this.state.kick && (
+            <Alert
+              title="You were kicked from the group "
+              buttonAff="Close"
+              height="20%"
+              press={() => this.state.setState({kick:false})}
+              cancel={() => this.state.setState({kick:false})}
             />
           )}
         </View>
