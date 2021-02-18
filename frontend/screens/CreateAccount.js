@@ -64,8 +64,6 @@ class createAccount extends React.Component {
       })
   }
 
-  
-
   //  checks whether or not the username can be set
   handleClick() {
     AsyncStorage.multiSet([
