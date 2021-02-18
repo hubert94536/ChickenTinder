@@ -8,6 +8,8 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
 import { BlurView } from '@react-native-community/blur'
@@ -17,10 +19,11 @@ import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
+import { showEnd } from '../redux/Actions.js'
 
 const height = Dimensions.get('window').height
 
-export default class Loading extends React.Component {
+class Loading extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -62,6 +65,7 @@ export default class Loading extends React.Component {
 
   leaveGroup() {
     socket.endLeave()
+    this.props.showEnd()
     global.code = ''
     global.host = ''
     global.isHost = false
@@ -129,10 +133,21 @@ export default class Loading extends React.Component {
   }
 }
 
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      showEnd,
+    },
+    dispatch,
+  )
+
 Loading.propTypes = {
   restaurant: PropTypes.array,
   navigation: PropTypes.object,
+  showEnd: PropTypes.func,
 }
+
+export default connect(mapDispatchToProps)(Loading)
 
 const styles = StyleSheet.create({
   background: {
