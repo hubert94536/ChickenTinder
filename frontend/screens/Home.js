@@ -2,7 +2,14 @@
 import React from 'react'
 import { bindActionCreators } from 'redux'
 import { BlurView } from '@react-native-community/blur'
-import { changeFriends, hideError, showError, setCode } from '../redux/Actions.js'
+import {
+  changeFriends,
+  hideError,
+  showError,
+  hideKick,
+  setCode,
+  hideEnd,
+} from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import {
   Dimensions,
@@ -41,7 +48,6 @@ class Home extends React.Component {
       joinPressed: false,
       searchPressed: false,
       join: false,
-      kick: false,
       inviteInfo: '',
       friends: '',
     }
@@ -74,7 +80,11 @@ class Home extends React.Component {
   render() {
     return (
       <ImageBackground
-        source={(this.state.join || this.props.error || this.state.kick) ? require(homedark) : require(home)}
+        source={
+          this.state.join || this.props.error || this.props.kick || this.props.end
+            ? require(homedark)
+            : require(home)
+        }
         style={styles.background}
       >
         <View style={styles.main}>
@@ -166,13 +176,24 @@ class Home extends React.Component {
               cancel={() => this.props.hideError()}
             />
           )}
-          {this.state.kick && (
+          {this.props.kick && (
             <Alert
-              title="You were kicked from the group "
+              title="Oh no!"
+              body="You were kicked from the group!"
               buttonAff="Close"
               height="20%"
-              press={() => this.state.setState({kick:false})}
-              cancel={() => this.state.setState({kick:false})}
+              press={() => this.props.hideKick()}
+              cancel={() => this.props.hideKick()}
+            />
+          )}
+          {this.props.end && (
+            <Alert
+              title="Oh no!"
+              body="The host has ended the group session"
+              buttonAff="Close"
+              height="20%"
+              press={() => this.props.hideEnd()}
+              cancel={() => this.props.hideEnd()}
             />
           )}
         </View>
@@ -186,7 +207,9 @@ const mapStateToProps = (state) => {
   const { error } = state
   const { username } = state
   const { code } = state
-  return { friends, error, username, code }
+  const { kick } = state
+  const { end } = state
+  return { friends, error, username, code, kick, end }
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -196,6 +219,8 @@ const mapDispatchToProps = (dispatch) =>
       showError,
       hideError,
       setCode,
+      hideKick,
+      hideEnd,
     },
     dispatch,
   )
@@ -211,6 +236,10 @@ Home.propTypes = {
   hideError: PropTypes.func,
   changeFriends: PropTypes.func,
   setCode: PropTypes.func,
+  hideKick: PropTypes.func,
+  hideEnd: PropTypes.func,
+  kick: PropTypes.bool,
+  end: PropTypes.bool
 }
 const styles = StyleSheet.create({
   main: {

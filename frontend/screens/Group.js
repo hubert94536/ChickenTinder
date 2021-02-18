@@ -27,7 +27,7 @@ import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
-import { setCode } from '../redux/Actions.js'
+import { setCode, showKick, showEnd } from '../redux/Actions.js'
 
 const font = 'CircularStd-Medium'
 let memberList = []
@@ -67,6 +67,7 @@ class Group extends React.Component {
     // listens if user is to be kicked
     socket.getSocket().once('kick', () => {
       this.leaveGroup(false)
+      this.props.showKick()
     })
 
     // listens for group updates
@@ -157,6 +158,7 @@ class Group extends React.Component {
     // leaving due to host ending session
     if (end) {
       socket.endLeave()
+      this.props.showEnd()
     }
     // normal user leaves
     else {
@@ -460,6 +462,8 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setCode,
+      showKick,
+      showEnd,
     },
     dispatch,
   )
@@ -471,6 +475,8 @@ Group.propTypes = {
   members: PropTypes.array,
   code: PropTypes.object,
   setCode: PropTypes.func,
+  showKick: PropTypes.func,
+  showEnd: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
