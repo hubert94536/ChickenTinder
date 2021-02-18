@@ -49,7 +49,7 @@ export default class TimeSwitch extends Component {
       this.setState({ activeSwitch: 2 }, () => onValueChange(this.state.activeSwitch))
 
       Animated.timing(this.state.offsetX, {
-        toValue: ((this.props.switchWidth || this.state.sbWidth) / 2 - 6) * dirsign,
+        toValue: ((this.props.switchWidth || this.state.sbWidth) / 2) * dirsign,
         duration: this.props.switchSpeedChange || 100,
         useNativeDriver: false,
       }).start()
@@ -103,7 +103,7 @@ export default class TimeSwitch extends Component {
                     switchStyles.wayBtnActive,
                     {
                       width: this.props.switchWidth / 2 || this.state.sbWidth / 2,
-                      height: this.props.switchHeight - 6 || this.state.sbHeight - 6,
+                      height: this.props.switchHeight - 1 || this.state.sbHeight - 1,
                       borderRadius:
                         this.props.switchBorderRadius !== undefined
                           ? this.props.switchBorderRadius
@@ -177,10 +177,10 @@ const switchStyles = StyleSheet.create({
     flexDirection: 'row',
   },
   wayBtnActive: {
-    borderWidth: 1,
-    marginTop: 2,
-    marginRight: 2,
-    marginLeft: 2,
+    // borderWidth: 1,
+    // marginTop: 2,
+    // marginRight: 2,
+    // marginLeft: 2,
   },
 })
 
