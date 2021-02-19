@@ -147,6 +147,8 @@ class Group extends React.Component {
       memberList.push(a)
       a.f = false
       memberRenderList.push(a)
+      memberRenderList.push(a)
+      memberRenderList.push(a)
     }
     const footer = {}
     footer.f = 'a'
