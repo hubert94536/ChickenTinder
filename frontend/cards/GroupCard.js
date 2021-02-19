@@ -28,20 +28,27 @@ export default class GroupCard extends React.Component {
   render() {
     return (
       <View style={styles.card}>
-        <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+        <View
+          style={[
+            styles.imageWrapper,
+            this.props.filters ? imgStyles.hexBorder : imgStyles.greyBorder,
+          ]}
+        >
           <Image
             source={{ uri: Image.resolveAssetSource(this.props.image).uri }}
-            style={[styles.image, this.props.filters ? imgStyles.hexBorder : imgStyles.greyBorder]}
+            style={[
+              styles.image,
+              this.props.filters ? imgStyles.whiteBorder : imgStyles.greyBorder,
+            ]}
           />
         </View>
-
-        <View style={styles.none}>
+        <View style={styles.info}>
           <Text style={[imgStyles.font, styles.name]}>{this.props.name}</Text>
           <Text style={[imgStyles.hex, imgStyles.font, styles.username]}>
             {'@' + this.props.username}
           </Text>
         </View>
-        <View style={styles.general}>
+        {/* <View style={styles.general}>
           {this.props.username !== this.props.host && this.isHost ? (
             <Text style={[imgStyles.hex, imgStyles.font, styles.remove]}>Remove</Text>
           ) : null}
@@ -53,7 +60,7 @@ export default class GroupCard extends React.Component {
               disabled={this.state.disabled}
             />
           ) : null}
-        </View>
+        </View> */}
       </View>
     )
   }
@@ -75,18 +82,25 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     alignSelf: 'center',
     width: width * 0.4,
-    height: height * 0.09,
-    padding: 0,
-    margin: '3%',
-    flexDirection: 'row',
+    height: height * 0.16,
+    margin: '1.5%',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   image: {
-    borderRadius: 63,
-    height: height * 0.075,
-    width: height * 0.075,
+    borderRadius: height * 0.1,
+    height: '99%',
+    width: '99%',
     borderWidth: height * 0.004,
-    alignSelf: 'flex-start',
-    marginLeft: '7%',
+  },
+  imageWrapper: {
+    borderRadius: height * 0.1,
+    height: height * 0.1,
+    width: height * 0.1,
+    borderWidth: height * 0.004,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   topText: {
     color: '#000',
@@ -100,23 +114,22 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     overflow: 'hidden',
   },
-  none: {
-    marginLeft: '3%',
-    width: height * 0.26,
+  info: {
     flexDirection: 'column',
+    alignItems: 'center',
     justifyContent: 'center',
-    color: 'green',
+    paddingBottom: height * 0.004,
   },
   name: {
     color: 'black',
     fontWeight: 'normal',
     fontSize: normalize(14),
-    width: height * 0.13,
+    alignSelf: 'center',
   },
   username: {
     fontWeight: 'normal',
     fontSize: normalize(10),
-    width: height * 0.13,
+    alignSelf: 'center',
   },
   remove: {
     alignSelf: 'center',

@@ -183,7 +183,8 @@ class Search extends Component {
           keyExtractor={(item) => item.username}
           ListHeaderComponent={this.renderHeader}
           onRefresh={() => this.onRefresh()}
-          refreshing={this.props.refresh}
+          // refreshing={this.props.refresh}
+          refreshing={this.state.refresh}
         />
         {(this.state.errorAlert || this.state.deleteFriend) && (
           <BlurView
