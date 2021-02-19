@@ -18,12 +18,13 @@ class Card extends React.Component {
       deleteFriend: false,
       status: this.props.status,
       pressed: false,
+      disabled: false
     }
   }
 
   deleteFriend() {
     this.props.unfriendAlert(false)
-    this.setState({ deleteFriend: false })
+    this.setState({ deleteFriend: false, disabled:true })
     friendsApi
       .removeFriendship(this.props.uid)
       .then(() => {
@@ -33,13 +34,16 @@ class Card extends React.Component {
         this.props.changeFriends(filteredArray)
         this.props.press(filteredArray)
         if (this.props.changeAdd) this.setState({ status: 'add' })
+        this.setState({disabled: false})
       })
       .catch(() => {
         this.props.showError()
+        this.setState({disabled: false})
       })
   }
 
   rejectFriend() {
+    this.setState({disabled: true})
     friendsApi
       .removeFriendship(this.props.uid)
       .then(() => {
@@ -48,12 +52,16 @@ class Card extends React.Component {
         })
         this.props.changeFriends(filteredArray)
         this.props.press(filteredArray)
-        this.setState({ status: 'add' })
+        this.setState({ status: 'add', disabled: false })
       })
-      .catch(() => this.props.showError())
+      .catch(() => {
+        this.props.showError()
+        this.setState({disabled: false})
+      })
   }
 
   acceptFriend() {
+    this.setState({disabled: true})
     friendsApi.acceptFriendRequest(this.props.uid).then(() => {
       var newArr = this.props.friends.friends.filter((item) => {
         if (item.username === this.props.username) item.status = 'friends'
@@ -61,12 +69,15 @@ class Card extends React.Component {
       })
       this.props.changeFriends(newArr)
       this.props.accept(newArr)
-      this.setState({ status: 'friends' })
+      this.setState({ status: 'friends', disabled: false })
+    }).catch(() => {
+      this.props.showError()
+      this.setState({disabled: false})
     })
-    this.props.showError
   }
 
   addFriend() {
+    this.setState({disabled: true})
     friendsApi.createFriendship(this.props.uid).then(() => {
       var newArr = []
       var addElem = this.props.total.filter((item) => {
@@ -92,9 +103,11 @@ class Card extends React.Component {
       newArr.push(addPerson)
       this.props.changeFriends(newArr)
       this.props.accept(newArr)
-      this.setState({ status: 'requested' })
+      this.setState({ status: 'requested', disabled: false })
+    }).catch(() => {
+      this.props.showError()
+      this.setState({disabled: false})
     })
-    this.props.showError()
   }
 
   render() {
@@ -117,7 +130,7 @@ class Card extends React.Component {
         )}
         {/* if user is not in a group */}
         {this.state.status === 'not added' && (
-          <TouchableHighlight>
+          <TouchableHighlight disabled={this.state.disabled}>
             <View style={imgStyles.card}>
               <Text style={[imgStyles.text, styles.topMargin]}>Add</Text>
               <AntDesign
@@ -168,11 +181,13 @@ class Card extends React.Component {
           <View style={imgStyles.card}>
             <Text style={[imgStyles.text, styles.black]}>Accept Request</Text>
             <Icon
+            disabled={this.state.disabled}
               style={[imgStyles.icon, styles.pend]}
               name="check-circle"
               onPress={() => this.acceptFriend()}
             />
             <AntDesign
+            disabled={this.state.disabled}
               style={[imgStyles.icon, styles.pend, styles.black]}
               name="closecircleo"
               onPress={() => this.rejectFriend()}

@@ -40,6 +40,7 @@ class createAccount extends React.Component {
       validUsername: true,
       validUsernameFormat: true,
       facebook: false,
+      disabled: false
     }
     AsyncStorage.multiGet([EMAIL, NAME, PHONE])
       .then((res) => {
@@ -66,6 +67,7 @@ class createAccount extends React.Component {
 
   //  checks whether or not the username can be set
   handleClick() {
+    this.setState({disabled: true})
     AsyncStorage.multiSet([
       [USERNAME, this.state.username],
       [PHOTO, this.state.photo],
@@ -98,6 +100,7 @@ class createAccount extends React.Component {
       .catch(() => {
         this.setState({ errorAlert: true })
       })
+      this.setState({disabled: false})
   }
 
   checkUsernameValidity() {
@@ -225,6 +228,7 @@ class createAccount extends React.Component {
           underlayColor={'white'}
           onPress={() => this.handleClick()}
           style={[screenStyles.longButton, styles.button]}
+          disabled={this.state.disabled}
         >
           <View style={[screenStyles.contentContainer]}>
             <Text

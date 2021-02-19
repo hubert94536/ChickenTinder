@@ -25,21 +25,25 @@ export default class NotifCard extends React.Component {
       confirmPressed: false,
       deletePressed: false,
       trash: false,
+      disabled: false
     }
   }
 
   // accept friend request and modify card
   async acceptFriend() {
+    this.setState({disabled: true})
     friendsApi
       .acceptFriendRequest(this.state.uid)
       .then(() => {
         this.setState({ isFriend: true })
       })
       .catch(() => this.props.showError())
+      this.setState({disabled: false})
   }
 
   // delete friend and modify view
   async deleteFriend() {
+    this.setState({disabled: true})
     friendsApi
       .removeFriendship(this.state.uid)
       .then(() => {
@@ -50,6 +54,7 @@ export default class NotifCard extends React.Component {
         this.props.press(this.props.uid, filteredArray, true)
       })
       .catch(() => this.props.showError())
+      this.setState({disabled: true})
   }
 
   handleHold() {
@@ -57,11 +62,13 @@ export default class NotifCard extends React.Component {
   }
 
   handleClick() {
+    this.setState({disabled: true})
     console.log('Pressed')
     if (this.props.type == 'invite') {
       console.log(this.props.content)
       socket.joinRoom(this.props.content)
     }
+    this.setState({disabled: false})
   }
 
   pressTrash() {

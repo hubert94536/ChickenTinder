@@ -43,6 +43,7 @@ class UserProfileView extends Component {
       // friends text
       numFriends: 0,
       imageData: null,
+      disabled: false
     }
   }
 
@@ -97,6 +98,7 @@ class UserProfileView extends Component {
   }
 
   async handleDelete() {
+    this.setState({disabled:true})
     loginService
       .deleteUser()
       // TODO: Disastrous phone auth code...
@@ -108,6 +110,8 @@ class UserProfileView extends Component {
       .catch(() => {
         this.props.hideError()
       })
+      this.setState({disabled:false})
+
   }
 
   // close alert for taken username
@@ -121,6 +125,7 @@ class UserProfileView extends Component {
   }
 
   async handleLogout() {
+    this.setState({disabled:true})
     loginService
       .logout()
       .then(() => {
@@ -131,10 +136,11 @@ class UserProfileView extends Component {
       .catch(() => {
         this.props.showError()
       })
+      this.setState({disabled:false})
   }
 
   cancelLogout() {
-    this.setState({ logoutAlert: false })
+    this.setState({ logoutAlert: false, disabled: false })
   }
 
   makeChanges() {
@@ -286,7 +292,7 @@ class UserProfileView extends Component {
                 height="25%"
                 twoButton
                 press={() => this.handleLogout()}
-                cancel={() => this.setState({ logoutAlert: false, visible: true })}
+                cancel={() => this.setState({ logoutAlert: false, visible: true, disabled: false })}
               />
             )}
 

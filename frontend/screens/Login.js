@@ -30,6 +30,7 @@ class Login extends React.Component {
     this.state = {
       pressed: false,
       alert: false,
+      disabled: false
     }
   }
 
@@ -55,6 +56,7 @@ class Login extends React.Component {
   }
 
   async handleClick() {
+    this.setState({disabled: true})
     loginService
       .loginWithFacebook()
       .then((result) => {
@@ -66,10 +68,11 @@ class Login extends React.Component {
       .catch(() => {
         this.props.showError()
       })
+      this.setState({disabled: false})
   }
 
   cancelClick() {
-    this.setState({ alert: false })
+    this.setState({ alert: false, disabled: false })
   }
 
   login() {
@@ -107,6 +110,7 @@ class Login extends React.Component {
             activeOpacity={1}
             underlayColor="white"
             onPress={() => this.login()}
+            disabled={this.state.disabled}
             style={[screenStyles.longButton, styles.fbButton]}
           >
             <View style={[screenStyles.contentContainer]}>
