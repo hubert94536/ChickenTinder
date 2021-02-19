@@ -147,8 +147,6 @@ class Group extends React.Component {
       memberList.push(a)
       a.f = false
       memberRenderList.push(a)
-      memberRenderList.push(a)
-      memberRenderList.push(a)
     }
     const footer = {}
     footer.f = 'a'
@@ -231,7 +229,7 @@ class Group extends React.Component {
         <Drawer
           style={styles.drawer}
           initialDrawerPos={100}
-          pointerEvents={this.state.blur ? 'none' : 'auto'}
+          enabled={this.state.blur ? 'none' : 'auto'}
           renderContainerView={
             <View style={styles.main}>
               <View style={styles.center}>
