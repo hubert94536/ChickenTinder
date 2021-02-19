@@ -125,20 +125,20 @@ class Friends extends React.Component {
     }
     return (
       <View>
+        <View>
+          <SearchBar
+            containerStyle={styles.container}
+            inputContainerStyle={styles.inputContainer}
+            inputStyle={(styles.text, styles.input)}
+            placeholder="Search by username"
+            onChangeText={(text) => this.searchFilterFunction(text)}
+            value={this.state.search}
+            lightTheme
+            round
+          />
+        </View>
         {this.state.friends.length > 0 && ( //Shows search bar + friends list if there are friends
           <View>
-            <View>
-              <SearchBar
-                containerStyle={styles.container}
-                inputContainerStyle={styles.inputContainer}
-                inputStyle={(styles.text, styles.input)}
-                placeholder="Search by username"
-                onChangeText={(text) => this.searchFilterFunction(text)}
-                value={this.state.search}
-                lightTheme
-                round
-              />
-            </View>
             <ScrollView
               style={[styles.scrollView]}
               alwaysBounceVertical="true"
@@ -162,7 +162,7 @@ class Friends extends React.Component {
             )}
           </View>
         )}
-        {this.state.data.length === 0 && this.state.friendsApiCalled && 
+        {this.props.friends.friends.length === 0 && this.state.friendsApiCalled && 
           ( //Show no friends view if there aren't any friends
             <View>
               <Icon name="emoticon-sad-outline" style={[styles.sadFace]} />
