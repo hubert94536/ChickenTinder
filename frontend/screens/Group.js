@@ -147,9 +147,11 @@ class Group extends React.Component {
       memberList.push(a)
       a.f = false
       memberRenderList.push(a)
+      memberRenderList.push(a)
+      memberRenderList.push(a)
     }
     const footer = {}
-    footer.f = true
+    footer.f = 'a'
     memberRenderList.push(footer)
   }
 
@@ -257,6 +259,9 @@ class Group extends React.Component {
                   color: colors.hex,
                   marginBottom: 10,
                 }}
+                columnWrapperStyle={{
+                  justifyContent: 'center',
+                }}
                 data={memberRenderList}
                 renderItem={({ item }) => {
                   if (item.f) {
@@ -270,12 +275,12 @@ class Group extends React.Component {
                           justifyContent: 'center',
                           width: windowWidth * 0.4,
                           height: windowHeight * 0.06,
-                          margin: '3%',
+                          margin: '1.5%',
                         }}
                       >
                         <Text
                           style={{
-                            color: 'black',
+                            color: 'dimgray',
                             textAlign: 'center',
                             width: '100%',
                           }}
@@ -598,8 +603,8 @@ const styles = StyleSheet.create({
     color: '#aaa',
   },
   memberContainer: {
-    marginLeft: '2%',
-    marginRight: '2%',
+    marginLeft: '1%',
+    marginRight: '1%',
     alignSelf: 'center',
     height: '55%',
     overflow: 'hidden',

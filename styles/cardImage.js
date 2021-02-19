@@ -17,6 +17,9 @@ export default StyleSheet.create({
   hexBorder: {
     borderColor: colors.hex,
   },
+  whiteBorder: {
+    borderColor: '#FFFFFF',
+  },
   greyBorder: {
     borderColor: '#F5F5F5',
   },
