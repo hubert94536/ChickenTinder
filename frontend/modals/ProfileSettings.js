@@ -8,7 +8,6 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
-import { BlurView } from '@react-native-community/blur'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
@@ -201,4 +200,6 @@ Settings.propTypes = {
   close: PropTypes.func,
   visible: PropTypes.bool,
   email: PropTypes.string,
+  deleteAlert: PropTypes.func,
+  logoutAlert: PropTypes.func,
 }
