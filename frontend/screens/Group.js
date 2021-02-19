@@ -231,7 +231,7 @@ class Group extends React.Component {
         <Drawer
           style={styles.drawer}
           initialDrawerPos={100}
-          pointerEvents={this.state.blur ? 'none' : 'auto'}
+          enabled={!this.state.blur}
           renderContainerView={
             <View style={styles.main}>
               <View style={styles.center}>

@@ -11,7 +11,8 @@ import {
 } from 'react-native'
 import Geolocation from 'react-native-geolocation-service'
 import PropTypes from 'prop-types'
-import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { Circle, PROVIDER_GOOGLE } from 'react-native-maps'
+import imgStyles from '../../styles/cardImage.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -33,6 +34,8 @@ let clientBuilder = new SmartyStreetsCore.ClientBuilder(
   new SmartyStreetsCore.StaticCredentials(ZIP_ID, ZIP_TOKEN),
 )
 let client = clientBuilder.buildUsZipcodeClient()
+
+const iconSize = 30
 
 const requestLocationPermission = async () => {
   PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
@@ -70,6 +73,7 @@ export default class Location extends Component {
       distance: 5.5,
       zip: '',
       zipValid: true,
+      expanded: true,
     }
   }
 
@@ -209,9 +213,21 @@ export default class Location extends Component {
                 alignItems: 'center',
               }}
             >
+              {/* <View style={styles.icon} /> */}
               <Text style={[styles.title, screenStyles.textBook, screenStyles.hex]}>
                 {this.state.city + this.state.state}
               </Text>
+
+              <AntDesign
+                style={styles.icon}
+                name={this.state.expanded ? 'up' : 'down'}
+                onPress={() => {
+                  console.log('chooselocation: pressed')
+                  this.setState((prev) => ({
+                    expanded: !prev.expanded,
+                  }))
+                }}
+              />
             </View>
             {/* Horizontal Line */}
             <View
@@ -371,6 +387,15 @@ const styles = StyleSheet.create({
   locationText: {
     fontSize: normalize(14),
     fontWeight: '300',
+  },
+  icon: {
+    position: 'absolute',
+    right: '2%',
+    height: normalize(iconSize),
+    width: normalize(iconSize),
+    fontFamily: 'CircularStd-Medium',
+    color: colors.gray,
+    fontSize: normalize(iconSize),
   },
 })
 
