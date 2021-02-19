@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Dimensions, Linking, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
+import mapStyle from '../../styles/mapStyle.json'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'
@@ -49,6 +50,7 @@ class Match extends React.Component {
           <View style={styles.mapContainer}>
             <MapView
               provider={PROVIDER_GOOGLE}
+              customMapStyle={mapStyle}
               style={styles.map}
               region={{
                 latitude: restaurant.latitude,
