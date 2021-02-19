@@ -69,6 +69,30 @@ const setCode = (code) => {
   }
 }
 
+const showKick = () => {
+  return {
+    type: 'SHOW_KICK',
+  }
+}
+
+const hideKick = () => {
+  return {
+    type: 'HIDE_KICK',
+  }
+}
+
+const showEnd = () => {
+  return {
+    type: 'SHOW_END',
+  }
+}
+
+const hideEnd = () => {
+  return {
+    type: 'HIDE_END',
+  }
+}
+
 export {
   showError,
   hideError,
@@ -81,4 +105,8 @@ export {
   newNotif,
   noNotif,
   setCode,
+  showKick,
+  hideKick,
+  showEnd,
+  hideEnd,
 }

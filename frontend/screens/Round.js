@@ -16,7 +16,7 @@ import RoundCard from '../cards/RoundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import normalize from '../../styles/normalize.js'
-import { setCode } from '../redux/Actions.js'
+import { setCode, showKick } from '../redux/Actions.js'
 
 class Round extends React.Component {
   constructor(props) {
@@ -52,6 +52,7 @@ class Round extends React.Component {
     socket.getSocket().off()
     if (end) {
       socket.endLeave()
+      this.props.showKick()
     } else {
       socket.leaveRound()
     }
@@ -184,6 +185,7 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setCode,
+      showKick,
     },
     dispatch,
   )
@@ -193,6 +195,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(Round)
 Round.propTypes = {
   navigation: PropTypes.object,
   setCode: PropTypes.func,
+  showKick: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

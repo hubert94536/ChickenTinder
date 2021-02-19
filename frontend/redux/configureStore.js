@@ -8,6 +8,8 @@ import {
   friendsReducer,
   notifReducer,
   codeReducer,
+  kickReducer,
+  endReducer,
 } from './Reducer.js'
 
 const rootReducer = combineReducers({
@@ -19,6 +21,8 @@ const rootReducer = combineReducers({
   friends: friendsReducer,
   notif: notifReducer,
   code: codeReducer,
+  kick: kickReducer,
+  end: endReducer,
 })
 
 const configureStore = () => {
