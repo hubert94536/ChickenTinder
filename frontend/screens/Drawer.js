@@ -29,7 +29,9 @@ class Drawer extends Component {
       onMoveShouldSetPanResponder: (evt, gestureState) => {
         // console.log('Drawer.js: tryGesture' + gestureState.moveY)
         return (
-          Math.abs(gestureState.dy) > Math.abs(gestureState.dx) && Math.abs(gestureState.dy) > 1
+          this.props.enabled &&
+          Math.abs(gestureState.dy) > Math.abs(gestureState.dx) &&
+          Math.abs(gestureState.dy) > 1
         )
       },
       onPanResponderGrant: () => {
@@ -192,6 +194,7 @@ Drawer.propTypes = {
   onClose: PropTypes.func,
   renderContainerView: PropTypes.object,
   renderDrawerView: PropTypes.object,
+  enabled: PropTypes.bool,
 }
 
 Drawer.defaultProps = {
