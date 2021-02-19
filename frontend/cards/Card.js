@@ -100,9 +100,7 @@ class Card extends React.Component {
   render() {
     const renderOption = this.props.currentUser !== this.props.username
     return (
-      <View 
-      style={styles.container}
-      >
+      <View style={styles.container}>
         <Image
           source={{ uri: Image.resolveAssetSource(this.props.image).uri }}
           style={imgStyles.button}

@@ -162,8 +162,8 @@ class Friends extends React.Component {
             )}
           </View>
         )}
-        {this.props.friends.friends.length === 0 && this.state.friendsApiCalled && 
-          ( //Show no friends view if there aren't any friends
+        {this.props.friends.friends.length === 0 &&
+          this.state.friendsApiCalled && ( //Show no friends view if there aren't any friends
             <View>
               <Icon name="emoticon-sad-outline" style={[styles.sadFace]} />
               <Text style={[screenStyles.text, styles.noFriendText1]}>No friends, yet</Text>
