@@ -239,7 +239,7 @@ Home.propTypes = {
   hideKick: PropTypes.func,
   hideEnd: PropTypes.func,
   kick: PropTypes.bool,
-  end: PropTypes.bool
+  end: PropTypes.bool,
 }
 const styles = StyleSheet.create({
   main: {
