@@ -17,6 +17,7 @@ import colors from '../../styles/colors.js'
 import loginService from '../apis/loginService.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
+import screenStyles from '../../styles/screenStyles.js'
 
 const font = 'CircularStd-Bold'
 const fontMed = 'CirularStd-Medium'
@@ -82,10 +83,10 @@ class PhoneAuthScreen extends Component {
           maxLength={6}
         />
         <TouchableOpacity
-          style={[styles.themeButton, { marginTop: 20 }]}
+          style={[screenStyles.longButton, styles.longButton]}
           onPress={() => this.handleVerifyCode()}
         >
-          <Text style={styles.themeButtonTitle}>Verify Code</Text>
+          <Text style={[screenStyles.longButtonText, styles.longButtonText]}>Verify Code</Text>
         </TouchableOpacity>
       </View>
     )
@@ -158,10 +159,10 @@ class PhoneAuthScreen extends Component {
 
             {this.state.confirmResult && (
               <TouchableOpacity
-                style={[styles.themeButton, { marginTop: 20 }]}
+                style={[screenStyles.longButton, styles.longButton]}
                 onPress={() => this.changePhoneNumber()}
               >
-                <Text style={styles.themeButtonTitle}>
+                <Text style={[screenStyles.longButtonText, styles.longButtonText]}>
                   {this.state.confirmResult ? 'Change Phone Number' : 'Send Code'}
                 </Text>
               </TouchableOpacity>
@@ -169,10 +170,10 @@ class PhoneAuthScreen extends Component {
 
             {!this.state.confirmResult && (
               <TouchableOpacity
-                style={[styles.themeButton, { marginTop: 0, marginBottom: '10%' }]}
+                style={[screenStyles.longButton,styles.longButton ]}
                 onPress={() => this.handleSendCode()}
               >
-                <Text style={styles.themeButtonTitle}>
+                <Text style={[screenStyles.longButtonText, styles.longButtonText]}>
                   {this.state.confirmResult ? 'Change Phone Number' : 'Submit'}
                 </Text>
               </TouchableOpacity>
@@ -256,6 +257,14 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 30,
   },
+  longButton: { 
+    borderColor: colors.hex, 
+    backgroundColor: colors.hex, 
+    marginBottom: '5%' },
+
+  longButtonText: { 
+      color: '#FFFFFF',},
+
   themeButtonTitle: {
     fontFamily: fontMed,
     fontSize: 24,

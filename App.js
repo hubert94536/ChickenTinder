@@ -143,7 +143,7 @@ class App extends React.Component {
           },
         },
         {
-          initialRouteName: start,
+          initialRouteName: 'Phone',
           headerMode: 'none',
           animationEnabled: false,
         },
