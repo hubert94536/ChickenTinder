@@ -121,7 +121,7 @@ class createAccount extends React.Component {
     - must not start or end with space
     - 2-15 characters
     */
-    const regex = /^[a-zA-Z0-9._\-]([ ._\-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._\-]$/
+    const regex = /^[a-zA-Z0-9._-]([ ._-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._-]$/
     if (!regex.test(this.state.name)) {
       this.setState({ validNameFormat: false })
     } else {
@@ -268,7 +268,7 @@ createAccount.propTypes = {
   // image: PropTypes.object,
   changeName: PropTypes.func,
   changeUsername: PropTypes.func,
-  changeImagee: PropTypes.func,
+  changeImage: PropTypes.func,
 }
 const styles = StyleSheet.create({
   main: {
