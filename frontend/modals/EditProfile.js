@@ -69,7 +69,7 @@ class EditProfile extends React.Component {
     - must not start or end with space
     - 2-15 characters
     */
-    const regex = /^[a-zA-Z0-9._\-]([._\-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._\-]$/
+    const regex = /^[a-zA-Z0-9._-]([._-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._-]$/
     if (!regex.test(this.state.usernameValue)) {
       this.setState({ validUsernameFormat: false })
     } else {
@@ -83,7 +83,7 @@ class EditProfile extends React.Component {
     - must not start or end with space
     - 2-15 characters
     */
-    const regex = /^[a-zA-Z0-9._\-]([ ._\-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._\-]$/
+    const regex = /^[a-zA-Z0-9._-]([ ._-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._-]$/
     if (!regex.test(this.state.nameValue)) {
       this.setState({ validNameFormat: false })
     } else {
@@ -183,10 +183,10 @@ EditProfile.propTypes = {
   nameChange: PropTypes.func,
   makeChanges: PropTypes.func,
   visible: PropTypes.bool,
-  // error: PropTypes.object,
-  // name: PropTypes.object,
-  // username: PropTypes.object,
-  // image: PropTypes.object,
+  error: PropTypes.bool,
+  name: PropTypes.object,
+  username: PropTypes.object,
+  image: PropTypes.object,
 }
 
 const styles = StyleSheet.create({

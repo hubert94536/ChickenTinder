@@ -2,7 +2,14 @@
 import React from 'react'
 import { bindActionCreators } from 'redux'
 import { BlurView } from '@react-native-community/blur'
-import { changeFriends, hideError, showError } from '../redux/Actions.js'
+import {
+  changeFriends,
+  hideError,
+  showError,
+  hideKick,
+  setCode,
+  hideEnd,
+} from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import {
   Dimensions,
@@ -48,13 +55,12 @@ class Home extends React.Component {
     socket.getSocket().once('update', (res) => {
       this.setState({ invite: false })
       global.host = res.members[res.host].username
-      global.code = res.code
+      this.props.setCode(res.code)
       global.isHost = res.members[res.host].username === this.props.username.username
       this.props.navigation.replace('Group', {
         response: res,
       })
     })
-
     // //uncomment if testing friends/requests
     // accountsApi.createFBUserTest('Hubes2', 32, 'hbc', 'hhcc@gmail.com', '50', '35434354')
     // accountsApi.createFBUserTest('Hanna2', 33, 'hannaaa', 'hannco@gmail.com', '51', '17891234')
@@ -74,7 +80,11 @@ class Home extends React.Component {
   render() {
     return (
       <ImageBackground
-        source={this.state.join ? require(homedark) : require(home)}
+        source={
+          this.state.join || this.props.error || this.props.kick || this.props.end
+            ? require(homedark)
+            : require(home)
+        }
         style={styles.background}
       >
         <View style={styles.main}>
@@ -126,7 +136,7 @@ class Home extends React.Component {
             </TouchableHighlight>
           </View>
           <TabBar
-            goHome={() => { }}
+            goHome={() => {}}
             goSearch={() => {
               socket.getSocket().off()
               this.props.navigation.replace('Search')
@@ -149,14 +159,14 @@ class Home extends React.Component {
             onPress={() => this.setState({ join: false })}
           />
 
-          {(this.state.join || this.props.error) && (
+          {/* {(this.state.join || this.props.error) && (
             <BlurView
               blurType="dark"
               blurAmount={10}
               reducedTransparencyFallbackColor="white"
               style={modalStyles.blur}
             />
-          )}
+          )} */}
           {this.props.error && (
             <Alert
               title="Error, please try again"
@@ -164,6 +174,26 @@ class Home extends React.Component {
               height="20%"
               press={() => this.props.hideError()}
               cancel={() => this.props.hideError()}
+            />
+          )}
+          {this.props.kick && (
+            <Alert
+              title="Oh no!"
+              body="You were kicked from the group!"
+              buttonAff="Close"
+              height="20%"
+              press={() => this.props.hideKick()}
+              cancel={() => this.props.hideKick()}
+            />
+          )}
+          {this.props.end && (
+            <Alert
+              title="Oh no!"
+              body="The host has ended the group session"
+              buttonAff="Close"
+              height="20%"
+              press={() => this.props.hideEnd()}
+              cancel={() => this.props.hideEnd()}
             />
           )}
         </View>
@@ -176,7 +206,10 @@ const mapStateToProps = (state) => {
   const { friends } = state
   const { error } = state
   const { username } = state
-  return { friends, error, username }
+  const { code } = state
+  const { kick } = state
+  const { end } = state
+  return { friends, error, username, code, kick, end }
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -185,6 +218,9 @@ const mapDispatchToProps = (dispatch) =>
       changeFriends,
       showError,
       hideError,
+      setCode,
+      hideKick,
+      hideEnd,
     },
     dispatch,
   )
@@ -194,11 +230,16 @@ export default connect(mapStateToProps, mapDispatchToProps)(Home)
 Home.propTypes = {
   navigation: PropTypes.object,
   error: PropTypes.bool,
-  // friends: PropTypes.object,
+  friends: PropTypes.object,
   username: PropTypes.object,
   showError: PropTypes.func,
   hideError: PropTypes.func,
   changeFriends: PropTypes.func,
+  setCode: PropTypes.func,
+  hideKick: PropTypes.func,
+  hideEnd: PropTypes.func,
+  kick: PropTypes.bool,
+  end: PropTypes.bool,
 }
 const styles = StyleSheet.create({
   main: {

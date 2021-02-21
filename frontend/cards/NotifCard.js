@@ -57,14 +57,11 @@ export default class NotifCard extends React.Component {
   }
 
   handleClick() {
-
-    console.log("Pressed")
-    if(this.props.type == 'invite')
-    {
+    console.log('Pressed')
+    if (this.props.type == 'invite') {
       console.log(this.props.content)
       socket.joinRoom(this.props.content)
     }
-
   }
 
   pressTrash() {
@@ -98,7 +95,9 @@ export default class NotifCard extends React.Component {
             )}
 
             {this.props.type == 'pending' && (
-              <Text style={[imgStyles.bookFont, styles.text]}>{this.props.name} sent you a friend request!</Text>
+              <Text style={[imgStyles.bookFont, styles.text]}>
+                {this.props.name} sent you a friend request!
+              </Text>
             )}
 
             <Text style={[imgStyles.bookFont, styles.username]}>@{this.props.username}</Text>
@@ -122,17 +121,17 @@ export default class NotifCard extends React.Component {
 
           {this.props.type == 'pending' && (
             <View style={styles.request}>
-            <Icon
-              style={[imgStyles.icon, styles.pend]}
-              name="check-circle"
-              onPress={() => this.acceptFriend()}
-            />
-            <AntDesign
-              style={[imgStyles.icon, styles.pend, styles.black]}
-              name="closecircleo"
-              onPress={() => this.rejectFriend()}
-            />
-          </View>
+              <Icon
+                style={[imgStyles.icon, styles.pend]}
+                name="check-circle"
+                onPress={() => this.acceptFriend()}
+              />
+              <AntDesign
+                style={[imgStyles.icon, styles.pend, styles.black]}
+                name="closecircleo"
+                onPress={() => this.rejectFriend()}
+              />
+            </View>
           )}
         </View>
       </TouchableWithoutFeedback>
@@ -226,12 +225,10 @@ const styles = StyleSheet.create({
     fontSize: normalize(12),
   },
   black: { color: 'black' },
-  pend: { fontSize: normalize(25),
-     marginHorizontal: '3%'
-     },
+  pend: { fontSize: normalize(25), marginHorizontal: '3%' },
   request: {
-    flexDirection: 'row', justifyContent: 'flex-end', 
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
     // borderColor: 'black', borderWidth: 2
-  }
-
+  },
 })

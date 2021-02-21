@@ -2,7 +2,6 @@ import React from 'react'
 import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { bindActionCreators } from 'redux'
-import { BlurView } from '@react-native-community/blur'
 import { connect } from 'react-redux'
 import { changeFriends, hideError, showError } from '../redux/Actions.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -10,9 +9,7 @@ import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
-import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
-import { faGlasses } from '@fortawesome/free-solid-svg-icons'
 
 class Card extends React.Component {
   constructor(props) {
@@ -30,13 +27,12 @@ class Card extends React.Component {
     friendsApi
       .removeFriendship(this.props.uid)
       .then(() => {
-        console.log(this.props.friends.friends)
         var filteredArray = this.props.friends.friends.filter((item) => {
           return item.username !== this.props.username
         })
-        this.props.changeFriends(newArr)
+        this.props.changeFriends(filteredArray)
         this.props.press(filteredArray)
-        this.setState({ status: 'add' })
+        if (this.props.changeAdd) this.setState({ status: 'add' })
       })
       .catch(() => {
         this.props.showError()
@@ -50,7 +46,7 @@ class Card extends React.Component {
         var filteredArray = this.props.friends.friends.filter((item) => {
           return item.username !== this.props.username
         })
-        this.props.changeFriends(newArr)
+        this.props.changeFriends(filteredArray)
         this.props.press(filteredArray)
         this.setState({ status: 'add' })
       })
@@ -68,7 +64,6 @@ class Card extends React.Component {
       this.setState({ status: 'friends' })
     })
     this.props.showError
-    console.log(this.props.friends.friends)
   }
 
   addFriend() {
@@ -245,7 +240,12 @@ Card.propTypes = {
   name: PropTypes.string,
   showError: PropTypes.func,
   hideError: PropTypes.func,
-  // error: PropTypes.bool,
+  unfriendAlert: PropTypes.func,
+  error: PropTypes.bool,
+  friends: PropTypes.object,
+  changeFriends: PropTypes.func,
+  accept: PropTypes.func,
+  changeAdd: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

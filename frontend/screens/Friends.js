@@ -18,6 +18,7 @@ const sleep = (milliseconds) => {
 }
 
 const height = Dimensions.get('window').height
+const width = Dimensions.get('window').width
 
 class Friends extends React.Component {
   constructor(props) {
@@ -39,13 +40,14 @@ class Friends extends React.Component {
       .getFriends()
       .then((res) => {
         this.props.changeFriends(res.friendList)
+        this.editFriends()
       })
       .catch(() => {
         this.props.showError()
       })
   }
 
-  componentDidMount() {
+  editFriends() {
     var pushFriends = []
     for (var friend in this.props.friends.friends) {
       if (this.props.friends.friends[friend].status === 'friends') {
@@ -56,10 +58,18 @@ class Friends extends React.Component {
     this.setState({
       friends: pushFriends,
       data: pushFriends,
-      refreshing: false,
       friendsApiCalled: true,
     })
     this.props.onFriendsChange(pushFriends.length)
+  }
+
+  componentDidMount() {
+    this.editFriends()
+    // for(var i = 0; i < this.props.friends.friends.length; i++)
+    // {
+    //   if(this.props.friends.friends[i].status === 'requested')
+    //     friendsApi.acceptFriendRequest(this.props.friends.friends[i].uid)
+    // }
   }
 
   //  searches the users friends by username
@@ -75,16 +85,10 @@ class Friends extends React.Component {
     this.setState({ friends: newData })
   }
 
-  async removeRequest(friend, newArr) {
-    friendsApi
-      .removeFriendship(friend)
-      .then(() => {
-        this.props.changeFriends(newArr)
-        this.setState({ friends: newArr, data: newArr })
-      })
-      .catch(() => {
-        this.props.showError()
-      })
+  async removeRequest(newArr) {
+    this.props.changeFriends(newArr)
+    this.setState({ friends: newArr, data: newArr })
+    console.log(newArr)
   }
 
   // Called on friends-list pulldown refresh
@@ -112,28 +116,29 @@ class Friends extends React.Component {
             status={status}
             key={i}
             index={i}
-            press={(uid, newArr) => this.removeRequest(uid, newArr)}
+            press={(newArr) => this.removeRequest(newArr)}
             unfriendAlert={this.props.unfriendAlert}
+            changeAdd={false}
           />,
         )
       }
     }
     return (
       <View>
+        <View>
+          <SearchBar
+            containerStyle={styles.container}
+            inputContainerStyle={styles.inputContainer}
+            inputStyle={(styles.text, styles.input)}
+            placeholder="Search by username"
+            onChangeText={(text) => this.searchFilterFunction(text)}
+            value={this.state.search}
+            lightTheme
+            round
+          />
+        </View>
         {this.state.friends.length > 0 && ( //Shows search bar + friends list if there are friends
           <View>
-            <View>
-              <SearchBar
-                containerStyle={styles.container}
-                inputContainerStyle={styles.inputContainer}
-                inputStyle={(styles.text, styles.input)}
-                placeholder="Search by username"
-                onChangeText={(text) => this.searchFilterFunction(text)}
-                value={this.state.search}
-                lightTheme
-                round
-              />
-            </View>
             <ScrollView
               style={[styles.scrollView]}
               alwaysBounceVertical="true"
@@ -157,7 +162,7 @@ class Friends extends React.Component {
             )}
           </View>
         )}
-        {this.state.friends.length === 0 &&
+        {this.props.friends.friends.length === 0 &&
           this.state.friendsApiCalled && ( //Show no friends view if there aren't any friends
             <View>
               <Icon name="emoticon-sad-outline" style={[styles.sadFace]} />
@@ -197,14 +202,15 @@ export default connect(mapStateToProps, mapDispatchToProps)(Friends)
 Friends.propTypes = {
   isFriends: PropTypes.bool,
   onFriendsChange: PropTypes.func,
-  // error: PropTypes.bool,
-  // friends: PropTypes.object,
-  // refresh: PropTypes.bool,
+  error: PropTypes.bool,
+  friends: PropTypes.object,
+  refresh: PropTypes.bool,
   showError: PropTypes.func,
   hideError: PropTypes.func,
   showRefresh: PropTypes.func,
   hideRefresh: PropTypes.func,
   changeFriends: PropTypes.func,
+  unfriendAlert: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
@@ -213,7 +219,7 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
     borderTopColor: 'transparent',
     width: '100%',
-    height: '35%',
+    height: width * 0.12,
     alignSelf: 'center',
   },
   inputContainer: {
