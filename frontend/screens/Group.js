@@ -446,10 +446,7 @@ class Group extends React.Component {
                     : { opacity: 0.4 },
                 ]}
                 onPress={() => {
-                  // console.log(
-                  //   `Submit Filters: ${this.state.userSubmitted}|${this.state.drawerOpen}`,
-                  // )
-                  if (!this.state.userSubmitted && !this.state.drawerOpen)
+                  if (!this.state.userSubmitted && this.state.drawerOpen)
                     this.filterRef.current.submitUserFilters()
                 }}
               >
