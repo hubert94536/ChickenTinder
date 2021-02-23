@@ -60,9 +60,8 @@ class Group extends React.Component {
       leaveAlert: false,
       endAlert: false,
       chooseFriends: false,
-
-      // Disabling buttons
       disabled: false,
+      drawerOpen: false,
     }
     console.log(members)
     this.updateMemberList()
@@ -252,6 +251,8 @@ class Group extends React.Component {
           style={styles.drawer}
           initialDrawerPos={100}
           enabled={!this.state.blur}
+          onOpen={() => this.setState({ drawerOpen: true })}
+          onClose={() => this.setState({ drawerOpen: false })}
           renderContainerView={
             <View style={styles.main}>
               <View style={styles.center}>
@@ -414,7 +415,10 @@ class Group extends React.Component {
                 underlayColor={colors.hex}
                 activeOpacity={1}
                 disabled={this.state.disabled}
-                onPress={() => this.start()}
+                onPress={() => {
+                  console.log(this.state.drawerOpen)
+                  if (!this.state.drawerOpen) this.start()
+                }}
                 style={[
                   screenStyles.bigButton,
                   styles.bigButton,
@@ -433,10 +437,13 @@ class Group extends React.Component {
                 style={[
                   screenStyles.bigButton,
                   styles.bigButton,
-                  !this.state.userSubmitted ? { opacity: 1 } : { opacity: 0.4 },
+                  !this.state.userSubmitted || this.state.drawerOpen
+                    ? { opacity: 1 }
+                    : { opacity: 0.4 },
                 ]}
                 onPress={() => {
-                  if (!this.state.userSubmitted) this.filterRef.current.submitUserFilters()
+                  if (!this.state.userSubmitted && this.state.drawerOpen)
+                    this.filterRef.current.submitUserFilters()
                 }}
               >
                 <Text style={styles.buttonText}>
@@ -450,11 +457,12 @@ class Group extends React.Component {
             style={styles.leave}
             activeOpacity={1}
             onPress={() => {
-              // console.log('left')
-              this.setState({ blur: true })
-              global.isHost
-                ? this.setState({ endAlert: true })
-                : this.setState({ leaveAlert: true })
+              if (!this.state.drawerOpen) {
+                this.setState({ blur: true })
+                global.isHost
+                  ? this.setState({ endAlert: true })
+                  : this.setState({ leaveAlert: true })
+              }
             }}
             underlayColor="white"
           >
