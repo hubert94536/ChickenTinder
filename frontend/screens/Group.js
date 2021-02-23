@@ -414,11 +414,11 @@ class Group extends React.Component {
               <TouchableHighlight
                 underlayColor={colors.hex}
                 activeOpacity={1}
-                disabled={this.state.disabled}
                 onPress={() => {
                   console.log(this.state.drawerOpen)
                   if (!this.state.drawerOpen) this.start()
                 }}
+                disabled={this.state.disabled}
                 style={[
                   screenStyles.bigButton,
                   styles.bigButton,
