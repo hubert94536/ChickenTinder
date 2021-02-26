@@ -91,6 +91,7 @@ class Group extends React.Component {
 
     socket.getSocket().once('start', (restaurants) => {
       if (restaurants.length > 0) {
+        socket.getSocket().off()
         global.restaurants = restaurants
         this.props.navigation.replace('Round')
       } else {
@@ -106,6 +107,7 @@ class Group extends React.Component {
     socket.getSocket().on('reselect', () => {
       console.log('reselect')
     })
+
   }
 
   setUserSubmit() {
@@ -147,8 +149,6 @@ class Group extends React.Component {
       memberList.push(a)
       a.f = false
       memberRenderList.push(a)
-      memberRenderList.push(a)
-      memberRenderList.push(a)
     }
     const footer = {}
     footer.f = 'a'
@@ -160,7 +160,9 @@ class Group extends React.Component {
     // leaving due to host ending session
     if (end) {
       socket.endLeave()
-      this.props.showEnd()
+      if (!global.isHost) {
+        this.props.showEnd()
+      }
     }
     // normal user leaves
     else {
