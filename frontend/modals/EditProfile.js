@@ -76,7 +76,7 @@ class EditProfile extends React.Component {
       this.setState({ validNameFormat: true })
     }
   }
-  
+
   validateUsername() {
     /*regex expression: 
     - alphanumeric characters (lowercase or uppercase), dot (.), underscore (_), hyphen(-)

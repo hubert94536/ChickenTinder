@@ -1,12 +1,4 @@
-import {
-  USERNAME,
-  NAME,
-  EMAIL,
-  PHOTO,
-  PHONE,
-  REGISTRATION_TOKEN,
-  UID,
-} from 'react-native-dotenv'
+import { USERNAME, NAME, EMAIL, PHOTO, PHONE, REGISTRATION_TOKEN, UID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import FBSDK from 'react-native-fbsdk'
 import auth from '@react-native-firebase/auth'
@@ -174,17 +166,17 @@ const deleteUser = async () => {
         credential = await auth.FacebookAuthProvider.credential(data.accessToken)
         break
       default:
-      return auth().verifyPhoneNumber(auth().currentUser.phoneNumber)
-        .on('state_changed', (phoneAuthSnapshot) => {
-          console.log('State: ', phoneAuthSnapshot.state);
-          switch (phoneAuthSnapshot.state){
-            case auth.PhoneAuthState.CODE_SENT:
-              break;
-            case auth.PhoneAuthState.ERROR:
-              break;
-          }
-        });
-
+        return auth()
+          .verifyPhoneNumber(auth().currentUser.phoneNumber)
+          .on('state_changed', (phoneAuthSnapshot) => {
+            console.log('State: ', phoneAuthSnapshot.state)
+            switch (phoneAuthSnapshot.state) {
+              case auth.PhoneAuthState.CODE_SENT:
+                break
+              case auth.PhoneAuthState.ERROR:
+                break
+            }
+          })
     }
     deleteUserWithCredential(credential)
   } catch (err) {

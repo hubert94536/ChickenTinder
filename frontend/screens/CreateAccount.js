@@ -63,12 +63,15 @@ class createAccount extends React.Component {
   }
 
   //  checks whether or not the username can be set
-  handleClick = async ()=> {
+  handleClick = async () => {
     await this.checkUsernameValidity()
-    if (!this.state.validUsername || !this.state.validNameFormat || !this.state.validUsernameFormat) {
+    if (
+      !this.state.validUsername ||
+      !this.state.validNameFormat ||
+      !this.state.validUsernameFormat
+    ) {
       return
-    }
-    else {
+    } else {
       this.props.changeUsername(this.state.username)
       this.props.changeName(this.state.name)
       this.props.changeImage(this.state.photo)
@@ -92,16 +95,16 @@ class createAccount extends React.Component {
           this.setState({ errorAlert: true })
           return
         })
-        AsyncStorage.multiSet([
-          [USERNAME, this.state.username],
-          [PHOTO, this.state.photo],
-          [NAME, this.state.name],
-        ])
-        if (this.state.phone) {
-          AsyncStorage.setItem(PHONE, this.state.phone)
-        } else {
-          AsyncStorage.setItem(EMAIL, this.state.email)
-        }
+      AsyncStorage.multiSet([
+        [USERNAME, this.state.username],
+        [PHOTO, this.state.photo],
+        [NAME, this.state.name],
+      ])
+      if (this.state.phone) {
+        AsyncStorage.setItem(PHONE, this.state.phone)
+      } else {
+        AsyncStorage.setItem(EMAIL, this.state.email)
+      }
     }
   }
 
@@ -170,8 +173,10 @@ class createAccount extends React.Component {
         </TouchableHighlight>
         <Text style={[screenStyles.textBook, styles.fieldName, styles.display]}>Display Name</Text>
         <TextInput
-          style={[screenStyles.textBook, styles.fieldText, 
-            this.state.validNameFormat ? styles.fieldTextMargin : styles.fieldTextMarginWarning
+          style={[
+            screenStyles.textBook,
+            styles.fieldText,
+            this.state.validNameFormat ? styles.fieldTextMargin : styles.fieldTextMarginWarning,
           ]}
           textAlign="left"
           onChangeText={(name) => {
@@ -191,13 +196,14 @@ class createAccount extends React.Component {
         <TextInput
           style={[
             screenStyles.textBook,
-            styles.fieldText, 
+            styles.fieldText,
             this.state.validUsername && this.state.validUsernameFormat
-              ? styles.fieldTextMargin : styles.fieldTextMarginWarning
+              ? styles.fieldTextMargin
+              : styles.fieldTextMarginWarning,
           ]}
           textAlign="left"
           onChangeText={(username) => {
-            this.setState({ username: username.split(' ').join('_') , validUsername: true}, () => {
+            this.setState({ username: username.split(' ').join('_'), validUsername: true }, () => {
               this.checkUsernameSyntax()
             })
           }}
@@ -210,20 +216,27 @@ class createAccount extends React.Component {
           maxLength={15}
         />
 
-        {!this.state.validUsername && this.state.validUsernameFormat &&(
+        {!this.state.validUsername && this.state.validUsernameFormat && (
           <Text style={[screenStyles.text, styles.warningText]}>This username is taken</Text>
         )}
         {!this.state.validUsernameFormat && this.state.validUsername && (
           <Text style={[screenStyles.text, styles.warningText]}>Invalid username format</Text>
         )}
         {!this.state.validUsernameFormat && !this.state.validUsername && (
-          <Text style={[screenStyles.text, styles.warningText]}>Invalid username format and username is taken</Text>
+          <Text style={[screenStyles.text, styles.warningText]}>
+            Invalid username format and username is taken
+          </Text>
         )}
         {!this.state.facebook && (
           <View>
             <Text style={[screenStyles.textBook, styles.fieldName]}>Phone Number</Text>
             <Text
-              style={[screenStyles.textBook, styles.fieldText, styles.fieldTextMargin, styles.fixedText]}
+              style={[
+                screenStyles.textBook,
+                styles.fieldText,
+                styles.fieldTextMargin,
+                styles.fixedText,
+              ]}
               textAlign="left"
             >
               {this.state.phone}
@@ -235,7 +248,12 @@ class createAccount extends React.Component {
             <Text style={[screenStyles.textBook, styles.fieldName]}>Email</Text>
 
             <Text
-              style={[screenStyles.textBook, styles.fieldText, styles.fieldTextMargin, styles.fixedText]}
+              style={[
+                screenStyles.textBook,
+                styles.fieldText,
+                styles.fieldTextMargin,
+                styles.fixedText,
+              ]}
               textAlign="left"
             >
               {this.state.email}
@@ -367,6 +385,6 @@ const styles = StyleSheet.create({
     fontSize: normalize(12),
     marginHorizontal: '12%',
     alignSelf: 'flex-start',
-    marginBottom: '1.40%'
+    marginBottom: '1.40%',
   },
 })
