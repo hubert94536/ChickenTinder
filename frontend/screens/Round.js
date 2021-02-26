@@ -191,7 +191,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       setCode,
       showKick,
-      showEnd
+      showEnd,
     },
     dispatch,
   )
