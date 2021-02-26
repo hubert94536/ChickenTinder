@@ -91,6 +91,7 @@ class Group extends React.Component {
 
     socket.getSocket().once('start', (restaurants) => {
       if (restaurants.length > 0) {
+        socket.getSocket().off()
         global.restaurants = restaurants
         this.props.navigation.replace('Round')
       } else {

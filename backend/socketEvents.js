@@ -468,7 +468,7 @@ module.exports = (io) => {
 
     // alert all users to choose random pick
     socket.on('choose', (data) => {
-      if (socket.user.room && data.index) {
+      if (socket.user.room && data.index >= 0) {
         io.in(socket.user.room).emit('choose', data.index)
       }
     })

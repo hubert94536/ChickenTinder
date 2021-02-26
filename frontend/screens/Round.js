@@ -26,6 +26,7 @@ class Round extends React.Component {
       leave: false,
     }
     socket.getSocket().once('match', (data) => {
+      socket.getSocket().off()
       var res
       for (var i = 0; i < global.restaurants.length; i++) {
         if (global.restaurants[i].id === data) {
@@ -41,6 +42,7 @@ class Round extends React.Component {
     socket.getSocket().on('leave', () => {
       this.leaveGroup(true)
     })
+
   }
 
   likeRestaurant(resId) {
@@ -92,6 +94,7 @@ class Round extends React.Component {
               this.likeRestaurant(global.restaurants[cardIndex].id)
             }}
             onSwipedAll={() => {
+              socket.getSocket().off()
               //let backend know you're done
               socket.finishedRound()
               //go to the loading page
