@@ -186,7 +186,7 @@ const deleteUser = async () => {
         });
 
     }
-    // deleteUserWithCredential(credential)
+    deleteUserWithCredential(credential)
   } catch (err) {
     console.log(err)
     return Promise.reject(err)
