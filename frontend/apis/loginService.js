@@ -127,7 +127,7 @@ const logout = async () => {
     if (auth().currentUser.providerData[0].providerId === 'facebook.com') {
       LoginManager.logOut()
     }
-    await notificationsApi.unlinkToken()` q `
+    await notificationsApi.unlinkToken()
     await auth().signOut()
     await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
   } catch (err) {

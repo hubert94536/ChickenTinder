@@ -215,7 +215,6 @@ module.exports = (io) => {
           // check if the session exists
           let session = await sendCommand('JSON.GET', [data.code])
           session = JSON.parse(session)
-          console.log(session)
           if (session) {
             // initialize member object
             let member = {}
