@@ -211,7 +211,6 @@ module.exports = (io) => {
     // updates room when someone joins
     socket.on('join', async (data) => {
       try {
-        console.log(socket.user.room)
         if (data.code) {
           // check if the session exists
           let session = await sendCommand('JSON.GET', [data.code])
@@ -235,6 +234,7 @@ module.exports = (io) => {
             socket.join(data.code)
             io.in(data.code).emit('update', session)
           } else {
+            console.log('exception')
             socket.emit('exception', 'join')
           }
         }
@@ -467,7 +467,7 @@ module.exports = (io) => {
 
     // alert all users to choose random pick
     socket.on('choose', (data) => {
-      if (socket.user.room && data.index) {
+      if (socket.user.room && data.index >= 0) {
         io.in(socket.user.room).emit('choose', data.index)
       }
     })

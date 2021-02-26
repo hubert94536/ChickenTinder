@@ -1,10 +1,4 @@
 import {
-  FIREBASE_API_KEY,
-  FIREBASE_APPLICATION_ID,
-  FIREBASE_AUTH_DOMAIN,
-  FIREBASE_DATABASE,
-  FIREBASE_STORAGE_BUCKET,
-  FIREBASE_PROJECT_ID,
   USERNAME,
   NAME,
   EMAIL,
@@ -167,30 +161,34 @@ const deleteUser = async () => {
     var credential
     switch (auth().currentUser.providerData[0].providerId) {
       case 'facebook.com':
-        // Need to refresh access token since old one expired
-        await AccessToken.refreshCurrentAccessTokenAsync()
         // Retrieve accesstoken to delete use from Firebase
         const data = await AccessToken.getCurrentAccessToken()
+        if (!data) {
+          // Attempt a login using the Facebook login dialog asking for default permissions.
+          const login = await LoginManager.logInWithPermissions(['public_profile', 'email'])
+          if (login.isCancelled) {
+            return Promise.reject(new Error('Cancelled request'))
+          }
+          data = await AccessToken.getCurrentAccessToken()
+        }
         credential = await auth.FacebookAuthProvider.credential(data.accessToken)
         break
-      case 'phone':
-        // return auth().verifyPhoneNumber(auth().currentUser.phoneNumber)
-        //   .on('state_changed', (phoneAuthSnapshot) => {
-        //     console.log('State: ', phoneAuthSnapshot.state);
-        //     switch (phoneAuthSnapshot.state){
-        //       case auth.PhoneAuthState.CODE_SENT:
-        //         break;
-        //       case auth.PhoneAuthState.ERROR:
-        //         break;
-        //     }
-        //   });
-        break
       default:
-        throw new Error('Could not determine provider')
+      return auth().verifyPhoneNumber(auth().currentUser.phoneNumber)
+        .on('state_changed', (phoneAuthSnapshot) => {
+          console.log('State: ', phoneAuthSnapshot.state);
+          switch (phoneAuthSnapshot.state){
+            case auth.PhoneAuthState.CODE_SENT:
+              break;
+            case auth.PhoneAuthState.ERROR:
+              break;
+          }
+        });
+
     }
     deleteUserWithCredential(credential)
   } catch (err) {
-    console.log('------ERROR DELETING USER')
+    console.log(err)
     return Promise.reject(err)
   }
 }
