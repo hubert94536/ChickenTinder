@@ -164,13 +164,22 @@ class Friends extends React.Component {
         )}
         {this.props.friends.friends.length === 0 &&
           this.state.friendsApiCalled && ( //Show no friends view if there aren't any friends
-            <View>
-              <Icon name="emoticon-sad-outline" style={[styles.sadFace]} />
-              <Text style={[screenStyles.text, styles.noFriendText1]}>No friends, yet</Text>
-              <Text style={[screenStyles.textBook, styles.noFriendText2]}>
-                You have no friends, yet. Add friends using the search feature below!
-              </Text>
-            </View>
+            <ScrollView
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.props.refresh}
+                  onRefresh={this.onRefresh.bind(this)}
+                />
+              }
+            >
+              <View>
+                <Icon name="emoticon-sad-outline" style={[styles.sadFace]} />
+                <Text style={[screenStyles.text, styles.noFriendText1]}>No friends, yet</Text>
+                <Text style={[screenStyles.textBook, styles.noFriendText2]}>
+                  You have no friends, yet. Add friends using the search feature below!
+                </Text>
+              </View>
+            </ScrollView>
           )}
         {!this.state.friendsApiCalled && <View></View>}
       </View>
