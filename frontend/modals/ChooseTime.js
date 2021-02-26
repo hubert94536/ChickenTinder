@@ -24,7 +24,7 @@ export default class Time extends React.Component {
       selectedHour: '',
       selectedMinute: '',
       invalidTime: false,
-      timeMode: 'pm',
+      timeMode: 'AM',
       switch: true,
     }
   }
@@ -48,11 +48,11 @@ export default class Time extends React.Component {
     if (hour < 0 || hour > 12 || min < 0 || min > 59 || isNaN(hour) || isNaN(min)) {
       this.setState({ invalidTime: true })
     } else {
-      if (this.state.timeMode === 'pm') {
+      if (this.state.timeMode === 'PM') {
         if (hour !== 12) {
           hour = hour + 12
         }
-      } else if (this.state.timeMode === 'am') {
+      } else if (this.state.timeMode === 'AM') {
         if (hour === 12) {
           hour = 0
         }
@@ -94,10 +94,10 @@ export default class Time extends React.Component {
               <View style={styles.switchButton}>
                 <TimeSwitch
                   onValueChange={(val) => this.setState({ timeMode: val })}
-                  text1="pm"
-                  text2="am"
-                  switchWidth={80}
-                  switchHeight={25}
+                  text1="AM"
+                  text2="PM"
+                  switchWidth={90}
+                  switchHeight={30}
                   switchBorderColor={screenStyles.hex.color}
                   btnBorderColor={screenStyles.hex.color}
                   btnBackgroundColor={screenStyles.hex.color}
