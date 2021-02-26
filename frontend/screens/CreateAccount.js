@@ -102,7 +102,7 @@ class createAccount extends React.Component {
 
   checkUsernameValidity() {
     if (this.state.username === '') {
-      this.setState({ validUsername: false })
+      this.setState({ validUsernameFormat: false })
     } else {
       accountsApi
         .checkUsername(this.state.username)
@@ -160,14 +160,22 @@ class createAccount extends React.Component {
         </TouchableHighlight>
         <Text style={[screenStyles.textBook, styles.fieldName, styles.display]}>Display Name</Text>
         <TextInput
-          style={[screenStyles.textBook, styles.fieldText]}
+          style={[screenStyles.textBook, styles.fieldText, {
+            marginBottom:
+              this.state.validNameFormat ? '7%' : '3%',
+          }]}
           textAlign="left"
           onChangeText={(name) => {
-            this.setState({ name })
+            this.setState({ name }, () => {
+              this.checkNameSyntax()
+            })
           }}
           value={this.state.name}
           maxLength={15}
         />
+        {!this.state.validNameFormat && (
+          <Text style={[screenStyles.text, styles.warningText]}>Only A-Z, 0-9, -, _, . characters allowed</Text>
+        )}
         <Text style={[screenStyles.textBook, styles.fieldName]}>Username</Text>
         <TextInput
           style={[
@@ -175,7 +183,7 @@ class createAccount extends React.Component {
             styles.fieldText,
             {
               marginBottom:
-                this.state.validUsername && this.state.validUsernameFormat ? '7%' : '0%',
+                this.state.validUsername && this.state.validUsernameFormat ? '7%' : '2%',
             },
           ]}
           textAlign="left"
@@ -190,10 +198,10 @@ class createAccount extends React.Component {
         />
 
         {!this.state.validUsername && (
-          <Text style={[screenStyles.text, styles.warningText]}>This username is taken</Text>
+          <Text style={[screenStyles.text, styles.warningText]}>Username is taken :(</Text>
         )}
         {!this.state.validUsernameFormat && (
-          <Text style={[screenStyles.text, styles.warningText]}>Invalid username format</Text>
+          <Text style={[screenStyles.text, styles.warningText]}>Only A-Z, 0-9, -, _, . characters allowed</Text>
         )}
         {!this.state.facebook && (
           <View>
