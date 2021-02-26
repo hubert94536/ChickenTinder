@@ -9,14 +9,13 @@ import Feather from 'react-native-vector-icons/Feather'
 import Swiper from 'react-native-deck-swiper'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
-import colors from '../../styles/colors.js'
 import global from '../../global.js'
 import modalStyles from '../../styles/modalStyles.js'
 import RoundCard from '../cards/RoundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import normalize from '../../styles/normalize.js'
-import { setCode, showKick } from '../redux/Actions.js'
+import { setCode, showKick, showEnd } from '../redux/Actions.js'
 
 class Round extends React.Component {
   constructor(props) {
@@ -26,7 +25,6 @@ class Round extends React.Component {
       index: 1,
       leave: false,
     }
-
     socket.getSocket().once('match', (data) => {
       var res
       for (var i = 0; i < global.restaurants.length; i++) {
@@ -39,7 +37,8 @@ class Round extends React.Component {
         restaurant: res,
       })
     })
-    socket.getSocket().once('leave', () => {
+
+    socket.getSocket().on('leave', () => {
       this.leaveGroup(true)
     })
   }
@@ -52,7 +51,9 @@ class Round extends React.Component {
     socket.getSocket().off()
     if (end) {
       socket.endLeave()
-      this.props.showKick()
+      if (!global.isHost) {
+        this.props.showEnd()
+      }
     } else {
       socket.leaveRound()
     }
@@ -63,8 +64,9 @@ class Round extends React.Component {
     this.props.navigation.replace('Home')
   }
 
-  endGroup() {
-    this.setState({ leave: false })
+  // host ends session
+  endRound() {
+    this.setState({ endAlert: false, blur: false })
     socket.endRound()
   }
 
@@ -167,7 +169,7 @@ class Round extends React.Component {
             body="Leaving ends the group for everyone"
             buttonAff="Leave"
             height="30%"
-            press={() => socket.endRound()}
+            press={() => this.endRound()}
             cancel={() => this.setState({ leave: false })}
           />
         )}
@@ -186,6 +188,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       setCode,
       showKick,
+      showEnd
     },
     dispatch,
   )

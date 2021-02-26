@@ -211,11 +211,11 @@ module.exports = (io) => {
     // updates room when someone joins
     socket.on('join', async (data) => {
       try {
-        console.log(socket.user.room)
         if (data.code) {
           // check if the session exists
           let session = await sendCommand('JSON.GET', [data.code])
           session = JSON.parse(session)
+          console.log(session)
           if (session) {
             // initialize member object
             let member = {}
@@ -235,6 +235,7 @@ module.exports = (io) => {
             socket.join(data.code)
             io.in(data.code).emit('update', session)
           } else {
+            console.log('exception')
             socket.emit('exception', 'join')
           }
         }

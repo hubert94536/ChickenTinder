@@ -65,7 +65,9 @@ class Loading extends React.Component {
 
   leaveGroup() {
     socket.endLeave()
-    this.props.showEnd()
+    if (!global.isHost) {
+      this.props.showEnd()
+    }
     global.code = ''
     global.host = ''
     global.isHost = false
