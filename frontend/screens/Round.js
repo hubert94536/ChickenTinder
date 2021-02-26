@@ -42,7 +42,6 @@ class Round extends React.Component {
     socket.getSocket().on('leave', () => {
       this.leaveGroup(true)
     })
-
   }
 
   likeRestaurant(resId) {
@@ -191,7 +190,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       setCode,
       showKick,
-      showEnd
+      showEnd,
     },
     dispatch,
   )

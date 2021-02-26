@@ -34,8 +34,6 @@ class createAccount extends React.Component {
       phone: '',
       email: '',
       photo: defImages[Math.floor(Math.random() * defImages.length)].toString(),
-      validEmail: true,
-      validEmailFormat: true,
       validNameFormat: true,
       validUsername: true,
       validUsernameFormat: true,
@@ -65,39 +63,49 @@ class createAccount extends React.Component {
   }
 
   //  checks whether or not the username can be set
-  handleClick() {
-    AsyncStorage.multiSet([
-      [USERNAME, this.state.username],
-      [PHOTO, this.state.photo],
-      [NAME, this.state.name],
-    ])
-    if (this.state.phone) {
-      AsyncStorage.setItem(PHONE, this.state.phone)
+  handleClick = async () => {
+    await this.checkUsernameValidity()
+    if (
+      !this.state.validUsername ||
+      !this.state.validNameFormat ||
+      !this.state.validUsernameFormat
+    ) {
+      return
     } else {
-      AsyncStorage.setItem(EMAIL, this.state.email)
+      this.props.changeUsername(this.state.username)
+      this.props.changeName(this.state.name)
+      this.props.changeImage(this.state.photo)
+      global.email = this.state.email
+      global.phone = this.state.phone
+      accountsApi
+        .createUser(
+          this.state.name,
+          this.state.username,
+          this.state.email,
+          this.state.phone,
+          this.state.photo,
+        )
+        .then(() => AsyncStorage.getItem(REGISTRATION_TOKEN))
+        .then((token) => notificationsApi.linkToken(token))
+        .then(() => {
+          socket.connect()
+          this.props.navigation.replace('Home')
+        })
+        .catch(() => {
+          this.setState({ errorAlert: true })
+          return
+        })
+      AsyncStorage.multiSet([
+        [USERNAME, this.state.username],
+        [PHOTO, this.state.photo],
+        [NAME, this.state.name],
+      ])
+      if (this.state.phone) {
+        AsyncStorage.setItem(PHONE, this.state.phone)
+      } else {
+        AsyncStorage.setItem(EMAIL, this.state.email)
+      }
     }
-    this.props.changeUsername(this.state.username)
-    this.props.changeName(this.state.name)
-    this.props.changeImage(this.state.photo)
-    global.email = this.state.email
-    global.phone = this.state.phone
-    return accountsApi
-      .createUser(
-        this.state.name,
-        this.state.username,
-        this.state.email,
-        this.state.phone,
-        this.state.photo,
-      )
-      .then(() => AsyncStorage.getItem(REGISTRATION_TOKEN))
-      .then((token) => notificationsApi.linkToken(token))
-      .then(() => {
-        socket.connect()
-        this.props.navigation.replace('Home')
-      })
-      .catch(() => {
-        this.setState({ errorAlert: true })
-      })
   }
 
   checkUsernameValidity() {
@@ -130,7 +138,12 @@ class createAccount extends React.Component {
   }
 
   checkUsernameSyntax() {
-    const regex = /^[a-zA-Z0-9]([._-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9]$/
+    /*regex expression: 
+    - alphanumeric characters (lowercase or uppercase), dot (.), underscore (_), hyphen(-)
+    - no spaces
+    - 2-15 characters
+    */
+    const regex = /^[a-zA-Z0-9._-]([._-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._-]$/
     if (!regex.test(this.state.username)) {
       this.setState({ validUsernameFormat: false })
     } else {
@@ -160,46 +173,70 @@ class createAccount extends React.Component {
         </TouchableHighlight>
         <Text style={[screenStyles.textBook, styles.fieldName, styles.display]}>Display Name</Text>
         <TextInput
-          style={[screenStyles.textBook, styles.fieldText]}
+          style={[
+            screenStyles.textBook,
+            styles.fieldText,
+            this.state.validNameFormat ? styles.fieldTextMargin : styles.fieldTextMarginWarning,
+          ]}
           textAlign="left"
           onChangeText={(name) => {
-            this.setState({ name })
+            this.setState({ name }, () => this.checkNameSyntax())
           }}
           value={this.state.name}
+          underlineColorAndroid="transparent"
+          spellCheck={false}
+          autoCorrect={false}
+          keyboardType="visible-password"
           maxLength={15}
         />
+        {!this.state.validNameFormat && (
+          <Text style={[screenStyles.text, styles.warningText]}>Invalid display name format</Text>
+        )}
         <Text style={[screenStyles.textBook, styles.fieldName]}>Username</Text>
         <TextInput
           style={[
             screenStyles.textBook,
             styles.fieldText,
-            {
-              marginBottom:
-                this.state.validUsername && this.state.validUsernameFormat ? '7%' : '0%',
-            },
+            this.state.validUsername && this.state.validUsernameFormat
+              ? styles.fieldTextMargin
+              : styles.fieldTextMarginWarning,
           ]}
           textAlign="left"
           onChangeText={(username) => {
-            this.setState({ username: username.split(' ').join('_') }, () => {
+            this.setState({ username: username.split(' ').join('_'), validUsername: true }, () => {
               this.checkUsernameSyntax()
             })
           }}
-          onBlur={() => this.checkUsernameValidity()}
+          onSubmitEditing={this.handleClick}
           value={this.state.username}
+          underlineColorAndroid="transparent"
+          spellCheck={false}
+          autoCorrect={false}
+          keyboardType="visible-password"
           maxLength={15}
         />
 
-        {!this.state.validUsername && (
+        {!this.state.validUsername && this.state.validUsernameFormat && (
           <Text style={[screenStyles.text, styles.warningText]}>This username is taken</Text>
         )}
-        {!this.state.validUsernameFormat && (
+        {!this.state.validUsernameFormat && this.state.validUsername && (
           <Text style={[screenStyles.text, styles.warningText]}>Invalid username format</Text>
+        )}
+        {!this.state.validUsernameFormat && !this.state.validUsername && (
+          <Text style={[screenStyles.text, styles.warningText]}>
+            Invalid username format and username is taken
+          </Text>
         )}
         {!this.state.facebook && (
           <View>
             <Text style={[screenStyles.textBook, styles.fieldName]}>Phone Number</Text>
             <Text
-              style={[screenStyles.textBook, styles.fieldText, styles.fixedText]}
+              style={[
+                screenStyles.textBook,
+                styles.fieldText,
+                styles.fieldTextMargin,
+                styles.fixedText,
+              ]}
               textAlign="left"
             >
               {this.state.phone}
@@ -211,7 +248,12 @@ class createAccount extends React.Component {
             <Text style={[screenStyles.textBook, styles.fieldName]}>Email</Text>
 
             <Text
-              style={[screenStyles.textBook, styles.fieldText, styles.fixedText]}
+              style={[
+                screenStyles.textBook,
+                styles.fieldText,
+                styles.fieldTextMargin,
+                styles.fixedText,
+              ]}
               textAlign="left"
             >
               {this.state.email}
@@ -223,7 +265,7 @@ class createAccount extends React.Component {
           onHideUnderlay={() => this.setState({ finishPressed: false })}
           activeOpacity={1}
           underlayColor={'white'}
-          onPress={() => this.handleClick()}
+          onPress={this.handleClick}
           style={[screenStyles.longButton, styles.button]}
         >
           <View style={[screenStyles.contentContainer]}>
@@ -315,11 +357,18 @@ const styles = StyleSheet.create({
   fieldText: {
     fontSize: normalize(18),
     color: colors.darkGray,
+    borderBottomColor: colors.darkGray,
+    borderBottomWidth: 1,
+  },
+  fieldTextMargin: {
     marginHorizontal: '12%',
     marginBottom: '7%',
     paddingVertical: '1%',
-    borderBottomColor: colors.darkGray,
-    borderBottomWidth: 1,
+  },
+  fieldTextMarginWarning: {
+    marginHorizontal: '12%',
+    marginBottom: '2%',
+    paddingVertical: '1%',
   },
   fixedText: {
     paddingVertical: '2%',
@@ -336,5 +385,6 @@ const styles = StyleSheet.create({
     fontSize: normalize(12),
     marginHorizontal: '12%',
     alignSelf: 'flex-start',
+    marginBottom: '1.40%',
   },
 })
