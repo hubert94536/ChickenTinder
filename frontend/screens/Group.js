@@ -107,6 +107,7 @@ class Group extends React.Component {
     socket.getSocket().on('reselect', () => {
       console.log('reselect')
     })
+
   }
 
   setUserSubmit() {
