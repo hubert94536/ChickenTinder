@@ -72,9 +72,9 @@ class PhoneAuthScreen extends Component {
     return (
       <View style={styles.verificationView}>
         <TextInput
-          style={styles.textInput}
+          style={[styles.textInput, { marginTop: '20%', marginBottom: '30%' }]}
           placeholder="Verification code"
-          placeholderTextColor="#eee"
+          placeholderTextColor="#6A6A6A"
           value={this.state.verificationCode}
           keyboardType="numeric"
           onChangeText={(code) => {
@@ -119,7 +119,8 @@ class PhoneAuthScreen extends Component {
                 this.handleBack()
               }}
             />
-            <View style={{ width: '70%' }}>
+            {!this.state.confirmResult && (
+              <View style={{ width: '70%' }}>
               <Text
                 style={{
                   textAlign: 'left',
@@ -144,7 +145,38 @@ class PhoneAuthScreen extends Component {
                 Enter your phone number for a text message verification code
               </Text>
             </View>
-            <TextInput
+            )}
+
+          {this.state.confirmResult && (
+              <View style={{ width: '70%' }}>
+              <Text
+                style={{
+                  textAlign: 'left',
+                  fontFamily: font,
+                  fontSize: normalize(30),
+                  color: 'white',
+                }}
+              >
+                Enter Code
+              </Text>
+              <Text
+                style={{
+                  textAlign: 'left',
+                  flexDirection: 'row',
+                  fontFamily: fontMed,
+                  fontSize: normalize(18),
+                  color: 'white',
+                  marginTop: '5%',
+                  marginBottom: '40%',
+                }}
+              >
+                We just texted you a verification code! Enter the code below
+              </Text>
+            </View>
+            )}
+
+            {!this.state.confirmResult && (
+              <TextInput
               style={[styles.textInput, { marginTop: '20%', marginBottom: '10%' }]}
               placeholder="Phone Number (+1 xxx xxx xxxx)"
               placeholderTextColor="#6A6A6A"
@@ -155,17 +187,8 @@ class PhoneAuthScreen extends Component {
               }}
               maxLength={15}
               editable={!this.state.confirmResult}
-            />
+              />
 
-            {this.state.confirmResult && (
-              <TouchableOpacity
-                style={[screenStyles.longButton, styles.longButton]}
-                onPress={() => this.changePhoneNumber()}
-              >
-                <Text style={[screenStyles.longButtonText, styles.longButtonText]}>
-                  {this.state.confirmResult ? 'Change Phone Number' : 'Send Code'}
-                </Text>
-              </TouchableOpacity>
             )}
 
             {!this.state.confirmResult && (
@@ -174,7 +197,7 @@ class PhoneAuthScreen extends Component {
                 onPress={() => this.handleSendCode()}
               >
                 <Text style={[screenStyles.longButtonText, styles.longButtonText]}>
-                  {this.state.confirmResult ? 'Change Phone Number' : 'Submit'}
+                Submit
                 </Text>
               </TouchableOpacity>
             )}
@@ -273,7 +296,7 @@ const styles = StyleSheet.create({
   verificationView: {
     width: '100%',
     alignItems: 'center',
-    marginTop: 50,
+    // marginTop: 50,
   },
 })
 
