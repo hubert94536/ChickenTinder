@@ -62,24 +62,23 @@ class Loading extends React.Component {
     })
 
     socket.getSocket().once('leave', () => {
+      this.setState({ disabled: true })
       this.leaveGroup(true)
     })
   }
 
   leaveGroup() {
-    if (!this.state.disabled) {
-      this.setState({ disabled: true })
-      socket.endLeave()
-      if (!global.isHost) {
-        this.props.showEnd()
-      }
-      global.code = ''
-      global.host = ''
-      global.isHost = false
-      global.restaurants = []
-      this.props.navigation.replace('Home')
-      this.setState({ disabled: false })
+    this.setState({ disabled: true })
+    socket.endLeave()
+    if (!global.isHost) {
+      this.props.showEnd()
     }
+    global.code = ''
+    global.host = ''
+    global.isHost = false
+    global.restaurants = []
+    this.props.navigation.replace('Home')
+    this.setState({ disabled: false })
   }
 
   endGroup() {
@@ -115,6 +114,7 @@ class Loading extends React.Component {
           )}
           {global.isHost && (
             <TouchableHighlight
+              disabled={this.state.disabled}
               style={[styles.leaveButton, screenStyles.medButton]}
               underlayColor="transparent"
               onPress={() => this.setState({ leave: true })}

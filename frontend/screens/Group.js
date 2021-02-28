@@ -101,6 +101,7 @@ class Group extends React.Component {
         console.log('group.js: no restaurants found')
         // need to handle no restaurants returned
       }
+      this.setState({ disabled: false })
     })
 
     socket.getSocket().on('leave', () => {
@@ -131,6 +132,7 @@ class Group extends React.Component {
   start() {
     // this.filterRef.current.setState({ locationAlert: true })
     // console.log('start pressed')
+    this.setState({ disabled: true })
     this.filterRef.current.startSession()
   }
 
@@ -158,36 +160,31 @@ class Group extends React.Component {
   }
 
   leaveGroup(end) {
-    if (!this.state.disabled) {
-      this.setState({ disabled: true })
-      socket.getSocket().off()
-      // leaving due to host ending session
-      if (end) {
-        socket.endLeave()
-        if (!global.isHost) {
-          this.props.showEnd()
-        }
+    this.setState({ disabled: true })
+    socket.getSocket().off()
+    // leaving due to host ending session
+    if (end) {
+      socket.endLeave()
+      if (!global.isHost) {
+        this.props.showEnd()
       }
-      // normal user leaves
-      else {
-        socket.leaveGroup()
-      }
-      this.props.setCode(0)
-      global.host = ''
-      global.isHost = false
-      this.props.navigation.replace('Home')
-      this.setState({ disabled: false })
     }
+    // normal user leaves
+    else {
+      socket.leaveGroup()
+    }
+    this.props.setCode(0)
+    global.host = ''
+    global.isHost = false
+    this.setState({ disabled: false })
+    this.props.navigation.replace('Home')
   }
 
   // host ends session
   endGroup() {
     this.setState({ endAlert: false, blur: false })
-    if (!this.state.disabled) {
-      this.setState({ disabled: true })
-      socket.endRound()
-      this.setState({ disabled: false })
-    }
+
+    socket.endRound()
   }
 
   // shows proper alert based on if user is host
@@ -438,6 +435,7 @@ class Group extends React.Component {
             )}
           </View>
           <TouchableHighlight
+            disabled={this.state.disabled}
             style={styles.leave}
             activeOpacity={1}
             onPress={() => {

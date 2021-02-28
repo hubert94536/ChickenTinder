@@ -41,6 +41,7 @@ class Round extends React.Component {
     })
 
     socket.getSocket().on('leave', () => {
+      this.setState({ disabled: true })
       this.leaveGroup(true)
     })
   }
@@ -50,24 +51,22 @@ class Round extends React.Component {
   }
 
   leaveGroup(end) {
-    if (!this.state.disabled) {
-      this.setState({ disabled: true })
-      socket.getSocket().off()
-      if (end) {
-        socket.endLeave()
-        if (!global.isHost) {
-          this.props.showEnd()
-        }
-      } else {
-        socket.leaveRound()
+    this.setState({ disabled: true })
+    socket.getSocket().off()
+    if (end) {
+      socket.endLeave()
+      if (!global.isHost) {
+        this.props.showEnd()
       }
-      this.props.setCode(0)
-      global.host = ''
-      global.isHost = false
-      global.restaurants = []
-      this.props.navigation.replace('Home')
-      this.setState({ disabled: false })
+    } else {
+      socket.leaveRound()
     }
+    this.props.setCode(0)
+    global.host = ''
+    global.isHost = false
+    global.restaurants = []
+    this.props.navigation.replace('Home')
+    this.setState({ disabled: false })
   }
 
   endGroup() {
@@ -115,6 +114,7 @@ class Round extends React.Component {
             <Text style={[screenStyles.text, styles.title, styles.topMargin]}>Get chews-ing!</Text>
             {!global.isHost && (
               <TouchableHighlight
+                disabled={this.state.disabled}
                 onPress={() => this.leaveGroup(false)}
                 style={[styles.leaveButton, styles.topMargin]}
                 underlayColor="transparent"
@@ -127,6 +127,7 @@ class Round extends React.Component {
             )}
             {global.isHost && (
               <TouchableHighlight
+                disabled={this.state.disabled}
                 onPress={() => this.setState({ leave: true })}
                 style={[styles.leaveButton, styles.topMargin]}
                 underlayColor="transparent"
@@ -209,7 +210,7 @@ Round.propTypes = {
   navigation: PropTypes.object,
   setCode: PropTypes.func,
   showKick: PropTypes.func,
-  showEnd: PropTypes.func
+  showEnd: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

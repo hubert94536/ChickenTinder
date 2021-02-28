@@ -276,7 +276,7 @@ Card.propTypes = {
   changeFriends: PropTypes.func,
   accept: PropTypes.func,
   changeAdd: PropTypes.bool,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

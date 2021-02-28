@@ -52,10 +52,10 @@ class Home extends React.Component {
       global.host = res.members[res.host].username
       this.props.setCode(res.code)
       global.isHost = res.members[res.host].username === this.props.username.username
+      this.setState({ disabled: false })
       this.props.navigation.replace('Group', {
         response: res,
       })
-      this.setState({ disabled: false })
     })
 
     // //uncomment if testing friends/requests
