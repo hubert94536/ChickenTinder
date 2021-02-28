@@ -42,6 +42,7 @@ class Round extends React.Component {
     socket.getSocket().on('leave', () => {
       this.leaveGroup(true)
     })
+
   }
 
   likeRestaurant(resId) {

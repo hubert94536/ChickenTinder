@@ -64,37 +64,26 @@ class createAccount extends React.Component {
 
   //  checks whether or not the username can be set
   handleClick = async () => {
-    await this.checkUsernameValidity()
-    if (
-      !this.state.validUsername ||
-      !this.state.validNameFormat ||
-      !this.state.validUsernameFormat
-    ) {
-      return
-    } else {
+    try {
+      if (!this.state.validUsernameFormat || !this.state.validNameFormat) {
+        return
+      }
+      await this.checkUsernameValidity()
+      if (!this.state.validUsername) {
+        return
+      }
+      await accountsApi.createUser(
+        this.state.name,
+        this.state.username,
+        this.state.email,
+        this.state.phone,
+        this.state.photo,
+      )
+      let token = await AsyncStorage.getItem(REGISTRATION_TOKEN)
+      await notificationsApi.linkToken(token)
       this.props.changeUsername(this.state.username)
       this.props.changeName(this.state.name)
       this.props.changeImage(this.state.photo)
-      global.email = this.state.email
-      global.phone = this.state.phone
-      accountsApi
-        .createUser(
-          this.state.name,
-          this.state.username,
-          this.state.email,
-          this.state.phone,
-          this.state.photo,
-        )
-        .then(() => AsyncStorage.getItem(REGISTRATION_TOKEN))
-        .then((token) => notificationsApi.linkToken(token))
-        .then(() => {
-          socket.connect()
-          this.props.navigation.replace('Home')
-        })
-        .catch(() => {
-          this.setState({ errorAlert: true })
-          return
-        })
       AsyncStorage.multiSet([
         [USERNAME, this.state.username],
         [PHOTO, this.state.photo],
@@ -102,24 +91,29 @@ class createAccount extends React.Component {
       ])
       if (this.state.phone) {
         AsyncStorage.setItem(PHONE, this.state.phone)
+        global.phone = this.state.phone
       } else {
         AsyncStorage.setItem(EMAIL, this.state.email)
+        global.email = this.state.email
       }
+      socket.connect()
+      this.props.navigation.replace('Home')
+    } catch (err) {
+      this.setState({ errorAlert: true })
+      return
     }
   }
 
-  checkUsernameValidity() {
+  async checkUsernameValidity() {
     if (this.state.username === '') {
-      this.setState({ validUsername: false })
+      this.setState({ validUsernameFormat: false })
     } else {
-      accountsApi
-        .checkUsername(this.state.username)
-        .then(() => {
-          this.setState({ validUsername: true })
-        })
-        .catch(() => {
-          this.setState({ validUsername: false })
-        })
+      try {
+        await accountsApi.checkUsername(this.state.username)
+        this.setState({ validUsername: true })
+      } catch (err) {
+        this.setState({ validUsername: false })
+      }
     }
   }
 
