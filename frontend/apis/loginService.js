@@ -1,18 +1,4 @@
-import {
-  FIREBASE_API_KEY,
-  FIREBASE_APPLICATION_ID,
-  FIREBASE_AUTH_DOMAIN,
-  FIREBASE_DATABASE,
-  FIREBASE_STORAGE_BUCKET,
-  FIREBASE_PROJECT_ID,
-  USERNAME,
-  NAME,
-  EMAIL,
-  PHOTO,
-  PHONE,
-  REGISTRATION_TOKEN,
-  UID,
-} from 'react-native-dotenv'
+import { USERNAME, NAME, EMAIL, PHOTO, PHONE, REGISTRATION_TOKEN, UID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import FBSDK from 'react-native-fbsdk'
 import auth from '@react-native-firebase/auth'
@@ -45,19 +31,24 @@ const loginWithCredential = async (userCredential) => {
     // Get info from database if not new user
     if (!userCredential.additionalUserInfo.isNewUser && userCredential.user.displayName != null) {
       const user = await accountsApi.getUser()
-      AsyncStorage.multiSet([
+      await AsyncStorage.multiSet([
         [USERNAME, user.username],
         [NAME, user.name],
         [PHOTO, user.photo],
         [UID, user.uid],
       ])
-      if (user.email) await AsyncStorage.setItem(EMAIL, user.email)
-      if (user.phone_number) await AsyncStorage.setItem(PHONE, user.phone_number)
-      global.email = user.email
-      global.phone = user.phone_number
+      if (user.email) {
+        await AsyncStorage.setItem(EMAIL, user.email)
+        global.email = user.email
+      }
+      else {
+        await AsyncStorage.setItem(PHONE, user.phone_number)
+        global.phone = user.phone_number
+      }
       // Link user with their notification token
       const token = await AsyncStorage.getItem(REGISTRATION_TOKEN)
       await notificationsApi.linkToken(token)
+      // TODO: set redux here
       socket.connect()
       return 'Home'
     }
@@ -72,16 +63,12 @@ const loginWithCredential = async (userCredential) => {
         ])
         break
       case 'phone':
-        await AsyncStorage.multiSet([[PHONE, userCredential.user.phoneNumber]])
-        break
-      case 'phone':
       case 'firebase':
         await AsyncStorage.multiSet([[PHONE, userCredential.user.phoneNumber]])
         break
       default:
         throw new Error('Could not determine provider')
     }
-
     return 'CreateAccount'
   } catch (err) {
     return Promise.reject(err)
@@ -167,30 +154,34 @@ const deleteUser = async () => {
     var credential
     switch (auth().currentUser.providerData[0].providerId) {
       case 'facebook.com':
-        // Need to refresh access token since old one expired
-        await AccessToken.refreshCurrentAccessTokenAsync()
         // Retrieve accesstoken to delete use from Firebase
         const data = await AccessToken.getCurrentAccessToken()
+        if (!data) {
+          // Attempt a login using the Facebook login dialog asking for default permissions.
+          const login = await LoginManager.logInWithPermissions(['public_profile', 'email'])
+          if (login.isCancelled) {
+            return Promise.reject(new Error('Cancelled request'))
+          }
+          data = await AccessToken.getCurrentAccessToken()
+        }
         credential = await auth.FacebookAuthProvider.credential(data.accessToken)
         break
-      case 'phone':
-        // return auth().verifyPhoneNumber(auth().currentUser.phoneNumber)
-        //   .on('state_changed', (phoneAuthSnapshot) => {
-        //     console.log('State: ', phoneAuthSnapshot.state);
-        //     switch (phoneAuthSnapshot.state){
-        //       case auth.PhoneAuthState.CODE_SENT:
-        //         break;
-        //       case auth.PhoneAuthState.ERROR:
-        //         break;
-        //     }
-        //   });
-        break
       default:
-        throw new Error('Could not determine provider')
+        return auth()
+          .verifyPhoneNumber(auth().currentUser.phoneNumber)
+          .on('state_changed', (phoneAuthSnapshot) => {
+            console.log('State: ', phoneAuthSnapshot.state)
+            switch (phoneAuthSnapshot.state) {
+              case auth.PhoneAuthState.CODE_SENT:
+                break
+              case auth.PhoneAuthState.ERROR:
+                break
+            }
+          })
     }
     deleteUserWithCredential(credential)
   } catch (err) {
-    console.log('------ERROR DELETING USER')
+    console.log(err)
     return Promise.reject(err)
   }
 }

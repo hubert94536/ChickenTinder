@@ -32,6 +32,7 @@ class Loading extends React.Component {
       disabled: false
     }
     socket.getSocket().once('match', (data) => {
+      socket.getSocket().off()
       var res
       for (var i = 0; i < this.state.restaurants.length; i++) {
         if (this.state.restaurants[i].id === data) {
@@ -44,6 +45,7 @@ class Loading extends React.Component {
       })
     })
     socket.getSocket().once('top 3', (res) => {
+      socket.getSocket().off()
       var restaurants = []
       for (var i = 0; i < 3; i++) {
         for (var j = 0; j < this.state.restaurants.length; j++) {
@@ -68,7 +70,9 @@ class Loading extends React.Component {
     if(!this.state.disabled){
       this.setState({disabled: true})
       socket.endLeave()
-      this.props.showEnd()
+      if (!global.isHost) {
+        this.props.showEnd()
+      }
       global.code = ''
       global.host = ''
       global.isHost = false

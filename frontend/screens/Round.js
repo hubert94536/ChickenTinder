@@ -9,14 +9,13 @@ import Feather from 'react-native-vector-icons/Feather'
 import Swiper from 'react-native-deck-swiper'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
-import colors from '../../styles/colors.js'
 import global from '../../global.js'
 import modalStyles from '../../styles/modalStyles.js'
 import RoundCard from '../cards/RoundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import normalize from '../../styles/normalize.js'
-import { setCode, showKick } from '../redux/Actions.js'
+import { setCode, showKick, showEnd } from '../redux/Actions.js'
 
 class Round extends React.Component {
   constructor(props) {
@@ -27,8 +26,8 @@ class Round extends React.Component {
       leave: false,
       disabled: false
     }
-
     socket.getSocket().once('match', (data) => {
+      socket.getSocket().off()
       var res
       for (var i = 0; i < global.restaurants.length; i++) {
         if (global.restaurants[i].id === data) {
@@ -40,9 +39,11 @@ class Round extends React.Component {
         restaurant: res,
       })
     })
-    socket.getSocket().once('leave', () => {
+
+    socket.getSocket().on('leave', () => {
       this.leaveGroup(true)
     })
+
   }
 
   likeRestaurant(resId) {
@@ -55,7 +56,9 @@ class Round extends React.Component {
       socket.getSocket().off()
       if (end) {
         socket.endLeave()
-        this.props.showKick()
+        if (!global.isHost) {
+          this.props.showEnd()
+        }
       } else {
         socket.leaveRound()
       }
@@ -70,8 +73,7 @@ class Round extends React.Component {
 
   endGroup() {
     if(!this.state.disabled){
-      this.setState({disabled: true})
-      this.setState({ leave: false })
+      this.setState({disabled: true, leave: false, endAlert: false, blue: false})
       socket.endRound()
       this.setState({disabled: false})
     }
@@ -99,6 +101,7 @@ class Round extends React.Component {
               this.likeRestaurant(global.restaurants[cardIndex].id)
             }}
             onSwipedAll={() => {
+              socket.getSocket().off()
               //let backend know you're done
               socket.finishedRound()
               //go to the loading page
@@ -196,6 +199,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       setCode,
       showKick,
+      showEnd,
     },
     dispatch,
   )
