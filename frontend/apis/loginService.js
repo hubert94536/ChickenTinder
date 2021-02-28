@@ -31,19 +31,24 @@ const loginWithCredential = async (userCredential) => {
     // Get info from database if not new user
     if (!userCredential.additionalUserInfo.isNewUser && userCredential.user.displayName != null) {
       const user = await accountsApi.getUser()
-      AsyncStorage.multiSet([
+      await AsyncStorage.multiSet([
         [USERNAME, user.username],
         [NAME, user.name],
         [PHOTO, user.photo],
         [UID, user.uid],
       ])
-      if (user.email) await AsyncStorage.setItem(EMAIL, user.email)
-      if (user.phone_number) await AsyncStorage.setItem(PHONE, user.phone_number)
-      global.email = user.email
-      global.phone = user.phone_number
+      if (user.email) {
+        await AsyncStorage.setItem(EMAIL, user.email)
+        global.email = user.email
+      }
+      else {
+        await AsyncStorage.setItem(PHONE, user.phone_number)
+        global.phone = user.phone_number
+      }
       // Link user with their notification token
       const token = await AsyncStorage.getItem(REGISTRATION_TOKEN)
       await notificationsApi.linkToken(token)
+      // TODO: set redux here
       socket.connect()
       return 'Home'
     }
@@ -58,16 +63,12 @@ const loginWithCredential = async (userCredential) => {
         ])
         break
       case 'phone':
-        await AsyncStorage.multiSet([[PHONE, userCredential.user.phoneNumber]])
-        break
-      case 'phone':
       case 'firebase':
         await AsyncStorage.multiSet([[PHONE, userCredential.user.phoneNumber]])
         break
       default:
         throw new Error('Could not determine provider')
     }
-
     return 'CreateAccount'
   } catch (err) {
     return Promise.reject(err)
