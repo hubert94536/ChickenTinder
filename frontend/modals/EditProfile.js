@@ -27,7 +27,7 @@ class EditProfile extends React.Component {
       usernameValue: this.props.username.username,
       validNameFormat: true,
       validUsernameFormat: true,
-      disabled: false
+      disabled: false,
     }
   }
 
@@ -47,7 +47,7 @@ class EditProfile extends React.Component {
 
   //remove whitespaces before and after name and username
   finalCheck() {
-    this.setState({disabled: true})
+    this.setState({ disabled: true })
     if (!this.state.validNameFormat || !this.state.validUsernameFormat) {
       return
     }
@@ -63,7 +63,7 @@ class EditProfile extends React.Component {
 
     this.props.nameChange(trimmedName)
     this.props.userChange(trimmedUser)
-    this.setState({disabled: false})
+    this.setState({ disabled: false })
   }
 
   validateName() {

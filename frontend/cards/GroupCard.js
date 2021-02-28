@@ -14,15 +14,14 @@ export default class GroupCard extends React.Component {
     super(props)
     this.state = {
       uid: this.props.uid,
-      disabled: false
+      disabled: false,
     }
   }
 
   removeUser(uid) {
-    this.setState({disabled: true})
+    this.setState({ disabled: true })
     socket.kickUser(uid)
-    this.setState({disabled: false})
-
+    this.setState({ disabled: false })
   }
 
   render() {

@@ -44,7 +44,7 @@ class Home extends React.Component {
       join: false,
       inviteInfo: '',
       friends: '',
-      disabled: false
+      disabled: false,
     }
 
     socket.getSocket().once('update', (res) => {
@@ -55,7 +55,7 @@ class Home extends React.Component {
       this.props.navigation.replace('Group', {
         response: res,
       })
-      this.setState({disabled: false})
+      this.setState({ disabled: false })
     })
 
     // //uncomment if testing friends/requests
@@ -71,7 +71,7 @@ class Home extends React.Component {
   }
 
   createGroup() {
-    this.setState({disabled: true})
+    this.setState({ disabled: true })
     socket.createRoom()
   }
 
@@ -237,7 +237,7 @@ Home.propTypes = {
   hideKick: PropTypes.func,
   hideEnd: PropTypes.func,
   kick: PropTypes.bool,
-  end: PropTypes.bool
+  end: PropTypes.bool,
 }
 const styles = StyleSheet.create({
   main: {

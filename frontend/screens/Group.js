@@ -62,7 +62,7 @@ class Group extends React.Component {
       chooseFriends: false,
 
       // Disabling buttons
-      disabled: false
+      disabled: false,
     }
     console.log(members)
     this.updateMemberList()
@@ -110,7 +110,6 @@ class Group extends React.Component {
     socket.getSocket().on('reselect', () => {
       console.log('reselect')
     })
-
   }
 
   setUserSubmit() {
@@ -159,8 +158,8 @@ class Group extends React.Component {
   }
 
   leaveGroup(end) {
-    if(!this.state.disabled){
-      this.setState({disabled: true})
+    if (!this.state.disabled) {
+      this.setState({ disabled: true })
       socket.getSocket().off()
       // leaving due to host ending session
       if (end) {
@@ -177,17 +176,17 @@ class Group extends React.Component {
       global.host = ''
       global.isHost = false
       this.props.navigation.replace('Home')
-      this.setState({disabled: false})
+      this.setState({ disabled: false })
     }
   }
 
   // host ends session
   endGroup() {
     this.setState({ endAlert: false, blur: false })
-    if(!this.state.disabled){
+    if (!this.state.disabled) {
       this.setState({ disabled: true })
       socket.endRound()
-      this.setState({disabled: false})
+      this.setState({ disabled: false })
     }
   }
 
@@ -371,7 +370,7 @@ class Group extends React.Component {
                     setBlur={(res) => this.setState({ blur: res })}
                     code={this.props.code.code}
                     style={{ elevation: 31 }}
-                    buttonDisable={(able) => this.setState({disabled: able})}
+                    buttonDisable={(able) => this.setState({ disabled: able })}
                   />
                 </View>
               </View>

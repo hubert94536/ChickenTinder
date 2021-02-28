@@ -628,7 +628,8 @@ FilterSelector.propTypes = {
   members: PropTypes.array,
   // error: PropTypes.bool,
   showError: PropTypes.func,
-  hideError: PropTypes.func
+  hideError: PropTypes.func,
+  buttonDisable: PropTypes.func
 }
 
 const styles = StyleSheet.create({

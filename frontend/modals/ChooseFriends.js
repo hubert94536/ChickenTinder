@@ -22,7 +22,7 @@ class ChooseFriends extends React.Component {
     this.state = {
       data: '',
       search: '',
-      disabled: false
+      disabled: false,
     }
   }
 
@@ -58,7 +58,7 @@ class ChooseFriends extends React.Component {
   }
 
   sendInvite(uid) {
-    this.setState({disabled: true})
+    this.setState({ disabled: true })
     socket.sendInvite(uid)
     var newArr = this.state.data.filter((item) => {
       if (item.uid === uid) item.status = 'in group'

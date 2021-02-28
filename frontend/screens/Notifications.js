@@ -63,7 +63,7 @@ class Notif extends Component {
       errorAlert: false,
       deleteFriend: false,
       // disabling buttons
-      disabled: false
+      disabled: false,
     }
 
     socket.getSocket().once('update', (res) => {

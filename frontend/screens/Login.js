@@ -30,7 +30,7 @@ class Login extends React.Component {
     this.state = {
       pressed: false,
       alert: false,
-      disabled: false
+      disabled: false,
     }
   }
 
@@ -56,9 +56,8 @@ class Login extends React.Component {
   }
 
   async handleClick() {
-    if(!this.state.disabled)
-    {
-      this.setState({disabled: true})
+    if (!this.state.disabled) {
+      this.setState({ disabled: true })
       loginService
         .loginWithFacebook()
         .then((result) => {
@@ -66,11 +65,11 @@ class Login extends React.Component {
           this.setInfo()
           this.setFriends()
           this.props.navigation.replace(result)
-          this.setState({disabled: false})
+          this.setState({ disabled: false })
         })
         .catch(() => {
           this.props.showError()
-          this.setState({disabled: false})
+          this.setState({ disabled: false })
         })
     }
   }
@@ -94,9 +93,9 @@ class Login extends React.Component {
             activeOpacity={1}
             underlayColor={'white'}
             onPress={() => {
-              this.setState({disabled: true})
+              this.setState({ disabled: true })
               this.props.navigation.replace('Phone')
-              this.setState({disabled: false})
+              this.setState({ disabled: false })
             }}
             style={[screenStyles.longButton, styles.phoneButton]}
           >

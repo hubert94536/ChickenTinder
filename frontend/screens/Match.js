@@ -20,12 +20,12 @@ class Match extends React.Component {
     super(props)
     this.state = {
       restaurant: this.props.navigation.state.params.restaurant,
-      disabled: false
+      disabled: false,
     }
   }
 
   endRound() {
-    this.setState({disabled: true})
+    this.setState({ disabled: true })
     socket.getSocket().off()
     if (global.isHost) {
       socket.endRound()
@@ -37,7 +37,7 @@ class Match extends React.Component {
     global.isHost = false
     global.restaurants = []
     this.props.navigation.replace('Home')
-    this.setState({disabled: false})
+    this.setState({ disabled: false })
   }
 
   render() {

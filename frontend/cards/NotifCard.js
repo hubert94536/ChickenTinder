@@ -31,19 +31,19 @@ export default class NotifCard extends React.Component {
 
   // accept friend request and modify card
   async acceptFriend() {
-    this.setState({disabled: true})
+    this.setState({ disabled: true })
     friendsApi
       .acceptFriendRequest(this.state.uid)
       .then(() => {
         this.setState({ isFriend: true })
       })
       .catch(() => this.props.showError())
-      this.setState({disabled: false})
+    this.setState({ disabled: false })
   }
 
   // delete friend and modify view
   async deleteFriend() {
-    this.setState({disabled: true})
+    this.setState({ disabled: true })
     friendsApi
       .removeFriendship(this.state.uid)
       .then(() => {
@@ -54,7 +54,7 @@ export default class NotifCard extends React.Component {
         this.props.press(this.props.uid, filteredArray, true)
       })
       .catch(() => this.props.showError())
-      this.setState({disabled: true})
+    this.setState({ disabled: true })
   }
 
   handleHold() {
@@ -62,13 +62,13 @@ export default class NotifCard extends React.Component {
   }
 
   handleClick() {
-    this.setState({disabled: true})
+    this.setState({ disabled: true })
     console.log('Pressed')
     if (this.props.type == 'invite') {
       console.log(this.props.content)
       socket.joinRoom(this.props.content)
     }
-    this.setState({disabled: false})
+    this.setState({ disabled: false })
   }
 
   pressTrash() {
@@ -77,10 +77,7 @@ export default class NotifCard extends React.Component {
 
   render() {
     return (
-      <TouchableWithoutFeedback
-        onPress={() => this.handleClick()}
-        disabled={this.state.disabled}
-      >
+      <TouchableWithoutFeedback onPress={() => this.handleClick()} disabled={this.state.disabled}>
         <View style={styles.container}>
           <Image
             source={{ uri: Image.resolveAssetSource(this.props.image).uri }}

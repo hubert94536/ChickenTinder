@@ -129,38 +129,38 @@ export default class Location extends Component {
     this.props.cancel()
   }
 
-location(){
-  if (requestLocationPermission()) {
-    Geolocation.getCurrentPosition(
-      (position) => {
-        this.setState({
-          zipValid: true,
-          city: 'Current Location',
-          state: '',
-          location: {
+  location() {
+    if (requestLocationPermission()) {
+      Geolocation.getCurrentPosition(
+        (position) => {
+          this.setState({
+            zipValid: true,
+            city: 'Current Location',
+            state: '',
+            location: {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            },
+          })
+          let newRegion = {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-          },
-        })
-        let newRegion = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          latitudeDelta: this.state.distance / 60 + 0.3,
-          longitudeDelta: this.state.distance / 60 + 0.3,
-        }
-        this.mapView.current.animateToRegion(newRegion, 3000)
-      },
-      (error) => {
-        console.log(error.code, error.message)
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-    )
-  } else {
-    console.log('Filter.js: Failed to get location')
+            latitudeDelta: this.state.distance / 60 + 0.3,
+            longitudeDelta: this.state.distance / 60 + 0.3,
+          }
+          this.mapView.current.animateToRegion(newRegion, 3000)
+        },
+        (error) => {
+          console.log(error.code, error.message)
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+      )
+    } else {
+      console.log('Filter.js: Failed to get location')
+    }
   }
-}
 
-  getLocation =  _.debounce(this.location.bind(this), 500)
+  getLocation = _.debounce(this.location.bind(this), 500)
   validateZip = _.debounce(this.validate.bind(this), 200)
 
   render() {

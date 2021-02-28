@@ -29,7 +29,7 @@ class Loading extends React.Component {
     this.state = {
       restaurants: this.props.navigation.state.params.restaurants,
       leave: false,
-      disabled: false
+      disabled: false,
     }
     socket.getSocket().once('match', (data) => {
       socket.getSocket().off()
@@ -67,8 +67,8 @@ class Loading extends React.Component {
   }
 
   leaveGroup() {
-    if(!this.state.disabled){
-      this.setState({disabled: true})
+    if (!this.state.disabled) {
+      this.setState({ disabled: true })
       socket.endLeave()
       if (!global.isHost) {
         this.props.showEnd()
@@ -78,16 +78,16 @@ class Loading extends React.Component {
       global.isHost = false
       global.restaurants = []
       this.props.navigation.replace('Home')
-      this.setState({disabled: false})
+      this.setState({ disabled: false })
     }
   }
 
   endGroup() {
-   if(!this.state.disabled){
-    this.setState({disabled: true})
-    socket.endGroup()
-   }
-    this.setState({disabled: false})
+    if (!this.state.disabled) {
+      this.setState({ disabled: true })
+      socket.endGroup()
+    }
+    this.setState({ disabled: false })
   }
 
   render() {

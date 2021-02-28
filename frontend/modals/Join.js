@@ -18,7 +18,7 @@ export default class Join extends React.Component {
       code: '',
       isValid: false,
       invalid: false,
-      disabled: false
+      disabled: false,
     }
   }
 
@@ -28,7 +28,7 @@ export default class Join extends React.Component {
     this.setState({ code: '' })
     socket.joinRoom(code)
     this.props.cancel()
-    this.setState({disabled: false})
+    this.setState({ disabled: false })
   }
 
   handleCancel() {

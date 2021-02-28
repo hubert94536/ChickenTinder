@@ -24,7 +24,7 @@ class Round extends React.Component {
       instr: true,
       index: 1,
       leave: false,
-      disabled: false
+      disabled: false,
     }
     socket.getSocket().once('match', (data) => {
       socket.getSocket().off()
@@ -43,7 +43,6 @@ class Round extends React.Component {
     socket.getSocket().on('leave', () => {
       this.leaveGroup(true)
     })
-
   }
 
   likeRestaurant(resId) {
@@ -51,8 +50,8 @@ class Round extends React.Component {
   }
 
   leaveGroup(end) {
-    if(!this.state.disabled){
-      this.setState({disabled: true})
+    if (!this.state.disabled) {
+      this.setState({ disabled: true })
       socket.getSocket().off()
       if (end) {
         socket.endLeave()
@@ -67,15 +66,15 @@ class Round extends React.Component {
       global.isHost = false
       global.restaurants = []
       this.props.navigation.replace('Home')
-      this.setState({disabled: false})
+      this.setState({ disabled: false })
     }
   }
 
   endGroup() {
-    if(!this.state.disabled){
-      this.setState({disabled: true, leave: false, endAlert: false, blue: false})
+    if (!this.state.disabled) {
+      this.setState({ disabled: true, leave: false, endAlert: false, blue: false })
       socket.endRound()
-      this.setState({disabled: false})
+      this.setState({ disabled: false })
     }
   }
 
@@ -210,6 +209,7 @@ Round.propTypes = {
   navigation: PropTypes.object,
   setCode: PropTypes.func,
   showKick: PropTypes.func,
+  showEnd: PropTypes.func
 }
 
 const styles = StyleSheet.create({

@@ -7,7 +7,6 @@ import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import colors from '../styles/colors.js'
 import notifsApi from './apis/notificationsApi.js'
-import _ from 'lodash'
 
 const height = Dimensions.get('window').height
 
@@ -18,32 +17,28 @@ class TabBar extends React.Component {
     }
   }
 
-  onGoHome(){
+  onGoHome() {
     // var debounce =  _.debounce(this.props.goHome, 200)
     // return debounce()
-    if(this.props.cur !== 'Home')
-    {
+    if (this.props.cur !== 'Home') {
       this.props.goHome()
     }
   }
 
-  onGoSearch(){
-    if(this.props.cur !== 'Search')
-    {
+  onGoSearch() {
+    if (this.props.cur !== 'Search') {
       this.props.goSearch()
     }
   }
 
-  onGoNotifs(){
-    if(this.props.cur !== 'Notifs')
-    {
+  onGoNotifs() {
+    if (this.props.cur !== 'Notifs') {
       this.props.goNotifs()
     }
   }
 
-  onGoProfile(){
-    if(this.props.cur !== 'Profile')
-    {
+  onGoProfile() {
+    if (this.props.cur !== 'Profile') {
       this.props.goProfile()
     }
   }
