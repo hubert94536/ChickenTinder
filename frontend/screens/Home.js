@@ -13,18 +13,13 @@ import {
 import { connect } from 'react-redux'
 import {
   Dimensions,
-  Image,
   ImageBackground,
   StyleSheet,
   Text,
   TouchableHighlight,
   View,
 } from 'react-native'
-import { USERNAME, NAME, PHOTO, PHONE, EMAIL } from 'react-native-dotenv'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
-import friendsApi from '../apis/friendsApi.js'
-import accountsApi from '../apis/accountsApi.js'
 import socket from '../apis/socket.js'
 import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
@@ -36,7 +31,6 @@ import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 
 const width = Dimensions.get('window').width
-const height = Dimensions.get('window').height
 const home = '../assets/backgrounds/Home.png'
 const homedark = '../assets/backgrounds/Home_Blur.png'
 
@@ -61,6 +55,7 @@ class Home extends React.Component {
         response: res,
       })
     })
+
     // //uncomment if testing friends/requests
     // accountsApi.createFBUserTest('Hubes2', 32, 'hbc', 'hhcc@gmail.com', '50', '35434354')
     // accountsApi.createFBUserTest('Hanna2', 33, 'hannaaa', 'hannco@gmail.com', '51', '17891234')
@@ -119,7 +114,7 @@ class Home extends React.Component {
               onShowUnderlay={() => this.setState({ joinPressed: true })}
               onHideUnderlay={() => this.setState({ joinPressed: false })}
               activeOpacity={1}
-              underlayColor={colors.hex}
+              underlayColor={'white'}
               style={{
                 backgroundColor: 'transparent',
                 borderRadius: 40,
@@ -158,15 +153,6 @@ class Home extends React.Component {
             cancel={() => this.setState({ join: false })}
             onPress={() => this.setState({ join: false })}
           />
-
-          {/* {(this.state.join || this.props.error) && (
-            <BlurView
-              blurType="dark"
-              blurAmount={10}
-              reducedTransparencyFallbackColor="white"
-              style={modalStyles.blur}
-            />
-          )} */}
           {this.props.error && (
             <Alert
               title="Error, please try again"
@@ -197,6 +183,14 @@ class Home extends React.Component {
             />
           )}
         </View>
+        {(this.state.join || this.props.error || this.props.end || this.props.kick) && (
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
       </ImageBackground>
     )
   }

@@ -34,6 +34,7 @@ export default class TopThree extends React.Component {
       restaurants: this.props.navigation.state.params.top.reverse(),
     }
     socket.getSocket().once('choose', (ind) => {
+      socket.getSocket().off()
       this.props.navigation.replace('Match', {
         restaurant: this.state.restaurants[ind],
       })
