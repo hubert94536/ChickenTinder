@@ -63,31 +63,31 @@ class EditProfile extends React.Component {
     this.props.userChange(trimmedUser)
   }
 
-  validateUsername() {
-    /*regex expression: 
-    - alphanumeric characters (lowercase or uppercase), dot (.), underscore (_), hyphen(-)
-    - must not start or end with space
-    - 2-15 characters
-    */
-    const regex = /^[a-zA-Z0-9._\-]([._\-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._\-]$/
-    if (!regex.test(this.state.usernameValue)) {
-      this.setState({ validUsernameFormat: false })
-    } else {
-      this.setState({ validUsernameFormat: true })
-    }
-  }
-
   validateName() {
     /*regex expression: 
     - alphanumeric characters (lowercase or uppercase), dot (.), underscore (_), hyphen(-), space( )
     - must not start or end with space
     - 2-15 characters
     */
-    const regex = /^[a-zA-Z0-9._\-]([ ._\-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._\-]$/
+    const regex = /^[a-zA-Z0-9._-]([ ._-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._-]$/
     if (!regex.test(this.state.nameValue)) {
       this.setState({ validNameFormat: false })
     } else {
       this.setState({ validNameFormat: true })
+    }
+  }
+
+  validateUsername() {
+    /*regex expression: 
+    - alphanumeric characters (lowercase or uppercase), dot (.), underscore (_), hyphen(-)
+    - must not start or end with space
+    - 2-15 characters
+    */
+    const regex = /^[a-zA-Z0-9._-]([._-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._-]$/
+    if (!regex.test(this.state.usernameValue)) {
+      this.setState({ validUsernameFormat: false })
+    } else {
+      this.setState({ validUsernameFormat: true })
     }
   }
 

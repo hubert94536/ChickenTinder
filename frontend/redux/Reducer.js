@@ -1,12 +1,14 @@
 const INITIAL_STATE = {
   error: false,
-  name: '',
-  username: '',
-  image: '',
+  name: {},
+  username: {},
+  image: {},
   refresh: false,
-  friends: [],
+  friends: {},
   notif: false,
   code: 0,
+  kick: false,
+  hostEnd: false,
 }
 
 export const errorReducer = (state = INITIAL_STATE.error, action) => {
@@ -97,6 +99,28 @@ export const codeReducer = (state = INITIAL_STATE.code, action) => {
         ...state,
         code: action.payload,
       }
+    default:
+      return state
+  }
+}
+
+export const kickReducer = (state = INITIAL_STATE.kick, action) => {
+  switch (action.type) {
+    case 'SHOW_KICK':
+      return true
+    case 'HIDE_KICK':
+      return false
+    default:
+      return state
+  }
+}
+
+export const endReducer = (state = INITIAL_STATE.kick, action) => {
+  switch (action.type) {
+    case 'SHOW_END':
+      return true
+    case 'HIDE_END':
+      return false
     default:
       return state
   }

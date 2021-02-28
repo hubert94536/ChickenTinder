@@ -2,22 +2,24 @@
 import React from 'react'
 import { bindActionCreators } from 'redux'
 import { BlurView } from '@react-native-community/blur'
-import { changeFriends, hideError, showError, setCode } from '../redux/Actions.js'
+import {
+  changeFriends,
+  hideError,
+  showError,
+  hideKick,
+  setCode,
+  hideEnd,
+} from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import {
   Dimensions,
-  Image,
   ImageBackground,
   StyleSheet,
   Text,
   TouchableHighlight,
   View,
 } from 'react-native'
-import { USERNAME, NAME, PHOTO, PHONE, EMAIL } from 'react-native-dotenv'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
-import friendsApi from '../apis/friendsApi.js'
-import accountsApi from '../apis/accountsApi.js'
 import socket from '../apis/socket.js'
 import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
@@ -29,7 +31,6 @@ import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 
 const width = Dimensions.get('window').width
-const height = Dimensions.get('window').height
 const home = '../assets/backgrounds/Home.png'
 const homedark = '../assets/backgrounds/Home_Blur.png'
 
@@ -54,6 +55,7 @@ class Home extends React.Component {
         response: res,
       })
     })
+
     // //uncomment if testing friends/requests
     // accountsApi.createFBUserTest('Hubes2', 32, 'hbc', 'hhcc@gmail.com', '50', '35434354')
     // accountsApi.createFBUserTest('Hanna2', 33, 'hannaaa', 'hannco@gmail.com', '51', '17891234')
@@ -73,7 +75,11 @@ class Home extends React.Component {
   render() {
     return (
       <ImageBackground
-        source={this.state.join ? require(homedark) : require(home)}
+        source={
+          this.state.join || this.props.error || this.props.kick || this.props.end
+            ? require(homedark)
+            : require(home)
+        }
         style={styles.background}
       >
         <View style={styles.main}>
@@ -108,7 +114,7 @@ class Home extends React.Component {
               onShowUnderlay={() => this.setState({ joinPressed: true })}
               onHideUnderlay={() => this.setState({ joinPressed: false })}
               activeOpacity={1}
-              underlayColor={colors.hex}
+              underlayColor={'white'}
               style={{
                 backgroundColor: 'transparent',
                 borderRadius: 40,
@@ -147,15 +153,6 @@ class Home extends React.Component {
             cancel={() => this.setState({ join: false })}
             onPress={() => this.setState({ join: false })}
           />
-
-          {(this.state.join || this.props.error) && (
-            <BlurView
-              blurType="dark"
-              blurAmount={10}
-              reducedTransparencyFallbackColor="white"
-              style={modalStyles.blur}
-            />
-          )}
           {this.props.error && (
             <Alert
               title="Error, please try again"
@@ -165,7 +162,35 @@ class Home extends React.Component {
               cancel={() => this.props.hideError()}
             />
           )}
+          {this.props.kick && (
+            <Alert
+              title="Oh no!"
+              body="You were kicked from the group!"
+              buttonAff="Close"
+              height="20%"
+              press={() => this.props.hideKick()}
+              cancel={() => this.props.hideKick()}
+            />
+          )}
+          {this.props.end && (
+            <Alert
+              title="Oh no!"
+              body="The host has ended the group session"
+              buttonAff="Close"
+              height="20%"
+              press={() => this.props.hideEnd()}
+              cancel={() => this.props.hideEnd()}
+            />
+          )}
         </View>
+        {(this.state.join || this.props.error || this.props.end || this.props.kick) && (
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
       </ImageBackground>
     )
   }
@@ -176,7 +201,9 @@ const mapStateToProps = (state) => {
   const { error } = state
   const { username } = state
   const { code } = state
-  return { friends, error, username, code }
+  const { kick } = state
+  const { end } = state
+  return { friends, error, username, code, kick, end }
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -186,6 +213,8 @@ const mapDispatchToProps = (dispatch) =>
       showError,
       hideError,
       setCode,
+      hideKick,
+      hideEnd,
     },
     dispatch,
   )
@@ -201,6 +230,10 @@ Home.propTypes = {
   hideError: PropTypes.func,
   changeFriends: PropTypes.func,
   setCode: PropTypes.func,
+  hideKick: PropTypes.func,
+  hideEnd: PropTypes.func,
+  kick: PropTypes.bool,
+  end: PropTypes.bool,
 }
 const styles = StyleSheet.create({
   main: {

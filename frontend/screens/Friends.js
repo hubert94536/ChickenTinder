@@ -18,6 +18,7 @@ const sleep = (milliseconds) => {
 }
 
 const height = Dimensions.get('window').height
+const width = Dimensions.get('window').width
 
 class Friends extends React.Component {
   constructor(props) {
@@ -124,20 +125,20 @@ class Friends extends React.Component {
     }
     return (
       <View>
+        <View>
+          <SearchBar
+            containerStyle={styles.container}
+            inputContainerStyle={styles.inputContainer}
+            inputStyle={(styles.text, styles.input)}
+            placeholder="Search by username"
+            onChangeText={(text) => this.searchFilterFunction(text)}
+            value={this.state.search}
+            lightTheme
+            round
+          />
+        </View>
         {this.state.friends.length > 0 && ( //Shows search bar + friends list if there are friends
           <View>
-            <View>
-              <SearchBar
-                containerStyle={styles.container}
-                inputContainerStyle={styles.inputContainer}
-                inputStyle={(styles.text, styles.input)}
-                placeholder="Search by username"
-                onChangeText={(text) => this.searchFilterFunction(text)}
-                value={this.state.search}
-                lightTheme
-                round
-              />
-            </View>
             <ScrollView
               style={[styles.scrollView]}
               alwaysBounceVertical="true"
@@ -161,15 +162,24 @@ class Friends extends React.Component {
             )}
           </View>
         )}
-        {this.state.friends.length === 0 &&
+        {this.props.friends.friends.length === 0 &&
           this.state.friendsApiCalled && ( //Show no friends view if there aren't any friends
-            <View>
-              <Icon name="emoticon-sad-outline" style={[styles.sadFace]} />
-              <Text style={[screenStyles.text, styles.noFriendText1]}>No friends, yet</Text>
-              <Text style={[screenStyles.textBook, styles.noFriendText2]}>
-                You have no friends, yet. Add friends using the search feature below!
-              </Text>
-            </View>
+            <ScrollView
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.props.refresh}
+                  onRefresh={this.onRefresh.bind(this)}
+                />
+              }
+            >
+              <View>
+                <Icon name="emoticon-sad-outline" style={[styles.sadFace]} />
+                <Text style={[screenStyles.text, styles.noFriendText1]}>No friends, yet</Text>
+                <Text style={[screenStyles.textBook, styles.noFriendText2]}>
+                  You have no friends, yet. Add friends using the search feature below!
+                </Text>
+              </View>
+            </ScrollView>
           )}
         {!this.state.friendsApiCalled && <View></View>}
       </View>
@@ -218,7 +228,7 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
     borderTopColor: 'transparent',
     width: '100%',
-    height: '35%',
+    height: width * 0.12,
     alignSelf: 'center',
   },
   inputContainer: {

@@ -27,7 +27,7 @@ import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
-import { setCode } from '../redux/Actions.js'
+import { setCode, showKick, showEnd } from '../redux/Actions.js'
 
 const font = 'CircularStd-Medium'
 let memberList = []
@@ -67,6 +67,7 @@ class Group extends React.Component {
     // listens if user is to be kicked
     socket.getSocket().once('kick', () => {
       this.leaveGroup(false)
+      this.props.showKick()
     })
 
     // listens for group updates
@@ -90,6 +91,7 @@ class Group extends React.Component {
 
     socket.getSocket().once('start', (restaurants) => {
       if (restaurants.length > 0) {
+        socket.getSocket().off()
         global.restaurants = restaurants
         this.props.navigation.replace('Round')
       } else {
@@ -105,6 +107,7 @@ class Group extends React.Component {
     socket.getSocket().on('reselect', () => {
       console.log('reselect')
     })
+
   }
 
   setUserSubmit() {
@@ -148,7 +151,7 @@ class Group extends React.Component {
       memberRenderList.push(a)
     }
     const footer = {}
-    footer.f = true
+    footer.f = 'a'
     memberRenderList.push(footer)
   }
 
@@ -157,6 +160,9 @@ class Group extends React.Component {
     // leaving due to host ending session
     if (end) {
       socket.endLeave()
+      if (!global.isHost) {
+        this.props.showEnd()
+      }
     }
     // normal user leaves
     else {
@@ -227,7 +233,7 @@ class Group extends React.Component {
         <Drawer
           style={styles.drawer}
           initialDrawerPos={100}
-          pointerEvents={this.state.blur ? 'none' : 'auto'}
+          enabled={!this.state.blur}
           renderContainerView={
             <View style={styles.main}>
               <View style={styles.center}>
@@ -255,6 +261,9 @@ class Group extends React.Component {
                   color: colors.hex,
                   marginBottom: 10,
                 }}
+                columnWrapperStyle={{
+                  justifyContent: 'center',
+                }}
                 data={memberRenderList}
                 renderItem={({ item }) => {
                   if (item.f) {
@@ -268,12 +277,12 @@ class Group extends React.Component {
                           justifyContent: 'center',
                           width: windowWidth * 0.4,
                           height: windowHeight * 0.06,
-                          margin: '3%',
+                          margin: '1.5%',
                         }}
                       >
                         <Text
                           style={{
-                            color: 'black',
+                            color: 'dimgray',
                             textAlign: 'center',
                             width: '100%',
                           }}
@@ -460,6 +469,8 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setCode,
+      showKick,
+      showEnd,
     },
     dispatch,
   )
@@ -471,6 +482,8 @@ Group.propTypes = {
   members: PropTypes.array,
   code: PropTypes.object,
   setCode: PropTypes.func,
+  showKick: PropTypes.func,
+  showEnd: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
@@ -592,8 +605,8 @@ const styles = StyleSheet.create({
     color: '#aaa',
   },
   memberContainer: {
-    marginLeft: '2%',
-    marginRight: '2%',
+    marginLeft: '1%',
+    marginRight: '1%',
     alignSelf: 'center',
     height: '55%',
     overflow: 'hidden',
