@@ -27,6 +27,7 @@ class EditProfile extends React.Component {
       usernameValue: this.props.username.username,
       validNameFormat: true,
       validUsernameFormat: true,
+      disabled: false
     }
   }
 
@@ -46,6 +47,7 @@ class EditProfile extends React.Component {
 
   //remove whitespaces before and after name and username
   finalCheck() {
+    this.setState({disabled: true})
     if (!this.state.validNameFormat || !this.state.validUsernameFormat) {
       return
     }
@@ -61,6 +63,7 @@ class EditProfile extends React.Component {
 
     this.props.nameChange(trimmedName)
     this.props.userChange(trimmedUser)
+    this.setState({disabled: false})
   }
 
   validateUsername() {
@@ -153,6 +156,7 @@ class EditProfile extends React.Component {
             )}
           </View>
           <TouchableHighlight
+            disabled={this.state.disabled}
             style={[screenStyles.medButton, styles.saveButton]}
             onPress={() => {
               this.finalCheck()

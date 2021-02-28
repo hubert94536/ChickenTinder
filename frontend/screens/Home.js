@@ -50,6 +50,7 @@ class Home extends React.Component {
       join: false,
       inviteInfo: '',
       friends: '',
+      disabled: false
     }
 
     socket.getSocket().once('update', (res) => {
@@ -60,6 +61,7 @@ class Home extends React.Component {
       this.props.navigation.replace('Group', {
         response: res,
       })
+      this.setState({disabled: false})
     })
     // //uncomment if testing friends/requests
     // accountsApi.createFBUserTest('Hubes2', 32, 'hbc', 'hhcc@gmail.com', '50', '35434354')
@@ -74,6 +76,7 @@ class Home extends React.Component {
   }
 
   createGroup() {
+    this.setState({disabled: true})
     socket.createRoom()
   }
 
@@ -91,6 +94,7 @@ class Home extends React.Component {
           <Text style={[screenStyles.text, styles.title]}>Let&apos;s Get Chews-ing</Text>
           <View>
             <TouchableHighlight
+              disabled={this.state.disabled}
               onShowUnderlay={() => this.setState({ createPressed: true })}
               onHideUnderlay={() => this.setState({ createPressed: false })}
               activeOpacity={1}

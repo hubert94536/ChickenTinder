@@ -18,14 +18,17 @@ class Card extends React.Component {
       deleteFriend: false,
       status: this.props.status,
       pressed: false,
-      disabled: false
+      disabled: false,
+      disabled2: false
     }
   }
 
   deleteFriend() {
     this.props.unfriendAlert(false)
-    this.setState({ deleteFriend: false, disabled:true })
-    friendsApi
+    this.setState({ deleteFriend: false})
+    if(!this.state.disabled){
+      this.setState({ disabled: true })
+      friendsApi
       .removeFriendship(this.props.uid)
       .then(() => {
         var filteredArray = this.props.friends.friends.filter((item) => {
@@ -40,10 +43,11 @@ class Card extends React.Component {
         this.props.showError()
         this.setState({disabled: false})
       })
+    }
   }
 
   rejectFriend() {
-    this.setState({disabled: true})
+    this.setState({disabled2: true})
     friendsApi
       .removeFriendship(this.props.uid)
       .then(() => {
@@ -52,11 +56,11 @@ class Card extends React.Component {
         })
         this.props.changeFriends(filteredArray)
         this.props.press(filteredArray)
-        this.setState({ status: 'add', disabled: false })
+        this.setState({ status: 'add', disabled2: false })
       })
       .catch(() => {
         this.props.showError()
-        this.setState({disabled: false})
+        this.setState({disabled2: false})
       })
   }
 
@@ -134,6 +138,7 @@ class Card extends React.Component {
             <View style={imgStyles.card}>
               <Text style={[imgStyles.text, styles.topMargin]}>Add</Text>
               <AntDesign
+                disabled={this.props.disabled}
                 style={[imgStyles.icon, styles.addIcon]}
                 name="pluscircleo"
                 onPress={() => {
@@ -153,7 +158,11 @@ class Card extends React.Component {
         )}
         {/* if they are not friends */}
         {this.state.status === 'add' && renderOption && (
-          <TouchableHighlight underlayColor="white" onPress={() => this.addFriend()}>
+          <TouchableHighlight
+            underlayColor="white"
+            onPress={() => this.addFriend()}
+            disabled={this.state.disabled}
+          >
             <View style={imgStyles.card}>
               <Text style={[imgStyles.text, styles.black]}>Add Friend</Text>
               <AntDesign style={[imgStyles.icon, styles.icon, styles.black]} name="pluscircleo" />
@@ -181,13 +190,13 @@ class Card extends React.Component {
           <View style={imgStyles.card}>
             <Text style={[imgStyles.text, styles.black]}>Accept Request</Text>
             <Icon
-            disabled={this.state.disabled}
+              disabled={this.state.disabled}
               style={[imgStyles.icon, styles.pend]}
               name="check-circle"
               onPress={() => this.acceptFriend()}
             />
             <AntDesign
-            disabled={this.state.disabled}
+              disabled={this.state.disabled2}
               style={[imgStyles.icon, styles.pend, styles.black]}
               name="closecircleo"
               onPress={() => this.rejectFriend()}

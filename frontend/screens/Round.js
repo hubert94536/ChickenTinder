@@ -25,6 +25,7 @@ class Round extends React.Component {
       instr: true,
       index: 1,
       leave: false,
+      disabled: false
     }
 
     socket.getSocket().once('match', (data) => {
@@ -49,23 +50,31 @@ class Round extends React.Component {
   }
 
   leaveGroup(end) {
-    socket.getSocket().off()
-    if (end) {
-      socket.endLeave()
-      this.props.showKick()
-    } else {
-      socket.leaveRound()
+    if(!this.state.disabled){
+      this.setState({disabled: true})
+      socket.getSocket().off()
+      if (end) {
+        socket.endLeave()
+        this.props.showKick()
+      } else {
+        socket.leaveRound()
+      }
+      this.props.setCode(0)
+      global.host = ''
+      global.isHost = false
+      global.restaurants = []
+      this.props.navigation.replace('Home')
+      this.setState({disabled: false})
     }
-    this.props.setCode(0)
-    global.host = ''
-    global.isHost = false
-    global.restaurants = []
-    this.props.navigation.replace('Home')
   }
 
   endGroup() {
-    this.setState({ leave: false })
-    socket.endRound()
+    if(!this.state.disabled){
+      this.setState({disabled: true})
+      this.setState({ leave: false })
+      socket.endRound()
+      this.setState({disabled: false})
+    }
   }
 
   render() {
@@ -167,6 +176,7 @@ class Round extends React.Component {
             body="Leaving ends the group for everyone"
             buttonAff="Leave"
             height="30%"
+            disabled={this.state.disabled}
             press={() => socket.endRound()}
             cancel={() => this.setState({ leave: false })}
           />

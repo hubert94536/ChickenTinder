@@ -16,6 +16,7 @@ import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
 import TimeSwitch from './TimeSwitch.js'
+import _ from 'lodash'
 
 export default class Time extends React.Component {
   constructor(props) {
@@ -60,6 +61,8 @@ export default class Time extends React.Component {
       this.handlePress(hour, min)
     }
   }
+
+  evaluate = _.debounce(this.evaluateTime.bind(this), 200)
 
   render() {
     return (
@@ -122,7 +125,7 @@ export default class Time extends React.Component {
             )}
             <TouchableHighlight
               style={[modalStyles.doneButton, styles.doneButtonMargin]}
-              onPress={() => this.evaluateTime()}
+              onPress={() => this.evaluate()}
             >
               <Text style={[screenStyles.text, modalStyles.doneText]}>Done</Text>
             </TouchableHighlight>

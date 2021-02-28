@@ -60,6 +60,9 @@ class Group extends React.Component {
       leaveAlert: false,
       endAlert: false,
       chooseFriends: false,
+
+      // Disabling buttons
+      disabled: false
     }
     console.log(members)
     this.updateMemberList()
@@ -156,26 +159,34 @@ class Group extends React.Component {
   }
 
   leaveGroup(end) {
-    socket.getSocket().off()
-    // leaving due to host ending session
-    if (end) {
-      socket.endLeave()
-      this.props.showEnd()
+    if(!this.state.disabled){
+      this.setState({disabled: true})
+      socket.getSocket().off()
+      // leaving due to host ending session
+      if (end) {
+        socket.endLeave()
+        this.props.showEnd()
+      }
+      // normal user leaves
+      else {
+        socket.leaveGroup()
+      }
+      this.props.setCode(0)
+      global.host = ''
+      global.isHost = false
+      this.props.navigation.replace('Home')
+      this.setState({disabled: false})
     }
-    // normal user leaves
-    else {
-      socket.leaveGroup()
-    }
-    this.props.setCode(0)
-    global.host = ''
-    global.isHost = false
-    this.props.navigation.replace('Home')
   }
 
   // host ends session
   endGroup() {
     this.setState({ endAlert: false, blur: false })
-    socket.endRound()
+    if(!this.state.disabled){
+      this.setState({ disabled: true })
+      socket.endRound()
+      this.setState({disabled: false})
+    }
   }
 
   // shows proper alert based on if user is host
@@ -358,6 +369,7 @@ class Group extends React.Component {
                     setBlur={(res) => this.setState({ blur: res })}
                     code={this.props.code.code}
                     style={{ elevation: 31 }}
+                    buttonDisable={(able) => this.setState({disabled: able})}
                   />
                 </View>
               </View>
@@ -392,6 +404,7 @@ class Group extends React.Component {
               <TouchableHighlight
                 underlayColor={colors.hex}
                 activeOpacity={1}
+                disabled={this.state.disabled}
                 onPress={() => this.start()}
                 style={[
                   screenStyles.bigButton,
@@ -407,6 +420,7 @@ class Group extends React.Component {
             )}
             {!global.isHost && (
               <TouchableHighlight
+                disabled={this.state.disabled}
                 style={[
                   screenStyles.bigButton,
                   styles.bigButton,

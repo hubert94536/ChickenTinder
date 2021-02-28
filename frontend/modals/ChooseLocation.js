@@ -21,6 +21,7 @@ import mapStyle from '../../styles/mapStyle.json'
 import Slider from '@react-native-community/slider'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { ZIP_ID, ZIP_TOKEN } from 'react-native-dotenv'
+import _ from 'lodash'
 
 const fullWidth = Dimensions.get('window').width
 const fullHeight = Dimensions.get('window').height
@@ -77,7 +78,7 @@ export default class Location extends Component {
     }
   }
 
-  validateZip() {
+  validate() {
     //created Lookup for validating zip code
     let lookup = new Lookup()
     lookup.zipCode = this.state.zip
@@ -128,36 +129,39 @@ export default class Location extends Component {
     this.props.cancel()
   }
 
-  getLocation() {
-    if (requestLocationPermission()) {
-      Geolocation.getCurrentPosition(
-        (position) => {
-          this.setState({
-            zipValid: true,
-            city: 'Current Location',
-            state: '',
-            location: {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-            },
-          })
-          let newRegion = {
+location(){
+  if (requestLocationPermission()) {
+    Geolocation.getCurrentPosition(
+      (position) => {
+        this.setState({
+          zipValid: true,
+          city: 'Current Location',
+          state: '',
+          location: {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-            latitudeDelta: this.state.distance / 60 + 0.3,
-            longitudeDelta: this.state.distance / 60 + 0.3,
-          }
-          this.mapView.current.animateToRegion(newRegion, 3000)
-        },
-        (error) => {
-          console.log(error.code, error.message)
-        },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-      )
-    } else {
-      console.log('Filter.js: Failed to get location')
-    }
+          },
+        })
+        let newRegion = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          latitudeDelta: this.state.distance / 60 + 0.3,
+          longitudeDelta: this.state.distance / 60 + 0.3,
+        }
+        this.mapView.current.animateToRegion(newRegion, 3000)
+      },
+      (error) => {
+        console.log(error.code, error.message)
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+    )
+  } else {
+    console.log('Filter.js: Failed to get location')
   }
+}
+
+  getLocation =  _.debounce(this.location.bind(this), 500)
+  validateZip = _.debounce(this.validate.bind(this), 200)
 
   render() {
     return (

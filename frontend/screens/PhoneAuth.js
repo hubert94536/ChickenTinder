@@ -32,10 +32,12 @@ class PhoneAuthScreen extends Component {
       errorAlert: false,
       invalidNumberAlert: false,
       badCodeAlert: false,
+      disabled: false
     }
   }
 
   handleSendCode = async () => {
+    this.setState({disabled: true})
     // Request to send OTP
     try {
       const confirm = await loginService.loginWithPhone(this.state.phone)
@@ -44,6 +46,7 @@ class PhoneAuthScreen extends Component {
       if (err.message == 'Invalid phone number') this.setState({ invalidNumberAlert: true })
       else this.setState({ errorAlert: true })
     }
+    this.setState({disabled: false})
   }
 
   changePhoneNumber = () => {
@@ -51,6 +54,7 @@ class PhoneAuthScreen extends Component {
   }
 
   handleVerifyCode = async () => {
+    this.setState({disabled: true})
     // Request for OTP verification
     const { confirmResult, verificationCode } = this.state
     if (verificationCode.length === 6) {
@@ -65,6 +69,7 @@ class PhoneAuthScreen extends Component {
     } else {
       this.setState({ badCodeAlert: true })
     }
+    this.setState({disabled: false})
   }
 
   renderConfirmationCodeView() {
@@ -82,6 +87,7 @@ class PhoneAuthScreen extends Component {
           maxLength={6}
         />
         <TouchableOpacity
+          disabled={this.state.disabled}
           style={[styles.themeButton, { marginTop: 20 }]}
           onPress={() => this.handleVerifyCode()}
         >
@@ -93,7 +99,9 @@ class PhoneAuthScreen extends Component {
 
   // Navigate to login
   handleBack = async () => {
+    this.setState({disabled: true})
     this.props.navigation.navigate('Login')
+    this.setState({disabled: false})
   }
 
   render() {
@@ -105,6 +113,7 @@ class PhoneAuthScreen extends Component {
         <SafeAreaView style={styles.container}>
           <View style={styles.page}>
             <AntDesign
+              disabled={this.state.disabled}
               name="arrowleft"
               style={{
                 fontSize: 30,
@@ -169,6 +178,7 @@ class PhoneAuthScreen extends Component {
 
             {!this.state.confirmResult && (
               <TouchableOpacity
+                disabled={this.state.disabled}
                 style={[styles.themeButton, { marginTop: 0, marginBottom: '10%' }]}
                 onPress={() => this.handleSendCode()}
               >

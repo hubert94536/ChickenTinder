@@ -56,19 +56,23 @@ class Login extends React.Component {
   }
 
   async handleClick() {
-    this.setState({disabled: true})
-    loginService
-      .loginWithFacebook()
-      .then((result) => {
-        this.setState({ alert: false })
-        this.setInfo()
-        this.setFriends()
-        this.props.navigation.replace(result)
-      })
-      .catch(() => {
-        this.props.showError()
-      })
-      this.setState({disabled: false})
+    if(!this.state.disabled)
+    {
+      this.setState({disabled: true})
+      loginService
+        .loginWithFacebook()
+        .then((result) => {
+          this.setState({ alert: false })
+          this.setInfo()
+          this.setFriends()
+          this.props.navigation.replace(result)
+          this.setState({disabled: false})
+        })
+        .catch(() => {
+          this.props.showError()
+          this.setState({disabled: false})
+        })
+    }
   }
 
   cancelClick() {
@@ -89,7 +93,11 @@ class Login extends React.Component {
             onHideUnderlay={() => this.setState({ phonePressed: false })}
             activeOpacity={1}
             underlayColor={'white'}
-            onPress={() => this.props.navigation.replace('Phone')}
+            onPress={() => {
+              this.setState({disabled: true})
+              this.props.navigation.replace('Phone')
+              this.setState({disabled: false})
+            }}
             style={[screenStyles.longButton, styles.phoneButton]}
           >
             <View style={screenStyles.contentContainer}>
@@ -156,6 +164,7 @@ class Login extends React.Component {
             title="Error, please try again"
             buttonAff="Close"
             height="20%"
+            disabled={false}
             press={() => this.props.hideError()}
             cancel={() => this.props.hideError()}
           />

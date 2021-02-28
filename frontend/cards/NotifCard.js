@@ -25,7 +25,7 @@ export default class NotifCard extends React.Component {
       confirmPressed: false,
       deletePressed: false,
       trash: false,
-      disabled: false
+      disabled: false,
     }
   }
 
@@ -77,7 +77,10 @@ export default class NotifCard extends React.Component {
 
   render() {
     return (
-      <TouchableWithoutFeedback onPress={() => this.handleClick()}>
+      <TouchableWithoutFeedback
+        onPress={() => this.handleClick()}
+        disabled={this.state.disabled}
+      >
         <View style={styles.container}>
           <Image
             source={{ uri: Image.resolveAssetSource(this.props.image).uri }}
