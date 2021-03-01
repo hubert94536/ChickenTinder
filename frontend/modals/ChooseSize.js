@@ -12,6 +12,7 @@ import PropTypes from 'prop-types'
 import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
+import _ from 'lodash'
 
 export default class Size extends React.Component {
   constructor(props) {
@@ -32,7 +33,7 @@ export default class Size extends React.Component {
     this.props.cancel()
   }
 
-  evaluateSize() {
+  evaluate() {
     if (this.state.selectedSize === '') {
       this.setState({ invalidSize: true })
     }
@@ -47,6 +48,8 @@ export default class Size extends React.Component {
       this.handlePress(s)
     }
   }
+
+  evaluateSize = _.debounce(this.evaluate.bind(this), 200)
 
   render() {
     return (
