@@ -25,6 +25,7 @@ class Round extends React.Component {
       index: 1,
       leave: false,
       disabled: false,
+      count: 0
     }
     socket.getSocket().once('match', (data) => {
       socket.getSocket().off()
@@ -146,20 +147,26 @@ class Round extends React.Component {
         <View style={styles.bottom}>
           <View>
             <TouchableHighlight
-              onPress={() => this.deck.swipeLeft()}
+              onPress={() => {
+                this.deck.swipeLeft()
+                this.setState({count: this.state.count + 1})
+              }}
               underlayColor="transparent"
               style={styles.background}
-              disabled={this.state.index > global.restaurants.length}
+              disabled={this.state.count > global.restaurants.length}
             >
               <Feather name="x" style={[screenStyles.text, styles.x]} />
             </TouchableHighlight>
           </View>
           <View>
             <TouchableHighlight
-              onPress={() => this.deck.swipeRight()}
+              onPress={() => {
+                this.deck.swipeRight()
+                this.setState({count: this.state.count + 1})
+              }}
               underlayColor="transparent"
               style={[styles.background]}
-              disabled={this.state.index > global.restaurants.length}
+              disabled={this.state.count > global.restaurants.length}
             >
               <Icon name="heart" style={[screenStyles.text, styles.heart]} />
             </TouchableHighlight>

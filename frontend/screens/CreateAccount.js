@@ -68,10 +68,12 @@ class createAccount extends React.Component {
     this.setState({ disabled: true })
     try {
       if (!this.state.validUsernameFormat || !this.state.validNameFormat) {
+        this.setState({ disabled: false })
         return
       }
       await this.checkUsernameValidity()
       if (!this.state.validUsername) {
+        this.setState({ disabled: false })
         return
       }
       await accountsApi.createUser(
