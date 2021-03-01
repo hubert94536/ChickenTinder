@@ -77,16 +77,13 @@ class Loading extends React.Component {
     global.host = ''
     global.isHost = false
     global.restaurants = []
-    this.props.navigation.replace('Home')
     this.setState({ disabled: false })
+    this.props.navigation.replace('Home')
   }
 
   endGroup() {
-    if (!this.state.disabled) {
-      this.setState({ disabled: true })
-      socket.endGroup()
-    }
-    this.setState({ disabled: false })
+    this.setState({ disabled: true })
+    socket.endGroup()
   }
 
   render() {
@@ -105,6 +102,7 @@ class Loading extends React.Component {
           </View>
           {!global.isHost && (
             <TouchableHighlight
+              disabled={this.state.disabled}
               style={[styles.leaveButton, screenStyles.medButton]}
               underlayColor="transparent"
               onPress={() => this.leaveGroup()}

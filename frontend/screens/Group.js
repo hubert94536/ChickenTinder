@@ -96,12 +96,13 @@ class Group extends React.Component {
       if (restaurants.length > 0) {
         socket.getSocket().off()
         global.restaurants = restaurants
+        this.setState({ disabled: false })
         this.props.navigation.replace('Round')
       } else {
         console.log('group.js: no restaurants found')
+        this.setState({ disabled: false })
         // need to handle no restaurants returned
       }
-      this.setState({ disabled: false })
     })
 
     socket.getSocket().on('leave', () => {
@@ -182,8 +183,7 @@ class Group extends React.Component {
 
   // host ends session
   endGroup() {
-    this.setState({ endAlert: false, blur: false })
-
+    this.setState({ endAlert: false, blur: false, disabled:true })
     socket.endRound()
   }
 

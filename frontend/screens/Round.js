@@ -65,8 +65,8 @@ class Round extends React.Component {
     global.host = ''
     global.isHost = false
     global.restaurants = []
-    this.props.navigation.replace('Home')
     this.setState({ disabled: false })
+    this.props.navigation.replace('Home')
   }
 
   endGroup() {
