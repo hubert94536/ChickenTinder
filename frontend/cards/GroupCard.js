@@ -14,11 +14,14 @@ export default class GroupCard extends React.Component {
     super(props)
     this.state = {
       uid: this.props.uid,
+      disabled: false,
     }
   }
 
   removeUser(uid) {
+    this.setState({ disabled: true })
     socket.kickUser(uid)
+    this.setState({ disabled: false })
   }
 
   render() {
@@ -53,6 +56,7 @@ export default class GroupCard extends React.Component {
               name="times-circle"
               style={[imgStyles.icon, styles.smallMargin]}
               onPress={() => this.removeUser(this.props.username)}
+              disabled={this.state.disabled}
             />
           ) : null}
         </View> */}

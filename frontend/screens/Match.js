@@ -20,10 +20,12 @@ class Match extends React.Component {
     super(props)
     this.state = {
       restaurant: this.props.navigation.state.params.restaurant,
+      disabled: false,
     }
   }
 
   endRound() {
+    this.setState({ disabled: true })
     socket.getSocket().off()
     if (global.isHost) {
       socket.endRound()
@@ -34,6 +36,7 @@ class Match extends React.Component {
     global.host = ''
     global.isHost = false
     global.restaurants = []
+    this.setState({ disabled: false })
     this.props.navigation.replace('Home')
   }
 
@@ -85,6 +88,7 @@ class Match extends React.Component {
           </Text>
         </TouchableHighlight>
         <Text /* Link to exit round */
+          disabled={this.state.disabled}
           style={[screenStyles.bigButtonText, styles.exitRoundText]}
           onPress={() => this.endRound()}
         >

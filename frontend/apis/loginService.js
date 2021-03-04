@@ -40,8 +40,7 @@ const loginWithCredential = async (userCredential) => {
       if (user.email) {
         await AsyncStorage.setItem(EMAIL, user.email)
         global.email = user.email
-      }
-      else {
+      } else {
         await AsyncStorage.setItem(PHONE, user.phone_number)
         global.phone = user.phone_number
       }

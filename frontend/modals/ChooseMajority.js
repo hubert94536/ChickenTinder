@@ -12,6 +12,7 @@ import PropTypes from 'prop-types'
 import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
+import _ from 'lodash'
 
 export default class Majority extends React.Component {
   constructor(props) {
@@ -32,7 +33,7 @@ export default class Majority extends React.Component {
     this.props.cancel()
   }
 
-  evaluate() {
+  evaluateSize() {
     if (this.state.selectedValue === '') {
       this.setState({ invalidValue: true })
     }
@@ -45,6 +46,8 @@ export default class Majority extends React.Component {
       this.handlePress(s)
     }
   }
+
+  evaluate = _.debounce(this.evaluateSize.bind(this), 100)
 
   render() {
     return (
