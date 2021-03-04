@@ -88,6 +88,7 @@ class Friends extends React.Component {
   async removeRequest(newArr) {
     this.props.changeFriends(newArr)
     this.setState({ friends: newArr, data: newArr })
+    this.props.onFriendsChange(newArr.length)
     console.log(newArr)
   }
 
