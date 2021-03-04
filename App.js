@@ -44,15 +44,6 @@ class App extends React.Component {
       // can change to our loading screen
       appContainer: <Text />,
     }
-
-    AsyncStorage.multiGet([USERNAME, NAME, PHOTO, EMAIL, PHONE]).then((res) => {
-      this.props.changeUsername(res[0][1])
-      this.props.changeName(res[1][1])
-      this.props.changeImage(res[2][1])
-      global.email = res[3][1]
-      global.phone = res[4][1]
-    })
-
     PushNotification.configure({
       onRegister: function (token) {
         console.log('Token generated')
@@ -78,18 +69,23 @@ class App extends React.Component {
         start = 'Login'
       } else {
         try {
-          const friends = await friendsApi.getFriends()
-          // for(var i = 0; i < friends.friendList.length; i++)
-          // {
-          //   if(friends.friendList[i].status === 'requested')
-          //     friendsApi.acceptFriendRequest(friends.friendList[i].uid)
-          // }
-          this.props.changeFriends(friends.friendList)
+          if (!user.displayName) {
+            start = 'Login'
+          } else {
+            let res = await AsyncStorage.multiGet([USERNAME, NAME, PHOTO, EMAIL, PHONE])
+            this.props.changeUsername(res[0][1])
+            this.props.changeName(res[1][1])
+            this.props.changeImage(res[2][1])
+            global.email = res[3][1]
+            global.phone = res[4][1]
+            const friends = await friendsApi.getFriends()
+            this.props.changeFriends(friends.friendList)
+            socket.connect()
+            start = 'Home'
+          }
         } catch (error) {
           console.log(error)
         }
-        socket.connect()
-        start = 'Home'
       }
       var RootStack = createStackNavigator(
         {
@@ -165,10 +161,7 @@ class App extends React.Component {
   }
 
   render() {
-    return (
-      // <Provider store={store}>{this.state.appContainer}</Provider>
-      this.state.appContainer
-    )
+    return this.state.appContainer
   }
 }
 

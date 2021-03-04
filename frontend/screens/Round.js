@@ -24,6 +24,8 @@ class Round extends React.Component {
       instr: true,
       index: 1,
       leave: false,
+      disabled: false,
+      count: 0
     }
     socket.getSocket().once('match', (data) => {
       socket.getSocket().off()
@@ -40,6 +42,7 @@ class Round extends React.Component {
     })
 
     socket.getSocket().on('leave', () => {
+      this.setState({ disabled: true })
       this.leaveGroup(true)
     })
   }
@@ -49,6 +52,7 @@ class Round extends React.Component {
   }
 
   leaveGroup(end) {
+    this.setState({ disabled: true })
     socket.getSocket().off()
     if (end) {
       socket.endLeave()
@@ -62,13 +66,16 @@ class Round extends React.Component {
     global.host = ''
     global.isHost = false
     global.restaurants = []
+    this.setState({ disabled: false })
     this.props.navigation.replace('Home')
   }
 
-  // host ends session
-  endRound() {
-    this.setState({ endAlert: false, blur: false })
-    socket.endRound()
+  endGroup() {
+    if (!this.state.disabled) {
+      this.setState({ disabled: true, leave: false, endAlert: false, blue: false })
+      socket.endRound()
+      this.setState({ disabled: false })
+    }
   }
 
   render() {
@@ -108,6 +115,7 @@ class Round extends React.Component {
             <Text style={[screenStyles.text, styles.title, styles.topMargin]}>Get chews-ing!</Text>
             {!global.isHost && (
               <TouchableHighlight
+                disabled={this.state.disabled}
                 onPress={() => this.leaveGroup(false)}
                 style={[styles.leaveButton, styles.topMargin]}
                 underlayColor="transparent"
@@ -120,6 +128,7 @@ class Round extends React.Component {
             )}
             {global.isHost && (
               <TouchableHighlight
+                disabled={this.state.disabled}
                 onPress={() => this.setState({ leave: true })}
                 style={[styles.leaveButton, styles.topMargin]}
                 underlayColor="transparent"
@@ -138,20 +147,26 @@ class Round extends React.Component {
         <View style={styles.bottom}>
           <View>
             <TouchableHighlight
-              onPress={() => this.deck.swipeLeft()}
+              onPress={() => {
+                this.deck.swipeLeft()
+                this.setState({count: this.state.count + 1})
+              }}
               underlayColor="transparent"
               style={styles.background}
-              disabled={this.state.index > global.restaurants.length}
+              disabled={this.state.count > global.restaurants.length}
             >
               <Feather name="x" style={[screenStyles.text, styles.x]} />
             </TouchableHighlight>
           </View>
           <View>
             <TouchableHighlight
-              onPress={() => this.deck.swipeRight()}
+              onPress={() => {
+                this.deck.swipeRight()
+                this.setState({count: this.state.count + 1})
+              }}
               underlayColor="transparent"
               style={[styles.background]}
-              disabled={this.state.index > global.restaurants.length}
+              disabled={this.state.count > global.restaurants.length}
             >
               <Icon name="heart" style={[screenStyles.text, styles.heart]} />
             </TouchableHighlight>
@@ -171,7 +186,8 @@ class Round extends React.Component {
             body="Leaving ends the group for everyone"
             buttonAff="Leave"
             height="30%"
-            press={() => this.endRound()}
+            disabled={this.state.disabled}
+            press={() => socket.endRound()}
             cancel={() => this.setState({ leave: false })}
           />
         )}
@@ -201,6 +217,7 @@ Round.propTypes = {
   navigation: PropTypes.object,
   setCode: PropTypes.func,
   showKick: PropTypes.func,
+  showEnd: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

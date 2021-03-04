@@ -60,6 +60,9 @@ class Group extends React.Component {
       leaveAlert: false,
       endAlert: false,
       chooseFriends: false,
+
+      // Disabling buttons
+      disabled: false,
     }
     console.log(members)
     this.updateMemberList()
@@ -93,9 +96,11 @@ class Group extends React.Component {
       if (restaurants.length > 0) {
         socket.getSocket().off()
         global.restaurants = restaurants
+        this.setState({ disabled: false })
         this.props.navigation.replace('Round')
       } else {
         console.log('group.js: no restaurants found')
+        this.setState({ disabled: false })
         // need to handle no restaurants returned
       }
     })
@@ -128,6 +133,7 @@ class Group extends React.Component {
   start() {
     // this.filterRef.current.setState({ locationAlert: true })
     // console.log('start pressed')
+    this.setState({ disabled: true })
     this.filterRef.current.startSession()
   }
 
@@ -155,6 +161,7 @@ class Group extends React.Component {
   }
 
   leaveGroup(end) {
+    this.setState({ disabled: true })
     socket.getSocket().off()
     // leaving due to host ending session
     if (end) {
@@ -170,12 +177,13 @@ class Group extends React.Component {
     this.props.setCode(0)
     global.host = ''
     global.isHost = false
+    this.setState({ disabled: false })
     this.props.navigation.replace('Home')
   }
 
   // host ends session
   endGroup() {
-    this.setState({ endAlert: false, blur: false })
+    this.setState({ endAlert: false, blur: false, disabled:true })
     socket.endRound()
   }
 
@@ -359,6 +367,7 @@ class Group extends React.Component {
                     setBlur={(res) => this.setState({ blur: res })}
                     code={this.props.code.code}
                     style={{ elevation: 31 }}
+                    buttonDisable={(able) => this.setState({ disabled: able })}
                   />
                 </View>
               </View>
@@ -393,6 +402,7 @@ class Group extends React.Component {
               <TouchableHighlight
                 underlayColor={colors.hex}
                 activeOpacity={1}
+                disabled={this.state.disabled}
                 onPress={() => this.start()}
                 style={[
                   screenStyles.bigButton,
@@ -408,6 +418,7 @@ class Group extends React.Component {
             )}
             {!global.isHost && (
               <TouchableHighlight
+                disabled={this.state.disabled}
                 style={[
                   screenStyles.bigButton,
                   styles.bigButton,
@@ -424,6 +435,7 @@ class Group extends React.Component {
             )}
           </View>
           <TouchableHighlight
+            disabled={this.state.disabled}
             style={styles.leave}
             activeOpacity={1}
             onPress={() => {
