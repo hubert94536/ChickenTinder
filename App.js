@@ -161,9 +161,7 @@ class App extends React.Component {
   }
 
   render() {
-    return (
-      this.state.appContainer
-    )
+    return this.state.appContainer
   }
 }
 

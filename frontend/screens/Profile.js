@@ -43,6 +43,7 @@ class UserProfileView extends Component {
       // friends text
       numFriends: 0,
       imageData: null,
+      disabled: false,
     }
   }
 
@@ -97,17 +98,21 @@ class UserProfileView extends Component {
   }
 
   async handleDelete() {
-    loginService
-      .deleteUser()
-      // TODO: Disastrous phone auth code...
-      .then(() => {
-        // close settings and navigate to Login
-        this.setState({ visible: false })
-        this.props.navigation.replace('Login')
-      })
-      .catch(() => {
-        this.props.hideError()
-      })
+    if (!this.state.disabled) {
+      this.setState({ disabled: true })
+      loginService
+        .deleteUser()
+        // TODO: Disastrous phone auth code...
+        .then(() => {
+          // close settings and navigate to Login
+          this.setState({ visible: false })
+          this.props.navigation.replace('Login')
+        })
+        .catch(() => {
+          this.props.hideError()
+        })
+      this.setState({ disabled: false })
+    }
   }
 
   // close alert for taken username
@@ -121,20 +126,24 @@ class UserProfileView extends Component {
   }
 
   async handleLogout() {
-    loginService
-      .logout()
-      .then(() => {
-        // close settings and navigate to Login
-        this.setState({ visible: false })
-        this.props.navigation.replace('Login')
-      })
-      .catch(() => {
-        this.props.showError()
-      })
+    if (!this.state.disabled) {
+      this.setState({ disabled: true })
+      loginService
+        .logout()
+        .then(() => {
+          // close settings and navigate to Login
+          this.setState({ visible: false })
+          this.props.navigation.replace('Login')
+        })
+        .catch(() => {
+          this.props.showError()
+        })
+      this.setState({ disabled: false })
+    }
   }
 
   cancelLogout() {
-    this.setState({ logoutAlert: false })
+    this.setState({ logoutAlert: false, disabled: false })
   }
 
   makeChanges() {
@@ -285,8 +294,9 @@ class UserProfileView extends Component {
                 buttonNeg="Go back"
                 height="25%"
                 twoButton
+                disabled={this.state.disabled}
                 press={() => this.handleLogout()}
-                cancel={() => this.setState({ logoutAlert: false, visible: true })}
+                cancel={() => this.setState({ logoutAlert: false, visible: true, disabled: false })}
               />
             )}
 
@@ -298,6 +308,7 @@ class UserProfileView extends Component {
                 buttonNeg="Go back"
                 twoButton
                 height="25%"
+                dispatch={this.state.disabled}
                 press={() => this.handleDelete()}
                 cancel={() => this.cancelDelete()}
               />

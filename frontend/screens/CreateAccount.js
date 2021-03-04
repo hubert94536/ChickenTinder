@@ -38,6 +38,7 @@ class createAccount extends React.Component {
       validUsername: true,
       validUsernameFormat: true,
       facebook: false,
+      disabled: false,
     }
     AsyncStorage.multiGet([EMAIL, NAME, PHONE])
       .then((res) => {
@@ -64,12 +65,15 @@ class createAccount extends React.Component {
 
   //  checks whether or not the username can be set
   handleClick = async () => {
+    this.setState({ disabled: true })
     try {
       if (!this.state.validUsernameFormat || !this.state.validNameFormat) {
+        this.setState({ disabled: false })
         return
       }
       await this.checkUsernameValidity()
       if (!this.state.validUsername) {
+        this.setState({ disabled: false })
         return
       }
       await accountsApi.createUser(
@@ -97,9 +101,10 @@ class createAccount extends React.Component {
         global.email = this.state.email
       }
       socket.connect()
+      this.setState({ disabled: false })
       this.props.navigation.replace('Home')
     } catch (err) {
-      this.setState({ errorAlert: true })
+      this.setState({ errorAlert: true, disabled: false })
       return
     }
   }
@@ -261,6 +266,7 @@ class createAccount extends React.Component {
           underlayColor={'white'}
           onPress={this.handleClick}
           style={[screenStyles.longButton, styles.button]}
+          disabled={this.state.disabled}
         >
           <View style={[screenStyles.contentContainer]}>
             <Text

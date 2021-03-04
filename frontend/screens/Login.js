@@ -30,6 +30,7 @@ class Login extends React.Component {
     this.state = {
       pressed: false,
       alert: false,
+      disabled: false,
     }
   }
 
@@ -55,21 +56,26 @@ class Login extends React.Component {
   }
 
   async handleClick() {
-    loginService
-      .loginWithFacebook()
-      .then((result) => {
-        this.setState({ alert: false })
-        this.setInfo()
-        this.setFriends()
-        this.props.navigation.replace(result)
-      })
-      .catch(() => {
-        this.props.showError()
-      })
+    if (!this.state.disabled) {
+      this.setState({ disabled: true })
+      loginService
+        .loginWithFacebook()
+        .then((result) => {
+          this.setState({ alert: false })
+          this.setInfo()
+          this.setFriends()
+          this.props.navigation.replace(result)
+          this.setState({ disabled: false })
+        })
+        .catch(() => {
+          this.props.showError()
+          this.setState({ disabled: false })
+        })
+    }
   }
 
   cancelClick() {
-    this.setState({ alert: false })
+    this.setState({ alert: false, disabled: false })
   }
 
   login() {
@@ -86,7 +92,11 @@ class Login extends React.Component {
             onHideUnderlay={() => this.setState({ phonePressed: false })}
             activeOpacity={1}
             underlayColor={'white'}
-            onPress={() => this.props.navigation.replace('Phone')}
+            onPress={() => {
+              this.setState({ disabled: true })
+              this.props.navigation.replace('Phone')
+              this.setState({ disabled: false })
+            }}
             style={[screenStyles.longButton, styles.phoneButton]}
           >
             <View style={screenStyles.contentContainer}>
@@ -107,6 +117,7 @@ class Login extends React.Component {
             activeOpacity={1}
             underlayColor="white"
             onPress={() => this.login()}
+            disabled={this.state.disabled}
             style={[screenStyles.longButton, styles.fbButton]}
           >
             <View style={[screenStyles.contentContainer]}>
@@ -152,6 +163,7 @@ class Login extends React.Component {
             title="Error, please try again"
             buttonAff="Close"
             height="20%"
+            disabled={false}
             press={() => this.props.hideError()}
             cancel={() => this.props.hideError()}
           />
