@@ -1,6 +1,5 @@
 import React from 'react'
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import imgStyles from '../../styles/cardImage.js'
