@@ -63,7 +63,7 @@ class ChooseFriends extends React.Component {
   //  function for searching your friends
   searchFilterFunction(text) {
     this.setState({ search: text })
-    const newData = this.props.friends.filter((item) => {
+    const newData = this.props.friends.friends.filter((item) => {
       const itemData = `${item.name.toUpperCase()} ${item.username.toUpperCase()}`
       const textData = text.toUpperCase()
       return itemData.indexOf(textData) > -1
