@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import colors from '../styles/colors.js'
-import notifsApi from './apis/notificationsApi.js'
 
 const height = Dimensions.get('window').height
 
@@ -150,4 +149,5 @@ TabBar.propTypes = {
   goProfile: PropTypes.func,
   cur: PropTypes.string,
   noNotif: PropTypes.func,
+  notif: PropTypes.bool,
 }
