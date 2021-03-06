@@ -9,8 +9,10 @@ import {
   View,
   Dimensions,
 } from 'react-native'
+import { bindActionCreators } from 'redux'
 import { BlurView } from '@react-native-community/blur'
 import Clipboard from '@react-native-community/clipboard'
+import { connect } from 'react-redux'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
@@ -25,6 +27,7 @@ import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
+import { setCode, showKick, showEnd } from '../redux/Actions.js'
 
 const font = 'CircularStd-Medium'
 let memberList = []
@@ -33,7 +36,7 @@ let memberRenderList = []
 const windowWidth = Dimensions.get('window').width
 const windowHeight = Dimensions.get('window').height
 
-export default class Group extends React.Component {
+class Group extends React.Component {
   constructor(props) {
     super(props)
     const members = this.props.navigation.state.params.response.members
@@ -57,6 +60,9 @@ export default class Group extends React.Component {
       leaveAlert: false,
       endAlert: false,
       chooseFriends: false,
+
+      // Disabling buttons
+      disabled: false,
     }
     console.log(members)
     this.updateMemberList()
@@ -64,13 +70,14 @@ export default class Group extends React.Component {
     // listens if user is to be kicked
     socket.getSocket().once('kick', () => {
       this.leaveGroup(false)
+      this.props.showKick()
     })
 
     // listens for group updates
     socket.getSocket().on('update', (res) => {
       console.log('socket "update": ' + JSON.stringify(res))
       global.host = res.members[res.host].username
-      global.code = res.code
+      this.props.setCode(res.code)
       this.setState({
         members: res.members,
         host: res.host,
@@ -87,10 +94,13 @@ export default class Group extends React.Component {
 
     socket.getSocket().once('start', (restaurants) => {
       if (restaurants.length > 0) {
+        socket.getSocket().off()
         global.restaurants = restaurants
+        this.setState({ disabled: false })
         this.props.navigation.replace('Round')
       } else {
         console.log('group.js: no restaurants found')
+        this.setState({ disabled: false })
         // need to handle no restaurants returned
       }
     })
@@ -123,6 +133,7 @@ export default class Group extends React.Component {
   start() {
     // this.filterRef.current.setState({ locationAlert: true })
     // console.log('start pressed')
+    this.setState({ disabled: true })
     this.filterRef.current.startSession()
   }
 
@@ -145,29 +156,34 @@ export default class Group extends React.Component {
       memberRenderList.push(a)
     }
     const footer = {}
-    footer.f = true
+    footer.f = 'a'
     memberRenderList.push(footer)
   }
 
   leaveGroup(end) {
+    this.setState({ disabled: true })
     socket.getSocket().off()
     // leaving due to host ending session
     if (end) {
       socket.endLeave()
+      if (!global.isHost) {
+        this.props.showEnd()
+      }
     }
     // normal user leaves
     else {
       socket.leaveGroup()
     }
-    global.code = ''
+    this.props.setCode(0)
     global.host = ''
     global.isHost = false
+    this.setState({ disabled: false })
     this.props.navigation.replace('Home')
   }
 
   // host ends session
   endGroup() {
-    this.setState({ endAlert: false, blur: false })
+    this.setState({ endAlert: false, blur: false, disabled:true })
     socket.endRound()
   }
 
@@ -184,7 +200,7 @@ export default class Group extends React.Component {
   }
 
   copyToClipboard() {
-    Clipboard.setString(global.code.toString())
+    Clipboard.setString(this.props.code.code.toString())
   }
 
   render() {
@@ -205,7 +221,7 @@ export default class Group extends React.Component {
             </Text>
             <View style={styles.subheader}>
               <Text style={styles.pinText}>Group PIN: </Text>
-              <Text style={styles.codeText}>{global.code + ' '}</Text>
+              <Text style={styles.codeText}>{this.props.code.code + ' '}</Text>
               <TouchableOpacity
                 style={{
                   flexDirection: 'column',
@@ -224,7 +240,7 @@ export default class Group extends React.Component {
         <Drawer
           style={styles.drawer}
           initialDrawerPos={100}
-          pointerEvents={this.state.blur ? 'none' : 'auto'}
+          enabled={!this.state.blur}
           renderContainerView={
             <View style={styles.main}>
               <View style={styles.center}>
@@ -252,6 +268,9 @@ export default class Group extends React.Component {
                   color: colors.hex,
                   marginBottom: 10,
                 }}
+                columnWrapperStyle={{
+                  justifyContent: 'center',
+                }}
                 data={memberRenderList}
                 renderItem={({ item }) => {
                   if (item.f) {
@@ -265,12 +284,12 @@ export default class Group extends React.Component {
                           justifyContent: 'center',
                           width: windowWidth * 0.4,
                           height: windowHeight * 0.06,
-                          margin: '3%',
+                          margin: '1.5%',
                         }}
                       >
                         <Text
                           style={{
-                            color: 'black',
+                            color: 'dimgray',
                             textAlign: 'center',
                             width: '100%',
                           }}
@@ -318,7 +337,7 @@ export default class Group extends React.Component {
                 />
               )}
               <ChooseFriends
-                code={global.code}
+                code={this.props.code.code}
                 visible={this.state.chooseFriends}
                 members={memberList}
                 press={() => this.setState({ chooseFriends: false, blur: false })}
@@ -346,8 +365,9 @@ export default class Group extends React.Component {
                     members={memberList}
                     ref={this.filterRef}
                     setBlur={(res) => this.setState({ blur: res })}
-                    code={global.code}
+                    code={this.props.code.code}
                     style={{ elevation: 31 }}
+                    buttonDisable={(able) => this.setState({ disabled: able })}
                   />
                 </View>
               </View>
@@ -382,6 +402,7 @@ export default class Group extends React.Component {
               <TouchableHighlight
                 underlayColor={colors.hex}
                 activeOpacity={1}
+                disabled={this.state.disabled}
                 onPress={() => this.start()}
                 style={[
                   screenStyles.bigButton,
@@ -397,6 +418,7 @@ export default class Group extends React.Component {
             )}
             {!global.isHost && (
               <TouchableHighlight
+                disabled={this.state.disabled}
                 style={[
                   screenStyles.bigButton,
                   styles.bigButton,
@@ -413,6 +435,7 @@ export default class Group extends React.Component {
             )}
           </View>
           <TouchableHighlight
+            disabled={this.state.disabled}
             style={styles.leave}
             activeOpacity={1}
             onPress={() => {
@@ -448,9 +471,30 @@ export default class Group extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  const { code } = state
+  return { code }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      setCode,
+      showKick,
+      showEnd,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(Group)
+
 Group.propTypes = {
   navigation: PropTypes.object,
   members: PropTypes.array,
+  code: PropTypes.object,
+  setCode: PropTypes.func,
+  showKick: PropTypes.func,
+  showEnd: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
@@ -572,8 +616,8 @@ const styles = StyleSheet.create({
     color: '#aaa',
   },
   memberContainer: {
-    marginLeft: '2%',
-    marginRight: '2%',
+    marginLeft: '1%',
+    marginRight: '1%',
     alignSelf: 'center',
     height: '55%',
     overflow: 'hidden',

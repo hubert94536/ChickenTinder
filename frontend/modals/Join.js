@@ -18,15 +18,17 @@ export default class Join extends React.Component {
       code: '',
       isValid: false,
       invalid: false,
+      disabled: false,
     }
   }
 
   handleAccept() {
-    this.setState({ pressed: false })
+    this.setState({ pressed: false, disabled: true })
     const code = this.state.code
     this.setState({ code: '' })
     socket.joinRoom(code)
     this.props.cancel()
+    this.setState({ disabled: false })
   }
 
   handleCancel() {
@@ -76,6 +78,7 @@ export default class Join extends React.Component {
               {this.state.isValid && (
                 <TouchableHighlight
                   underlayColor={screenStyles.hex.color}
+                  disabled={this.state.disabled}
                   onHideUnderlay={() => this.setState({ pressed: false })}
                   onShowUnderlay={() => this.setState({ pressed: true })}
                   onPress={() => this.handleAccept()}
@@ -116,7 +119,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: '-10%'
+    marginBottom: '-10%',
   },
   text: {
     fontSize: normalize(20),

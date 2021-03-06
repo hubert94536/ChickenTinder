@@ -1,17 +1,13 @@
 /* eslint-disable prettier/prettier */
 import React from 'react'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux';
 import {
   PermissionsAndroid,
   StyleSheet,
   Text,
-  TouchableHighlight,
   View,
 } from 'react-native'
 // import { BlurView } from '@react-native-community/blur'
 import Geolocation from 'react-native-geolocation-service'
-import { hideError, showError } from '../redux/Actions.js'
 import PropTypes from 'prop-types'
 import Swiper from 'react-native-swiper'
 import Alert from '../modals/Alert.js'
@@ -253,19 +249,23 @@ class FilterSelector extends React.Component {
         Socket.startSession(filters)
       }
     }
+    this.props.buttonDisable(false)
   }
 
   startSession() {
+    this.props.buttonDisable(true)
     console.log('session-start')
     if (this.state.location === null) {
       this.props.setBlur(true)
       this.setState({ locationAlert: true })
+      this.props.buttonDisable(false)
     } else if (this.state.majority && this.state.distance) {
       this.evaluateFilters()
     }
   }
 
   submitUserFilters() {
+    this.props.buttonDisable(true)
     const filters = {}
     // puts the cuisine and restrictions into one array
     const selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
@@ -273,6 +273,7 @@ class FilterSelector extends React.Component {
     console.log('userfilters: ' + JSON.stringify(filters.categories))
     Socket.submitFilters(filters.categories)
     this.props.handleUpdate()
+    this.props.buttonDisable(false)
   }
 
   render() {
@@ -627,7 +628,8 @@ FilterSelector.propTypes = {
   members: PropTypes.array,
   // error: PropTypes.bool,
   showError: PropTypes.func,
-  hideError: PropTypes.func
+  hideError: PropTypes.func,
+  buttonDisable: PropTypes.func
 }
 
 const styles = StyleSheet.create({

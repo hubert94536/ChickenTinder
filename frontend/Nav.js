@@ -11,19 +11,43 @@ import notifsApi from './apis/notificationsApi.js'
 const height = Dimensions.get('window').height
 
 class TabBar extends React.Component {
-  componentDidMount()
-  {
-    if(this.props.cur === 'Notifs')
-    {
-      this.props.noNotif();
+  componentDidMount() {
+    if (this.props.cur === 'Notifs') {
+      this.props.noNotif()
     }
-    
   }
+
+  onGoHome() {
+    // var debounce =  _.debounce(this.props.goHome, 200)
+    // return debounce()
+    if (this.props.cur !== 'Home') {
+      this.props.goHome()
+    }
+  }
+
+  onGoSearch() {
+    if (this.props.cur !== 'Search') {
+      this.props.goSearch()
+    }
+  }
+
+  onGoNotifs() {
+    if (this.props.cur !== 'Notifs') {
+      this.props.goNotifs()
+    }
+  }
+
+  onGoProfile() {
+    if (this.props.cur !== 'Profile') {
+      this.props.goProfile()
+    }
+  }
+
   render() {
     return (
       <View style={styles.bar}>
         <TouchableHighlight
-          onPress={() => this.props.goHome()}
+          onPress={() => this.onGoHome()}
           style={{ width: '10%' }}
           underlayColor="transparent"
         >
@@ -33,7 +57,7 @@ class TabBar extends React.Component {
           />
         </TouchableHighlight>
         <TouchableHighlight
-          onPress={() => this.props.goSearch()}
+          onPress={() => this.onGoSearch()}
           style={{ width: '10%' }}
           underlayColor="transparent"
         >
@@ -43,7 +67,7 @@ class TabBar extends React.Component {
           />
         </TouchableHighlight>
         <TouchableHighlight
-          onPress={() => this.props.goNotifs()}
+          onPress={() => this.onGoNotifs()}
           style={{ width: '10%' }}
           underlayColor="transparent"
         >
@@ -70,7 +94,7 @@ class TabBar extends React.Component {
           </View>
         </TouchableHighlight>
         <TouchableHighlight
-          onPress={() => this.props.goProfile()}
+          onPress={() => this.onGoProfile()}
           style={{ width: '10%' }}
           underlayColor="transparent"
         >
@@ -125,4 +149,5 @@ TabBar.propTypes = {
   goNotifs: PropTypes.func,
   goProfile: PropTypes.func,
   cur: PropTypes.string,
+  noNotif: PropTypes.func,
 }

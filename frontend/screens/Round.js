@@ -1,30 +1,34 @@
 import React from 'react'
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { bindActionCreators } from 'redux'
 import { BlurView } from '@react-native-community/blur'
+import { connect } from 'react-redux'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
 import Swiper from 'react-native-deck-swiper'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
-import colors from '../../styles/colors.js'
 import global from '../../global.js'
 import modalStyles from '../../styles/modalStyles.js'
 import RoundCard from '../cards/RoundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import normalize from '../../styles/normalize.js'
+import { setCode, showKick, showEnd } from '../redux/Actions.js'
 
-export default class Round extends React.Component {
+class Round extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       instr: true,
       index: 1,
       leave: false,
+      disabled: false,
+      count: 0
     }
-
     socket.getSocket().once('match', (data) => {
+      socket.getSocket().off()
       var res
       for (var i = 0; i < global.restaurants.length; i++) {
         if (global.restaurants[i].id === data) {
@@ -36,32 +40,42 @@ export default class Round extends React.Component {
         restaurant: res,
       })
     })
-    socket.getSocket().once('leave', () => {
+
+    socket.getSocket().on('leave', () => {
+      this.setState({ disabled: true })
       this.leaveGroup(true)
     })
   }
-  
+
   likeRestaurant(resId) {
     socket.likeRestaurant(resId)
   }
 
   leaveGroup(end) {
+    this.setState({ disabled: true })
     socket.getSocket().off()
     if (end) {
       socket.endLeave()
+      if (!global.isHost) {
+        this.props.showEnd()
+      }
     } else {
       socket.leaveRound()
     }
-    global.code = ''
+    this.props.setCode(0)
     global.host = ''
     global.isHost = false
     global.restaurants = []
+    this.setState({ disabled: false })
     this.props.navigation.replace('Home')
   }
 
   endGroup() {
-    this.setState({ leave: false })
-    socket.endRound()
+    if (!this.state.disabled) {
+      this.setState({ disabled: true, leave: false, endAlert: false, blue: false })
+      socket.endRound()
+      this.setState({ disabled: false })
+    }
   }
 
   render() {
@@ -86,6 +100,7 @@ export default class Round extends React.Component {
               this.likeRestaurant(global.restaurants[cardIndex].id)
             }}
             onSwipedAll={() => {
+              socket.getSocket().off()
               //let backend know you're done
               socket.finishedRound()
               //go to the loading page
@@ -100,6 +115,7 @@ export default class Round extends React.Component {
             <Text style={[screenStyles.text, styles.title, styles.topMargin]}>Get chews-ing!</Text>
             {!global.isHost && (
               <TouchableHighlight
+                disabled={this.state.disabled}
                 onPress={() => this.leaveGroup(false)}
                 style={[styles.leaveButton, styles.topMargin]}
                 underlayColor="transparent"
@@ -112,6 +128,7 @@ export default class Round extends React.Component {
             )}
             {global.isHost && (
               <TouchableHighlight
+                disabled={this.state.disabled}
                 onPress={() => this.setState({ leave: true })}
                 style={[styles.leaveButton, styles.topMargin]}
                 underlayColor="transparent"
@@ -130,20 +147,26 @@ export default class Round extends React.Component {
         <View style={styles.bottom}>
           <View>
             <TouchableHighlight
-              onPress={() => this.deck.swipeLeft()}
+              onPress={() => {
+                this.deck.swipeLeft()
+                this.setState({count: this.state.count + 1})
+              }}
               underlayColor="transparent"
               style={styles.background}
-              disabled={this.state.index > global.restaurants.length}
+              disabled={this.state.count > global.restaurants.length}
             >
               <Feather name="x" style={[screenStyles.text, styles.x]} />
             </TouchableHighlight>
           </View>
           <View>
             <TouchableHighlight
-              onPress={() => this.deck.swipeRight()}
+              onPress={() => {
+                this.deck.swipeRight()
+                this.setState({count: this.state.count + 1})
+              }}
               underlayColor="transparent"
               style={[styles.background]}
-              disabled={this.state.index > global.restaurants.length}
+              disabled={this.state.count > global.restaurants.length}
             >
               <Icon name="heart" style={[screenStyles.text, styles.heart]} />
             </TouchableHighlight>
@@ -163,6 +186,7 @@ export default class Round extends React.Component {
             body="Leaving ends the group for everyone"
             buttonAff="Leave"
             height="30%"
+            disabled={this.state.disabled}
             press={() => socket.endRound()}
             cancel={() => this.setState({ leave: false })}
           />
@@ -172,8 +196,28 @@ export default class Round extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  const { code } = state
+  return { code }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      setCode,
+      showKick,
+      showEnd,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(Round)
+
 Round.propTypes = {
   navigation: PropTypes.object,
+  setCode: PropTypes.func,
+  showKick: PropTypes.func,
+  showEnd: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

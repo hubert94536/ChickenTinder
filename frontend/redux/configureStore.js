@@ -7,6 +7,9 @@ import {
   refreshReducer,
   friendsReducer,
   notifReducer,
+  codeReducer,
+  kickReducer,
+  endReducer,
 } from './Reducer.js'
 
 const rootReducer = combineReducers({
@@ -17,6 +20,9 @@ const rootReducer = combineReducers({
   refresh: refreshReducer,
   friends: friendsReducer,
   notif: notifReducer,
+  code: codeReducer,
+  kick: kickReducer,
+  end: endReducer,
 })
 
 const configureStore = () => {

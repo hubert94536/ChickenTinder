@@ -20,6 +20,7 @@ import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
 import getCuisine from '../assets/images/foodImages.js'
 import normalize from '../../styles/normalize.js'
+import _ from 'lodash'
 
 const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
@@ -34,6 +35,7 @@ export default class TopThree extends React.Component {
       restaurants: this.props.navigation.state.params.top.reverse(),
     }
     socket.getSocket().once('choose', (ind) => {
+      socket.getSocket().off()
       this.props.navigation.replace('Match', {
         restaurant: this.state.restaurants[ind],
       })
@@ -58,10 +60,12 @@ export default class TopThree extends React.Component {
     }
   }
 
-  goMatch() {
+  match() {
     console.log(this.state.chosen)
     socket.choose(this.state.chosen)
   }
+
+  goMatch = _.debounce(this.match.bind(this), 500)
 
   render() {
     return (

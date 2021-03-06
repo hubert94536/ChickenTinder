@@ -1,18 +1,4 @@
-import {
-  FIREBASE_API_KEY,
-  FIREBASE_APPLICATION_ID,
-  FIREBASE_AUTH_DOMAIN,
-  FIREBASE_DATABASE,
-  FIREBASE_STORAGE_BUCKET,
-  FIREBASE_PROJECT_ID,
-  USERNAME,
-  NAME,
-  EMAIL,
-  PHOTO,
-  PHONE,
-  REGISTRATION_TOKEN,
-  UID,
-} from 'react-native-dotenv'
+import { USERNAME, NAME, EMAIL, PHOTO, PHONE, REGISTRATION_TOKEN, UID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import FBSDK from 'react-native-fbsdk'
 import auth from '@react-native-firebase/auth'
@@ -45,35 +31,34 @@ const loginWithCredential = async (userCredential) => {
     // Get info from database if not new user
     if (!userCredential.additionalUserInfo.isNewUser && userCredential.user.displayName != null) {
       const user = await accountsApi.getUser()
-      AsyncStorage.multiSet([
+      await AsyncStorage.multiSet([
         [USERNAME, user.username],
         [NAME, user.name],
         [PHOTO, user.photo],
         [UID, user.uid],
       ])
-      if (user.email) await AsyncStorage.setItem(EMAIL, user.email)
-      if (user.phone_number) await AsyncStorage.setItem(PHONE, user.phone_number)
-      global.email = user.email
-      global.phone = user.phone_number
+      if (user.email) {
+        await AsyncStorage.setItem(EMAIL, user.email)
+        global.email = user.email
+      } else {
+        await AsyncStorage.setItem(PHONE, user.phone_number)
+        global.phone = user.phone_number
+      }
       // Link user with their notification token
       const token = await AsyncStorage.getItem(REGISTRATION_TOKEN)
       await notificationsApi.linkToken(token)
+      // TODO: set redux here
       socket.connect()
       return 'Home'
     }
     // Set user's info locally
     await AsyncStorage.setItem(UID, userCredential.user.uid)
-    auth().currentUser.updateProfile({displayName: null})
-    switch (auth().currentUser.providerData[0].providerId){
-      case "facebook.com":
+    auth().currentUser.updateProfile({ displayName: null })
+    switch (auth().currentUser.providerData[0].providerId) {
+      case 'facebook.com':
         await AsyncStorage.multiSet([
           [NAME, userCredential.additionalUserInfo.profile.name],
-          [EMAIL, userCredential.additionalUserInfo.profile.email]
-        ])
-        break;
-      case "phone":
-        await AsyncStorage.multiSet([
-          [PHONE, userCredential.user.phoneNumber]
+          [EMAIL, userCredential.additionalUserInfo.profile.email],
         ])
         break
       case 'phone':
@@ -81,9 +66,8 @@ const loginWithCredential = async (userCredential) => {
         await AsyncStorage.multiSet([[PHONE, userCredential.user.phoneNumber]])
         break
       default:
-        throw new Error("Could not determine provider")
+        throw new Error('Could not determine provider')
     }
-
     return 'CreateAccount'
   } catch (err) {
     return Promise.reject(err)
@@ -120,7 +104,7 @@ formatPhoneNumber = (number) => {
 
 const loginWithPhone = async (number) => {
   try {
-    if (!validatePhoneNumber(number)) throw new Error("Invalid phone number")
+    if (!validatePhoneNumber(number)) throw new Error('Invalid phone number')
     const confirm = await auth().signInWithPhoneNumber(formatPhoneNumber(number))
     return confirm
   } catch (err) {
@@ -132,7 +116,9 @@ const loginWithPhone = async (number) => {
 const logout = async () => {
   try {
     socket.getSocket().disconnect()
-    if (auth().currentUser.providerData[0].providerId === "facebook.com") { LoginManager.logOut() }
+    if (auth().currentUser.providerData[0].providerId === 'facebook.com') {
+      LoginManager.logOut()
+    }
     await notificationsApi.unlinkToken()
     await auth().signOut()
     await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
@@ -144,7 +130,7 @@ const logout = async () => {
 // TODO: Generalize
 
 const deleteUserWithCredential = async (credential) => {
-  try{ 
+  try {
     // Reauthenticate current user
     await auth().currentUser.reauthenticateWithCredential(credential)
     // Disconnect from socket
@@ -164,33 +150,37 @@ const deleteUserWithCredential = async (credential) => {
 const deleteUser = async () => {
   try {
     // Get credential for reauthentication
-    var credential;
-    switch (auth().currentUser.providerData[0].providerId){
-      case "facebook.com":
-        // Need to refresh access token since old one expired
-        await AccessToken.refreshCurrentAccessTokenAsync()
+    var credential
+    switch (auth().currentUser.providerData[0].providerId) {
+      case 'facebook.com':
         // Retrieve accesstoken to delete use from Firebase
         const data = await AccessToken.getCurrentAccessToken()
+        if (!data) {
+          // Attempt a login using the Facebook login dialog asking for default permissions.
+          const login = await LoginManager.logInWithPermissions(['public_profile', 'email'])
+          if (login.isCancelled) {
+            return Promise.reject(new Error('Cancelled request'))
+          }
+          data = await AccessToken.getCurrentAccessToken()
+        }
         credential = await auth.FacebookAuthProvider.credential(data.accessToken)
-        break;
-      case "phone":
-        // return auth().verifyPhoneNumber(auth().currentUser.phoneNumber)
-        //   .on('state_changed', (phoneAuthSnapshot) => {
-        //     console.log('State: ', phoneAuthSnapshot.state);
-        //     switch (phoneAuthSnapshot.state){
-        //       case auth.PhoneAuthState.CODE_SENT:
-        //         break;
-        //       case auth.PhoneAuthState.ERROR:
-        //         break;
-        //     }
-        //   });
-        break;
+        break
       default:
-        throw new Error("Could not determine provider")
+        return auth()
+          .verifyPhoneNumber(auth().currentUser.phoneNumber)
+          .on('state_changed', (phoneAuthSnapshot) => {
+            console.log('State: ', phoneAuthSnapshot.state)
+            switch (phoneAuthSnapshot.state) {
+              case auth.PhoneAuthState.CODE_SENT:
+                break
+              case auth.PhoneAuthState.ERROR:
+                break
+            }
+          })
     }
     deleteUserWithCredential(credential)
   } catch (err) {
-    console.log('------ERROR DELETING USER')
+    console.log(err)
     return Promise.reject(err)
   }
 }

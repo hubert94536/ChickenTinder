@@ -16,6 +16,7 @@ import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
 import TimeSwitch from './TimeSwitch.js'
+import _ from 'lodash'
 
 export default class Time extends React.Component {
   constructor(props) {
@@ -24,7 +25,7 @@ export default class Time extends React.Component {
       selectedHour: '',
       selectedMinute: '',
       invalidTime: false,
-      timeMode: 'pm',
+      timeMode: 'AM',
       switch: true,
     }
   }
@@ -48,11 +49,11 @@ export default class Time extends React.Component {
     if (hour < 0 || hour > 12 || min < 0 || min > 59 || isNaN(hour) || isNaN(min)) {
       this.setState({ invalidTime: true })
     } else {
-      if (this.state.timeMode === 'pm') {
+      if (this.state.timeMode === 'PM') {
         if (hour !== 12) {
           hour = hour + 12
         }
-      } else if (this.state.timeMode === 'am') {
+      } else if (this.state.timeMode === 'AM') {
         if (hour === 12) {
           hour = 0
         }
@@ -60,6 +61,8 @@ export default class Time extends React.Component {
       this.handlePress(hour, min)
     }
   }
+
+  evaluate = _.debounce(this.evaluateTime.bind(this), 200)
 
   render() {
     return (
@@ -94,9 +97,9 @@ export default class Time extends React.Component {
               <View style={styles.switchButton}>
                 <TimeSwitch
                   onValueChange={(val) => this.setState({ timeMode: val })}
-                  text1="pm"
-                  text2="am"
-                  switchWidth={75}
+                  text1="AM"
+                  text2="PM"
+                  switchWidth={90}
                   switchHeight={30}
                   switchBorderColor={screenStyles.hex.color}
                   btnBorderColor={screenStyles.hex.color}
@@ -122,7 +125,7 @@ export default class Time extends React.Component {
             )}
             <TouchableHighlight
               style={[modalStyles.doneButton, styles.doneButtonMargin]}
-              onPress={() => this.evaluateTime()}
+              onPress={() => this.evaluate()}
             >
               <Text style={[screenStyles.text, modalStyles.doneText]}>Done</Text>
             </TouchableHighlight>

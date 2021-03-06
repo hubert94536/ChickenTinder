@@ -1,15 +1,25 @@
 import React from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { hideError, showError } from '../redux/Actions.js'
+import {
+  changeImage,
+  changeName,
+  changeUsername,
+  changeFriends,
+  hideError,
+  showError,
+} from '../redux/Actions.js'
 import { Image, ImageBackground, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import Alert from '../modals/Alert.js'
 import { BlurView } from '@react-native-community/blur'
 import colors from '../../styles/colors.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
 import loginService from '../apis/loginService.js'
 import modalStyles from '../../styles/modalStyles.js'
+import { NAME, USERNAME, PHOTO, EMAIL, PHONE } from 'react-native-dotenv'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import PropTypes from 'prop-types'
@@ -20,23 +30,52 @@ class Login extends React.Component {
     this.state = {
       pressed: false,
       alert: false,
+      disabled: false,
     }
   }
 
-  async handleClick() {
-    loginService
-      .loginWithFacebook()
-      .then((result) => {
-        this.setState({ alert: false })
-        this.props.navigation.replace(result)
+  async setInfo() {
+    AsyncStorage.multiGet([USERNAME, NAME, PHOTO, EMAIL, PHONE]).then((res) => {
+      this.props.changeUsername(res[0][1])
+      this.props.changeName(res[1][1])
+      this.props.changeImage(res[2][1])
+      global.email = res[3][1]
+      global.phone = res[4][1]
+    })
+  }
+
+  async setFriends() {
+    friendsApi
+      .getFriends()
+      .then((res) => {
+        this.props.changeFriends(res.friendList)
       })
       .catch(() => {
         this.props.showError()
       })
   }
 
+  async handleClick() {
+    if (!this.state.disabled) {
+      this.setState({ disabled: true })
+      loginService
+        .loginWithFacebook()
+        .then((result) => {
+          this.setState({ alert: false })
+          this.setInfo()
+          this.setFriends()
+          this.props.navigation.replace(result)
+          this.setState({ disabled: false })
+        })
+        .catch(() => {
+          this.props.showError()
+          this.setState({ disabled: false })
+        })
+    }
+  }
+
   cancelClick() {
-    this.setState({ alert: false })
+    this.setState({ alert: false, disabled: false })
   }
 
   login() {
@@ -53,7 +92,11 @@ class Login extends React.Component {
             onHideUnderlay={() => this.setState({ phonePressed: false })}
             activeOpacity={1}
             underlayColor={'white'}
-            onPress={() => this.props.navigation.replace('Phone')}
+            onPress={() => {
+              this.setState({ disabled: true })
+              this.props.navigation.replace('Phone')
+              this.setState({ disabled: false })
+            }}
             style={[screenStyles.longButton, styles.phoneButton]}
           >
             <View style={screenStyles.contentContainer}>
@@ -74,6 +117,7 @@ class Login extends React.Component {
             activeOpacity={1}
             underlayColor="white"
             onPress={() => this.login()}
+            disabled={this.state.disabled}
             style={[screenStyles.longButton, styles.fbButton]}
           >
             <View style={[screenStyles.contentContainer]}>
@@ -119,6 +163,7 @@ class Login extends React.Component {
             title="Error, please try again"
             buttonAff="Close"
             height="20%"
+            disabled={false}
             press={() => this.props.hideError()}
             cancel={() => this.props.hideError()}
           />
@@ -130,12 +175,20 @@ class Login extends React.Component {
 
 const mapStateToProps = (state) => {
   const { error } = state
-  return { error }
+  const { name } = state
+  const { username } = state
+  const { image } = state
+  const { friends } = state
+  return { error, name, username, image, friends }
 }
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
+      changeName,
+      changeImage,
+      changeUsername,
+      changeFriends,
       showError,
       hideError,
     },
@@ -149,9 +202,13 @@ Login.propTypes = {
     navigate: PropTypes.func.isRequired,
     replace: PropTypes.func,
   }).isRequired,
-  // error: PropTypes.bool,
+  error: PropTypes.bool,
   showError: PropTypes.func,
   hideError: PropTypes.func,
+  changeName: PropTypes.func,
+  changeUsername: PropTypes.func,
+  changeImage: PropTypes.func,
+  changeFriends: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
