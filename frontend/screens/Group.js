@@ -105,12 +105,23 @@ class Group extends React.Component {
       }
     })
 
-    socket.getSocket().on('leave', () => {
+    socket.getSocket().once('leave', () => {
       this.leaveGroup(true)
     })
 
     socket.getSocket().on('reselect', () => {
-      console.log('reselect')
+      // alert for host to reselect filters
+    })
+
+    socket.getSocket().on('exception', (msg) => {
+      // handle button disables here
+      if (msg === 'submit') {
+        // submit alert here
+      } else if (msg === 'start') {
+        // start alert here
+      } else if (msg === 'kick') {
+        // kick alert here
+      }
     })
   }
 
@@ -183,7 +194,7 @@ class Group extends React.Component {
 
   // host ends session
   endGroup() {
-    this.setState({ endAlert: false, blur: false, disabled:true })
+    this.setState({ endAlert: false, blur: false, disabled: true })
     socket.endRound()
   }
 
