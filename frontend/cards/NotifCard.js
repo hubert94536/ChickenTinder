@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native'
+import { Image, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'

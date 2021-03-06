@@ -25,7 +25,7 @@ class Round extends React.Component {
       index: 1,
       leave: false,
       disabled: false,
-      count: 0
+      count: 0,
     }
     socket.getSocket().once('match', (data) => {
       socket.getSocket().off()
@@ -42,14 +42,8 @@ class Round extends React.Component {
     })
 
     socket.getSocket().on('leave', () => {
-      this.setState({ disabled: true })
       this.leaveGroup(true)
     })
-
-  }
-
-  likeRestaurant(resId) {
-    socket.likeRestaurant(resId)
   }
 
   leaveGroup(end) {
@@ -67,16 +61,12 @@ class Round extends React.Component {
     global.host = ''
     global.isHost = false
     global.restaurants = []
-    this.setState({ disabled: false })
     this.props.navigation.replace('Home')
   }
 
-  endGroup() {
-    if (!this.state.disabled) {
-      this.setState({ disabled: true, leave: false, endAlert: false, blue: false })
-      socket.endRound()
-      this.setState({ disabled: false })
-    }
+  endRound() {
+    this.setState({ leave: false, disabled: true })
+    socket.endRound()
   }
 
   render() {
@@ -98,7 +88,7 @@ class Round extends React.Component {
               }
             }}
             onSwipedRight={(cardIndex) => {
-              this.likeRestaurant(global.restaurants[cardIndex].id)
+              socket.likeRestaurant(global.restaurants[cardIndex].id)
             }}
             onSwipedAll={() => {
               socket.getSocket().off()
@@ -150,11 +140,11 @@ class Round extends React.Component {
             <TouchableHighlight
               onPress={() => {
                 this.deck.swipeLeft()
-                this.setState({count: this.state.count + 1})
+                this.setState({ count: this.state.count + 1 })
               }}
               underlayColor="transparent"
               style={styles.background}
-              disabled={this.state.count > global.restaurants.length}
+              disabled={this.state.count > global.restaurants.length || this.state.disabled}
             >
               <Feather name="x" style={[screenStyles.text, styles.x]} />
             </TouchableHighlight>
@@ -163,11 +153,11 @@ class Round extends React.Component {
             <TouchableHighlight
               onPress={() => {
                 this.deck.swipeRight()
-                this.setState({count: this.state.count + 1})
+                this.setState({ count: this.state.count + 1 })
               }}
               underlayColor="transparent"
               style={[styles.background]}
-              disabled={this.state.count > global.restaurants.length}
+              disabled={this.state.count > global.restaurants.length || this.state.disabled}
             >
               <Icon name="heart" style={[screenStyles.text, styles.heart]} />
             </TouchableHighlight>

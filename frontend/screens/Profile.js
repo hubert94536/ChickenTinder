@@ -46,7 +46,6 @@ class UserProfileView extends Component {
       disabled: false,
     }
   }
-
   // getting current user's info
   async changeName() {
     if (this.state.nameValue !== this.props.name.name) {
@@ -204,7 +203,6 @@ class UserProfileView extends Component {
 
   render() {
     const { numFriends, visible, edit, logoutAlert, deleteAlert, blur, takenAlert } = this.state
-
     return (
       <View style={[screenStyles.mainContainer]}>
         <View>
