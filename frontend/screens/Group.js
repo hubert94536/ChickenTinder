@@ -153,16 +153,17 @@ class Group extends React.Component {
   updateMemberList() {
     memberList = []
     memberRenderList = []
-    for (const user in this.state.members) {
+    // console.log(JSON.stringify(this.state.members))
+    for (const uid in this.state.members) {
       const a = {}
-      a.name = this.state.members[user].name
-      a.username = this.state.members[user].username
-      a.user = user
-      a.photo = this.state.members[user].photo
-      a.filters = this.state.members[user].filters
+      a.name = this.state.members[uid].name
+      a.username = this.state.members[uid].username
+      a.uid = uid
+      a.photo = this.state.members[uid].photo
+      a.filters = this.state.members[uid].filters
       a.host = this.state.host
       a.isHost = global.isHost
-      a.key = user
+      a.key = uid
       memberList.push(a)
       a.f = false
       memberRenderList.push(a)
@@ -322,6 +323,7 @@ class Group extends React.Component {
                         key={item.key}
                         name={item.name}
                         username={item.username}
+                        uid={item.uid}
                       />
                     )
                   }
@@ -444,7 +446,10 @@ class Group extends React.Component {
                     : { opacity: 0.4 },
                 ]}
                 onPress={() => {
-                  if (!this.state.userSubmitted && this.state.drawerOpen)
+                  // console.log(
+                  //   `Submit Filters: ${this.state.userSubmitted}|${this.state.drawerOpen}`,
+                  // )
+                  if (!this.state.userSubmitted && !this.state.drawerOpen)
                     this.filterRef.current.submitUserFilters()
                 }}
               >
