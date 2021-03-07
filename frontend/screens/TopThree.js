@@ -78,9 +78,10 @@ export default class TopThree extends React.Component {
           {this.state.restaurants.length > 2 && (
             <TouchableHighlight
               disabled={!global.isHost}
-              underlayColor= {colors.beige}
+              underlayColor={colors.beige}
               style={[
-                styles.center, styles.cardDefault,
+                styles.center,
+                styles.cardDefault,
                 this.state.chosen === 2 ? styles.cardSelected : styles.cardUnselected,
               ]}
               onPress={() => this.setState({ chosen: 2 })}
@@ -133,7 +134,8 @@ export default class TopThree extends React.Component {
             disabled={!global.isHost}
             underlayColor={colors.beige}
             style={[
-              styles.left, styles.cardDefault,
+              styles.left,
+              styles.cardDefault,
               this.state.chosen === 1 ? styles.cardSelected : styles.cardUnselected,
             ]}
             onPress={() => this.setState({ chosen: 1 })}
@@ -185,7 +187,8 @@ export default class TopThree extends React.Component {
             disabled={!global.isHost}
             underlayColor={colors.beige}
             style={[
-              styles.right, styles.cardDefault,
+              styles.right,
+              styles.cardDefault,
               this.state.chosen === 0 ? styles.cardSelected : styles.cardUnselected,
             ]}
             onPress={() => this.setState({ chosen: 0 })}
@@ -197,7 +200,8 @@ export default class TopThree extends React.Component {
               />
               <TouchableHighlight
                 style={[
-                  styles.tinyButton, styles.tinyButtonRight,
+                  styles.tinyButton,
+                  styles.tinyButtonRight,
                   this.state.chosen === 0 ? styles.chosenBackground : styles.neutralBackground,
                 ]}
               >

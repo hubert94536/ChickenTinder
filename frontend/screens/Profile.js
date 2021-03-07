@@ -204,132 +204,132 @@ class UserProfileView extends Component {
   render() {
     const { numFriends, visible, edit, logoutAlert, deleteAlert, blur, takenAlert } = this.state
     return (
-        <ImageBackground
-          style={screenStyles.screenBackground}
-          source={require('../assets/backgrounds/Profile.png')}
-        >
-          <View>
-            <View style={[styles.container]}>
-              <View style={[screenStyles.icons, styles.filler]}></View>
-              <Text style={[screenStyles.text, styles.myProfile]}>Profile</Text>
+      <ImageBackground
+        style={screenStyles.screenBackground}
+        source={require('../assets/backgrounds/Profile.png')}
+      >
+        <View>
+          <View style={[styles.container]}>
+            <View style={[screenStyles.icons, styles.filler]}></View>
+            <Text style={[screenStyles.text, styles.myProfile]}>Profile</Text>
+            <Icon
+              name="cog-outline"
+              style={[screenStyles.icons, styles.cog]}
+              onPress={() => this.setState({ visible: true })}
+            />
+          </View>
+          <Image
+            source={{ uri: Image.resolveAssetSource(this.props.image.image).uri }}
+            style={screenStyles.avatar}
+          />
+          <View style={[styles.alignCenter]}>
+            <View style={[styles.container, styles.alignCenter]}>
+              <Text style={(screenStyles.text, styles.name)}>{this.props.name.name}</Text>
               <Icon
-                name="cog-outline"
-                style={[screenStyles.icons, styles.cog]}
-                onPress={() => this.setState({ visible: true })}
+                name="pencil-outline"
+                style={styles.pencil}
+                onPress={() => this.editProfile()}
               />
             </View>
-            <Image
-              source={{ uri: Image.resolveAssetSource(this.props.image.image).uri }}
-              style={screenStyles.avatar}
-            />
-            <View style={[styles.alignCenter]}>
-              <View style={[styles.container, styles.alignCenter]}>
-                <Text style={(screenStyles.text, styles.name)}>{this.props.name.name}</Text>
-                <Icon
-                  name="pencil-outline"
-                  style={styles.pencil}
-                  onPress={() => this.editProfile()}
-                />
-              </View>
-              <Text style={(screenStyles.text, styles.username)}>
-                {'@' + this.props.username.username}
-              </Text>
-            </View>
-            <Text style={(screenStyles.text, styles.friends)}>Your Friends</Text>
-            <Text style={[screenStyles.text, styles.friendNum]}>{numFriends + ' friends'}</Text>
+            <Text style={(screenStyles.text, styles.username)}>
+              {'@' + this.props.username.username}
+            </Text>
           </View>
-          <View style={[styles.friendContainer]}>
-            {/* Contains the search bar and friends display if has friends, otherwise no friends view */}
-            <Friends
-              isFriends
-              onFriendsChange={(n) => this.handleFriendsCount(n)}
-              unfriendAlert={(bool) => this.setState({ blur: bool })}
-            />
-          </View>
-
-          <TabBar
-            goHome={() => this.props.navigation.replace('Home')}
-            goSearch={() => this.props.navigation.replace('Search')}
-            goNotifs={() => this.props.navigation.replace('Notifications')}
-            goProfile={() => {}}
-            cur="Profile"
+          <Text style={(screenStyles.text, styles.friends)}>Your Friends</Text>
+          <Text style={[screenStyles.text, styles.friendNum]}>{numFriends + ' friends'}</Text>
+        </View>
+        <View style={[styles.friendContainer]}>
+          {/* Contains the search bar and friends display if has friends, otherwise no friends view */}
+          <Friends
+            isFriends
+            onFriendsChange={(n) => this.handleFriendsCount(n)}
+            unfriendAlert={(bool) => this.setState({ blur: bool })}
           />
+        </View>
 
-          {(visible || edit || logoutAlert || deleteAlert || blur) && (
-            <BlurView
-              blurType="dark"
-              blurAmount={10}
-              reducedTransparencyFallbackColor="white"
-              style={modalStyles.blur}
-            />
-          )}
+        <TabBar
+          goHome={() => this.props.navigation.replace('Home')}
+          goSearch={() => this.props.navigation.replace('Search')}
+          goNotifs={() => this.props.navigation.replace('Notifications')}
+          goProfile={() => {}}
+          cur="Profile"
+        />
 
-          <Settings
-            visible={visible}
-            close={() => this.setState({ visible: false })}
-            delete={() => this.handleDelete()}
-            logout={() => this.handleLogout()}
-            logoutAlert={() => this.setState({ logoutAlert: true })}
-            deleteAlert={() => this.setState({ deleteAlert: true })}
+        {(visible || edit || logoutAlert || deleteAlert || blur) && (
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
           />
+        )}
 
-          {edit && (
-            <EditProfile
-              dontSave={() => this.dontSave()}
-              makeChanges={() => this.makeChanges()}
-              userChange={(text) => this.setState({ usernameValue: text })}
-              nameChange={(text) => this.setState({ nameValue: text })}
-            />
-          )}
+        <Settings
+          visible={visible}
+          close={() => this.setState({ visible: false })}
+          delete={() => this.handleDelete()}
+          logout={() => this.handleLogout()}
+          logoutAlert={() => this.setState({ logoutAlert: true })}
+          deleteAlert={() => this.setState({ deleteAlert: true })}
+        />
 
-          {logoutAlert && (
-            <Alert
-              title="Log out"
-              body="Are you sure you want to log out?"
-              buttonAff="Logout"
-              buttonNeg="Go back"
-              height="25%"
-              twoButton
-              disabled={this.state.disabled}
-              press={() => this.handleLogout()}
-              cancel={() => this.setState({ logoutAlert: false, visible: true, disabled: false })}
-            />
-          )}
+        {edit && (
+          <EditProfile
+            dontSave={() => this.dontSave()}
+            makeChanges={() => this.makeChanges()}
+            userChange={(text) => this.setState({ usernameValue: text })}
+            nameChange={(text) => this.setState({ nameValue: text })}
+          />
+        )}
 
-          {deleteAlert && (
-            <Alert
-              title="Delete account?"
-              body="By deleting your account, you will lose all of your data"
-              buttonAff="Delete"
-              buttonNeg="Go back"
-              twoButton
-              height="25%"
-              dispatch={this.state.disabled}
-              press={() => this.handleDelete()}
-              cancel={() => this.cancelDelete()}
-            />
-          )}
+        {logoutAlert && (
+          <Alert
+            title="Log out"
+            body="Are you sure you want to log out?"
+            buttonAff="Logout"
+            buttonNeg="Go back"
+            height="25%"
+            twoButton
+            disabled={this.state.disabled}
+            press={() => this.handleLogout()}
+            cancel={() => this.setState({ logoutAlert: false, visible: true, disabled: false })}
+          />
+        )}
 
-          {this.props.error && (
-            <Alert
-              title="Error, please try again"
-              buttonAff="Close"
-              height="20%"
-              press={() => this.props.hideError()}
-              cancel={() => this.props.hideError()}
-            />
-          )}
-          {takenAlert && (
-            <Alert
-              title="Username taken!"
-              buttonAff="Close"
-              height="20%"
-              press={() => this.closeTaken()}
-              cancel={() => this.closeTaken()}
-            />
-          )}
-        </ImageBackground>
-  )
+        {deleteAlert && (
+          <Alert
+            title="Delete account?"
+            body="By deleting your account, you will lose all of your data"
+            buttonAff="Delete"
+            buttonNeg="Go back"
+            twoButton
+            height="25%"
+            dispatch={this.state.disabled}
+            press={() => this.handleDelete()}
+            cancel={() => this.cancelDelete()}
+          />
+        )}
+
+        {this.props.error && (
+          <Alert
+            title="Error, please try again"
+            buttonAff="Close"
+            height="20%"
+            press={() => this.props.hideError()}
+            cancel={() => this.props.hideError()}
+          />
+        )}
+        {takenAlert && (
+          <Alert
+            title="Username taken!"
+            buttonAff="Close"
+            height="20%"
+            press={() => this.closeTaken()}
+            cancel={() => this.closeTaken()}
+          />
+        )}
+      </ImageBackground>
+    )
   }
 }
 
@@ -393,16 +393,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
   },
-  pencil: { 
-    fontSize: normalize(28), 
-    marginLeft: '1%', 
-    marginBottom: '1%', 
-    color: 'white' 
+  pencil: {
+    fontSize: normalize(28),
+    marginLeft: '1%',
+    marginBottom: '1%',
+    color: 'white',
   },
-  username: { 
-    fontSize: normalize(14), 
-    color: colors.hex, 
-    fontWeight: 'bold' 
+  username: {
+    fontSize: normalize(14),
+    color: colors.hex,
+    fontWeight: 'bold',
   },
   friends: {
     marginTop: '10%',
@@ -410,17 +410,17 @@ const styles = StyleSheet.create({
     fontSize: normalize(20),
     fontWeight: 'bold',
   },
-  friendNum: { 
-    marginLeft: '7%', 
-    fontSize: normalize(17), 
-    fontFamily: 'CircularStd-Medium' 
+  friendNum: {
+    marginLeft: '7%',
+    fontSize: normalize(17),
+    fontFamily: 'CircularStd-Medium',
   },
   friendContainer: {
     height: '50%',
   },
-  filler: { 
-    width: '7%', 
-    margin: '5%', 
-    textAlign: 'right' 
+  filler: {
+    width: '7%',
+    margin: '5%',
+    textAlign: 'right',
   },
 })

@@ -153,8 +153,8 @@ class Search extends Component {
 
   render() {
     return (
-      <ImageBackground 
-        source={require('../assets/backgrounds/Search.png')} 
+      <ImageBackground
+        source={require('../assets/backgrounds/Search.png')}
         style={screenStyles.screenBackground}
       >
         <Text style={[screenStyles.icons, styles.title]}>Find friends</Text>

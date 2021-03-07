@@ -104,24 +104,25 @@ class Round extends React.Component {
             animateOverlayLabelsOpacity
           >
             <Text style={[screenStyles.text, styles.title, styles.topMargin]}>Get chews-ing!</Text>
-              <TouchableHighlight
-                disabled={this.state.disabled}
-                onPress={() => {
-                  if (global.isHost) 
-                    {this.setState({ leave: true })}
-                  else 
-                    {this.leaveGroup(false)}
-                }}
-                style={[styles.leaveButton, styles.topMargin]}
-                underlayColor="transparent"
-              >
-                <View style={styles.centerAlign}>
-                  <Icon5 name="door-open" style={[screenStyles.text, styles.door]} />
-                  <Text style={([screenStyles.text], styles.black)}>
-                    {global.isHost ? 'End' : 'Leave'}
-                  </Text>
-                </View>
-              </TouchableHighlight>
+            <TouchableHighlight
+              disabled={this.state.disabled}
+              onPress={() => {
+                if (global.isHost) {
+                  this.setState({ leave: true })
+                } else {
+                  this.leaveGroup(false)
+                }
+              }}
+              style={[styles.leaveButton, styles.topMargin]}
+              underlayColor="transparent"
+            >
+              <View style={styles.centerAlign}>
+                <Icon5 name="door-open" style={[screenStyles.text, styles.door]} />
+                <Text style={([screenStyles.text], styles.black)}>
+                  {global.isHost ? 'End' : 'Leave'}
+                </Text>
+              </View>
+            </TouchableHighlight>
             <Text style={[screenStyles.text, styles.topMargin, styles.restaurant]}>
               Restaurant {this.state.index}/{global.restaurants.length}
             </Text>

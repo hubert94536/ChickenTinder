@@ -297,11 +297,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.hex,
     marginBottom: '5%',
   },
-
   longButtonText: {
     color: '#FFFFFF',
   },
-
   themeButtonTitle: {
     fontFamily: fontMed,
     fontSize: 24,
