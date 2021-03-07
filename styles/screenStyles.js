@@ -42,8 +42,6 @@ export default StyleSheet.create({
     fontSize: 17,
     paddingTop: '0.5%',
     paddingBottom: '0.5%',
-    // paddingTop: '2.5%',
-    // paddingBottom: '2.5%',
   },
   title: {
     textAlign: 'center',
@@ -73,14 +71,12 @@ export default StyleSheet.create({
     paddingHorizontal: 12,
     width: '70%',
   },
-
   longButtonText: {
     alignSelf: 'center',
     fontFamily: 'CircularStd-Book',
     fontSize: 18,
     fontWeight: 'normal',
   },
-
   avatar: {
     width: 100,
     height: 100,
@@ -105,5 +101,8 @@ export default StyleSheet.create({
   },
   medium: {
     fontFamily: 'CircularStd-Medium',
+  },
+  screenBackground: {
+    flex: 1,
   },
 })

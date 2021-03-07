@@ -83,7 +83,7 @@ class Home extends React.Component {
             ? require(homedark)
             : require(home)
         }
-        style={styles.background}
+        style={screenStyles.screenBackground}
       >
         <View style={styles.main}>
           <Text style={[screenStyles.text, styles.title]}>Let&apos;s Get Chews-ing</Text>
@@ -243,9 +243,6 @@ const styles = StyleSheet.create({
   main: {
     flex: 1,
     justifyContent: 'space-evenly',
-  },
-  background: {
-    flex: 1,
   },
   title: {
     fontSize: normalize(30),

@@ -154,7 +154,7 @@ class createAccount extends React.Component {
     return (
       <ImageBackground
         source={require('../assets/backgrounds/CreateAccount.png')}
-        style={styles.main}
+        style={screenStyles.screenBackground}
       >
         <Text style={[screenStyles.textBold, screenStyles.title, styles.title]}>
           Create Account
@@ -313,9 +313,6 @@ createAccount.propTypes = {
   changeImage: PropTypes.func,
 }
 const styles = StyleSheet.create({
-  main: {
-    flex: 1,
-  },
   display: {
     marginTop: '5%',
   },

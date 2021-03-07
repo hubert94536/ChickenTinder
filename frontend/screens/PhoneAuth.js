@@ -20,7 +20,6 @@ import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 
 const font = 'CircularStd-Bold'
-const fontMed = 'CirularStd-Medium'
 
 class PhoneAuthScreen extends Component {
   constructor(props) {
@@ -109,9 +108,9 @@ class PhoneAuthScreen extends Component {
     return (
       <ImageBackground
         source={require('../assets/backgrounds/Login_Input_Phone.png')}
-        style={styles.background}
+        style={screenStyles.screenBackground}
       >
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={screenStyles.screenBackground}>
           <View style={styles.page}>
             <AntDesign
               disabled={this.state.disabled}
@@ -144,7 +143,7 @@ class PhoneAuthScreen extends Component {
                 style={{
                   textAlign: 'left',
                   flexDirection: 'row',
-                  fontFamily: fontMed,
+                  fontFamily: screenStyles.book.fontFamily,
                   fontSize: normalize(18),
                   color: 'white',
                   marginTop: '5%',
@@ -172,7 +171,7 @@ class PhoneAuthScreen extends Component {
                 style={{
                   textAlign: 'left',
                   flexDirection: 'row',
-                  fontFamily: fontMed,
+                  fontFamily: screenStyles.book.fontFamily,
                   fontSize: normalize(18),
                   color: 'white',
                   marginTop: '5%',
@@ -256,13 +255,6 @@ class PhoneAuthScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-    // backgroundColor: '#FFFFFF',
-  },
   page: {
     flex: 1,
     height: '100%',
@@ -270,38 +262,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   textInput: {
-    fontFamily: fontMed,
+    fontFamily: screenStyles.book.fontFamily,
     marginTop: 20,
     width: '80%',
     borderColor: '#A5A5A5',
     borderWidth: 0,
     borderBottomWidth: 1.5,
     paddingLeft: 10,
-    color: '#6A6A6A',
+    color: colors.darkGray,
     fontSize: 20,
-  },
-  themeButton: {
-    width: '90%',
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.hex,
-    borderColor: '#FFFFFF',
-    borderWidth: 2,
-    borderRadius: 30,
   },
   longButton: { 
     borderColor: colors.hex, 
     backgroundColor: colors.hex, 
-    marginBottom: '5%' },
-
+    marginBottom: '5%' 
+  },
   longButtonText: { 
-      color: '#FFFFFF',},
-
-  themeButtonTitle: {
-    fontFamily: fontMed,
-    fontSize: 24,
-    color: '#FFFFFF',
+      color: '#FFFFFF',
   },
   verificationView: {
     width: '100%',

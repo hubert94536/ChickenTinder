@@ -221,7 +221,7 @@ class Notif extends Component {
     return (
       <ImageBackground
         source={require('../assets/backgrounds/Search.png')}
-        style={styles.container}
+        style={screenStyles.screenBackground}
       >
         <View>
           <Text style={[screenStyles.icons, styles.NotifTitle]}>Notifications</Text>
@@ -366,9 +366,6 @@ Notif.propTypes = {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   NotifTitle: {
     marginTop: '7%',
     textAlign: 'center',

@@ -81,7 +81,7 @@ class Round extends React.Component {
   render() {
     return (
       <View style={styles.mainContainer}>
-        <View style={{ flex: 1 }}>
+        <View style={screenStyles.screenBackground}>
           <Swiper
             ref={(deck) => (this.deck = deck)}
             cards={global.restaurants}
@@ -113,32 +113,24 @@ class Round extends React.Component {
             animateOverlayLabelsOpacity
           >
             <Text style={[screenStyles.text, styles.title, styles.topMargin]}>Get chews-ing!</Text>
-            {!global.isHost && (
               <TouchableHighlight
                 disabled={this.state.disabled}
-                onPress={() => this.leaveGroup(false)}
+                onPress={() => {
+                  if (global.isHost) 
+                    {this.setState({ leave: true })}
+                  else 
+                    {this.leaveGroup(false)}
+                }}
                 style={[styles.leaveButton, styles.topMargin]}
                 underlayColor="transparent"
               >
                 <View style={styles.centerAlign}>
                   <Icon5 name="door-open" style={[screenStyles.text, styles.door]} />
-                  <Text style={([screenStyles.text], styles.black)}>Leave</Text>
+                  <Text style={([screenStyles.text], styles.black)}>
+                    {global.isHost ? 'End' : 'Leave'}
+                  </Text>
                 </View>
               </TouchableHighlight>
-            )}
-            {global.isHost && (
-              <TouchableHighlight
-                disabled={this.state.disabled}
-                onPress={() => this.setState({ leave: true })}
-                style={[styles.leaveButton, styles.topMargin]}
-                underlayColor="transparent"
-              >
-                <View style={styles.centerAlign}>
-                  <Icon5 name="door-open" style={[screenStyles.text, styles.door]} />
-                  <Text style={([screenStyles.text], styles.black)}>End</Text>
-                </View>
-              </TouchableHighlight>
-            )}
             <Text style={[screenStyles.text, styles.topMargin, styles.restaurant]}>
               Restaurant {this.state.index}/{global.restaurants.length}
             </Text>

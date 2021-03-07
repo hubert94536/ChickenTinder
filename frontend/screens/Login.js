@@ -84,7 +84,10 @@ class Login extends React.Component {
 
   render() {
     return (
-      <ImageBackground source={require('../assets/backgrounds/Login.png')} style={styles.main}>
+      <ImageBackground 
+        source={require('../assets/backgrounds/Login.png')} 
+        style={[styles.main, screenStyles.screenBackground]}
+      >
         <Image source={require('../assets/Icon_White.png')} style={styles.logo} />
         <View style={styles.bottom}>
           <TouchableHighlight
@@ -213,7 +216,6 @@ Login.propTypes = {
 
 const styles = StyleSheet.create({
   main: {
-    flex: 1,
     justifyContent: 'space-evenly',
   },
   logo: {
