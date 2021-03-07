@@ -46,7 +46,6 @@ class UserProfileView extends Component {
       disabled: false,
     }
   }
-
   // getting current user's info
   async changeName() {
     if (this.state.nameValue !== this.props.name.name) {

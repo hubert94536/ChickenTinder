@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import {
   ImageBackground,
@@ -8,16 +9,18 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import auth from '@react-native-firebase/auth'
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import PropTypes from 'prop-types'
-import Alert from '../modals/Alert.js'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { BlurView } from '@react-native-community/blur'
+import Alert from '../modals/Alert.js'
+import { changeFriends, changeName, changeUsername, changeImage } from '../redux/Actions.js'
 import colors from '../../styles/colors.js'
 import loginService from '../apis/loginService.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
+import UserInfo from './UserInfo.js'
 
 const font = 'CircularStd-Bold'
 
@@ -33,6 +36,7 @@ class PhoneAuthScreen extends Component {
       invalidNumberAlert: false,
       badCodeAlert: false,
       disabled: false,
+      login: false,
     }
   }
 
@@ -58,23 +62,27 @@ class PhoneAuthScreen extends Component {
     // Request for OTP verification
     const { confirmResult, verificationCode } = this.state
     if (verificationCode.length === 6) {
-      confirmResult
-        .confirm(verificationCode)
-        .then((userCredential) => loginService.loginWithCredential(userCredential))
-        .then((result) => this.props.navigation.replace(result))
-        .catch((error) => {
-          this.setState({ errorAlert: true })
-          console.log(error)
+      try {
+        // get user's information and set
+        let userCredential = await confirmResult.confirm(verificationCode)
+        let result = await loginService.loginWithCredential(userCredential)
+        this.setState({ login: true }, () => {
+          this.props.navigation.replace(result)
         })
+      } catch (error) {
+        this.setState({ errorAlert: true, disabled: false })
+        console.log(error)
+      }
     } else {
-      this.setState({ badCodeAlert: true })
+      this.setState({ badCodeAlert: true, disabled: false })
     }
-    this.setState({ disabled: false })
   }
 
   renderConfirmationCodeView() {
     return (
       <View style={styles.verificationView}>
+        {/* get user's info upon logging in */}
+        {this.state.login && <UserInfo></UserInfo>}
         <TextInput
           style={[styles.textInput, { marginTop: '20%', marginBottom: '30%' }]}
           placeholder="Verification code"
@@ -101,7 +109,6 @@ class PhoneAuthScreen extends Component {
   handleBack = async () => {
     this.setState({ disabled: true })
     this.props.navigation.navigate('Login')
-    this.setState({ disabled: false })
   }
 
   render() {
@@ -129,85 +136,82 @@ class PhoneAuthScreen extends Component {
             />
             {!this.state.confirmResult && (
               <View style={{ width: '70%' }}>
-              <Text
-                style={{
-                  textAlign: 'left',
-                  fontFamily: font,
-                  fontSize: normalize(30),
-                  color: 'white',
-                }}
-              >
-                Enter your number
-              </Text>
-              <Text
-                style={{
-                  textAlign: 'left',
-                  flexDirection: 'row',
-                  fontFamily: screenStyles.book.fontFamily,
-                  fontSize: normalize(18),
-                  color: 'white',
-                  marginTop: '5%',
-                  marginBottom: '40%',
-                }}
-              >
-                Enter your phone number for a text message verification code
-              </Text>
-            </View>
+                <Text
+                  style={{
+                    textAlign: 'left',
+                    fontFamily: font,
+                    fontSize: normalize(30),
+                    color: 'white',
+                  }}
+                >
+                  Enter your number
+                </Text>
+                <Text
+                  style={{
+                    textAlign: 'left',
+                    flexDirection: 'row',
+                    fontFamily: fontMed,
+                    fontSize: normalize(18),
+                    color: 'white',
+                    marginTop: '5%',
+                    marginBottom: '40%',
+                  }}
+                >
+                  Enter your phone number for a text message verification code
+                </Text>
+              </View>
             )}
 
-          {this.state.confirmResult && (
+            {this.state.confirmResult && (
               <View style={{ width: '70%' }}>
-              <Text
-                style={{
-                  textAlign: 'left',
-                  fontFamily: font,
-                  fontSize: normalize(30),
-                  color: 'white',
-                }}
-              >
-                Enter Code
-              </Text>
-              <Text
-                style={{
-                  textAlign: 'left',
-                  flexDirection: 'row',
-                  fontFamily: screenStyles.book.fontFamily,
-                  fontSize: normalize(18),
-                  color: 'white',
-                  marginTop: '5%',
-                  marginBottom: '40%',
-                }}
-              >
-                We just texted you a verification code! Enter the code below
-              </Text>
-            </View>
+                <Text
+                  style={{
+                    textAlign: 'left',
+                    fontFamily: font,
+                    fontSize: normalize(30),
+                    color: 'white',
+                  }}
+                >
+                  Enter Code
+                </Text>
+                <Text
+                  style={{
+                    textAlign: 'left',
+                    flexDirection: 'row',
+                    fontFamily: fontMed,
+                    fontSize: normalize(18),
+                    color: 'white',
+                    marginTop: '5%',
+                    marginBottom: '40%',
+                  }}
+                >
+                  We just texted you a verification code! Enter the code below
+                </Text>
+              </View>
             )}
 
             {!this.state.confirmResult && (
               <TextInput
-              style={[styles.textInput, { marginTop: '20%', marginBottom: '10%' }]}
-              placeholder="Phone Number (+1 xxx xxx xxxx)"
-              placeholderTextColor="#6A6A6A"
-              keyboardType="phone-pad"
-              value={this.state.phone}
-              onChangeText={(num) => {
-                this.setState({ phone: num })
-              }}
-              maxLength={15}
-              editable={!this.state.confirmResult}
+                style={[styles.textInput, { marginTop: '20%', marginBottom: '10%' }]}
+                placeholder="Phone Number (+1 xxx xxx xxxx)"
+                placeholderTextColor="#6A6A6A"
+                keyboardType="phone-pad"
+                value={this.state.phone}
+                onChangeText={(num) => {
+                  this.setState({ phone: num })
+                }}
+                maxLength={15}
+                editable={!this.state.confirmResult}
               />
-
             )}
 
             {!this.state.confirmResult && (
               <TouchableOpacity
                 disabled={this.state.disabled}
-                style={[screenStyles.longButton,styles.longButton ]}
+                style={[screenStyles.longButton, styles.longButton]}
                 onPress={() => this.handleSendCode()}
               >
-                <Text style={[screenStyles.longButtonText, styles.longButtonText]}>
-                Submit
-                </Text>
+                <Text style={[screenStyles.longButtonText, styles.longButtonText]}>Submit</Text>
               </TouchableOpacity>
             )}
 
@@ -255,6 +259,12 @@ class PhoneAuthScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+  },
   page: {
     flex: 1,
     height: '100%',
@@ -272,23 +282,50 @@ const styles = StyleSheet.create({
     color: colors.darkGray,
     fontSize: 20,
   },
-  longButton: { 
-    borderColor: colors.hex, 
-    backgroundColor: colors.hex, 
-    marginBottom: '5%' 
+  themeButton: {
+    width: '90%',
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.hex,
+    borderColor: '#FFFFFF',
+    borderWidth: 2,
+    borderRadius: 30,
   },
-  longButtonText: { 
-      color: '#FFFFFF',
+  longButton: {
+    borderColor: colors.hex,
+    backgroundColor: colors.hex,
+    marginBottom: '5%',
+  },
+
+  longButtonText: {
+    color: '#FFFFFF',
+  },
+
+  themeButtonTitle: {
+    fontFamily: fontMed,
+    fontSize: 24,
+    color: '#FFFFFF',
   },
   verificationView: {
     width: '100%',
     alignItems: 'center',
-    // marginTop: 50,
   },
 })
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      changeFriends,
+      changeName,
+      changeUsername,
+      changeImage,
+    },
+    dispatch,
+  )
+
+export default connect(null, mapDispatchToProps)(PhoneAuthScreen)
 
 PhoneAuthScreen.propTypes = {
   navigation: PropTypes.object,
 }
-
-export default PhoneAuthScreen

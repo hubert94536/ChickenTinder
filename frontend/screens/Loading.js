@@ -62,7 +62,6 @@ class Loading extends React.Component {
     })
 
     socket.getSocket().once('leave', () => {
-      this.setState({ disabled: true })
       this.leaveGroup(true)
     })
   }
@@ -77,7 +76,6 @@ class Loading extends React.Component {
     global.host = ''
     global.isHost = false
     global.restaurants = []
-    this.setState({ disabled: false })
     this.props.navigation.replace('Home')
   }
 

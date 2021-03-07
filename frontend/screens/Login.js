@@ -1,28 +1,19 @@
+import PropTypes from 'prop-types'
 import React from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import {
-  changeImage,
-  changeName,
-  changeUsername,
-  changeFriends,
-  hideError,
-  showError,
-} from '../redux/Actions.js'
 import { Image, ImageBackground, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { bindActionCreators } from 'redux'
 import Alert from '../modals/Alert.js'
 import { BlurView } from '@react-native-community/blur'
 import colors from '../../styles/colors.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import friendsApi from '../apis/friendsApi.js'
+import { hideError, showError } from '../redux/Actions.js'
 import imgStyles from '../../styles/cardImage.js'
 import loginService from '../apis/loginService.js'
 import modalStyles from '../../styles/modalStyles.js'
-import { NAME, USERNAME, PHOTO, EMAIL, PHONE } from 'react-native-dotenv'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
-import PropTypes from 'prop-types'
+import UserInfo from './UserInfo.js'
 
 class Login extends React.Component {
   constructor() {
@@ -31,43 +22,33 @@ class Login extends React.Component {
       pressed: false,
       alert: false,
       disabled: false,
+      login: false,
     }
   }
 
-  async setInfo() {
-    AsyncStorage.multiGet([USERNAME, NAME, PHOTO, EMAIL, PHONE]).then((res) => {
-      this.props.changeUsername(res[0][1])
-      this.props.changeName(res[1][1])
-      this.props.changeImage(res[2][1])
-      global.email = res[3][1]
-      global.phone = res[4][1]
-    })
+  phoneLogin() {
+    this.setState({ disabled: true })
+    this.props.navigation.replace('Phone')
   }
 
-  async setFriends() {
-    friendsApi
-      .getFriends()
-      .then((res) => {
-        this.props.changeFriends(res.friendList)
-      })
-      .catch(() => {
-        this.props.showError()
-      })
-  }
-
-  async handleClick() {
+  async facebookLogin() {
     if (!this.state.disabled) {
       this.setState({ disabled: true })
       loginService
         .loginWithFacebook()
-        .then((result) => {
-          this.setState({ alert: false })
-          this.setInfo()
-          this.setFriends()
-          this.props.navigation.replace(result)
-          this.setState({ disabled: false })
+        .then(async (result) => {
+          if (result === 'CreateAccount') {
+            this.setState({ alert: false }, () => {
+              this.props.navigation.replace(result)
+            })
+          } else {
+            this.setState({ alert: false, login: true }, () => {
+              this.props.navigation.replace(result)
+            })
+          }
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log(err)
           this.props.showError()
           this.setState({ disabled: false })
         })
@@ -84,10 +65,9 @@ class Login extends React.Component {
 
   render() {
     return (
-      <ImageBackground 
-        source={require('../assets/backgrounds/Login.png')} 
-        style={[styles.main, screenStyles.screenBackground]}
-      >
+      <ImageBackground source={require('../assets/backgrounds/Login.png')} style={styles.main}>
+        {/* get user's info upon logging in */}
+        {this.state.login && <UserInfo></UserInfo>}
         <Image source={require('../assets/Icon_White.png')} style={styles.logo} />
         <View style={styles.bottom}>
           <TouchableHighlight
@@ -95,11 +75,7 @@ class Login extends React.Component {
             onHideUnderlay={() => this.setState({ phonePressed: false })}
             activeOpacity={1}
             underlayColor={'white'}
-            onPress={() => {
-              this.setState({ disabled: true })
-              this.props.navigation.replace('Phone')
-              this.setState({ disabled: false })
-            }}
+            onPress={() => this.phoneLogin()}
             style={[screenStyles.longButton, styles.phoneButton]}
           >
             <View style={screenStyles.contentContainer}>
@@ -157,7 +133,7 @@ class Login extends React.Component {
             buttonAff="Open"
             buttonNeg="Go Back"
             height="25%"
-            press={() => this.handleClick()}
+            press={() => this.facebookLogin()}
             cancel={() => this.cancelClick()}
           />
         )}
@@ -178,20 +154,12 @@ class Login extends React.Component {
 
 const mapStateToProps = (state) => {
   const { error } = state
-  const { name } = state
-  const { username } = state
-  const { image } = state
-  const { friends } = state
-  return { error, name, username, image, friends }
+  return { error }
 }
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      changeName,
-      changeImage,
-      changeUsername,
-      changeFriends,
       showError,
       hideError,
     },

@@ -12,7 +12,6 @@ import {
 import Geolocation from 'react-native-geolocation-service'
 import PropTypes from 'prop-types'
 import MapView, { Circle, PROVIDER_GOOGLE } from 'react-native-maps'
-import imgStyles from '../../styles/cardImage.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -25,7 +24,6 @@ import _ from 'lodash'
 
 const fullWidth = Dimensions.get('window').width
 const fullHeight = Dimensions.get('window').height
-const ratio = fullHeight / fullWidth
 
 const SmartyStreetsSDK = require('smartystreets-javascript-sdk')
 const SmartyStreetsCore = SmartyStreetsSDK.core
