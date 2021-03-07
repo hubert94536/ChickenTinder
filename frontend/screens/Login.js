@@ -37,9 +37,15 @@ class Login extends React.Component {
       loginService
         .loginWithFacebook()
         .then(async (result) => {
-          this.setState({ alert: false, login: true }, () => {
-            this.props.navigation.replace(result)
-          })
+          if (result === 'CreateAccount') {
+            this.setState({ alert: false }, () => {
+              this.props.navigation.replace(result)
+            })
+          } else {
+            this.setState({ alert: false, login: true }, () => {
+              this.props.navigation.replace(result)
+            })
+          }
         })
         .catch((err) => {
           console.log(err)
