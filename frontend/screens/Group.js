@@ -60,6 +60,8 @@ class Group extends React.Component {
       leaveAlert: false,
       endAlert: false,
       chooseFriends: false,
+
+      // Open
       disabled: false,
       drawerOpen: false,
     }
@@ -418,7 +420,7 @@ class Group extends React.Component {
                   console.log(this.state.drawerOpen)
                   if (!this.state.drawerOpen) this.start()
                 }}
-                disabled={this.state.disabled}
+                disabled={this.state.disabled || this.state.drawerOpen}
                 style={[
                   screenStyles.bigButton,
                   styles.bigButton,
@@ -433,7 +435,7 @@ class Group extends React.Component {
             )}
             {!global.isHost && (
               <TouchableHighlight
-                disabled={this.state.disabled}
+                disabled={this.state.disabled || this.state.drawerOpen}
                 style={[
                   screenStyles.bigButton,
                   styles.bigButton,
@@ -453,7 +455,7 @@ class Group extends React.Component {
             )}
           </View>
           <TouchableHighlight
-            disabled={this.state.disabled}
+            disabled={this.state.disabled || this.state.drawerOpen}
             style={styles.leave}
             activeOpacity={1}
             onPress={() => {
