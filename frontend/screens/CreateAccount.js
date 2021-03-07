@@ -17,6 +17,7 @@ import accountsApi from '../apis/accountsApi.js'
 import { changeImage, changeName, changeUsername, changeFriends } from '../redux/Actions.js'
 import colors from '../../styles/colors.js'
 import defImages from '../assets/images/defImages.js'
+import global from '../../global.js'
 import notificationsApi from '../apis/notificationsApi.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -190,7 +191,6 @@ class createAccount extends React.Component {
           keyboardType="visible-password"
           maxLength={15}
         />
-
         {!this.state.validUsername && this.state.validUsernameFormat && (
           <Text style={[screenStyles.text, styles.warningText]}>This username is taken</Text>
         )}
@@ -202,7 +202,7 @@ class createAccount extends React.Component {
             Invalid username format and username is taken
           </Text>
         )}
-        {this.state.phone && (
+        {this.state.phone !== '' && (
           <View>
             <Text style={[screenStyles.textBook, styles.fieldName]}>Phone Number</Text>
             <Text
@@ -218,7 +218,7 @@ class createAccount extends React.Component {
             </Text>
           </View>
         )}
-        {this.state.email && (
+        {this.state.email !== '' && (
           <View>
             <Text style={[screenStyles.textBook, styles.fieldName]}>Email</Text>
 
