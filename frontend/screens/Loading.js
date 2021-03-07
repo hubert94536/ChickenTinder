@@ -88,7 +88,7 @@ class Loading extends React.Component {
     return (
       <ImageBackground
         source={require('../assets/backgrounds/Loading.png')}
-        style={styles.background}
+        style={screenStyles.screenBackground}
       >
         <View style={[modalStyles.modalContent]}>
           <View style={styles.content}>
@@ -159,9 +159,6 @@ Loading.propTypes = {
 export default connect(mapDispatchToProps)(Loading)
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
   content: {
     width: '70%',
     alignSelf: 'center',
