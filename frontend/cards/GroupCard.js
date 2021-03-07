@@ -9,6 +9,8 @@ import normalize from '../../styles/normalize.js'
 const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
 
+const bg = '#FCE5CD'
+
 export default class GroupCard extends React.Component {
   constructor(props) {
     super(props)
@@ -29,18 +31,10 @@ export default class GroupCard extends React.Component {
     // console.log(this.props.host)
     return (
       <View style={styles.card}>
-        <View
-          style={[
-            styles.imageWrapper,
-            this.props.filters ? imgStyles.hexBorder : imgStyles.greyBorder,
-          ]}
-        >
+        <View style={[styles.imageWrapper]}>
           <Image
             source={{ uri: Image.resolveAssetSource(this.props.image).uri }}
-            style={[
-              styles.image,
-              this.props.filters ? imgStyles.whiteBorder : imgStyles.greyBorder,
-            ]}
+            style={[styles.image, this.props.filters ? imgStyles.hexBorder : imgStyles.tanBorder]}
           />
           {this.props.filters && (
             <Icon
@@ -69,7 +63,7 @@ export default class GroupCard extends React.Component {
           {this.props.uid != this.props.host && this.props.isHost ? (
             <Icon
               name="times-circle"
-              style={[imgStyles.icon, styles.smallMargin]}
+              style={[imgStyles.icon, styles.removeIcon]}
               onPress={() => this.removeUser(this.props.uid)}
               disabled={this.state.disabled}
             />
@@ -98,7 +92,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(15),
   },
   card: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: bg,
     borderRadius: 7,
     alignSelf: 'center',
     width: width * 0.4,
@@ -115,10 +109,8 @@ const styles = StyleSheet.create({
     borderWidth: height * 0.004,
   },
   imageWrapper: {
-    borderRadius: height * 0.1,
     height: height * 0.1,
     width: height * 0.1,
-    borderWidth: height * 0.004,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -130,7 +122,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: '7%',
     top: '7%',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: bg,
     borderRadius: 30,
     overflow: 'hidden',
   },
@@ -155,5 +147,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginLeft: '30%',
   },
-  smallMargin: { marginLeft: '5%' },
+  removeIcon: {
+    position: 'absolute',
+    top: normalize(6),
+    right: normalize(6),
+    fontSize: normalize(20),
+  },
 })
