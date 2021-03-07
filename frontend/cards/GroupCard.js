@@ -1,5 +1,6 @@
 import React from 'react'
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import imgStyles from '../../styles/cardImage.js'
@@ -24,6 +25,8 @@ export default class GroupCard extends React.Component {
   }
 
   render() {
+    // console.log(this.props.uid)
+    // console.log(this.props.host)
     return (
       <View style={styles.card}>
         <View
@@ -39,6 +42,13 @@ export default class GroupCard extends React.Component {
               this.props.filters ? imgStyles.whiteBorder : imgStyles.greyBorder,
             ]}
           />
+          {this.props.filters && (
+            <Icon
+              style={[imgStyles.icon, styles.checkIcon]}
+              name="check-circle"
+              onPress={() => this.acceptFriend()}
+            />
+          )}
         </View>
         <View style={styles.info}>
           <Text style={[imgStyles.font, styles.name]}>{this.props.name}</Text>
@@ -46,19 +56,25 @@ export default class GroupCard extends React.Component {
             {'@' + this.props.username}
           </Text>
         </View>
-        {/* <View style={styles.general}>
-          {this.props.username !== this.props.host && this.isHost ? (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+          }}
+        >
+          {/* {this.props.uid !== this.props.host && this.props.isHost ? (
             <Text style={[imgStyles.hex, imgStyles.font, styles.remove]}>Remove</Text>
-          ) : null}
-          {this.props.username !== this.props.host && this.isHost ? (
+          ) : null} */}
+          {this.props.uid != this.props.host && this.props.isHost ? (
             <Icon
               name="times-circle"
               style={[imgStyles.icon, styles.smallMargin]}
-              onPress={() => this.removeUser(this.props.username)}
+              onPress={() => this.removeUser(this.props.uid)}
               disabled={this.state.disabled}
             />
           ) : null}
-        </View> */}
+        </View>
       </View>
     )
   }
@@ -75,6 +91,12 @@ GroupCard.propTypes = {
 }
 
 const styles = StyleSheet.create({
+  checkIcon: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    fontSize: normalize(15),
+  },
   card: {
     backgroundColor: '#F5F5F5',
     borderRadius: 7,
@@ -133,6 +155,5 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginLeft: '30%',
   },
-  general: { flex: 1, flexDirection: 'row' },
   smallMargin: { marginLeft: '5%' },
 })
