@@ -58,6 +58,14 @@ class Home extends React.Component {
       })
     })
 
+    socket.getSocket().on('exception', (msg) => {
+      // handle button disables here
+      if (msg === 'create') {
+        // create alert here
+      } else if (msg === 'join') {
+        // join alert here
+      }
+    })
     // //uncomment if testing friends/requests
     // accountsApi.createFBUserTest('Hubes2', 32, 'hbc', 'hhcc@gmail.com', '50', '35434354')
     // accountsApi.createFBUserTest('Hanna2', 33, 'hannaaa', 'hannco@gmail.com', '51', '17891234')
@@ -83,7 +91,7 @@ class Home extends React.Component {
             ? require(homedark)
             : require(home)
         }
-        style={styles.background}
+        style={screenStyles.screenBackground}
       >
         <View style={styles.main}>
           <Text style={[screenStyles.text, styles.title]}>Let&apos;s Get Chews-ing</Text>
@@ -243,9 +251,6 @@ const styles = StyleSheet.create({
   main: {
     flex: 1,
     justifyContent: 'space-evenly',
-  },
-  background: {
-    flex: 1,
   },
   title: {
     fontSize: normalize(30),
