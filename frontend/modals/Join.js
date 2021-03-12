@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, StyleSheet, Text, TouchableHighlight, View, TextInput } from 'react-native'
+import { Dimensions, Modal, StyleSheet, Text, TouchableHighlight, View, TextInput } from 'react-native'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -9,6 +9,8 @@ import screenStyles from '../../styles/screenStyles.js'
 
 //  props are name, image url, and functions for cancel and go
 // invite alert
+
+const width = Dimensions.get('screen').width
 
 export default class Join extends React.Component {
   constructor(props) {
@@ -57,7 +59,7 @@ export default class Join extends React.Component {
               <View style={styles.inputContainer}>
                 <Text style={[screenStyles.text, styles.text]}>Group PIN:</Text>
                 <TextInput
-                  style={[screenStyles.text, screenStyles.input, styles.textInput]}
+                  style={[screenStyles.input, styles.textInput, screenStyles.book]}
                   placeholderTextColor="#9F9F9F"
                   textAlign="left"
                   placeholder="e.g. A12345"
@@ -71,10 +73,10 @@ export default class Join extends React.Component {
                   value={this.state.code}
                 />
               </View>
-              {!this.state.invalid && <Text style={styles.alignCenter}> </Text>}
-              {this.state.invalid && (
-                <Text style={styles.alignCenter}>Sorry, PIN is invalid or expired</Text>
-              )}
+              <View style={styles.errorText}>
+                <AntDesign name='exclamationcircle' style={ [this.state.invalid ? styles.error : styles.noError]}/>
+              <Text style={ [screenStyles.book, this.state.invalid ? styles.error : styles.noError]}>Invalid PIN. Please try again.</Text>
+              </View>
               {this.state.isValid && (
                 <TouchableHighlight
                   underlayColor={screenStyles.hex.color}
@@ -82,15 +84,17 @@ export default class Join extends React.Component {
                   onHideUnderlay={() => this.setState({ pressed: false })}
                   onShowUnderlay={() => this.setState({ pressed: true })}
                   onPress={() => this.handleAccept()}
-                  style={modalStyles.button}
+                  style={[modalStyles.button, styles.button]}
                 >
                   <Text
                     style={[
                       modalStyles.text,
+                      screenStyles.book,
+                      styles.buttonText,
                       { color: this.state.pressed ? 'white' : screenStyles.hex.color },
                     ]}
                   >
-                    Join
+                    Join Group
                   </Text>
                 </TouchableHighlight>
               )}
@@ -99,7 +103,7 @@ export default class Join extends React.Component {
                   onPress={() => this.setState({ invalid: true })}
                   style={[modalStyles.button, styles.bgHex]}
                 >
-                  <Text style={[modalStyles.text, styles.white]}>Join</Text>
+                  <Text style={[modalStyles.text, styles.white, screenStyles.book]}>Join Group</Text>
                 </TouchableHighlight>
               )}
             </View>
@@ -113,7 +117,7 @@ export default class Join extends React.Component {
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 0,
-    height: 180,
+    height: width*0.5,
     borderRadius: 15,
   },
   inputContainer: {
@@ -123,7 +127,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: normalize(20),
-    marginRight: '10%',
+    marginRight: '5%',
     marginLeft: '10%',
   },
   textInput: {
@@ -135,15 +139,39 @@ const styles = StyleSheet.create({
     paddingBottom: '2%',
     textAlignVertical: 'center',
     color: 'black',
+    height:width*0.089,
   },
-  alignCenter: {
-    textAlign: 'center',
+  noError:{
+    marginLeft:'2%',
+    color:'white',
+  },
+  error:{
+    marginLeft:'2%',
+    color:'red',
+  },
+  errorText:{
+    marginTop:'10%',
+    marginLeft:'10%',
+    flexDirection:'row',
+    alignItems:'center'
   },
   bgHex: {
     backgroundColor: screenStyles.hex.color,
+    width:'45%',
+  },
+  button:{
+    width:'45%',
+  },
+  buttonText:{
+    fontSize:normalize(17),
+    paddingTop:'8%',
+    paddingBottom:'8%',
   },
   white: {
     color: 'white',
+    fontSize:normalize(17),
+    paddingTop:'8%',
+    paddingBottom:'8%',
   },
 })
 
