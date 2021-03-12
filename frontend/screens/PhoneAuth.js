@@ -23,7 +23,6 @@ import screenStyles from '../../styles/screenStyles.js'
 import UserInfo from './UserInfo.js'
 
 const font = 'CircularStd-Bold'
-const fontMed = 'CirularStd-Medium'
 
 class PhoneAuthScreen extends Component {
   constructor(props) {
@@ -116,9 +115,9 @@ class PhoneAuthScreen extends Component {
     return (
       <ImageBackground
         source={require('../assets/backgrounds/Login_Input_Phone.png')}
-        style={styles.background}
+        style={screenStyles.screenBackground}
       >
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={screenStyles.screenBackground}>
           <View style={styles.page}>
             <AntDesign
               disabled={this.state.disabled}
@@ -273,14 +272,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   textInput: {
-    fontFamily: fontMed,
+    fontFamily: screenStyles.book.fontFamily,
     marginTop: 20,
     width: '80%',
     borderColor: '#A5A5A5',
     borderWidth: 0,
     borderBottomWidth: 1.5,
     paddingLeft: 10,
-    color: '#6A6A6A',
+    color: colors.darkGray,
     fontSize: 20,
   },
   themeButton: {
@@ -298,11 +297,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.hex,
     marginBottom: '5%',
   },
-
   longButtonText: {
     color: '#FFFFFF',
   },
-
   themeButtonTitle: {
     fontFamily: fontMed,
     fontSize: 24,
