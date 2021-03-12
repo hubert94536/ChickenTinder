@@ -13,11 +13,10 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from '@react-native-community/blur'
-import { newNotif, noNotif, changeFriends } from '../redux/Actions.js'
+import { newNotif, noNotif, changeFriends, showError } from '../redux/Actions.js'
 import Swiper from 'react-native-swiper'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
-import accountsApi from '../apis/accountsApi.js'
 import notificationsApi from '../apis/notificationsApi.js'
 import colors from '../../styles/colors.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -62,6 +61,8 @@ class Notif extends Component {
       deleteAlert: false,
       errorAlert: false,
       deleteFriend: false,
+      // disabling buttons
+      disabled: false,
     }
 
     socket.getSocket().once('update', (res) => {
@@ -133,10 +134,6 @@ class Notif extends Component {
     var activityNotifs = []
     var requestNotifs = []
     var notifList = this.state.notifs
-    // var String1 = "hello"
-    // var String2 = "hello"
-    // var result = String1.localeCompare(String2)
-    // notifList.sort( (x,y) => x.updatedAt.localeCompare(y.updatedAt));
     notifList.sort((x, y) => new Date(x.updatedAt).valueOf() < new Date(y.updatedAt).valueOf())
     // Create all friend/request cards
     if (Array.isArray(notifList) && notifList.length) {
@@ -167,13 +164,13 @@ class Notif extends Component {
           if (notifList[i].type == 'friends') {
             //someone sent you a request
             var newArr = []
-            for (var i = 0; i < this.props.friends.friends.length; i++) {
+            for (var j = 0; i < this.props.friends.friends.length; i++) {
               var person = {
-                name: this.props.friends.friends[i].name,
-                username: this.props.friends.friends[i].username,
-                photo: this.props.friends.friends[i].photo,
-                uid: this.props.friends.friends[i].uid,
-                status: this.props.friends.friends[i].status,
+                name: this.props.friends.friends[j].name,
+                username: this.props.friends.friends[j].username,
+                photo: this.props.friends.friends[j].photo,
+                uid: this.props.friends.friends[j].uid,
+                status: this.props.friends.friends[j].status,
               }
               newArr.push(person)
             }
@@ -188,11 +185,11 @@ class Notif extends Component {
             this.props.changeFriends(newArr)
           } else {
             //you accepted someones request
-            var newArr = this.props.friends.friends.filter((item) => {
+            var arr = this.props.friends.friends.filter((item) => {
               if (item.username === notifList[i].senderUsername) item.status = 'friends'
               return item
             })
-            this.props.changeFriends(newArr)
+            this.props.changeFriends(arr)
           }
         } else {
           activityNotifs.push(
@@ -219,7 +216,7 @@ class Notif extends Component {
     return (
       <ImageBackground
         source={require('../assets/backgrounds/Search.png')}
-        style={styles.container}
+        style={screenStyles.screenBackground}
       >
         <View>
           <Text style={[screenStyles.icons, styles.NotifTitle]}>Notifications</Text>
@@ -334,7 +331,6 @@ const mapStateToProps = (state) => {
   const { notif } = state
   const { error } = state
   const { username } = state
-  const { friends } = state
   return { notif, error, username }
 }
 //  access the state as this.props.notif
@@ -346,6 +342,7 @@ const mapDispatchToProps = (dispatch) =>
       newNotif,
       noNotif,
       changeFriends,
+      showError,
     },
     dispatch,
   )
@@ -357,16 +354,15 @@ export default connect(mapStateToProps, mapDispatchToProps)(Notif)
 Notif.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
+    replace: PropTypes.func,
   }).isRequired,
   username: PropTypes.object,
   friends: PropTypes.object,
   changeFriends: PropTypes.func,
+  showError: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   NotifTitle: {
     marginTop: '7%',
     textAlign: 'center',

@@ -39,6 +39,7 @@
     "pg": "^8.5.1",
     "prop-types": "^15.7.2",
     "react": "16.13.1",
+    "react-lodash": "^0.1.2",
     "react-native": "^0.63.2",
     "react-native-deck-swiper": "^2.0.5",
     "react-native-dotenv": "^0.2.0",

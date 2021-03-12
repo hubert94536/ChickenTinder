@@ -44,6 +44,7 @@ class Home extends React.Component {
       join: false,
       inviteInfo: '',
       friends: '',
+      disabled: false,
     }
 
     socket.getSocket().once('update', (res) => {
@@ -51,11 +52,20 @@ class Home extends React.Component {
       global.host = res.members[res.host].username
       this.props.setCode(res.code)
       global.isHost = res.members[res.host].username === this.props.username.username
+      this.setState({ disabled: false })
       this.props.navigation.replace('Group', {
         response: res,
       })
     })
 
+    socket.getSocket().on('exception', (msg) => {
+      // handle button disables here
+      if (msg === 'create') {
+        // create alert here
+      } else if (msg === 'join') {
+        // join alert here
+      }
+    })
     // //uncomment if testing friends/requests
     // accountsApi.createFBUserTest('Hubes2', 32, 'hbc', 'hhcc@gmail.com', '50', '35434354')
     // accountsApi.createFBUserTest('Hanna2', 33, 'hannaaa', 'hannco@gmail.com', '51', '17891234')
@@ -69,6 +79,7 @@ class Home extends React.Component {
   }
 
   createGroup() {
+    this.setState({ disabled: true })
     socket.createRoom()
   }
 
@@ -80,12 +91,13 @@ class Home extends React.Component {
             ? require(homedark)
             : require(home)
         }
-        style={styles.background}
+        style={screenStyles.screenBackground}
       >
         <View style={styles.main}>
           <Text style={[screenStyles.text, styles.title]}>Let&apos;s Get Chews-ing</Text>
           <View>
             <TouchableHighlight
+              disabled={this.state.disabled}
               onShowUnderlay={() => this.setState({ createPressed: true })}
               onHideUnderlay={() => this.setState({ createPressed: false })}
               activeOpacity={1}
@@ -239,9 +251,6 @@ const styles = StyleSheet.create({
   main: {
     flex: 1,
     justifyContent: 'space-evenly',
-  },
-  background: {
-    flex: 1,
   },
   title: {
     fontSize: normalize(30),

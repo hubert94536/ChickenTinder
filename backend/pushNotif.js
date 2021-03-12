@@ -5,7 +5,7 @@ const { Notifications } = require('./models.js')
 
 // TODO: Remove debugging code when done
 
-pool.connect((err, client, release) => {
+pool.connect((err, client) => {
   if (err) {
     console.error(err)
   }

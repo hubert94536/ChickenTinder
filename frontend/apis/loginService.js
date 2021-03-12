@@ -1,27 +1,14 @@
-import { USERNAME, NAME, EMAIL, PHOTO, PHONE, REGISTRATION_TOKEN, UID } from 'react-native-dotenv'
+import { USERNAME, NAME, EMAIL, PHOTO, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import FBSDK from 'react-native-fbsdk'
 import auth from '@react-native-firebase/auth'
 import accountsApi from './accountsApi.js'
+import global from '../../global.js'
 import notificationsApi from './notificationsApi.js'
 import socket from './socket.js'
 
 const { LoginManager, AccessToken } = FBSDK
 
-// const config = {
-//   apiKey: FIREBASE_API_KEY, // Auth / General Use
-//   applicationId: FIREBASE_APPLICATION_ID, // General Use
-//   projectId: FIREBASE_PROJECT_ID, // General Use
-//   authDomain: FIREBASE_AUTH_DOMAIN, // Auth with popup/redirect
-//   databaseURL: FIREBASE_DATABASE, // Realtime Database
-//   storageBucket: FIREBASE_STORAGE_BUCKET, // Storage
-// }
-
-// if (!Firebase.apps.length) Firebase.initializeApp(config)
-
-// TODO: Move phone auth
-
-// TODO: On login, check user displayname
 // On login for new user, set display name to null
 // If user provider ID is phone, set async storage phone to number
 // If account finishes creation, set display name to display name
@@ -30,47 +17,50 @@ const loginWithCredential = async (userCredential) => {
   try {
     // Get info from database if not new user
     if (!userCredential.additionalUserInfo.isNewUser && userCredential.user.displayName != null) {
-      const user = await accountsApi.getUser()
-      await AsyncStorage.multiSet([
-        [USERNAME, user.username],
-        [NAME, user.name],
-        [PHOTO, user.photo],
-        [UID, user.uid],
-      ])
-      if (user.email) {
-        await AsyncStorage.setItem(EMAIL, user.email)
-        global.email = user.email
-      }
-      else {
-        await AsyncStorage.setItem(PHONE, user.phone_number)
-        global.phone = user.phone_number
-      }
-      // Link user with their notification token
-      const token = await AsyncStorage.getItem(REGISTRATION_TOKEN)
-      await notificationsApi.linkToken(token)
-      // TODO: set redux here
-      socket.connect()
+      await fetchAccount()
       return 'Home'
     }
-    // Set user's info locally
-    await AsyncStorage.setItem(UID, userCredential.user.uid)
     auth().currentUser.updateProfile({ displayName: null })
+    // Set user's info locally
     switch (auth().currentUser.providerData[0].providerId) {
       case 'facebook.com':
-        await AsyncStorage.multiSet([
-          [NAME, userCredential.additionalUserInfo.profile.name],
-          [EMAIL, userCredential.additionalUserInfo.profile.email],
-        ])
+        // let name = userCredential.additionalUserInfo.profile.name.length > 15 ?
+        //   userCredential.additionalUserInfo.profile.name.substring(0, 15) :
+        //   userCredential.additionalUserInfo.profile.name
+        global.email = userCredential.additionalUserInfo.profile.email
         break
       case 'phone':
       case 'firebase':
-        await AsyncStorage.multiSet([[PHONE, userCredential.user.phoneNumber]])
+        global.phone = userCredential.user.phoneNumber
         break
       default:
         throw new Error('Could not determine provider')
     }
     return 'CreateAccount'
   } catch (err) {
+    console.log(err)
+    return Promise.reject(err)
+  }
+}
+
+const fetchAccount = async () => {
+  try {
+    const user = await accountsApi.getUser()
+    await AsyncStorage.multiSet([
+      [USERNAME, user.username],
+      [NAME, user.name],
+      [PHOTO, user.photo],
+    ])
+    if (user.email) {
+      await AsyncStorage.setItem(EMAIL, user.email)
+    } else {
+      await AsyncStorage.setItem(PHONE, user.phone_number)
+    }
+    // Link user with their notification token
+    const token = await AsyncStorage.getItem(REGISTRATION_TOKEN)
+    await notificationsApi.linkToken(token)
+  } catch (err) {
+    console.log(err)
     return Promise.reject(err)
   }
 }
@@ -80,7 +70,7 @@ const loginWithFacebook = async () => {
     // Attempt a login using the Facebook login dialog asking for default permissions.
     const login = await LoginManager.logInWithPermissions(['public_profile', 'email'])
     if (login.isCancelled) {
-      return Promise.reject(new Error('Cancelled request'))
+      return
     }
     const token = await AccessToken.getCurrentAccessToken()
     const credential = await auth.FacebookAuthProvider.credential(token.accessToken)
@@ -88,16 +78,17 @@ const loginWithFacebook = async () => {
     const userCredential = await auth().signInWithCredential(credential)
     return loginWithCredential(userCredential)
   } catch (err) {
+    console.log(err)
     return Promise.reject(err)
   }
 }
 
-validatePhoneNumber = (number) => {
+const validatePhoneNumber = (number) => {
   const regexp = /^\+?(\d{1,2})?\s?\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/
   return regexp.test(number)
 }
 
-formatPhoneNumber = (number) => {
+const formatPhoneNumber = (number) => {
   const regexp = /^\+?(\d{1,2})?\s?\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/
   const matches = number.match(regexp)
   return `+${matches[1] || 1}${matches[2]}${matches[3]}${matches[4]}`
@@ -122,8 +113,9 @@ const logout = async () => {
     }
     await notificationsApi.unlinkToken()
     await auth().signOut()
-    await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
+    await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE])
   } catch (err) {
+    console.log(err)
     return Promise.reject(err)
   }
 }
@@ -140,7 +132,7 @@ const deleteUserWithCredential = async (credential) => {
     await accountsApi.deleteUser()
     // Delete user from firebase and remove information from AsyncStorage
     await auth().currentUser.delete()
-    await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
+    await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE])
   } catch (err) {
     console.log('------ERROR DELETING USER')
     return Promise.reject(err)
@@ -155,7 +147,7 @@ const deleteUser = async () => {
     switch (auth().currentUser.providerData[0].providerId) {
       case 'facebook.com':
         // Retrieve accesstoken to delete use from Firebase
-        const data = await AccessToken.getCurrentAccessToken()
+        var data = await AccessToken.getCurrentAccessToken()
         if (!data) {
           // Attempt a login using the Facebook login dialog asking for default permissions.
           const login = await LoginManager.logInWithPermissions(['public_profile', 'email'])
