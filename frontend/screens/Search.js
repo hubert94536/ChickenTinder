@@ -47,11 +47,6 @@ class Search extends Component {
   }
 
   async getFriends() {
-    // for(var i = 0; i < this.props.friends.friends.length; i++)
-    // {
-    //   if(this.props.friends.friends[i].status === 'requested')
-    //     friendsApi.acceptFriendRequest(this.props.friends.friends[i].uid)
-    // }
     friendsApi
       .getFriends()
       .then((res) => {
@@ -158,7 +153,10 @@ class Search extends Component {
 
   render() {
     return (
-      <ImageBackground source={require('../assets/backgrounds/Search.png')} style={{ flex: 1 }}>
+      <ImageBackground
+        source={require('../assets/backgrounds/Search.png')}
+        style={screenStyles.screenBackground}
+      >
         <Text style={[screenStyles.icons, styles.title]}>Find friends</Text>
         <FlatList
           data={this.state.data}
@@ -183,7 +181,6 @@ class Search extends Component {
           keyExtractor={(item) => item.username}
           ListHeaderComponent={this.renderHeader}
           onRefresh={() => this.onRefresh()}
-          // refreshing={this.props.refresh}
           refreshing={this.state.refresh}
         />
         {(this.state.errorAlert || this.state.deleteFriend) && (

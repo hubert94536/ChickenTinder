@@ -3,14 +3,14 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Dimensions, Linking, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
-import mapStyle from '../../styles/mapStyle.json'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'
 import global from '../../global.js'
-import screenStyles from '../../styles/screenStyles.js'
+import mapStyle from '../../styles/mapStyle.json'
 import MatchCard from '../cards/MatchCard.js'
 import normalize from '../../styles/normalize.js'
+import screenStyles from '../../styles/screenStyles.js'
 import { setCode } from '../redux/Actions.js'
 import socket from '../apis/socket.js'
 
@@ -36,7 +36,6 @@ class Match extends React.Component {
     global.host = ''
     global.isHost = false
     global.restaurants = []
-    this.setState({ disabled: false })
     this.props.navigation.replace('Home')
   }
 
@@ -50,7 +49,7 @@ class Match extends React.Component {
         </View>
         <View style={styles.restaurantCardContainer} /*Restaurant card*/>
           <MatchCard card={restaurant} />
-          <View style={styles.mapContainer}>
+          <View style={[styles.mapContainer, styles.map]}>
             <MapView
               provider={PROVIDER_GOOGLE}
               customMapStyle={mapStyle}
@@ -156,17 +155,12 @@ const styles = StyleSheet.create({
     borderRadius: 14, //roundness of border
     height: '65%',
     width: '82%',
-    //backgroundColor: hex, for testing
   },
   //To give the Google Map rounded bottom edges
   mapContainer: {
     borderBottomLeftRadius: 14,
     borderBottomRightRadius: 14,
     overflow: 'hidden', //hides map overflow
-    alignSelf: 'center',
-    justifyContent: 'flex-end',
-    height: Dimensions.get('window').height * 0.4,
-    width: Dimensions.get('window').width * 0.82,
   },
   map: {
     alignSelf: 'center',
@@ -194,7 +188,7 @@ const styles = StyleSheet.create({
   },
   /* Text for exit round link */
   exitRoundText: {
-    color: '#6A6A6A',
+    color: colors.darkGray,
     justifyContent: 'center',
     alignSelf: 'center',
     width: '65%',

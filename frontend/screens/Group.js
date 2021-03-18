@@ -61,8 +61,9 @@ class Group extends React.Component {
       endAlert: false,
       chooseFriends: false,
 
-      // Disabling buttons
+      // Open
       disabled: false,
+      drawerOpen: false,
     }
     console.log(members)
     this.updateMemberList()
@@ -105,12 +106,23 @@ class Group extends React.Component {
       }
     })
 
-    socket.getSocket().on('leave', () => {
+    socket.getSocket().once('leave', () => {
       this.leaveGroup(true)
     })
 
     socket.getSocket().on('reselect', () => {
-      console.log('reselect')
+      // alert for host to reselect filters
+    })
+
+    socket.getSocket().on('exception', (msg) => {
+      // handle button disables here
+      if (msg === 'submit') {
+        // submit alert here
+      } else if (msg === 'start') {
+        // start alert here
+      } else if (msg === 'kick') {
+        // kick alert here
+      }
     })
   }
 
@@ -141,16 +153,17 @@ class Group extends React.Component {
   updateMemberList() {
     memberList = []
     memberRenderList = []
-    for (const user in this.state.members) {
+    // console.log(JSON.stringify(this.state.members))
+    for (const uid in this.state.members) {
       const a = {}
-      a.name = this.state.members[user].name
-      a.username = this.state.members[user].username
-      a.user = user
-      a.photo = this.state.members[user].photo
-      a.filters = this.state.members[user].filters
+      a.name = this.state.members[uid].name
+      a.username = this.state.members[uid].username
+      a.uid = uid
+      a.photo = this.state.members[uid].photo
+      a.filters = this.state.members[uid].filters
       a.host = this.state.host
       a.isHost = global.isHost
-      a.key = user
+      a.key = uid
       memberList.push(a)
       a.f = false
       memberRenderList.push(a)
@@ -183,7 +196,7 @@ class Group extends React.Component {
 
   // host ends session
   endGroup() {
-    this.setState({ endAlert: false, blur: false, disabled:true })
+    this.setState({ endAlert: false, blur: false, disabled: true })
     socket.endRound()
   }
 
@@ -241,6 +254,8 @@ class Group extends React.Component {
           style={styles.drawer}
           initialDrawerPos={100}
           enabled={!this.state.blur}
+          onOpen={() => this.setState({ drawerOpen: true })}
+          onClose={() => this.setState({ drawerOpen: false })}
           renderContainerView={
             <View style={styles.main}>
               <View style={styles.center}>
@@ -308,6 +323,7 @@ class Group extends React.Component {
                         key={item.key}
                         name={item.name}
                         username={item.username}
+                        uid={item.uid}
                       />
                     )
                   }
@@ -402,8 +418,11 @@ class Group extends React.Component {
               <TouchableHighlight
                 underlayColor={colors.hex}
                 activeOpacity={1}
-                disabled={this.state.disabled}
-                onPress={() => this.start()}
+                onPress={() => {
+                  console.log(this.state.drawerOpen)
+                  if (!this.state.drawerOpen) this.start()
+                }}
+                disabled={this.state.disabled || this.state.drawerOpen}
                 style={[
                   screenStyles.bigButton,
                   styles.bigButton,
@@ -418,14 +437,20 @@ class Group extends React.Component {
             )}
             {!global.isHost && (
               <TouchableHighlight
-                disabled={this.state.disabled}
+                disabled={this.state.disabled || this.state.drawerOpen}
                 style={[
                   screenStyles.bigButton,
                   styles.bigButton,
-                  !this.state.userSubmitted ? { opacity: 1 } : { opacity: 0.4 },
+                  !this.state.userSubmitted || this.state.drawerOpen
+                    ? { opacity: 1 }
+                    : { opacity: 0.4 },
                 ]}
                 onPress={() => {
-                  if (!this.state.userSubmitted) this.filterRef.current.submitUserFilters()
+                  // console.log(
+                  //   `Submit Filters: ${this.state.userSubmitted}|${this.state.drawerOpen}`,
+                  // )
+                  if (!this.state.userSubmitted && !this.state.drawerOpen)
+                    this.filterRef.current.submitUserFilters()
                 }}
               >
                 <Text style={styles.buttonText}>
@@ -435,15 +460,16 @@ class Group extends React.Component {
             )}
           </View>
           <TouchableHighlight
-            disabled={this.state.disabled}
+            disabled={this.state.disabled || this.state.drawerOpen}
             style={styles.leave}
             activeOpacity={1}
             onPress={() => {
-              // console.log('left')
-              this.setState({ blur: true })
-              global.isHost
-                ? this.setState({ endAlert: true })
-                : this.setState({ leaveAlert: true })
+              if (!this.state.drawerOpen) {
+                this.setState({ blur: true })
+                global.isHost
+                  ? this.setState({ endAlert: true })
+                  : this.setState({ leaveAlert: true })
+              }
             }}
             underlayColor="white"
           >

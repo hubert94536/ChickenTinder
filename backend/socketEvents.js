@@ -460,7 +460,6 @@ module.exports = (io) => {
           }
         }
       } catch (err) {
-        socket.emit('exception', 'finished')
         console.error(err)
       }
     })
