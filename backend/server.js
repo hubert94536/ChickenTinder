@@ -27,7 +27,7 @@ app.use(
 app.set('etag', false)
 
 // if development mode, allow self-signed ssl
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 /*-----TESTING ENDPTS------ */
 app
   .route('/test/accounts')
