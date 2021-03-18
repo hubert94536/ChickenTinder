@@ -118,7 +118,7 @@ class App extends React.Component {
           },
         },
         {
-          initialRouteName: start,
+          initialRouteName: 'Login',
           headerMode: 'none',
           animationEnabled: false,
         },

@@ -13,7 +13,11 @@ const config = {
   port: process.env.USERS_PORT,
   database: process.env.USERS_DATABASE,
   dialect: 'postgresql',
-  ssl: { rejectUnauthorized: false }
+  dialectOptions: {
+    ssl: {
+      rejectUnauthorized: false
+    }
+  }
 }
 
 const pool = new pg.Pool(config)
