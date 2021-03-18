@@ -36,7 +36,7 @@
     "http": "0.0.1-security",
     "joi": "^17.3.0",
     "mock-async-storage": "^2.2.0",
-    "pg": "^8.5.1",
+    "pg": "^7.14.0",
     "prop-types": "^15.7.2",
     "react": "16.13.1",
     "react-lodash": "^0.1.2",

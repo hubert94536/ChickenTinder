@@ -14,7 +14,7 @@ const config = {
   database: process.env.USERS_DATABASE,
   dialect: 'postgresql',
   dialectOptions: {
-    ssl: true
+    ssl: false
   }
 }
 
