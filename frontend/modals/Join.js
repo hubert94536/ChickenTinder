@@ -1,5 +1,13 @@
 import React from 'react'
-import { Dimensions, Modal, StyleSheet, Text, TouchableHighlight, View, TextInput } from 'react-native'
+import {
+  Dimensions,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
+  TextInput,
+} from 'react-native'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -74,8 +82,15 @@ export default class Join extends React.Component {
                 />
               </View>
               <View style={styles.errorText}>
-                <AntDesign name='exclamationcircle' style={ [this.state.invalid ? styles.error : styles.noError]}/>
-              <Text style={ [screenStyles.book, this.state.invalid ? styles.error : styles.noError]}>Invalid PIN. Please try again.</Text>
+                <AntDesign
+                  name="exclamationcircle"
+                  style={[this.state.invalid ? styles.error : styles.noError]}
+                />
+                <Text
+                  style={[screenStyles.book, this.state.invalid ? styles.error : styles.noError]}
+                >
+                  Invalid PIN. Please try again.
+                </Text>
               </View>
               {this.state.isValid && (
                 <TouchableHighlight
@@ -103,7 +118,9 @@ export default class Join extends React.Component {
                   onPress={() => this.setState({ invalid: true })}
                   style={[modalStyles.button, styles.bgHex]}
                 >
-                  <Text style={[modalStyles.text, styles.white, screenStyles.book]}>Join Group</Text>
+                  <Text style={[modalStyles.text, styles.white, screenStyles.book]}>
+                    Join Group
+                  </Text>
                 </TouchableHighlight>
               )}
             </View>
@@ -117,7 +134,7 @@ export default class Join extends React.Component {
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 0,
-    height: width*0.5,
+    height: width * 0.5,
     borderRadius: 15,
   },
   inputContainer: {
@@ -139,39 +156,39 @@ const styles = StyleSheet.create({
     paddingBottom: '2%',
     textAlignVertical: 'center',
     color: 'black',
-    height:width*0.089,
+    height: width * 0.089,
   },
-  noError:{
-    marginLeft:'2%',
-    color:'white',
+  noError: {
+    marginLeft: '2%',
+    color: 'white',
   },
-  error:{
-    marginLeft:'2%',
-    color:'red',
+  error: {
+    marginLeft: '2%',
+    color: 'red',
   },
-  errorText:{
-    marginTop:'10%',
-    marginLeft:'10%',
-    flexDirection:'row',
-    alignItems:'center'
+  errorText: {
+    marginTop: '10%',
+    marginLeft: '10%',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   bgHex: {
     backgroundColor: screenStyles.hex.color,
-    width:'45%',
+    width: '45%',
   },
-  button:{
-    width:'45%',
+  button: {
+    width: '45%',
   },
-  buttonText:{
-    fontSize:normalize(17),
-    paddingTop:'8%',
-    paddingBottom:'8%',
+  buttonText: {
+    fontSize: normalize(17),
+    paddingTop: '8%',
+    paddingBottom: '8%',
   },
   white: {
     color: 'white',
-    fontSize:normalize(17),
-    paddingTop:'8%',
-    paddingBottom:'8%',
+    fontSize: normalize(17),
+    paddingTop: '8%',
+    paddingBottom: '8%',
   },
 })
 

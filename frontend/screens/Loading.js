@@ -18,7 +18,7 @@ import colors from '../../styles/colors.js'
 import global from '../../global.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
-import { ProgressBar } from 'react-native-paper';
+import { ProgressBar } from 'react-native-paper'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
 import { showEnd } from '../redux/Actions.js'
@@ -94,41 +94,43 @@ class Loading extends React.Component {
         source={require('../assets/backgrounds/Loading.png')}
         style={screenStyles.screenBackground}
       >
-        <View style={[styles.top, {flexDirection:'row', justifyContent:'space-between'}]}>
+        <View style={[styles.top, { flexDirection: 'row', justifyContent: 'space-between' }]}>
           <TouchableHighlight
-              disabled={this.state.disabled}
-              onPress={() => {
-                if (global.isHost) {
-                  this.setState({ leave: true })
-                } else {
-                  this.leaveGroup(false)
-                }
-              }}
-              style={[styles.leaveIcon]}
-              underlayColor="transparent"
-            >
-              <View style={styles.centerAlign}>
-                <Icon5 name="door-open" style={[screenStyles.text, styles.door]} />
-                <Text style={([screenStyles.text], styles.gray)}>
-                  Leave
-                </Text>
-              </View>
-            </TouchableHighlight>
-            <View>
-            <Text style={[screenStyles.text, styles.black, {alignSelf:'flex-end'}]}>
-                  5/6 members finished
-            </Text>
-            <ProgressBar progress={0.5} color={colors.hex} style={{width:'100%', backgroundColor:'#E0E0E0', alignSelf:'center'}}/>
+            disabled={this.state.disabled}
+            onPress={() => {
+              if (global.isHost) {
+                this.setState({ leave: true })
+              } else {
+                this.leaveGroup(false)
+              }
+            }}
+            style={[styles.leaveIcon]}
+            underlayColor="transparent"
+          >
+            <View style={styles.centerAlign}>
+              <Icon5 name="door-open" style={[screenStyles.text, styles.door]} />
+              <Text style={([screenStyles.text], styles.gray)}>Leave</Text>
             </View>
-        </View>
-          <View style={styles.content}>
-            <Text style={[styles.general, styles.title]}>Round done!</Text>
-            <Image source={require('../assets/loading.gif')} style={styles.gif} />
+          </TouchableHighlight>
+          <View>
+            <Text style={[screenStyles.text, styles.black, { alignSelf: 'flex-end' }]}>
+              5/6 members finished
+            </Text>
+            <ProgressBar
+              progress={0.5}
+              color={colors.hex}
+              style={{ width: '100%', backgroundColor: '#E0E0E0', alignSelf: 'center' }}
+            />
           </View>
+        </View>
+        <View style={styles.content}>
+          <Text style={[styles.general, styles.title]}>Round done!</Text>
+          <Image source={require('../assets/loading.gif')} style={styles.gif} />
+        </View>
         <View>
           <Text style={styles.general}>
-              Hang tight while others finish swiping and a match is found.
-            </Text>
+            Hang tight while others finish swiping and a match is found.
+          </Text>
           {!global.isHost && (
             <TouchableHighlight
               disabled={this.state.disabled}
@@ -149,25 +151,25 @@ class Loading extends React.Component {
               <Text style={styles.leaveText}>Continue</Text>
             </TouchableHighlight>
           )}
-          </View>
-          {this.state.leave && (
-            <BlurView
-              blurType="dark"
-              blurAmount={10}
-              reducedTransparencyFallbackColor="white"
-              style={modalStyles.blur}
-            />
-          )}
-          {this.state.leave && (
-            <Alert
-              title="Are you sure you want to leave?"
-              body="Leaving ends the group for everyone"
-              buttonAff="Leave"
-              height="30%"
-              press={() => socket.endRound()}
-              cancel={() => this.setState({ leave: false })}
-            />
-          )}
+        </View>
+        {this.state.leave && (
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
+        {this.state.leave && (
+          <Alert
+            title="Are you sure you want to leave?"
+            body="Leaving ends the group for everyone"
+            buttonAff="Leave"
+            height="30%"
+            press={() => socket.endRound()}
+            cancel={() => this.setState({ leave: false })}
+          />
+        )}
       </ImageBackground>
     )
   }
@@ -190,12 +192,12 @@ Loading.propTypes = {
 export default connect(mapDispatchToProps)(Loading)
 
 const styles = StyleSheet.create({
-  top: { marginTop: '7%', marginLeft:'5%', marginRight:'5%' },
-  leaveIcon: { alignSelf:'flex-start' },
+  top: { marginTop: '7%', marginLeft: '5%', marginRight: '5%' },
+  leaveIcon: { alignSelf: 'flex-start' },
   centerAlign: { alignItems: 'center' },
   door: { color: '#6A6A6A', fontSize: normalize(20) },
   gray: { color: '#6A6A6A' },
-  black: {color: 'black'},
+  black: { color: 'black' },
   content: {
     width: '70%',
     alignSelf: 'center',
@@ -205,13 +207,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.hex,
     marginTop: '0%',
-    width: '90%'
+    width: '90%',
   },
   gif: {
     alignSelf: 'center',
     width: height * 0.28,
     height: height * 0.35,
-    marginBottom:'15%'
+    marginBottom: '15%',
   },
   general: {
     fontFamily: screenStyles.book.fontFamily,
@@ -220,8 +222,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: '20%',
     color: 'white',
-    width:'80%',
-    alignSelf:'center'
+    width: '80%',
+    alignSelf: 'center',
   },
   leaveButton: {
     alignSelf: 'center',
