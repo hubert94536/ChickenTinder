@@ -144,7 +144,6 @@ class Group extends React.Component {
   // pings server to fetch restaurants, start session
   start() {
     // this.filterRef.current.setState({ locationAlert: true })
-    // console.log('start pressed')
     this.setState({ disabled: true })
     this.filterRef.current.startSession()
   }
@@ -153,7 +152,6 @@ class Group extends React.Component {
   updateMemberList() {
     memberList = []
     memberRenderList = []
-    // console.log(JSON.stringify(this.state.members))
     for (const uid in this.state.members) {
       const a = {}
       a.name = this.state.members[uid].name
@@ -419,7 +417,6 @@ class Group extends React.Component {
                 underlayColor={colors.hex}
                 activeOpacity={1}
                 onPress={() => {
-                  console.log(this.state.drawerOpen)
                   if (!this.state.drawerOpen) this.start()
                 }}
                 disabled={this.state.disabled || this.state.drawerOpen}
@@ -446,9 +443,6 @@ class Group extends React.Component {
                     : { opacity: 0.4 },
                 ]}
                 onPress={() => {
-                  // console.log(
-                  //   `Submit Filters: ${this.state.userSubmitted}|${this.state.drawerOpen}`,
-                  // )
                   if (!this.state.userSubmitted && !this.state.drawerOpen)
                     this.filterRef.current.submitUserFilters()
                 }}

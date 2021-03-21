@@ -17,15 +17,19 @@ class UserInfo extends React.Component {
   }
 
   async componentDidMount() {
-    socket.connect()
-    let res = await AsyncStorage.multiGet([USERNAME, NAME, PHOTO, EMAIL, PHONE])
-    this.props.changeUsername(res[0][1])
-    this.props.changeName(res[1][1])
-    this.props.changeImage(res[2][1])
-    global.email = res[3][1]
-    global.phone = res[4][1]
-    const friends = await friendsApi.getFriends()
-    this.props.changeFriends(friends.friendList)
+    try {
+      socket.connect()
+      let res = await AsyncStorage.multiGet([USERNAME, NAME, PHOTO, EMAIL, PHONE])
+      this.props.changeUsername(res[0][1])
+      this.props.changeName(res[1][1])
+      this.props.changeImage(res[2][1])
+      global.email = res[3][1]
+      global.phone = res[4][1]
+      const friends = await friendsApi.getFriends()
+      this.props.changeFriends(friends.friendList)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   render() {

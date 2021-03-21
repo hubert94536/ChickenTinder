@@ -59,7 +59,6 @@ export default class TopThree extends React.Component {
   }
 
   match() {
-    console.log(this.state.chosen)
     socket.choose(this.state.chosen)
   }
 
