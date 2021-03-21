@@ -23,6 +23,7 @@ import screenStyles from '../../styles/screenStyles.js'
 import UserInfo from './UserInfo.js'
 
 const font = 'CircularStd-Bold'
+const fontMed = 'CirularStd-Medium'
 
 class PhoneAuthScreen extends Component {
   constructor(props) {
