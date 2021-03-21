@@ -24,37 +24,33 @@ import socket from '../apis/socket.js'
 import { showEnd } from '../redux/Actions.js'
 
 const height = Dimensions.get('window').height
-const res = []
 
 class Loading extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      // restaurants: this.props.navigation.state.params.restaurants,
-      restaurants: res,
       leave: false,
       disabled: false,
     }
     socket.getSocket().once('match', (data) => {
       socket.getSocket().off()
-      var res
-      for (var i = 0; i < this.state.restaurants.length; i++) {
-        if (this.state.restaurants[i].id === data) {
-          res = this.state.restaurants[i]
+      for (var i = 0; i < global.restaurants.length; i++) {
+        if (global.restaurants[i].id === data) {
+          this.props.navigation.replace('Match', {
+            restaurant: global.restaurants[i]
+          })
           break
         }
       }
-      this.props.navigation.replace('Match', {
-        restaurant: res,
-      })
     })
+    
     socket.getSocket().once('top 3', (res) => {
       socket.getSocket().off()
       var restaurants = []
       for (var i = 0; i < 3; i++) {
-        for (var j = 0; j < this.state.restaurants.length; j++) {
-          if (this.state.restaurants[j].id === res.choices[i]) {
-            restaurants[i] = this.state.restaurants[j]
+        for (var j = 0; j < global.restaurants.length; j++) {
+          if (global.restaurants[j].id === res.choices[i]) {
+            restaurants[i] = global.restaurants[j]
             restaurants[i].likes = res.likes[i]
             break
           }
