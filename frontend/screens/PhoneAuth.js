@@ -23,6 +23,7 @@ import screenStyles from '../../styles/screenStyles.js'
 import UserInfo from './UserInfo.js'
 
 const font = 'CircularStd-Bold'
+const fontMed = 'CirularStd-Medium'
 
 class PhoneAuthScreen extends Component {
   constructor(props) {
@@ -150,7 +151,7 @@ class PhoneAuthScreen extends Component {
                   style={{
                     textAlign: 'left',
                     flexDirection: 'row',
-                    fontFamily: font,
+                    fontFamily: fontMed,
                     fontSize: normalize(18),
                     color: 'white',
                     marginTop: '5%',
@@ -178,7 +179,7 @@ class PhoneAuthScreen extends Component {
                   style={{
                     textAlign: 'left',
                     flexDirection: 'row',
-                    fontFamily: font,
+                    fontFamily: fontMed,
                     fontSize: normalize(18),
                     color: 'white',
                     marginTop: '5%',
@@ -301,7 +302,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   themeButtonTitle: {
-    fontFamily: font,
+    fontFamily: fontMed,
     fontSize: 24,
     color: '#FFFFFF',
   },
