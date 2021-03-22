@@ -29,7 +29,9 @@ class Drawer extends Component {
       onMoveShouldSetPanResponder: (evt, gestureState) => {
         // console.log('Drawer.js: tryGesture' + gestureState.moveY)
         return (
-          Math.abs(gestureState.dy) > Math.abs(gestureState.dx) && Math.abs(gestureState.dy) > 1
+          this.props.enabled &&
+          Math.abs(gestureState.dy) > Math.abs(gestureState.dx) &&
+          Math.abs(gestureState.dy) > 1
         )
       },
       onPanResponderGrant: () => {
@@ -60,12 +62,14 @@ class Drawer extends Component {
             speed: 12,
             bounciness: 12,
           }).start()
+          this.props.onClose()
         } else if (goingDown) {
           this.currState = false
           Animated.spring(this.state.position, {
             toValue: this.state.openPosition,
             useNativeDriver: 'false',
           }).start()
+          this.props.onOpen()
         } else if (!goingUp && !goingDown) {
           // console.log('filterContainer.js: bounce')
           Animated.spring(this.state.position, {
@@ -192,6 +196,7 @@ Drawer.propTypes = {
   onClose: PropTypes.func,
   renderContainerView: PropTypes.object,
   renderDrawerView: PropTypes.object,
+  enabled: PropTypes.bool,
 }
 
 Drawer.defaultProps = {

@@ -1,18 +1,19 @@
+import PropTypes from 'prop-types'
 import React from 'react'
-import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { hideError, showError } from '../redux/Actions.js'
 import { Image, ImageBackground, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { bindActionCreators } from 'redux'
 import Alert from '../modals/Alert.js'
 import { BlurView } from '@react-native-community/blur'
 import colors from '../../styles/colors.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { hideError, showError } from '../redux/Actions.js'
 import imgStyles from '../../styles/cardImage.js'
 import loginService from '../apis/loginService.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
-import PropTypes from 'prop-types'
+import UserInfo from './UserInfo.js'
 
 class Login extends React.Component {
   constructor() {
@@ -20,23 +21,42 @@ class Login extends React.Component {
     this.state = {
       pressed: false,
       alert: false,
+      disabled: false,
+      login: false,
     }
   }
 
-  async handleClick() {
-    loginService
-      .loginWithFacebook()
-      .then((result) => {
-        this.setState({ alert: false })
-        this.props.navigation.replace(result)
-      })
-      .catch(() => {
-        this.props.showError()
-      })
+  phoneLogin() {
+    this.setState({ disabled: true })
+    this.props.navigation.replace('Phone')
+  }
+
+  async facebookLogin() {
+    if (!this.state.disabled) {
+      this.setState({ disabled: true })
+      loginService
+        .loginWithFacebook()
+        .then(async (result) => {
+          if (result === 'CreateAccount') {
+            this.setState({ alert: false }, () => {
+              this.props.navigation.replace(result)
+            })
+          } else {
+            this.setState({ alert: false, login: true }, () => {
+              this.props.navigation.replace(result)
+            })
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+          this.props.showError()
+          this.setState({ disabled: false })
+        })
+    }
   }
 
   cancelClick() {
-    this.setState({ alert: false })
+    this.setState({ alert: false, disabled: false })
   }
 
   login() {
@@ -46,6 +66,8 @@ class Login extends React.Component {
   render() {
     return (
       <ImageBackground source={require('../assets/backgrounds/Login.png')} style={styles.main}>
+        {/* get user's info upon logging in */}
+        {this.state.login && <UserInfo></UserInfo>}
         <Image source={require('../assets/Icon_White.png')} style={styles.logo} />
         <View style={styles.bottom}>
           <TouchableHighlight
@@ -53,7 +75,7 @@ class Login extends React.Component {
             onHideUnderlay={() => this.setState({ phonePressed: false })}
             activeOpacity={1}
             underlayColor={'white'}
-            onPress={() => this.props.navigation.replace('Phone')}
+            onPress={() => this.phoneLogin()}
             style={[screenStyles.longButton, styles.phoneButton]}
           >
             <View style={screenStyles.contentContainer}>
@@ -74,6 +96,7 @@ class Login extends React.Component {
             activeOpacity={1}
             underlayColor="white"
             onPress={() => this.login()}
+            disabled={this.state.disabled}
             style={[screenStyles.longButton, styles.fbButton]}
           >
             <View style={[screenStyles.contentContainer]}>
@@ -110,7 +133,7 @@ class Login extends React.Component {
             buttonAff="Open"
             buttonNeg="Go Back"
             height="25%"
-            press={() => this.handleClick()}
+            press={() => this.facebookLogin()}
             cancel={() => this.cancelClick()}
           />
         )}
@@ -119,6 +142,7 @@ class Login extends React.Component {
             title="Error, please try again"
             buttonAff="Close"
             height="20%"
+            disabled={false}
             press={() => this.props.hideError()}
             cancel={() => this.props.hideError()}
           />
@@ -149,14 +173,17 @@ Login.propTypes = {
     navigate: PropTypes.func.isRequired,
     replace: PropTypes.func,
   }).isRequired,
-  // error: PropTypes.bool,
+  error: PropTypes.bool,
   showError: PropTypes.func,
   hideError: PropTypes.func,
+  changeName: PropTypes.func,
+  changeUsername: PropTypes.func,
+  changeImage: PropTypes.func,
+  changeFriends: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
   main: {
-    flex: 1,
     justifyContent: 'space-evenly',
   },
   logo: {

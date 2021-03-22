@@ -211,7 +211,7 @@ module.exports = (io) => {
     // updates room when someone joins
     socket.on('join', async (data) => {
       try {
-        if (data.code && !socket.user.room) {
+        if (data.code) {
           // check if the session exists
           let session = await sendCommand('JSON.GET', [data.code])
           session = JSON.parse(session)
@@ -234,6 +234,7 @@ module.exports = (io) => {
             socket.join(data.code)
             io.in(data.code).emit('update', session)
           } else {
+            console.log('exception')
             socket.emit('exception', 'join')
           }
         }
@@ -459,14 +460,13 @@ module.exports = (io) => {
           }
         }
       } catch (err) {
-        socket.emit('exception', 'finished')
         console.error(err)
       }
     })
 
     // alert all users to choose random pick
     socket.on('choose', (data) => {
-      if (socket.user.room && data.index) {
+      if (socket.user.room && data.index >= 0) {
         io.in(socket.user.room).emit('choose', data.index)
       }
     })
@@ -477,6 +477,7 @@ module.exports = (io) => {
         sendCommand('JSON.DEL', [`${socket.user.room}`]).catch((err) => console.error(err))
         sendCommand('JSON.DEL', [`filters:${socket.user.room}`]).catch((err) => console.error(err))
         io.in(socket.user.room).emit('leave')
+        delete socket.user.room
       }
     })
 
