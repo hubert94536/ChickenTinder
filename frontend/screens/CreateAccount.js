@@ -21,6 +21,7 @@ import notificationsApi from '../apis/notificationsApi.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
+import ChoosePic from '../modals/ChoosePic.js'
 
 class createAccount extends React.Component {
   constructor() {
@@ -39,6 +40,7 @@ class createAccount extends React.Component {
       validUsernameFormat: true,
       facebook: false,
       disabled: false,
+      edit: false,
     }
     AsyncStorage.multiGet([EMAIL, NAME, PHONE])
       .then((res) => {
@@ -150,6 +152,20 @@ class createAccount extends React.Component {
     }
   }
 
+  editPic() {
+    this.setState({ edit: true })
+  }
+
+  dontSave() {
+    this.setState({ edit: false })
+  }
+
+  makeChanges(pic) {
+    this.props.changeImage(pic)
+    this.setState({ photo: pic })
+    this.setState({ edit: false })
+  }
+
   render() {
     return (
       <ImageBackground
@@ -167,7 +183,7 @@ class createAccount extends React.Component {
           source={{ uri: Image.resolveAssetSource(this.state.photo).uri }}
           style={styles.avatar}
         />
-        <TouchableHighlight style={styles.select} underlayColor="transparent">
+        <TouchableHighlight style={styles.select} underlayColor="transparent" onPress = {() => this.setState({ edit: true })}>
           <Text style={[styles.selectText, screenStyles.textBold]}>Select a Profile Icon</Text>
         </TouchableHighlight>
         <Text style={[screenStyles.textBook, styles.fieldName, styles.display]}>Display Name</Text>
@@ -279,6 +295,13 @@ class createAccount extends React.Component {
             </Text>
           </View>
         </TouchableHighlight>
+
+        {this.state.edit && (
+              <ChoosePic
+                dontSave={() => this.dontSave()}
+                makeChanges={(pic) => this.makeChanges(pic)}
+              />
+          )}
       </ImageBackground>
     )
   }
