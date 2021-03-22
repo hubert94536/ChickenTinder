@@ -1,9 +1,4 @@
 import React from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { bindActionCreators } from 'redux'
-import { changeImage, changeName, changeUsername } from '../redux/Actions.js'
-import { connect } from 'react-redux'
-import { EMAIL, NAME, PHOTO, USERNAME, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
 import {
   Image,
   ImageBackground,
@@ -13,10 +8,16 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
+import { EMAIL, NAME, PHOTO, USERNAME, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
 import accountsApi from '../apis/accountsApi.js'
+import { changeImage, changeName, changeUsername, changeFriends } from '../redux/Actions.js'
 import colors from '../../styles/colors.js'
 import defImages from '../assets/images/defImages.js'
+import global from '../../global.js'
 import notificationsApi from '../apis/notificationsApi.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -32,37 +33,15 @@ class createAccount extends React.Component {
       errorAlert: false,
       name: '',
       username: '',
-      phone: '',
-      email: '',
+      phone: global.phone,
+      email: global.email,
       photo: defImages[Math.floor(Math.random() * defImages.length)].toString(),
       validNameFormat: true,
       validUsername: true,
       validUsernameFormat: true,
-      facebook: false,
       disabled: false,
       edit: false,
     }
-    AsyncStorage.multiGet([EMAIL, NAME, PHONE])
-      .then((res) => {
-        console.log(res[0][1])
-        this.setState(
-          {
-            email: res[0][1],
-            name: res[1][1],
-            phone: res[2][1],
-          },
-          () => {
-            if (this.state.email) {
-              this.setState({
-                facebook: true,
-              })
-            }
-          },
-        )
-      })
-      .catch(() => {
-        this.setState({ errorAlert: true })
-      })
   }
 
   //  checks whether or not the username can be set
@@ -90,6 +69,7 @@ class createAccount extends React.Component {
       this.props.changeUsername(this.state.username)
       this.props.changeName(this.state.name)
       this.props.changeImage(this.state.photo)
+      this.props.changeFriends([])
       AsyncStorage.multiSet([
         [USERNAME, this.state.username],
         [PHOTO, this.state.photo],
@@ -97,13 +77,10 @@ class createAccount extends React.Component {
       ])
       if (this.state.phone) {
         AsyncStorage.setItem(PHONE, this.state.phone)
-        global.phone = this.state.phone
       } else {
         AsyncStorage.setItem(EMAIL, this.state.email)
-        global.email = this.state.email
       }
       socket.connect()
-      this.setState({ disabled: false })
       this.props.navigation.replace('Home')
     } catch (err) {
       this.setState({ errorAlert: true, disabled: false })
@@ -170,7 +147,7 @@ class createAccount extends React.Component {
     return (
       <ImageBackground
         source={require('../assets/backgrounds/CreateAccount.png')}
-        style={styles.main}
+        style={screenStyles.screenBackground}
       >
         <Text style={[screenStyles.textBold, screenStyles.title, styles.title]}>
           Create Account
@@ -230,7 +207,6 @@ class createAccount extends React.Component {
           keyboardType="visible-password"
           maxLength={15}
         />
-
         {!this.state.validUsername && this.state.validUsernameFormat && (
           <Text style={[screenStyles.text, styles.warningText]}>This username is taken</Text>
         )}
@@ -242,7 +218,7 @@ class createAccount extends React.Component {
             Invalid username format and username is taken
           </Text>
         )}
-        {!this.state.facebook && (
+        {this.state.phone !== '' && (
           <View>
             <Text style={[screenStyles.textBook, styles.fieldName]}>Phone Number</Text>
             <Text
@@ -258,7 +234,7 @@ class createAccount extends React.Component {
             </Text>
           </View>
         )}
-        {this.state.facebook && (
+        {this.state.email !== '' && (
           <View>
             <Text style={[screenStyles.textBook, styles.fieldName]}>Email</Text>
 
@@ -307,38 +283,27 @@ class createAccount extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  const { name } = state
-  const { username } = state
-  const { image } = state
-  return { name, username, image }
-}
-
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       changeName,
       changeUsername,
       changeImage,
+      changeFriends,
     },
     dispatch,
   )
 
-export default connect(mapStateToProps, mapDispatchToProps)(createAccount)
+export default connect(null, mapDispatchToProps)(createAccount)
 
 createAccount.propTypes = {
   navigation: PropTypes.object,
-  // name: PropTypes.object,
-  // username: PropTypes.object,
-  // image: PropTypes.object,
   changeName: PropTypes.func,
   changeUsername: PropTypes.func,
   changeImage: PropTypes.func,
+  changeFriends: PropTypes.func,
 }
 const styles = StyleSheet.create({
-  main: {
-    flex: 1,
-  },
   display: {
     marginTop: '5%',
   },

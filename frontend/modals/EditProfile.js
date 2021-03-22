@@ -109,9 +109,7 @@ class EditProfile extends React.Component {
               source={{ uri: Image.resolveAssetSource(this.props.image.image).uri }}
               style={styles.pfp}
             />
-            <View
-              style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: '4%' }}
-            ></View>
+            <View style={styles.whiteSpace} />
             <Text style={[screenStyles.text, styles.nameText]}>Display name</Text>
             <TextInput
               style={[
@@ -212,6 +210,11 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     alignSelf: 'center',
   },
+  whiteSpace: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: '4%',
+  },
   nameText: {
     marginBottom: '2%',
     color: 'black',
@@ -226,7 +229,6 @@ const styles = StyleSheet.create({
     backgroundColor: screenStyles.hex.color,
     borderColor: screenStyles.hex.color,
     margin: '5%',
-    // margin: '1.5%',
     width: '50%',
   },
   saveText: {

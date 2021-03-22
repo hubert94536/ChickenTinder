@@ -23,6 +23,9 @@ export default StyleSheet.create({
   greyBorder: {
     borderColor: '#F5F5F5',
   },
+  tanBorder: {
+    borderColor: '#FCE5CD',
+  },
   button: {
     borderRadius: 63,
     height: width * 0.12,

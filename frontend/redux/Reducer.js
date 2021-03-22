@@ -115,7 +115,7 @@ export const kickReducer = (state = INITIAL_STATE.kick, action) => {
   }
 }
 
-export const endReducer = (state = INITIAL_STATE.kick, action) => {
+export const endReducer = (state = INITIAL_STATE.hostEnd, action) => {
   switch (action.type) {
     case 'SHOW_END':
       return true

@@ -1,26 +1,26 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
+import PropTypes from 'prop-types'
 import { changeImage, changeName, changeUsername, hideError, showError } from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import { Image, ImageBackground, Keyboard, StyleSheet, Text, View } from 'react-native'
 import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from '@react-native-community/blur'
+import ImagePicker from 'react-native-image-crop-picker'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Alert from '../modals/Alert.js'
 import accountsApi from '../apis/accountsApi.js'
 import colors from '../../styles/colors.js'
-import loginService from '../apis/loginService.js'
+import EditProfile from '../modals/EditProfile.js'
 import Friends from './Friends.js'
+import loginService from '../apis/loginService.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
+import Settings from '../modals/ProfileSettings.js'
 import socket from '../apis/socket.js'
 import TabBar from '../Nav.js'
-import ImagePicker from 'react-native-image-crop-picker'
-import PropTypes from 'prop-types'
-import EditProfile from '../modals/EditProfile.js'
-import Settings from '../modals/ProfileSettings.js'
 
 class UserProfileView extends Component {
   constructor(props) {
@@ -46,7 +46,6 @@ class UserProfileView extends Component {
       disabled: false,
     }
   }
-
   // getting current user's info
   async changeName() {
     if (this.state.nameValue !== this.props.name.name) {
@@ -204,137 +203,132 @@ class UserProfileView extends Component {
 
   render() {
     const { numFriends, visible, edit, logoutAlert, deleteAlert, blur, takenAlert } = this.state
-
     return (
-      <View style={[screenStyles.mainContainer]}>
+      <ImageBackground
+        style={screenStyles.screenBackground}
+        source={require('../assets/backgrounds/Profile.png')}
+      >
         <View>
-          <ImageBackground
-            style={styles.imageBackground}
-            source={require('../assets/backgrounds/Profile.png')}
-          >
-            <View>
-              <View style={[styles.titleContainer]}>
-                <View style={[screenStyles.icons, styles.filler]}></View>
-                <Text style={[screenStyles.text, styles.myProfile]}>Profile</Text>
-                <Icon
-                  name="cog-outline"
-                  style={[screenStyles.icons, styles.cog]}
-                  onPress={() => this.setState({ visible: true })}
-                />
-              </View>
-              <Image
-                source={{ uri: Image.resolveAssetSource(this.props.image.image).uri }}
-                style={screenStyles.avatar}
-              />
-              <View style={[styles.infoContainer]}>
-                <View style={[styles.nameContainer]}>
-                  <Text style={(screenStyles.text, styles.name)}>{this.props.name.name}</Text>
-                  <Icon
-                    name="pencil-outline"
-                    style={styles.pencil}
-                    onPress={() => this.editProfile()}
-                  />
-                </View>
-                <Text style={(screenStyles.text, styles.username)}>
-                  {'@' + this.props.username.username}
-                </Text>
-              </View>
-              <Text style={(screenStyles.text, styles.friends)}>Your Friends</Text>
-              <Text style={[screenStyles.text, styles.friendNum]}>{numFriends + ' friends'}</Text>
-            </View>
-            <View style={[styles.friendContainer]}>
-              {/* Contains the search bar and friends display if has friends, otherwise no friends view */}
-              <Friends
-                isFriends
-                onFriendsChange={(n) => this.handleFriendsCount(n)}
-                unfriendAlert={(bool) => this.setState({ blur: bool })}
+          <View style={[styles.container]}>
+            <View style={[screenStyles.icons, styles.filler]}></View>
+            <Text style={[screenStyles.text, styles.myProfile]}>Profile</Text>
+            <Icon
+              name="cog-outline"
+              style={[screenStyles.icons, styles.cog]}
+              onPress={() => this.setState({ visible: true })}
+            />
+          </View>
+          <Image
+            source={{ uri: Image.resolveAssetSource(this.props.image.image).uri }}
+            style={screenStyles.avatar}
+          />
+          <View style={[styles.alignCenter]}>
+            <View style={[styles.container, styles.alignCenter]}>
+              <Text style={(screenStyles.text, styles.name)}>{this.props.name.name}</Text>
+              <Icon
+                name="pencil-outline"
+                style={styles.pencil}
+                onPress={() => this.editProfile()}
               />
             </View>
-
-            <TabBar
-              goHome={() => this.props.navigation.replace('Home')}
-              goSearch={() => this.props.navigation.replace('Search')}
-              goNotifs={() => this.props.navigation.replace('Notifications')}
-              goProfile={() => {}}
-              cur="Profile"
-            />
-
-            {(visible || edit || logoutAlert || deleteAlert || blur) && (
-              <BlurView
-                blurType="dark"
-                blurAmount={10}
-                reducedTransparencyFallbackColor="white"
-                style={modalStyles.blur}
-              />
-            )}
-
-            <Settings
-              visible={visible}
-              close={() => this.setState({ visible: false })}
-              delete={() => this.handleDelete()}
-              logout={() => this.handleLogout()}
-              logoutAlert={() => this.setState({ logoutAlert: true })}
-              deleteAlert={() => this.setState({ deleteAlert: true })}
-            />
-
-            {edit && (
-              <EditProfile
-                dontSave={() => this.dontSave()}
-                makeChanges={() => this.makeChanges()}
-                userChange={(text) => this.setState({ usernameValue: text })}
-                nameChange={(text) => this.setState({ nameValue: text })}
-              />
-            )}
-
-            {logoutAlert && (
-              <Alert
-                title="Log out"
-                body="Are you sure you want to log out?"
-                buttonAff="Logout"
-                buttonNeg="Go back"
-                height="25%"
-                twoButton
-                disabled={this.state.disabled}
-                press={() => this.handleLogout()}
-                cancel={() => this.setState({ logoutAlert: false, visible: true, disabled: false })}
-              />
-            )}
-
-            {deleteAlert && (
-              <Alert
-                title="Delete account?"
-                body="By deleting your account, you will lose all of your data"
-                buttonAff="Delete"
-                buttonNeg="Go back"
-                twoButton
-                height="25%"
-                dispatch={this.state.disabled}
-                press={() => this.handleDelete()}
-                cancel={() => this.cancelDelete()}
-              />
-            )}
-
-            {this.props.error && (
-              <Alert
-                title="Error, please try again"
-                buttonAff="Close"
-                height="20%"
-                press={() => this.props.hideError()}
-                cancel={() => this.props.hideError()}
-              />
-            )}
-            {takenAlert && (
-              <Alert
-                title="Username taken!"
-                buttonAff="Close"
-                height="20%"
-                press={() => this.closeTaken()}
-                cancel={() => this.closeTaken()}
-              />
-            )}
-          </ImageBackground>
+            <Text style={(screenStyles.text, styles.username)}>
+              {'@' + this.props.username.username}
+            </Text>
+          </View>
+          <Text style={(screenStyles.text, styles.friends)}>Your Friends</Text>
+          <Text style={[screenStyles.text, styles.friendNum]}>{numFriends + ' friends'}</Text>
         </View>
-      </View>
+        <View style={[styles.friendContainer]}>
+          {/* Contains the search bar and friends display if has friends, otherwise no friends view */}
+          <Friends
+            isFriends
+            onFriendsChange={(n) => this.handleFriendsCount(n)}
+            unfriendAlert={(bool) => this.setState({ blur: bool })}
+          />
+        </View>
+
+        <TabBar
+          goHome={() => this.props.navigation.replace('Home')}
+          goSearch={() => this.props.navigation.replace('Search')}
+          goNotifs={() => this.props.navigation.replace('Notifications')}
+          goProfile={() => {}}
+          cur="Profile"
+        />
+
+        {(visible || edit || logoutAlert || deleteAlert || blur) && (
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
+
+        <Settings
+          visible={visible}
+          close={() => this.setState({ visible: false })}
+          delete={() => this.handleDelete()}
+          logout={() => this.handleLogout()}
+          logoutAlert={() => this.setState({ logoutAlert: true })}
+          deleteAlert={() => this.setState({ deleteAlert: true })}
+        />
+
+        {edit && (
+          <EditProfile
+            dontSave={() => this.dontSave()}
+            makeChanges={() => this.makeChanges()}
+            userChange={(text) => this.setState({ usernameValue: text })}
+            nameChange={(text) => this.setState({ nameValue: text })}
+          />
+        )}
+
+        {logoutAlert && (
+          <Alert
+            title="Log out"
+            body="Are you sure you want to log out?"
+            buttonAff="Logout"
+            buttonNeg="Go back"
+            height="25%"
+            twoButton
+            disabled={this.state.disabled}
+            press={() => this.handleLogout()}
+            cancel={() => this.setState({ logoutAlert: false, visible: true, disabled: false })}
+          />
+        )}
+
+        {deleteAlert && (
+          <Alert
+            title="Delete account?"
+            body="By deleting your account, you will lose all of your data"
+            buttonAff="Delete"
+            buttonNeg="Go back"
+            twoButton
+            height="25%"
+            dispatch={this.state.disabled}
+            press={() => this.handleDelete()}
+            cancel={() => this.cancelDelete()}
+          />
+        )}
+
+        {this.props.error && (
+          <Alert
+            title="Error, please try again"
+            buttonAff="Close"
+            height="20%"
+            press={() => this.props.hideError()}
+            cancel={() => this.props.hideError()}
+          />
+        )}
+        {takenAlert && (
+          <Alert
+            title="Username taken!"
+            buttonAff="Close"
+            height="20%"
+            press={() => this.closeTaken()}
+            cancel={() => this.closeTaken()}
+          />
+        )}
+      </ImageBackground>
     )
   }
 }
@@ -375,23 +369,17 @@ UserProfileView.propTypes = {
 }
 
 const styles = StyleSheet.create({
-  imageBackground: {
-    // flex: 1,
-    height: '100%',
-  },
-  titleContainer: {
+  container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  alignCenter: {
+    alignItems: 'center',
   },
   cog: {
     margin: '5%',
     textAlign: 'right',
     color: 'white',
-  },
-  nameContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
   },
   myProfile: {
     fontSize: normalize(25),
@@ -400,35 +388,39 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
   },
-  changeButtons: {
-    alignSelf: 'center',
-    width: '35%',
-  },
-  button: {
-    alignSelf: 'center',
-    width: '35%',
-    marginRight: '5%',
-    marginTop: '5%',
-  },
   name: {
     fontSize: normalize(22),
     fontWeight: 'bold',
     color: 'white',
   },
-  pencil: { fontSize: normalize(28), marginLeft: '1%', marginBottom: '1%', color: 'white' },
-  username: { fontSize: normalize(14), color: colors.hex, fontWeight: 'bold' },
+  pencil: {
+    fontSize: normalize(28),
+    marginLeft: '1%',
+    marginBottom: '1%',
+    color: 'white',
+  },
+  username: {
+    fontSize: normalize(14),
+    color: colors.hex,
+    fontWeight: 'bold',
+  },
   friends: {
     marginTop: '10%',
     marginLeft: '7%',
     fontSize: normalize(20),
     fontWeight: 'bold',
   },
-  friendNum: { marginLeft: '7%', fontSize: normalize(17), fontFamily: 'CircularStd-Medium' },
+  friendNum: {
+    marginLeft: '7%',
+    fontSize: normalize(17),
+    fontFamily: 'CircularStd-Medium',
+  },
   friendContainer: {
     height: '50%',
   },
-  filler: { width: '7%', margin: '5%', textAlign: 'right' },
-  infoContainer: {
-    alignItems: 'center',
+  filler: {
+    width: '7%',
+    margin: '5%',
+    textAlign: 'right',
   },
 })
