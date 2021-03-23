@@ -8,14 +8,23 @@ export default StyleSheet.create({
   font: {
     fontFamily: 'CircularStd-Medium',
   },
+  bookFont: {
+    fontFamily: 'CircularStd-Book',
+  },
   hex: {
     color: colors.hex,
   },
   hexBorder: {
     borderColor: colors.hex,
   },
+  whiteBorder: {
+    borderColor: '#FFFFFF',
+  },
   greyBorder: {
     borderColor: '#F5F5F5',
+  },
+  tanBorder: {
+    borderColor: '#FCE5CD',
   },
   button: {
     borderRadius: 63,

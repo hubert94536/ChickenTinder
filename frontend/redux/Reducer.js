@@ -1,11 +1,14 @@
 const INITIAL_STATE = {
   error: false,
-  name: '',
-  username: '',
-  image: '',
+  name: {},
+  username: {},
+  image: {},
   refresh: false,
-  friends: [],
-  notif: true,
+  friends: {},
+  notif: false,
+  code: 0,
+  kick: false,
+  hostEnd: false,
 }
 
 export const errorReducer = (state = INITIAL_STATE.error, action) => {
@@ -31,7 +34,7 @@ export const nameReducer = (state = INITIAL_STATE.name, action) => {
   }
 }
 
-export const usernameReducer = (state = INITIAL_STATE.name, action) => {
+export const usernameReducer = (state = INITIAL_STATE.username, action) => {
   switch (action.type) {
     case 'CHANGE_USERNAME':
       return {
@@ -43,7 +46,7 @@ export const usernameReducer = (state = INITIAL_STATE.name, action) => {
   }
 }
 
-export const imageReducer = (state = INITIAL_STATE.name, action) => {
+export const imageReducer = (state = INITIAL_STATE.image, action) => {
   switch (action.type) {
     case 'CHANGE_IMAGE':
       return {
@@ -55,7 +58,7 @@ export const imageReducer = (state = INITIAL_STATE.name, action) => {
   }
 }
 
-export const refreshReducer = (state = INITIAL_STATE.name, action) => {
+export const refreshReducer = (state = INITIAL_STATE.refresh, action) => {
   switch (action.type) {
     case 'SHOW_REFRESH':
       return true
@@ -66,7 +69,7 @@ export const refreshReducer = (state = INITIAL_STATE.name, action) => {
   }
 }
 
-export const friendsReducer = (state = INITIAL_STATE.name, action) => {
+export const friendsReducer = (state = INITIAL_STATE.friends, action) => {
   switch (action.type) {
     case 'CHANGE_FRIENDS':
       return {
@@ -78,11 +81,45 @@ export const friendsReducer = (state = INITIAL_STATE.name, action) => {
   }
 }
 
-export const notifReducer = (state = INITIAL_STATE.error, action) => {
+export const notifReducer = (state = INITIAL_STATE.notif, action) => {
   switch (action.type) {
     case 'NEW_NOTIF':
       return true
     case 'NO_NOTIF':
+      return false
+    default:
+      return state
+  }
+}
+
+export const codeReducer = (state = INITIAL_STATE.code, action) => {
+  switch (action.type) {
+    case 'SET_CODE':
+      return {
+        ...state,
+        code: action.payload,
+      }
+    default:
+      return state
+  }
+}
+
+export const kickReducer = (state = INITIAL_STATE.kick, action) => {
+  switch (action.type) {
+    case 'SHOW_KICK':
+      return true
+    case 'HIDE_KICK':
+      return false
+    default:
+      return state
+  }
+}
+
+export const endReducer = (state = INITIAL_STATE.hostEnd, action) => {
+  switch (action.type) {
+    case 'SHOW_END':
+      return true
+    case 'HIDE_END':
       return false
     default:
       return state

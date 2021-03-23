@@ -1,5 +1,5 @@
 import Axios from 'axios'
-import Firebase from 'firebase'
+import auth from '@react-native-firebase/auth'
 
 const accountsApi = Axios.create({
   baseURL: 'https://wechews.herokuapp.com',
@@ -8,7 +8,7 @@ const accountsApi = Axios.create({
 
 // Set the AUTH token for any request
 accountsApi.interceptors.request.use(async function (config) {
-  const token = await Firebase.auth().currentUser.getIdToken()
+  const token = await auth().currentUser.getIdToken()
   config.headers.authorization = token ? `Bearer ${token}` : ''
   return config
 })
@@ -33,15 +33,18 @@ const createFBUserTest = async (name, uid, username, email, photo, phone) => {
 }
 
 // creates user
-const createFBUser = async (name, username, email, photo) => {
+const createUser = async (name, username, email, phone, photo) => {
+  const data = {
+    name: name,
+    username: username,
+    photo: photo,
+  }
+  if (email) data['email'] = email
+  if (phone) data['phone_number'] = phone
   return accountsApi
-    .post('/accounts', {
-      name: name,
-      username: username,
-      email: email,
-      photo: photo,
-    })
+    .post('/accounts', data)
     .then((res) => {
+      auth().currentUser.updateProfile({ displayName: username })
       return res.status
     })
     .catch((error) => {
@@ -172,6 +175,7 @@ const updateUser = async (req) => {
   return accountsApi
     .put(`/accounts`, req)
     .then((res) => {
+      if ('username' in req) auth().currentUser.updateProfile({ displayName: req.username })
       return {
         status: res.status,
       }
@@ -227,7 +231,7 @@ export default {
   checkEmail,
   checkPhoneNumber,
   checkUsername,
-  createFBUser,
+  createUser,
   deleteUser,
   getAllUsers,
   getUser,

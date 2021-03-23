@@ -27,6 +27,7 @@ class EditProfile extends React.Component {
       usernameValue: this.props.username.username,
       validNameFormat: true,
       validUsernameFormat: true,
+      disabled: false,
     }
   }
 
@@ -46,6 +47,7 @@ class EditProfile extends React.Component {
 
   //remove whitespaces before and after name and username
   finalCheck() {
+    this.setState({ disabled: true })
     if (!this.state.validNameFormat || !this.state.validUsernameFormat) {
       return
     }
@@ -61,20 +63,7 @@ class EditProfile extends React.Component {
 
     this.props.nameChange(trimmedName)
     this.props.userChange(trimmedUser)
-  }
-
-  validateUsername() {
-    /*regex expression: 
-    - alphanumeric characters (lowercase or uppercase), dot (.), underscore (_), hyphen(-)
-    - must not start or end with space
-    - 2-15 characters
-    */
-    const regex = /^[a-zA-Z0-9._\-]([._\-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._\-]$/
-    if (!regex.test(this.state.usernameValue)) {
-      this.setState({ validUsernameFormat: false })
-    } else {
-      this.setState({ validUsernameFormat: true })
-    }
+    this.setState({ disabled: false })
   }
 
   validateName() {
@@ -83,11 +72,25 @@ class EditProfile extends React.Component {
     - must not start or end with space
     - 2-15 characters
     */
-    const regex = /^[a-zA-Z0-9._\-]([ ._\-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._\-]$/
+    const regex = /^[a-zA-Z0-9._-]([ ._-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._-]$/
     if (!regex.test(this.state.nameValue)) {
       this.setState({ validNameFormat: false })
     } else {
       this.setState({ validNameFormat: true })
+    }
+  }
+
+  validateUsername() {
+    /*regex expression: 
+    - alphanumeric characters (lowercase or uppercase), dot (.), underscore (_), hyphen(-)
+    - must not start or end with space
+    - 2-15 characters
+    */
+    const regex = /^[a-zA-Z0-9._-]([._-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._-]$/
+    if (!regex.test(this.state.usernameValue)) {
+      this.setState({ validUsernameFormat: false })
+    } else {
+      this.setState({ validUsernameFormat: true })
     }
   }
 
@@ -106,9 +109,7 @@ class EditProfile extends React.Component {
               source={{ uri: Image.resolveAssetSource(this.props.image.image).uri }}
               style={styles.pfp}
             />
-            <View
-              style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: '4%' }}
-            ></View>
+            <View style={styles.whiteSpace} />
             <Text style={[screenStyles.text, styles.nameText]}>Display name</Text>
             <TextInput
               style={[
@@ -153,6 +154,7 @@ class EditProfile extends React.Component {
             )}
           </View>
           <TouchableHighlight
+            disabled={this.state.disabled}
             style={[screenStyles.medButton, styles.saveButton]}
             onPress={() => {
               this.finalCheck()
@@ -183,10 +185,10 @@ EditProfile.propTypes = {
   nameChange: PropTypes.func,
   makeChanges: PropTypes.func,
   visible: PropTypes.bool,
-  // error: PropTypes.object,
-  // name: PropTypes.object,
-  // username: PropTypes.object,
-  // image: PropTypes.object,
+  error: PropTypes.bool,
+  name: PropTypes.object,
+  username: PropTypes.object,
+  image: PropTypes.object,
 }
 
 const styles = StyleSheet.create({
@@ -208,6 +210,11 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     alignSelf: 'center',
   },
+  whiteSpace: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: '4%',
+  },
   nameText: {
     marginBottom: '2%',
     color: 'black',
@@ -222,7 +229,6 @@ const styles = StyleSheet.create({
     backgroundColor: screenStyles.hex.color,
     borderColor: screenStyles.hex.color,
     margin: '5%',
-    // margin: '1.5%',
     width: '50%',
   },
   saveText: {

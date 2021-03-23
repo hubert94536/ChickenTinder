@@ -2,15 +2,13 @@ import React from 'react'
 import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { bindActionCreators } from 'redux'
-import { BlurView } from '@react-native-community/blur'
 import { connect } from 'react-redux'
-import { hideError, showError } from '../redux/Actions.js'
+import { changeFriends, hideError, showError } from '../redux/Actions.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
-import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 
 class Card extends React.Component {
@@ -20,53 +18,106 @@ class Card extends React.Component {
       deleteFriend: false,
       status: this.props.status,
       pressed: false,
+      disabled: false,
+      disabled2: false,
     }
   }
 
   deleteFriend() {
+    this.props.unfriendAlert(false)
+    this.setState({ deleteFriend: false })
+    if (!this.state.disabled) {
+      this.setState({ disabled: true })
+      friendsApi
+        .removeFriendship(this.props.uid)
+        .then(() => {
+          var filteredArray = this.props.friends.friends.filter((item) => {
+            return item.username !== this.props.username
+          })
+          this.props.changeFriends(filteredArray)
+          this.props.press(filteredArray)
+          if (this.props.changeAdd) this.setState({ status: 'add' })
+          this.setState({ disabled: false })
+        })
+        .catch(() => {
+          this.props.showError()
+          this.setState({ disabled: false })
+        })
+    }
+  }
+
+  rejectFriend() {
+    this.setState({ disabled2: true })
     friendsApi
       .removeFriendship(this.props.uid)
       .then(() => {
-        this.props.unfriendAlert(false)
-        this.setState({ deleteFriend: false, status: 'add' })
-        var filteredArray = this.props.total.filter((item) => {
+        var filteredArray = this.props.friends.friends.filter((item) => {
           return item.username !== this.props.username
         })
-        this.props.press(this.props.uid, filteredArray)
+        this.props.changeFriends(filteredArray)
+        this.props.press(filteredArray)
+        this.setState({ status: 'add', disabled2: false })
       })
-      .catch((err) => {
-        console.log(err)
+      .catch(() => {
         this.props.showError()
-        this.props.unfriendAlert(false)
-        this.setState({ deleteFriend: false })
+        this.setState({ disabled2: false })
       })
   }
 
   acceptFriend() {
+    this.setState({ disabled: true })
     friendsApi
       .acceptFriendRequest(this.props.uid)
       .then(() => {
-        this.setState({ status: 'friends' })
+        var newArr = this.props.friends.friends.filter((item) => {
+          if (item.username === this.props.username) item.status = 'friends'
+          return item
+        })
+        this.props.changeFriends(newArr)
+        this.props.accept(newArr)
+        this.setState({ status: 'friends', disabled: false })
       })
-      .catch(() => this.props.showError())
+      .catch(() => {
+        this.props.showError()
+        this.setState({ disabled: false })
+      })
   }
 
   addFriend() {
+    this.setState({ disabled: true })
     friendsApi
       .createFriendship(this.props.uid)
       .then(() => {
-        this.setState({ status: 'requested' })
+        var newArr = []
+        var addElem = this.props.total.filter((item) => {
+          return item.username === this.props.username
+        })
+        for (var i = 0; i < this.props.friends.friends.length; i++) {
+          var person = {
+            name: this.props.friends.friends[i].name,
+            username: this.props.friends.friends[i].username,
+            photo: this.props.friends.friends[i].photo,
+            uid: this.props.friends.friends[i].uid,
+            status: this.props.friends.friends[i].status,
+          }
+          newArr.push(person)
+        }
+        var addPerson = {
+          name: addElem[0].name,
+          username: addElem[0].username,
+          photo: addElem[0].photo,
+          uid: addElem[0].uid,
+          status: 'requested',
+        }
+        newArr.push(addPerson)
+        this.props.changeFriends(newArr)
+        this.props.accept(newArr)
+        this.setState({ status: 'requested', disabled: false })
       })
-      .catch(() => this.props.showError())
-  }
-
-  rejectFriend() {
-    friendsApi
-      .removeFriendship(this.props.uid)
-      .then(() => {
-        this.setState({ status: 'add' })
+      .catch(() => {
+        this.props.showError()
+        this.setState({ disabled: false })
       })
-      .catch(() => this.props.showError())
   }
 
   render() {
@@ -89,10 +140,11 @@ class Card extends React.Component {
         )}
         {/* if user is not in a group */}
         {this.state.status === 'not added' && (
-          <TouchableHighlight>
+          <TouchableHighlight disabled={this.state.disabled}>
             <View style={imgStyles.card}>
               <Text style={[imgStyles.text, styles.topMargin]}>Add</Text>
               <AntDesign
+                disabled={this.props.disabled}
                 style={[imgStyles.icon, styles.addIcon]}
                 name="pluscircleo"
                 onPress={() => {
@@ -112,7 +164,11 @@ class Card extends React.Component {
         )}
         {/* if they are not friends */}
         {this.state.status === 'add' && renderOption && (
-          <TouchableHighlight underlayColor="white" onPress={() => this.addFriend()}>
+          <TouchableHighlight
+            underlayColor="white"
+            onPress={() => this.addFriend()}
+            disabled={this.state.disabled}
+          >
             <View style={imgStyles.card}>
               <Text style={[imgStyles.text, styles.black]}>Add Friend</Text>
               <AntDesign style={[imgStyles.icon, styles.icon, styles.black]} name="pluscircleo" />
@@ -140,11 +196,13 @@ class Card extends React.Component {
           <View style={imgStyles.card}>
             <Text style={[imgStyles.text, styles.black]}>Accept Request</Text>
             <Icon
+              disabled={this.state.disabled}
               style={[imgStyles.icon, styles.pend]}
               name="check-circle"
               onPress={() => this.acceptFriend()}
             />
             <AntDesign
+              disabled={this.state.disabled2}
               style={[imgStyles.icon, styles.pend, styles.black]}
               name="closecircleo"
               onPress={() => this.rejectFriend()}
@@ -185,7 +243,8 @@ class Card extends React.Component {
 
 const mapStateToProps = (state) => {
   const { error } = state
-  return { error }
+  const { friends } = state
+  return { error, friends }
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -193,6 +252,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       showError,
       hideError,
+      changeFriends,
     },
     dispatch,
   )
@@ -210,7 +270,13 @@ Card.propTypes = {
   name: PropTypes.string,
   showError: PropTypes.func,
   hideError: PropTypes.func,
-  // error: PropTypes.bool,
+  unfriendAlert: PropTypes.func,
+  error: PropTypes.bool,
+  friends: PropTypes.object,
+  changeFriends: PropTypes.func,
+  accept: PropTypes.func,
+  changeAdd: PropTypes.bool,
+  disabled: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

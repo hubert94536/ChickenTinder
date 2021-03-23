@@ -196,13 +196,13 @@ module.exports = (io) => {
 
     // send invite with host info to join a room
     socket.on('invite', async (data) => {
-      if (data.receiver_uid && data.code) {
+      if (data.uid && socket.user.room) {
         // create request body
         let req = {}
         req.body = {}
-        req.body.receiver_uid = data.receiver_uid
+        req.body.receiver_uid = data.uid
         req.body.type = 'invite'
-        req.body.content = data.code
+        req.body.content = socket.user.room
         req.body.sender_uid = socket.user.uid
         notifs.createNotif(req).catch((err) => console.error(err))
       }
@@ -211,7 +211,7 @@ module.exports = (io) => {
     // updates room when someone joins
     socket.on('join', async (data) => {
       try {
-        if (data.code && !socket.user.room) {
+        if (data.code) {
           // check if the session exists
           let session = await sendCommand('JSON.GET', [data.code])
           session = JSON.parse(session)
@@ -234,6 +234,7 @@ module.exports = (io) => {
             socket.join(data.code)
             io.in(data.code).emit('update', session)
           } else {
+            console.log('exception')
             socket.emit('exception', 'join')
           }
         }
@@ -246,13 +247,15 @@ module.exports = (io) => {
     // merge user's filters to master list, send updated session back
     socket.on('submit', async (data) => {
       try {
-        if (socket.user.room && data.categories) {
-          // append filters categories
-          await sendCommand('JSON.STRAPPEND', [
-            `filters:${socket.user.room}`,
-            'categories',
-            JSON.stringify(data.categories),
-          ])
+        if (socket.user.room) {
+          if (data.categories) {
+            // append filters categories
+            await sendCommand('JSON.STRAPPEND', [
+              `filters:${socket.user.room}`,
+              'categories',
+              JSON.stringify(data.categories),
+            ])
+          }
           // update member who submitted filters
           await sendCommand('JSON.SET', [
             socket.user.room,
@@ -457,14 +460,13 @@ module.exports = (io) => {
           }
         }
       } catch (err) {
-        socket.emit('exception', 'finished')
         console.error(err)
       }
     })
 
     // alert all users to choose random pick
     socket.on('choose', (data) => {
-      if (socket.user.room && data.index) {
+      if (socket.user.room && data.index >= 0) {
         io.in(socket.user.room).emit('choose', data.index)
       }
     })
@@ -475,6 +477,7 @@ module.exports = (io) => {
         sendCommand('JSON.DEL', [`${socket.user.room}`]).catch((err) => console.error(err))
         sendCommand('JSON.DEL', [`filters:${socket.user.room}`]).catch((err) => console.error(err))
         io.in(socket.user.room).emit('leave')
+        delete socket.user.room
       }
     })
 

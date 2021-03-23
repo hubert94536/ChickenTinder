@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   FlatList,
+  ImageBackground,
   StyleSheet,
   Text,
   TouchableHighlight,
@@ -8,8 +9,10 @@ import {
   View,
   Dimensions,
 } from 'react-native'
+import { bindActionCreators } from 'redux'
 import { BlurView } from '@react-native-community/blur'
 import Clipboard from '@react-native-community/clipboard'
+import { connect } from 'react-redux'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
@@ -24,6 +27,7 @@ import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
+import { setCode, showKick, showEnd } from '../redux/Actions.js'
 
 const font = 'CircularStd-Medium'
 let memberList = []
@@ -32,7 +36,7 @@ let memberRenderList = []
 const windowWidth = Dimensions.get('window').width
 const windowHeight = Dimensions.get('window').height
 
-export default class Group extends React.Component {
+class Group extends React.Component {
   constructor(props) {
     super(props)
     const members = this.props.navigation.state.params.response.members
@@ -56,6 +60,10 @@ export default class Group extends React.Component {
       leaveAlert: false,
       endAlert: false,
       chooseFriends: false,
+
+      // Open
+      disabled: false,
+      drawerOpen: false,
     }
     console.log(members)
     this.updateMemberList()
@@ -63,13 +71,14 @@ export default class Group extends React.Component {
     // listens if user is to be kicked
     socket.getSocket().once('kick', () => {
       this.leaveGroup(false)
+      this.props.showKick()
     })
 
     // listens for group updates
     socket.getSocket().on('update', (res) => {
       console.log('socket "update": ' + JSON.stringify(res))
       global.host = res.members[res.host].username
-      global.code = res.code
+      this.props.setCode(res.code)
       this.setState({
         members: res.members,
         host: res.host,
@@ -88,9 +97,11 @@ export default class Group extends React.Component {
       if (restaurants.length > 0) {
         socket.getSocket().off()
         global.restaurants = restaurants
+        this.setState({ disabled: false })
         this.props.navigation.replace('Round')
       } else {
         console.log('group.js: no restaurants found')
+        this.setState({ disabled: false })
         // need to handle no restaurants returned
       }
     })
@@ -99,12 +110,19 @@ export default class Group extends React.Component {
       this.leaveGroup(true)
     })
 
-    socket.getSocket().once('reselect', () => {
-      console.log('reselect')
+    socket.getSocket().on('reselect', () => {
+      // alert for host to reselect filters
     })
 
-    socket.getSocket().once('reselect', () => {
-      console.log('reselect')
+    socket.getSocket().on('exception', (msg) => {
+      // handle button disables here
+      if (msg === 'submit') {
+        // submit alert here
+      } else if (msg === 'start') {
+        // start alert here
+      } else if (msg === 'kick') {
+        // kick alert here
+      }
     })
   }
 
@@ -127,6 +145,7 @@ export default class Group extends React.Component {
   start() {
     // this.filterRef.current.setState({ locationAlert: true })
     // console.log('start pressed')
+    this.setState({ disabled: true })
     this.filterRef.current.startSession()
   }
 
@@ -134,44 +153,50 @@ export default class Group extends React.Component {
   updateMemberList() {
     memberList = []
     memberRenderList = []
-    for (const user in this.state.members) {
+    // console.log(JSON.stringify(this.state.members))
+    for (const uid in this.state.members) {
       const a = {}
-      a.name = this.state.members[user].name
-      a.username = this.state.members[user].username
-      a.user = user
-      a.photo = this.state.members[user].photo
-      a.filters = this.state.members[user].filters
+      a.name = this.state.members[uid].name
+      a.username = this.state.members[uid].username
+      a.uid = uid
+      a.photo = this.state.members[uid].photo
+      a.filters = this.state.members[uid].filters
       a.host = this.state.host
       a.isHost = global.isHost
-      a.key = user
+      a.key = uid
       memberList.push(a)
       a.f = false
       memberRenderList.push(a)
     }
     const footer = {}
-    footer.f = true
+    footer.f = 'a'
     memberRenderList.push(footer)
   }
 
   leaveGroup(end) {
+    this.setState({ disabled: true })
     socket.getSocket().off()
     // leaving due to host ending session
     if (end) {
       socket.endLeave()
+      if (!global.isHost) {
+        this.props.showEnd()
+      }
     }
     // normal user leaves
     else {
       socket.leaveGroup()
     }
-    global.code = ''
+    this.props.setCode(0)
     global.host = ''
     global.isHost = false
+    this.setState({ disabled: false })
     this.props.navigation.replace('Home')
   }
 
   // host ends session
   endGroup() {
-    this.setState({ endAlert: false, blur: false })
+    this.setState({ endAlert: false, blur: false, disabled: true })
     socket.endRound()
   }
 
@@ -188,7 +213,7 @@ export default class Group extends React.Component {
   }
 
   copyToClipboard() {
-    Clipboard.setString(global.code.toString())
+    Clipboard.setString(this.props.code.code.toString())
   }
 
   render() {
@@ -196,7 +221,12 @@ export default class Group extends React.Component {
     return (
       <View style={styles.all}>
         <View style={styles.header}>
-          <View style={styles.headerFill}>
+          {/* <View style={styles.headerFill}> */}
+          <ImageBackground
+            pointerEvents="box-none"
+            source={require('../assets/backgrounds/Gradient.png')}
+            style={styles.headerFill}
+          >
             <Text style={styles.groupTitle}>
               {global.isHost
                 ? 'Your Group'
@@ -204,7 +234,7 @@ export default class Group extends React.Component {
             </Text>
             <View style={styles.subheader}>
               <Text style={styles.pinText}>Group PIN: </Text>
-              <Text style={styles.codeText}>{global.code + ' '}</Text>
+              <Text style={styles.codeText}>{this.props.code.code + ' '}</Text>
               <TouchableOpacity
                 style={{
                   flexDirection: 'column',
@@ -217,12 +247,15 @@ export default class Group extends React.Component {
                 <Ionicons name="copy-outline" style={styles.copyIcon} />
               </TouchableOpacity>
             </View>
-          </View>
+          </ImageBackground>
+          {/* </View> */}
         </View>
         <Drawer
           style={styles.drawer}
           initialDrawerPos={100}
-          pointerEvents={this.state.blur ? 'none' : 'auto'}
+          enabled={!this.state.blur}
+          onOpen={() => this.setState({ drawerOpen: true })}
+          onClose={() => this.setState({ drawerOpen: false })}
           renderContainerView={
             <View style={styles.main}>
               <View style={styles.center}>
@@ -238,7 +271,9 @@ export default class Group extends React.Component {
                 </Text>
                 <Text style={styles.divider}>|</Text>
                 <Text style={styles.waiting}>
-                  waiting for {this.countNeedFilters(this.state.members)} member filters
+                  {this.countNeedFilters(this.state.members) == 0
+                    ? 'waiting for host to start'
+                    : `waiting for ${this.countNeedFilters(this.state.members)} member filters`}
                 </Text>
               </View>
               <FlatList
@@ -247,6 +282,9 @@ export default class Group extends React.Component {
                 ListHeaderComponentStyle={{
                   color: colors.hex,
                   marginBottom: 10,
+                }}
+                columnWrapperStyle={{
+                  justifyContent: 'center',
                 }}
                 data={memberRenderList}
                 renderItem={({ item }) => {
@@ -261,12 +299,12 @@ export default class Group extends React.Component {
                           justifyContent: 'center',
                           width: windowWidth * 0.4,
                           height: windowHeight * 0.06,
-                          margin: '3%',
+                          margin: '1.5%',
                         }}
                       >
                         <Text
                           style={{
-                            color: 'black',
+                            color: 'dimgray',
                             textAlign: 'center',
                             width: '100%',
                           }}
@@ -285,6 +323,7 @@ export default class Group extends React.Component {
                         key={item.key}
                         name={item.name}
                         username={item.username}
+                        uid={item.uid}
                       />
                     )
                   }
@@ -314,7 +353,7 @@ export default class Group extends React.Component {
                 />
               )}
               <ChooseFriends
-                code={global.code}
+                code={this.props.code.code}
                 visible={this.state.chooseFriends}
                 members={memberList}
                 press={() => this.setState({ chooseFriends: false, blur: false })}
@@ -342,8 +381,9 @@ export default class Group extends React.Component {
                     members={memberList}
                     ref={this.filterRef}
                     setBlur={(res) => this.setState({ blur: res })}
-                    code={global.code}
+                    code={this.props.code.code}
                     style={{ elevation: 31 }}
+                    buttonDisable={(able) => this.setState({ disabled: able })}
                   />
                 </View>
               </View>
@@ -359,6 +399,7 @@ export default class Group extends React.Component {
                       color: colors.hex,
                       fontFamily: font,
                       fontSize: normalize(11),
+                      elevation: 32,
                     }}
                   >
                     {global.isHost ? 'Pull down for host menu' : 'Pull down to set filters'}
@@ -377,7 +418,11 @@ export default class Group extends React.Component {
               <TouchableHighlight
                 underlayColor={colors.hex}
                 activeOpacity={1}
-                onPress={() => this.start()}
+                onPress={() => {
+                  console.log(this.state.drawerOpen)
+                  if (!this.state.drawerOpen) this.start()
+                }}
+                disabled={this.state.disabled || this.state.drawerOpen}
                 style={[
                   screenStyles.bigButton,
                   styles.bigButton,
@@ -392,13 +437,20 @@ export default class Group extends React.Component {
             )}
             {!global.isHost && (
               <TouchableHighlight
+                disabled={this.state.disabled || this.state.drawerOpen}
                 style={[
                   screenStyles.bigButton,
                   styles.bigButton,
-                  !this.state.userSubmitted ? { opacity: 1 } : { opacity: 0.4 },
+                  !this.state.userSubmitted || this.state.drawerOpen
+                    ? { opacity: 1 }
+                    : { opacity: 0.4 },
                 ]}
                 onPress={() => {
-                  if (!this.state.userSubmitted) this.filterRef.current.submitUserFilters()
+                  // console.log(
+                  //   `Submit Filters: ${this.state.userSubmitted}|${this.state.drawerOpen}`,
+                  // )
+                  if (!this.state.userSubmitted && !this.state.drawerOpen)
+                    this.filterRef.current.submitUserFilters()
                 }}
               >
                 <Text style={styles.buttonText}>
@@ -408,14 +460,16 @@ export default class Group extends React.Component {
             )}
           </View>
           <TouchableHighlight
+            disabled={this.state.disabled || this.state.drawerOpen}
             style={styles.leave}
             activeOpacity={1}
             onPress={() => {
-              // console.log('left')
-              this.setState({ blur: true })
-              global.isHost
-                ? this.setState({ endAlert: true })
-                : this.setState({ leaveAlert: true })
+              if (!this.state.drawerOpen) {
+                this.setState({ blur: true })
+                global.isHost
+                  ? this.setState({ endAlert: true })
+                  : this.setState({ leaveAlert: true })
+              }
             }}
             underlayColor="white"
           >
@@ -443,9 +497,30 @@ export default class Group extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  const { code } = state
+  return { code }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      setCode,
+      showKick,
+      showEnd,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(Group)
+
 Group.propTypes = {
   navigation: PropTypes.object,
   members: PropTypes.array,
+  code: PropTypes.object,
+  setCode: PropTypes.func,
+  showKick: PropTypes.func,
+  showEnd: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
@@ -474,11 +549,11 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: colors.hex,
+    // justifyContent: 'space-between',
+    // backgroundColor: colors.hex,
+    overflow: 'hidden',
     height: windowHeight / 6,
     width: '100%',
-    paddingBottom: 20,
   },
   groupTitle: {
     color: '#fff',
@@ -567,8 +642,8 @@ const styles = StyleSheet.create({
     color: '#aaa',
   },
   memberContainer: {
-    marginLeft: '2%',
-    marginRight: '2%',
+    marginLeft: '1%',
+    marginRight: '1%',
     alignSelf: 'center',
     height: '55%',
     overflow: 'hidden',

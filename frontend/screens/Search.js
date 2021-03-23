@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { changeFriends, hideError, hideRefresh, showError, showRefresh } from '../redux/Actions.js'
 import { connect } from 'react-redux'
-import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, FlatList, ImageBackground, StyleSheet, Text } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import { SearchBar } from 'react-native-elements'
 import PropTypes from 'prop-types'
@@ -29,6 +29,7 @@ class Search extends Component {
       deleteFriend: false,
       deleteFriendName: '',
       value: '',
+      refresh: false,
     }
   }
 
@@ -38,6 +39,27 @@ class Search extends Component {
       friendsMap[this.props.friends.friends[friend].uid] = this.props.friends.friends[friend].status
     }
     this.setState({ friends: friendsMap })
+
+    for (var i = 0; i < this.props.friends.friends.length; i++) {
+      if (this.props.friends.friends[i].status === 'requested')
+        friendsApi.acceptFriendRequest(this.props.friends.friends[i].uid)
+    }
+  }
+
+  async getFriends() {
+    friendsApi
+      .getFriends()
+      .then((res) => {
+        this.props.changeFriends(res.friendList)
+        var friendsMap = new Object()
+        for (var friend in res.friendList) {
+          friendsMap[res.friendList[friend].uid] = res.friendList[friend].status
+        }
+        this.setState({ friends: friendsMap })
+      })
+      .catch(() => {
+        this.props.showError()
+      })
   }
 
   updateText = async (text) => {
@@ -47,6 +69,7 @@ class Search extends Component {
   }
 
   searchFilterFunction = async () => {
+    this.setState({ data: [] })
     clearTimeout(this.timeout) // clears the old timer
     if (!this.state.value) {
       var emptyArray = []
@@ -87,16 +110,16 @@ class Search extends Component {
     }
   }
 
-  async removeRequest(friend, newArr) {
-    friendsApi
-      .removeFriendship(friend)
-      .then(() => {
-        this.props.changeFriends(newArr)
-        this.setState({ friends: newArr })
-      })
-      .catch(() => {
-        this.setState({ errorAlert: true })
-      })
+  async removeRequest(newArr) {
+    this.setState({ friends: newArr })
+  }
+
+  async acceptFriend(newArr) {
+    this.setState({ friends: newArr })
+  }
+
+  async addFriend(newArr) {
+    this.setState({ friends: newArr })
   }
 
   renderHeader = () => {
@@ -122,15 +145,22 @@ class Search extends Component {
   // Called on search-list pulldown refresh
   onRefresh() {
     this.props.showRefresh()
-    sleep(2000).then(this.searchFilterFunction(this.state.value).then(this.props.hideRefresh()))
+    sleep(2000)
+      .then(this.getFriends())
+      .then(this.searchFilterFunction(this.state.value))
+      .then(this.props.hideRefresh())
   }
 
   render() {
     return (
-      <View style={screenStyles.mainContainer}>
+      <ImageBackground
+        source={require('../assets/backgrounds/Search.png')}
+        style={screenStyles.screenBackground}
+      >
         <Text style={[screenStyles.icons, styles.title]}>Find friends</Text>
         <FlatList
           data={this.state.data}
+          extraData={this.state.data}
           renderItem={({ item }) => (
             <Card
               name={item.name}
@@ -141,14 +171,17 @@ class Search extends Component {
               total={this.state.data}
               status={item.status}
               key={item.uid}
-              press={(uid, newArr) => this.removeRequest(uid, newArr)}
+              press={(newArr) => this.removeRequest(newArr)}
               unfriendAlert={(bool) => this.setState({ deleteFriend: bool })}
+              accept={(newArr) => this.acceptFriend(newArr)}
+              add={(newArr) => this.addFriend(newArr)}
+              changeAdd={true}
             />
           )}
           keyExtractor={(item) => item.username}
           ListHeaderComponent={this.renderHeader}
           onRefresh={() => this.onRefresh()}
-          refreshing={this.props.refresh}
+          refreshing={this.state.refresh}
         />
         {(this.state.errorAlert || this.state.deleteFriend) && (
           <BlurView
@@ -175,7 +208,7 @@ class Search extends Component {
           goProfile={() => this.props.navigation.replace('Profile')}
           cur="Search"
         />
-      </View>
+      </ImageBackground>
     )
   }
 }
@@ -204,10 +237,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(Search)
 
 Search.propTypes = {
   navigation: PropTypes.object,
-  // error: PropTypes.bool,
-  // refresh: PropTypes.bool,
-  // friends: PropTypes.object,
-  // username: PropTypes.object,
+  error: PropTypes.bool,
+  refresh: PropTypes.bool,
+  friends: PropTypes.object,
+  username: PropTypes.object,
   showError: PropTypes.func,
   showRefresh: PropTypes.func,
   hideError: PropTypes.func,
@@ -217,8 +250,9 @@ Search.propTypes = {
 
 const styles = StyleSheet.create({
   title: {
-    marginTop: '10%',
+    marginTop: '7%',
     textAlign: 'center',
+    color: 'white',
   },
   container: {
     backgroundColor: 'white',
@@ -227,6 +261,7 @@ const styles = StyleSheet.create({
     width: '95%',
     height: Dimensions.get('window').height * 0.08,
     alignSelf: 'center',
+    marginTop: '13%',
   },
   inputContainer: {
     height: Dimensions.get('window').height * 0.05,

@@ -14,17 +14,16 @@ import Ion from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'
-import global from '../../global.js'
+import getCuisine from '../assets/images/foodImages.js'
 import getStarPath from '../assets/stars/star.js'
+import global from '../../global.js'
+import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
-import getCuisine from '../assets/images/foodImages.js'
-import normalize from '../../styles/normalize.js'
+import _ from 'lodash'
 
 const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
-
-const font = 'CircularStd-Book'
 
 export default class TopThree extends React.Component {
   constructor(props) {
@@ -59,9 +58,11 @@ export default class TopThree extends React.Component {
     }
   }
 
-  goMatch() {
+  match() {
     socket.choose(this.state.chosen)
   }
+
+  goMatch = _.debounce(this.match.bind(this), 500)
 
   render() {
     return (
@@ -76,9 +77,10 @@ export default class TopThree extends React.Component {
           {this.state.restaurants.length > 2 && (
             <TouchableHighlight
               disabled={!global.isHost}
-              underlayColor="#F9E2C2"
+              underlayColor={colors.beige}
               style={[
                 styles.center,
+                styles.cardDefault,
                 this.state.chosen === 2 ? styles.cardSelected : styles.cardUnselected,
               ]}
               onPress={() => this.setState({ chosen: 2 })}
@@ -86,10 +88,7 @@ export default class TopThree extends React.Component {
               <View style={styles.card}>
                 <ImageBackground
                   source={getCuisine(this.state.restaurants[2].categories)}
-                  style={[
-                    styles.center,
-                    this.state.chosen === 2 ? styles.imageSelected : styles.imageUnselected,
-                  ]}
+                  style={[styles.center, styles.image]}
                 />
                 <TouchableHighlight
                   style={[
@@ -132,9 +131,10 @@ export default class TopThree extends React.Component {
           )}
           <TouchableHighlight
             disabled={!global.isHost}
-            underlayColor="#F9E2C2"
+            underlayColor={colors.beige}
             style={[
               styles.left,
+              styles.cardDefault,
               this.state.chosen === 1 ? styles.cardSelected : styles.cardUnselected,
             ]}
             onPress={() => this.setState({ chosen: 1 })}
@@ -142,10 +142,7 @@ export default class TopThree extends React.Component {
             <View style={styles.card}>
               <ImageBackground
                 source={getCuisine(this.state.restaurants[1].categories)}
-                style={[
-                  this.state.chosen === 1 ? styles.imageSelected : styles.imageUnselected,
-                  styles.center,
-                ]}
+                style={[styles.center, styles.image]}
               />
               <TouchableHighlight
                 style={[
@@ -187,9 +184,10 @@ export default class TopThree extends React.Component {
           </TouchableHighlight>
           <TouchableHighlight
             disabled={!global.isHost}
-            underlayColor="#F9E2C2"
+            underlayColor={colors.beige}
             style={[
               styles.right,
+              styles.cardDefault,
               this.state.chosen === 0 ? styles.cardSelected : styles.cardUnselected,
             ]}
             onPress={() => this.setState({ chosen: 0 })}
@@ -197,13 +195,11 @@ export default class TopThree extends React.Component {
             <View style={styles.card}>
               <ImageBackground
                 source={getCuisine(this.state.restaurants[0].categories)}
-                style={[
-                  this.state.chosen === 0 ? styles.imageSelected : styles.imageUnselected,
-                  styles.center,
-                ]}
+                style={[styles.center, styles.image]}
               />
               <TouchableHighlight
                 style={[
+                  styles.tinyButton,
                   styles.tinyButtonRight,
                   this.state.chosen === 0 ? styles.chosenBackground : styles.neutralBackground,
                 ]}
@@ -300,7 +296,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   subtitle: {
-    fontFamily: font,
+    fontFamily: screenStyles.book.fontFamily,
     fontSize: normalize(18),
     textAlign: 'center',
     marginLeft: '5%',
@@ -353,7 +349,7 @@ const styles = StyleSheet.create({
   },
   randomText: { fontSize: normalize(23), fontWeight: 'bold' },
   submit: {
-    fontFamily: font,
+    fontFamily: screenStyles.book.fontFamily,
     padding: '2%',
   },
   waiting: {
@@ -365,27 +361,20 @@ const styles = StyleSheet.create({
   waitingText: {
     fontWeight: 'bold',
   },
-  imageSelected: {
-    height: height * 0.18,
-    width: width * 0.38,
-    position: 'absolute',
-    overflow: 'hidden',
-    marginTop: '2%',
-  },
   button: {
     flexDirection: 'row',
     paddingTop: '3%',
     paddingBottom: '3%',
     paddingRight: '10%',
   },
-  imageUnselected: {
+  image: {
     height: height * 0.18,
     width: width * 0.38,
     position: 'absolute',
     overflow: 'hidden',
     marginTop: '2%',
   },
-  cardSelected: {
+  cardDefault: {
     height: height * 0.3,
     width: width * 0.43,
     position: 'absolute',
@@ -393,17 +382,15 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderWidth: 5,
     borderColor: colors.hex,
-    backgroundColor: '#F9E2C2',
+    backgroundColor: colors.beige,
+  },
+  cardSelected: {
+    elevation: 1,
+    borderColor: colors.hex,
   },
   cardUnselected: {
-    height: height * 0.3,
-    width: width * 0.43,
-    position: 'absolute',
     elevation: 0,
-    borderRadius: 15,
-    borderWidth: 5,
     borderColor: '#c4c4c4',
-    backgroundColor: '#F9E2C2',
   },
   tinyButton: {
     width: '50%',
@@ -414,12 +401,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
   },
   tinyButtonRight: {
-    width: '50%',
-    alignItems: 'center',
     alignSelf: 'flex-end',
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 7,
-    borderTopRightRadius: 10,
   },
 })

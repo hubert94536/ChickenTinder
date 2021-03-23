@@ -12,6 +12,7 @@ import PropTypes from 'prop-types'
 import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
+import _ from 'lodash'
 
 export default class Majority extends React.Component {
   constructor(props) {
@@ -32,7 +33,7 @@ export default class Majority extends React.Component {
     this.props.cancel()
   }
 
-  evaluate() {
+  evaluateSize() {
     if (this.state.selectedValue === '') {
       this.setState({ invalidValue: true })
     }
@@ -46,6 +47,8 @@ export default class Majority extends React.Component {
     }
   }
 
+  evaluate = _.debounce(this.evaluateSize.bind(this), 100)
+
   render() {
     return (
       <Modal animationType="fade" transparent visible={this.props.visible}>
@@ -56,9 +59,9 @@ export default class Majority extends React.Component {
             onPress={() => this.handleCancel()}
           />
           <View style={modalStyles.titleContainer}>
-            <Text style={[screenStyles.text, modalStyles.titleText]}>{this.props.title}</Text>
-            <Text style={[screenStyles.text, styles.black]}>
-              Members (out of {this.props.max}) needed to get a match
+            <Text style={[screenStyles.text, modalStyles.titleText]}>Majority</Text>
+            <Text style={[styles.black, screenStyles.book]}>
+              How many members needed for a match
             </Text>
             <View style={modalStyles.inputContainer}>
               <TextInput
@@ -104,7 +107,7 @@ export default class Majority extends React.Component {
 
 const styles = StyleSheet.create({
   mainContainerHeight: {
-    height: Dimensions.get('window').height * 0.3,
+    height: Dimensions.get('window').height * 0.25,
   },
   input: {
     alignSelf: 'center',
@@ -123,7 +126,6 @@ const styles = StyleSheet.create({
 })
 
 Majority.propTypes = {
-  title: PropTypes.string,
   subtext: PropTypes.string,
   press: PropTypes.func,
   cancel: PropTypes.func,
