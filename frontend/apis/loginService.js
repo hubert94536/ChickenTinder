@@ -158,18 +158,9 @@ const deleteUser = async () => {
         }
         credential = await auth.FacebookAuthProvider.credential(data.accessToken)
         break
-      default:
-        return auth()
-          .verifyPhoneNumber(auth().currentUser.phoneNumber)
-          .on('state_changed', (phoneAuthSnapshot) => {
-            console.log('State: ', phoneAuthSnapshot.state)
-            switch (phoneAuthSnapshot.state) {
-              case auth.PhoneAuthState.CODE_SENT:
-                break
-              case auth.PhoneAuthState.ERROR:
-                break
-            }
-          })
+      case 'phone':
+        // assume front end has handled reauthentication
+        break
     }
     deleteUserWithCredential(credential)
   } catch (err) {
@@ -180,6 +171,7 @@ const deleteUser = async () => {
 
 export default {
   deleteUser,
+  deleteUserWithCredential,
   loginWithFacebook,
   logout,
   loginWithCredential,
