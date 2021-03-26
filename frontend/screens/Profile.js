@@ -10,6 +10,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Alert from '../modals/Alert.js'
 import accountsApi from '../apis/accountsApi.js'
 import colors from '../../styles/colors.js'
+import Confirmation from '../modals/Confirmation.js'
 import loginService from '../apis/loginService.js'
 import Friends from './Friends.js'
 import modalStyles from '../../styles/modalStyles.js'
@@ -40,6 +41,7 @@ class UserProfileView extends Component {
       logoutAlert: false,
       deleteAlert: false,
       blur: false,
+      confirmatin: true,
       // friends text
       numFriends: 0,
       imageData: null,
@@ -250,7 +252,7 @@ class UserProfileView extends Component {
               cur="Profile"
             />
 
-            {(visible || edit || logoutAlert || deleteAlert || blur) && (
+            {(visible || edit || logoutAlert || deleteAlert || blur || this.state.confirmation) && (
               <BlurView
                 blurType="dark"
                 blurAmount={10}
@@ -266,6 +268,12 @@ class UserProfileView extends Component {
               logout={() => this.handleLogout()}
               logoutAlert={() => this.setState({ logoutAlert: true })}
               deleteAlert={() => this.setState({ deleteAlert: true })}
+            />
+
+            <Confirmation
+              visible={this.state.confirmation}
+              close={() => this.setState({ confirmation: false })}
+              show={() => this.setState({ confirmation: true })}
             />
 
             {edit && (
