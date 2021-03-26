@@ -62,6 +62,37 @@ const noNotif = () => {
   }
 }
 
+const setCode = (code) => {
+  return {
+    type: 'SET_CODE',
+    payload: code,
+  }
+}
+
+const showKick = () => {
+  return {
+    type: 'SHOW_KICK',
+  }
+}
+
+const hideKick = () => {
+  return {
+    type: 'HIDE_KICK',
+  }
+}
+
+const showEnd = () => {
+  return {
+    type: 'SHOW_END',
+  }
+}
+
+const hideEnd = () => {
+  return {
+    type: 'HIDE_END',
+  }
+}
+
 export {
   showError,
   hideError,
@@ -73,4 +104,9 @@ export {
   hideRefresh,
   newNotif,
   noNotif,
+  setCode,
+  showKick,
+  hideKick,
+  showEnd,
+  hideEnd,
 }

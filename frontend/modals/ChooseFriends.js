@@ -1,6 +1,6 @@
 import React from 'react'
 import { bindActionCreators } from 'redux'
-import { changeFriends } from '../redux/Actions.js'
+import { changeFriends, setCode } from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import { Dimensions, FlatList, Modal, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { SearchBar } from 'react-native-elements'
@@ -22,6 +22,7 @@ class ChooseFriends extends React.Component {
     this.state = {
       data: '',
       search: '',
+      disabled: false,
     }
   }
 
@@ -35,10 +36,10 @@ class ChooseFriends extends React.Component {
             (member) => member.username === this.props.friends.friends[friend].username,
           )
         ) {
-          this.props.friends.friends[friend].added = true
+          this.props.friends.friends[friend].added = 'in group'
           pushFriends.push(this.props.friends.friends[friend])
         } else {
-          this.props.friends.friends[friend].added = false
+          this.props.friends.friends[friend].added = 'not added'
           pushFriends.push(this.props.friends.friends[friend])
         }
       }
@@ -48,7 +49,7 @@ class ChooseFriends extends React.Component {
 
   // copies the room code
   copyToClipboard() {
-    Clipboard.setString(this.props.code.toString())
+    Clipboard.setString(this.props.code.code.toString())
   }
 
   //  closes the choose friends modal in filters
@@ -57,7 +58,13 @@ class ChooseFriends extends React.Component {
   }
 
   sendInvite(uid) {
+    this.setState({ disabled: true })
     socket.sendInvite(uid)
+    var newArr = this.state.data.filter((item) => {
+      if (item.uid === uid) item.status = 'in group'
+      return item
+    })
+    this.setState({ data: newArr, disabled: true })
   }
 
   //  function for searching your friends
@@ -88,7 +95,9 @@ class ChooseFriends extends React.Component {
               <Text style={[screenStyles.text, styles.subHeaderText, styles.subHeaderMarginL]}>
                 Group PIN:
               </Text>
-              <Text style={[screenStyles.textBold, styles.subHeaderText]}>{this.props.code}</Text>
+              <Text style={[screenStyles.textBold, styles.subHeaderText]}>
+                {this.props.code.code}
+              </Text>
               <TouchableOpacity onPress={() => this.copyToClipboard()}>
                 <Ionicons name="copy-outline" style={styles.icon2} />
               </TouchableOpacity>
@@ -112,10 +121,11 @@ class ChooseFriends extends React.Component {
                   image={item.photo}
                   uid={item.uid}
                   username={item.username}
-                  total={this.props.friends}
-                  status="not added"
+                  total={this.state.data}
+                  status={item.added}
                   key={item.uid}
                   press={() => this.sendInvite(item.uid)}
+                  disabled={this.state.disabled}
                 />
               )}
               keyExtractor={(item) => item.username}
@@ -130,13 +140,15 @@ class ChooseFriends extends React.Component {
 
 const mapStateToProps = (state) => {
   const { friends } = state
-  return { friends }
+  const { code } = state
+  return { friends, code }
 }
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       changeFriends,
+      setCode,
     },
     dispatch,
   )
@@ -147,12 +159,12 @@ ChooseFriends.propTypes = {
   members: PropTypes.array,
   press: PropTypes.func,
   visible: PropTypes.bool,
-  code: PropTypes.number,
-  // username: PropTypes.string,
-  // friends: PropTypes.object,
+  username: PropTypes.object,
+  friends: PropTypes.object,
   showError: PropTypes.func,
   hideError: PropTypes.func,
   changeFriends: PropTypes.func,
+  code: PropTypes.object,
 }
 
 const styles = StyleSheet.create({
