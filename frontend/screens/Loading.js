@@ -188,15 +188,12 @@ Loading.propTypes = {
 export default connect(mapDispatchToProps)(Loading)
 
 const styles = StyleSheet.create({
-<<<<<<< HEAD
-=======
   top: { marginTop: '7%', marginLeft: '5%', marginRight: '5%' },
   leaveIcon: { alignSelf: 'flex-start' },
   centerAlign: { alignItems: 'center' },
   door: { color: '#6A6A6A', fontSize: normalize(20) },
   gray: { color: '#6A6A6A' },
   black: { color: 'black' },
->>>>>>> 998ce4da8d7c94047635aa0c8395e0123d641fbc
   content: {
     width: '70%',
     alignSelf: 'center',
