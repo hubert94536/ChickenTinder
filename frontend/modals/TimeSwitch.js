@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, Animated } from 'react-native'
+import { StyleSheet } from 'react-native'
 import PropTypes from 'prop-types'
 import { ButtonGroup } from 'react-native-elements'
 import colors from '../../styles/colors.js'
@@ -14,35 +14,42 @@ export default class TimeSwitch extends Component {
     onValueChange: () => null,
   }
 
-  constructor () {
+  constructor() {
     super()
     this.state = {
-      selectedIndex: 2
+      selectedIndex: 2,
     }
     this.updateIndex = this.updateIndex.bind(this)
   }
 
-  updateIndex (selectedIndex) {
-    this.setState({selectedIndex})
+  updateIndex(selectedIndex) {
+    this.setState({ selectedIndex }, () =>
+      console.log('selectedIndex: ' + this.state.selectedIndex),
+    )
+    if (selectedIndex == 0) {
+      this.props.onValueChange('AM')
+    } else if (selectedIndex == 1) {
+      this.props.onValueChange('PM')
+    }
   }
-  
-  render () {
+
+  render() {
     const buttons = ['AM', 'PM']
     const { selectedIndex } = this.state
     return (
-        <ButtonGroup
-          onPress={this.updateIndex}
-          selectedIndex={selectedIndex}
-          buttons={buttons}
-          //Styling
-          containerStyle={styles.container} 
-          innerBorderStyle={styles.innerBorder}
-          textStyle={styles.text}
-          selectedButtonStyle={styles.button}
-          selectedTextStyle={styles.selectedText}
-          underlayColor={'white'}
-          activeOpacity={1}
-        />
+      <ButtonGroup
+        onPress={this.updateIndex}
+        selectedIndex={selectedIndex}
+        buttons={buttons}
+        //Styling
+        containerStyle={styles.container}
+        innerBorderStyle={styles.innerBorder}
+        textStyle={styles.text}
+        selectedButtonStyle={styles.button}
+        selectedTextStyle={styles.selectedText}
+        underlayColor={'white'}
+        activeOpacity={1}
+      />
     )
   }
 }
@@ -53,7 +60,7 @@ const styles = StyleSheet.create({
     width: 80,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor:colors.hex,
+    borderColor: colors.hex,
   },
   innerBorder: {
     width: 0,
