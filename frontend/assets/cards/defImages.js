@@ -1,424 +1,424 @@
 // Cuisine = 1, Type = 2
 const foodImages = {
-  'African': {
+  African: {
     img: require('./African.png'),
-    val: 1
+    val: 1,
   },
-  'Australian': {
+  Australian: {
     img: require('./Australian.png'),
-    val: 1
+    val: 1,
   },
   'Modern Australian': {
     img: 'Australian',
-    val: 1
+    val: 1,
   },
   'New Zealand': {
     img: 'Australian',
-    val: 1
+    val: 1,
   },
-  'Creperies': {
+  Creperies: {
     img: require('./Bakery.png'),
-    val: 2
+    val: 2,
   },
-  'Baguettes': {
+  Baguettes: {
     img: require('./Bakery2.png'),
-    val: 2
+    val: 2,
   },
   'Breakfast & Brunch': {
     img: require('./Breakfast.png'),
-    val: 2
+    val: 2,
   },
-  'Diners': {
+  Diners: {
     img: 'Breakfast & Brunch',
-    val: 2
+    val: 2,
   },
-  'Waffles': {
+  Waffles: {
     img: 'Breakfast & Brunch',
-    val: 2
+    val: 2,
   },
-  'British': {
+  British: {
     img: require('./British.png'),
-    val: 1
+    val: 1,
   },
   'Fish & Chips': {
     img: 'British',
-    val: 2
+    val: 2,
   },
-  'Burmese': {
+  Burmese: {
     img: require('./Burmese.png'),
-    val: 1
+    val: 1,
   },
-  'Cafes': {
+  Cafes: {
     img: require('./Cafes.png'),
-    val: 2
+    val: 2,
   },
   'Hong Kong Style Cafe': {
     img: 'Cafes',
-    val: 2
+    val: 2,
   },
-  'Coffeeshops': {
+  Coffeeshops: {
     img: 'Cafes',
-    val: 2
+    val: 2,
   },
   'Coffee & Tea': {
     img: 'Cafes',
-    val: 2
+    val: 2,
   },
-  'Cambodian': {
+  Cambodian: {
     img: require('./Cambodian.png'),
-    val: 1
+    val: 1,
   },
-  'Canadian': {
+  Canadian: {
     img: require('./Canadian.png'),
-    val: 1
+    val: 1,
   },
-  'Caribbean': {
+  Caribbean: {
     img: require('./Caribbean.png'),
-    val: 2
+    val: 2,
   },
   'Cajun/Creole': {
     img: 'Caribbean',
-    val: 2
+    val: 2,
   },
   'Chicken Wings': {
     img: require('./ChickenWings.png'),
-    val: 2
+    val: 2,
   },
   'Chicken Shop': {
     img: 'Chicken Wings',
-    val: 2
+    val: 2,
   },
   'Rotisserie Chicken': {
     img: 'Chicken Wings',
-    val: 2
+    val: 2,
   },
-  'Chinese': {
+  Chinese: {
     img: require('./Chinese.png'),
-    val: 1
+    val: 1,
   },
   'Dim Sum': {
     img: 'Chinese',
-    val: 2
+    val: 2,
   },
-  'Dumplings': {
+  Dumplings: {
     img: 'Chinese',
-    val: 2
+    val: 2,
   },
   'Hot Pot': {
     img: 'Chinese',
-    val: 2
+    val: 2,
   },
-  'Wok': {
+  Wok: {
     img: 'Chinese',
-    val: 2
+    val: 2,
   },
-  'Cuban': {
+  Cuban: {
     img: require('./Cuban.png'),
-    val: 1
+    val: 1,
   },
-  'Ethiopian': {
+  Ethiopian: {
     img: require('./Ethiopian.png'),
-    val: 1
+    val: 1,
   },
-  'Filipino': {
+  Filipino: {
     img: require('./Filipino.png'),
-    val: 1
+    val: 1,
   },
-  'French': {
+  French: {
     img: require('./French.png'),
-    val: 1
+    val: 1,
   },
-  'Bistro': {
+  Bistro: {
     img: 'French',
-    val: 2
+    val: 2,
   },
   'French Southwest': {
     img: 'French',
-    val: 1
+    val: 1,
   },
-  'German': {
+  German: {
     img: require('./German.png'),
-    val: 1
+    val: 1,
   },
-  'Bavarian': {
+  Bavarian: {
     img: 'German',
-    val: 1
+    val: 1,
   },
-  'Fischbroetchen': {
+  Fischbroetchen: {
     img: 'German',
-    val: 2
+    val: 2,
   },
-  'Schnitzel': {
+  Schnitzel: {
     img: 'German',
-    val: 2
+    val: 2,
   },
-  'Greek': {
+  Greek: {
     img: require('./Greek.png'),
-    val: 1
+    val: 1,
   },
-  'Wraps': {
+  Wraps: {
     img: 'Greek',
-    val: 2
+    val: 2,
   },
   'Middle Eastern': {
     img: require('./Halal_Middle_Eastern.png'),
-    val: 1
+    val: 1,
   },
-  'Halal': {
+  Halal: {
     img: 'Middle Eastern',
-    val: 2
+    val: 2,
   },
-  'Burgers': {
+  Burgers: {
     img: require('./Hamburger.png'),
-    val: 2
+    val: 2,
   },
   'Fast Food': {
     img: 'Burgers',
-    val: 1
+    val: 1,
   },
-  'Hawaiian': {
+  Hawaiian: {
     img: require('./Hawaiian.png'),
-    val: 2
+    val: 2,
   },
-  'Polynesian': {
+  Polynesian: {
     img: require('./Hawaiian_Polynesian.png'),
-    val: 1
+    val: 1,
   },
   'Hot Dog': {
     img: require('./Hot_Dog.png'),
-    val: 2
+    val: 2,
   },
   'American (New)': {
     img: 'Caribbean',
-    val: 1
+    val: 1,
   },
   'American (Traditional)': {
     img: 'Hamburger',
-    val: 1
+    val: 1,
   },
-  'Indian': {
+  Indian: {
     img: require('./Indian.png'),
-    val: 1
+    val: 1,
   },
-  'Pakistani': {
+  Pakistani: {
     img: 'Indian',
-    val: 1
+    val: 1,
   },
-  'Indonesian': {
+  Indonesian: {
     img: require('./Indonesian.png'),
-    val: 1
+    val: 1,
   },
-  'Irish': {
+  Irish: {
     img: require('./Irish_Bars.png'),
-    val: 1
+    val: 1,
   },
   'Island Pub': {
     img: 'Irish',
-    val: 1
+    val: 1,
   },
   'Beer Garden': {
     img: 'Irish',
-    val: 2
+    val: 2,
   },
   'Beer Hall': {
     img: 'Irish',
-    val: 2
+    val: 2,
   },
-  'Gastropubs': {
+  Gastropubs: {
     img: 'Irish',
-    val: 2
+    val: 2,
   },
   'Irish Pub': {
     img: 'Irish',
-    val: 2
+    val: 2,
   },
-  'Italian': {
+  Italian: {
     img: require('./Italian.png'),
-    val: 1
+    val: 1,
   },
-  'Japanese': {
+  Japanese: {
     img: require('./Japanese.png'),
-    val: 1
+    val: 1,
   },
-  'Ramen': {
+  Ramen: {
     img: 'Japanese',
-    val: 2
+    val: 2,
   },
-  'Nikkei': {
+  Nikkei: {
     img: 'Japanese',
-    val: 2
+    val: 2,
   },
-  'Noodles': {
+  Noodles: {
     img: 'Japanese',
-    val: 2
+    val: 2,
   },
-  'Kebab': {
+  Kebab: {
     img: require('./Kebab_Middle_Eastern.png'),
-    val: 2
+    val: 2,
   },
-  'Korean': {
+  Korean: {
     img: require('./Korean.png'),
-    val: 1
+    val: 1,
   },
-  'Mediterranean': {
+  Mediterranean: {
     img: require('./Mediterranean.png'),
-    val: 1
+    val: 1,
   },
-  'Pita': {
+  Pita: {
     img: 'Mediterranean',
-    val: 2
+    val: 2,
   },
-  'Mexican': {
+  Mexican: {
     img: require('./Mexican.png'),
-    val: 1
+    val: 1,
   },
   'Tex-Mex': {
     img: 'Mexican',
-    val: 1
+    val: 1,
   },
-  'Mongolian': {
+  Mongolian: {
     img: require('./Mongolian.png'),
-    val: 1
+    val: 1,
   },
-  'Moroccan': {
+  Moroccan: {
     img: require('./Moroccan.png'),
-    val: 1
+    val: 1,
   },
-  'Peruvian': {
+  Peruvian: {
     img: require('./Peruvian.png'),
-    val: 1
+    val: 1,
   },
-  'Pizza': {
+  Pizza: {
     img: require('./Pizza.png'),
-    val: 2
+    val: 2,
   },
-  'Polish': {
+  Polish: {
     img: require('./Polish.png'),
-    val: 1
+    val: 1,
   },
-  'Russian': {
+  Russian: {
     img: require('./Russian.png'),
-    val: 2
+    val: 2,
   },
   'Eastern European': {
     img: 'Russian',
-    val: 1
+    val: 1,
   },
-  'Soup': {
+  Soup: {
     img: 'Russian',
-    val: 2
+    val: 2,
   },
-  'Ukrainian': {
+  Ukrainian: {
     img: 'Russian',
-    val: 2
+    val: 2,
   },
-  'Salad': {
+  Salad: {
     img: require('./Salad.png'),
-    val: 2
+    val: 2,
   },
-  'Vegetarian': {
+  Vegetarian: {
     img: 'Salad',
-    val: 0.5
+    val: 0.5,
   },
-  'Vegan': {
+  Vegan: {
     img: 'Salad',
-    val: 0.5
+    val: 0.5,
   },
-  'Sandwiches': {
+  Sandwiches: {
     img: require('./Sandwiches.png'),
-    val: 2
+    val: 2,
   },
-  'Delis': {
+  Delis: {
     img: 'Sandwiches',
-    val: 2
+    val: 2,
   },
   'Open Sandwiches': {
     img: 'Sandwiches',
-    val: 2
+    val: 2,
   },
-  'Seafood': {
+  Seafood: {
     img: require('./Seafood.png'),
-    val: 2
+    val: 2,
   },
   'Live/Raw Food': {
     img: 'Seafood',
-    val: 2
+    val: 2,
   },
   'Soul Food': {
     img: require('./Southern_Soulfood.png'),
-    val: 2
+    val: 2,
   },
-  'Southern': {
+  Southern: {
     img: 'Soul Food',
-    val: 2
+    val: 2,
   },
   'Comfort Food': {
     img: 'Soul Food',
-    val: 1
+    val: 1,
   },
-  'Spanish': {
+  Spanish: {
     img: require('./Spanish_Tapas.png'),
-    val: 1
+    val: 1,
   },
   'Tapas Bars': {
     img: 'Spanish',
-    val: 2
+    val: 2,
   },
   'Tapas/Small Plates': {
     img: 'Spanish',
-    val: 1
+    val: 1,
   },
   'Sri Lankan': {
     img: require('./Sri_Lankan.png'),
-    val: 1
+    val: 1,
   },
-  'Steakhouses': {
+  Steakhouses: {
     img: require('./Steakhouse.png'),
-    val: 2
+    val: 2,
   },
-  'Barbeque': {
+  Barbeque: {
     img: 'Steakhouses',
-    val: 2
+    val: 2,
   },
   'Sushi Bars': {
     img: require('./Sushi.png'),
-    val: 2
+    val: 2,
   },
-  'Swedish': {
+  Swedish: {
     img: require('./Swedish_Scandinavian.png'),
-    val: 1
+    val: 1,
   },
-  'Meatballs': {
+  Meatballs: {
     img: 'Swedish',
-    val: 2
+    val: 2,
   },
-  'Scandinavian': {
+  Scandinavian: {
     img: 'Swedish',
-    val: 1
+    val: 1,
   },
   'Traditional Norwegian': {
     img: 'Swedish',
-    val: 2
+    val: 2,
   },
   'Traditional Swedish': {
     img: 'Swedish',
-    val: 2
+    val: 2,
   },
-  'Taiwanese': {
+  Taiwanese: {
     img: require('./Taiwanese.png'),
-    val: 2
+    val: 2,
   },
   'Asian Fusion': {
     img: 'Taiwanese',
-    val: 1
+    val: 1,
   },
-  'Thai': {
+  Thai: {
     img: require('./Thai.png'),
-    val: 1
+    val: 1,
   },
-  'Vietnamese': {
+  Vietnamese: {
     img: require('./Vietnamese.png'),
-    val: 1
-  }
+    val: 1,
+  },
 }
 export default foodImages
