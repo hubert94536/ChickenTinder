@@ -150,7 +150,7 @@ class PhoneAuthScreen extends Component {
                   style={{
                     textAlign: 'left',
                     flexDirection: 'row',
-                    fontFamily: fontMed,
+                    fontFamily: screenStyles.medium.fontFamily,
                     fontSize: normalize(18),
                     color: 'white',
                     marginTop: '5%',
@@ -178,7 +178,7 @@ class PhoneAuthScreen extends Component {
                   style={{
                     textAlign: 'left',
                     flexDirection: 'row',
-                    fontFamily: fontMed,
+                    fontFamily: screenStyles.medium.fontFamily,
                     fontSize: normalize(18),
                     color: 'white',
                     marginTop: '5%',
@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   themeButtonTitle: {
-    fontFamily: fontMed,
+    fontFamily: screenStyles.medium.fontFamily,
     fontSize: 24,
     color: '#FFFFFF',
   },

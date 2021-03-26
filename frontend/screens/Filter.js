@@ -576,7 +576,6 @@ class FilterSelector extends React.Component {
         />
         <Majority
           max={this.props.members.length}
-          title={'Majority'}
           filterSubtext={'Choose the number of members needed to get a match'}
           visible={this.state.chooseMajority}
           cancel={() => {
