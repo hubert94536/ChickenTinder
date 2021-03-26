@@ -97,16 +97,6 @@ export default class Time extends React.Component {
               <View style={styles.switchButton}>
                 <TimeSwitch
                   onValueChange={(val) => this.setState({ timeMode: val })}
-                  text1="AM"
-                  text2="PM"
-                  switchWidth={90}
-                  switchHeight={30}
-                  switchBorderColor={screenStyles.hex.color}
-                  btnBorderColor={screenStyles.hex.color}
-                  btnBackgroundColor={screenStyles.hex.color}
-                  fontColor={screenStyles.hex.color}
-                  activeFontColor="white"
-                  style={styles.switchButton}
                 />
               </View>
             </View>
