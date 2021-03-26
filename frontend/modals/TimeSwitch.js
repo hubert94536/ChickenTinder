@@ -23,9 +23,7 @@ export default class TimeSwitch extends Component {
   }
 
   updateIndex(selectedIndex) {
-    this.setState({ selectedIndex }, () =>
-      console.log('selectedIndex: ' + this.state.selectedIndex),
-    )
+    this.setState({ selectedIndex })
     if (selectedIndex == 0) {
       this.props.onValueChange('AM')
     } else if (selectedIndex == 1) {

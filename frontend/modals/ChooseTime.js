@@ -97,9 +97,7 @@ export default class Time extends React.Component {
               <View style={styles.switchButton}>
                 <TimeSwitch
                   onValueChange={(val) =>
-                    this.setState({ timeMode: val }, () =>
-                      console.log('timeMode: ' + this.state.timeMode),
-                    )
+                    this.setState({ timeMode: val })
                   }
                 />
               </View>
