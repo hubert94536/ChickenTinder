@@ -1,9 +1,9 @@
 import foodImages from './defImages.js'
 
 const generalFoodImages = [
-  require('./General1.png'),
-  require('./General2.png'),
-  require('./General3.png'),
+  require('./General1.svg'),
+  require('./General2.svg'),
+  require('./General3.svg'),
 ]
 
 export default function getCuisine(categories) {
@@ -12,10 +12,20 @@ export default function getCuisine(categories) {
   for (var i = 0; i < categories.length; i++) {
     if (categories[i].title) {
       const temp = foodImages[categories[i].title]
-      if (temp && temp.val >= max){
-        if (typeof temp.img === "string") image = foodImages[temp.img].img
+      if (temp && temp.priority >= max){
+        if (typeof temp.img === "string") {
+          if(foodImages[temp.img].val > 1){
+            var index = Math.random() * (foodImages[temp.img].val - 1)
+            image = foodImages[temp.img].choices[index];
+          }
+          else image = foodImages[temp.img].img
+        }
         else image = temp.img;
-        max = temp.val;
+        if(temp.val > 2){
+          var index = Math.random() * (temp.val - 1)
+          image = temp.choices[index];
+        }
+        max = temp.priority;
       }
     }
   }

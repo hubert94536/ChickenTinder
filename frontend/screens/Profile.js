@@ -16,7 +16,6 @@ import Confirmation from '../modals/Confirmation.js'
 import loginService from '../apis/loginService.js'
 import EditProfile from '../modals/EditProfile.js'
 import Friends from './Friends.js'
-import loginService from '../apis/loginService.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -43,7 +42,7 @@ class UserProfileView extends Component {
       logoutAlert: false,
       deleteAlert: false,
       blur: false,
-      confirmatin: true,
+      confirmation: true,
       // friends text
       numFriends: 0,
       imageData: null,
@@ -127,6 +126,7 @@ class UserProfileView extends Component {
               this.setState({verificationId: phoneAuthSnapshot.verificationId})
               this.verifyCode('111111')
 // TODO: Display verification code input modal (6 digits)
+              this.setState({confirmation: true})
               break;
             // Auto verified on android - proceed to delete account
             case auth.PhoneAuthState.AUTO_VERIFIED:
@@ -167,6 +167,7 @@ class UserProfileView extends Component {
       // If reauthentication succeeds, delete account using credential
       .then(() => {
         console.log("success")
+        this.setState({confirmation: false})
         // loginService
         // .deleteUserWithCredential(credential)
         // .then(() => {
@@ -182,6 +183,7 @@ class UserProfileView extends Component {
         console.log("Code verification failed")
         console.log(error)
 // TODO: Code could not be verified, disply an error
+  this.setState({confirmation: false})
         this.props.showError()
       })
   }
@@ -353,6 +355,7 @@ class UserProfileView extends Component {
               visible={this.state.confirmation}
               close={() => this.setState({ confirmation: false })}
               show={() => this.setState({ confirmation: true })}
+              verify={(code) => this.verifyCode(code)}
             />
 
             {edit && (

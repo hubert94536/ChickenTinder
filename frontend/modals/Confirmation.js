@@ -30,30 +30,12 @@ class Confirmation extends React.Component {
     this.state = {
         code: '',
         confirmResult: null,
-        badCodeAlert: false
     }
   }
 
   // function called when main button is pressed
-    handlePress = async () => {
-        // Request for OTP verification
-        const { confirmResult, code } = this.state
-        if (code.length === 6) {
-          confirmResult
-            .confirm(code)
-            .then((userCredential) => loginService.loginWithCredential(userCredential))
-            .then((result) => {
-                this.props.close()
-                this.props.navigation.replace(result)
-            })
-            .catch((error) => {
-              this.props.showError()
-              console.log(error)
-            })
-        } else {
-          this.setState({ badCodeAlert: true, press:false })
-          this.props.close()
-        }
+    handlePress() {
+      this.props.verify(this.state.code)
     }
 
 
@@ -103,30 +85,6 @@ class Confirmation extends React.Component {
           </View>
         </View>
         </Modal>
-        {this.props.error && (
-              <Alert
-                title="Error, please try again"
-                buttonAff="Close"
-                height="20%"
-                press={() => this.props.hideError()}
-                cancel={() => this.props.hideError()}
-              />
-        )}
-          {this.state.badCodeAlert && (
-            <Alert
-              title="Please enter a 6 digit OTP code."
-              buttonAff="Close"
-              height="20%"
-              press={() => {
-                  this.setState({ badCodeAlert: false })
-                  this.props.show()
-                }}
-              cancel={() => {
-                this.setState({ badCodeAlert: false })
-                this.props.show()
-              }}
-            />
-          )}
       </View>
     )
   }
@@ -205,7 +163,7 @@ const mapStateToProps = (state) => {
 
 Confirmation.propTypes = {
     close: PropTypes.func,
-    show: PropTypes.func
+    verify: PropTypes.func
 }
 
 Confirmation.defaultProps = {
