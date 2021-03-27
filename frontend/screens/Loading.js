@@ -37,13 +37,13 @@ class Loading extends React.Component {
       for (var i = 0; i < global.restaurants.length; i++) {
         if (global.restaurants[i].id === data) {
           this.props.navigation.replace('Match', {
-            restaurant: global.restaurants[i]
+            restaurant: global.restaurants[i],
           })
           break
         }
       }
     })
-    
+
     socket.getSocket().once('top 3', (res) => {
       socket.getSocket().off()
       var restaurants = []
