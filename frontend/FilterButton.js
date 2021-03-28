@@ -30,6 +30,8 @@ export default class FilterButton extends React.Component {
         height: 28,
         alignItems: 'center',
         justifyContent: 'center',
+        marginLeft: '2%',
+        marginRight: '2%',
       },
       text: {
         paddingLeft: '2%',
