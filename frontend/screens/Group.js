@@ -361,7 +361,7 @@ class Group extends React.Component {
             </View>
           }
           offset={windowHeight / 6}
-          objectHeight={global.isHost ? 400 : 350}
+          objectHeight={global.isHost ? 325 : 275}
           renderDrawerView={
             <View>
               <View>
@@ -369,7 +369,7 @@ class Group extends React.Component {
                   style={{
                     backgroundColor: 'white',
                     width: windowWidth,
-                    height: global.isHost ? 400 : 350,
+                    height: global.isHost ? 325 : 275,
                     zIndex: 30,
                     elevation: 30,
                   }}

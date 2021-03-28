@@ -14,61 +14,35 @@ import colors from '../../styles/colors.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
+import TagsView from '../TagsView.js'
 import Icon from 'react-native-vector-icons/AntDesign'
-import TimeSwitch from './TimeSwitch.js'
 import _ from 'lodash'
 
-export default class Time extends React.Component {
+const tagsPrice = ['$', '$$', '$$$', '$$$$']
+
+export default class Price extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedHour: '',
-      selectedMinute: '',
-      invalidTime: false,
-      timeMode: 'AM',
-      switch: true,
+      selectedPrice: [],
     }
   }
 
   // function called when main button is pressed
-  handlePress(hr, min) {
-    this.props.press(hr, min)
+  handlePress() {
+    let prices = this.state.selectedPrice
+      .map((item) => item.length)
+      .sort()
+      .toString()
+    this.props.press(prices)
   }
 
   //  function called when 'x' is pressed
   handleCancel() {
-    let invalid = this.state.invalidTime
-    this.setState({
-      selectedHour: '',
-      selectedMinute: '',
-      invalidTime: false,
-    })
-    this.props.cancel(invalid)
+    this.props.cancel(true)
   }
 
-  evaluateTime() {
-    if (this.state.selectedMinute === '' || this.state.selectedHour === '') {
-      this.setState({ invalidTime: true })
-    }
-    var hour = parseInt(this.state.selectedHour)
-    var min = parseInt(this.state.selectedMinute)
-    if (hour < 0 || hour > 12 || min < 0 || min > 59 || isNaN(hour) || isNaN(min)) {
-      this.setState({ invalidTime: true })
-    } else {
-      if (this.state.timeMode === 'PM') {
-        if (hour !== 12) {
-          hour = hour + 12
-        }
-      } else if (this.state.timeMode === 'AM') {
-        if (hour === 12) {
-          hour = 0
-        }
-      }
-      this.handlePress(hour, min)
-    }
-  }
-
-  evaluate = _.debounce(this.evaluateTime.bind(this), 200)
+  evaluate = _.debounce(this.handlePress.bind(this), 200)
 
   render() {
     return (
@@ -80,31 +54,24 @@ export default class Time extends React.Component {
             onPress={() => this.handleCancel()}
           />
           <View style={modalStyles.titleContainer}>
-            <Text style={[screenStyles.text, modalStyles.titleText]}>Time</Text>
+            <Text style={[screenStyles.text, modalStyles.titleText]}>Price</Text>
             <Text style={[screenStyles.text, styles.black]}>Set a time for your group to eat</Text>
             <View style={modalStyles.error}>
-              <TextInput
-                style={[modalStyles.textInput, styles.black]}
-                value={this.state.selectedHour}
-                placeholder="12"
-                placeholderTextColor="#9f9f9f"
-                onChangeText={(text) => this.setState({ selectedHour: text, invalidTime: false })}
-                keyboardType="numeric"
-              />
-              <Text style={[screenStyles.text, styles.colon]}>:</Text>
-              <TextInput
-                style={[modalStyles.textInput, styles.black]}
-                value={this.state.selectedMinute}
-                placeholder="00"
-                placeholderTextColor="#9f9f9f"
-                onChangeText={(text) => this.setState({ selectedMinute: text, invalidTime: false })}
-                keyboardType="numeric"
-              />
-              <View style={styles.switchButton}>
-                <TimeSwitch onValueChange={(val) => this.setState({ timeMode: val })} />
+              <View style={styles.filterGroupContainer}>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={styles.filterSubtext}>Select all that apply</Text>
+                </View>
+                <TagsView
+                  ACCENT_COLOR={colors.hex}
+                  TEXT_COLOR={colors.hex}
+                  all={tagsPrice}
+                  selected={this.state.selectedPrice}
+                  isExclusive={false}
+                  onChange={(event) => this.setState({ selectedPrice: event })}
+                />
               </View>
             </View>
-            {this.state.invalidTime && (
+            {this.state.invalidPrice && (
               <View style={[modalStyles.error, styles.errorMargin]}>
                 <Icon name="exclamationcircle" color={colors.hex} style={modalStyles.errorIcon} />
                 <Text style={[screenStyles.text, modalStyles.errorText]}>
@@ -112,7 +79,7 @@ export default class Time extends React.Component {
                 </Text>
               </View>
             )}
-            {!this.state.invalidTime && (
+            {!this.state.invalidPrice && (
               <View style={[modalStyles.error, styles.errorMargin]}>
                 <Text style={[screenStyles.text, modalStyles.errorText]}> </Text>
               </View>
@@ -142,20 +109,11 @@ const styles = StyleSheet.create({
     marginRight: '2%',
     marginLeft: '2%',
   },
-  switchButton: {
-    marginLeft: '4%',
-  },
-  switchButtonInner: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 0,
-    margin: 0,
-  },
-  switchButtonOuter: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 0,
-    margin: 0,
+  filterGroupContainer: {
+    marginLeft: '5%',
+    marginRight: '5%',
+    flex: 1,
+    justifyContent: 'flex-start',
   },
   errorMargin: {
     marginTop: '3%',
@@ -165,7 +123,7 @@ const styles = StyleSheet.create({
   },
 })
 
-Time.propTypes = {
+Price.propTypes = {
   press: PropTypes.func,
   cancel: PropTypes.func,
   visible: PropTypes.bool,
