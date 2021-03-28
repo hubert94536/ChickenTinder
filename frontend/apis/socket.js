@@ -4,8 +4,8 @@ import io from 'socket.io-client'
 var socket = null
 
 const connect = () => {
-  // socket = io('http://192.168.0.23:5000')
-  socket = io('https://wechews.herokuapp.com')
+  socket = io('http://192.168.0.23:5000')
+  // socket = io('https://wechews.herokuapp.com')
   socket.on('connect', async () => {
     console.log('connect')
     const token = await auth().currentUser.getIdToken()
@@ -21,7 +21,16 @@ const connect = () => {
 }
 
 const createRoom = () => {
-  socket.emit('create')
+  // intialize session info
+  let session = {}
+  session.join = true
+  session.members = {}
+  session.filters = {}
+  session.filters.categories = ''
+  session.stage = 'groups'
+  socket.emit('create', {
+    session: session
+  })
 }
 
 // sends invite to an uid
@@ -32,8 +41,16 @@ const sendInvite = (receiver) => {
 }
 
 const joinRoom = (code) => {
+  // initialize member object
+  let member = {}
+  member.name = socket.user.name
+  member.username = socket.user.username
+  member.photo = socket.user.photo
+  member.filters = false
+  member.connected = true
   socket.emit('join', {
     code: code,
+    member: member
   })
 }
 
@@ -55,6 +72,7 @@ const kickUser = (uid) => {
 // filters needs: radius, group size, majority, location or latitude/longitude
 // filters options: price, open_at, categories, limit
 const startSession = (filters) => {
+
   socket.emit('start', { filters: filters })
 }
 

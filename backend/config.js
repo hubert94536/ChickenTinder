@@ -13,18 +13,18 @@ const config = {
   port: process.env.USERS_PORT,
   database: process.env.USERS_DATABASE,
   dialect: 'postgresql',
-  ssl: true,
+  ssl: false,
 }
 
 const pool = new pg.Pool(config)
 const sequelize = new Sequelize(config)
-// const redisClient = redis.createClient('redis://localhost:6379')
+const redisClient = redis.createClient('redis://localhost:6379')
 
-const redisClient = redis.createClient({
-  host: process.env.REDIS_HOST,
-  port: process.env.REDIS_PORT,
-  password: process.env.REDIS_PASSWORD,
-})
+// const redisClient = redis.createClient({
+//   host: process.env.REDIS_HOST,
+//   port: process.env.REDIS_PORT,
+//   password: process.env.REDIS_PASSWORD,
+// })
 
 const hgetAll = promisify(redisClient.hgetall).bind(redisClient)
 const hmset = promisify(redisClient.hmset).bind(redisClient)
