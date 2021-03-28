@@ -12,7 +12,7 @@ export default function getCuisine(categories) {
   for (var i = 0; i < categories.length; i++) {
     if (categories[i].title) {
       const temp = foodImages[categories[i].title]
-      if (temp && temp.val >= max) {
+      if (temp && temp.val > max) {
         if (typeof temp.img === 'string') image = foodImages[temp.img].img
         else image = temp.img
         max = temp.val

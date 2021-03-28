@@ -30,20 +30,26 @@ export default class Majority extends React.Component {
 
   //  function called when 'x' is pressed
   handleCancel() {
-    this.props.cancel()
+    let invalid = this.state.invalidValue
+    this.setState({
+      selectedValue: '',
+      invalidValue: false,
+    })
+    this.props.cancel(invalid)
   }
 
   evaluateSize() {
     if (this.state.selectedValue === '') {
       this.setState({ invalidValue: true })
-    }
-    let s = parseInt(this.state.selectedValue)
-
-    // Adjust min/max round lengths
-    if (s < 1 || s > this.props.max || isNaN(s)) {
-      this.setState({ invalidValue: true })
     } else {
-      this.handlePress(s)
+      let s = parseInt(this.state.selectedValue)
+
+      // Adjust min/max round lengths
+      if (s < 1 || s > this.props.max || isNaN(s)) {
+        this.setState({ invalidValue: true })
+      } else {
+        this.handlePress(s)
+      }
     }
   }
 
@@ -105,6 +111,17 @@ export default class Majority extends React.Component {
   }
 }
 
+/* TODO: Implement better majority picker */
+
+// let tagsMajority = []
+// let size = this.props.members.length
+// let half = Math.ceil(size * 0.5)
+// let twoThirds = Math.ceil(size * 0.67)
+// tagsMajority.push(half)
+// if (twoThirds != half) tagsMajority.push(twoThirds)
+// tagsMajority.push('All')
+// tagsMajority.push('Custom: ')
+
 const styles = StyleSheet.create({
   mainContainerHeight: {
     height: Dimensions.get('window').height * 0.25,
@@ -127,6 +144,7 @@ const styles = StyleSheet.create({
 
 Majority.propTypes = {
   subtext: PropTypes.string,
+  title: PropTypes.string,
   press: PropTypes.func,
   cancel: PropTypes.func,
   visible: PropTypes.bool,
