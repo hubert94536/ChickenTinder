@@ -4,21 +4,17 @@ import {
   Modal,
   StyleSheet,
   Text,
-  TextInput,
   TouchableHighlight,
   View,
 } from 'react-native'
 import PropTypes from 'prop-types'
-// import { Switch } from 'react-native-switch'
+import ButtonSwitch from './ButtonSwitch.js'
 import colors from '../../styles/colors.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
-import TagsView from '../TagsView.js'
 import Icon from 'react-native-vector-icons/AntDesign'
 import _ from 'lodash'
-
-const tagsPrice = ['$', '$$', '$$$', '$$$$']
 
 export default class Price extends React.Component {
   constructor(props) {
@@ -55,19 +51,27 @@ export default class Price extends React.Component {
           />
           <View style={modalStyles.titleContainer}>
             <Text style={[screenStyles.text, modalStyles.titleText]}>Price</Text>
-            <Text style={[screenStyles.text, styles.black]}>Set a time for your group to eat</Text>
+            <Text style={[screenStyles.text, styles.black]}>Select your ideal price range</Text>
             <View style={modalStyles.error}>
               <View style={styles.filterGroupContainer}>
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.filterSubtext}>Select all that apply</Text>
                 </View>
-                <TagsView
-                  ACCENT_COLOR={colors.hex}
-                  TEXT_COLOR={colors.hex}
-                  all={tagsPrice}
-                  selected={this.state.selectedPrice}
-                  isExclusive={false}
-                  onChange={(event) => this.setState({ selectedPrice: event })}
+                <ButtonSwitch
+                  text1="$"
+                  text2="$$"
+                  text3="$$$"
+                  text4="$$$$"
+                  value1="$"
+                  value2="$$"
+                  value3="$$$"
+                  value4="$$$$"
+                  selectMultiple={true}
+                  onValueChange={(priceArr) => {
+                      this.setState({ selectedPrice: priceArr }, 
+                      ()=>console.log('price array: ' + this.state.selectedPrice))
+                    }
+                  }
                 />
               </View>
             </View>

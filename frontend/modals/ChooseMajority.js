@@ -14,7 +14,6 @@ import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
 import _ from 'lodash'
-import { ButtonGroup } from 'react-native-elements'
 
 export default class Majority extends React.Component {
   constructor(props) {
@@ -61,9 +60,6 @@ export default class Majority extends React.Component {
     let size = this.props.max
     let half = Math.ceil(size * 0.5).toString()
     let twoThirds = Math.ceil(size * 0.67).toString()
-    // if (half == twoThirds) {
-    //   twoThirds = undefined
-    // }
     return (
       <Modal animationType="fade" transparent visible={this.props.visible}>
         <View style={[modalStyles.mainContainer, styles.mainContainerHeight]}>
@@ -78,7 +74,7 @@ export default class Majority extends React.Component {
               How many members needed for a match
             </Text>
 
-            <View style={modalStyles.inputContainer}>
+            <View style={[modalStyles.inputContainer, styles.inputContainer]}>
               <ButtonSwitch
                 text1= {half}
                 text2= {twoThirds}
@@ -119,7 +115,7 @@ export default class Majority extends React.Component {
               </View>
             )}
             <TouchableHighlight
-              style={[modalStyles.doneButton, styles.doneButtonMargin]}
+              style={modalStyles.doneButton}
               onPress={() => this.evaluate()}
             >
               <Text style={[screenStyles.text, modalStyles.doneText]}>Done</Text>
@@ -146,6 +142,9 @@ const styles = StyleSheet.create({
   mainContainerHeight: {
     height: Dimensions.get('window').height * 0.25,
   },
+  inputContainer: {
+    marginLeft: '0%'
+  },
   input: {
     alignSelf: 'center',
     marginTop: '3%',
@@ -153,9 +152,6 @@ const styles = StyleSheet.create({
   },
   errorMargin: {
     marginBottom: '1%',
-  },
-  doneButtonMargin: {
-    marginTop: '3%',
   },
   black: {
     color: 'black',

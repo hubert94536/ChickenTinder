@@ -19,13 +19,42 @@ export default class ButtonSwitch extends Component {
   constructor() {
     super()
     this.state = {
-      selectedIndex: 0,
+      selectedIndex: -1,
+      selectedIndexes:[],
     }
     this.updateIndex = this.updateIndex.bind(this)
   }
 
   updateIndex(selectedIndex) {
-    this.setState({ selectedIndex })
+    // If allow users to select multiple buttons (ie. price)
+    if (this.props.selectMultiple) {
+      this.setState({selectedIndexes: selectedIndex}, ()=> {
+        //  Turn array of indexes into array of desired values passed in as props
+        const priceArr =[]
+        const tempSelectedIndexes = this.state.selectedIndexes
+        tempSelectedIndexes.forEach(index => {
+          switch (index) {
+            case 0:
+              priceArr.push(this.props.value1)
+              break;
+            case 1:
+              priceArr.push(this.props.value2)
+              break;
+            case 2:
+              priceArr.push(this.props.value3)
+              break;
+            case 3:
+              priceArr.push(this.props.value4)
+              break;
+          }
+        })
+        this.props.onValueChange(priceArr)
+      })
+      return
+    }
+    else {
+      this.setState({ selectedIndex: selectedIndex })
+    }
     if (selectedIndex == 0) {
       this.props.onValueChange(this.props.value1)
     } else if (selectedIndex == 1) {
@@ -45,7 +74,7 @@ export default class ButtonSwitch extends Component {
     if (this.props.text4) {
       buttons.push(this.props.text4)
     }
-    const { selectedIndex } = this.state
+
     if (this.props.text4) {
       groupWidth = styles.containerWidth4
     }
@@ -58,7 +87,8 @@ export default class ButtonSwitch extends Component {
     return (
       <ButtonGroup
         onPress={this.updateIndex}
-        selectedIndex={selectedIndex}
+        selectedIndex={this.state.selectedIndex}
+        selectedIndexes={this.state.selectedIndexes}
         buttons={buttons}
         //Styling
         containerStyle={[styles.container, groupWidth]}
@@ -68,6 +98,7 @@ export default class ButtonSwitch extends Component {
         selectedTextStyle={styles.selectedText}
         underlayColor={'white'}
         activeOpacity={1}
+        selectMultiple={this.props.selectMultiple}
       />
     )
   }
@@ -87,7 +118,7 @@ const styles = StyleSheet.create({
     width: 120
   },
   containerWidth4: {
-    width: 160
+    width: 180
   },
   innerBorder: {
     width: 0,
