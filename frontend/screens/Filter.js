@@ -246,6 +246,7 @@ class FilterSelector extends React.Component {
       filters.latitude = this.state.location.latitude
       filters.longitude = this.state.location.longitude
       if (global.isHost) {
+        console.log(JSON.stringify(filters))
         Socket.startSession(filters)
       }
     }
@@ -583,7 +584,6 @@ class FilterSelector extends React.Component {
             this.props.setBlur(false)
           }}
           press={(sz) => {
-            // console.log(sz)
             this.setState({ majority: sz, chooseMajority: false })
             this.props.setBlur(false)
           }}

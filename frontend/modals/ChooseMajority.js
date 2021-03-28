@@ -9,10 +9,12 @@ import {
   View,
 } from 'react-native'
 import PropTypes from 'prop-types'
+import ButtonSwitch from './ButtonSwitch.js'
 import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
 import _ from 'lodash'
+import { ButtonGroup } from 'react-native-elements'
 
 export default class Majority extends React.Component {
   constructor(props) {
@@ -50,6 +52,12 @@ export default class Majority extends React.Component {
   evaluate = _.debounce(this.evaluateSize.bind(this), 100)
 
   render() {
+    let size = this.props.max
+    let half = Math.ceil(size * 0.5).toString()
+    let twoThirds = Math.ceil(size * 0.67).toString()
+    // if (half == twoThirds) {
+    //   twoThirds = undefined
+    // }
     return (
       <Modal animationType="fade" transparent visible={this.props.visible}>
         <View style={[modalStyles.mainContainer, styles.mainContainerHeight]}>
@@ -63,7 +71,19 @@ export default class Majority extends React.Component {
             <Text style={[styles.black, screenStyles.book]}>
               How many members needed for a match
             </Text>
+
             <View style={modalStyles.inputContainer}>
+              <ButtonSwitch
+                text1= {half}
+                text2= {twoThirds}
+                text3="All"
+                value1={half}
+                value2={twoThirds}
+                value3={this.props.max.toString()}
+                onValueChange={(majority)=>
+                    this.setState({selectedValue: majority})
+                }
+              />
               <TextInput
                 style={modalStyles.textInput}
                 value={this.state.selectedValue}
@@ -72,7 +92,7 @@ export default class Majority extends React.Component {
                 defaultValue={this.props.max.toString()}
               />
               <Text style={[screenStyles.text, modalStyles.titleText, styles.input]}>
-                / {this.props.max} members
+                / {this.props.max}
               </Text>
             </View>
             {this.state.invalidValue && (
