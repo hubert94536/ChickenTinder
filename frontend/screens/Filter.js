@@ -306,132 +306,103 @@ class FilterSelector extends React.Component {
   render() {
     return (
       <View style={styles.mainContainer}>
-        <Swiper
-          loop={false}
-          showsPagination={global.isHost}
-          activeDotColor={ACCENT_COLOR}
-          paginationStyle={{ bottom: -10 }}
-          onIndexChanged={(index) => this.setState({ swiperIndex: index })}
-          disableScrollViewPanResponder={true}
+        <View
+          style={{
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
         >
-          <View
-            style={{
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            {global.isHost && (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  paddingTop: '5%',
+          {global.isHost && (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                paddingTop: '5%',
+              }}
+            >
+              {/* Majority Button */}
+              <FilterButton
+                active={this.state.s_majority != null}
+                onPress={() => {
+                  console.log('curr majority: ' + this.state.s_majority)
+                  this.setState({ chooseMajority: true })
+                  this.props.setBlur(true)
                 }}
-              >
-                {/* Majority Button */}
-                <FilterButton
-                  active={this.state.s_majority != null}
-                  onPress={() => {
-                    console.log('curr majority: ' + this.state.s_majority)
-                    this.setState({ chooseMajority: true })
-                    this.props.setBlur(true)
-                  }}
-                  title="Majority"
-                />
+                title="Majority"
+              />
 
-                {/* Round Size Button */}
-                <FilterButton
-                  active={this.state.s_size != null}
-                  onPress={() => {
-                    console.log('curr round size: ' + this.state.s_size)
-                    this.setState({ chooseSize: true })
-                    this.props.setBlur(true)
-                  }}
-                  title="Round Size"
-                />
-
-                {/* Location Button */}
-                <FilterButton
-                  active={this.state.s_location != null}
-                  onPress={() => {
-                    console.log('curr location: ' + this.state.s_location)
-                    this.setState({ chooseLocation: true })
-                    this.props.setBlur(true)
-                  }}
-                  title="Location"
-                />
-
-                {/* Time */}
-                <FilterButton
-                  active={this.state.s_time != null}
-                  onPress={() => {
-                    console.log('curr time: ' + this.state.s_time)
-                    this.setState({ chooseTime: true })
-                    this.props.setBlur(true)
-                  }}
-                  title="Time"
-                />
-
-                {/* Price */}
-                <FilterButton
-                  active={this.state.s_price != null}
-                  onPress={() => {
-                    console.log('prices: ' + this.state.s_price)
-                    this.setState({ choosePrice: true })
-                    this.props.setBlur(true)
-                  }}
-                  title="Price"
-                />
-              </View>
-            )}
-            <View style={{ paddingTop: '5%' }}>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={[screenStyles.text, styles.filterTitleText]}>Cuisines</Text>
-                <Text style={styles.filterSubtext}>Select all that apply</Text>
-              </View>
-              <FlatList
-                data={cuisines}
-                columnWrapperStyle={{
-                  justifyContent: 'center',
+              {/* Round Size Button */}
+              <FilterButton
+                active={this.state.s_size != null}
+                onPress={() => {
+                  console.log('curr round size: ' + this.state.s_size)
+                  this.setState({ chooseSize: true })
+                  this.props.setBlur(true)
                 }}
-                numColumns={5}
-                renderItem={({ item }) => {
-                  return (
-                    <CategoryCard
-                      uid={1}
-                      category={item}
-                      onPress={(sel) => {
-                        s_categories[item] = sel
-                      }}
-                    />
-                  )
+                title="Round Size"
+              />
+
+              {/* Location Button */}
+              <FilterButton
+                active={this.state.s_location != null}
+                onPress={() => {
+                  console.log('curr location: ' + this.state.s_location)
+                  this.setState({ chooseLocation: true })
+                  this.props.setBlur(true)
                 }}
-                keyExtractor={(item, index) => index}
+                title="Location"
+              />
+
+              {/* Time */}
+              <FilterButton
+                active={this.state.s_time != null}
+                onPress={() => {
+                  console.log('curr time: ' + this.state.s_time)
+                  this.setState({ chooseTime: true })
+                  this.props.setBlur(true)
+                }}
+                title="Time"
+              />
+
+              {/* Price */}
+              <FilterButton
+                active={this.state.s_price != null}
+                onPress={() => {
+                  console.log('prices: ' + this.state.s_price)
+                  this.setState({ choosePrice: true })
+                  this.props.setBlur(true)
+                }}
+                title="Price"
               />
             </View>
-          </View>
-
-          {global.isHost && (
-            <View style={styles.swiperContainer}>
-              {/* PRICE */}
-              <View style={styles.filterGroupContainer}>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={[screenStyles.text, styles.filterTitleText]}>Price</Text>
-                  <Text style={styles.filterSubtext}>Select all that apply</Text>
-                </View>
-                <TagsView
-                  ACCENT_COLOR={ACCENT_COLOR}
-                  TEXT_COLOR={TEXT_COLOR}
-                  all={tagsPrice}
-                  selected={this.state.selectedPrice}
-                  isExclusive={false}
-                  onChange={(event) => this.setState({ selectedPrice: event })}
-                />
-              </View>
-            </View>
           )}
-        </Swiper>
+          <View style={{ paddingTop: '5%' }}>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={[screenStyles.text, styles.filterTitleText]}>Cuisines</Text>
+              <Text style={styles.filterSubtext}>Select all that apply</Text>
+            </View>
+            <FlatList
+              data={cuisines}
+              columnWrapperStyle={{
+                justifyContent: 'center',
+              }}
+              numColumns={5}
+              renderItem={({ item }) => {
+                return (
+                  <CategoryCard
+                    uid={1}
+                    category={item}
+                    onPress={(sel) => {
+                      s_categories[item] = sel
+                    }}
+                  />
+                )
+              }}
+              keyExtractor={(item, index) => index}
+            />
+          </View>
+        </View>
         {/* ------------------------------------------ALERTS------------------------------------------ */}
 
         {this.state.locationAlert && (

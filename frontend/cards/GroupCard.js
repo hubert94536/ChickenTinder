@@ -37,15 +37,7 @@ export default class GroupCard extends React.Component {
             style={[styles.image, this.props.filters ? imgStyles.hexBorder : imgStyles.tanBorder]}
           />
           {this.props.filters && (
-<<<<<<< HEAD
             <Icon style={[imgStyles.icon, styles.checkIcon]} name="check-circle" />
-=======
-            <Icon
-              style={[imgStyles.icon, styles.checkIcon]}
-              name="check-circle"
-              onPress={() => this.acceptFriend()}
-            />
->>>>>>> kevin-dropdown
           )}
         </View>
         <View style={styles.info}>
