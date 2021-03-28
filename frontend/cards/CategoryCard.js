@@ -43,9 +43,6 @@ export default class CategoryCard extends React.Component {
             style={[
               styles.imageWrapper,
               {
-                borderRadius: 10,
-                backgroundColor: bg,
-                borderWidth: 2,
                 borderColor: this.state.selected ? colors.hex : 'white',
               },
             ]}
@@ -77,6 +74,11 @@ const styles = StyleSheet.create({
     height: width * 0.15,
     borderRadius: 10,
     overflow: 'hidden',
+  },
+  imageWrapper: {
+    borderRadius: 10,
+    backgroundColor: bg,
+    borderWidth: 2,
   },
   card: {
     width: width * 0.15,

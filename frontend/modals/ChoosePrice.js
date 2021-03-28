@@ -55,42 +55,21 @@ export default class Price extends React.Component {
           />
           <View style={modalStyles.titleContainer}>
             <Text style={[screenStyles.text, modalStyles.titleText]}>Price</Text>
-            <Text style={[screenStyles.text, styles.black]}>Set a time for your group to eat</Text>
-            <View style={modalStyles.error}>
-              <View style={styles.filterGroupContainer}>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={styles.filterSubtext}>Select all that apply</Text>
-                </View>
-                <TagsView
-                  ACCENT_COLOR={colors.hex}
-                  TEXT_COLOR={colors.hex}
-                  all={tagsPrice}
-                  selected={this.state.selectedPrice}
-                  isExclusive={false}
-                  onChange={(event) => this.setState({ selectedPrice: event })}
-                />
-              </View>
-            </View>
-            {this.state.invalidPrice && (
-              <View style={[modalStyles.error, styles.errorMargin]}>
-                <Icon name="exclamationcircle" color={colors.hex} style={modalStyles.errorIcon} />
-                <Text style={[screenStyles.text, modalStyles.errorText]}>
-                  Invalid time. Please try again
-                </Text>
-              </View>
-            )}
-            {!this.state.invalidPrice && (
-              <View style={[modalStyles.error, styles.errorMargin]}>
-                <Text style={[screenStyles.text, modalStyles.errorText]}> </Text>
-              </View>
-            )}
-            <TouchableHighlight
-              style={[modalStyles.doneButton, styles.doneButtonMargin]}
-              onPress={() => this.evaluate()}
-            >
-              <Text style={[screenStyles.text, modalStyles.doneText]}>Done</Text>
-            </TouchableHighlight>
+            <Text style={[screenStyles.text, styles.black]}>Select a target price</Text>
           </View>
+          <View style={styles.filterGroupContainer}>
+            <TagsView
+              ACCENT_COLOR={colors.hex}
+              TEXT_COLOR={colors.hex}
+              all={tagsPrice}
+              selected={this.state.selectedPrice}
+              isExclusive={false}
+              onChange={(event) => this.setState({ selectedPrice: event })}
+            />
+          </View>
+          <TouchableHighlight style={[modalStyles.doneButton]} onPress={() => this.evaluate()}>
+            <Text style={[screenStyles.text, modalStyles.doneText]}>Done</Text>
+          </TouchableHighlight>
         </View>
       </Modal>
     )
@@ -110,16 +89,10 @@ const styles = StyleSheet.create({
     marginLeft: '2%',
   },
   filterGroupContainer: {
-    marginLeft: '5%',
-    marginRight: '5%',
-    flex: 1,
-    justifyContent: 'flex-start',
-  },
-  errorMargin: {
-    marginTop: '3%',
-  },
-  doneButtonMargin: {
-    marginTop: '5%',
+    height: '20%',
+    alignSelf: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
   },
 })
 
