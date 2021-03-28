@@ -1,11 +1,5 @@
-/* eslint-disable prettier/prettier */
 import React from 'react'
-import {
-  PermissionsAndroid,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
+import { PermissionsAndroid, StyleSheet, Text, View } from 'react-native'
 // import { BlurView } from '@react-native-community/blur'
 import Geolocation from 'react-native-geolocation-service'
 import PropTypes from 'prop-types'
@@ -16,13 +10,17 @@ import Socket from '../apis/socket.js'
 import TagsView from '../TagsView.js'
 import DynamicTags from '../TagsViewGenerator.js'
 import BackgroundButton from '../BackgroundButton.js'
+import FilterButton from '../FilterButton.js'
 import colors from '../../styles/colors.js'
 import global from '../../global.js'
 import Location from '../modals/ChooseLocation.js'
 import Time from '../modals/ChooseTime.js'
+import Price from '../modals/ChoosePrice.js'
 import Size from '../modals/ChooseSize.js'
 import Majority from '../modals/ChooseMajority.js'
 import screenStyles from '../../styles/screenStyles.js'
+import { FlatList } from 'react-native-gesture-handler'
+import CategoryCard from '../cards/CategoryCard.js'
 // import modalStyles from '../../styles/modalStyles.js'
 
 const font = 'CircularStd-Medium'
@@ -32,7 +30,7 @@ const BORDER_COLOR = colors.hex
 const TEXT_COLOR = colors.hex
 const ACCENT_COLOR = colors.hex
 
-const tagsCuisine = [
+const cuisines = [
   'American',
   'European',
   'Latin American',
@@ -50,6 +48,8 @@ const tagsDiet = ['Vegan', 'Vegetarian']
 const tagsPrice = ['$', '$$', '$$$', '$$$$']
 
 const tagsSizes = [10, 20, 30, 40, 50]
+
+const s_categories = {}
 
 //  requests the users permission
 const requestLocationPermission = async () => {
@@ -81,36 +81,51 @@ class FilterSelector extends React.Component {
     const date = new Date()
 
     this.state = {
-      // Filters
-      distance: 5,
-      location: null,
+      // Set filters
+      s_majority: null,
+      s_size: null,
+      s_radius: null,
+      s_location: null,
+      s_time: null,
+      s_price: null,
 
-      hour: date.getUTCHours(),
-      minute: date.getUTCMinutes(),
-      asap: true,
-
-      lat: 0,
-      long: 0,
-      size: 10,
-      majority: this.props.members.length,
       selectedCuisine: [],
       selectedPrice: [],
       selectedRestriction: [],
-      selectedSize: [ 10 ],
-      selectedMajority: ['All'],
 
       // MODALS
       chooseFriends: false,
-      chooseLocation: false,
       chooseMajority: false,
       chooseSize: false,
+      chooseLocation: false,
       chooseTime: false,
+      choosePrice: false,
 
       // ALERTS
       locationAlert: false,
 
       // SWIPER
       swiperIndex: 0,
+    }
+
+    cuisines.forEach((item) => (s_categories[item] = false))
+    if (requestLocationPermission()) {
+      Geolocation.getCurrentPosition(
+        (position) => {
+          this.setState({
+            defaultLocation: {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            },
+          })
+        },
+        (error) => {
+          console.log(error.code, error.message)
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+      )
+    } else {
+      console.log('filter.js: Failed to get location')
     }
   }
 
@@ -120,8 +135,10 @@ class FilterSelector extends React.Component {
       Geolocation.getCurrentPosition(
         (position) => {
           this.setState({
-            long: position.coords.longitude,
-            lat: position.coords.latitude,
+            d_location: {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            },
           })
         },
         (error) => {
@@ -131,6 +148,12 @@ class FilterSelector extends React.Component {
       )
     } else {
       console.log('Filter.js: Failed to get location')
+      this.setState({
+        d_location: {
+          latitude: 34.070983,
+          longitude: -118.444765,
+        },
+      })
     }
   }
 
@@ -218,37 +241,44 @@ class FilterSelector extends React.Component {
   //  formats the filters to call yelp api
   evaluateFilters() {
     const filters = {}
-    let unix = null
-    //  convert to unix time
-    if (this.state.asap) {
-      unix = Math.floor(Date.now() / 1000)
-    } else {
-      const dd = date.getDate()
-      const mm = date.getMonth()
-      const yyyy = date.getFullYear()
-      const timezone = date.getTimezoneOffset()
-      unix = Date.UTC(yyyy, mm, dd, this.state.hour, this.state.minute + timezone) / 1000
-    }
-    filters.open_at = unix
-    filters.price = this.state.selectedPrice.map((item) => item.length).sort().toString()
-    // puts the cuisine and restrictions into one array
-    const selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
-    filters.categories = this.categorize(selections)
-    filters.radius = this.state.distance * 1600
-    filters.majority = this.state.selectedMajority == ['All'] ? this.props.members.length : this.state.majority
     filters.groupSize = this.props.members.length
-    filters.limit = this.state.selectedSize[0]
-    //  making sure we have a valid location
-    if (this.state.location === null) {
-      this.setState({ locationAlert: true })
-      this.props.setBlur(true)
+
+    // Default filter settings
+    let d_majority = Math.ceil(this.props.members.length * 0.75)
+    let d_size = 10
+    let d_radius = 5.5 * 1600
+    let d_time = Math.floor(Date.now() / 1000)
+    let d_price = ''
+
+    filters.majority = this.state.s_majority ? this.state.s_majority : d_majority
+
+    filters.limit = this.state.s_size ? this.state.s_size : d_size
+
+    if (this.state.s_location != null) {
+      filters.radius = this.state.s_radius * 1600
+      filters.latitude = this.state.s_location.latitude
+      filters.longitude = this.state.s_location.longitude
     } else {
-      filters.latitude = this.state.location.latitude
-      filters.longitude = this.state.location.longitude
-      if (global.isHost) {
-        console.log(JSON.stringify(filters))
-        Socket.startSession(filters)
-      }
+      filters.radius = d_radius
+      filters.latitude = this.state.d_location.latitude
+      filters.longitude = this.state.d_location.longitude
+    }
+
+    filters.open_at = this.state.s_time ? this.state.s_time : d_time
+
+    filters.price = this.state.s_price ? this.state.s_price : d_price
+
+    // CATEGORIES
+    const selections = []
+    for (const [key, value] of Object.entries(s_categories)) {
+      if (value) selections.push(key)
+    }
+
+    filters.categories = this.categorize(selections)
+
+    if (global.isHost) {
+      console.log(`Selected filters: ${JSON.stringify(filters)}`)
+      Socket.startSession(filters)
     }
     this.props.buttonDisable(false)
   }
@@ -256,21 +286,17 @@ class FilterSelector extends React.Component {
   startSession() {
     this.props.buttonDisable(true)
     console.log('session-start')
-    if (this.state.location === null) {
-      this.props.setBlur(true)
-      this.setState({ locationAlert: true })
-      this.props.buttonDisable(false)
-    } else if (this.state.majority && this.state.distance) {
-      this.evaluateFilters()
-    }
+    this.evaluateFilters()
   }
 
   submitUserFilters() {
     this.props.buttonDisable(true)
     const filters = {}
-    // puts the cuisine and restrictions into one array
-    const selections = this.state.selectedCuisine.concat(this.state.selectedRestriction)
+
+    const selections = []
+    for (const [key, value] of Object.entries(s_categories)) if (value) selections.push(key)
     filters.categories = this.categorize(selections)
+
     console.log('userfilters: ' + JSON.stringify(filters.categories))
     Socket.submitFilters(filters.categories)
     this.props.handleUpdate()
@@ -278,233 +304,107 @@ class FilterSelector extends React.Component {
   }
 
   render() {
-    let tagsMajority = []
-    let size = this.props.members.length
-    let half = Math.ceil(size * 0.5)
-    let twoThirds = Math.ceil(size * 0.67)
-    tagsMajority.push(half)
-    if (twoThirds != half) tagsMajority.push(twoThirds)
-    tagsMajority.push('All')
-    tagsMajority.push('Custom: ')
-
     return (
       <View style={styles.mainContainer}>
-
-        {/* Title */}
-        {global.isHost && (
-          <View style={styles.titles}>
-            <View style={styles.titleContainer}>
-              <Text
-                style={[
-                  screenStyles.text,
-                  styles.filterHeader,
-                  { textAlign: 'center', color: this.state.swiperIndex == 0 ? TEXT_COLOR : 'gainsboro' },
-                ]}
-              >
-                Group Settings
-                </Text>
-            </View>
-            <View style={styles.titleContainer, {}}>
-              <Text
-                style={[
-                  screenStyles.text,
-                  styles.filterHeader,
-                  { textAlign: 'center', color: this.state.swiperIndex == 1 ? TEXT_COLOR : 'gainsboro' }
-                ]}
-              >
-                Your Filters
-              </Text>
-            </View>
-          </View>
-        )}
-        {!global.isHost && (
-          <View style={
-            styles.titleContainer,
-            {
-              flexDiretion: 'row',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }
-          }>
-            <Text
-              style={[
-                screenStyles.text,
-                styles.filterHeader,
-              ]}
-            >
-              Your Filters
-              </Text>
-          </View>
-        )}
-        <Swiper
-          loop={false}
-          showsPagination={global.isHost}
-          activeDotColor={ACCENT_COLOR}
-          paginationStyle={{ bottom: -10 }}
-          onIndexChanged={(index) => this.setState({ swiperIndex: index })}
-          disableScrollViewPanResponder={true}
+        <View
+          style={{
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
         >
           {global.isHost && (
-            <View style={styles.swiperContainer}>
-              {/* TODO: Update Buttom Label */}
-              {/* Majority Rule */}
-              <View style={styles.filterGroupContainer}>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={[screenStyles.text, styles.filterTitleText]}>Majority</Text>
-                  <Text style={styles.filterSubtext}>Members (out of {this.props.members.length}) needed to get a match</Text>
-                </View>
-                <DynamicTags
-                  all={tagsMajority}
-                  selected={this.state.selectedMajority}
-                  selectedNum={this.state.majority}
-                  isExclusive={true}
-                  onChange={(event) => {
-                    if (event[0] === 'Custom: ') {
-                      this.setState({ chooseMajority: true })
-                      this.props.setBlur(true)
-                    } else if (event[0] != 'All') {
-                      this.setState({ majority: parseInt(event[0]) })
-                    }
-                    this.setState({ selectedMajority: event })
-                  }}
-                />
-              </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                paddingTop: '5%',
+              }}
+            >
+              {/* Majority Button */}
+              <FilterButton
+                active={this.state.s_majority != null}
+                onPress={() => {
+                  console.log('curr majority: ' + this.state.s_majority)
+                  this.setState({ chooseMajority: true })
+                  this.props.setBlur(true)
+                }}
+                title="Majority"
+              />
 
+              {/* Round Size Button */}
+              <FilterButton
+                active={this.state.s_size != null}
+                onPress={() => {
+                  console.log('curr round size: ' + this.state.s_size)
+                  this.setState({ chooseSize: true })
+                  this.props.setBlur(true)
+                }}
+                title="Round Size"
+              />
 
-              {/* TODO: Update Buttom Label */}
-              {/* Round Size */}
-              <View style={styles.filterGroupContainer}>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={[screenStyles.text, styles.filterTitleText]}>Round Size</Text>
-                  <Text style={styles.filterSubtext}>Max number of restaurants</Text>
-                </View>
-                <TagsView
-                  all={tagsSizes}
-                  selected={this.state.selectedSize}
-                  isExclusive={true}
-                  ACCENT_COLOR={ACCENT_COLOR}
-                  onChange={(event) => {
-                    if (event[0] === 'Custom: ') {
-                      this.setState({ chooseSize: true })
-                      this.props.setBlur(true)
-                    }
-                    this.setState({ selectedSize: event, size: event[0] })
-                  }}
-                />
-              </View>
+              {/* Location Button */}
+              <FilterButton
+                active={this.state.s_location != null}
+                onPress={() => {
+                  console.log('curr location: ' + this.state.s_location)
+                  this.setState({ chooseLocation: true })
+                  this.props.setBlur(true)
+                }}
+                title="Location"
+              />
 
-              {/* DISTANCE */}
-              <View style={styles.filterGroupContainer}>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={[screenStyles.text, styles.filterTitleText]}>Distance</Text>
-                  <Text style={styles.filterSubtext}>({this.state.distance} miles)</Text>
-                </View>
-                <BackgroundButton
-                    backgroundColor={this.state.asap ? BACKGROUND_COLOR : ACCENT_COLOR}
-                    textColor={this.state.asap ? ACCENT_COLOR : BACKGROUND_COLOR}
-                    borderColor={BORDER_COLOR}
-                    onPress={() => {
-                      this.setState({ chooseLocation: true })
-                      this.props.setBlur(true)
-                    }}
-                    title={'Choose Location'}
-                />
-              </View>
+              {/* Time */}
+              <FilterButton
+                active={this.state.s_time != null}
+                onPress={() => {
+                  console.log('curr time: ' + this.state.s_time)
+                  this.setState({ chooseTime: true })
+                  this.props.setBlur(true)
+                }}
+                title="Time"
+              />
 
-              {/* PRICE */}
-              <View style={styles.filterGroupContainer}>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={[screenStyles.text, styles.filterTitleText]}>Price</Text>
-                  <Text style={styles.filterSubtext}>Select all that apply</Text>
-                </View>
-                <TagsView
-                  ACCENT_COLOR={ACCENT_COLOR}
-                  TEXT_COLOR={TEXT_COLOR}
-                  all={tagsPrice}
-                  selected={this.state.selectedPrice}
-                  isExclusive={false}
-                  onChange={(event) => this.setState({ selectedPrice: event })}
-                />
-              </View>
-
-              {/* TIME */}
-              <View style={styles.filterGroupContainer}>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={[screenStyles.text, styles.filterTitleText]}>Time</Text>
-                  <Text style={styles.filterSubtext}>Select when to eat</Text>
-                </View>
-                <View style={styles.buttonContainer}>
-                  <BackgroundButton
-                    backgroundColor={this.state.asap ? ACCENT_COLOR : BACKGROUND_COLOR}
-                    textColor={this.state.asap ? BACKGROUND_COLOR : ACCENT_COLOR}
-                    borderColor={BORDER_COLOR}
-                    onPress={() => {
-                      const hr = date.getUTCHours()
-                      const min = date.getUTCMinutes()
-                      this.setState({ hour: hr, minute: min, asap: true })
-                    }}
-                    title={'ASAP'}
-                  />
-                  <BackgroundButton
-                    backgroundColor={!this.state.asap ? ACCENT_COLOR : BACKGROUND_COLOR}
-                    textColor={!this.state.asap ? BACKGROUND_COLOR : ACCENT_COLOR}
-                    borderColor={BORDER_COLOR}
-                    onPress={() => {
-                      this.setState({ chooseTime: true, asap: false })
-                      this.props.setBlur(true)
-                    }}
-                    title={'Set Time'}
-                  />
-                </View>
-              </View>
+              {/* Price */}
+              <FilterButton
+                active={this.state.s_price != null}
+                onPress={() => {
+                  console.log('prices: ' + this.state.s_price)
+                  this.setState({ choosePrice: true })
+                  this.props.setBlur(true)
+                }}
+                title="Price"
+              />
             </View>
           )}
-          <View style={styles.swiperContainer}>
-            {/* CUISINES */}
-            <View style={styles.bigFilterGroupContainer}>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={[screenStyles.text, styles.filterTitleText]}>Cuisines</Text>
-                <Text style={styles.filterSubtext}>Select all that apply</Text>
-              </View>
-              <TagsView
-                ACCENT_COLOR={ACCENT_COLOR}
-                all={tagsCuisine}
-                selected={this.state.selectedCuisine}
-                isExclusive={false}
-                onChange={(event) => this.setState({ selectedCuisine: event })}
-              />
-
+          <View style={{ paddingTop: '5%' }}>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={[screenStyles.text, styles.filterTitleText]}>Cuisines</Text>
+              <Text style={styles.filterSubtext}>Select all that apply</Text>
             </View>
-
-            {/* DIETARY RESTRICTIONS */}
-            <View style={styles.filterGroupContainer}>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={[screenStyles.text, styles.filterTitleText]}>Dietary Restrictions</Text>
-                <Text style={styles.filterSubtext}>Select all that apply</Text>
-              </View>
-              <TagsView
-                ACCENT_COLOR={ACCENT_COLOR}
-                all={tagsDiet}
-                selected={this.state.selectedRestriction}
-                isExclusive={false}
-                onChange={(event) => this.setState({ selectedRestriction: event })}
-              />
-            </View>
-          </View>
-        </Swiper>
-        {/* ------------------------------------------ALERTS------------------------------------------ */}
-        {/* {(this.state.chooseFriends ||
-          this.state.chooseLocation ||
-          this.state.chooseMajority ||
-          this.state.chooseSize ||
-          this.state.chooseTime) && (
-            <BlurView
-              blurType="dark"
-              blurAmount={10}
-              reducedTransparencyFallbackColor="white"
-              style={modalStyles.blur}
+            <FlatList
+              data={cuisines}
+              columnWrapperStyle={{
+                justifyContent: 'center',
+              }}
+              numColumns={5}
+              renderItem={({ item }) => {
+                return (
+                  <CategoryCard
+                    uid={1}
+                    category={item}
+                    onPress={(sel) => {
+                      s_categories[item] = sel
+                    }}
+                  />
+                )
+              }}
+              keyExtractor={(item, index) => index}
             />
-          )} */}
+          </View>
+        </View>
+        {/* ------------------------------------------ALERTS------------------------------------------ */}
+
         {this.state.locationAlert && (
           <Alert
             title="Location Required"
@@ -549,52 +449,79 @@ class FilterSelector extends React.Component {
             this.props.setBlur(false)
           }}
         />
-        <Time
-          visible={this.state.chooseTime}
-          cancel={() => {
-            this.setState({ chooseTime: false })
-            this.setState({ asap: true })
+
+        <Majority
+          max={this.props.members.length}
+          title={'Majority'}
+          filterSubtext={'Choose the number of members needed to get a match'}
+          visible={this.state.chooseMajority}
+          cancel={(clear) => {
+            this.setState({ chooseMajority: false })
             this.props.setBlur(false)
+            if (clear) this.setState({ s_majority: null })
           }}
-          press={(hr, min) => {
-            this.setState({ hour: hr, minute: min, chooseTime: false, asap: false })
+          press={(value) => {
+            console.log(this.state.s_majority)
+            this.setState({ s_majority: value, chooseMajority: false })
             this.props.setBlur(false)
           }}
         />
+
         <Size
           max={50}
           title={'Round Size'}
           filterSubtext={'Choose the max number of restaurants to swipe through'}
           visible={this.state.chooseSize}
-          cancel={() => {
+          cancel={(clear) => {
             this.setState({ chooseSize: false })
             this.props.setBlur(false)
+            if (clear) this.setState({ s_size: null })
           }}
-          press={(sz) => {
-            this.setState({ size: sz, chooseSize: false })
+          press={(value) => {
+            this.setState({ s_size: value, chooseSize: false })
             this.props.setBlur(false)
           }}
         />
-        <Majority
-          max={this.props.members.length}
-          filterSubtext={'Choose the number of members needed to get a match'}
-          visible={this.state.chooseMajority}
-          cancel={() => {
-            this.setState({ chooseMajority: false })
+
+        <Time
+          visible={this.state.chooseTime}
+          cancel={(clear) => {
+            this.setState({ chooseTime: false })
             this.props.setBlur(false)
+            if (clear) this.setState({ s_time: null })
           }}
-          press={(sz) => {
-            this.setState({ majority: sz, chooseMajority: false })
+          press={(hr, min) => {
+            // TODO: Add checking for dates/times in the past
+            let dd = date.getDate()
+            let mm = date.getMonth()
+            let yy = date.getFullYear()
+            let tz = date.getTimezoneOffset()
+            let time = Date.UTC(yy, mm, dd, hr, min + tz) / 1000
+            this.setState({ s_time: time, chooseTime: false })
             this.props.setBlur(false)
           }}
         />
+
+        <Price
+          visible={this.state.choosePrice}
+          cancel={(clear) => {
+            this.setState({ choosePrice: false })
+            this.props.setBlur(false)
+            if (clear) this.setState({ s_price: null })
+          }}
+          press={(prices) => {
+            this.setState({ s_price: prices, choosePrice: false })
+            this.props.setBlur(false)
+          }}
+        />
+
         <Location
           visible={this.state.chooseLocation}
           update={(dist, loc) => {
-            this.setState({ 
+            this.setState({
               chooseLocation: false,
-              distance: dist,
-              location: loc,
+              s_radius: dist,
+              s_location: loc,
             })
             this.props.setBlur(false)
           }}
@@ -628,7 +555,7 @@ FilterSelector.propTypes = {
   // error: PropTypes.bool,
   showError: PropTypes.func,
   hideError: PropTypes.func,
-  buttonDisable: PropTypes.func
+  buttonDisable: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
@@ -651,7 +578,6 @@ const styles = StyleSheet.create({
     marginBottom: '1%',
   },
   swiperContainer: {
-    // flex: 1,
     height: '100%',
     backgroundColor: BACKGROUND_COLOR,
     justifyContent: 'flex-start',
@@ -670,12 +596,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
   },
-  filterHeader: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    color: TEXT_COLOR,
-    textAlign: 'center',
-  },
   filterTitleText: {
     fontSize: 20,
     color: TEXT_COLOR,
@@ -690,26 +610,6 @@ const styles = StyleSheet.create({
     marginLeft: '4%',
     marginTop: '1%',
   },
-  header: {
-    textAlign: 'left',
-    color: TEXT_COLOR,
-    fontSize: 20,
-    fontWeight: 'bold',
-    margin: '1%',
-  },
-  touchable: {
-    width: '50%',
-    borderColor: BORDER_COLOR,
-    justifyContent: 'center',
-    margin: '5%',
-  },
-  // nextTitle: {
-  //   color: TEXT_COLOR,
-  //   textAlign: 'center',
-  //   fontSize: 25,
-  //   paddingTop: '2%',
-  //   paddingBottom: '2%',
-  // },
   buttonContainer: {
     flex: 1,
     flexDirection: 'row',

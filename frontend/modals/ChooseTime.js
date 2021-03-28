@@ -37,7 +37,13 @@ export default class Time extends React.Component {
 
   //  function called when 'x' is pressed
   handleCancel() {
-    this.props.cancel()
+    let invalid = this.state.invalidTime
+    this.setState({
+      selectedHour: '',
+      selectedMinute: '',
+      invalidTime: false,
+    })
+    this.props.cancel(invalid)
   }
 
   evaluateTime() {

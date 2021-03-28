@@ -31,19 +31,19 @@ export default class Size extends React.Component {
 
   //  function called when 'x' is pressed
   handleCancel() {
-    this.props.cancel()
+    let invalid = this.state.invalidSize
+    this.setState({
+      selectedSize: '',
+      invalidSize: false,
+    })
+    this.props.cancel(invalid)
   }
 
   evaluate() {
-    if (this.state.selectedSize === '') {
-      this.setState({ invalidSize: true })
-    }
     let s = parseInt(this.state.selectedSize)
 
-    console.log(this.props.max)
-
     // Adjust min/max round lengths
-    if (s < 1 || s > this.props.max) {
+    if (isNaN(s) || s < 1 || s > this.props.max) {
       this.setState({ invalidSize: true })
     } else {
       this.handlePress(s)
