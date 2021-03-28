@@ -20,7 +20,7 @@ export default class ButtonSwitch extends Component {
     super()
     this.state = {
       selectedIndex: -1,
-      selectedIndexes:[],
+      selectedIndexes: [],
     }
     this.updateIndex = this.updateIndex.bind(this)
   }
@@ -28,31 +28,30 @@ export default class ButtonSwitch extends Component {
   updateIndex(selectedIndex) {
     // If allow users to select multiple buttons (ie. price)
     if (this.props.selectMultiple) {
-      this.setState({selectedIndexes: selectedIndex}, ()=> {
+      this.setState({ selectedIndexes: selectedIndex }, () => {
         //  Turn array of indexes into array of desired values passed in as props
-        const priceArr =[]
+        const priceArr = []
         const tempSelectedIndexes = this.state.selectedIndexes
-        tempSelectedIndexes.forEach(index => {
+        tempSelectedIndexes.forEach((index) => {
           switch (index) {
             case 0:
               priceArr.push(this.props.value1)
-              break;
+              break
             case 1:
               priceArr.push(this.props.value2)
-              break;
+              break
             case 2:
               priceArr.push(this.props.value3)
-              break;
+              break
             case 3:
               priceArr.push(this.props.value4)
-              break;
+              break
           }
         })
         this.props.onValueChange(priceArr)
       })
       return
-    }
-    else {
+    } else {
       this.setState({ selectedIndex: selectedIndex })
     }
     if (selectedIndex == 0) {
@@ -77,11 +76,9 @@ export default class ButtonSwitch extends Component {
 
     if (this.props.text4) {
       groupWidth = styles.containerWidth4
-    }
-    else if (this.props.text3) {
+    } else if (this.props.text3) {
       groupWidth = styles.containerWidth3
-    }
-    else {
+    } else {
       groupWidth = styles.containerWidth2
     }
     return (
@@ -111,14 +108,14 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.hex,
   },
-  containerWidth2:{
-    width: 80
+  containerWidth2: {
+    width: 80,
   },
   containerWidth3: {
-    width: 120
+    width: 120,
   },
   containerWidth4: {
-    width: 180
+    width: 180,
   },
   innerBorder: {
     width: 0,

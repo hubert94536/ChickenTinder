@@ -106,9 +106,7 @@ export default class Time extends React.Component {
                   text2="PM"
                   value1="AM"
                   value2="PM"
-                  onValueChange={(val) =>
-                    this.setState({ timeMode: val })
-                  }
+                  onValueChange={(val) => this.setState({ timeMode: val })}
                 />
               </View>
             </View>

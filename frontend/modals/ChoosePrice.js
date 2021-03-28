@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  Dimensions,
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View,
-} from 'react-native'
+import { Dimensions, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
 import ButtonSwitch from './ButtonSwitch.js'
 import colors from '../../styles/colors.js'
@@ -68,10 +61,10 @@ export default class Price extends React.Component {
                   value4="$$$$"
                   selectMultiple={true}
                   onValueChange={(priceArr) => {
-                      this.setState({ selectedPrice: priceArr }, 
-                      ()=>console.log('price array: ' + this.state.selectedPrice))
-                    }
-                  }
+                    this.setState({ selectedPrice: priceArr }, () =>
+                      console.log('price array: ' + this.state.selectedPrice),
+                    )
+                  }}
                 />
               </View>
             </View>

@@ -76,15 +76,13 @@ export default class Majority extends React.Component {
 
             <View style={[modalStyles.inputContainer, styles.inputContainer]}>
               <ButtonSwitch
-                text1= {half}
-                text2= {twoThirds}
+                text1={half}
+                text2={twoThirds}
                 text3="All"
                 value1={half}
                 value2={twoThirds}
                 value3={this.props.max.toString()}
-                onValueChange={(majority)=>
-                    this.setState({selectedValue: majority})
-                }
+                onValueChange={(majority) => this.setState({ selectedValue: majority })}
               />
               <TextInput
                 style={modalStyles.textInput}
@@ -114,10 +112,7 @@ export default class Majority extends React.Component {
                 <Text style={[screenStyles.text, modalStyles.errorText]}> </Text>
               </View>
             )}
-            <TouchableHighlight
-              style={modalStyles.doneButton}
-              onPress={() => this.evaluate()}
-            >
+            <TouchableHighlight style={modalStyles.doneButton} onPress={() => this.evaluate()}>
               <Text style={[screenStyles.text, modalStyles.doneText]}>Done</Text>
             </TouchableHighlight>
           </View>
@@ -143,7 +138,7 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height * 0.25,
   },
   inputContainer: {
-    marginLeft: '0%'
+    marginLeft: '0%',
   },
   input: {
     alignSelf: 'center',

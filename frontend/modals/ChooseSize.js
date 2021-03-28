@@ -66,14 +66,16 @@ export default class Size extends React.Component {
             <Text style={[screenStyles.text, styles.black]}>{this.props.filterSubtext}</Text>
             <View style={modalStyles.inputContainer}>
               <ButtonSwitch
-                  text1="10"
-                  text2="20"
-                  text3="30"
-                  value1="10"
-                  value2="20"
-                  value3="30"
-                  onValueChange={(size)=> {this.setState({selectedSize: size})}}
-                />
+                text1="10"
+                text2="20"
+                text3="30"
+                value1="10"
+                value2="20"
+                value3="30"
+                onValueChange={(size) => {
+                  this.setState({ selectedSize: size })
+                }}
+              />
               <TextInput
                 style={modalStyles.textInput}
                 value={this.state.selectedSize}
