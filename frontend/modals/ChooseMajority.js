@@ -30,20 +30,26 @@ export default class Majority extends React.Component {
 
   //  function called when 'x' is pressed
   handleCancel() {
-    this.props.cancel()
+    let invalid = this.state.invalidValue
+    this.setState({
+      selectedValue: '',
+      invalidValue: false,
+    })
+    this.props.cancel(invalid)
   }
 
   evaluateSize() {
     if (this.state.selectedValue === '') {
       this.setState({ invalidValue: true })
-    }
-    let s = parseInt(this.state.selectedValue)
-
-    // Adjust min/max round lengths
-    if (s < 1 || s > this.props.max || isNaN(s)) {
-      this.setState({ invalidValue: true })
     } else {
-      this.handlePress(s)
+      let s = parseInt(this.state.selectedValue)
+
+      // Adjust min/max round lengths
+      if (s < 1 || s > this.props.max || isNaN(s)) {
+        this.setState({ invalidValue: true })
+      } else {
+        this.handlePress(s)
+      }
     }
   }
 
@@ -127,6 +133,7 @@ const styles = StyleSheet.create({
 
 Majority.propTypes = {
   subtext: PropTypes.string,
+  title: PropTypes.string,
   press: PropTypes.func,
   cancel: PropTypes.func,
   visible: PropTypes.bool,
