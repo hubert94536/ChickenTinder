@@ -189,6 +189,9 @@ module.exports = (io) => {
       lock(data.code, async function (done) {
         try {
           if (data.code && data.member) {
+            data.member.name = socket.user.name
+            data.member.username = socket.user.username
+            data.member.photo = socket.user.photo
             // check if the session exists
             let session = await sendCommand('JSON.GET', [data.code])
             session = JSON.parse(session)
