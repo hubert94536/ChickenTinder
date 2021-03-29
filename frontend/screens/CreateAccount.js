@@ -8,7 +8,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
-import { EMAIL, NAME, PHOTO, USERNAME, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
+import { EMAIL, NAME, PHOTO, USERNAME, PHONE, REGISTRATION_TOKEN, UID } from 'react-native-dotenv'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -32,9 +32,8 @@ class createAccount extends React.Component {
       errorAlert: false,
       name: '',
       username: '',
-      phone: global.phone,
-      email: global.email,
-      photo: defImages[Math.floor(Math.random() * defImages.length)].toString(),
+      // photo: defImages.keys()[Math.floor(Math.random() * defImages.length)].toString(),
+      photo: defImages.African.img.toString(),
       validNameFormat: true,
       validUsername: true,
       validUsernameFormat: true,
@@ -58,8 +57,8 @@ class createAccount extends React.Component {
       await accountsApi.createUser(
         this.state.name,
         this.state.username,
-        this.state.email,
-        this.state.phone,
+        global.email,
+        global.phone,
         this.state.photo,
       )
       let token = await AsyncStorage.getItem(REGISTRATION_TOKEN)
@@ -68,15 +67,16 @@ class createAccount extends React.Component {
       this.props.changeName(this.state.name)
       this.props.changeImage(this.state.photo)
       this.props.changeFriends([])
-      AsyncStorage.multiSet([
+      await AsyncStorage.multiSet([
         [USERNAME, this.state.username],
         [PHOTO, this.state.photo],
         [NAME, this.state.name],
+        [UID, global.uid],
       ])
-      if (this.state.phone) {
-        AsyncStorage.setItem(PHONE, this.state.phone)
+      if (global.phone) {
+        await AsyncStorage.setItem(PHONE, global.phone)
       } else {
-        AsyncStorage.setItem(EMAIL, this.state.email)
+        await AsyncStorage.setItem(EMAIL, global.email)
       }
       socket.connect()
       this.props.navigation.replace('Home')
@@ -202,7 +202,7 @@ class createAccount extends React.Component {
             Invalid username format and username is taken
           </Text>
         )}
-        {this.state.phone !== '' && (
+        {global.phone && (
           <View>
             <Text style={[screenStyles.textBook, styles.fieldName]}>Phone Number</Text>
             <Text
@@ -214,11 +214,11 @@ class createAccount extends React.Component {
               ]}
               textAlign="left"
             >
-              {this.state.phone}
+              {global.phone}
             </Text>
           </View>
         )}
-        {this.state.email !== '' && (
+        {global.email && (
           <View>
             <Text style={[screenStyles.textBook, styles.fieldName]}>Email</Text>
 
@@ -231,7 +231,7 @@ class createAccount extends React.Component {
               ]}
               textAlign="left"
             >
-              {this.state.email}
+              {global.email}
             </Text>
           </View>
         )}

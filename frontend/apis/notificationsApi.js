@@ -3,7 +3,7 @@ import auth from '@react-native-firebase/auth'
 
 const notificationsApi = Axios.create({
   baseURL: 'https://wechews.herokuapp.com',
-  // baseURL: 'http://172.16.0.10:5000',
+  // baseURL: 'http://192.168.0.23:5000',
 })
 
 // Set the AUTH token for any request

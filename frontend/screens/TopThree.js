@@ -12,20 +12,22 @@ import {
 import FA from 'react-native-vector-icons/FontAwesome'
 import Ion from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/AntDesign'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'
 import getCuisine from '../assets/images/foodImages.js'
 import getStarPath from '../assets/stars/star.js'
-import global from '../../global.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
+import { updateSession, setHost } from '../redux/Actions.js'
 import _ from 'lodash'
 
 const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
 
-export default class TopThree extends React.Component {
+class TopThree extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -38,9 +40,14 @@ export default class TopThree extends React.Component {
         restaurant: this.state.restaurants[ind],
       })
     })
+
+    socket.getSocket().on('update', (res) => {
+      this.props.updateSession(res)
+      this.props.setHost(res.members[res.host].username === this.props.username)
+    })
   }
   evaluateCuisines(cuisines) {
-    return cuisines.map((item) => item.title).join(', ')
+    return cuisines.join(', ')
   }
 
   randomize() {
@@ -76,7 +83,7 @@ export default class TopThree extends React.Component {
         <View style={styles.height}>
           {this.state.restaurants.length > 2 && (
             <TouchableHighlight
-              disabled={!global.isHost}
+              disabled={!this.props.isHost}
               underlayColor={colors.beige}
               style={[
                 styles.center,
@@ -130,7 +137,7 @@ export default class TopThree extends React.Component {
             </TouchableHighlight>
           )}
           <TouchableHighlight
-            disabled={!global.isHost}
+            disabled={!this.props.isHost}
             underlayColor={colors.beige}
             style={[
               styles.left,
@@ -183,7 +190,7 @@ export default class TopThree extends React.Component {
             </View>
           </TouchableHighlight>
           <TouchableHighlight
-            disabled={!global.isHost}
+            disabled={!this.props.isHost}
             underlayColor={colors.beige}
             style={[
               styles.right,
@@ -237,7 +244,7 @@ export default class TopThree extends React.Component {
             </View>
           </TouchableHighlight>
         </View>
-        {global.isHost && (
+        {this.props.isHost && (
           <TouchableHighlight underlayColor="transparent" onPress={() => this.randomize()}>
             <View style={styles.randomButton}>
               <Ion name="shuffle" style={styles.randomIcon} />
@@ -245,7 +252,7 @@ export default class TopThree extends React.Component {
             </View>
           </TouchableHighlight>
         )}
-        {global.isHost && (
+        {this.props.isHost && (
           <TouchableHighlight
             underlayColor="white"
             onPress={() => this.goMatch()}
@@ -257,9 +264,9 @@ export default class TopThree extends React.Component {
             <Text style={[screenStyles.medButtonText, styles.submit, styles.white]}>Submit</Text>
           </TouchableHighlight>
         )}
-        {!global.isHost && (
+        {!this.props.isHost && (
           <TouchableHighlight
-            disabled={!global.isHost}
+            disabled={!this.props.isHost}
             underlayColor="white"
             style={[screenStyles.bigButton, styles.waiting]}
           >
@@ -275,6 +282,25 @@ export default class TopThree extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    isHost: state.isHost.isHost,
+    session: state.session.session,
+    username: state.username.username,
+  }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      updateSession,
+      setHost,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(TopThree)
+
 TopThree.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
@@ -284,6 +310,11 @@ TopThree.propTypes = {
         top: PropTypes.array,
       }),
     }),
+    session: PropTypes.object,
+    updateSession: PropTypes.func,
+    setHost: PropTypes.func,
+    username: PropTypes.string,
+    isHost: PropTypes.bool,
   }),
 }
 
