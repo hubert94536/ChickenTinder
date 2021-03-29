@@ -19,13 +19,12 @@ const config = {
 const pool = new pg.Pool(config)
 const sequelize = new Sequelize(config)
 // const redisClient = redis.createClient('redis://localhost:6379')
-const lock = require('redis-lock')(redisClient)
 const redisClient = redis.createClient({
   host: process.env.REDIS_HOST,
   port: process.env.REDIS_PORT,
   password: process.env.REDIS_PASSWORD,
 })
-redis.addCommand('JSON.SET')
+const lock = require('redis-lock')(redisClient)
 const hgetAll = promisify(redisClient.hgetall).bind(redisClient)
 const hmset = promisify(redisClient.hmset).bind(redisClient)
 const sendCommand = promisify(redisClient.send_command).bind(redisClient)
