@@ -1,21 +1,18 @@
 import React from 'react'
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { bindActionCreators } from 'redux'
-import { BlurView } from '@react-native-community/blur'
 import { connect } from 'react-redux'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
 import Swiper from 'react-native-deck-swiper'
 import PropTypes from 'prop-types'
-import Alert from '../modals/Alert.js'
 import global from '../../global.js'
-import modalStyles from '../../styles/modalStyles.js'
 import RoundCard from '../cards/RoundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import normalize from '../../styles/normalize.js'
-import { setCode, showKick, showEnd } from '../redux/Actions.js'
+import { updateSession } from '../redux/Actions.js'
 
 class Round extends React.Component {
   constructor(props) {
@@ -40,34 +37,17 @@ class Round extends React.Component {
         restaurant: res,
       })
     })
-
-    socket.getSocket().on('leave', () => {
-      this.leaveGroup(true)
-    })
   }
 
-  leaveGroup(end) {
+  leave() {
     this.setState({ disabled: true })
     socket.getSocket().off()
-    if (end) {
-      socket.endLeave()
-      if (!global.isHost) {
-        this.props.showEnd()
-      }
-    } else {
-      socket.leaveRound()
-    }
-    this.props.setCode(0)
-    global.host = ''
-    global.isHost = false
-    global.restaurants = []
+    socket.leave('round')
+    this.props.updateSession({})
+    this.setState({ disabled: false })
     this.props.navigation.replace('Home')
   }
 
-  endRound() {
-    this.setState({ leave: false, disabled: true })
-    socket.endRound()
-  }
 
   render() {
     return (
@@ -107,11 +87,7 @@ class Round extends React.Component {
             <TouchableHighlight
               disabled={this.state.disabled}
               onPress={() => {
-                if (global.isHost) {
-                  this.setState({ leave: true })
-                } else {
-                  this.leaveGroup(false)
-                }
+                this.leave()
               }}
               style={[styles.leaveButton, styles.topMargin]}
               underlayColor="transparent"
@@ -119,7 +95,7 @@ class Round extends React.Component {
               <View style={styles.centerAlign}>
                 <Icon5 name="door-open" style={[screenStyles.text, styles.door]} />
                 <Text style={([screenStyles.text], styles.black)}>
-                  {global.isHost ? 'End' : 'Leave'}
+                  Leave
                 </Text>
               </View>
             </TouchableHighlight>
@@ -156,52 +132,24 @@ class Round extends React.Component {
             </TouchableHighlight>
           </View>
         </View>
-        {this.state.leave && (
-          <BlurView
-            blurType="dark"
-            blurAmount={10}
-            reducedTransparencyFallbackColor="white"
-            style={modalStyles.blur}
-          />
-        )}
-        {this.state.leave && (
-          <Alert
-            title="Are you sure you want to leave?"
-            body="Leaving ends the group for everyone"
-            buttonAff="Leave"
-            height="30%"
-            disabled={this.state.disabled}
-            press={() => socket.endRound()}
-            cancel={() => this.setState({ leave: false })}
-          />
-        )}
       </View>
     )
   }
 }
 
-const mapStateToProps = (state) => {
-  const { code } = state
-  return { code }
-}
-
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      setCode,
-      showKick,
-      showEnd,
+      updateSession,
     },
     dispatch,
   )
 
-export default connect(mapStateToProps, mapDispatchToProps)(Round)
+export default connect(null, mapDispatchToProps)(Round)
 
 Round.propTypes = {
   navigation: PropTypes.object,
-  setCode: PropTypes.func,
-  showKick: PropTypes.func,
-  showEnd: PropTypes.func,
+  updateSession: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

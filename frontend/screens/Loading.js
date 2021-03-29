@@ -11,17 +11,14 @@ import {
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import Alert from '../modals/Alert.js'
-import { BlurView } from '@react-native-community/blur'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import colors from '../../styles/colors.js'
 import global from '../../global.js'
-import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import { ProgressBar } from 'react-native-paper'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
-import { showEnd } from '../redux/Actions.js'
+import { updateSession } from '../redux/Actions.js'
 
 const height = Dimensions.get('window').height
 
@@ -60,28 +57,15 @@ class Loading extends React.Component {
         top: restaurants,
       })
     })
-
-    socket.getSocket().once('leave', () => {
-      this.leaveGroup(true)
-    })
   }
 
-  leaveGroup() {
+  leave() {
     this.setState({ disabled: true })
-    socket.endLeave()
-    if (!global.isHost) {
-      this.props.showEnd()
-    }
-    global.code = ''
-    global.host = ''
-    global.isHost = false
-    global.restaurants = []
+    socket.getSocket().off()
+    socket.leave('loading')
+    this.props.updateSession({})
+    this.setState({ disabled: false })
     this.props.navigation.replace('Home')
-  }
-
-  endGroup() {
-    this.setState({ disabled: true })
-    socket.endGroup()
   }
 
   render() {
@@ -93,13 +77,7 @@ class Loading extends React.Component {
         <View style={[styles.top, { flexDirection: 'row', justifyContent: 'space-between' }]}>
           <TouchableHighlight
             disabled={this.state.disabled}
-            onPress={() => {
-              if (global.isHost) {
-                this.setState({ leave: true })
-              } else {
-                this.leaveGroup(false)
-              }
-            }}
+            onPress={() => this.leave()}
             style={[styles.leaveIcon]}
             underlayColor="transparent"
           >
@@ -127,17 +105,17 @@ class Loading extends React.Component {
           <Text style={styles.general}>
             Hang tight while others finish swiping and a match is found.
           </Text>
-          {!global.isHost && (
+          {!this.props.isHost && (
             <TouchableHighlight
               disabled={this.state.disabled}
               style={[styles.leaveButton, screenStyles.medButton]}
               underlayColor="transparent"
-              onPress={() => this.leaveGroup()}
+              onPress={() => this.leave()}
             >
               <Text style={styles.leaveText}>Waiting...</Text>
             </TouchableHighlight>
           )}
-          {global.isHost && (
+          {this.props.isHost && (
             <TouchableHighlight
               disabled={this.state.disabled}
               style={[styles.leaveButton, screenStyles.medButton]}
@@ -148,33 +126,21 @@ class Loading extends React.Component {
             </TouchableHighlight>
           )}
         </View>
-        {this.state.leave && (
-          <BlurView
-            blurType="dark"
-            blurAmount={10}
-            reducedTransparencyFallbackColor="white"
-            style={modalStyles.blur}
-          />
-        )}
-        {this.state.leave && (
-          <Alert
-            title="Are you sure you want to leave?"
-            body="Leaving ends the group for everyone"
-            buttonAff="Leave"
-            height="30%"
-            press={() => socket.endRound()}
-            cancel={() => this.setState({ leave: false })}
-          />
-        )}
       </ImageBackground>
     )
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    isHost: state.isHost.isHost
   }
 }
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      showEnd,
+      updateSession,
     },
     dispatch,
   )
@@ -182,10 +148,11 @@ const mapDispatchToProps = (dispatch) =>
 Loading.propTypes = {
   restaurant: PropTypes.array,
   navigation: PropTypes.object,
-  showEnd: PropTypes.func,
+  updateSession: PropTypes.func,
+  isHost: PropTypes.bool,
 }
 
-export default connect(mapDispatchToProps)(Loading)
+export default connect(mapStateToProps, mapDispatchToProps)(Loading)
 
 const styles = StyleSheet.create({
   top: { marginTop: '7%', marginLeft: '5%', marginRight: '5%' },

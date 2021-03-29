@@ -7,8 +7,8 @@ import {
   hideError,
   showError,
   hideKick,
-  setCode,
-  hideEnd,
+  updateSession,
+  setHost,
 } from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import {
@@ -23,7 +23,6 @@ import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
-import global from '../../global.js'
 import Join from '../modals/Join.js'
 import normalize from '../../styles/normalize.js'
 import TabBar from '../Nav.js'
@@ -49,13 +48,17 @@ class Home extends React.Component {
 
     socket.getSocket().once('update', (res) => {
       this.setState({ invite: false })
-      global.host = res.members[res.host].username
-      this.props.setCode(res.code)
-      global.isHost = res.members[res.host].username === this.props.username.username
+      this.props.updateSession(res)
+      this.props.setHost(res.members[res.host].username === this.props.username)
       this.setState({ disabled: false })
-      this.props.navigation.replace('Group', {
-        response: res,
-      })
+      this.props.navigation.replace('Group')
+    })
+
+    socket.getSocket().on('reconnect', (res) => {
+      this.props.updateSession(res)
+      this.props.setHost(res.members[res.host].username === this.props.username)
+      if (!res.resInfo) this.props.navigation.replace('Group')
+      // TODO: nav to correct screens
     })
 
     socket.getSocket().on('exception', (msg) => {
@@ -209,13 +212,11 @@ class Home extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const { friends } = state
-  const { error } = state
-  const { username } = state
-  const { code } = state
-  const { kick } = state
-  const { end } = state
-  return { friends, error, username, code, kick, end }
+  return {
+    username: state.username.username,
+    error: state.error,
+    kick: state.kick, 
+  }
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -224,9 +225,9 @@ const mapDispatchToProps = (dispatch) =>
       changeFriends,
       showError,
       hideError,
-      setCode,
+      updateSession,
       hideKick,
-      hideEnd,
+      setHost,
     },
     dispatch,
   )
@@ -236,16 +237,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(Home)
 Home.propTypes = {
   navigation: PropTypes.object,
   error: PropTypes.bool,
-  friends: PropTypes.object,
-  username: PropTypes.object,
+  username: PropTypes.string,
   showError: PropTypes.func,
   hideError: PropTypes.func,
   changeFriends: PropTypes.func,
-  setCode: PropTypes.func,
   hideKick: PropTypes.func,
-  hideEnd: PropTypes.func,
   kick: PropTypes.bool,
-  end: PropTypes.bool,
+  setHost: PropTypes.func,
+  updateSession: PropTypes.func,
 }
 const styles = StyleSheet.create({
   main: {

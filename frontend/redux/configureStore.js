@@ -9,7 +9,8 @@ import {
   notifReducer,
   codeReducer,
   kickReducer,
-  endReducer,
+  sessionReducer,
+  setHostReducer,
 } from './Reducer.js'
 
 const rootReducer = combineReducers({
@@ -22,7 +23,8 @@ const rootReducer = combineReducers({
   notif: notifReducer,
   code: codeReducer,
   kick: kickReducer,
-  end: endReducer,
+  session: sessionReducer,
+  isHost: setHostReducer,
 })
 
 const configureStore = () => {

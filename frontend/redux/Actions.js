@@ -81,15 +81,17 @@ const hideKick = () => {
   }
 }
 
-const showEnd = () => {
+const updateSession = (session) => {
   return {
-    type: 'SHOW_END',
+    type: 'UPDATE_SESSION',
+    payload: session,
   }
 }
 
-const hideEnd = () => {
+const setHost = (isHost) => {
   return {
-    type: 'HIDE_END',
+    type: 'SET_HOST',
+    payload: isHost,
   }
 }
 
@@ -107,6 +109,6 @@ export {
   setCode,
   showKick,
   hideKick,
-  showEnd,
-  hideEnd,
+  updateSession,
+  setHost,
 }

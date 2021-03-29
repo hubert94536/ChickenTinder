@@ -1,15 +1,12 @@
 import React from 'react'
 import { PermissionsAndroid, StyleSheet, Text, View } from 'react-native'
+import { connect } from 'react-redux'
 // import { BlurView } from '@react-native-community/blur'
 import Geolocation from 'react-native-geolocation-service'
 import PropTypes from 'prop-types'
-import Swiper from 'react-native-swiper'
 import Alert from '../modals/Alert.js'
 import ChooseFriends from '../modals/ChooseFriends.js'
 import Socket from '../apis/socket.js'
-import TagsView from '../TagsView.js'
-import DynamicTags from '../TagsViewGenerator.js'
-import BackgroundButton from '../BackgroundButton.js'
 import FilterButton from '../FilterButton.js'
 import colors from '../../styles/colors.js'
 import global from '../../global.js'
@@ -26,9 +23,7 @@ import CategoryCard from '../cards/CategoryCard.js'
 const font = 'CircularStd-Medium'
 
 const BACKGROUND_COLOR = 'white'
-const BORDER_COLOR = colors.hex
 const TEXT_COLOR = colors.hex
-const ACCENT_COLOR = colors.hex
 
 const cuisines = [
   'American',
@@ -42,12 +37,6 @@ const cuisines = [
   'Middle Eastern',
   'African',
 ]
-
-const tagsDiet = ['Vegan', 'Vegetarian']
-
-const tagsPrice = ['$', '$$', '$$$', '$$$$']
-
-const tagsSizes = [10, 20, 30, 40, 50]
 
 const s_categories = {}
 
@@ -78,8 +67,6 @@ const date = new Date()
 class FilterSelector extends React.Component {
   constructor(props) {
     super(props)
-    const date = new Date()
-
     this.state = {
       // Set filters
       s_majority: null,
@@ -278,7 +265,7 @@ class FilterSelector extends React.Component {
 
     if (global.isHost) {
       console.log(`Selected filters: ${JSON.stringify(filters)}`)
-      Socket.startSession(filters)
+      Socket.startSession(filters, this.props.session)
     }
     this.props.buttonDisable(false)
   }
@@ -535,18 +522,11 @@ class FilterSelector extends React.Component {
   }
 }
 
-// const mapStateToProps = (state) => {
-//   const { error } = state
-//   return { error }
-// };
-
-// const mapDispatchToProps = dispatch => (
-//   bindActionCreators({
-//     showError, hideError
-//   }, dispatch)
-// );
-
-// export default connect(mapStateToProps, mapDispatchToProps)(FilterSelector);
+const mapStateToProps = (state) => {
+  return {
+    session: state.session.session,
+  }
+}
 
 FilterSelector.propTypes = {
   handleUpdate: PropTypes.func,
@@ -618,4 +598,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default FilterSelector
+export default connect(mapStateToProps)(FilterSelector)

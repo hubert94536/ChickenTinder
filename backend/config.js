@@ -30,6 +30,7 @@ const hgetAll = promisify(redisClient.hgetall).bind(redisClient)
 const hmset = promisify(redisClient.hmset).bind(redisClient)
 const sendCommand = promisify(redisClient.send_command).bind(redisClient)
 const hdel = promisify(redisClient.hdel).bind(redisClient)
+const multi = promisify(redisClient.multi).bind(redisClient)
 firebase.initializeApp({
   credential: firebase.credential.cert({
     private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
@@ -39,4 +40,4 @@ firebase.initializeApp({
   databaseURL: 'https://wechews-83255.firebaseio.com',
 })
 
-module.exports = { firebase, hdel, hgetAll, hmset, pool, sendCommand, sequelize }
+module.exports = { firebase, hdel, hgetAll, hmset, multi, pool, sendCommand, sequelize }

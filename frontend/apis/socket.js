@@ -53,16 +53,10 @@ const joinRoom = (code) => {
     member: member
   })
 }
-
-// leaving during swiping round
-const leaveRound = () => {
-  socket.emit('leave round')
-}
-
-// leaving while forming a group
-const leaveGroup = () => {
-  socket.emit('leave group')
-}
+// leaving a session
+const leave = (stage) => {
+  socket.emit('leave', {stage: stage})
+} 
 
 const kickUser = (uid) => {
   socket.emit('kick', { uid: uid })
@@ -71,9 +65,35 @@ const kickUser = (uid) => {
 // host starts a session
 // filters needs: radius, group size, majority, location or latitude/longitude
 // filters options: price, open_at, categories, limit
-const startSession = (filters) => {
-
-  socket.emit('start', { filters: filters })
+const startSession = (filters, session) => {
+  // set filters for yelp querying from host filters
+  if (filters.price) {
+    session.filters.price = filters.price
+  }
+  if (filters.open_at) {
+    session.filters.open_at = filters.open_at
+  }
+  session.filters.radius = filters.radius
+  if (filters.location) {
+    session.filters.location = filters.location
+  } else {
+    session.filters.latitude = filters.latitude
+    session.filters.longitude = filters.longitude
+  }
+  if (filters.limit) {
+    session.filters.limit = filters.limit
+  }
+  session.filters.categories += filters.categories
+  if (session.filters.categories.endsWith(',')) {
+    session.filters.categories = session.filters.categories.slice(0, -1)
+  }
+  // keep temporary categories in case no restaurants returned
+  session.tempCategories = session.filters.categories
+  session.filters.categories = Array.from(new Set(session.filters.categories.split(','))).toString()
+  session.majority = filters.majority
+  session.finished = [] // keep track of who's finished swiping
+  session.restaurants = {} // keep track of restaurant likes
+  socket.emit('start', { session: session })
 }
 
 // submit categories array (append a ',' at end)
@@ -98,16 +118,6 @@ const choose = (index) => {
   socket.emit('choose', { index: index })
 }
 
-// end session
-const endRound = () => {
-  socket.emit('end')
-}
-
-// leaving a session due to end
-const endLeave = () => {
-  socket.emit('end leave')
-}
-
 // update user's socket info (name, username, photo)
 const updateUser = (dataObj) => {
   socket.emit('update', dataObj)
@@ -121,14 +131,11 @@ export default {
   choose,
   connect,
   createRoom,
-  endLeave,
-  endRound,
+  leave,
   finishedRound,
   getSocket,
   joinRoom,
   kickUser,
-  leaveGroup,
-  leaveRound,
   likeRestaurant,
   sendInvite,
   startSession,
