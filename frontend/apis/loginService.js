@@ -36,6 +36,8 @@ const loginWithCredential = async (userCredential) => {
       default:
         throw new Error('Could not determine provider')
     }
+    console.log(userCredential)
+    global.uid = userCredential.user.uid
     return 'CreateAccount'
   } catch (err) {
     console.log(err)
@@ -50,6 +52,7 @@ const fetchAccount = async () => {
       [USERNAME, user.username],
       [NAME, user.name],
       [PHOTO, user.photo],
+      [UID, user.uid]
     ])
     if (user.email) {
       await AsyncStorage.setItem(EMAIL, user.email)

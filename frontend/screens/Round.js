@@ -7,12 +7,11 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
 import Swiper from 'react-native-deck-swiper'
 import PropTypes from 'prop-types'
-import global from '../../global.js'
 import RoundCard from '../cards/RoundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import normalize from '../../styles/normalize.js'
-import { updateSession } from '../redux/Actions.js'
+import { updateSession, setHost } from '../redux/Actions.js'
 
 class Round extends React.Component {
   constructor(props) {
@@ -26,15 +25,22 @@ class Round extends React.Component {
     }
     socket.getSocket().once('match', (data) => {
       socket.getSocket().off()
-      var res
-      for (var i = 0; i < global.restaurants.length; i++) {
-        if (global.restaurants[i].id === data) {
-          res = global.restaurants[i]
-          break
-        }
-      }
       this.props.navigation.replace('Match', {
-        restaurant: res,
+        restaurant: this.props.session.resInfo.find(x => x.id === data),
+      })
+    })
+
+    socket.getSocket().on('update', (res) => {
+      this.props.updateSession(res)
+      this.props.setHost(res.members[res.host].username === this.props.username)
+    })
+
+    socket.getSocket().once('top 3', (res) => {
+      socket.getSocket().off()
+      let restaurants = this.props.session.resInfo.filter(x => res.choices.includes(x.id))
+      restaurants.forEach(x => x.likes = res.likes[res.choices.indexOf(x)])
+      this.props.navigation.replace('TopThree', {
+        top: restaurants,
       })
     })
   }
@@ -55,7 +61,7 @@ class Round extends React.Component {
         <View style={screenStyles.screenBackground}>
           <Swiper
             ref={(deck) => (this.deck = deck)}
-            cards={global.restaurants}
+            cards={this.props.session.resInfo}
             cardStyle={styles.card}
             cardIndex={0}
             renderCard={(card) => <RoundCard card={card} />}
@@ -63,12 +69,15 @@ class Round extends React.Component {
             disableBottomSwipe
             disableTopSwipe
             onSwiped={() => {
-              if (this.state.index !== global.restaurants.length) {
+              if (this.state.index !== this.props.session.resInfo.length) {
                 this.setState({ index: this.state.index + 1 })
               }
             }}
             onSwipedRight={(cardIndex) => {
-              socket.likeRestaurant(global.restaurants[cardIndex].id)
+              socket.likeRestaurant(this.props.session.resInfo[cardIndex].id)
+            }}
+            onSwipedLeft={(cardIndex) => {
+              socket.dislikeRestaurant(this.props.session.resInfo[cardIndex].id)
             }}
             onSwipedAll={() => {
               socket.getSocket().off()
@@ -76,7 +85,7 @@ class Round extends React.Component {
               socket.finishedRound()
               //go to the loading page
               this.props.navigation.replace('Loading', {
-                restaurants: global.restaurants,
+                restaurants: this.props.session.resInfo,
               })
             }}
             stackSeparation={0}
@@ -100,7 +109,7 @@ class Round extends React.Component {
               </View>
             </TouchableHighlight>
             <Text style={[screenStyles.text, styles.topMargin, styles.restaurant]}>
-              Restaurant {this.state.index}/{global.restaurants.length}
+              Restaurant {this.state.index}/{this.props.session.resInfo.length}
             </Text>
           </Swiper>
         </View>
@@ -113,7 +122,7 @@ class Round extends React.Component {
               }}
               underlayColor="transparent"
               style={styles.background}
-              disabled={this.state.count > global.restaurants.length || this.state.disabled}
+              disabled={this.state.count > this.props.session.resInfo.length || this.state.disabled}
             >
               <Feather name="x" style={[screenStyles.text, styles.x]} />
             </TouchableHighlight>
@@ -126,7 +135,7 @@ class Round extends React.Component {
               }}
               underlayColor="transparent"
               style={[styles.background]}
-              disabled={this.state.count > global.restaurants.length || this.state.disabled}
+              disabled={this.state.count > this.props.session.resInfo.length || this.state.disabled}
             >
               <Icon name="heart" style={[screenStyles.text, styles.heart]} />
             </TouchableHighlight>
@@ -137,19 +146,30 @@ class Round extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    session: state.session.session,
+    username: state.username.username,
+  }
+}
+
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       updateSession,
+      setHost,
     },
     dispatch,
   )
 
-export default connect(null, mapDispatchToProps)(Round)
+export default connect(mapStateToProps, mapDispatchToProps)(Round)
 
 Round.propTypes = {
+  session: PropTypes.object,
   navigation: PropTypes.object,
   updateSession: PropTypes.func,
+  setHost: PropTypes.func,
+  username: PropTypes.string,
 }
 
 const styles = StyleSheet.create({

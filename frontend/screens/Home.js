@@ -23,6 +23,7 @@ import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
+import global from '../../global.js'
 import Join from '../modals/Join.js'
 import normalize from '../../styles/normalize.js'
 import TabBar from '../Nav.js'
@@ -46,7 +47,8 @@ class Home extends React.Component {
       disabled: false,
     }
 
-    socket.getSocket().once('update', (res) => {
+    socket.getSocket().on('update', (res) => {
+      socket.getSocket().off()
       this.setState({ invite: false })
       this.props.updateSession(res)
       this.props.setHost(res.members[res.host].username === this.props.username)
@@ -54,11 +56,25 @@ class Home extends React.Component {
       this.props.navigation.replace('Group')
     })
 
-    socket.getSocket().on('reconnect', (res) => {
-      this.props.updateSession(res)
-      this.props.setHost(res.members[res.host].username === this.props.username)
-      if (!res.resInfo) this.props.navigation.replace('Group')
-      // TODO: nav to correct screens
+    socket.getSocket().on('reconnect', (session) => {
+      socket.getSocket().off()
+      this.props.updateSession(session)
+      this.props.setHost(session.members[session.host].username === this.props.username)
+      if (!session.resInfo) this.props.navigation.replace('Group')
+      else if (session.match) {
+        this.props.navigation.replace('Match', {
+          restaurant: session.resInfo.find(x => x.id === session.match),
+        })
+      }
+      else if (session.top3) {
+        let restaurants = session.resInfo.filter(x => session.top3.choices.includes(x.id))
+        restaurants.forEach(x => x.likes = session.top3.likes[session.top3.choices.indexOf(x)])
+        this.props.navigation.replace('TopThree', {
+          top: restaurants,
+        })
+      }
+      else if (session.finished.indexOf(global.uid) !== -1) this.props.navigation.replace('Loading')
+      else this.props.navigation.replace('Round')
     })
 
     socket.getSocket().on('exception', (msg) => {
@@ -146,7 +162,7 @@ class Home extends React.Component {
             </TouchableHighlight>
           </View>
           <TabBar
-            goHome={() => {}}
+            goHome={() => { }}
             goSearch={() => {
               socket.getSocket().off()
               this.props.navigation.replace('Search')
@@ -215,7 +231,7 @@ const mapStateToProps = (state) => {
   return {
     username: state.username.username,
     error: state.error,
-    kick: state.kick, 
+    kick: state.kick,
   }
 }
 

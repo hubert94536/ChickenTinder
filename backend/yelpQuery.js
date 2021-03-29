@@ -30,7 +30,7 @@ const getRestaurants = (req) => {
               longitude: business.coordinates.longitude,
               url: business.url,
               transactions: business.transactions,
-              categories: business.categories,
+              categories: business.categories.map(x => x.title),
             }
           }),
         }

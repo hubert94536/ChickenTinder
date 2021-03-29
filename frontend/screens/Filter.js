@@ -1,6 +1,5 @@
 import React from 'react'
 import { PermissionsAndroid, StyleSheet, Text, View } from 'react-native'
-import { connect } from 'react-redux'
 // import { BlurView } from '@react-native-community/blur'
 import Geolocation from 'react-native-geolocation-service'
 import PropTypes from 'prop-types'
@@ -9,7 +8,6 @@ import ChooseFriends from '../modals/ChooseFriends.js'
 import Socket from '../apis/socket.js'
 import FilterButton from '../FilterButton.js'
 import colors from '../../styles/colors.js'
-import global from '../../global.js'
 import Location from '../modals/ChooseLocation.js'
 import Time from '../modals/ChooseTime.js'
 import Price from '../modals/ChoosePrice.js'
@@ -84,7 +82,7 @@ class FilterSelector extends React.Component {
       chooseFriends: false,
       chooseMajority: false,
       chooseSize: false,
-      chooseLocation: true,
+      chooseLocation: false,
       chooseTime: false,
       choosePrice: false,
 
@@ -226,7 +224,7 @@ class FilterSelector extends React.Component {
   }
 
   //  formats the filters to call yelp api
-  evaluateFilters() {
+  evaluateFilters(session) {
     const filters = {}
     filters.groupSize = this.props.members.length
 
@@ -263,17 +261,17 @@ class FilterSelector extends React.Component {
 
     filters.categories = this.categorize(selections)
 
-    if (global.isHost) {
+    if (this.props.isHost) {
       console.log(`Selected filters: ${JSON.stringify(filters)}`)
-      Socket.startSession(filters, this.props.session)
+      Socket.startSession(filters, session)
     }
     this.props.buttonDisable(false)
   }
 
-  startSession() {
+  startSession(session) {
     this.props.buttonDisable(true)
     console.log('session-start')
-    this.evaluateFilters()
+    this.evaluateFilters(session)
   }
 
   submitUserFilters() {
@@ -300,7 +298,7 @@ class FilterSelector extends React.Component {
             alignItems: 'center',
           }}
         >
-          {global.isHost && (
+          {this.props.isHost && (
             <View
               style={{
                 flexDirection: 'row',
@@ -525,6 +523,7 @@ class FilterSelector extends React.Component {
 const mapStateToProps = (state) => {
   return {
     session: state.session.session,
+    isHost: state.isHost.isHost
   }
 }
 
@@ -598,4 +597,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default connect(mapStateToProps)(FilterSelector)
+export default FilterSelector

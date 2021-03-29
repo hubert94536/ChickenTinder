@@ -2,6 +2,7 @@ const firebase = require('firebase-admin')
 const pg = require('pg')
 const { promisify } = require('util')
 const redis = require('redis')
+const lock = require('redis-lock')(redis)
 const { Sequelize } = require('sequelize')
 
 // configuration for database
@@ -40,4 +41,4 @@ firebase.initializeApp({
   databaseURL: 'https://wechews-83255.firebaseio.com',
 })
 
-module.exports = { firebase, hdel, hgetAll, hmset, multi, pool, sendCommand, sequelize }
+module.exports = { firebase, hdel, hgetAll, hmset, multi, pool, sendCommand, sequelize, lock }

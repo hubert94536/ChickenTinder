@@ -77,11 +77,10 @@ class Group extends React.Component {
       this.updateMemberList()
     })
 
-    socket.getSocket().once('start', (restaurants) => {
-      if (restaurants.length > 0) {
+    socket.getSocket().once('start', (res) => {
+      if (res.resInfo.length > 0) {
         socket.getSocket().off()
-        global.restaurants = restaurants
-        this.setState({ disabled: false })
+        this.props.updateSession(res)
         this.props.navigation.replace('Round')
       } else {
         console.log('group.js: no restaurants found')
@@ -123,10 +122,8 @@ class Group extends React.Component {
 
   // pings server to fetch restaurants, start session
   start() {
-    // this.filterRef.current.setState({ locationAlert: true })
-    // console.log('start pressed')
     this.setState({ disabled: true })
-    this.filterRef.current.startSession()
+    this.filterRef.current.startSession(this.props.session)
   }
 
   // update user cards in group
@@ -334,6 +331,7 @@ class Group extends React.Component {
                     code={this.props.session.code}
                     style={{ elevation: 31 }}
                     buttonDisable={(able) => this.setState({ disabled: able })}
+                    session={this.props.session}
                   />
                 </View>
               </View>

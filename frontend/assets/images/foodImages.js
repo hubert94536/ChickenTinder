@@ -10,8 +10,8 @@ export default function getCuisine(categories) {
   var max = 0
   var image = null
   for (var i = 0; i < categories.length; i++) {
-    if (categories[i].title) {
-      const temp = foodImages[categories[i].title]
+    if (categories[i]) {
+      const temp = foodImages[categories[i]]
       if (temp && temp.val > max) {
         if (typeof temp.img === 'string') image = foodImages[temp.img].img
         else image = temp.img
@@ -20,9 +20,9 @@ export default function getCuisine(categories) {
     }
   }
   if (image) return image
-  if (categories[i] !== undefined && categories[i].title[0].toUpperCase() < 'I')
+  if (categories[i] !== undefined && categories[i][0].toUpperCase() < 'I')
     return generalFoodImages[0]
-  else if (categories[i] !== undefined && categories[i].title[0].toUpperCase() < 'Q')
+  else if (categories[i] !== undefined && categories[i][0].toUpperCase() < 'Q')
     return generalFoodImages[1]
   else return generalFoodImages[2]
 }

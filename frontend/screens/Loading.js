@@ -13,12 +13,11 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import colors from '../../styles/colors.js'
-import global from '../../global.js'
 import normalize from '../../styles/normalize.js'
 import { ProgressBar } from 'react-native-paper'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
-import { updateSession } from '../redux/Actions.js'
+import { updateSession, setHost } from '../redux/Actions.js'
 
 const height = Dimensions.get('window').height
 
@@ -31,31 +30,23 @@ class Loading extends React.Component {
     }
     socket.getSocket().once('match', (data) => {
       socket.getSocket().off()
-      for (var i = 0; i < global.restaurants.length; i++) {
-        if (global.restaurants[i].id === data) {
-          this.props.navigation.replace('Match', {
-            restaurant: global.restaurants[i],
-          })
-          break
-        }
-      }
+      this.props.navigation.replace('Match', {
+        restaurant: this.props.session.resInfo.find(x => x.id === data),
+      })
     })
 
     socket.getSocket().once('top 3', (res) => {
       socket.getSocket().off()
-      var restaurants = []
-      for (var i = 0; i < 3; i++) {
-        for (var j = 0; j < global.restaurants.length; j++) {
-          if (global.restaurants[j].id === res.choices[i]) {
-            restaurants[i] = global.restaurants[j]
-            restaurants[i].likes = res.likes[i]
-            break
-          }
-        }
-      }
+      let restaurants = this.props.session.resInfo.filter(x => res.choices.includes(x.id))
+      restaurants.forEach(x => x.likes = res.likes[res.choices.indexOf(x)])
       this.props.navigation.replace('TopThree', {
         top: restaurants,
       })
+    })
+
+    socket.getSocket().on('update', (res) => {
+      this.props.updateSession(res)
+      this.props.setHost(res.members[res.host].username === this.props.username)
     })
   }
 
@@ -133,7 +124,9 @@ class Loading extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    isHost: state.isHost.isHost
+    session: state.session.session,
+    isHost: state.isHost.isHost,
+    username: state.username.username
   }
 }
 
@@ -141,6 +134,7 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       updateSession,
+      setHost,
     },
     dispatch,
   )
@@ -150,6 +144,9 @@ Loading.propTypes = {
   navigation: PropTypes.object,
   updateSession: PropTypes.func,
   isHost: PropTypes.bool,
+  setHost: PropTypes.func,
+  username: PropTypes.string,
+  session: PropTypes.object,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Loading)

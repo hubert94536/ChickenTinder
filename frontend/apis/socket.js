@@ -27,7 +27,7 @@ const createRoom = () => {
   session.members = {}
   session.filters = {}
   session.filters.categories = ''
-  session.stage = 'groups'
+  session.match = ''
   socket.emit('create', {
     session: session
   })
@@ -93,7 +93,6 @@ const startSession = (filters, session) => {
   session.majority = filters.majority
   session.finished = [] // keep track of who's finished swiping
   session.restaurants = {} // keep track of restaurant likes
-  console.log('test: ' +session.filters)
   socket.emit('start', { session: session })
 }
 
@@ -107,6 +106,10 @@ const submitFilters = (categories) => {
 // pass restaurant id for a like
 const likeRestaurant = (resId) => {
   socket.emit('like', { resId: resId })
+}
+
+const dislikeRestaurant = (resId) => {
+  socket.emit('dislike', { resId: resId })
 }
 
 // let everyone know you are done swiping
@@ -124,6 +127,11 @@ const updateUser = (dataObj) => {
   socket.emit('update', dataObj)
 }
 
+// host manually takes everyone to top3
+const toTop3 = () => {
+  socket.emit('to top 3')
+}
+
 const getSocket = () => {
   return socket
 }
@@ -132,6 +140,7 @@ export default {
   choose,
   connect,
   createRoom,
+  dislikeRestaurant,
   leave,
   finishedRound,
   getSocket,
@@ -142,4 +151,5 @@ export default {
   startSession,
   submitFilters,
   updateUser,
+  toTop3,
 }

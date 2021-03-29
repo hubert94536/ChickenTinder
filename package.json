@@ -86,7 +86,8 @@
     "jest-cli": "^26.6.1",
     "patch-package": "^6.2.2",
     "prettier": "^2.1.2",
-    "react-test-renderer": "^17.0.1"
+    "react-test-renderer": "^17.0.1",
+    "redis-lock": "^0.1.4"
   },
   "jest": {
     "preset": "react-native",
