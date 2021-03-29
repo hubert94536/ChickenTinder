@@ -43,9 +43,6 @@ const sendInvite = (receiver) => {
 const joinRoom = (code) => {
   // initialize member object
   let member = {}
-  member.name = socket.user.name
-  member.username = socket.user.username
-  member.photo = socket.user.photo
   member.filters = false
   member.connected = true
   socket.emit('join', {
