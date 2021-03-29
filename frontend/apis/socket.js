@@ -93,6 +93,7 @@ const startSession = (filters, session) => {
   session.majority = filters.majority
   session.finished = [] // keep track of who's finished swiping
   session.restaurants = {} // keep track of restaurant likes
+  console.log('test: ' +session.filters)
   socket.emit('start', { session: session })
 }
 

@@ -84,7 +84,7 @@ class FilterSelector extends React.Component {
       chooseFriends: false,
       chooseMajority: false,
       chooseSize: false,
-      chooseLocation: false,
+      chooseLocation: true,
       chooseTime: false,
       choosePrice: false,
 
