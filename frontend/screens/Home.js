@@ -63,17 +63,16 @@ class Home extends React.Component {
       if (!session.resInfo) this.props.navigation.replace('Group')
       else if (session.match) {
         this.props.navigation.replace('Match', {
-          restaurant: session.resInfo.find(x => x.id === session.match),
+          restaurant: session.resInfo.find((x) => x.id === session.match),
         })
-      }
-      else if (session.top3) {
-        let restaurants = session.resInfo.filter(x => session.top3.choices.includes(x.id))
-        restaurants.forEach(x => x.likes = session.top3.likes[session.top3.choices.indexOf(x)])
+      } else if (session.top3) {
+        let restaurants = session.resInfo.filter((x) => session.top3.choices.includes(x.id))
+        restaurants.forEach((x) => (x.likes = session.top3.likes[session.top3.choices.indexOf(x)]))
         this.props.navigation.replace('TopThree', {
           top: restaurants,
         })
-      }
-      else if (session.finished.indexOf(global.uid) !== -1) this.props.navigation.replace('Loading')
+      } else if (session.finished.indexOf(global.uid) !== -1)
+        this.props.navigation.replace('Loading')
       else this.props.navigation.replace('Round')
     })
 
@@ -106,9 +105,7 @@ class Home extends React.Component {
     return (
       <ImageBackground
         source={
-          this.state.join || this.props.error || this.props.kick || this.props.end
-            ? require(homedark)
-            : require(home)
+          this.state.join || this.props.error || this.props.kick ? require(homedark) : require(home)
         }
         style={screenStyles.screenBackground}
       >
@@ -162,7 +159,7 @@ class Home extends React.Component {
             </TouchableHighlight>
           </View>
           <TabBar
-            goHome={() => { }}
+            goHome={() => {}}
             goSearch={() => {
               socket.getSocket().off()
               this.props.navigation.replace('Search')
@@ -203,18 +200,8 @@ class Home extends React.Component {
               cancel={() => this.props.hideKick()}
             />
           )}
-          {this.props.end && (
-            <Alert
-              title="Oh no!"
-              body="The host has ended the group session"
-              buttonAff="Close"
-              height="20%"
-              press={() => this.props.hideEnd()}
-              cancel={() => this.props.hideEnd()}
-            />
-          )}
         </View>
-        {(this.state.join || this.props.error || this.props.end || this.props.kick) && (
+        {(this.state.join || this.props.error || this.props.kick) && (
           <BlurView
             blurType="dark"
             blurAmount={10}

@@ -19,7 +19,6 @@ import PropTypes from 'prop-types'
 import Drawer from './Drawer.js'
 import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
-import global from '../../global.js'
 import GroupCard from '../cards/GroupCard.js'
 import ChooseFriends from '../modals/ChooseFriends.js'
 import FilterSelector from './Filter.js'
@@ -27,7 +26,7 @@ import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
-import { showKick, updateSession, setHost, } from '../redux/Actions.js'
+import { showKick, updateSession, setHost } from '../redux/Actions.js'
 
 const font = 'CircularStd-Medium'
 var memberList = []
@@ -68,7 +67,8 @@ class Group extends React.Component {
     // listens for group updates
     socket.getSocket().on('update', (res) => {
       console.log('socket "update": ' + JSON.stringify(res))
-      if (res.host != this.props.session.host) this.props.setHost(res.members[res.host].username === this.props.username)
+      if (res.host != this.props.session.host)
+        this.props.setHost(res.members[res.host].username === this.props.username)
       this.props.updateSession(res)
       let count = this.countNeedFilters(res.members)
       if (!count) {
@@ -187,7 +187,9 @@ class Group extends React.Component {
             <Text style={styles.groupTitle}>
               {this.props.isHost
                 ? 'Your Group'
-                : `${this.firstName(this.props.session.members[this.props.session.host].name)}'s Group`}
+                : `${this.firstName(
+                    this.props.session.members[this.props.session.host].name,
+                  )}'s Group`}
             </Text>
             <View style={styles.subheader}>
               <Text style={styles.pinText}>Group PIN: </Text>
@@ -230,7 +232,9 @@ class Group extends React.Component {
                 <Text style={styles.waiting}>
                   {this.countNeedFilters(this.props.session.members) == 0
                     ? 'waiting for host to start'
-                    : `waiting for ${this.countNeedFilters(this.props.session.members)} member filters`}
+                    : `waiting for ${this.countNeedFilters(
+                        this.props.session.members,
+                      )} member filters`}
                 </Text>
               </View>
               <FlatList
@@ -418,7 +422,7 @@ class Group extends React.Component {
             <Text
               style={[
                 styles.leaveText,
-                this.state.leave? { color: colors.hex } : { color: '#6A6A6A' },
+                this.state.leave ? { color: colors.hex } : { color: '#6A6A6A' },
               ]}
             >
               Leave Group
@@ -443,7 +447,7 @@ const mapStateToProps = (state) => {
   return {
     isHost: state.isHost.isHost,
     session: state.session.session,
-    username: state.username.username
+    username: state.username.username,
   }
 }
 

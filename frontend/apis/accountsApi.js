@@ -2,8 +2,8 @@ import Axios from 'axios'
 import auth from '@react-native-firebase/auth'
 
 const accountsApi = Axios.create({
-  // baseURL: 'https://wechews.herokuapp.com',
-  baseURL: 'http://192.168.0.23:5000',
+  baseURL: 'https://wechews.herokuapp.com',
+  // baseURL: 'http://192.168.0.23:5000',
 })
 
 // Set the AUTH token for any request

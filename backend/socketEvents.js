@@ -69,7 +69,7 @@ module.exports = (io) => {
         return callback({ message: 'UNAUTHORIZED' })
       }
     },
-    // TODO: add locks
+
     postAuthenticate: async (socket) => {
       // reconnect socket client to each namespace
       _.each(io.nsps, function (nsp) {
@@ -81,23 +81,26 @@ module.exports = (io) => {
       hmset(`users:${socket.user.uid}`, 'client', socket.id).catch((err) => console.error(err))
       let user = await hgetAll(`users:${socket.user.uid}`)
       if (user.room) {
-        // check if room still exists
-        let session = await sendCommand('JSON.GET', [user.room])
-        session = JSON.parse(session)
-        if (session) {
-          await sendCommand('JSON.SET', [
-            user.room,
-            `.members['${socket.user.uid}'].connected`,
-            true
-          ])
-          session.members[socket.user.uid].connected = true
-          socket.user.room = user.room
-          socket.join(user.room)
-          socket.emit('reconnect', session)
-          socket.to(user.room).emit('update', session)
-        } else {
-          hdel(`users:${socket.user.uid}`, 'room').catch(err => console.error(err))
-        }
+        lock(user.room, async function (done) {
+          // check if room still exists
+          let session = await sendCommand('JSON.GET', [user.room])
+          session = JSON.parse(session)
+          if (session) {
+            await sendCommand('JSON.SET', [
+              user.room,
+              `.members['${socket.user.uid}'].connected`,
+              true,
+            ])
+            session.members[socket.user.uid].connected = true
+            socket.user.room = user.room
+            socket.join(user.room)
+            socket.emit('reconnect', session)
+            socket.to(user.room).emit('update', session)
+          } else {
+            hdel(`users:${socket.user.uid}`, 'room').catch((err) => console.error(err))
+          }
+          done()
+        })
       }
     },
   })
@@ -117,7 +120,7 @@ module.exports = (io) => {
             await sendCommand('JSON.SET', [
               socket.user.room,
               `.members['${socket.user.uid}'].connected`,
-              false
+              false,
             ])
             io.in(socket.user.room).emit('update', session)
           }
@@ -155,7 +158,7 @@ module.exports = (io) => {
           // set session and filters in cache and emit to user
           await sendCommand('JSON.SET', [code, '.', JSON.stringify(data.session)])
           // associate uid to last room
-          hmset(`users:${socket.user.uid}`, 'room', code).catch(err => console.error(err))
+          hmset(`users:${socket.user.uid}`, 'room', code).catch((err) => console.error(err))
           // update user's socket to hold room code
           socket.user.room = code
           socket.join(socket.user.room)
@@ -180,36 +183,41 @@ module.exports = (io) => {
         notifs.createNotif(req).catch((err) => console.error(err))
       }
     })
-    // TODO add locks, multi
+    // TODO multi
     // updates room when someone joins
-    socket.on('join', async (data) => {
-      try {
-        if (data.code && data.member) {
-          // check if the session exists
-          let session = await sendCommand('JSON.GET', [data.code])
-          session = JSON.parse(session)
-          if (session && session.open) {
-            // update session info with member
-            await sendCommand('JSON.SET', [
-              data.code,
-              `.members['${socket.user.uid}']`,
-              JSON.stringify(data.member),
-            ])
-            session.members[socket.user.uid] = data.member
-            // associate uid to last room
-            hmset(`users:${socket.user.uid}`, 'room', data.code).catch(err => console.error(err))
-            socket.user.room = data.code
-            socket.join(data.code)
-            io.in(data.code).emit('update', session)
-          } else {
-            console.log('exception')
-            socket.emit('exception', 'join')
+    socket.on('join', (data) => {
+      lock(data.code, async function (done) {
+        try {
+          if (data.code && data.member) {
+            // check if the session exists
+            let session = await sendCommand('JSON.GET', [data.code])
+            session = JSON.parse(session)
+            if (session && session.open) {
+              // update session info with member
+              await sendCommand('JSON.SET', [
+                data.code,
+                `.members['${socket.user.uid}']`,
+                JSON.stringify(data.member),
+              ])
+              session.members[socket.user.uid] = data.member
+              // associate uid to last room
+              hmset(`users:${socket.user.uid}`, 'room', data.code).catch((err) =>
+                console.error(err),
+              )
+              socket.user.room = data.code
+              socket.join(data.code)
+              io.in(data.code).emit('update', session)
+            } else {
+              console.log('exception')
+              socket.emit('exception', 'join')
+            }
           }
+        } catch (err) {
+          socket.emit('exception', 'join')
+          console.error(err)
         }
-      } catch (err) {
-        socket.emit('exception', 'join')
-        console.error(err)
-      }
+        done()
+      })
     })
     //TODO: multi
     // merge user's filters to master list, send updated session back
@@ -238,46 +246,41 @@ module.exports = (io) => {
         console.error(err)
       }
     })
-    // TODO: add lock?
+
     // alert to all clients in room to start
     socket.on('start', async (data) => {
-      try {
-        let session = data.session
-        if (session) {
-          // fetch restaurants from Yelp
-          const resList = await yelp.getRestaurants(session.filters)
-          // emit that no restaurants were found
-          if (!resList.businessList || resList.businessList.length == 0) {
-            // reset filters except for group's categories
-            session.filters = {}
-            session.filters.categories = session.tempCategories
-            await sendCommand('JSON.SET', [
-              socket.user.room,
-              '.',
-              JSON.stringify(session),
-            ])
-            socket.emit('reselect', session)
-          } else {
-            // prevent new users to join room
-            session.open = false
-            session.resInfo = resList.businessList
-            for (let res in resList.businessList) {
-              session.restaurants[resList.businessList[res].id] = 0
+      lock(socket.user.room, async function (done) {
+        try {
+          let session = data.session
+          if (session) {
+            // fetch restaurants from Yelp
+            const resList = await yelp.getRestaurants(session.filters)
+            // emit that no restaurants were found
+            if (!resList.businessList || resList.businessList.length == 0) {
+              // reset filters except for group's categories
+              session.filters = {}
+              session.filters.categories = session.tempCategories
+              await sendCommand('JSON.SET', [socket.user.room, '.', JSON.stringify(session)])
+              socket.emit('reselect', session)
+            } else {
+              // prevent new users to join room
+              session.open = false
+              session.resInfo = resList.businessList
+              for (let res in resList.businessList) {
+                session.restaurants[resList.businessList[res].id] = 0
+              }
+              await sendCommand('JSON.SET', [socket.user.room, '.', JSON.stringify(session)])
+              io.in(socket.user.room).emit('start', session)
             }
-            await sendCommand('JSON.SET', [
-              socket.user.room,
-              '.',
-              JSON.stringify(session),
-            ])
-            io.in(socket.user.room).emit('start', session)
           }
+        } catch (err) {
+          socket.emit('exception', 'start')
+          console.error(err)
         }
-      } catch (err) {
-        socket.emit('exception', 'start')
-        console.error(err)
-      }
+        done()
+      })
     })
-    // TODO: add lock, multi
+    // TODO: multi
     // add restaurant id to list + check for matches
     socket.on('like', async (data) => {
       try {
@@ -296,7 +299,11 @@ module.exports = (io) => {
             io.in(socket.user.room).emit('match', data.resId)
           } else {
             // set what card user was last on
-            await sendCommand('JSON.SET', [socket.user.room, `.members['${socket.user.uid}'].card`, JSON.stringify(data.resId)])
+            await sendCommand('JSON.SET', [
+              socket.user.room,
+              `.members['${socket.user.uid}'].card`,
+              JSON.stringify(data.resId),
+            ])
           }
         }
       } catch (err) {
@@ -307,16 +314,20 @@ module.exports = (io) => {
     // set what card user was last on
     socket.on('dislike', (data) => {
       if (data.resId) {
-        sendCommand('JSON.SET', [socket.user.room, `.members['${socket.user.uid}'].card`, JSON.stringify(data.resId)]).catch(err => console.error(err))
+        sendCommand('JSON.SET', [
+          socket.user.room,
+          `.members['${socket.user.uid}'].card`,
+          JSON.stringify(data.resId),
+        ]).catch((err) => console.error(err))
       }
     })
-    // TODO: add locks so host is guaranteed to be in room, multi
+    // TODO: multi
     // handle user leaving
     socket.on('leave', async (data) => {
-      try {
-        if (socket.user.room) {
+      lock(socket.user.room, async function (done) {
+        try {
           socket.leave(socket.user.room)
-          hdel(`users:${socket.user.uid}`, 'room').catch(err => console.error(err))
+          hdel(`users:${socket.user.uid}`, 'room').catch((err) => console.error(err))
           await sendCommand('JSON.DEL', [socket.user.room, `.members['${socket.user.uid}']`])
           // retrieve a session
           let session = await sendCommand('JSON.GET', [socket.user.room])
@@ -327,35 +338,46 @@ module.exports = (io) => {
           } else {
             // if the host is leaving, reassign the host
             if (session.host === socket.user.uid) {
-              await sendCommand('JSON.SET', [socket.user.room, '.host', JSON.stringify(Object.keys(session.members)[0])])
+              await sendCommand('JSON.SET', [
+                socket.user.room,
+                '.host',
+                JSON.stringify(Object.keys(session.members)[0]),
+              ])
               session.host = Object.keys(session.members)[0]
             }
             // if the removed user was last person to finish in a round, get top 3 restaurants and emit
-            if (data.restaurants && !data.top3 && session.finished.length === Object.keys(session.members).length) {
+            if (
+              data.restaurants &&
+              !data.top3 &&
+              session.finished.length === Object.keys(session.members).length
+            ) {
               let top3 = getTop3(session.restaurants)
               if (top3.choices.length > 1) {
                 await sendCommand('JSON.SET', [socket.user.room, '.top3', JSON.stringify(top3)])
                 io.in(socket.user.room).emit('top 3', top3)
               } else {
                 // return match if top3 is only 1 restaurant
-                await sendCommand('JSON.SET', [socket.user.room, '.match', JSON.stringify(top3.choices[0])])
+                await sendCommand('JSON.SET', [
+                  socket.user.room,
+                  '.match',
+                  JSON.stringify(top3.choices[0]),
+                ])
                 io.in(socket.user.room).emit('match', top3.choices[0])
               }
             } else if (data.restaurants && !data.top3) {
               // decrease the majority by 1
-              sendCommand('JSON.NUMINCRBY', [
-                socket.user.room,
-                '.majority',
-                -1,
-              ]).catch((err) => console.error(err))
+              sendCommand('JSON.NUMINCRBY', [socket.user.room, '.majority', -1]).catch((err) =>
+                console.error(err),
+              )
             }
             io.in(socket.user.room).emit('update', session)
           }
           delete socket.user.room
+        } catch (err) {
+          console.error(err)
         }
-      } catch (err) {
-        console.error(err)
-      }
+        done()
+      })
     })
     // TODO: multi
     // alert user to be kicked from room
@@ -381,9 +403,9 @@ module.exports = (io) => {
     })
     //TODO: multi
     // mark user as finished swiping, send top 3 matches if everyone's finished
-    socket.on('finished', async () => {
-      try {
-        if (socket.user.room) {
+    socket.on('finished', () => {
+      lock(socket.user.room, async function (done) {
+        try {
           // add user's uid to finished array in filters
           await sendCommand('JSON.ARRAPPEND', [
             socket.user.room,
@@ -400,30 +422,42 @@ module.exports = (io) => {
               io.in(socket.user.room).emit('top 3', top3)
             } else {
               // return match if top3 is only 1 restaurant
-              await sendCommand('JSON.SET', [socket.user.room, '.match', JSON.stringify(top3.choices[0])])
+              await sendCommand('JSON.SET', [
+                socket.user.room,
+                '.match',
+                JSON.stringify(top3.choices[0]),
+              ])
               io.in(socket.user.room).emit('match', top3.choices[0])
             }
           } else {
             io.in(socket.user.room).emit('update', session)
           }
+        } catch (err) {
+          console.error(err)
         }
-      } catch (err) {
-        console.error(err)
-      }
+        done()
+      })
     })
 
     socket.on('to top 3', () => {
-      let session = await sendCommand('JSON.GET', [socket.user.room])
-      session = JSON.parse(session)
-      let top3 = getTop3(session.restaurants)
-      if (top3.choices.length > 1) {
-        await sendCommand('JSON.SET', [socket.user.room, '.top3', JSON.stringify(top3)])
-        io.in(socket.user.room).emit('top 3', top3)
-      } else {
-        // return match if top3 is only 1 restaurant
-        await sendCommand('JSON.SET', [socket.user.room, '.match', JSON.stringify(top3.choices[0])])
-        io.in(socket.user.room).emit('match', top3.choices[0])
-      }
+      lock(socket.user.room, async function (done) {
+        let session = await sendCommand('JSON.GET', [socket.user.room])
+        session = JSON.parse(session)
+        let top3 = getTop3(session.restaurants)
+        if (top3.choices.length > 1) {
+          await sendCommand('JSON.SET', [socket.user.room, '.top3', JSON.stringify(top3)])
+          io.in(socket.user.room).emit('top 3', top3)
+        } else {
+          // return match if top3 is only 1 restaurant
+          await sendCommand('JSON.SET', [
+            socket.user.room,
+            '.match',
+            JSON.stringify(top3.choices[0]),
+          ])
+          io.in(socket.user.room).emit('match', top3.choices[0])
+        }
+        done()
+      })
     })
 
     // alert all users to choose random pick

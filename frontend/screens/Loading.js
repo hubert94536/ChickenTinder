@@ -31,14 +31,14 @@ class Loading extends React.Component {
     socket.getSocket().once('match', (data) => {
       socket.getSocket().off()
       this.props.navigation.replace('Match', {
-        restaurant: this.props.session.resInfo.find(x => x.id === data),
+        restaurant: this.props.session.resInfo.find((x) => x.id === data),
       })
     })
 
     socket.getSocket().once('top 3', (res) => {
       socket.getSocket().off()
-      let restaurants = this.props.session.resInfo.filter(x => res.choices.includes(x.id))
-      restaurants.forEach(x => x.likes = res.likes[res.choices.indexOf(x)])
+      let restaurants = this.props.session.resInfo.filter((x) => res.choices.includes(x.id))
+      restaurants.forEach((x) => (x.likes = res.likes[res.choices.indexOf(x)]))
       this.props.navigation.replace('TopThree', {
         top: restaurants,
       })
@@ -126,7 +126,7 @@ const mapStateToProps = (state) => {
   return {
     session: state.session.session,
     isHost: state.isHost.isHost,
-    username: state.username.username
+    username: state.username.username,
   }
 }
 

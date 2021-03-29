@@ -40,7 +40,7 @@ class createAccount extends React.Component {
       disabled: false,
     }
   }
-  
+
   //  checks whether or not the username can be set
   handleClick = async () => {
     this.setState({ disabled: true })
@@ -71,7 +71,7 @@ class createAccount extends React.Component {
         [USERNAME, this.state.username],
         [PHOTO, this.state.photo],
         [NAME, this.state.name],
-        [UID, global.uid]
+        [UID, global.uid],
       ])
       if (global.phone) {
         await AsyncStorage.setItem(PHONE, global.phone)

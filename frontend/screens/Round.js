@@ -26,7 +26,7 @@ class Round extends React.Component {
     socket.getSocket().once('match', (data) => {
       socket.getSocket().off()
       this.props.navigation.replace('Match', {
-        restaurant: this.props.session.resInfo.find(x => x.id === data),
+        restaurant: this.props.session.resInfo.find((x) => x.id === data),
       })
     })
 
@@ -37,8 +37,8 @@ class Round extends React.Component {
 
     socket.getSocket().once('top 3', (res) => {
       socket.getSocket().off()
-      let restaurants = this.props.session.resInfo.filter(x => res.choices.includes(x.id))
-      restaurants.forEach(x => x.likes = res.likes[res.choices.indexOf(x)])
+      let restaurants = this.props.session.resInfo.filter((x) => res.choices.includes(x.id))
+      restaurants.forEach((x) => (x.likes = res.likes[res.choices.indexOf(x)]))
       this.props.navigation.replace('TopThree', {
         top: restaurants,
       })
@@ -53,7 +53,6 @@ class Round extends React.Component {
     this.setState({ disabled: false })
     this.props.navigation.replace('Home')
   }
-
 
   render() {
     return (
@@ -103,9 +102,7 @@ class Round extends React.Component {
             >
               <View style={styles.centerAlign}>
                 <Icon5 name="door-open" style={[screenStyles.text, styles.door]} />
-                <Text style={([screenStyles.text], styles.black)}>
-                  Leave
-                </Text>
+                <Text style={([screenStyles.text], styles.black)}>Leave</Text>
               </View>
             </TouchableHighlight>
             <Text style={[screenStyles.text, styles.topMargin, styles.restaurant]}>

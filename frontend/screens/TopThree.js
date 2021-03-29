@@ -299,7 +299,6 @@ const mapDispatchToProps = (dispatch) =>
     dispatch,
   )
 
-
 export default connect(mapStateToProps, mapDispatchToProps)(TopThree)
 
 TopThree.propTypes = {
@@ -315,6 +314,7 @@ TopThree.propTypes = {
     updateSession: PropTypes.func,
     setHost: PropTypes.func,
     username: PropTypes.string,
+    isHost: PropTypes.bool,
   }),
 }
 

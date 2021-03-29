@@ -1,4 +1,4 @@
-import { USERNAME, NAME, EMAIL, PHOTO, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
+import { USERNAME, NAME, EMAIL, PHOTO, PHONE, REGISTRATION_TOKEN, UID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import FBSDK from 'react-native-fbsdk'
 import auth from '@react-native-firebase/auth'
@@ -52,7 +52,7 @@ const fetchAccount = async () => {
       [USERNAME, user.username],
       [NAME, user.name],
       [PHOTO, user.photo],
-      [UID, user.uid]
+      [UID, user.uid],
     ])
     if (user.email) {
       await AsyncStorage.setItem(EMAIL, user.email)

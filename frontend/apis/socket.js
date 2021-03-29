@@ -4,8 +4,8 @@ import io from 'socket.io-client'
 var socket = null
 
 const connect = () => {
-  socket = io('http://192.168.0.23:5000')
-  // socket = io('https://wechews.herokuapp.com')
+  // socket = io('http://192.168.0.23:5000')
+  socket = io('https://wechews.herokuapp.com')
   socket.on('connect', async () => {
     console.log('connect')
     const token = await auth().currentUser.getIdToken()
@@ -29,7 +29,7 @@ const createRoom = () => {
   session.filters.categories = ''
   session.match = ''
   socket.emit('create', {
-    session: session
+    session: session,
   })
 }
 
@@ -50,13 +50,13 @@ const joinRoom = (code) => {
   member.connected = true
   socket.emit('join', {
     code: code,
-    member: member
+    member: member,
   })
 }
 // leaving a session
 const leave = (stage) => {
-  socket.emit('leave', {stage: stage})
-} 
+  socket.emit('leave', { stage: stage })
+}
 
 const kickUser = (uid) => {
   socket.emit('kick', { uid: uid })

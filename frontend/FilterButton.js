@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, View, Text, StyleSheet } from 'react-native'
+import { TouchableOpacity, Text, StyleSheet } from 'react-native'
 import PropTypes from 'prop-types'
 import colors from '../styles/colors.js'
 import normalize from '../styles/normalize.js'

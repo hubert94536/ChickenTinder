@@ -94,7 +94,7 @@ class Match extends React.Component {
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      updateSession
+      updateSession,
     },
     dispatch,
   )

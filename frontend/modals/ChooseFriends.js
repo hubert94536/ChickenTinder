@@ -143,7 +143,6 @@ const mapStateToProps = (state) => {
   }
 }
 
-
 export default connect(mapStateToProps)(ChooseFriends)
 
 ChooseFriends.propTypes = {
@@ -151,6 +150,7 @@ ChooseFriends.propTypes = {
   press: PropTypes.func,
   visible: PropTypes.bool,
   friends: PropTypes.array,
+  session: PropTypes.object,
 }
 
 const styles = StyleSheet.create({

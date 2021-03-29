@@ -16,7 +16,6 @@ import Majority from '../modals/ChooseMajority.js'
 import screenStyles from '../../styles/screenStyles.js'
 import { FlatList } from 'react-native-gesture-handler'
 import CategoryCard from '../cards/CategoryCard.js'
-// import modalStyles from '../../styles/modalStyles.js'
 
 const font = 'CircularStd-Medium'
 
@@ -262,7 +261,6 @@ class FilterSelector extends React.Component {
     filters.categories = this.categorize(selections)
 
     if (this.props.isHost) {
-      console.log(`Selected filters: ${JSON.stringify(filters)}`)
       Socket.startSession(filters, session)
     }
     this.props.buttonDisable(false)
@@ -517,13 +515,6 @@ class FilterSelector extends React.Component {
         />
       </View>
     )
-  }
-}
-
-const mapStateToProps = (state) => {
-  return {
-    session: state.session.session,
-    isHost: state.isHost.isHost
   }
 }
 
