@@ -1,4 +1,4 @@
-import { USERNAME, NAME, EMAIL, PHOTO, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
+import { USERNAME, NAME, EMAIL, PHOTO, PHONE, REGISTRATION_TOKEN, UID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import FBSDK from 'react-native-fbsdk'
 import auth from '@react-native-firebase/auth'
@@ -36,6 +36,8 @@ const loginWithCredential = async (userCredential) => {
       default:
         throw new Error('Could not determine provider')
     }
+    console.log(userCredential)
+    global.uid = userCredential.user.uid
     return 'CreateAccount'
   } catch (err) {
     console.log(err)
@@ -50,6 +52,7 @@ const fetchAccount = async () => {
       [USERNAME, user.username],
       [NAME, user.name],
       [PHOTO, user.photo],
+      [UID, user.uid],
     ])
     if (user.email) {
       await AsyncStorage.setItem(EMAIL, user.email)

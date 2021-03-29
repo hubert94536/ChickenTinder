@@ -7,10 +7,8 @@ import normalize from '../../styles/normalize.js'
 import getCuisine from '../assets/images/foodImages.js'
 import colors from '../../styles/colors.js'
 import screenStyles from '../../styles/screenStyles.js'
-import modalStyles from '../../styles/modalStyles.js'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
-const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
 
 const bg = '#FCE5CD'

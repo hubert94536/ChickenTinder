@@ -13,23 +13,25 @@ const config = {
   port: process.env.USERS_PORT,
   database: process.env.USERS_DATABASE,
   dialect: 'postgresql',
-  ssl: true,
+  ssl: {
+    rejectUnauthorized: false
+  }
 }
 
 const pool = new pg.Pool(config)
 const sequelize = new Sequelize(config)
 // const redisClient = redis.createClient('redis://localhost:6379')
-
 const redisClient = redis.createClient({
   host: process.env.REDIS_HOST,
   port: process.env.REDIS_PORT,
   password: process.env.REDIS_PASSWORD,
 })
-
+const lock = require('redis-lock')(redisClient)
 const hgetAll = promisify(redisClient.hgetall).bind(redisClient)
 const hmset = promisify(redisClient.hmset).bind(redisClient)
 const sendCommand = promisify(redisClient.send_command).bind(redisClient)
 const hdel = promisify(redisClient.hdel).bind(redisClient)
+const multi = redisClient.multi()
 firebase.initializeApp({
   credential: firebase.credential.cert({
     private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
@@ -39,4 +41,15 @@ firebase.initializeApp({
   databaseURL: 'https://wechews-83255.firebaseio.com',
 })
 
-module.exports = { firebase, hdel, hgetAll, hmset, pool, sendCommand, sequelize }
+module.exports = {
+  firebase,
+  hdel,
+  hgetAll,
+  hmset,
+  multi,
+  pool,
+  sendCommand,
+  sequelize,
+  lock,
+  redisClient,
+}

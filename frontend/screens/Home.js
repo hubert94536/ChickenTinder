@@ -7,8 +7,8 @@ import {
   hideError,
   showError,
   hideKick,
-  setCode,
-  hideEnd,
+  updateSession,
+  setHost,
 } from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import {
@@ -47,15 +47,33 @@ class Home extends React.Component {
       disabled: false,
     }
 
-    socket.getSocket().once('update', (res) => {
+    socket.getSocket().on('update', (res) => {
+      socket.getSocket().off()
       this.setState({ invite: false })
-      global.host = res.members[res.host].username
-      this.props.setCode(res.code)
-      global.isHost = res.members[res.host].username === this.props.username.username
+      this.props.updateSession(res)
+      this.props.setHost(res.members[res.host].username === this.props.username)
       this.setState({ disabled: false })
-      this.props.navigation.replace('Group', {
-        response: res,
-      })
+      this.props.navigation.replace('Group')
+    })
+
+    socket.getSocket().on('reconnect', (session) => {
+      socket.getSocket().off()
+      this.props.updateSession(session)
+      this.props.setHost(session.members[session.host].username === this.props.username)
+      if (!session.resInfo) this.props.navigation.replace('Group')
+      else if (session.match) {
+        this.props.navigation.replace('Match', {
+          restaurant: session.resInfo.find((x) => x.id === session.match),
+        })
+      } else if (session.top3) {
+        let restaurants = session.resInfo.filter((x) => session.top3.choices.includes(x.id))
+        restaurants.forEach((x) => (x.likes = session.top3.likes[session.top3.choices.indexOf(x)]))
+        this.props.navigation.replace('TopThree', {
+          top: restaurants,
+        })
+      } else if (session.finished.indexOf(global.uid) !== -1)
+        this.props.navigation.replace('Loading')
+      else this.props.navigation.replace('Round')
     })
 
     socket.getSocket().on('exception', (msg) => {
@@ -87,9 +105,7 @@ class Home extends React.Component {
     return (
       <ImageBackground
         source={
-          this.state.join || this.props.error || this.props.kick || this.props.end
-            ? require(homedark)
-            : require(home)
+          this.state.join || this.props.error || this.props.kick ? require(homedark) : require(home)
         }
         style={screenStyles.screenBackground}
       >
@@ -184,18 +200,8 @@ class Home extends React.Component {
               cancel={() => this.props.hideKick()}
             />
           )}
-          {this.props.end && (
-            <Alert
-              title="Oh no!"
-              body="The host has ended the group session"
-              buttonAff="Close"
-              height="20%"
-              press={() => this.props.hideEnd()}
-              cancel={() => this.props.hideEnd()}
-            />
-          )}
         </View>
-        {(this.state.join || this.props.error || this.props.end || this.props.kick) && (
+        {(this.state.join || this.props.error || this.props.kick) && (
           <BlurView
             blurType="dark"
             blurAmount={10}
@@ -209,13 +215,11 @@ class Home extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const { friends } = state
-  const { error } = state
-  const { username } = state
-  const { code } = state
-  const { kick } = state
-  const { end } = state
-  return { friends, error, username, code, kick, end }
+  return {
+    username: state.username.username,
+    error: state.error,
+    kick: state.kick,
+  }
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -224,9 +228,9 @@ const mapDispatchToProps = (dispatch) =>
       changeFriends,
       showError,
       hideError,
-      setCode,
+      updateSession,
       hideKick,
-      hideEnd,
+      setHost,
     },
     dispatch,
   )
@@ -236,16 +240,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(Home)
 Home.propTypes = {
   navigation: PropTypes.object,
   error: PropTypes.bool,
-  friends: PropTypes.object,
-  username: PropTypes.object,
+  username: PropTypes.string,
   showError: PropTypes.func,
   hideError: PropTypes.func,
   changeFriends: PropTypes.func,
-  setCode: PropTypes.func,
   hideKick: PropTypes.func,
-  hideEnd: PropTypes.func,
   kick: PropTypes.bool,
-  end: PropTypes.bool,
+  setHost: PropTypes.func,
+  updateSession: PropTypes.func,
 }
 const styles = StyleSheet.create({
   main: {
