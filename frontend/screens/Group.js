@@ -60,8 +60,11 @@ class Group extends React.Component {
 
     // listens if user is to be kicked
     socket.getSocket().once('kick', () => {
-      this.leave()
+      socket.getSocket().off()
+      socket.leave('group')
       this.props.showKick()
+      this.props.navigation.replace('Home')
+      this.props.updateSession({})
     })
 
     // listens for group updates
@@ -154,9 +157,9 @@ class Group extends React.Component {
     this.setState({ disabled: true })
     socket.getSocket().off()
     socket.leave('group')
-    this.props.updateSession({})
     this.setState({ disabled: false })
     this.props.navigation.replace('Home')
+    this.props.updateSession({})
   }
 
   cancelAlert() {
@@ -188,8 +191,8 @@ class Group extends React.Component {
               {this.props.isHost
                 ? 'Your Group'
                 : `${this.firstName(
-                    this.props.session.members[this.props.session.host].name,
-                  )}'s Group`}
+                  this.props.session.members[this.props.session.host].name,
+                )}'s Group`}
             </Text>
             <View style={styles.subheader}>
               <Text style={styles.pinText}>Group PIN: </Text>
@@ -233,8 +236,8 @@ class Group extends React.Component {
                   {this.countNeedFilters(this.props.session.members) == 0
                     ? 'waiting for host to start'
                     : `waiting for ${this.countNeedFilters(
-                        this.props.session.members,
-                      )} member filters`}
+                      this.props.session.members,
+                    )} member filters`}
                 </Text>
               </View>
               <FlatList

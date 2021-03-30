@@ -38,7 +38,7 @@ class Loading extends React.Component {
     socket.getSocket().once('top 3', (res) => {
       socket.getSocket().off()
       let restaurants = this.props.session.resInfo.filter((x) => res.choices.includes(x.id))
-      restaurants.forEach((x) => (x.likes = res.likes[res.choices.indexOf(x)]))
+      restaurants.forEach((x) => (x.likes = res.likes[res.choices.indexOf(x.id)]))
       this.props.navigation.replace('TopThree', {
         top: restaurants,
       })
@@ -54,9 +54,9 @@ class Loading extends React.Component {
     this.setState({ disabled: true })
     socket.getSocket().off()
     socket.leave('loading')
-    this.props.updateSession({})
     this.setState({ disabled: false })
     this.props.navigation.replace('Home')
+    this.props.updateSession({})
   }
 
   render() {
@@ -111,7 +111,7 @@ class Loading extends React.Component {
               disabled={this.state.disabled}
               style={[styles.leaveButton, screenStyles.medButton]}
               underlayColor="transparent"
-              onPress={() => this.setState({ leave: true })}
+              onPress={() => socket.toTop3()}
             >
               <Text style={styles.leaveText}>Continue</Text>
             </TouchableHighlight>
