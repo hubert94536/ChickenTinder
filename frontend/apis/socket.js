@@ -28,6 +28,7 @@ const createRoom = () => {
   session.filters = {}
   session.filters.categories = ''
   session.match = ''
+  session.open = true
   socket.emit('create', {
     session: session,
   })

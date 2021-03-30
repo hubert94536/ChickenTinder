@@ -60,6 +60,7 @@ class Group extends React.Component {
 
     // listens if user is to be kicked
     socket.getSocket().once('kick', () => {
+      console.log(kick)
       this.leave()
       this.props.showKick()
     })

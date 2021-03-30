@@ -389,6 +389,7 @@ module.exports = (io) => {
         if (data.uid) {
           // get socket id associated to user uid
           let user = await hgetAll(`users:${data.uid}`)
+          console.log(user)
           if (user && user.client) {
             io.to(user.client).emit('kick')
           } else {
