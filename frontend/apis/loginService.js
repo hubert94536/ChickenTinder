@@ -116,7 +116,7 @@ const logout = async () => {
     }
     await notificationsApi.unlinkToken()
     await auth().signOut()
-    await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE])
+    await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
   } catch (err) {
     console.log(err)
     return Promise.reject(err)
@@ -135,7 +135,7 @@ const deleteUserWithCredential = async (credential) => {
     await accountsApi.deleteUser()
     // Delete user from firebase and remove information from AsyncStorage
     await auth().currentUser.delete()
-    await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE])
+    await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
   } catch (err) {
     console.log('------ERROR DELETING USER')
     return Promise.reject(err)
