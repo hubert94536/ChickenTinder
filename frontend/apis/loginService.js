@@ -1,4 +1,4 @@
-import { USERNAME, NAME, EMAIL, PHOTO, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
+import { USERNAME, NAME, EMAIL, PHOTO, PHONE, REGISTRATION_TOKEN, UID } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import FBSDK from 'react-native-fbsdk'
 import auth from '@react-native-firebase/auth'
@@ -36,6 +36,7 @@ const loginWithCredential = async (userCredential) => {
       default:
         throw new Error('Could not determine provider')
     }
+    global.uid = userCredential.user.uid
     return 'CreateAccount'
   } catch (err) {
     console.log(err)
@@ -50,6 +51,7 @@ const fetchAccount = async () => {
       [USERNAME, user.username],
       [NAME, user.name],
       [PHOTO, user.photo],
+      [UID, user.uid],
     ])
     if (user.email) {
       await AsyncStorage.setItem(EMAIL, user.email)
@@ -113,7 +115,7 @@ const logout = async () => {
     }
     await notificationsApi.unlinkToken()
     await auth().signOut()
-    await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE])
+    await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
   } catch (err) {
     console.log(err)
     return Promise.reject(err)
@@ -132,7 +134,7 @@ const deleteUserWithCredential = async (credential) => {
     await accountsApi.deleteUser()
     // Delete user from firebase and remove information from AsyncStorage
     await auth().currentUser.delete()
-    await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE])
+    await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
   } catch (err) {
     console.log('------ERROR DELETING USER')
     return Promise.reject(err)

@@ -9,23 +9,18 @@ const acceptRequest = async (req, res) => {
     const main = req.authId
     const friend = req.body.friend
     // set status to friends for friend and main account uids
-    const mainAccount = await Friends.update(
+    const status = await Friends.update(
       { status: 'friends' },
       {
         where: {
-          [Op.and]: [{ main_uid: main }, { friend_uid: friend }],
+          [Op.or]: [
+            { [Op.and]: [{ main_uid: friend }, { friend_uid: main }] },
+            { [Op.and]: [{ main_uid: main }, { friend_uid: friend }] },
+          ],
         },
       },
     )
-    const friendAccount = await Friends.update(
-      { status: 'friends' },
-      {
-        where: {
-          [Op.and]: [{ main_uid: friend }, { friend_uid: main }],
-        },
-      },
-    )
-    if (mainAccount && friendAccount) {
+    if (status) {
       // update notification to main from pending friend request to friends
       await Notifications.update(
         { type: 'friends' },
@@ -117,7 +112,6 @@ const getFriends = async (req, res) => {
   }
 }
 
-// TODO: Remove all below functions in production
 // Creates friendship requests between both accounts
 const createTestFriends = async (req, res) => {
   try {
@@ -147,23 +141,18 @@ const acceptTestRequest = async (req, res) => {
     const main = req.body.uid
     const friend = req.body.friend
     // set status to friends for friend and main account uids
-    const mainAccount = await Friends.update(
+    const status = await Friends.update(
       { status: 'friends' },
       {
         where: {
-          [Op.and]: [{ main_uid: main }, { friend_uid: friend }],
+          [Op.or]: [
+            { [Op.and]: [{ main_uid: friend }, { friend_uid: main }] },
+            { [Op.and]: [{ main_uid: main }, { friend_uid: friend }] },
+          ],
         },
       },
     )
-    const friendAccount = await Friends.update(
-      { status: 'friends' },
-      {
-        where: {
-          [Op.and]: [{ main_uid: friend }, { friend_uid: main }],
-        },
-      },
-    )
-    if (mainAccount && friendAccount) {
+    if (status) {
       // update notification to main from pending friend request to friends
       await Notifications.update(
         { type: 'friends' },

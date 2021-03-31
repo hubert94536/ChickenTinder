@@ -6,12 +6,11 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'
-import global from '../../global.js'
 import mapStyle from '../../styles/mapStyle.json'
 import MatchCard from '../cards/MatchCard.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
-import { setCode } from '../redux/Actions.js'
+import { updateSession } from '../redux/Actions.js'
 import socket from '../apis/socket.js'
 
 // the card for the restaurant match
@@ -24,19 +23,13 @@ class Match extends React.Component {
     }
   }
 
-  endRound() {
+  leave() {
     this.setState({ disabled: true })
     socket.getSocket().off()
-    if (global.isHost) {
-      socket.endRound()
-    } else {
-      socket.endLeave()
-    }
-    this.props.setCode(0)
-    global.host = ''
-    global.isHost = false
-    global.restaurants = []
+    socket.leave('match')
+    this.setState({ disabled: false })
     this.props.navigation.replace('Home')
+    this.props.updateSession({})
   }
 
   render() {
@@ -89,7 +82,7 @@ class Match extends React.Component {
         <Text /* Link to exit round */
           disabled={this.state.disabled}
           style={[screenStyles.bigButtonText, styles.exitRoundText]}
-          onPress={() => this.endRound()}
+          onPress={() => this.leave()}
         >
           Exit Round
         </Text>
@@ -98,20 +91,15 @@ class Match extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  const { code } = state
-  return { code }
-}
-
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      setCode,
+      updateSession,
     },
     dispatch,
   )
 
-export default connect(mapStateToProps, mapDispatchToProps)(Match)
+export default connect(null, mapDispatchToProps)(Match)
 
 Match.propTypes = {
   //navig should contain navigate fx + state, which contains params which contains the necessary restaurant arr
@@ -124,7 +112,7 @@ Match.propTypes = {
       }),
     }),
   }),
-  setCode: PropTypes.func,
+  updateSession: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

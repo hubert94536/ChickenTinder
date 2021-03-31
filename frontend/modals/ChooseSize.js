@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native'
 import PropTypes from 'prop-types'
+import ButtonSwitch from './ButtonSwitch.js'
 import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
@@ -30,19 +31,19 @@ export default class Size extends React.Component {
 
   //  function called when 'x' is pressed
   handleCancel() {
-    this.props.cancel()
+    let invalid = this.state.invalidSize
+    this.setState({
+      selectedSize: '',
+      invalidSize: false,
+    })
+    this.props.cancel(invalid)
   }
 
   evaluate() {
-    if (this.state.selectedSize === '') {
-      this.setState({ invalidSize: true })
-    }
     let s = parseInt(this.state.selectedSize)
 
-    console.log(this.props.max)
-
     // Adjust min/max round lengths
-    if (s < 1 || s > this.props.max) {
+    if (isNaN(s) || s < 1 || s > this.props.max) {
       this.setState({ invalidSize: true })
     } else {
       this.handlePress(s)
@@ -64,6 +65,17 @@ export default class Size extends React.Component {
             <Text style={[screenStyles.text, modalStyles.titleText]}>{this.props.title}</Text>
             <Text style={[screenStyles.text, styles.black]}>{this.props.filterSubtext}</Text>
             <View style={modalStyles.inputContainer}>
+              <ButtonSwitch
+                text1="10"
+                text2="20"
+                text3="30"
+                value1="10"
+                value2="20"
+                value3="30"
+                onValueChange={(size) => {
+                  this.setState({ selectedSize: size })
+                }}
+              />
               <TextInput
                 style={modalStyles.textInput}
                 value={this.state.selectedSize}

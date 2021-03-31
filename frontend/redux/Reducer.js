@@ -9,6 +9,8 @@ const INITIAL_STATE = {
   code: 0,
   kick: false,
   hostEnd: false,
+  session: {},
+  isHost: false,
 }
 
 export const errorReducer = (state = INITIAL_STATE.error, action) => {
@@ -115,12 +117,25 @@ export const kickReducer = (state = INITIAL_STATE.kick, action) => {
   }
 }
 
-export const endReducer = (state = INITIAL_STATE.hostEnd, action) => {
+export const sessionReducer = (state = INITIAL_STATE.session, action) => {
   switch (action.type) {
-    case 'SHOW_END':
-      return true
-    case 'HIDE_END':
-      return false
+    case 'UPDATE_SESSION':
+      return {
+        ...state,
+        session: action.payload,
+      }
+    default:
+      return state
+  }
+}
+
+export const setHostReducer = (state = INITIAL_STATE.isHost, action) => {
+  switch (action.type) {
+    case 'SET_HOST':
+      return {
+        ...state,
+        isHost: action.payload,
+      }
     default:
       return state
   }

@@ -185,7 +185,7 @@ Login.propTypes = {
 const styles = StyleSheet.create({
   main: {
     justifyContent: 'space-evenly',
-    flex: 1
+    flex: 1,
   },
   logo: {
     alignSelf: 'center',

@@ -112,47 +112,46 @@ class UserProfileView extends Component {
     if (!this.state.disabled) {
       this.setState({ disabled: true })
       // Check if phone provider - if so, validate phone num
-      if (auth().currentUser.providerData[0].providerId === 'phone')
-      {
+      if (auth().currentUser.providerData[0].providerId === 'phone') {
         auth()
-        .verifyPhoneNumber(auth().currentUser.phoneNumber)
-        .on('state_changed', (phoneAuthSnapshot) => {
-          console.log('State: ', phoneAuthSnapshot.state)
-          console.log(phoneAuthSnapshot)
-          switch (phoneAuthSnapshot.state) {
-            // Ask for code input
-            case auth.PhoneAuthState.CODE_SENT:
-              // Store verification id in state
-              this.setState({verificationId: phoneAuthSnapshot.verificationId})
-              this.verifyCode('111111')
-// TODO: Display verification code input modal (6 digits)
-              this.setState({confirmation: true})
-              break;
-            // Auto verified on android - proceed to delete account
-            case auth.PhoneAuthState.AUTO_VERIFIED:
-              this.setState({verificationId: phoneAuthSnapshot.verificationId})
-              this.verifyCode(phoneAuthSnapshot.code)
-              break;
-            // Display error alert
-            case auth.PhoneAuthState.ERROR:
-// TODO: Code could not be sent, display an error
-              this.props.showError()
-              break;
-          }
-        })
+          .verifyPhoneNumber(auth().currentUser.phoneNumber)
+          .on('state_changed', (phoneAuthSnapshot) => {
+            console.log('State: ', phoneAuthSnapshot.state)
+            console.log(phoneAuthSnapshot)
+            switch (phoneAuthSnapshot.state) {
+              // Ask for code input
+              case auth.PhoneAuthState.CODE_SENT:
+                // Store verification id in state
+                this.setState({ verificationId: phoneAuthSnapshot.verificationId })
+                this.verifyCode('111111')
+                // TODO: Display verification code input modal (6 digits)
+                this.setState({ confirmation: true })
+                break
+              // Auto verified on android - proceed to delete account
+              case auth.PhoneAuthState.AUTO_VERIFIED:
+                this.setState({ verificationId: phoneAuthSnapshot.verificationId })
+                this.verifyCode(phoneAuthSnapshot.code)
+                break
+              // Display error alert
+              case auth.PhoneAuthState.ERROR:
+                // TODO: Code could not be sent, display an error
+                this.props.showError()
+                break
+            }
+          })
       }
       // Not phone provider - delete the account
       else {
         loginService
-        .deleteUser()
-        .then(() => {
-          // close settings and navigate to Login
-          this.setState({ visible: false })
-          this.props.navigation.replace('Login')
-        })
-        .catch(() => {
-          this.props.hideError()
-        })
+          .deleteUser()
+          .then(() => {
+            // close settings and navigate to Login
+            this.setState({ visible: false })
+            this.props.navigation.replace('Login')
+          })
+          .catch(() => {
+            this.props.hideError()
+          })
       }
       this.setState({ disabled: false })
     }
@@ -161,13 +160,14 @@ class UserProfileView extends Component {
   // IMPORTANT: Code MUST be passed in as a string
   // NOTE: Currently only logs success. To delete, uncomment lines under log.
   async verifyCode(code) {
-    console.log("Verifying code ", code)
+    console.log('Verifying code ', code)
     const credential = auth.PhoneAuthProvider.credential(this.state.verificationId, code)
-    auth().currentUser.reauthenticateWithCredential(credential)
+    auth()
+      .currentUser.reauthenticateWithCredential(credential)
       // If reauthentication succeeds, delete account using credential
       .then(() => {
-        console.log("success")
-        this.setState({confirmation: false})
+        console.log('success')
+        this.setState({ confirmation: false })
         // loginService
         // .deleteUserWithCredential(credential)
         // .then(() => {
@@ -180,10 +180,10 @@ class UserProfileView extends Component {
         // })
       })
       .catch((error) => {
-        console.log("Code verification failed")
+        console.log('Code verification failed')
         console.log(error)
-// TODO: Code could not be verified, disply an error
-  this.setState({confirmation: false})
+        // TODO: Code could not be verified, disply an error
+        this.setState({ confirmation: false })
         this.props.showError()
       })
   }
@@ -333,14 +333,14 @@ class UserProfileView extends Component {
           cur="Profile"
         />
 
-            {(visible || edit || logoutAlert || deleteAlert || blur || this.state.confirmation) && (
-              <BlurView
-                blurType="dark"
-                blurAmount={10}
-                reducedTransparencyFallbackColor="white"
-                style={modalStyles.blur}
-              />
-            )}
+        {(visible || edit || logoutAlert || deleteAlert || blur || this.state.confirmation) && (
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
 
         <Settings
           visible={visible}
@@ -351,21 +351,21 @@ class UserProfileView extends Component {
           deleteAlert={() => this.setState({ deleteAlert: true })}
         />
 
-            <Confirmation
-              visible={this.state.confirmation}
-              close={() => this.setState({ confirmation: false })}
-              show={() => this.setState({ confirmation: true })}
-              verify={(code) => this.verifyCode(code)}
-            />
+        <Confirmation
+          visible={this.state.confirmation}
+          close={() => this.setState({ confirmation: false })}
+          show={() => this.setState({ confirmation: true })}
+          verify={(code) => this.verifyCode(code)}
+        />
 
-            {edit && (
-              <EditProfile
-                dontSave={() => this.dontSave()}
-                makeChanges={() => this.makeChanges()}
-                userChange={(text) => this.setState({ usernameValue: text })}
-                nameChange={(text) => this.setState({ nameValue: text })}
-              />
-            )}
+        {edit && (
+          <EditProfile
+            dontSave={() => this.dontSave()}
+            makeChanges={() => this.makeChanges()}
+            userChange={(text) => this.setState({ usernameValue: text })}
+            nameChange={(text) => this.setState({ nameValue: text })}
+          />
+        )}
 
         {logoutAlert && (
           <Alert

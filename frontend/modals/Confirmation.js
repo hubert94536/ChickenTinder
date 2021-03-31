@@ -11,49 +11,43 @@ import {
 import { bindActionCreators } from 'redux'
 import { hideError, showError } from '../redux/Actions.js'
 import { connect } from 'react-redux'
-import { BlurView } from '@react-native-community/blur'
-import Alert from './Alert.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
-import global from '../../global.js'
-import loginService from '../apis/loginService.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 
 const height = Dimensions.get('window').height
-const font = 'CirularStd-Bold'
 
 class Confirmation extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-        code: '',
-        confirmResult: null,
+      code: '',
+      confirmResult: null,
     }
   }
 
   // function called when main button is pressed
-    handlePress() {
-      this.props.verify(this.state.code)
-    }
-
+  handlePress() {
+    this.props.verify(this.state.code)
+  }
 
   render() {
     return (
       <View style={styles.main}>
         <Text />
         <Modal transparent animationType="none" visible={this.props.visible}>
-        <View style={[modalStyles.modal, styles.modal]}>
-          <View style={styles.titleContainer}>
-            <Text style={[screenStyles.textBold, styles.titleText]}>Confirmation</Text>
-            <AntDesign
-              name="closecircleo"
-              style={[screenStyles.text, styles.closeIcon]}
-              onPress={() => this.props.close()}
-            />
-          </View>
-          <View style={styles.bodyContainer}>
+          <View style={[modalStyles.modal, styles.modal]}>
+            <View style={styles.titleContainer}>
+              <Text style={[screenStyles.textBold, styles.titleText]}>Confirmation</Text>
+              <AntDesign
+                name="closecircleo"
+                style={[screenStyles.text, styles.closeIcon]}
+                onPress={() => this.props.close()}
+              />
+            </View>
+            <View style={styles.bodyContainer}>
               <TextInput
                 style={[screenStyles.text, screenStyles.input, styles.textInput]}
                 keyboardType="numeric"
@@ -61,29 +55,29 @@ class Confirmation extends React.Component {
                   this.setState({ code: code })
                 }}
                 maxLength={6}
-                placeholder='Enter Code'
+                placeholder="Enter Code"
               />
-          </View>
-          <View style={modalStyles.justifyCenter}>
-            <TouchableHighlight
-              style={[screenStyles.medButton, styles.verifyButton]}
-              underlayColor="white"
-              onShowUnderlay={() => this.setState({ press: true })}
-              onHideUnderlay={() => this.setState({ press: false })}
-              onPress={() => this.handlePress() }
-            >
-              <Text
-                style={[
-                  screenStyles.smallButtonText,
-                  styles.verifyText,
-                  this.state.press ? screenStyles.hex : styles.white,
-                ]}
+            </View>
+            <View style={modalStyles.justifyCenter}>
+              <TouchableHighlight
+                style={[screenStyles.medButton, styles.verifyButton]}
+                underlayColor="white"
+                onShowUnderlay={() => this.setState({ press: true })}
+                onHideUnderlay={() => this.setState({ press: false })}
+                onPress={() => this.handlePress()}
               >
-                Verify
-              </Text>
-            </TouchableHighlight>
+                <Text
+                  style={[
+                    screenStyles.smallButtonText,
+                    styles.verifyText,
+                    this.state.press ? screenStyles.hex : styles.white,
+                  ]}
+                >
+                  Verify
+                </Text>
+              </TouchableHighlight>
+            </View>
           </View>
-        </View>
         </Modal>
       </View>
     )
@@ -144,28 +138,24 @@ const styles = StyleSheet.create({
   },
 })
 
-
 const mapStateToProps = (state) => {
-    const { error } = state
-    return { error }
-  }
-  
-  const mapDispatchToProps = (dispatch) =>
-    bindActionCreators(
-      {
-        showError,
-        hideError,
-      },
-      dispatch,
-    )
-  
-  export default connect(mapStateToProps, mapDispatchToProps)(Confirmation)
-
-Confirmation.propTypes = {
-    close: PropTypes.func,
-    verify: PropTypes.func
+  const { error } = state
+  return { error }
 }
 
-Confirmation.defaultProps = {
-  visible: true,
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      showError,
+      hideError,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(Confirmation)
+
+Confirmation.propTypes = {
+  close: PropTypes.func,
+  verify: PropTypes.func,
+  visible: PropTypes.bool,
 }
