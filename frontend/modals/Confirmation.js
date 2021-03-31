@@ -114,7 +114,6 @@ const styles = StyleSheet.create({
   textInput: {
     marginTop: '3%',
     borderColor: '#E0E0E0',
-    color: '#B2B2B2',
     alignSelf: 'stretch',
     borderWidth: 0,
     borderBottomWidth: 1.5,
