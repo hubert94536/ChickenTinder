@@ -36,7 +36,6 @@ const loginWithCredential = async (userCredential) => {
       default:
         throw new Error('Could not determine provider')
     }
-    console.log(userCredential)
     global.uid = userCredential.user.uid
     return 'CreateAccount'
   } catch (err) {

@@ -29,7 +29,8 @@ import normalize from '../../styles/normalize.js'
 import TabBar from '../Nav.js'
 import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
-
+import accountsApi from '../apis/accountsApi.js'
+import friendsApi from '../apis/friendsApi.js'
 const width = Dimensions.get('window').width
 const home = '../assets/backgrounds/Home.png'
 const homedark = '../assets/backgrounds/Home_Blur.png'
@@ -90,10 +91,10 @@ class Home extends React.Component {
     // accountsApi.createFBUserTest('Anna2', 34, 'annaxand', 'annaxand@yahoo.com', '52', '17891235')
     // accountsApi.createFBUserTest('Helen2', 35, 'helennn', 'helennn@gmail.com', '53', '45678903')
     // accountsApi.createFBUserTest('Kevin2', 36, 'kev', 'kevi@gmail.com', '54', '45678904')
-    // // // friendsApi.createFriendshipTest(requester, accepter)
-    // friendsApi.createFriendshipTest(32, "7eqhoZrbfVOKJwJ1UeBjQg6BZdE2")
-    // friendsApi.createFriendshipTest(33, "7eqhoZrbfVOKJwJ1UeBjQg6BZdE2")
-    // friendsApi.createFriendshipTest(34, "7eqhoZrbfVOKJwJ1UeBjQg6BZdE2")
+    // // friendsApi.createFriendshipTest(requester, accepter)
+    // friendsApi.createFriendshipTest(32, "TL7VCEYG7SRUPpqFJe3xVvCoLt23")
+    // friendsApi.createFriendshipTest(33, "TL7VCEYG7SRUPpqFJe3xVvCoLt23")
+    // friendsApi.createFriendshipTest(34, "TL7VCEYG7SRUPpqFJe3xVvCoLt23")
   }
 
   createGroup() {

@@ -13,6 +13,19 @@ const width = Dimensions.get('window').width
 
 const bg = '#FCE5CD'
 
+const cuisine_imgs = {
+  'American': 'American (Traditional)',
+  'European': 'French',
+  'Latin American': 'Spanish',
+  'Mediterranean': 'Mediterranean',
+  'South Asian': 'Indian',
+  'Southeast Asian': 'Vietnamese',
+  'Pacific Islander': 'Polynesian',
+  'East Asian': 'Chinese',
+  'Middle Eastern': 'Middle Eastern',
+  'African': 'African',
+}
+
 export default class CategoryCard extends React.Component {
   constructor(props) {
     super(props)
@@ -32,8 +45,7 @@ export default class CategoryCard extends React.Component {
   }
 
   render() {
-    let catList = [{ title: this.props.category }]
-    const imgsrc = getCuisine(catList)
+    const imgsrc = getCuisine([cuisine_imgs[this.props.category]])
     return (
       <View style={styles.card}>
         <TouchableOpacity onPress={this.onTap}>
