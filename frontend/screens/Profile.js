@@ -42,7 +42,7 @@ class UserProfileView extends Component {
       logoutAlert: false,
       deleteAlert: false,
       blur: false,
-      confirmation: true,
+      confirmation: false,
       // friends text
       numFriends: 0,
       imageData: null,
