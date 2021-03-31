@@ -4,8 +4,8 @@ import io from 'socket.io-client'
 var socket = null
 
 const connect = () => {
-  // socket = io('http://192.168.0.23:5000')
-  socket = io('https://wechews.herokuapp.com')
+  socket = io('http://192.168.0.23:5000')
+  // socket = io('https://wechews.herokuapp.com')
   socket.on('connect', async () => {
     console.log('connect')
     const token = await auth().currentUser.getIdToken()
