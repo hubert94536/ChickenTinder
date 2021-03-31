@@ -16,7 +16,7 @@ import PropTypes from 'prop-types'
 import accountsApi from '../apis/accountsApi.js'
 import { changeImage, changeName, changeUsername, changeFriends } from '../redux/Actions.js'
 import colors from '../../styles/colors.js'
-import defImages from '../assets/images/defImages.js'
+import { foodImages } from '../assets/images/defImages.js'
 import global from '../../global.js'
 import notificationsApi from '../apis/notificationsApi.js'
 import normalize from '../../styles/normalize.js'
@@ -32,8 +32,7 @@ class createAccount extends React.Component {
       errorAlert: false,
       name: '',
       username: '',
-      // photo: defImages.keys()[Math.floor(Math.random() * defImages.length)].toString(),
-      photo: defImages.African.img.toString(),
+      photo: foodImages[Object.keys(foodImages)[Math.floor(Math.random() * Object.keys(foodImages).length)]].img.toString(),
       validNameFormat: true,
       validUsername: true,
       validUsernameFormat: true,
@@ -202,7 +201,7 @@ class createAccount extends React.Component {
             Invalid username format and username is taken
           </Text>
         )}
-        {global.phone && (
+        {global.phone != '' && (
           <View>
             <Text style={[screenStyles.textBook, styles.fieldName]}>Phone Number</Text>
             <Text
@@ -218,7 +217,7 @@ class createAccount extends React.Component {
             </Text>
           </View>
         )}
-        {global.email && (
+        {global.email != '' && (
           <View>
             <Text style={[screenStyles.textBook, styles.fieldName]}>Email</Text>
 
