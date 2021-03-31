@@ -10,7 +10,7 @@ import { bindActionCreators } from 'redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import auth from '@react-native-firebase/auth'
 import CreateAccount from './frontend/screens/CreateAccount.js'
-import { newNotif } from './frontend/redux/Actions.js'
+import { newNotif, setHost, updateSession } from './frontend/redux/Actions.js'
 import Group from './frontend/screens/Group.js'
 import Home from './frontend/screens/Home.js'
 import Loading from './frontend/screens/Loading.js'
@@ -23,6 +23,7 @@ import Search from './frontend/screens/Search.js'
 import TopThree from './frontend/screens/TopThree.js'
 import UserProfileView from './frontend/screens/Profile.js'
 import UserInfo from './frontend/screens/UserInfo.js'
+import socket from './frontend/apis/socket.js'
 
 class App extends React.Component {
   constructor() {
@@ -124,6 +125,33 @@ class App extends React.Component {
         },
       )
       var AppContainer = createAppContainer(RootStack)
+      // if (start === 'Home') {
+      //   socket.getSocket().on('reconnect', (session) => {
+      //     socket.getSocket().off()
+      //     if (session) {
+      //       this.props.updateSession(session)
+      //       this.props.setHost(session.members[session.host].username === this.props.username)
+      //       if (!session.resInfo) this.props.navigation.replace('Group')
+      //       else if (session.match) {
+      //         this.props.navigation.replace('Match', {
+      //           restaurant: session.resInfo.find((x) => x.id === session.match),
+      //         })
+      //       } else if (session.top3) {
+      //         let restaurants = session.resInfo.filter((x) => session.top3.choices.includes(x.id))
+      //         restaurants.forEach(
+      //           (x) => (x.likes = session.top3.likes[session.top3.choices.indexOf(x.id)]),
+      //         )
+      //         this.props.navigation.replace('TopThree', {
+      //           top: restaurants,
+      //         })
+      //       } else if (session.finished.indexOf(global.uid) !== -1)
+      //         this.props.navigation.replace('Loading')
+      //       else this.props.navigation.replace('Round')
+      //     } else {
+      //       this.props.navigation.replace('Home')
+      //     }
+      //   })
+      // }
       this.setState({ appContainer: <AppContainer /> })
     })
   }
@@ -144,15 +172,23 @@ class App extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    session: state.session.session
+  }
+}
+
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       newNotif,
+      setHost,
+      updateSession
     },
     dispatch,
   )
 
-export default connect(null, mapDispatchToProps)(App)
+export default connect(mapStateToProps, mapDispatchToProps)(App)
 
 App.propTypes = {
   newNotif: PropTypes.func,
