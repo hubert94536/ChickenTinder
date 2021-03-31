@@ -203,7 +203,7 @@ class createAccount extends React.Component {
             Invalid username format and username is taken
           </Text>
         )}
-        {global.phone != '' && (
+        {global.phone != '' && global.phone && (
           <View>
             <Text style={[screenStyles.textBook, styles.fieldName]}>Phone Number</Text>
             <Text
@@ -219,7 +219,7 @@ class createAccount extends React.Component {
             </Text>
           </View>
         )}
-        {global.email != '' && (
+        {global.email != '' && global.email && (
           <View>
             <Text style={[screenStyles.textBook, styles.fieldName]}>Email</Text>
 
