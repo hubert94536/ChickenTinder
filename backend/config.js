@@ -14,8 +14,8 @@ const config = {
   database: process.env.USERS_DATABASE,
   dialect: 'postgresql',
   ssl: {
-    rejectUnauthorized: false
-  }
+    rejectUnauthorized: false,
+  },
 }
 
 const pool = new pg.Pool(config)

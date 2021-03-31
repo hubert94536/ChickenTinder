@@ -12,15 +12,17 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Alert from '../modals/Alert.js'
 import accountsApi from '../apis/accountsApi.js'
 import colors from '../../styles/colors.js'
+import Confirmation from '../modals/Confirmation.js'
+import loginService from '../apis/loginService.js'
 import EditProfile from '../modals/EditProfile.js'
 import Friends from './Friends.js'
-import loginService from '../apis/loginService.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Settings from '../modals/ProfileSettings.js'
 import socket from '../apis/socket.js'
 import TabBar from '../Nav.js'
+import auth from '@react-native-firebase/auth'
 
 class UserProfileView extends Component {
   constructor(props) {
@@ -40,10 +42,13 @@ class UserProfileView extends Component {
       logoutAlert: false,
       deleteAlert: false,
       blur: false,
+      confirmation: false,
       // friends text
       numFriends: 0,
       imageData: null,
       disabled: false,
+      // phone auth
+      verificationId: null,
     }
   }
   // getting current user's info
@@ -96,23 +101,96 @@ class UserProfileView extends Component {
     }
   }
 
+  ////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////PHONE AUTH///////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+
+  // TODO: Create code input modal that for 6 digit code that executes the "verifyCode" function (below) upon submitting the code
+  // More TODOs in functions below
+
   async handleDelete() {
     if (!this.state.disabled) {
       this.setState({ disabled: true })
-      loginService
-        .deleteUser()
-        // TODO: Disastrous phone auth code...
-        .then(() => {
-          // close settings and navigate to Login
-          this.setState({ visible: false })
-          this.props.navigation.replace('Login')
-        })
-        .catch(() => {
-          this.props.hideError()
-        })
+      // Check if phone provider - if so, validate phone num
+      if (auth().currentUser.providerData[0].providerId === 'phone') {
+        auth()
+          .verifyPhoneNumber(auth().currentUser.phoneNumber)
+          .on('state_changed', (phoneAuthSnapshot) => {
+            console.log('State: ', phoneAuthSnapshot.state)
+            console.log(phoneAuthSnapshot)
+            switch (phoneAuthSnapshot.state) {
+              // Ask for code input
+              case auth.PhoneAuthState.CODE_SENT:
+                // Store verification id in state
+                this.setState({ verificationId: phoneAuthSnapshot.verificationId })
+                this.verifyCode('111111')
+                // TODO: Display verification code input modal (6 digits)
+                this.setState({ confirmation: true })
+                break
+              // Auto verified on android - proceed to delete account
+              case auth.PhoneAuthState.AUTO_VERIFIED:
+                this.setState({ verificationId: phoneAuthSnapshot.verificationId })
+                this.verifyCode(phoneAuthSnapshot.code)
+                break
+              // Display error alert
+              case auth.PhoneAuthState.ERROR:
+                // TODO: Code could not be sent, display an error
+                this.props.showError()
+                break
+            }
+          })
+      }
+      // Not phone provider - delete the account
+      else {
+        loginService
+          .deleteUser()
+          .then(() => {
+            // close settings and navigate to Login
+            this.setState({ visible: false })
+            this.props.navigation.replace('Login')
+          })
+          .catch(() => {
+            this.props.hideError()
+          })
+      }
       this.setState({ disabled: false })
     }
   }
+
+  // IMPORTANT: Code MUST be passed in as a string
+  // NOTE: Currently only logs success. To delete, uncomment lines under log.
+  async verifyCode(code) {
+    console.log('Verifying code ', code)
+    const credential = auth.PhoneAuthProvider.credential(this.state.verificationId, code)
+    auth()
+      .currentUser.reauthenticateWithCredential(credential)
+      // If reauthentication succeeds, delete account using credential
+      .then(() => {
+        console.log('success')
+        this.setState({ confirmation: false })
+        // loginService
+        // .deleteUserWithCredential(credential)
+        // .then(() => {
+        //   // close settings and navigate to Login
+        //   this.setState({ visible: false })
+        //   this.props.navigation.replace('Login')
+        // })
+        // .catch(() => {
+        //   this.props.hideError()
+        // })
+      })
+      .catch((error) => {
+        console.log('Code verification failed')
+        console.log(error)
+        // TODO: Code could not be verified, disply an error
+        this.setState({ confirmation: false })
+        this.props.showError()
+      })
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
 
   // close alert for taken username
   closeTaken() {
@@ -255,7 +333,7 @@ class UserProfileView extends Component {
           cur="Profile"
         />
 
-        {(visible || edit || logoutAlert || deleteAlert || blur) && (
+        {(visible || edit || logoutAlert || deleteAlert || blur || this.state.confirmation) && (
           <BlurView
             blurType="dark"
             blurAmount={10}
@@ -271,6 +349,13 @@ class UserProfileView extends Component {
           logout={() => this.handleLogout()}
           logoutAlert={() => this.setState({ logoutAlert: true })}
           deleteAlert={() => this.setState({ deleteAlert: true })}
+        />
+
+        <Confirmation
+          visible={this.state.confirmation}
+          close={() => this.setState({ confirmation: false })}
+          show={() => this.setState({ confirmation: true })}
+          verify={(code) => this.verifyCode(code)}
         />
 
         {edit && (

@@ -14,16 +14,16 @@ const width = Dimensions.get('window').width
 const bg = '#FCE5CD'
 
 const cuisine_imgs = {
-  'American': 'American (Traditional)',
-  'European': 'French',
+  American: 'American (Traditional)',
+  European: 'French',
   'Latin American': 'Spanish',
-  'Mediterranean': 'Mediterranean',
+  Mediterranean: 'Mediterranean',
   'South Asian': 'Indian',
   'Southeast Asian': 'Vietnamese',
   'Pacific Islander': 'Polynesian',
   'East Asian': 'Chinese',
   'Middle Eastern': 'Middle Eastern',
-  'African': 'African',
+  African: 'African',
 }
 
 export default class CategoryCard extends React.Component {
