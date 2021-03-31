@@ -191,8 +191,8 @@ class Group extends React.Component {
               {this.props.isHost
                 ? 'Your Group'
                 : `${this.firstName(
-                  this.props.session.members[this.props.session.host].name,
-                )}'s Group`}
+                    this.props.session.members[this.props.session.host].name,
+                  )}'s Group`}
             </Text>
             <View style={styles.subheader}>
               <Text style={styles.pinText}>Group PIN: </Text>
@@ -236,8 +236,8 @@ class Group extends React.Component {
                   {this.countNeedFilters(this.props.session.members) == 0
                     ? 'waiting for host to start'
                     : `waiting for ${this.countNeedFilters(
-                      this.props.session.members,
-                    )} member filters`}
+                        this.props.session.members,
+                      )} member filters`}
                 </Text>
               </View>
               <FlatList

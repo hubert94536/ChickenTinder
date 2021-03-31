@@ -32,7 +32,9 @@ class createAccount extends React.Component {
       errorAlert: false,
       name: '',
       username: '',
-      photo: foodImages[Object.keys(foodImages)[Math.floor(Math.random() * Object.keys(foodImages).length)]].img.toString(),
+      photo: foodImages[
+        Object.keys(foodImages)[Math.floor(Math.random() * Object.keys(foodImages).length)]
+      ].img.toString(),
       validNameFormat: true,
       validUsername: true,
       validUsernameFormat: true,
