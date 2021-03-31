@@ -69,7 +69,9 @@ class Home extends React.Component {
           })
         } else if (session.top3) {
           let restaurants = session.resInfo.filter((x) => session.top3.choices.includes(x.id))
-          restaurants.forEach((x) => (x.likes = session.top3.likes[session.top3.choices.indexOf(x.id)]))
+          restaurants.forEach(
+            (x) => (x.likes = session.top3.likes[session.top3.choices.indexOf(x.id)]),
+          )
           this.props.navigation.replace('TopThree', {
             top: restaurants,
           })
@@ -164,7 +166,7 @@ class Home extends React.Component {
             </TouchableHighlight>
           </View>
           <TabBar
-            goHome={() => { }}
+            goHome={() => {}}
             goSearch={() => {
               socket.getSocket().off()
               this.props.navigation.replace('Search')

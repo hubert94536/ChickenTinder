@@ -57,11 +57,7 @@ class Group extends React.Component {
       drawerOpen: false,
     }
     this.updateMemberList()
-    socket.reconnect()
-    console.log('reconnect')
-    socket.getSocket().on('reconnect', session => {
-      console.log(session)
-    })
+
     // listens if user is to be kicked
     socket.getSocket().once('kick', () => {
       socket.getSocket().off()

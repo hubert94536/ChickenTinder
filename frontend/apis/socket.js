@@ -154,5 +154,5 @@ export default {
   submitFilters,
   updateUser,
   toTop3,
-  reconnect
+  reconnect,
 }

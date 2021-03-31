@@ -477,11 +477,7 @@ module.exports = (io) => {
         io.in(socket.user.room).emit('top 3', top3)
       } else {
         // return match if top3 is only 1 restaurant
-        await sendCommand('JSON.SET', [
-          socket.user.room,
-          '.match',
-          JSON.stringify(top3.choices[0]),
-        ])
+        await sendCommand('JSON.SET', [socket.user.room, '.match', JSON.stringify(top3.choices[0])])
         io.in(socket.user.room).emit('match', top3.choices[0])
       }
     })
