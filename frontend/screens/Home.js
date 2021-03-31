@@ -59,24 +59,28 @@ class Home extends React.Component {
 
     socket.getSocket().on('reconnect', (session) => {
       socket.getSocket().off()
-      this.props.updateSession(session)
-      this.props.setHost(session.members[session.host].username === this.props.username)
-      if (!session.resInfo) this.props.navigation.replace('Group')
-      else if (session.match) {
-        this.props.navigation.replace('Match', {
-          restaurant: session.resInfo.find((x) => x.id === session.match),
-        })
-      } else if (session.top3) {
-        let restaurants = session.resInfo.filter((x) => session.top3.choices.includes(x.id))
-        restaurants.forEach(
-          (x) => (x.likes = session.top3.likes[session.top3.choices.indexOf(x.id)]),
-        )
-        this.props.navigation.replace('TopThree', {
-          top: restaurants,
-        })
-      } else if (session.finished.indexOf(global.uid) !== -1)
-        this.props.navigation.replace('Loading')
-      else this.props.navigation.replace('Round')
+      if (session) {
+        this.props.updateSession(session)
+        this.props.setHost(session.members[session.host].username === this.props.username)
+        if (!session.resInfo) this.props.navigation.replace('Group')
+        else if (session.match) {
+          this.props.navigation.replace('Match', {
+            restaurant: session.resInfo.find((x) => x.id === session.match),
+          })
+        } else if (session.top3) {
+          let restaurants = session.resInfo.filter((x) => session.top3.choices.includes(x.id))
+          restaurants.forEach(
+            (x) => (x.likes = session.top3.likes[session.top3.choices.indexOf(x.id)]),
+          )
+          this.props.navigation.replace('TopThree', {
+            top: restaurants,
+          })
+        } else if (session.finished.indexOf(global.uid) !== -1)
+          this.props.navigation.replace('Loading')
+        else this.props.navigation.replace('Round')
+      } else {
+        this.props.navigation.replace('Home')
+      }
     })
 
     socket.getSocket().on('exception', (msg) => {
