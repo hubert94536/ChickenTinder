@@ -17,7 +17,7 @@ export default class MatchCard extends React.Component {
     }
   }
   evaluateCuisines(cuisines) {
-    return cuisines[0].title
+    return cuisines[0]
   }
 
   render() {

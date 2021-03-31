@@ -19,7 +19,6 @@ import PropTypes from 'prop-types'
 import Drawer from './Drawer.js'
 import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
-import global from '../../global.js'
 import GroupCard from '../cards/GroupCard.js'
 import ChooseFriends from '../modals/ChooseFriends.js'
 import FilterSelector from './Filter.js'
@@ -27,11 +26,11 @@ import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
-import { setCode, showKick, showEnd } from '../redux/Actions.js'
+import { showKick, updateSession, setHost } from '../redux/Actions.js'
 
 const font = 'CircularStd-Medium'
-let memberList = []
-let memberRenderList = []
+var memberList = []
+var memberRenderList = []
 
 const windowWidth = Dimensions.get('window').width
 const windowHeight = Dimensions.get('window').height
@@ -39,16 +38,9 @@ const windowHeight = Dimensions.get('window').height
 class Group extends React.Component {
   constructor(props) {
     super(props)
-    const members = this.props.navigation.state.params.response.members
     this.filterRef = React.createRef()
     this.state = {
       // Group data
-      // Member Dictionary
-      members: members,
-
-      host: this.props.navigation.state.params.response.host,
-      hostName: members[this.props.navigation.state.params.response.host].username,
-
       filters: {},
 
       // UI state
@@ -58,56 +50,46 @@ class Group extends React.Component {
 
       // Modal visibility vars
       leaveAlert: false,
-      endAlert: false,
       chooseFriends: false,
 
       // Open
       disabled: false,
       drawerOpen: false,
     }
-    console.log(members)
     this.updateMemberList()
 
     // listens if user is to be kicked
     socket.getSocket().once('kick', () => {
-      this.leaveGroup(false)
+      socket.getSocket().off()
+      socket.leave('group')
       this.props.showKick()
+      this.props.navigation.replace('Home')
+      this.props.updateSession({})
     })
 
     // listens for group updates
     socket.getSocket().on('update', (res) => {
       console.log('socket "update": ' + JSON.stringify(res))
-      global.host = res.members[res.host].username
-      this.props.setCode(res.code)
-      this.setState({
-        members: res.members,
-        host: res.host,
-        hostName: res.members[res.host].username,
-        code: res.code,
-      })
-
-      const count = this.countNeedFilters(res.members)
+      if (res.host != this.props.session.host)
+        this.props.setHost(res.members[res.host].username === this.props.username)
+      this.props.updateSession(res)
+      let count = this.countNeedFilters(res.members)
       if (!count) {
         this.setState({ canStart: true })
       }
       this.updateMemberList()
     })
 
-    socket.getSocket().once('start', (restaurants) => {
-      if (restaurants.length > 0) {
+    socket.getSocket().once('start', (res) => {
+      if (res.resInfo.length > 0) {
         socket.getSocket().off()
-        global.restaurants = restaurants
-        this.setState({ disabled: false })
+        this.props.updateSession(res)
         this.props.navigation.replace('Round')
       } else {
         console.log('group.js: no restaurants found')
         this.setState({ disabled: false })
         // need to handle no restaurants returned
       }
-    })
-
-    socket.getSocket().once('leave', () => {
-      this.leaveGroup(true)
     })
 
     socket.getSocket().on('reselect', () => {
@@ -134,7 +116,7 @@ class Group extends React.Component {
   countNeedFilters(users) {
     let count = 0
     for (const user in users) {
-      if (!users[user].filters && user != this.state.host) {
+      if (!users[user].filters && user != this.props.session.host) {
         count++
       }
     }
@@ -143,26 +125,24 @@ class Group extends React.Component {
 
   // pings server to fetch restaurants, start session
   start() {
-    // this.filterRef.current.setState({ locationAlert: true })
-    // console.log('start pressed')
     this.setState({ disabled: true })
-    this.filterRef.current.startSession()
+    this.filterRef.current.startSession(this.props.session)
   }
 
   // update user cards in group
   updateMemberList() {
     memberList = []
     memberRenderList = []
-    // console.log(JSON.stringify(this.state.members))
-    for (const uid in this.state.members) {
+    // console.log(JSON.stringify(this.props.session.members))
+    for (const uid in this.props.session.members) {
       const a = {}
-      a.name = this.state.members[uid].name
-      a.username = this.state.members[uid].username
+      a.name = this.props.session.members[uid].name
+      a.username = this.props.session.members[uid].username
       a.uid = uid
-      a.photo = this.state.members[uid].photo
-      a.filters = this.state.members[uid].filters
-      a.host = this.state.host
-      a.isHost = global.isHost
+      a.photo = this.props.session.members[uid].photo
+      a.filters = this.props.session.members[uid].filters
+      a.host = this.props.session.host
+      a.isHost = this.props.isHost
       a.key = uid
       memberList.push(a)
       a.f = false
@@ -173,47 +153,27 @@ class Group extends React.Component {
     memberRenderList.push(footer)
   }
 
-  leaveGroup(end) {
+  leave() {
     this.setState({ disabled: true })
     socket.getSocket().off()
-    // leaving due to host ending session
-    if (end) {
-      socket.endLeave()
-      if (!global.isHost) {
-        this.props.showEnd()
-      }
-    }
-    // normal user leaves
-    else {
-      socket.leaveGroup()
-    }
-    this.props.setCode(0)
-    global.host = ''
-    global.isHost = false
+    socket.leave('group')
     this.setState({ disabled: false })
     this.props.navigation.replace('Home')
+    this.props.updateSession({})
   }
 
-  // host ends session
-  endGroup() {
-    this.setState({ endAlert: false, blur: false, disabled: true })
-    socket.endRound()
-  }
-
-  // shows proper alert based on if user is host
   cancelAlert() {
-    global.isHost
-      ? this.setState({ endAlert: false, blur: false })
-      : this.setState({ leaveAlert: false, blur: false })
+    this.setState({ leaveAlert: false, blur: false })
   }
 
   firstName(str) {
     const first_sp = str.indexOf(' ')
-    return str.substr(0, first_sp)
+    if (first_sp != -1) return str.substr(0, first_sp)
+    else return str
   }
 
   copyToClipboard() {
-    Clipboard.setString(this.props.code.code.toString())
+    Clipboard.setString(this.props.session.code.toString())
   }
 
   render() {
@@ -228,13 +188,15 @@ class Group extends React.Component {
             style={styles.headerFill}
           >
             <Text style={styles.groupTitle}>
-              {global.isHost
+              {this.props.isHost
                 ? 'Your Group'
-                : `${this.firstName(this.state.members[this.state.host].name)}'s Group`}
+                : `${this.firstName(
+                  this.props.session.members[this.props.session.host].name,
+                )}'s Group`}
             </Text>
             <View style={styles.subheader}>
               <Text style={styles.pinText}>Group PIN: </Text>
-              <Text style={styles.codeText}>{this.props.code.code + ' '}</Text>
+              <Text style={styles.codeText}>{this.props.session.code + ' '}</Text>
               <TouchableOpacity
                 style={{
                   flexDirection: 'column',
@@ -271,9 +233,11 @@ class Group extends React.Component {
                 </Text>
                 <Text style={styles.divider}>|</Text>
                 <Text style={styles.waiting}>
-                  {this.countNeedFilters(this.state.members) == 0
+                  {this.countNeedFilters(this.props.session.members) == 0
                     ? 'waiting for host to start'
-                    : `waiting for ${this.countNeedFilters(this.state.members)} member filters`}
+                    : `waiting for ${this.countNeedFilters(
+                      this.props.session.members,
+                    )} member filters`}
                 </Text>
               </View>
               <FlatList
@@ -317,9 +281,9 @@ class Group extends React.Component {
                     return (
                       <GroupCard
                         filters={item.filters}
-                        host={this.state.host}
+                        host={this.props.session.host}
                         image={item.photo}
-                        isHost={global.isHost}
+                        isHost={this.props.isHost}
                         key={item.key}
                         name={item.name}
                         username={item.username}
@@ -338,22 +302,12 @@ class Group extends React.Component {
                   body="You will will not be able to return without an invite"
                   buttonAff="Yes"
                   height="20%"
-                  press={() => this.leaveGroup(false)}
-                  cancel={() => this.cancelAlert()}
-                />
-              )}
-              {this.state.endAlert && (
-                <Alert
-                  title="End the session?"
-                  body="You will not be able to return"
-                  buttonAff="Yes"
-                  height="20%"
-                  press={() => this.endGroup()}
+                  press={() => this.leave()}
                   cancel={() => this.cancelAlert()}
                 />
               )}
               <ChooseFriends
-                code={this.props.code.code}
+                code={this.props.session.code}
                 visible={this.state.chooseFriends}
                 members={memberList}
                 press={() => this.setState({ chooseFriends: false, blur: false })}
@@ -361,7 +315,7 @@ class Group extends React.Component {
             </View>
           }
           offset={windowHeight / 6}
-          objectHeight={global.isHost ? 400 : 350}
+          objectHeight={this.props.isHost ? 325 : 275}
           renderDrawerView={
             <View>
               <View>
@@ -369,21 +323,22 @@ class Group extends React.Component {
                   style={{
                     backgroundColor: 'white',
                     width: windowWidth,
-                    height: global.isHost ? 400 : 350,
+                    height: this.props.isHost ? 325 : 275,
                     zIndex: 30,
                     elevation: 30,
                   }}
                 >
                   <FilterSelector
-                    host={global.host}
-                    isHost={global.isHost}
+                    host={this.props.session.host}
+                    isHost={this.props.isHost}
                     handleUpdate={() => this.setUserSubmit()}
                     members={memberList}
                     ref={this.filterRef}
                     setBlur={(res) => this.setState({ blur: res })}
-                    code={this.props.code.code}
+                    code={this.props.session.code}
                     style={{ elevation: 31 }}
                     buttonDisable={(able) => this.setState({ disabled: able })}
+                    session={this.props.session}
                   />
                 </View>
               </View>
@@ -402,7 +357,7 @@ class Group extends React.Component {
                       elevation: 32,
                     }}
                   >
-                    {global.isHost ? 'Pull down for host menu' : 'Pull down to set filters'}
+                    {this.props.isHost ? 'Pull down for host menu' : 'Pull down to set filters'}
                   </Text>
                 </View>
               </View>
@@ -414,7 +369,7 @@ class Group extends React.Component {
             When everyone has submitted filters, the round will begin!
           </Text>
           <View>
-            {global.isHost && (
+            {this.props.isHost && (
               <TouchableHighlight
                 underlayColor={colors.hex}
                 activeOpacity={1}
@@ -426,7 +381,7 @@ class Group extends React.Component {
                 style={[
                   screenStyles.bigButton,
                   styles.bigButton,
-                  this.countNeedFilters(this.state.members) == 0
+                  this.countNeedFilters(this.props.session.members) == 0
                     ? { opacity: 1 }
                     : { opacity: 0.75 },
                 ]}
@@ -435,7 +390,7 @@ class Group extends React.Component {
                 <Text style={styles.buttonText}>Start Round</Text>
               </TouchableHighlight>
             )}
-            {!global.isHost && (
+            {!this.props.isHost && (
               <TouchableHighlight
                 disabled={this.state.disabled || this.state.drawerOpen}
                 style={[
@@ -446,9 +401,6 @@ class Group extends React.Component {
                     : { opacity: 0.4 },
                 ]}
                 onPress={() => {
-                  // console.log(
-                  //   `Submit Filters: ${this.state.userSubmitted}|${this.state.drawerOpen}`,
-                  // )
                   if (!this.state.userSubmitted && !this.state.drawerOpen)
                     this.filterRef.current.submitUserFilters()
                 }}
@@ -465,10 +417,7 @@ class Group extends React.Component {
             activeOpacity={1}
             onPress={() => {
               if (!this.state.drawerOpen) {
-                this.setState({ blur: true })
-                global.isHost
-                  ? this.setState({ endAlert: true })
-                  : this.setState({ leaveAlert: true })
+                this.setState({ blur: true, leaveAlert: true })
               }
             }}
             underlayColor="white"
@@ -476,10 +425,10 @@ class Group extends React.Component {
             <Text
               style={[
                 styles.leaveText,
-                this.state.leaveGroup ? { color: colors.hex } : { color: '#6A6A6A' },
+                this.state.leave ? { color: colors.hex } : { color: '#6A6A6A' },
               ]}
             >
-              {global.isHost ? 'Cancel Group' : 'Leave Group'}
+              Leave Group
             </Text>
           </TouchableHighlight>
         </View>
@@ -498,16 +447,19 @@ class Group extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const { code } = state
-  return { code }
+  return {
+    isHost: state.isHost.isHost,
+    session: state.session.session,
+    username: state.username.username,
+  }
 }
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      setCode,
       showKick,
-      showEnd,
+      updateSession,
+      setHost,
     },
     dispatch,
   )
@@ -516,11 +468,12 @@ export default connect(mapStateToProps, mapDispatchToProps)(Group)
 
 Group.propTypes = {
   navigation: PropTypes.object,
-  members: PropTypes.array,
-  code: PropTypes.object,
-  setCode: PropTypes.func,
   showKick: PropTypes.func,
-  showEnd: PropTypes.func,
+  updateSession: PropTypes.func,
+  setHost: PropTypes.func,
+  isHost: PropTypes.bool,
+  session: PropTypes.object,
+  username: PropTypes.string,
 }
 
 const styles = StyleSheet.create({
@@ -549,8 +502,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     flexDirection: 'column',
     alignItems: 'center',
-    // justifyContent: 'space-between',
-    // backgroundColor: colors.hex,
     overflow: 'hidden',
     height: windowHeight / 6,
     width: '100%',
