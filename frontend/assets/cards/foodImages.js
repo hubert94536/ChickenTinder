@@ -1,4 +1,4 @@
-import foodImages from './defImages.js'
+import { foodImages } from './defImages.js'
 
 const generalFoodImages = [
   require('./General1.png'),
@@ -13,8 +13,7 @@ export default function getCuisine(categories) {
     if (categories[i]) {
       const temp = foodImages[categories[i]]
       if (temp && temp.val > max) {
-        if (typeof temp.img === 'string') image = foodImages[temp.img].img
-        else image = temp.img
+        image = temp.img
         max = temp.val
       }
     }

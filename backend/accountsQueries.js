@@ -1,4 +1,5 @@
 const { Op } = require('sequelize')
+const { hdel } = require('./config.js')
 const { Accounts, Friends, Notifications } = require('./models.js')
 
 // Check if email exists
@@ -158,6 +159,8 @@ const deleteAccount = async (req, res) => {
       where: { uid: uid },
     })
     if (deleted) {
+      await hdel(`users:${uid}`, 'client', 'regtoken')
+      console.log('good')
       return res.status(204).send('User deleted')
     }
     return res.status(404).send('User with the specified UID does not exists')
@@ -193,7 +196,6 @@ const getAllAccounts = async (req, res) => {
 }
 
 // Update account by uid
-// TODO: Transactions
 const updateAccount = async (req, res) => {
   try {
     const uid = req.authId
