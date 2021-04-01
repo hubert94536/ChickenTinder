@@ -1,7 +1,7 @@
 const _ = require('underscore')
 const socketAuth = require('socketio-auth')
 const auth = require('./auth')
-const { hdel, hgetAll, hmset, sendCommand, multi, lock } = require('./config.js')
+const { hdel, hgetAll, hmset, sendCommand, lock } = require('./config.js')
 const notifs = require('./notifsQueries.js')
 const yelp = require('./yelpQuery.js')
 
@@ -131,7 +131,7 @@ module.exports = (io) => {
     // disconnects user and removes them if in room
     socket.on('disconnect', async () => {
       try {
-        console.log("disconnected: " + socket.user.uid)
+        console.log('disconnected: ' + socket.user.uid)
         if (socket.user && socket.user.room) {
           socket.leave(socket.user.room)
           lock(socket.user.room, async function (done) {

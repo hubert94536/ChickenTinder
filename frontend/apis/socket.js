@@ -17,7 +17,11 @@ const connect = () => {
   })
   socket.on('disconnect', (reason) => {
     console.log('Disconnect:', reason)
-    if (reason !== 'UNAUTHORIZED') socket.connect()
+    if (reason === 'transport close' || reason === 'transport error' || reason === 'ping timeout')
+      socket.connect()
+    else {
+      // disconnected screen, please try again
+    }
   })
 }
 
@@ -143,7 +147,6 @@ const getSocket = () => {
   return socket
 }
 
-
 export default {
   choose,
   connect,
@@ -161,5 +164,5 @@ export default {
   updateUser,
   toTop3,
   reconnection,
-  kickLeave
+  kickLeave,
 }

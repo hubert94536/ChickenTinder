@@ -3,5 +3,5 @@ export default {
   email: '',
   uid: '',
   restaurant: {},
-  top: []
+  top: [],
 }

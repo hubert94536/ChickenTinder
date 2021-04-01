@@ -525,6 +525,7 @@ FilterSelector.propTypes = {
   showError: PropTypes.func,
   hideError: PropTypes.func,
   buttonDisable: PropTypes.func,
+  isHost: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

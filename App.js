@@ -10,7 +10,7 @@ import { bindActionCreators } from 'redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import auth from '@react-native-firebase/auth'
 import CreateAccount from './frontend/screens/CreateAccount.js'
-import { newNotif, setHost, updateSession } from './frontend/redux/Actions.js'
+import { newNotif, setHost, updateSession, setMatch, setTop } from './frontend/redux/Actions.js'
 import global from './global.js'
 import Group from './frontend/screens/Group.js'
 import Home from './frontend/screens/Home.js'
@@ -21,10 +21,10 @@ import Notifications from './frontend/screens/Notifications.js'
 import PhoneAuthScreen from './frontend/screens/PhoneAuth.js'
 import Round from './frontend/screens/Round.js'
 import Search from './frontend/screens/Search.js'
+import socket from './frontend/apis/socket.js'
 import TopThree from './frontend/screens/TopThree.js'
 import UserProfileView from './frontend/screens/Profile.js'
 import UserInfo from './frontend/screens/UserInfo.js'
-import socket from './frontend/apis/socket.js'
 
 class App extends React.Component {
   constructor() {
@@ -32,7 +32,7 @@ class App extends React.Component {
     this.state = {
       // can change to our loading screen
       appContainer: <Text />,
-      appState: AppState.currentState
+      appState: AppState.currentState,
     }
     PushNotification.configure({
       onRegister: function (token) {
@@ -64,42 +64,54 @@ class App extends React.Component {
           } else {
             this.setState({ appContainer: <UserInfo /> })
             start = 'Home'
-            AppState.addEventListener("change", this._handleAppStateChange)
+            AppState.addEventListener('change', this._handleAppStateChange)
             socket.getSocket().on('reconnect', (session) => {
               console.log('reconnect: ' + session)
               if (session) {
                 // check if member was kicked
                 if (!session.members[this.props.username]) {
                   socket.kickLeave()
-                  this.navigator && this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Home' }))
+                  this.navigator &&
+                    this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Home' }))
                 }
                 // update host and session props
                 this.props.updateSession(session)
                 this.props.setHost(session.members[session.host].username === this.props.username)
                 // check if session is still in a group
-                if (!session.resInfo) this.navigator && this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Group' }))
+                if (!session.resInfo)
+                  this.navigator &&
+                    this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Group' }))
                 // check if session is in a match
                 else if (session.match) {
-                  global.restaurant = session.resInfo.find((x) => x.id === session.match)
-                  this.navigator && this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Match' }))
+                  this.props.setMatch(session.resInfo.find((x) => x.id === session.match))
+                  this.navigator &&
+                    this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Match' }))
                 }
                 // check if session is in top 3
                 else if (session.top3) {
-                  let restaurants = session.resInfo.filter((x) => session.top3.choices.includes(x.id))
+                  let restaurants = session.resInfo.filter((x) =>
+                    session.top3.choices.includes(x.id),
+                  )
                   restaurants.forEach(
                     (x) => (x.likes = session.top3.likes[session.top3.choices.indexOf(x.id)]),
                   )
-                  global.top = restaurants
-                  this.navigator && this.navigator.dispatch(NavigationActions.navigate({ routeName: 'TopThree' }))
-                } 
+                  this.props.setTop(restaurants.reverse())
+                  this.navigator &&
+                    this.navigator.dispatch(NavigationActions.navigate({ routeName: 'TopThree' }))
+                }
                 // check if session is in round and if user is finished swiping => going to loading
                 else if (session.finished.indexOf(global.uid) !== -1)
-                  this.navigator && this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Loading' }))
+                  this.navigator &&
+                    this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Loading' }))
                 // check if session is in round and still swiping
-                else this.navigator && this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Round' }))
+                else
+                  this.navigator &&
+                    this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Round' }))
               }
-              // check if session already ended 
-              else this.navigator && this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Home' }))
+              // check if session already ended
+              else
+                this.navigator &&
+                  this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Home' }))
             })
           }
         } catch (error) {
@@ -164,7 +176,7 @@ class App extends React.Component {
         },
       )
       const AppContainer = createAppContainer(RootStack)
-      this.setState({ appContainer: <AppContainer ref={nav => this.navigator = nav} /> })
+      this.setState({ appContainer: <AppContainer ref={(nav) => (this.navigator = nav)} /> })
     })
   }
 
@@ -180,15 +192,12 @@ class App extends React.Component {
   }
 
   // detect if app is coming out of background
-  _handleAppStateChange = nextAppState => {
-    if (
-      this.state.appState.match(/inactive|background/) &&
-      nextAppState === "active"
-    ) {
+  _handleAppStateChange = (nextAppState) => {
+    if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
       if (socket.getSocket().connected) socket.reconnection()
       else socket.getSocket().connect()
     }
-    this.setState({ appState: nextAppState });
+    this.setState({ appState: nextAppState })
   }
 
   render() {
@@ -199,7 +208,7 @@ class App extends React.Component {
 const mapStateToProps = (state) => {
   return {
     session: state.session.session,
-    username: state.username.username
+    username: state.username.username,
   }
 }
 
@@ -208,7 +217,9 @@ const mapDispatchToProps = (dispatch) =>
     {
       newNotif,
       setHost,
-      updateSession
+      updateSession,
+      setMatch,
+      setTop,
     },
     dispatch,
   )
@@ -217,6 +228,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(App)
 
 App.propTypes = {
   newNotif: PropTypes.func,
+  setHost: PropTypes.func,
+  updateSession: PropTypes.func,
+  setMatch: PropTypes.func,
+  setTop: PropTypes.func,
+  username: PropTypes.string,
 }
 
 /*

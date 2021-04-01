@@ -18,26 +18,24 @@ import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'
 import getCuisine from '../assets/images/foodImages.js'
 import getStarPath from '../assets/stars/star.js'
-import global from '../../global.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
-import { updateSession, setHost } from '../redux/Actions.js'
+import { updateSession, setHost, setMatch } from '../redux/Actions.js'
 import _ from 'lodash'
 
 const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
-const restaurants = global.top.reverse()
 
 class TopThree extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      chosen: restaurants.length - 1,
+      chosen: this.props.top.length - 1,
     }
     socket.getSocket().once('choose', (ind) => {
       socket.getSocket().off()
-      global.restaurant = restaurants[ind]
+      this.props.setMatch(this.props.top[ind])
       this.props.navigation.replace('Match')
     })
 
@@ -51,7 +49,7 @@ class TopThree extends React.Component {
   }
 
   randomize() {
-    var random = Math.floor(Math.random() * this.props.navigation.state.params.top.length)
+    let random = Math.floor(Math.random() * this.props.top.length)
     switch (random) {
       case 0:
         this.setState({ chosen: 0 })
@@ -72,7 +70,7 @@ class TopThree extends React.Component {
   goMatch = _.debounce(this.match.bind(this), 500)
 
   render() {
-    console.log(restaurants[1])
+    let restaurants = this.props.top
     return (
       <View>
         <View style={styles.container}>
@@ -112,18 +110,13 @@ class TopThree extends React.Component {
                   </View>
                 </TouchableHighlight>
                 <View style={styles.margin}>
-                  <Image
-                    source={getStarPath(restaurants[2].rating)}
-                    style={styles.center}
-                  />
+                  <Image source={getStarPath(restaurants[2].rating)} style={styles.center} />
                   <TouchableHighlight
                     underlayColor="transparent"
                     onPress={() => Linking.openURL(restaurants[2].url)}
                   >
                     <View style={styles.yelpInfo}>
-                      <Text style={styles.yelp}>
-                        {restaurants[2].reviewCount} reviews on yelp
-                      </Text>
+                      <Text style={styles.yelp}>{restaurants[2].reviewCount} reviews on yelp</Text>
                       <FA name="yelp" style={styles.red} />
                     </View>
                   </TouchableHighlight>
@@ -166,18 +159,13 @@ class TopThree extends React.Component {
                 </View>
               </TouchableHighlight>
               <View style={styles.margin}>
-                <Image
-                  source={getStarPath(restaurants[1].rating)}
-                  style={styles.center}
-                />
+                <Image source={getStarPath(restaurants[1].rating)} style={styles.center} />
                 <TouchableHighlight
                   underlayColor="transparent"
                   onPress={() => Linking.openURL(restaurants[1].url)}
                 >
                   <View style={styles.yelpInfo}>
-                    <Text style={styles.yelp}>
-                      {restaurants[1].reviewCount} reviews on yelp
-                    </Text>
+                    <Text style={styles.yelp}>{restaurants[1].reviewCount} reviews on yelp</Text>
                     <FA name="yelp" style={styles.red} />
                   </View>
                 </TouchableHighlight>
@@ -220,18 +208,13 @@ class TopThree extends React.Component {
                 </View>
               </TouchableHighlight>
               <View style={styles.margin}>
-                <Image
-                  source={getStarPath(restaurants[0].rating)}
-                  style={styles.center}
-                />
+                <Image source={getStarPath(restaurants[0].rating)} style={styles.center} />
                 <TouchableHighlight
                   underlayColor="transparent"
                   onPress={() => Linking.openURL(restaurants[0].url)}
                 >
                   <View style={styles.yelpInfo}>
-                    <Text style={styles.yelp}>
-                      {restaurants[0].reviewCount} reviews on yelp
-                    </Text>
+                    <Text style={styles.yelp}>{restaurants[0].reviewCount} reviews on yelp</Text>
                     <FA name="yelp" style={styles.red} />
                   </View>
                 </TouchableHighlight>
@@ -288,6 +271,7 @@ const mapStateToProps = (state) => {
     isHost: state.isHost.isHost,
     session: state.session.session,
     username: state.username.username,
+    top: state.top.top,
   }
 }
 
@@ -296,6 +280,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       updateSession,
       setHost,
+      setMatch,
     },
     dispatch,
   )
@@ -310,7 +295,16 @@ TopThree.propTypes = {
     setHost: PropTypes.func,
     username: PropTypes.string,
     isHost: PropTypes.bool,
+    top: PropTypes.array,
+    setMatch: PropTypes.func,
   }),
+  isHost: PropTypes.bool,
+  session: PropTypes.object,
+  username: PropTypes.string,
+  top: PropTypes.array,
+  setMatch: PropTypes.func,
+  updateSession: PropTypes.func,
+  setHost: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

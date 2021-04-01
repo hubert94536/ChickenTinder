@@ -11,6 +11,8 @@ import {
   kickReducer,
   sessionReducer,
   setHostReducer,
+  setMatchReducer,
+  setTopReducer,
 } from './Reducer.js'
 
 const rootReducer = combineReducers({
@@ -25,6 +27,8 @@ const rootReducer = combineReducers({
   kick: kickReducer,
   session: sessionReducer,
   isHost: setHostReducer,
+  match: setMatchReducer,
+  top: setTopReducer,
 })
 
 const configureStore = () => {
