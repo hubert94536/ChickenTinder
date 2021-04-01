@@ -137,8 +137,14 @@ const styles = StyleSheet.create({
 ButtonSwitch.propTypes = {
   disabled: PropTypes.bool,
   onValueChange: PropTypes.func,
+  value1: PropTypes.string,
+  value2: PropTypes.string,
+  value3: PropTypes.string,
+  value4: PropTypes.string,
   text1: PropTypes.string,
   text2: PropTypes.string,
+  text3: PropTypes.string,
+  text4: PropTypes.string,
   switchWidth: PropTypes.number,
   switchHeight: PropTypes.number,
   switchdirection: PropTypes.string,
@@ -150,4 +156,5 @@ ButtonSwitch.propTypes = {
   btnBackgroundColor: PropTypes.string,
   fontColor: PropTypes.string,
   activeFontColor: PropTypes.string,
+  selectMultiple: PropTypes.bool,
 }
