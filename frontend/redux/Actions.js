@@ -95,6 +95,20 @@ const setHost = (isHost) => {
   }
 }
 
+const setMatch = (match) => {
+  return {
+    type: 'SET_MATCH',
+    payload: match,
+  }
+}
+
+const setTop = (top) => {
+  return {
+    type: 'SET_TOP',
+    payload: top,
+  }
+}
+
 export {
   showError,
   hideError,
@@ -111,4 +125,6 @@ export {
   hideKick,
   updateSession,
   setHost,
+  setMatch,
+  setTop,
 }

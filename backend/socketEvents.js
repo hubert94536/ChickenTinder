@@ -1,7 +1,7 @@
 const _ = require('underscore')
 const socketAuth = require('socketio-auth')
 const auth = require('./auth')
-const { hdel, hgetAll, hmset, sendCommand, multi, lock } = require('./config.js')
+const { hdel, hgetAll, hmset, sendCommand, lock } = require('./config.js')
 const notifs = require('./notifsQueries.js')
 const yelp = require('./yelpQuery.js')
 
@@ -110,7 +110,7 @@ module.exports = (io) => {
   })
 
   io.on('connection', (socket) => {
-    socket.on('reconnect', async () => {
+    socket.on('reconnection', () => {
       if (socket.user.room) {
         lock(socket.user.room, async function (done) {
           // check if room still exists
@@ -131,7 +131,9 @@ module.exports = (io) => {
     // disconnects user and removes them if in room
     socket.on('disconnect', async () => {
       try {
+        console.log('disconnected: ' + socket.user.uid)
         if (socket.user && socket.user.room) {
+          socket.leave(socket.user.room)
           lock(socket.user.room, async function (done) {
             let user = await hgetAll(`users:${socket.user.uid}`)
             // check if they already reconnected before disconnect event was fired
@@ -240,7 +242,7 @@ module.exports = (io) => {
               socket.join(data.code)
               io.in(data.code).emit('update', session)
             } else {
-              console.log('exception')
+              console.error('exception')
               socket.emit('exception', 'join')
             }
           }
@@ -416,22 +418,22 @@ module.exports = (io) => {
     socket.on('kick', async (data) => {
       try {
         if (data.uid) {
-          // get socket id associated to user uid
-          let user = await hgetAll(`users:${data.uid}`)
-          if (user && user.client) {
-            io.to(user.client).emit('kick')
-          } else {
-            // user is disconnected
-            await sendCommand('JSON.DEL', [socket.user.room, `.members['${data.uid}']`])
-            let session = await sendCommand('JSON.GET', [socket.user.room])
-            session = JSON.parse(session)
-            io.in(socket.user.room).emit('update', session)
-          }
+          await sendCommand('JSON.DEL', [socket.user.room, `.members['${data.uid}']`])
+          let session = await sendCommand('JSON.GET', [socket.user.room])
+          session = JSON.parse(session)
+          io.in(socket.user.room).emit('update', session)
         }
       } catch (err) {
         socket.emit('exception', `kick:${data.uid}`)
         console.error(err)
       }
+    })
+
+    // leaving due to being kicked
+    socket.on('kick leave', () => {
+      socket.leave(socket.user.room)
+      hdel(`users:${socket.user.uid}`, 'room').catch((err) => console.error(err))
+      delete socket.user.room
     })
 
     // mark user as finished swiping, send top 3 matches if everyone's finished

@@ -11,7 +11,7 @@ import RoundCard from '../cards/RoundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import normalize from '../../styles/normalize.js'
-import { updateSession, setHost } from '../redux/Actions.js'
+import { updateSession, setHost, setMatch, setTop } from '../redux/Actions.js'
 
 class Round extends React.Component {
   constructor(props) {
@@ -25,9 +25,8 @@ class Round extends React.Component {
     }
     socket.getSocket().once('match', (data) => {
       socket.getSocket().off()
-      this.props.navigation.replace('Match', {
-        restaurant: this.props.session.resInfo.find((x) => x.id === data),
-      })
+      this.props.setMatch(this.props.session.resInfo.find((x) => x.id === data))
+      this.props.navigation.replace('Match')
     })
 
     socket.getSocket().on('update', (res) => {
@@ -38,10 +37,9 @@ class Round extends React.Component {
     socket.getSocket().once('top 3', (res) => {
       socket.getSocket().off()
       let restaurants = this.props.session.resInfo.filter((x) => res.choices.includes(x.id))
-      restaurants.forEach((x) => (x.likes = res.likes[res.choices.indexOf(x)]))
-      this.props.navigation.replace('TopThree', {
-        top: restaurants,
-      })
+      restaurants.forEach((x) => (x.likes = res.likes[res.choices.indexOf(x.id)]))
+      this.props.setTop(restaurants.reverse())
+      this.props.navigation.replace('TopThree')
     })
   }
 
@@ -155,6 +153,8 @@ const mapDispatchToProps = (dispatch) =>
     {
       updateSession,
       setHost,
+      setMatch,
+      setTop,
     },
     dispatch,
   )
@@ -167,6 +167,8 @@ Round.propTypes = {
   updateSession: PropTypes.func,
   setHost: PropTypes.func,
   username: PropTypes.string,
+  setMatch: PropTypes.func,
+  setTop: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

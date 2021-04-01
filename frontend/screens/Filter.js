@@ -268,7 +268,6 @@ class FilterSelector extends React.Component {
 
   startSession(session) {
     this.props.buttonDisable(true)
-    console.log('session-start')
     this.evaluateFilters(session)
   }
 
@@ -526,6 +525,7 @@ FilterSelector.propTypes = {
   showError: PropTypes.func,
   hideError: PropTypes.func,
   buttonDisable: PropTypes.func,
+  isHost: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({
