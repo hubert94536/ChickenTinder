@@ -268,7 +268,6 @@ class FilterSelector extends React.Component {
 
   startSession(session) {
     this.props.buttonDisable(true)
-    console.log('session-start')
     this.evaluateFilters(session)
   }
 

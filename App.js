@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Text } from 'react-native'
+import { Text, AppState } from 'react-native'
 import { REGISTRATION_TOKEN } from 'react-native-dotenv'
 import PushNotification from 'react-native-push-notification'
-import { createAppContainer } from 'react-navigation'
+import { createAppContainer, NavigationActions } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack' // 1.0.0-beta.27
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import auth from '@react-native-firebase/auth'
 import CreateAccount from './frontend/screens/CreateAccount.js'
 import { newNotif, setHost, updateSession } from './frontend/redux/Actions.js'
+import global from './global.js'
 import Group from './frontend/screens/Group.js'
 import Home from './frontend/screens/Home.js'
 import Loading from './frontend/screens/Loading.js'
@@ -31,6 +32,7 @@ class App extends React.Component {
     this.state = {
       // can change to our loading screen
       appContainer: <Text />,
+      appState: AppState.currentState
     }
     PushNotification.configure({
       onRegister: function (token) {
@@ -62,6 +64,43 @@ class App extends React.Component {
           } else {
             this.setState({ appContainer: <UserInfo /> })
             start = 'Home'
+            AppState.addEventListener("change", this._handleAppStateChange)
+            socket.getSocket().on('reconnect', (session) => {
+              console.log('reconnect: ' + session)
+              if (session) {
+                // check if member was kicked
+                if (!session.members[this.props.username]) {
+                  socket.kickLeave()
+                  this.navigator && this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Home' }))
+                }
+                // update host and session props
+                this.props.updateSession(session)
+                this.props.setHost(session.members[session.host].username === this.props.username)
+                // check if session is still in a group
+                if (!session.resInfo) this.navigator && this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Group' }))
+                // check if session is in a match
+                else if (session.match) {
+                  global.restaurant = session.resInfo.find((x) => x.id === session.match)
+                  this.navigator && this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Match' }))
+                }
+                // check if session is in top 3
+                else if (session.top3) {
+                  let restaurants = session.resInfo.filter((x) => session.top3.choices.includes(x.id))
+                  restaurants.forEach(
+                    (x) => (x.likes = session.top3.likes[session.top3.choices.indexOf(x.id)]),
+                  )
+                  global.top = restaurants
+                  this.navigator && this.navigator.dispatch(NavigationActions.navigate({ routeName: 'TopThree' }))
+                } 
+                // check if session is in round and if user is finished swiping => going to loading
+                else if (session.finished.indexOf(global.uid) !== -1)
+                  this.navigator && this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Loading' }))
+                // check if session is in round and still swiping
+                else this.navigator && this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Round' }))
+              }
+              // check if session already ended 
+              else this.navigator && this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Home' }))
+            })
           }
         } catch (error) {
           console.log(error)
@@ -124,35 +163,8 @@ class App extends React.Component {
           animationEnabled: false,
         },
       )
-      var AppContainer = createAppContainer(RootStack)
-      // if (start === 'Home') {
-      //   socket.getSocket().on('reconnect', (session) => {
-      //     socket.getSocket().off()
-      //     if (session) {
-      //       this.props.updateSession(session)
-      //       this.props.setHost(session.members[session.host].username === this.props.username)
-      //       if (!session.resInfo) this.props.navigation.replace('Group')
-      //       else if (session.match) {
-      //         this.props.navigation.replace('Match', {
-      //           restaurant: session.resInfo.find((x) => x.id === session.match),
-      //         })
-      //       } else if (session.top3) {
-      //         let restaurants = session.resInfo.filter((x) => session.top3.choices.includes(x.id))
-      //         restaurants.forEach(
-      //           (x) => (x.likes = session.top3.likes[session.top3.choices.indexOf(x.id)]),
-      //         )
-      //         this.props.navigation.replace('TopThree', {
-      //           top: restaurants,
-      //         })
-      //       } else if (session.finished.indexOf(global.uid) !== -1)
-      //         this.props.navigation.replace('Loading')
-      //       else this.props.navigation.replace('Round')
-      //     } else {
-      //       this.props.navigation.replace('Home')
-      //     }
-      //   })
-      // }
-      this.setState({ appContainer: <AppContainer /> })
+      const AppContainer = createAppContainer(RootStack)
+      this.setState({ appContainer: <AppContainer ref={nav => this.navigator = nav} /> })
     })
   }
 
@@ -167,6 +179,18 @@ class App extends React.Component {
     }
   }
 
+  // detect if app is coming out of background
+  _handleAppStateChange = nextAppState => {
+    if (
+      this.state.appState.match(/inactive|background/) &&
+      nextAppState === "active"
+    ) {
+      if (socket.getSocket().connected) socket.reconnection()
+      else socket.getSocket().connect()
+    }
+    this.setState({ appState: nextAppState });
+  }
+
   render() {
     return this.state.appContainer
   }
@@ -174,7 +198,8 @@ class App extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    session: state.session.session
+    session: state.session.session,
+    username: state.username.username
   }
 }
 

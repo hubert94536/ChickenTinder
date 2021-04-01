@@ -13,6 +13,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import colors from '../../styles/colors.js'
+import global from '../../global.js'
 import normalize from '../../styles/normalize.js'
 import { ProgressBar } from 'react-native-paper'
 import screenStyles from '../../styles/screenStyles.js'
@@ -30,18 +31,16 @@ class Loading extends React.Component {
     }
     socket.getSocket().once('match', (data) => {
       socket.getSocket().off()
-      this.props.navigation.replace('Match', {
-        restaurant: this.props.session.resInfo.find((x) => x.id === data),
-      })
+      global.restaurant = this.props.session.resInfo.find((x) => x.id === data)
+      this.props.navigation.replace('Match')
     })
 
     socket.getSocket().once('top 3', (res) => {
       socket.getSocket().off()
       let restaurants = this.props.session.resInfo.filter((x) => res.choices.includes(x.id))
       restaurants.forEach((x) => (x.likes = res.likes[res.choices.indexOf(x.id)]))
-      this.props.navigation.replace('TopThree', {
-        top: restaurants,
-      })
+      global.top = restaurants
+      this.props.navigation.replace('TopThree')
     })
 
     socket.getSocket().on('update', (res) => {

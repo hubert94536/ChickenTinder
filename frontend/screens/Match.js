@@ -6,6 +6,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'
+import global from '../../global.js'
 import mapStyle from '../../styles/mapStyle.json'
 import MatchCard from '../cards/MatchCard.js'
 import normalize from '../../styles/normalize.js'
@@ -13,12 +14,13 @@ import screenStyles from '../../styles/screenStyles.js'
 import { updateSession } from '../redux/Actions.js'
 import socket from '../apis/socket.js'
 
+restaurant = global.restaurant
+
 // the card for the restaurant match
 class Match extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      restaurant: this.props.navigation.state.params.restaurant,
       disabled: false,
     }
   }
@@ -33,7 +35,6 @@ class Match extends React.Component {
   }
 
   render() {
-    const { restaurant } = this.state
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer} /*Header for header text and heart icon */>
@@ -105,12 +106,6 @@ Match.propTypes = {
   //navig should contain navigate fx + state, which contains params which contains the necessary restaurant arr
   navigation: PropTypes.shape({
     replace: PropTypes.func,
-    navigate: PropTypes.func,
-    state: PropTypes.shape({
-      params: PropTypes.shape({
-        restaurant: PropTypes.object,
-      }),
-    }),
   }),
   updateSession: PropTypes.func,
 }

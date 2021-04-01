@@ -25,9 +25,8 @@ class Round extends React.Component {
     }
     socket.getSocket().once('match', (data) => {
       socket.getSocket().off()
-      this.props.navigation.replace('Match', {
-        restaurant: this.props.session.resInfo.find((x) => x.id === data),
-      })
+      global.restaurant = this.props.session.resInfo.find((x) => x.id === data)
+      this.props.navigation.replace('Match')
     })
 
     socket.getSocket().on('update', (res) => {
@@ -38,10 +37,9 @@ class Round extends React.Component {
     socket.getSocket().once('top 3', (res) => {
       socket.getSocket().off()
       let restaurants = this.props.session.resInfo.filter((x) => res.choices.includes(x.id))
-      restaurants.forEach((x) => (x.likes = res.likes[res.choices.indexOf(x)]))
-      this.props.navigation.replace('TopThree', {
-        top: restaurants,
-      })
+      restaurants.forEach((x) => (x.likes = res.likes[res.choices.indexOf(x.id)]))
+      global.top = restaurants
+      this.props.navigation.replace('TopThree')
     })
   }
 

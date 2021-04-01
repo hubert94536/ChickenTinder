@@ -4,8 +4,8 @@ import io from 'socket.io-client'
 var socket = null
 
 const connect = () => {
-  socket = io('http://192.168.0.23:5000')
-  // socket = io('https://wechews.herokuapp.com')
+  // socket = io('http://192.168.0.23:5000')
+  socket = io('https://wechews.herokuapp.com')
   socket.on('connect', async () => {
     console.log('connect')
     const token = await auth().currentUser.getIdToken()
@@ -17,6 +17,7 @@ const connect = () => {
   })
   socket.on('disconnect', (reason) => {
     console.log('Disconnect:', reason)
+    if (reason !== 'UNAUTHORIZED') socket.connect()
   })
 }
 
@@ -130,13 +131,18 @@ const toTop3 = () => {
   socket.emit('to top 3')
 }
 // reconnect for updated session
-const reconnect = () => {
-  socket.emit('reconnect')
+const reconnection = () => {
+  socket.emit('reconnection')
+}
+
+const kickLeave = () => {
+  socket.emit('kick leave')
 }
 
 const getSocket = () => {
   return socket
 }
+
 
 export default {
   choose,
@@ -154,5 +160,6 @@ export default {
   submitFilters,
   updateUser,
   toTop3,
-  reconnect,
+  reconnection,
+  kickLeave
 }
