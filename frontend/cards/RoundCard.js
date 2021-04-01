@@ -40,9 +40,9 @@ export default class RoundCard extends React.Component {
 
   evaluateCuisines(cuisines) {
     if (cuisines.length >= 2) {
-      return cuisines[0].title + ', ' + cuisines[1].title
+      return cuisines[0] + ', ' + cuisines[1]
     } else {
-      return cuisines[0].title
+      return cuisines[0]
     }
   }
 
