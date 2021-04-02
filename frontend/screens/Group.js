@@ -58,18 +58,18 @@ class Group extends React.Component {
     }
     this.updateMemberList()
 
-    // listens if user is to be kicked
-    socket.getSocket().once('kick', () => {
-      socket.getSocket().off()
-      socket.leave('group')
-      this.props.showKick()
-      this.props.navigation.replace('Home')
-      this.props.updateSession({})
-    })
-
     // listens for group updates
     socket.getSocket().on('update', (res) => {
       console.log('socket "update": ' + JSON.stringify(res))
+      // check if kicked from host
+      if (!res.members[this.props.username]) {
+        socket.getSocket().off()
+        this.props.showKick()
+        this.props.updateSession({})
+        socket.kickLeave()
+        this.props.navigation.replace('Home')
+        return
+      }
       if (res.host != this.props.session.host)
         this.props.setHost(res.members[res.host].username === this.props.username)
       this.props.updateSession(res)
@@ -191,8 +191,8 @@ class Group extends React.Component {
               {this.props.isHost
                 ? 'Your Group'
                 : `${this.firstName(
-                  this.props.session.members[this.props.session.host].name,
-                )}'s Group`}
+                    this.props.session.members[this.props.session.host].name,
+                  )}'s Group`}
             </Text>
             <View style={styles.subheader}>
               <Text style={styles.pinText}>Group PIN: </Text>
@@ -236,8 +236,8 @@ class Group extends React.Component {
                   {this.countNeedFilters(this.props.session.members) == 0
                     ? 'waiting for host to start'
                     : `waiting for ${this.countNeedFilters(
-                      this.props.session.members,
-                    )} member filters`}
+                        this.props.session.members,
+                      )} member filters`}
                 </Text>
               </View>
               <FlatList

@@ -47,7 +47,6 @@ class Home extends React.Component {
       friends: '',
       disabled: false,
     }
-
     socket.getSocket().on('update', (res) => {
       socket.getSocket().off()
       this.setState({ invite: false })
@@ -55,26 +54,6 @@ class Home extends React.Component {
       this.props.setHost(res.members[res.host].username === this.props.username)
       this.setState({ disabled: false })
       this.props.navigation.replace('Group')
-    })
-
-    socket.getSocket().on('reconnect', (session) => {
-      socket.getSocket().off()
-      this.props.updateSession(session)
-      this.props.setHost(session.members[session.host].username === this.props.username)
-      if (!session.resInfo) this.props.navigation.replace('Group')
-      else if (session.match) {
-        this.props.navigation.replace('Match', {
-          restaurant: session.resInfo.find((x) => x.id === session.match),
-        })
-      } else if (session.top3) {
-        let restaurants = session.resInfo.filter((x) => session.top3.choices.includes(x.id))
-        restaurants.forEach((x) => (x.likes = session.top3.likes[session.top3.choices.indexOf(x.id)]))
-        this.props.navigation.replace('TopThree', {
-          top: restaurants,
-        })
-      } else if (session.finished.indexOf(global.uid) !== -1)
-        this.props.navigation.replace('Loading')
-      else this.props.navigation.replace('Round')
     })
 
     socket.getSocket().on('exception', (msg) => {
@@ -85,6 +64,7 @@ class Home extends React.Component {
         // join alert here
       }
     })
+
     // //uncomment if testing friends/requests
     // accountsApi.createFBUserTest('Hubes2', 32, 'hbc', 'hhcc@gmail.com', '50', '35434354')
     // accountsApi.createFBUserTest('Hanna2', 33, 'hannaaa', 'hannco@gmail.com', '51', '17891234')
@@ -92,9 +72,9 @@ class Home extends React.Component {
     // accountsApi.createFBUserTest('Helen2', 35, 'helennn', 'helennn@gmail.com', '53', '45678903')
     // accountsApi.createFBUserTest('Kevin2', 36, 'kev', 'kevi@gmail.com', '54', '45678904')
     // // friendsApi.createFriendshipTest(requester, accepter)
-    // friendsApi.createFriendshipTest(32, "TL7VCEYG7SRUPpqFJe3xVvCoLt23")
-    // friendsApi.createFriendshipTest(33, "TL7VCEYG7SRUPpqFJe3xVvCoLt23")
-    // friendsApi.createFriendshipTest(34, "TL7VCEYG7SRUPpqFJe3xVvCoLt23")
+    // friendsApi.createFriendshipTest(32, "bG0nwNsUpeSYW913nNaLdorlB8H2")
+    // friendsApi.createFriendshipTest(33, "bG0nwNsUpeSYW913nNaLdorlB8H2")
+    // friendsApi.createFriendshipTest(34, "bG0nwNsUpeSYW913nNaLdorlB8H2")
   }
 
   createGroup() {

@@ -11,11 +11,14 @@ import {
 } from 'react-native'
 import colors from '../../styles/colors.js'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
+import ChoosePic from '../modals/ChoosePic.js'
+import { changeImage } from '../redux/Actions.js'
 
 const height = Dimensions.get('window').height
 
@@ -28,7 +31,13 @@ class EditProfile extends React.Component {
       validNameFormat: true,
       validUsernameFormat: true,
       disabled: false,
+      editPic: false,
+      photo: this.props.image.image
     }
+  }
+
+  componentDidMount(){
+    this.setState({photo: this.props.image.image})
   }
 
   changeUser(text) {
@@ -47,7 +56,11 @@ class EditProfile extends React.Component {
 
   //remove whitespaces before and after name and username
   finalCheck() {
-    this.setState({ disabled: true })
+    this.setState({ disabled: true, editPic: false })
+    if(this.state.photo != this.props.image.image)
+    {
+      this.props.changeImage(this.state.photo );
+    }
     if (!this.state.validNameFormat || !this.state.validUsernameFormat) {
       return
     }
@@ -94,6 +107,19 @@ class EditProfile extends React.Component {
     }
   }
 
+  editPic() {
+    this.setState({ editPic: true })
+  }
+
+  dontSavePic() {
+    this.setState({ editPic: false })
+  }
+
+  changePic(pic) {
+    this.setState({ photo: pic })
+    this.setState({ editPic: false })
+  }
+
   render() {
     return (
       <Modal animationType="fade" transparent visible={this.props.visible}>
@@ -106,9 +132,12 @@ class EditProfile extends React.Component {
           <View style={styles.modalContent}>
             <Text style={[screenStyles.text, styles.titleText]}>Edit Profile</Text>
             <Image
-              source={{ uri: Image.resolveAssetSource(this.props.image.image).uri }}
+              source={{ uri: Image.resolveAssetSource(this.state.photo).uri }}
               style={styles.pfp}
             />
+            <TouchableHighlight style={styles.select} underlayColor="transparent" onPress = {() => this.setState({ editPic: true })}>
+              <Text style={[styles.selectText, screenStyles.textBold]}>Change Profile Icon</Text>
+            </TouchableHighlight>
             <View style={styles.whiteSpace} />
             <Text style={[screenStyles.text, styles.nameText]}>Display name</Text>
             <TextInput
@@ -153,6 +182,12 @@ class EditProfile extends React.Component {
               </Text>
             )}
           </View>
+          {this.state.editPic && (
+              <ChoosePic
+                dontSave={() => this.dontSavePic()}
+                makeChanges={(pic) => this.changePic(pic)}
+              />
+          )}
           <TouchableHighlight
             disabled={this.state.disabled}
             style={[screenStyles.medButton, styles.saveButton]}
@@ -177,7 +212,14 @@ const mapStateToProps = (state) => {
   return { error, name, username, image }
 }
 
-export default connect(mapStateToProps)(EditProfile)
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      changeImage,
+    },
+    dispatch,
+  )
+export default connect(mapStateToProps, mapDispatchToProps)(EditProfile)
 
 EditProfile.propTypes = {
   dontSave: PropTypes.func,
@@ -244,5 +286,12 @@ const styles = StyleSheet.create({
   },
   inputMarginWarning: {
     marginBottom: '1%',
+  },
+  select: {
+    alignItems: 'center',
+    marginTop: '2%',
+  },
+  selectText: {
+    color: colors.hex,
   },
 })

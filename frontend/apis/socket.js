@@ -17,6 +17,11 @@ const connect = () => {
   })
   socket.on('disconnect', (reason) => {
     console.log('Disconnect:', reason)
+    if (reason === 'transport close' || reason === 'transport error' || reason === 'ping timeout')
+      socket.connect()
+    else {
+      // disconnected screen, please try again
+    }
   })
 }
 
@@ -129,6 +134,14 @@ const updateUser = (dataObj) => {
 const toTop3 = () => {
   socket.emit('to top 3')
 }
+// reconnect for updated session
+const reconnection = () => {
+  socket.emit('reconnection')
+}
+
+const kickLeave = () => {
+  socket.emit('kick leave')
+}
 
 const getSocket = () => {
   return socket
@@ -150,4 +163,6 @@ export default {
   submitFilters,
   updateUser,
   toTop3,
+  reconnection,
+  kickLeave,
 }

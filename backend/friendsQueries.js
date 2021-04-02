@@ -14,10 +14,9 @@ const acceptRequest = async (req, res) => {
       {
         where: {
           [Op.or]: [
-            {[Op.and]: [{ main_uid: friend }, { friend_uid: main }]},
-            {[Op.and]: [{ main_uid: main }, { friend_uid: friend }]},
-          ]
-          
+            { [Op.and]: [{ main_uid: friend }, { friend_uid: main }] },
+            { [Op.and]: [{ main_uid: main }, { friend_uid: friend }] },
+          ],
         },
       },
     )
@@ -147,9 +146,9 @@ const acceptTestRequest = async (req, res) => {
       {
         where: {
           [Op.or]: [
-            {[Op.and]: [{ main_uid: friend }, { friend_uid: main }]},
-            {[Op.and]: [{ main_uid: main }, { friend_uid: friend }]},
-          ]
+            { [Op.and]: [{ main_uid: friend }, { friend_uid: main }] },
+            { [Op.and]: [{ main_uid: main }, { friend_uid: friend }] },
+          ],
         },
       },
     )

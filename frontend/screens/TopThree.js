@@ -21,7 +21,7 @@ import getStarPath from '../assets/stars/star.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
-import { updateSession, setHost } from '../redux/Actions.js'
+import { updateSession, setHost, setMatch } from '../redux/Actions.js'
 import _ from 'lodash'
 
 const height = Dimensions.get('window').height
@@ -31,14 +31,12 @@ class TopThree extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      chosen: this.props.navigation.state.params.top.length - 1,
-      restaurants: this.props.navigation.state.params.top.reverse(),
+      chosen: this.props.top.length - 1,
     }
     socket.getSocket().once('choose', (ind) => {
       socket.getSocket().off()
-      this.props.navigation.replace('Match', {
-        restaurant: this.state.restaurants[ind],
-      })
+      this.props.setMatch(this.props.top[ind])
+      this.props.navigation.replace('Match')
     })
 
     socket.getSocket().on('update', (res) => {
@@ -51,7 +49,7 @@ class TopThree extends React.Component {
   }
 
   randomize() {
-    var random = Math.floor(Math.random() * this.props.navigation.state.params.top.length)
+    let random = Math.floor(Math.random() * this.props.top.length)
     switch (random) {
       case 0:
         this.setState({ chosen: 0 })
@@ -72,6 +70,7 @@ class TopThree extends React.Component {
   goMatch = _.debounce(this.match.bind(this), 500)
 
   render() {
+    let restaurants = this.props.top
     return (
       <View>
         <View style={styles.container}>
@@ -81,7 +80,7 @@ class TopThree extends React.Component {
           </Text>
         </View>
         <View style={styles.height}>
-          {this.state.restaurants.length > 2 && (
+          {restaurants.length > 2 && (
             <TouchableHighlight
               disabled={!this.props.isHost}
               underlayColor={colors.beige}
@@ -94,7 +93,7 @@ class TopThree extends React.Component {
             >
               <View style={styles.card}>
                 <ImageBackground
-                  source={getCuisine(this.state.restaurants[2].categories)}
+                  source={getCuisine(restaurants[2].categories)}
                   style={[styles.center, styles.image]}
                 />
                 <TouchableHighlight
@@ -106,31 +105,26 @@ class TopThree extends React.Component {
                   <View style={styles.button}>
                     <Icon name="heart" style={[styles.buttonIcon, styles.white]} />
                     <Text style={[screenStyles.text, styles.categories, styles.white]}>
-                      {this.state.restaurants[2].likes} likes
+                      {restaurants[2].likes} likes
                     </Text>
                   </View>
                 </TouchableHighlight>
                 <View style={styles.margin}>
-                  <Image
-                    source={getStarPath(this.state.restaurants[2].rating)}
-                    style={styles.center}
-                  />
+                  <Image source={getStarPath(restaurants[2].rating)} style={styles.center} />
                   <TouchableHighlight
                     underlayColor="transparent"
-                    onPress={() => Linking.openURL(this.state.restaurants[2].url)}
+                    onPress={() => Linking.openURL(restaurants[2].url)}
                   >
                     <View style={styles.yelpInfo}>
-                      <Text style={styles.yelp}>
-                        {this.state.restaurants[2].reviewCount} reviews on yelp
-                      </Text>
+                      <Text style={styles.yelp}>{restaurants[2].reviewCount} reviews on yelp</Text>
                       <FA name="yelp" style={styles.red} />
                     </View>
                   </TouchableHighlight>
                   <Text numberOfLines={1} style={[screenStyles.medButtonText, styles.name]}>
-                    {this.state.restaurants[2].name}
+                    {restaurants[2].name}
                   </Text>
                   <Text numberOfLines={1} style={[screenStyles.smallButtonText, styles.categories]}>
-                    {this.evaluateCuisines(this.state.restaurants[2].categories)}
+                    {this.evaluateCuisines(restaurants[2].categories)}
                   </Text>
                 </View>
               </View>
@@ -148,7 +142,7 @@ class TopThree extends React.Component {
           >
             <View style={styles.card}>
               <ImageBackground
-                source={getCuisine(this.state.restaurants[1].categories)}
+                source={getCuisine(restaurants[1].categories)}
                 style={[styles.center, styles.image]}
               />
               <TouchableHighlight
@@ -160,31 +154,26 @@ class TopThree extends React.Component {
                 <View style={styles.button}>
                   <Icon name="heart" style={[styles.buttonIcon, styles.white]} />
                   <Text style={[screenStyles.text, styles.categories, styles.white]}>
-                    {this.state.restaurants[1].likes} likes
+                    {restaurants[1].likes} likes
                   </Text>
                 </View>
               </TouchableHighlight>
               <View style={styles.margin}>
-                <Image
-                  source={getStarPath(this.state.restaurants[1].rating)}
-                  style={styles.center}
-                />
+                <Image source={getStarPath(restaurants[1].rating)} style={styles.center} />
                 <TouchableHighlight
                   underlayColor="transparent"
-                  onPress={() => Linking.openURL(this.state.restaurants[1].url)}
+                  onPress={() => Linking.openURL(restaurants[1].url)}
                 >
                   <View style={styles.yelpInfo}>
-                    <Text style={styles.yelp}>
-                      {this.state.restaurants[1].reviewCount} reviews on yelp
-                    </Text>
+                    <Text style={styles.yelp}>{restaurants[1].reviewCount} reviews on yelp</Text>
                     <FA name="yelp" style={styles.red} />
                   </View>
                 </TouchableHighlight>
                 <Text numberOfLines={1} style={[screenStyles.medButtonText, styles.name]}>
-                  {this.state.restaurants[1].name}
+                  {restaurants[1].name}
                 </Text>
                 <Text numberOfLines={1} style={[screenStyles.smallButtonText, { fontSize: 15 }]}>
-                  {this.evaluateCuisines(this.state.restaurants[1].categories)}
+                  {this.evaluateCuisines(restaurants[1].categories)}
                 </Text>
               </View>
             </View>
@@ -201,7 +190,7 @@ class TopThree extends React.Component {
           >
             <View style={styles.card}>
               <ImageBackground
-                source={getCuisine(this.state.restaurants[0].categories)}
+                source={getCuisine(restaurants[0].categories)}
                 style={[styles.center, styles.image]}
               />
               <TouchableHighlight
@@ -214,31 +203,26 @@ class TopThree extends React.Component {
                 <View style={styles.button}>
                   <Icon name="heart" style={[styles.buttonIcon, styles.white]} />
                   <Text style={[screenStyles.text, styles.categories, styles.white]}>
-                    {this.state.restaurants[0].likes} likes
+                    {restaurants[0].likes} likes
                   </Text>
                 </View>
               </TouchableHighlight>
               <View style={styles.margin}>
-                <Image
-                  source={getStarPath(this.state.restaurants[0].rating)}
-                  style={styles.center}
-                />
+                <Image source={getStarPath(restaurants[0].rating)} style={styles.center} />
                 <TouchableHighlight
                   underlayColor="transparent"
-                  onPress={() => Linking.openURL(this.state.restaurants[0].url)}
+                  onPress={() => Linking.openURL(restaurants[0].url)}
                 >
                   <View style={styles.yelpInfo}>
-                    <Text style={styles.yelp}>
-                      {this.state.restaurants[0].reviewCount} reviews on yelp
-                    </Text>
+                    <Text style={styles.yelp}>{restaurants[0].reviewCount} reviews on yelp</Text>
                     <FA name="yelp" style={styles.red} />
                   </View>
                 </TouchableHighlight>
                 <Text numberOfLines={1} style={[screenStyles.medButtonText, styles.name]}>
-                  {this.state.restaurants[0].name}
+                  {restaurants[0].name}
                 </Text>
                 <Text numberOfLines={1} style={[screenStyles.smallButtonText, styles.categories]}>
-                  {this.evaluateCuisines(this.state.restaurants[0].categories)}
+                  {this.evaluateCuisines(restaurants[0].categories)}
                 </Text>
               </View>
             </View>
@@ -287,6 +271,7 @@ const mapStateToProps = (state) => {
     isHost: state.isHost.isHost,
     session: state.session.session,
     username: state.username.username,
+    top: state.top.top,
   }
 }
 
@@ -295,6 +280,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       updateSession,
       setHost,
+      setMatch,
     },
     dispatch,
   )
@@ -303,19 +289,22 @@ export default connect(mapStateToProps, mapDispatchToProps)(TopThree)
 
 TopThree.propTypes = {
   navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired,
     replace: PropTypes.func,
-    state: PropTypes.shape({
-      params: PropTypes.shape({
-        top: PropTypes.array,
-      }),
-    }),
     session: PropTypes.object,
     updateSession: PropTypes.func,
     setHost: PropTypes.func,
     username: PropTypes.string,
     isHost: PropTypes.bool,
+    top: PropTypes.array,
+    setMatch: PropTypes.func,
   }),
+  isHost: PropTypes.bool,
+  session: PropTypes.object,
+  username: PropTypes.string,
+  top: PropTypes.array,
+  setMatch: PropTypes.func,
+  updateSession: PropTypes.func,
+  setHost: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
