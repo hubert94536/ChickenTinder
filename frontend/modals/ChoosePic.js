@@ -16,7 +16,7 @@ import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
-import defImages from '../assets/images/defImages.js'
+import { assets as defImages } from '../assets/images/defImages.js'
 import ImageCard from '../cards/ImageCard.js'
 import { ScrollView } from 'react-native-gesture-handler'
 import { FlatList} from 'react-native'
@@ -41,15 +41,15 @@ class EditProfile extends React.Component {
 
   componentDidMount() {
     let pushImages= []
-    for (var i = 0; i < defImages.length; i++) {
+    for (var i = 0; i < Object.keys(defImages).length; i++) {
         pushImages.push(<ImageCard 
-        image = {defImages[i]}
+        image = {defImages[Object.keys(defImages)[i]].toString()}
         press={(pic) => this.select(pic)}
-        selected= {this.props.image.image === defImages[i]}/>)
+        selected= {this.props.image.image === defImages[Object.keys(defImages)[i]].toString()}
+        />)
         
     }
 
-    
     this.setState({images: pushImages})
     this.setState({selected: this.props.image.image})
 
@@ -76,14 +76,17 @@ class EditProfile extends React.Component {
 
   async updateSelected(pic) {
     let pushImages= []
-    for (var i = 0; i < defImages.length; i++) {
-        pushImages.push(<ImageCard 
-        image = {defImages[i]}
-        press={(selectedPic) => this.select(selectedPic)}
-        selected= {pic === defImages[i]}/>)
-        
-    }
-    this.setState({images: pushImages})
+    for (var i = 0; i < Object.keys(defImages).length; i++) {
+      pushImages.push(<ImageCard 
+      image = {defImages[Object.keys(defImages)[i]].toString()}
+      press={(selectedPic) => this.select(selectedPic)}
+      selected= {pic === defImages[Object.keys(defImages)[i]].toString()}
+      />)
+      
+  }
+    this.setState({images: []}, () => {
+      this.setState({images: pushImages});
+  });
     console.log("Selected image:" + pic)
 
   }
@@ -111,6 +114,10 @@ class EditProfile extends React.Component {
             numColumns={4}
             extraData={this.state.selected}/>
           </View>
+          <Image
+            source={{ uri: Image.resolveAssetSource(this.props.image.image).uri }}
+            style={[styles.picture,  this.state.selected ? {borderColor: 'black'} : {borderColor: 'white'}]}
+          />
           <TouchableHighlight
             disabled={this.state.disabled}
             style={[screenStyles.medButton, styles.saveButton]}
@@ -119,6 +126,7 @@ class EditProfile extends React.Component {
             }}
             underlayColor="white"
           >
+            
             <Text style={[screenStyles.smallButtonText, styles.saveText]}> Done</Text>
           </TouchableHighlight>
         </View>

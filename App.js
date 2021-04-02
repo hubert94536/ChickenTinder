@@ -25,7 +25,6 @@ import socket from './frontend/apis/socket.js'
 import TopThree from './frontend/screens/TopThree.js'
 import UserProfileView from './frontend/screens/Profile.js'
 import UserInfo from './frontend/screens/UserInfo.js'
-import socket from './frontend/apis/socket.js'
 
 class App extends React.Component {
   constructor() {
@@ -171,7 +170,7 @@ class App extends React.Component {
           },
         },
         {
-          initialRouteName: 'CreateAccount',
+          initialRouteName: start,
           headerMode: 'none',
           animationEnabled: false,
         },
