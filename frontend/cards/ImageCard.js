@@ -35,7 +35,6 @@ export default class ImageCard extends React.Component {
     this.setState({ selected: true })
     this.props.press(this.state.photo)
     this.setState({ disabled: false })
-    
   }
 
   render() {
@@ -44,7 +43,10 @@ export default class ImageCard extends React.Component {
         <View style={styles.container}>
           <Image
             source={{ uri: Image.resolveAssetSource(this.props.image).uri }}
-            style={[styles.picture,  this.state.selected ? {borderColor: 'black'} : {borderColor: 'white'}]}
+            style={[
+              styles.picture,
+              this.state.selected ? { borderColor: 'black' } : { borderColor: 'white' },
+            ]}
           />
         </View>
       </TouchableWithoutFeedback>
@@ -67,7 +69,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: width * 0.135,
     width: width * 0.135,
-    borderWidth: 1
+    borderWidth: 1,
   },
-  
 })

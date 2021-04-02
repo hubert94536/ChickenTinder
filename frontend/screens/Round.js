@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
 import Swiper from 'react-native-deck-swiper'
 import PropTypes from 'prop-types'
+import global from '../../global.js'
 import RoundCard from '../cards/RoundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -23,6 +24,7 @@ class Round extends React.Component {
       disabled: false,
       count: 0,
     }
+
     socket.getSocket().once('match', (data) => {
       socket.getSocket().off()
       this.props.setMatch(this.props.session.resInfo.find((x) => x.id === data))
@@ -50,6 +52,18 @@ class Round extends React.Component {
     this.setState({ disabled: false })
     this.props.navigation.replace('Home')
     this.props.updateSession({})
+  }
+
+  componentDidMount() {
+    console.log(this.props.session)
+    if (this.props.session.members[global.uid] !== 'undefined') {
+      for (var i = 0; i < this.props.session.resInfo.length; i++) {
+        if (this.props.session.resInfo[i].id === this.props.session.members[global.uid].card) {
+          this.deck.jumpToCardIndex(i + 1)
+          this.setState({ index: i + 2, count: i + 1 })
+        }
+      }
+    }
   }
 
   render() {

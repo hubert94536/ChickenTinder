@@ -191,21 +191,20 @@ class PhoneAuthScreen extends Component {
             )}
 
             {!this.state.confirmResult && (
-          
               <View style={[styles.numberContainer]}>
                 <Text style={[styles.fixedText]}>+1</Text>
                 <TextInput
-                style={[styles.textInput]}
-                placeholder="Phone Number"
-                placeholderTextColor="#6A6A6A"
-                keyboardType="phone-pad"
-                value={this.state.phone}
-                onChangeText={(num) => {
-                  this.setState({ phone: "+1" + num })
-                }}
-                maxLength={15}
-                editable={!this.state.confirmResult}
-              />
+                  style={[styles.textInput]}
+                  placeholder="Phone Number"
+                  placeholderTextColor="#6A6A6A"
+                  keyboardType="phone-pad"
+                  value={this.state.phone}
+                  onChangeText={(num) => {
+                    this.setState({ phone: '+1' + num })
+                  }}
+                  maxLength={15}
+                  editable={!this.state.confirmResult}
+                />
               </View>
             )}
 
@@ -293,9 +292,9 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     color: colors.darkGray,
     fontSize: 20,
-    height: '54%'
+    height: '54%',
   },
-  
+
   themeButton: {
     width: '90%',
     height: 50,
@@ -323,12 +322,12 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
-  numberContainer: { 
-    marginTop: '20%', 
-    marginBottom: '10%', 
-    flexDirection: 'row', 
-    alignItems: 'flex-end'
-  }
+  numberContainer: {
+    marginTop: '20%',
+    marginBottom: '10%',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+  },
 })
 
 const mapDispatchToProps = (dispatch) =>

@@ -13,14 +13,13 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import colors from '../../styles/colors.js'
 import { connect } from 'react-redux'
 import { assets as defImages } from '../assets/images/defImages.js'
-import { FlatList} from 'react-native'
+import { FlatList } from 'react-native'
 import ImageCard from '../cards/ImageCard.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import PropTypes from 'prop-types'
 import screenStyles from '../../styles/screenStyles.js'
 import { ScrollView } from 'react-native-gesture-handler'
-
 
 const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
@@ -35,65 +34,67 @@ class ChoosePic extends React.Component {
       validUsernameFormat: true,
       disabled: false,
       images: [],
-      selected: "",
+      selected: '',
       refresh: false,
     }
   }
 
   componentDidMount() {
-    let pushImages= []
+    let pushImages = []
     for (var i = 0; i < Object.keys(defImages).length; i++) {
-        pushImages.push(<ImageCard 
-        image = {defImages[Object.keys(defImages)[i]].toString()}
-        press={(pic) => this.select(pic)}
-        selected= {this.props.image.image === defImages[Object.keys(defImages)[i]].toString()}
-        />)
-        
+      pushImages.push(
+        <ImageCard
+          image={defImages[Object.keys(defImages)[i]].toString()}
+          press={(pic) => this.select(pic)}
+          selected={this.props.image.image === defImages[Object.keys(defImages)[i]].toString()}
+        />,
+      )
     }
 
-    this.setState({images: pushImages})
-    this.setState({selected: this.props.image.image})
-
+    this.setState({ images: pushImages })
+    this.setState({ selected: this.props.image.image })
   }
 
-   ItemView = ({item}) => {
+  ItemView = ({ item }) => {
     return (
       // FlatList Item
       item
-    );
-  };
+    )
+  }
 
-   ItemSeparatorView = () => {
+  ItemSeparatorView = () => {
     return (
       // FlatList Item Separator
       <View
-          style={{
-              height: width*0.03,
-              width: '100%',
-          }}
+        style={{
+          height: width * 0.03,
+          width: '100%',
+        }}
       />
-    );
-  };
+    )
+  }
 
   async updateSelected(pic) {
-    let pushImages= []
+    let pushImages = []
     for (var i = 0; i < Object.keys(defImages).length; i++) {
-      pushImages.push(<ImageCard 
-      image = {defImages[Object.keys(defImages)[i]].toString()}
-      press={(selectedPic) => this.select(selectedPic)}
-      selected= {pic === defImages[Object.keys(defImages)[i]].toString()}
-      />)
-      
-  }
-    this.setState({images: []}, () => {
-      this.setState({images: pushImages});
-  });
-    console.log("Selected image:" + pic)
-
+      pushImages.push(
+        <ImageCard
+          image={defImages[Object.keys(defImages)[i]].toString()}
+          press={(selectedPic) => this.select(selectedPic)}
+          selected={pic === defImages[Object.keys(defImages)[i]].toString()}
+        />,
+      )
+    }
+    this.setState({ images: [] }, () => {
+      this.setState({ images: pushImages })
+    })
+    console.log('Selected image:' + pic)
   }
 
   select(pic) {
-    this.updateSelected(pic).then(() => {this.setState({selected: pic, refresh: !this.state.refresh})}) 
+    this.updateSelected(pic).then(() => {
+      this.setState({ selected: pic, refresh: !this.state.refresh })
+    })
   }
 
   render() {
@@ -106,18 +107,22 @@ class ChoosePic extends React.Component {
             onPress={() => this.props.dontSave()}
           />
           <View style={styles.modalContent}>
-            
             <Text style={[screenStyles.text, styles.nameText]}>Select a Profile Icon</Text>
-            <FlatList style={[styles.flatlist]} 
-            data = {this.state.images}
-            ItemSeparatorComponent={this.ItemSeparatorView}
-            renderItem={this.ItemView}
-            numColumns={4}
-            extraData={this.state.selected}/>
+            <FlatList
+              style={[styles.flatlist]}
+              data={this.state.images}
+              ItemSeparatorComponent={this.ItemSeparatorView}
+              renderItem={this.ItemView}
+              numColumns={4}
+              extraData={this.state.selected}
+            />
           </View>
           <Image
             source={{ uri: Image.resolveAssetSource(this.props.image.image).uri }}
-            style={[styles.picture,  this.state.selected ? {borderColor: 'black'} : {borderColor: 'white'}]}
+            style={[
+              styles.picture,
+              this.state.selected ? { borderColor: 'black' } : { borderColor: 'white' },
+            ]}
           />
           <TouchableHighlight
             disabled={this.state.disabled}
@@ -127,7 +132,6 @@ class ChoosePic extends React.Component {
             }}
             underlayColor="white"
           >
-            
             <Text style={[screenStyles.smallButtonText, styles.saveText]}> Done</Text>
           </TouchableHighlight>
         </View>
@@ -200,7 +204,7 @@ const styles = StyleSheet.create({
   inputMarginWarning: {
     marginBottom: '1%',
   },
-  flatlist: { 
-    flexDirection: 'column' 
-  }
+  flatlist: {
+    flexDirection: 'column',
+  },
 })

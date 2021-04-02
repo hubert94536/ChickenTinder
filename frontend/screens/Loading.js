@@ -26,7 +26,6 @@ class Loading extends React.Component {
     super(props)
     this.state = {
       restaurants: this.props.navigation.state.params.restaurants,
-      restaurants: res,
       leave: false,
       disabled: false,
     }

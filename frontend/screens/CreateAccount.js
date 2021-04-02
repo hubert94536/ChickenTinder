@@ -161,7 +161,11 @@ class createAccount extends React.Component {
           source={{ uri: Image.resolveAssetSource(this.state.photo).uri }}
           style={styles.avatar}
         />
-        <TouchableHighlight style={styles.select} underlayColor="transparent" onPress = {() => this.setState({ edit: true })}>
+        <TouchableHighlight
+          style={styles.select}
+          underlayColor="transparent"
+          onPress={() => this.setState({ edit: true })}
+        >
           <Text style={[styles.selectText, screenStyles.textBold]}>Select a Profile Icon</Text>
         </TouchableHighlight>
 
@@ -275,11 +279,11 @@ class createAccount extends React.Component {
         </TouchableHighlight>
 
         {this.state.edit && (
-              <ChoosePic
-                dontSave={() => this.dontSave()}
-                makeChanges={(pic) => this.makeChanges(pic)}
-              />
-          )}
+          <ChoosePic
+            dontSave={() => this.dontSave()}
+            makeChanges={(pic) => this.makeChanges(pic)}
+          />
+        )}
       </ImageBackground>
     )
   }
