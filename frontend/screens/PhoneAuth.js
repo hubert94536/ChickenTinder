@@ -192,7 +192,7 @@ class PhoneAuthScreen extends Component {
 
             {!this.state.confirmResult && (
           
-              <View style={[{ marginTop: '20%', marginBottom: '10%', flexDirection: 'row', alignItems: 'flex-end'}]}>
+              <View style={[styles.numberContainer]}>
                 <Text style={[styles.fixedText]}>+1</Text>
                 <TextInput
                 style={[styles.textInput]}
@@ -323,6 +323,12 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
+  numberContainer: { 
+    marginTop: '20%', 
+    marginBottom: '10%', 
+    flexDirection: 'row', 
+    alignItems: 'flex-end'
+  }
 })
 
 const mapDispatchToProps = (dispatch) =>

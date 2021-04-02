@@ -26,18 +26,9 @@ export default class ImageCard extends React.Component {
       confirmPressed: false,
       deletePressed: false,
       disabled: false,
-      selected: false,
+      selected: this.props.selected,
     }
   }
-
-  componentDidMount()
-  {
-    this.setState({selected: this.props.selected})
-  }
-
- 
-
-  
 
   handleClick() {
     this.setState({ disabled: true })
@@ -46,8 +37,6 @@ export default class ImageCard extends React.Component {
     this.setState({ disabled: false })
     
   }
-
-
 
   render() {
     return (
@@ -80,6 +69,5 @@ const styles = StyleSheet.create({
     width: width * 0.135,
     borderWidth: 1
   },
-  
   
 })

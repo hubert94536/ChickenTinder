@@ -164,7 +164,7 @@ class createAccount extends React.Component {
         <TouchableHighlight style={styles.select} underlayColor="transparent" onPress = {() => this.setState({ edit: true })}>
           <Text style={[styles.selectText, screenStyles.textBold]}>Select a Profile Icon</Text>
         </TouchableHighlight>
-        
+
         <Text style={[screenStyles.textBook, styles.fieldName, styles.display]}>Display Name</Text>
         <TextInput
           style={[
@@ -336,7 +336,6 @@ const styles = StyleSheet.create({
   button: {
     borderColor: colors.hex,
     backgroundColor: colors.hex,
-    // width: '20%',
     marginTop: '7%',
   },
   mediumText: {

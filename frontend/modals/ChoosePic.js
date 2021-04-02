@@ -9,22 +9,23 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import colors from '../../styles/colors.js'
 import { connect } from 'react-redux'
+import { assets as defImages } from '../assets/images/defImages.js'
+import { FlatList} from 'react-native'
+import ImageCard from '../cards/ImageCard.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
-import screenStyles from '../../styles/screenStyles.js'
-import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
-import { assets as defImages } from '../assets/images/defImages.js'
-import ImageCard from '../cards/ImageCard.js'
+import screenStyles from '../../styles/screenStyles.js'
 import { ScrollView } from 'react-native-gesture-handler'
-import { FlatList} from 'react-native'
+
 
 const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
 
-class EditProfile extends React.Component {
+class ChoosePic extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -107,7 +108,7 @@ class EditProfile extends React.Component {
           <View style={styles.modalContent}>
             
             <Text style={[screenStyles.text, styles.nameText]}>Select a Profile Icon</Text>
-            <FlatList style={{ flexDirection: 'column' }} 
+            <FlatList style={[styles.flatlist]} 
             data = {this.state.images}
             ItemSeparatorComponent={this.ItemSeparatorView}
             renderItem={this.ItemView}
@@ -143,9 +144,9 @@ const mapStateToProps = (state) => {
   return { error, name, username, image }
 }
 
-export default connect(mapStateToProps)(EditProfile)
+export default connect(mapStateToProps)(ChoosePic)
 
-EditProfile.propTypes = {
+ChoosePic.propTypes = {
   dontSave: PropTypes.func,
   makeChanges: PropTypes.func,
   visible: PropTypes.bool,
@@ -199,4 +200,7 @@ const styles = StyleSheet.create({
   inputMarginWarning: {
     marginBottom: '1%',
   },
+  flatlist: { 
+    flexDirection: 'column' 
+  }
 })
