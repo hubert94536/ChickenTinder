@@ -11,6 +11,8 @@ const INITIAL_STATE = {
   hostEnd: false,
   session: {},
   isHost: false,
+  match: {},
+  top: [],
 }
 
 export const errorReducer = (state = INITIAL_STATE.error, action) => {
@@ -135,6 +137,30 @@ export const setHostReducer = (state = INITIAL_STATE.isHost, action) => {
       return {
         ...state,
         isHost: action.payload,
+      }
+    default:
+      return state
+  }
+}
+
+export const setMatchReducer = (state = INITIAL_STATE.match, action) => {
+  switch (action.type) {
+    case 'SET_MATCH':
+      return {
+        ...state,
+        match: action.payload,
+      }
+    default:
+      return state
+  }
+}
+
+export const setTopReducer = (state = INITIAL_STATE.top, action) => {
+  switch (action.type) {
+    case 'SET_TOP':
+      return {
+        ...state,
+        top: action.payload,
       }
     default:
       return state

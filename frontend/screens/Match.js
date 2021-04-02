@@ -18,7 +18,6 @@ class Match extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      restaurant: this.props.navigation.state.params.restaurant,
       disabled: false,
     }
   }
@@ -33,7 +32,6 @@ class Match extends React.Component {
   }
 
   render() {
-    const { restaurant } = this.state
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer} /*Header for header text and heart icon */>
@@ -41,23 +39,23 @@ class Match extends React.Component {
           <Icon name="heart" style={[styles.general, styles.heart]} />
         </View>
         <View style={styles.restaurantCardContainer} /*Restaurant card*/>
-          <MatchCard card={restaurant} />
+          <MatchCard card={this.props.match} />
           <View style={[styles.mapContainer, styles.map]}>
             <MapView
               provider={PROVIDER_GOOGLE}
               customMapStyle={mapStyle}
               style={styles.map}
               region={{
-                latitude: restaurant.latitude,
-                longitude: restaurant.longitude,
+                latitude: this.props.match.latitude,
+                longitude: this.props.match.longitude,
                 latitudeDelta: 0.015,
                 longitudeDelta: 0.015,
               }}
             >
               <Marker
                 coordinate={{
-                  latitude: restaurant.latitude,
-                  longitude: restaurant.longitude,
+                  latitude: this.props.match.latitude,
+                  longitude: this.props.match.longitude,
                 }}
               />
             </MapView>
@@ -66,17 +64,17 @@ class Match extends React.Component {
         <TouchableHighlight //Button to open restaurant on yelp
           underlayColor="white"
           style={[screenStyles.bigButton, styles.yelpButton]}
-          onPress={() => Linking.openURL(restaurant.url)}
+          onPress={() => Linking.openURL(this.props.match.url)}
         >
           <Text style={[screenStyles.bigButtonText, styles.white]}>Open on Yelp</Text>
         </TouchableHighlight>
         <TouchableHighlight
           /* Button to call phone # */
           style={[screenStyles.bigButton, styles.callButton]}
-          onPress={() => Linking.openURL(`tel:${restaurant.phone}`)}
+          onPress={() => Linking.openURL(`tel:${this.props.match.phone}`)}
         >
           <Text style={[screenStyles.bigButtonText, { color: colors.hex }]}>
-            Call: {restaurant.phone}
+            Call: {this.props.match.phone}
           </Text>
         </TouchableHighlight>
         <Text /* Link to exit round */
@@ -91,6 +89,12 @@ class Match extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    match: state.match.match,
+  }
+}
+
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
@@ -99,20 +103,15 @@ const mapDispatchToProps = (dispatch) =>
     dispatch,
   )
 
-export default connect(null, mapDispatchToProps)(Match)
+export default connect(mapStateToProps, mapDispatchToProps)(Match)
 
 Match.propTypes = {
   //navig should contain navigate fx + state, which contains params which contains the necessary restaurant arr
   navigation: PropTypes.shape({
     replace: PropTypes.func,
-    navigate: PropTypes.func,
-    state: PropTypes.shape({
-      params: PropTypes.shape({
-        restaurant: PropTypes.object,
-      }),
-    }),
   }),
   updateSession: PropTypes.func,
+  match: PropTypes.object,
 }
 
 const styles = StyleSheet.create({
