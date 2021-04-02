@@ -1,424 +1,478 @@
 // Cuisine = 1, Type = 2
+const assets = {
+  African: require('./African.png'),
+  Australian: require('./Australian.png'),
+  Bakery: require('./Bakery.png'),
+  Bakery2: require('./Bakery2.png'),
+  Breakfast: require('./Breakfast.png'),
+  British: require('./British.png'),
+  Burmese: require('./Burmese.png'),
+  Cafes: require('./Cafes.png'),
+  Cambodian: require('./Cambodian.png'),
+  Canadian: require('./Canadian.png'),
+  Caribbean: require('./Caribbean.png'),
+  ChickenWings: require('./ChickenWings.png'),
+  Chinese: require('./Chinese.png'),
+  Cuban: require('./Cuban.png'),
+  Ethiopian: require('./Ethiopian.png'),
+  Filipino: require('./Filipino.png'),
+  French: require('./French.png'),
+  German: require('./German.png'),
+  Greek: require('./Greek.png'),
+  Halal: require('./Halal_Middle_Eastern.png'),
+  Hamburger: require('./Hamburger.png'),
+  Hawaiian: require('./Hawaiian.png'),
+  Polynesian: require('./Hawaiian_Polynesian.png'),
+  HotDog: require('./Hot_Dog.png'),
+  Indian: require('./Indian.png'),
+  Indonesian: require('./Indonesian.png'),
+  Irish: require('./Irish_Bars.png'),
+  Italian: require('./Italian.png'),
+  Japanese: require('./Japanese.png'),
+  Kebab: require('./Kebab_Middle_Eastern.png'),
+  Korean: require('./Korean.png'),
+  Mediterranean: require('./Mediterranean.png'),
+  Mexican: require('./Mexican.png'),
+  Mongolian: require('./Mongolian.png'),
+  Moroccan: require('./Moroccan.png'),
+  Peruvian: require('./Peruvian.png'),
+  Pizza: require('./Pizza.png'),
+  Polish: require('./Polish.png'),
+  Russian: require('./Russian.png'),
+  Salad: require('./Salad.png'),
+  Sandwiches: require('./Sandwiches.png'),
+  Seafood: require('./Seafood.png'),
+  SoulFood: require('./Southern_Soulfood.png'),
+  Spanish: require('./Spanish_Tapas.png'),
+  SriLankan: require('./Sri_Lankan.png'),
+  Steak: require('./Steakhouse.png'),
+  Sushi: require('./Sushi.png'),
+  Swedish: require('./Swedish_Scandinavian.png'),
+  Taiwanese: require('./Taiwanese.png'),
+  Thai: require('./Thai.png'),
+  Vietnamese: require('./Vietnamese.png'),
+}
+
 const foodImages = {
-  'African': {
-    img: require('./African.png'),
+  African: {
+    img: assets['African'],
     val: 1,
   },
-  'Australian': {
-    img: require('./Australian.png'),
+  Australian: {
+    img: assets['Australian'],
     val: 1,
   },
   'Modern Australian': {
-    img: 'Australian',
+    img: assets['Australian'],
     val: 1,
   },
   'New Zealand': {
-    img: 'Australian',
+    img: assets['Australian'],
     val: 1,
   },
-  'Creperies': {
-    img: require('./Bakery.png'),
+  Creperies: {
+    img: assets['Bakery'],
     val: 2,
   },
-  'Baguettes': {
-    img: require('./Bakery2.png'),
+  Baguettes: {
+    img: assets['Bakery2'],
     val: 2,
   },
   'Breakfast & Brunch': {
-    img: require('./Breakfast.png'),
+    img: assets['Breakfast'],
     val: 2,
   },
-  'Diners': {
-    img: 'Breakfast & Brunch',
+  Diners: {
+    img: assets['Breakfast'],
     val: 2,
   },
-  'Waffles': {
-    img: 'Breakfast & Brunch',
+  Waffles: {
+    img: assets['Breakfast'],
     val: 2,
   },
-  'British': {
-    img: require('./British.png'),
+  British: {
+    img: assets['British'],
     val: 1,
   },
   'Fish & Chips': {
-    img: 'British',
+    img: assets['British'],
     val: 2,
   },
-  'Burmese': {
-    img: require('./Burmese.png'),
+  Burmese: {
+    img: assets['Burmese'],
     val: 1,
   },
-  'Cafes': {
-    img: require('./Cafes.png'),
+  Cafes: {
+    img: assets['Cafes'],
     val: 2,
   },
   'Hong Kong Style Cafe': {
-    img: 'Cafes',
+    img: assets['Cafes'],
     val: 2,
   },
-  'Coffeeshops': {
-    img: 'Cafes',
+  Coffeeshops: {
+    img: assets['Cafes'],
     val: 2,
   },
   'Coffee & Tea': {
-    img: 'Cafes',
+    img: assets['Cafes'],
     val: 2,
   },
-  'Cambodian': {
-    img: require('./Cambodian.png'),
+  Cambodian: {
+    img: assets['Cambodian'],
     val: 1,
   },
-  'Canadian': {
-    img: require('./Canadian.png'),
+  Canadian: {
+    img: assets['Canadian'],
     val: 1,
   },
-  'Caribbean': {
-    img: require('./Caribbean.png'),
+  Caribbean: {
+    img: assets['Caribbean'],
     val: 2,
   },
   'Cajun/Creole': {
-    img: 'Caribbean',
+    img: assets['Caribbean'],
     val: 2,
   },
   'Chicken Wings': {
-    img: require('./ChickenWings.png'),
+    img: assets['ChickenWings'],
     val: 2,
   },
   'Chicken Shop': {
-    img: 'Chicken Wings',
+    img: assets['ChickenWings'],
     val: 2,
   },
   'Rotisserie Chicken': {
-    img: 'Chicken Wings',
+    img: assets['ChickenWings'],
     val: 2,
   },
-  'Chinese': {
-    img: require('./Chinese.png'),
+  Chinese: {
+    img: assets['Chinese'],
     val: 1,
   },
   'Dim Sum': {
-    img: 'Chinese',
+    img: assets['Chinese'],
     val: 2,
   },
-  'Dumplings': {
-    img: 'Chinese',
+  Dumplings: {
+    img: assets['Chinese'],
     val: 2,
   },
   'Hot Pot': {
-    img: 'Chinese',
+    img: assets['Chinese'],
     val: 2,
   },
-  'Wok': {
-    img: 'Chinese',
+  Wok: {
+    img: assets['Chinese'],
     val: 2,
   },
-  'Cuban': {
-    img: require('./Cuban.png'),
+  Cuban: {
+    img: assets['Cuban'],
     val: 1,
   },
-  'Ethiopian': {
-    img: require('./Ethiopian.png'),
+  Ethiopian: {
+    img: assets['Ethiopian'],
     val: 1,
   },
-  'Filipino': {
-    img: require('./Filipino.png'),
+  Filipino: {
+    img: assets['Filipino'],
     val: 1,
   },
-  'French': {
-    img: require('./French.png'),
+  French: {
+    img: assets['French'],
     val: 1,
   },
-  'Bistro': {
-    img: 'French',
+  Bistro: {
+    img: assets['French'],
     val: 2,
   },
   'French Southwest': {
-    img: 'French',
+    img: assets['French'],
     val: 1,
   },
-  'German': {
-    img: require('./German.png'),
+  German: {
+    img: assets['German'],
     val: 1,
   },
-  'Bavarian': {
-    img: 'German',
+  Bavarian: {
+    img: assets['German'],
     val: 1,
   },
-  'Fischbroetchen': {
-    img: 'German',
+  Fischbroetchen: {
+    img: assets['German'],
     val: 2,
   },
-  'Schnitzel': {
-    img: 'German',
+  Schnitzel: {
+    img: assets['German'],
     val: 2,
   },
-  'Greek': {
-    img: require('./Greek.png'),
+  Greek: {
+    img: assets['Greek'],
     val: 1,
   },
-  'Wraps': {
-    img: 'Greek',
+  Wraps: {
+    img: assets['Greek'],
     val: 2,
   },
   'Middle Eastern': {
-    img: require('./Halal_Middle_Eastern.png'),
+    img: assets['Halal'],
     val: 1,
   },
-  'Halal': {
-    img: 'Middle Eastern',
+  Halal: {
+    img: assets['Halal'],
     val: 2,
   },
-  'Hamburger': {
-    img: require('./Hamburger.png'),
+  Hamburger: {
+    img: assets['Hamburger'],
     val: 2,
   },
   'Fast Food': {
-    img: 'Hamburger',
+    img: assets['Hamburger'],
     val: 1,
   },
-  'Hawaiian': {
-    img: require('./Hawaiian.png'),
+  Hawaiian: {
+    img: assets['Hawaiian'],
     val: 2,
   },
-  'Polynesian': {
-    img: require('./Hawaiian_Polynesian.png'),
+  Polynesian: {
+    img: assets['Polynesian'],
     val: 1,
   },
   'Hot Dog': {
-    img: require('./Hot_Dog.png'),
+    img: assets['HotDog'],
     val: 2,
   },
   'American (New)': {
-    img: 'Caribbean',
+    img: assets['Caribbean'],
     val: 1,
   },
   'American (Traditional)': {
-    img: 'Hamburger',
+    img: assets['Hamburger'],
     val: 1,
   },
-  'Indian': {
-    img: require('./Indian.png'),
+  Indian: {
+    img: assets['Indian'],
     val: 1,
   },
-  'Pakistani': {
-    img: 'Indian',
+  Pakistani: {
+    img: assets['Indian'],
     val: 1,
   },
-  'Indonesian': {
-    img: require('./Indonesian.png'),
+  Indonesian: {
+    img: assets['Indonesian'],
     val: 1,
   },
-  'Irish': {
-    img: require('./Irish_Bars.png'),
+  Irish: {
+    img: assets['Irish'],
     val: 1,
   },
   'Island Pub': {
-    img: 'Irish',
+    img: assets['Irish'],
     val: 1,
   },
   'Beer Garden': {
-    img: 'Irish',
+    img: assets['Irish'],
     val: 2,
   },
   'Beer Hall': {
-    img: 'Irish',
+    img: assets['Irish'],
     val: 2,
   },
-  'Gastropubs': {
-    img: 'Irish',
+  Gastropubs: {
+    img: assets['Irish'],
     val: 2,
   },
   'Irish Pub': {
-    img: 'Irish',
+    img: assets['Irish'],
     val: 2,
   },
-  'Italian': {
-    img: require('./Italian.png'),
+  Italian: {
+    img: assets['Italian'],
     val: 1,
   },
-  'Japanese': {
-    img: require('./Japanese.png'),
+  Japanese: {
+    img: assets['Japanese'],
     val: 1,
   },
-  'Ramen': {
-    img: 'Japanese',
+  Ramen: {
+    img: assets['Japanese'],
     val: 2,
   },
-  'Nikkei': {
-    img: 'Japanese',
+  Nikkei: {
+    img: assets['Japanese'],
     val: 2,
   },
-  'Noodles': {
-    img: 'Japanese',
+  Noodles: {
+    img: assets['Japanese'],
     val: 2,
   },
-  'Kebab': {
-    img: require('./Kebab_Middle_Eastern.png'),
+  Kebab: {
+    img: assets['Kebab'],
     val: 2,
   },
-  'Korean': {
-    img: require('./Korean.png'),
+  Korean: {
+    img: assets['Korean'],
     val: 1,
   },
-  'Mediterranean': {
-    img: require('./Mediterranean.png'),
+  Mediterranean: {
+    img: assets['Mediterranean'],
     val: 1,
   },
-  'Pita': {
-    img: 'Mediterranean',
+  Pita: {
+    img: assets['Mediterranean'],
     val: 2,
   },
-  'Mexican': {
-    img: require('./Mexican.png'),
+  Mexican: {
+    img: assets['Mexican'],
     val: 1,
   },
   'Tex-Mex': {
-    img: 'Mexican',
+    img: assets['Mexican'],
     val: 1,
   },
-  'Mongolian': {
-    img: require('./Mongolian.png'),
+  Mongolian: {
+    img: assets['Mongolian'],
     val: 1,
   },
-  'Moroccan': {
-    img: require('./Moroccan.png'),
+  Moroccan: {
+    img: assets['Moroccan'],
     val: 1,
   },
-  'Peruvian': {
-    img: require('./Peruvian.png'),
+  Peruvian: {
+    img: assets['Peruvian'],
     val: 1,
   },
-  'Pizza': {
-    img: require('./Pizza.png'),
+  Pizza: {
+    img: assets['Pizza'],
     val: 2,
   },
-  'Polish': {
-    img: require('./Polish.png'),
+  Polish: {
+    img: assets['Polish'],
     val: 1,
   },
-  'Russian': {
-    img: require('./Russian.png'),
+  Russian: {
+    img: assets['Russian'],
     val: 2,
   },
   'Eastern European': {
-    img: 'Russian',
+    img: assets['Russian'],
     val: 1,
   },
-  'Soup': {
-    img: 'Russian',
+  Soup: {
+    img: assets['Russian'],
     val: 2,
   },
-  'Ukrainian': {
-    img: 'Russian',
+  Ukrainian: {
+    img: assets['Russian'],
     val: 2,
   },
-  'Salad': {
-    img: require('./Salad.png'),
+  Salad: {
+    img: assets['Salad'],
     val: 2,
   },
-  'Vegetarian': {
-    img: 'Salad',
+  Vegetarian: {
+    img: assets['Salad'],
     val: 0.5,
   },
-  'Vegan': {
-    img: 'Salad',
+  Vegan: {
+    img: assets['Salad'],
     val: 0.5,
   },
-  'Sandwiches': {
-    img: require('./Sandwiches.png'),
+  Sandwiches: {
+    img: assets['Sandwiches'],
     val: 2,
   },
-  'Delis': {
-    img: 'Sandwiches',
+  Delis: {
+    img: assets['Sandwiches'],
     val: 2,
   },
   'Open Sandwiches': {
-    img: 'Sandwiches',
+    img: assets['Sandwiches'],
     val: 2,
   },
-  'Seafood': {
-    img: require('./Seafood.png'),
+  Seafood: {
+    img: assets['Seafood'],
     val: 2,
   },
   'Live/Raw Food': {
-    img: 'Seafood',
+    img: assets['Seafood'],
     val: 2,
   },
   'Soul Food': {
-    img: require('./Southern_Soulfood.png'),
+    img: assets['SoulFood'],
     val: 2,
   },
-  'Southern': {
-    img: 'Soul Food',
+  Southern: {
+    img: assets['SoulFood'],
     val: 2,
   },
   'Comfort Food': {
-    img: 'Soul Food',
+    img: assets['SoulFood'],
     val: 1,
   },
-  'Spanish': {
-    img: require('./Spanish_Tapas.png'),
+  Spanish: {
+    img: assets['Spanish'],
     val: 1,
   },
   'Tapas Bars': {
-    img: 'Spanish',
+    img: assets['Spanish'],
     val: 2,
   },
   'Tapas/Small Plates': {
-    img: 'Spanish',
+    img: assets['Spanish'],
     val: 1,
   },
   'Sri Lankan': {
-    img: require('./Sri_Lankan.png'),
+    img: assets['SriLankan'],
     val: 1,
   },
-  'Steakhouses': {
-    img: require('./Steakhouse.png'),
+  Steakhouses: {
+    img: assets['Steak'],
     val: 2,
   },
-  'Barbeque': {
-    img: 'Steakhouses',
+  Barbeque: {
+    img: assets['Steak'],
     val: 2,
   },
   'Sushi Bars': {
-    img: require('./Sushi.png'),
+    img: assets['Sushi'],
     val: 2,
   },
-  'Swedish': {
-    img: require('./Swedish_Scandinavian.png'),
+  Swedish: {
+    img: assets['Swedish'],
     val: 1,
   },
-  'Meatballs': {
-    img: 'Swedish',
+  Meatballs: {
+    img: assets['Swedish'],
     val: 2,
   },
-  'Scandinavian': {
-    img: 'Swedish',
+  Scandinavian: {
+    img: assets['Swedish'],
     val: 1,
   },
   'Traditional Norwegian': {
-    img: 'Swedish',
+    img: assets['Swedish'],
     val: 2,
   },
   'Traditional Swedish': {
-    img: 'Swedish',
+    img: assets['Swedish'],
     val: 2,
   },
-  'Taiwanese': {
-    img: require('./Taiwanese.png'),
+  Taiwanese: {
+    img: assets['Taiwanese'],
     val: 2,
   },
   'Asian Fusion': {
-    img: 'Taiwanese',
+    img: assets['Taiwanese'],
     val: 1,
   },
-  'Thai': {
-    img: require('./Thai.png'),
+  Thai: {
+    img: assets['Thai'],
     val: 1,
   },
-  'Vietnamese': {
-    img: require('./Vietnamese.png'),
+  Vietnamese: {
+    img: assets['Vietnamese'],
     val: 1,
   },
 }
-export default foodImages
+export { foodImages }

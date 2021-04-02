@@ -1,7 +1,7 @@
 export default {
-  host: '',
   phone: '',
   email: '',
-  restaurants: [],
-  isHost: false,
+  uid: '',
+  restaurant: {},
+  top: [],
 }
