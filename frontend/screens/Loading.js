@@ -10,11 +10,14 @@ import {
 } from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import { BlurView } from '@react-native-community/blur'
 import PropTypes from 'prop-types'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
+import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
 import normalize from '../../styles/normalize.js'
 import { ProgressBar } from 'react-native-paper'
+import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
 import { updateSession, setHost, setMatch, setTop } from '../redux/Actions.js'
@@ -66,7 +69,7 @@ class Loading extends React.Component {
         <View style={[styles.top, { flexDirection: 'row', justifyContent: 'space-between' }]}>
           <TouchableHighlight
             disabled={this.state.disabled}
-            onPress={() => this.leave()}
+            onPress={() => this.setState({ leave: true, disabled: true })}
             style={[styles.leaveIcon]}
             underlayColor="transparent"
           >
@@ -115,6 +118,27 @@ class Loading extends React.Component {
             </TouchableHighlight>
           )}
         </View>
+        {this.state.leave && (
+          <Alert
+            title="Leave Round"
+            body="Are you sure you want to leave?"
+            buttonAff="Leave"
+            buttonNeg="Back"
+            height="25%"
+            twoButton
+            disabled={this.state.disabled}
+            press={() => this.leave()}
+            cancel={() => this.setState({ leave: false, disabled: false })}
+          />
+        )}
+        {this.state.leave && (
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
       </ImageBackground>
     )
   }

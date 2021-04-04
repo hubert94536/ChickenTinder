@@ -372,7 +372,7 @@ class UserProfileView extends Component {
             title="Log out"
             body="Are you sure you want to log out?"
             buttonAff="Logout"
-            buttonNeg="Go back"
+            buttonNeg="Back"
             height="25%"
             twoButton
             disabled={this.state.disabled}
@@ -386,7 +386,7 @@ class UserProfileView extends Component {
             title="Delete account?"
             body="By deleting your account, you will lose all of your data"
             buttonAff="Delete"
-            buttonNeg="Go back"
+            buttonNeg="Back"
             twoButton
             height="25%"
             dispatch={this.state.disabled}
