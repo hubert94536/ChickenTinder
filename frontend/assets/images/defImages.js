@@ -3,7 +3,7 @@ const assets = {
   African: require('./African.png'),
   Australian: require('./Australian.png'),
   Bakery: require('./Bakery.png'),
-  Bakery2: require('./Bakery.png'),
+  Bakery2: require('./Bakery2.png'),
   Breakfast: require('./Breakfast.png'),
   British: require('./British.png'),
   Burmese: require('./Burmese.png'),
@@ -475,4 +475,4 @@ const foodImages = {
     val: 1,
   },
 }
-export { foodImages }
+export { foodImages, assets}
