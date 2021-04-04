@@ -31,7 +31,7 @@ import { showKick, updateSession, setHost } from '../redux/Actions.js'
 const font = 'CircularStd-Medium'
 var memberList = []
 var memberRenderList = []
-var socketErrMsg = 'Socket error message uninitialized'
+var socketErrMsg = 'Error, please try again'
 
 const windowWidth = Dimensions.get('window').width
 const windowHeight = Dimensions.get('window').height
@@ -83,39 +83,22 @@ class Group extends React.Component {
     })
 
     socket.getSocket().once('start', (res) => {
-      if (res.resInfo.length > 0) {
-        socket.getSocket().off()
-        this.props.updateSession(res)
-        this.props.navigation.replace('Round')
-      } else {
-        console.log('group.js: no restaurants found')
-        this.setState({ disabled: false })
-        // need to handle no restaurants returned
-      }
+      socket.getSocket().off()
+      this.props.updateSession(res)
+      this.props.navigation.replace('Round')
     })
 
     socket.getSocket().on('reselect', () => {
       // alert for host to reselect filters
       socketErrMsg = 'Please reselect your host filters'
-      this.setState({ socketErr: true })
+      this.setState({ socketErr: true, disabled: false })
     })
 
     socket.getSocket().on('exception', (msg) => {
-      // handle button disables here
-      this.setState({ disabled: true })
-      if (msg === 'submit') {
-        // submit alert here
-        socketErrMsg = 'Unable to submit filters'
-        this.setState({ socketErr: true })
-      } else if (msg === 'start') {
-        // start alert here
-        socketErrMsg = 'Unable to start round'
-        this.setState({ socketErr: true })
-      } else if (msg === 'kick') {
-        // kick alert here
-        socketErrMsg = 'Unable to kick member'
-        this.setState({ socketErr: true })
-      }
+      if (msg === 'submit') socketErrMsg = 'Unable to submit filters, please try again.'
+      else if (msg === 'start') socketErrMsg = 'Unable to start round, please try again.'
+      else if (msg === 'kick') socketErrMsg = 'Unable to kick member, please try again.'
+      this.setState({ socketErr: true, disabled: false })
     })
   }
 
@@ -202,8 +185,8 @@ class Group extends React.Component {
               {this.props.isHost
                 ? 'Your Group'
                 : `${this.firstName(
-                    this.props.session.members[this.props.session.host].name,
-                  )}'s Group`}
+                  this.props.session.members[this.props.session.host].name,
+                )}'s Group`}
             </Text>
             <View style={styles.subheader}>
               <Text style={styles.pinText}>Group PIN: </Text>
@@ -247,8 +230,8 @@ class Group extends React.Component {
                   {this.countNeedFilters(this.props.session.members) == 0
                     ? 'waiting for host to start'
                     : `waiting for ${this.countNeedFilters(
-                        this.props.session.members,
-                      )} member filters`}
+                      this.props.session.members,
+                    )} member filters`}
                 </Text>
               </View>
               <FlatList
@@ -405,7 +388,6 @@ class Group extends React.Component {
                 underlayColor={colors.hex}
                 activeOpacity={1}
                 onPress={() => {
-                  console.log(this.state.drawerOpen)
                   if (!this.state.drawerOpen) this.start()
                 }}
                 disabled={this.state.disabled || this.state.drawerOpen}
@@ -662,7 +644,6 @@ const styles = StyleSheet.create({
     left: 0,
   },
   footerContainer: {
-    color: 'white',
     fontFamily: font,
     height: windowHeight * 0.05,
     backgroundColor: 'white',
