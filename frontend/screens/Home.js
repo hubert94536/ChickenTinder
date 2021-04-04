@@ -34,6 +34,7 @@ import friendsApi from '../apis/friendsApi.js'
 const width = Dimensions.get('window').width
 const home = '../assets/backgrounds/Home.png'
 const homedark = '../assets/backgrounds/Home_Blur.png'
+var socketErrMsg = 'Socket error message uninitialized'
 
 class Home extends React.Component {
   constructor() {
@@ -46,6 +47,7 @@ class Home extends React.Component {
       inviteInfo: '',
       friends: '',
       disabled: false,
+      socketErr: false,
     }
     socket.getSocket().on('update', (res) => {
       socket.getSocket().off()
@@ -59,9 +61,13 @@ class Home extends React.Component {
     socket.getSocket().on('exception', (msg) => {
       // handle button disables here
       if (msg === 'create') {
-        // create alert here
+        // create alert
+        socketErrMsg = 'Unable to create a group'
+        this.setState({ socketErr: true })
       } else if (msg === 'join') {
-        // join alert here
+        // join alert
+        socketErrMsg = 'Unable to join a group'
+        this.setState({ socketErr: true })
       }
     })
 
@@ -86,7 +92,9 @@ class Home extends React.Component {
     return (
       <ImageBackground
         source={
-          this.state.join || this.props.error || this.props.kick ? require(homedark) : require(home)
+          this.state.join || this.props.error || this.props.kick || this.state.socketErr
+            ? require(homedark)
+            : require(home)
         }
         style={screenStyles.screenBackground}
       >
@@ -181,8 +189,18 @@ class Home extends React.Component {
               cancel={() => this.props.hideKick()}
             />
           )}
+          {this.state.socketErr && (
+            <Alert
+              title="Connection Error!"
+              body={socketErrMsg}
+              buttonAff="Close"
+              height="20%"
+              press={() => this.setState({ socketErr: false })}
+              cancel={() => this.setState({ socketErr: false })}
+            />
+          )}
         </View>
-        {(this.state.join || this.props.error || this.props.kick) && (
+        {(this.state.join || this.props.error || this.props.kick || this.state.socketErr) && (
           <BlurView
             blurType="dark"
             blurAmount={10}
