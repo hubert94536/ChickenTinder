@@ -31,6 +31,7 @@ import { showKick, updateSession, setHost } from '../redux/Actions.js'
 const font = 'CircularStd-Medium'
 var memberList = []
 var memberRenderList = []
+var socketErrMsg = 'Socket error message uninitialized'
 
 const windowWidth = Dimensions.get('window').width
 const windowHeight = Dimensions.get('window').height
@@ -51,6 +52,7 @@ class Group extends React.Component {
       // Modal visibility vars
       leaveAlert: false,
       chooseFriends: false,
+      socketErr: false,
 
       // Open
       disabled: false,
@@ -94,16 +96,25 @@ class Group extends React.Component {
 
     socket.getSocket().on('reselect', () => {
       // alert for host to reselect filters
+      socketErrMsg = 'Please reselect your host filters'
+      this.setState({ socketErr: true })
     })
 
     socket.getSocket().on('exception', (msg) => {
       // handle button disables here
+      this.setState({ disabled: true })
       if (msg === 'submit') {
         // submit alert here
+        socketErrMsg = 'Unable to submit filters'
+        this.setState({ socketErr: true })
       } else if (msg === 'start') {
         // start alert here
+        socketErrMsg = 'Unable to start round'
+        this.setState({ socketErr: true })
       } else if (msg === 'kick') {
         // kick alert here
+        socketErrMsg = 'Unable to kick member'
+        this.setState({ socketErr: true })
       }
     })
   }
@@ -306,6 +317,26 @@ class Group extends React.Component {
                   cancel={() => this.cancelAlert()}
                 />
               )}
+              {this.state.socketErr && (
+                <Alert
+                  title="Error Encountered!"
+                  body={socketErrMsg}
+                  buttonAff="Close"
+                  height="20%"
+                  press={() =>
+                    this.setState({
+                      socketErr: false,
+                      // , disabled: false
+                    })
+                  }
+                  cancel={() =>
+                    this.setState({
+                      socketErr: false,
+                      // , disabled: false
+                    })
+                  }
+                />
+              )}
               <ChooseFriends
                 code={this.props.session.code}
                 visible={this.state.chooseFriends}
@@ -432,7 +463,7 @@ class Group extends React.Component {
             </Text>
           </TouchableHighlight>
         </View>
-        {this.state.blur && (
+        {(this.state.blur || this.state.socketErr) && (
           <BlurView
             pointerEvents="none"
             blurType="dark"
