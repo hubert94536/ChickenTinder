@@ -23,7 +23,6 @@ import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
-import global from '../../global.js'
 import Join from '../modals/Join.js'
 import normalize from '../../styles/normalize.js'
 import TabBar from '../Nav.js'
@@ -51,7 +50,6 @@ class Home extends React.Component {
     }
     socket.getSocket().on('update', (res) => {
       socket.getSocket().off()
-      this.setState({ invite: false })
       this.props.updateSession(res)
       this.props.setHost(res.members[res.host].username === this.props.username)
       this.setState({ disabled: false })
@@ -59,16 +57,9 @@ class Home extends React.Component {
     })
 
     socket.getSocket().on('exception', (msg) => {
-      // handle button disables here
-      if (msg === 'create') {
-        // create alert
-        socketErrMsg = 'Unable to create a group'
-        this.setState({ socketErr: true })
-      } else if (msg === 'join') {
-        // join alert
-        socketErrMsg = 'Unable to join a group'
-        this.setState({ socketErr: true })
-      }
+      if (msg === 'create') socketErrMsg = 'Unable to create a group, please try again'
+      else if (msg === 'join') socketErrMsg = 'Unable to join a group, please try again'
+      this.setState({ socketErr: true, disabled: false })
     })
 
     // //uncomment if testing friends/requests

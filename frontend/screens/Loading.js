@@ -55,9 +55,7 @@ class Loading extends React.Component {
     this.setState({ disabled: true })
     socket.getSocket().off()
     socket.leave('loading')
-    this.setState({ disabled: false })
     this.props.navigation.replace('Home')
-    this.props.updateSession({})
   }
 
   render() {

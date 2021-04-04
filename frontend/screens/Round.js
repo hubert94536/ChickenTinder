@@ -50,9 +50,7 @@ class Round extends React.Component {
     this.setState({ disabled: true })
     socket.getSocket().off()
     socket.leave('round')
-    this.setState({ disabled: false })
     this.props.navigation.replace('Home')
-    this.props.updateSession({})
   }
 
   render() {
