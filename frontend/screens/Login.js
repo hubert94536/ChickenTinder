@@ -131,7 +131,7 @@ class Login extends React.Component {
             body="You will be directed to the Facebook app for account verification"
             twoButton
             buttonAff="Open"
-            buttonNeg="Go Back"
+            buttonNeg="Back"
             height="25%"
             press={() => this.facebookLogin()}
             cancel={() => this.cancelClick()}
