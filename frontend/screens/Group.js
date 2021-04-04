@@ -19,6 +19,7 @@ import PropTypes from 'prop-types'
 import Drawer from './Drawer.js'
 import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
+import global from '../../global.js'
 import GroupCard from '../cards/GroupCard.js'
 import ChooseFriends from '../modals/ChooseFriends.js'
 import FilterSelector from './Filter.js'
@@ -64,12 +65,12 @@ class Group extends React.Component {
     socket.getSocket().on('update', (res) => {
       console.log('socket "update": ' + JSON.stringify(res))
       // check if kicked from host
-      if (!res.members[this.props.username]) {
+      if (!res.members[global.uid]) {
         socket.getSocket().off()
-        this.props.showKick()
-        this.props.updateSession({})
         socket.kickLeave()
+        this.props.showKick()
         this.props.navigation.replace('Home')
+        this.props.updateSession({})
         return
       }
       if (res.host != this.props.session.host)
@@ -90,7 +91,7 @@ class Group extends React.Component {
 
     socket.getSocket().on('reselect', () => {
       // alert for host to reselect filters
-      socketErrMsg = 'Please reselect your host filters'
+      socketErrMsg = 'No restaurants were found. Please broaden your filters.'
       this.setState({ socketErr: true, disabled: false })
     })
 
@@ -151,9 +152,7 @@ class Group extends React.Component {
     this.setState({ disabled: true })
     socket.getSocket().off()
     socket.leave('group')
-    this.setState({ disabled: false })
     this.props.navigation.replace('Home')
-    this.props.updateSession({})
   }
 
   cancelAlert() {
