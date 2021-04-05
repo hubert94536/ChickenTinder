@@ -15,7 +15,6 @@ export default class GroupCard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      uid: this.props.uid,
       disabled: false,
     }
   }
@@ -27,8 +26,6 @@ export default class GroupCard extends React.Component {
   }
 
   render() {
-    // console.log(this.props.uid)
-    // console.log(this.props.host)
     return (
       <View style={styles.card}>
         <View style={[styles.imageWrapper]}>
@@ -53,9 +50,6 @@ export default class GroupCard extends React.Component {
             right: 0,
           }}
         >
-          {/* {this.props.uid !== this.props.host && this.props.isHost ? (
-            <Text style={[imgStyles.hex, imgStyles.font, styles.remove]}>Remove</Text>
-          ) : null} */}
           {this.props.uid != this.props.host && this.props.isHost ? (
             <Icon
               name="times-circle"

@@ -2,12 +2,15 @@ import React from 'react'
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import { BlurView } from '@react-native-community/blur'
+import Feather from 'react-native-vector-icons/Feather'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import Feather from 'react-native-vector-icons/Feather'
 import Swiper from 'react-native-deck-swiper'
 import PropTypes from 'prop-types'
 import global from '../../global.js'
+import Alert from '../modals/Alert.js'
+import modalStyles from '../../styles/modalStyles.js'
 import RoundCard from '../cards/RoundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -49,9 +52,7 @@ class Round extends React.Component {
     this.setState({ disabled: true })
     socket.getSocket().off()
     socket.leave('round')
-    this.setState({ disabled: false })
     this.props.navigation.replace('Home')
-    this.props.updateSession({})
   }
 
   componentDidMount() {
@@ -107,7 +108,7 @@ class Round extends React.Component {
             <TouchableHighlight
               disabled={this.state.disabled}
               onPress={() => {
-                this.leave()
+                this.setState({ leave: true })
               }}
               style={[styles.leaveButton, styles.topMargin]}
               underlayColor="transparent"
@@ -150,6 +151,27 @@ class Round extends React.Component {
             </TouchableHighlight>
           </View>
         </View>
+        {this.state.leave && (
+          <Alert
+            title="Leave Round"
+            body="Are you sure you want to leave?"
+            buttonAff="Leave"
+            buttonNeg="Back"
+            height="25%"
+            twoButton
+            disabled={this.state.disabled}
+            press={() => this.leave()}
+            cancel={() => this.setState({ leave: false, disabled: false })}
+          />
+        )}
+        {this.state.leave && (
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
       </View>
     )
   }

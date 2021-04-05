@@ -60,7 +60,9 @@ export default class Join extends React.Component {
               <AntDesign
                 name="closecircleo"
                 style={modalStyles.icon}
-                onPress={() => this.props.onPress()}
+                onPress={() => {
+                  this.setState({ invalid: false }, () => this.props.onPress())
+                }}
               />
             </View>
             <View style={modalStyles.modalContent}>
