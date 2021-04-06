@@ -9,6 +9,8 @@ import {
   hideKick,
   updateSession,
   setHost,
+  setDisable,
+  hideDisable
 } from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import {
@@ -45,21 +47,21 @@ class Home extends React.Component {
       join: false,
       inviteInfo: '',
       friends: '',
-      disabled: false,
       socketErr: false,
     }
     socket.getSocket().on('update', (res) => {
       socket.getSocket().off()
       this.props.updateSession(res)
       this.props.setHost(res.members[res.host].username === this.props.username)
-      this.setState({ disabled: false })
+      this.props.hideDisable()
       this.props.navigation.replace('Group')
     })
 
     socket.getSocket().on('exception', (msg) => {
       if (msg === 'create') socketErrMsg = 'Unable to create a group, please try again'
       else if (msg === 'join') socketErrMsg = 'Unable to join a group, please try again'
-      this.setState({ socketErr: true, disabled: false })
+      this.setState({ socketErr: true })
+      this.props.hideDisable()
     })
 
     // //uncomment if testing friends/requests
@@ -75,7 +77,7 @@ class Home extends React.Component {
   }
 
   createGroup() {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     socket.createRoom()
   }
 
@@ -93,7 +95,7 @@ class Home extends React.Component {
           <Text style={[screenStyles.text, styles.title]}>Let&apos;s Get Chews-ing</Text>
           <View>
             <TouchableHighlight
-              disabled={this.state.disabled}
+              disabled={this.props.disable}
               onShowUnderlay={() => this.setState({ createPressed: true })}
               onHideUnderlay={() => this.setState({ createPressed: false })}
               activeOpacity={1}
@@ -209,6 +211,7 @@ const mapStateToProps = (state) => {
     username: state.username.username,
     error: state.error,
     kick: state.kick,
+    disable: state.disable
   }
 }
 
@@ -221,6 +224,8 @@ const mapDispatchToProps = (dispatch) =>
       updateSession,
       hideKick,
       setHost,
+      setDisable,
+      hideDisable
     },
     dispatch,
   )

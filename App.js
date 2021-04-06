@@ -66,7 +66,7 @@ class App extends React.Component {
             start = 'Home'
             AppState.addEventListener('change', this._handleAppStateChange)
             socket.getSocket().on('reconnect', (session) => {
-              console.log('reconnect: ' + session)
+              // console.log('reconnect: ' + session)
               if (session) {
                 // check if member was kicked
                 if (!session.members[this.props.username]) {
