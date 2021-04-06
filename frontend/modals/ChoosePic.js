@@ -10,6 +10,8 @@ import {
   View,
 } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import { bindActionCreators } from 'redux'
+import { setDisable, hideDisable } from '../redux/Actions.js'
 import colors from '../../styles/colors.js'
 import { connect } from 'react-redux'
 import { assets as defImages } from '../assets/images/defImages.js'
@@ -32,7 +34,6 @@ class ChoosePic extends React.Component {
       usernameValue: this.props.username.username,
       validNameFormat: true,
       validUsernameFormat: true,
-      disabled: false,
       images: [],
       selected: '',
       refresh: false,
@@ -125,7 +126,7 @@ class ChoosePic extends React.Component {
             ]}
           />
           <TouchableHighlight
-            disabled={this.state.disabled}
+            disabled={this.props.disable}
             style={[screenStyles.medButton, styles.saveButton]}
             onPress={() => {
               this.props.makeChanges(this.state.selected)
@@ -145,10 +146,20 @@ const mapStateToProps = (state) => {
   const { name } = state
   const { username } = state
   const { image } = state
-  return { error, name, username, image }
+  const { disable } = state
+  return { error, name, username, image,disable }
 }
 
-export default connect(mapStateToProps)(ChoosePic)
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      setDisable,
+      hideDisable
+    },
+    dispatch,
+  )
+
+  export default connect(mapStateToProps, mapDispatchToProps)(ChoosePic)
 
 ChoosePic.propTypes = {
   dontSave: PropTypes.func,

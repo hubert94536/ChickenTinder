@@ -14,7 +14,7 @@ import { bindActionCreators } from 'redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
 import accountsApi from '../apis/accountsApi.js'
-import { changeImage, changeName, changeUsername, changeFriends } from '../redux/Actions.js'
+import { changeImage, changeName, changeUsername, changeFriends, setDisable, hideDisable } from '../redux/Actions.js'
 import colors from '../../styles/colors.js'
 import { foodImages } from '../assets/images/defImages.js'
 import global from '../../global.js'
@@ -39,22 +39,21 @@ class createAccount extends React.Component {
       validNameFormat: true,
       validUsername: true,
       validUsernameFormat: true,
-      disabled: false,
       edit: false,
     }
   }
 
   //  checks whether or not the username can be set
   handleClick = async () => {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     try {
       if (!this.state.validUsernameFormat || !this.state.validNameFormat) {
-        this.setState({ disabled: false })
+        this.props.hideDisable()
         return
       }
       await this.checkUsernameValidity()
       if (!this.state.validUsername) {
-        this.setState({ disabled: false })
+        this.props.hideDisable()
         return
       }
       await accountsApi.createUser(
@@ -84,7 +83,8 @@ class createAccount extends React.Component {
       socket.connect()
       this.props.navigation.replace('Home')
     } catch (err) {
-      this.setState({ errorAlert: true, disabled: false })
+      this.setState({ errorAlert: true })
+      this.props.hideDisable()
       return
     }
   }
@@ -264,7 +264,7 @@ class createAccount extends React.Component {
           underlayColor={'white'}
           onPress={this.handleClick}
           style={[screenStyles.longButton, styles.button]}
-          disabled={this.state.disabled}
+          disabled={this.props.disable}
         >
           <View style={[screenStyles.contentContainer]}>
             <Text
@@ -289,6 +289,12 @@ class createAccount extends React.Component {
   }
 }
 
+
+const mapStateToProps = (state) => {
+  const { disable } = state
+  return { disable }
+}
+
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
@@ -300,7 +306,7 @@ const mapDispatchToProps = (dispatch) =>
     dispatch,
   )
 
-export default connect(null, mapDispatchToProps)(createAccount)
+export default connect(mapStateToProps, mapDispatchToProps)(createAccount)
 
 createAccount.propTypes = {
   navigation: PropTypes.object,

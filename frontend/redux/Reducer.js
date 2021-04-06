@@ -13,6 +13,7 @@ const INITIAL_STATE = {
   isHost: false,
   match: {},
   top: [],
+  disable: false
 }
 
 export const errorReducer = (state = INITIAL_STATE.error, action) => {
@@ -162,6 +163,17 @@ export const setTopReducer = (state = INITIAL_STATE.top, action) => {
         ...state,
         top: action.payload,
       }
+    default:
+      return state
+  }
+}
+
+export const disableReducer = (state = INITIAL_STATE.disable, action) => {
+  switch (action.type) {
+    case 'SET_DISABLE':
+      return true
+    case 'HIDE_DISABLE':
+      return false
     default:
       return state
   }

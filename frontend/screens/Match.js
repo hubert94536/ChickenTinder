@@ -10,22 +10,20 @@ import mapStyle from '../../styles/mapStyle.json'
 import MatchCard from '../cards/MatchCard.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
-import { updateSession } from '../redux/Actions.js'
+import { updateSession, setDisable, hideDisable } from '../redux/Actions.js'
 import socket from '../apis/socket.js'
 
 // the card for the restaurant match
 class Match extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      disabled: false,
-    }
   }
 
   leave() {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     socket.getSocket().off()
     socket.leave('match')
+    this.props.hideDisable()
     this.props.navigation.replace('Home')
   }
 
@@ -76,7 +74,7 @@ class Match extends React.Component {
           </Text>
         </TouchableHighlight>
         <Text /* Link to exit round */
-          disabled={this.state.disabled}
+          disabled={this.props.disable}
           style={[screenStyles.bigButtonText, styles.exitRoundText]}
           onPress={() => this.leave()}
         >
@@ -90,6 +88,7 @@ class Match extends React.Component {
 const mapStateToProps = (state) => {
   return {
     match: state.match.match,
+    disable: state.disable
   }
 }
 
@@ -97,6 +96,8 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       updateSession,
+      setDisable,
+      hideDisable
     },
     dispatch,
   )

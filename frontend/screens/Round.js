@@ -15,7 +15,7 @@ import RoundCard from '../cards/RoundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import normalize from '../../styles/normalize.js'
-import { updateSession, setHost, setMatch, setTop } from '../redux/Actions.js'
+import { updateSession, setHost, setMatch, setTop, setDisable, hideDisable } from '../redux/Actions.js'
 
 class Round extends React.Component {
   constructor(props) {
@@ -24,7 +24,6 @@ class Round extends React.Component {
       instr: true,
       index: 1,
       leave: false,
-      disabled: false,
       count: 0,
     }
 
@@ -49,7 +48,7 @@ class Round extends React.Component {
   }
 
   leave() {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     socket.getSocket().off()
     socket.leave('round')
     this.props.navigation.replace('Home')
@@ -106,7 +105,7 @@ class Round extends React.Component {
           >
             <Text style={[screenStyles.text, styles.title, styles.topMargin]}>Get chews-ing!</Text>
             <TouchableHighlight
-              disabled={this.state.disabled}
+              disabled={this.props.disable}
               onPress={() => {
                 this.setState({ leave: true })
               }}
@@ -132,7 +131,7 @@ class Round extends React.Component {
               }}
               underlayColor="transparent"
               style={styles.background}
-              disabled={this.state.count > this.props.session.resInfo.length || this.state.disabled}
+              disabled={this.state.count > this.props.session.resInfo.length || this.props.disable}
             >
               <Feather name="x" style={[screenStyles.text, styles.x]} />
             </TouchableHighlight>
@@ -145,7 +144,7 @@ class Round extends React.Component {
               }}
               underlayColor="transparent"
               style={[styles.background]}
-              disabled={this.state.count > this.props.session.resInfo.length || this.state.disabled}
+              disabled={this.state.count > this.props.session.resInfo.length || this.props.disable}
             >
               <Icon name="heart" style={[screenStyles.text, styles.heart]} />
             </TouchableHighlight>
@@ -159,9 +158,12 @@ class Round extends React.Component {
             buttonNeg="Back"
             height="25%"
             twoButton
-            disabled={this.state.disabled}
+            disabled={this.props.disable}
             press={() => this.leave()}
-            cancel={() => this.setState({ leave: false, disabled: false })}
+            cancel={() => {
+              this.setState({ leave: false })
+              this.props.hideDisable()
+            }}
           />
         )}
         {this.state.leave && (
@@ -181,6 +183,7 @@ const mapStateToProps = (state) => {
   return {
     session: state.session.session,
     username: state.username.username,
+    disable: state.disable
   }
 }
 
@@ -191,6 +194,8 @@ const mapDispatchToProps = (dispatch) =>
       setHost,
       setMatch,
       setTop,
+      setDisable,
+      hideDisable
     },
     dispatch,
   )

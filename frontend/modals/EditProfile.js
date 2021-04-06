@@ -18,7 +18,7 @@ import screenStyles from '../../styles/screenStyles.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
 import ChoosePic from '../modals/ChoosePic.js'
-import { changeImage } from '../redux/Actions.js'
+import { changeImage, setDisable, hideDisable } from '../redux/Actions.js'
 
 const height = Dimensions.get('window').height
 
@@ -30,7 +30,6 @@ class EditProfile extends React.Component {
       usernameValue: this.props.username.username,
       validNameFormat: true,
       validUsernameFormat: true,
-      disabled: false,
       editPic: false,
       photo: this.props.image.image,
     }
@@ -56,7 +55,8 @@ class EditProfile extends React.Component {
 
   //remove whitespaces before and after name and username
   finalCheck() {
-    this.setState({ disabled: true, editPic: false })
+    this.props.setDisable()
+    this.setState({ editPic: false })
     if (this.state.photo != this.props.image.image) {
       this.props.changeImage(this.state.photo)
     }
@@ -75,7 +75,7 @@ class EditProfile extends React.Component {
 
     this.props.nameChange(trimmedName)
     this.props.userChange(trimmedUser)
-    this.setState({ disabled: false })
+    this.props.hideDisable()
   }
 
   validateName() {
@@ -192,7 +192,7 @@ class EditProfile extends React.Component {
             />
           )}
           <TouchableHighlight
-            disabled={this.state.disabled}
+            disabled={this.props.disable}
             style={[screenStyles.medButton, styles.saveButton]}
             onPress={() => {
               this.finalCheck()
@@ -212,13 +212,16 @@ const mapStateToProps = (state) => {
   const { name } = state
   const { username } = state
   const { image } = state
-  return { error, name, username, image }
+  const { disable } = state
+  return { error, name, username, image, disable }
 }
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       changeImage,
+      setDisable,
+      hideDisable
     },
     dispatch,
   )

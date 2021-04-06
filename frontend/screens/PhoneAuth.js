@@ -14,7 +14,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { BlurView } from '@react-native-community/blur'
 import Alert from '../modals/Alert.js'
-import { changeFriends, changeName, changeUsername, changeImage } from '../redux/Actions.js'
+import { changeFriends, changeName, changeUsername, changeImage, setDisable, hideDisable } from '../redux/Actions.js'
 import colors from '../../styles/colors.js'
 import loginService from '../apis/loginService.js'
 import modalStyles from '../../styles/modalStyles.js'
@@ -35,13 +35,12 @@ class PhoneAuthScreen extends Component {
       errorAlert: false,
       invalidNumberAlert: false,
       badCodeAlert: false,
-      disabled: false,
       login: false,
     }
   }
 
   handleSendCode = async () => {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     // Request to send OTP
     try {
       const confirm = await loginService.loginWithPhone(this.state.phone)
@@ -50,7 +49,7 @@ class PhoneAuthScreen extends Component {
       if (err.message == 'Invalid phone number') this.setState({ invalidNumberAlert: true })
       else this.setState({ errorAlert: true })
     }
-    this.setState({ disabled: false })
+    this.props.hideDisable()
   }
 
   changePhoneNumber = () => {
@@ -58,7 +57,7 @@ class PhoneAuthScreen extends Component {
   }
 
   handleVerifyCode = async () => {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     // Request for OTP verification
     const { confirmResult, verificationCode } = this.state
     if (verificationCode.length === 6) {
@@ -70,11 +69,13 @@ class PhoneAuthScreen extends Component {
           this.props.navigation.replace(result)
         })
       } catch (error) {
-        this.setState({ errorAlert: true, disabled: false })
+        this.setState({ errorAlert: true })
+        this.props.hideDisable()
         console.log(error)
       }
     } else {
-      this.setState({ badCodeAlert: true, disabled: false })
+      this.setState({ badCodeAlert: true })
+      this.props.hideDisable()
     }
   }
 
@@ -95,7 +96,7 @@ class PhoneAuthScreen extends Component {
           maxLength={6}
         />
         <TouchableOpacity
-          disabled={this.state.disabled}
+          disabled={this.props.disable}
           style={[screenStyles.longButton, styles.longButton]}
           onPress={() => this.handleVerifyCode()}
         >
@@ -107,7 +108,7 @@ class PhoneAuthScreen extends Component {
 
   // Navigate to login
   handleBack = async () => {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     this.props.navigation.navigate('Login')
   }
 
@@ -120,7 +121,7 @@ class PhoneAuthScreen extends Component {
         <SafeAreaView style={screenStyles.screenBackground}>
           <View style={styles.page}>
             <AntDesign
-              disabled={this.state.disabled}
+              disabled={this.props.disable}
               name="arrowleft"
               style={{
                 fontSize: 30,
@@ -210,7 +211,7 @@ class PhoneAuthScreen extends Component {
 
             {!this.state.confirmResult && (
               <TouchableOpacity
-                disabled={this.state.disabled}
+                disabled={this.props.disable}
                 style={[screenStyles.longButton, styles.longButton]}
                 onPress={() => this.handleSendCode()}
               >
@@ -260,6 +261,26 @@ class PhoneAuthScreen extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  const { disable } = state
+  return { disable }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      changeFriends,
+      changeName,
+      changeUsername,
+      changeImage,
+      setDisable,
+      hideDisable
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(PhoneAuthScreen)
 
 const styles = StyleSheet.create({
   background: {
@@ -329,19 +350,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
 })
-
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(
-    {
-      changeFriends,
-      changeName,
-      changeUsername,
-      changeImage,
-    },
-    dispatch,
-  )
-
-export default connect(null, mapDispatchToProps)(PhoneAuthScreen)
 
 PhoneAuthScreen.propTypes = {
   navigation: PropTypes.object,
