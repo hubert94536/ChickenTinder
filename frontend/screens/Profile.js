@@ -228,7 +228,7 @@ class UserProfileView extends Component {
         .catch(() => {
           this.props.showError()
         })
-      this.props.hideDisable()
+        this.props.hideDisable()
     }
   }
 

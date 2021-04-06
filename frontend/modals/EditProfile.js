@@ -221,7 +221,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       changeImage,
       setDisable,
-      hideDisable,
+      hideDisable
     },
     dispatch,
   )

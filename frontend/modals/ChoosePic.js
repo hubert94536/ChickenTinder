@@ -12,6 +12,7 @@ import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import PropTypes from 'prop-types'
 import screenStyles from '../../styles/screenStyles.js'
+import { ScrollView } from 'react-native-gesture-handler'
 
 const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
@@ -144,12 +145,12 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setDisable,
-      hideDisable,
+      hideDisable
     },
     dispatch,
   )
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChoosePic)
+  export default connect(mapStateToProps, mapDispatchToProps)(ChoosePic)
 
 ChoosePic.propTypes = {
   dontSave: PropTypes.func,

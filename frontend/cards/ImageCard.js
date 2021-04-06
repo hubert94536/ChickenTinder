@@ -1,8 +1,17 @@
 import React from 'react'
-import { Dimensions, Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { setDisable, hideDisable } from '../redux/Actions.js'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 
 const width = Dimensions.get('window').width
@@ -51,7 +60,7 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setDisable,
-      hideDisable,
+      hideDisable
     },
     dispatch,
   )
