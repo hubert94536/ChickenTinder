@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { setDisable, hideDisable } from '../redux/Actions.js'
+import { setDisable, hideDisable, showRefresh, hideRefresh } from '../redux/Actions.js'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -41,6 +41,7 @@ class Join extends React.Component {
     this.setState({ code: '' })
     socket.joinRoom(code)
     this.props.cancel()
+    this.props.showRefresh()
     this.props.hideDisable()
   }
 
@@ -138,14 +139,17 @@ class Join extends React.Component {
 
 const mapStateToProps = (state) => {
   const { disable } = state
-  return { disable }
+  const { refresh } = state
+  return { disable, refresh }
 }
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setDisable,
-      hideDisable
+      hideDisable,
+      showRefresh,
+      hideRefresh,
     },
     dispatch,
   )
@@ -219,4 +223,8 @@ Join.propTypes = {
   onPress: PropTypes.func,
   name: PropTypes.string,
   visible: PropTypes.bool,
+  showRefresh: PropTypes.func,
+  setDisable: PropTypes.func,
+  hideDisable: PropTypes.func,
+  disable: PropTypes.bool,
 }
