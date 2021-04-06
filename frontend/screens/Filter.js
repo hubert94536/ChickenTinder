@@ -274,11 +274,9 @@ class FilterSelector extends React.Component {
   submitUserFilters() {
     this.props.buttonDisable(true)
     const filters = {}
-
     const selections = []
     for (const [key, value] of Object.entries(s_categories)) if (value) selections.push(key)
     filters.categories = this.categorize(selections)
-
     console.log('userfilters: ' + JSON.stringify(filters.categories))
     Socket.submitFilters(filters.categories)
     this.props.handleUpdate()

@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { changeFriends, hideError, showError } from '../redux/Actions.js'
+import { changeFriends, hideError, showError, setDisable, hideDisable } from '../redux/Actions.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
@@ -18,16 +18,14 @@ class Card extends React.Component {
       deleteFriend: false,
       status: this.props.status,
       pressed: false,
-      disabled: false,
-      disabled2: false,
     }
   }
 
   deleteFriend() {
     this.props.unfriendAlert(false)
     this.setState({ deleteFriend: false })
-    if (!this.state.disabled) {
-      this.setState({ disabled: true })
+    if (!this.props.disable) {
+      this.props.setDisable()
       friendsApi
         .removeFriendship(this.props.uid)
         .then(() => {
@@ -37,17 +35,17 @@ class Card extends React.Component {
           this.props.changeFriends(filteredArray)
           this.props.press(filteredArray)
           if (this.props.changeAdd) this.setState({ status: 'add' })
-          this.setState({ disabled: false })
+          this.props.hideDisable()
         })
         .catch(() => {
           this.props.showError()
-          this.setState({ disabled: false })
+          this.props.hideDisable()
         })
     }
   }
 
   rejectFriend() {
-    this.setState({ disabled2: true })
+    this.props.setDisable()
     friendsApi
       .removeFriendship(this.props.uid)
       .then(() => {
@@ -56,16 +54,17 @@ class Card extends React.Component {
         })
         this.props.changeFriends(filteredArray)
         this.props.press(filteredArray)
-        this.setState({ status: 'add', disabled2: false })
+        this.setState({ status: 'add' })
+        this.props.hideDisable()
       })
       .catch(() => {
         this.props.showError()
-        this.setState({ disabled2: false })
+        this.props.hideDisable()
       })
   }
 
   acceptFriend() {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     friendsApi
       .acceptFriendRequest(this.props.uid)
       .then(() => {
@@ -75,16 +74,17 @@ class Card extends React.Component {
         })
         this.props.changeFriends(newArr)
         this.props.accept(newArr)
-        this.setState({ status: 'friends', disabled: false })
+        this.setState({ status: 'friends' })
+        this.props.hideDisable()
       })
       .catch(() => {
         this.props.showError()
-        this.setState({ disabled: false })
+        this.props.hideDisable()
       })
   }
 
   addFriend() {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     friendsApi
       .createFriendship(this.props.uid)
       .then(() => {
@@ -112,11 +112,12 @@ class Card extends React.Component {
         newArr.push(addPerson)
         this.props.changeFriends(newArr)
         this.props.accept(newArr)
-        this.setState({ status: 'requested', disabled: false })
+        this.setState({ status: 'requested' })
+        this.props.hideDisable()
       })
       .catch(() => {
         this.props.showError()
-        this.setState({ disabled: false })
+        this.props.hideDisable()
       })
   }
 
@@ -140,11 +141,11 @@ class Card extends React.Component {
         )}
         {/* if user is not in a group */}
         {this.state.status === 'not added' && (
-          <TouchableHighlight disabled={this.state.disabled}>
+          <TouchableHighlight disabled={this.props.disable}>
             <View style={imgStyles.card}>
               <Text style={[imgStyles.text, styles.topMargin]}>Add</Text>
               <AntDesign
-                disabled={this.props.disabled}
+                disabled={this.props.disable}
                 style={[imgStyles.icon, styles.addIcon]}
                 name="pluscircleo"
                 onPress={() => {
@@ -167,7 +168,7 @@ class Card extends React.Component {
           <TouchableHighlight
             underlayColor="white"
             onPress={() => this.addFriend()}
-            disabled={this.state.disabled}
+            disabled={this.props.disable}
           >
             <View style={imgStyles.card}>
               <Text style={[imgStyles.text, styles.black]}>Add Friend</Text>
@@ -196,13 +197,13 @@ class Card extends React.Component {
           <View style={imgStyles.card}>
             <Text style={[imgStyles.text, styles.black]}>Accept Request</Text>
             <Icon
-              disabled={this.state.disabled}
+              disabled={this.props.disable}
               style={[imgStyles.icon, styles.pend]}
               name="check-circle"
               onPress={() => this.acceptFriend()}
             />
             <AntDesign
-              disabled={this.state.disabled2}
+              disabled={this.props.disable}
               style={[imgStyles.icon, styles.pend, styles.black]}
               name="closecircleo"
               onPress={() => this.rejectFriend()}
@@ -244,7 +245,8 @@ class Card extends React.Component {
 const mapStateToProps = (state) => {
   const { error } = state
   const { friends } = state
-  return { error, friends }
+  const { disable } = state
+  return { error, friends, disable }
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -253,6 +255,8 @@ const mapDispatchToProps = (dispatch) =>
       showError,
       hideError,
       changeFriends,
+      setDisable,
+      hideDisable
     },
     dispatch,
   )
@@ -276,7 +280,6 @@ Card.propTypes = {
   changeFriends: PropTypes.func,
   accept: PropTypes.func,
   changeAdd: PropTypes.bool,
-  disabled: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

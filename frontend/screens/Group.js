@@ -19,6 +19,7 @@ import PropTypes from 'prop-types'
 import Drawer from './Drawer.js'
 import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
+import global from '../../global.js'
 import GroupCard from '../cards/GroupCard.js'
 import ChooseFriends from '../modals/ChooseFriends.js'
 import FilterSelector from './Filter.js'
@@ -26,12 +27,12 @@ import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
-import { showKick, updateSession, setHost } from '../redux/Actions.js'
+import { showKick, updateSession, setHost, setDisable, hideDisable } from '../redux/Actions.js'
 
 const font = 'CircularStd-Medium'
 var memberList = []
 var memberRenderList = []
-var socketErrMsg = 'Socket error message uninitialized'
+var socketErrMsg = 'Error, please try again'
 
 const windowWidth = Dimensions.get('window').width
 const windowHeight = Dimensions.get('window').height
@@ -55,7 +56,6 @@ class Group extends React.Component {
       socketErr: false,
 
       // Open
-      disabled: false,
       drawerOpen: false,
     }
     this.updateMemberList()
@@ -64,12 +64,12 @@ class Group extends React.Component {
     socket.getSocket().on('update', (res) => {
       console.log('socket "update": ' + JSON.stringify(res))
       // check if kicked from host
-      if (!res.members[this.props.username]) {
+      if (!res.members[global.uid]) {
         socket.getSocket().off()
-        this.props.showKick()
-        this.props.updateSession({})
         socket.kickLeave()
+        this.props.showKick()
         this.props.navigation.replace('Home')
+        this.props.updateSession({})
         return
       }
       if (res.host != this.props.session.host)
@@ -83,39 +83,24 @@ class Group extends React.Component {
     })
 
     socket.getSocket().once('start', (res) => {
-      if (res.resInfo.length > 0) {
-        socket.getSocket().off()
-        this.props.updateSession(res)
-        this.props.navigation.replace('Round')
-      } else {
-        console.log('group.js: no restaurants found')
-        this.setState({ disabled: false })
-        // need to handle no restaurants returned
-      }
+      socket.getSocket().off()
+      this.props.updateSession(res)
+      this.props.navigation.replace('Round')
     })
 
     socket.getSocket().on('reselect', () => {
       // alert for host to reselect filters
-      socketErrMsg = 'Please reselect your host filters'
+      socketErrMsg = 'No restaurants were found. Please broaden your filters.'
       this.setState({ socketErr: true })
+      this.props.hideDisable()
     })
 
     socket.getSocket().on('exception', (msg) => {
-      // handle button disables here
-      this.setState({ disabled: true })
-      if (msg === 'submit') {
-        // submit alert here
-        socketErrMsg = 'Unable to submit filters'
-        this.setState({ socketErr: true })
-      } else if (msg === 'start') {
-        // start alert here
-        socketErrMsg = 'Unable to start round'
-        this.setState({ socketErr: true })
-      } else if (msg === 'kick') {
-        // kick alert here
-        socketErrMsg = 'Unable to kick member'
-        this.setState({ socketErr: true })
-      }
+      if (msg === 'submit') socketErrMsg = 'Unable to submit filters, please try again.'
+      else if (msg === 'start') socketErrMsg = 'Unable to start round, please try again.'
+      else if (msg === 'kick') socketErrMsg = 'Unable to kick member, please try again.'
+      this.setState({ socketErr: true })
+      this.props.hideDisable()
     })
   }
 
@@ -136,7 +121,7 @@ class Group extends React.Component {
 
   // pings server to fetch restaurants, start session
   start() {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     this.filterRef.current.startSession(this.props.session)
   }
 
@@ -165,12 +150,10 @@ class Group extends React.Component {
   }
 
   leave() {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     socket.getSocket().off()
     socket.leave('group')
-    this.setState({ disabled: false })
     this.props.navigation.replace('Home')
-    this.props.updateSession({})
   }
 
   cancelAlert() {
@@ -202,8 +185,8 @@ class Group extends React.Component {
               {this.props.isHost
                 ? 'Your Group'
                 : `${this.firstName(
-                    this.props.session.members[this.props.session.host].name,
-                  )}'s Group`}
+                  this.props.session.members[this.props.session.host].name,
+                )}'s Group`}
             </Text>
             <View style={styles.subheader}>
               <Text style={styles.pinText}>Group PIN: </Text>
@@ -247,8 +230,8 @@ class Group extends React.Component {
                   {this.countNeedFilters(this.props.session.members) == 0
                     ? 'waiting for host to start'
                     : `waiting for ${this.countNeedFilters(
-                        this.props.session.members,
-                      )} member filters`}
+                      this.props.session.members,
+                    )} member filters`}
                 </Text>
               </View>
               <FlatList
@@ -368,7 +351,7 @@ class Group extends React.Component {
                     setBlur={(res) => this.setState({ blur: res })}
                     code={this.props.session.code}
                     style={{ elevation: 31 }}
-                    buttonDisable={(able) => this.setState({ disabled: able })}
+                    buttonDisable={(able) => able ? this.props.setDisable() : this.props.hideDisable() }
                     session={this.props.session}
                   />
                 </View>
@@ -405,10 +388,9 @@ class Group extends React.Component {
                 underlayColor={colors.hex}
                 activeOpacity={1}
                 onPress={() => {
-                  console.log(this.state.drawerOpen)
                   if (!this.state.drawerOpen) this.start()
                 }}
-                disabled={this.state.disabled || this.state.drawerOpen}
+                disabled={this.props.disable || this.state.drawerOpen}
                 style={[
                   screenStyles.bigButton,
                   styles.bigButton,
@@ -423,7 +405,7 @@ class Group extends React.Component {
             )}
             {!this.props.isHost && (
               <TouchableHighlight
-                disabled={this.state.disabled || this.state.drawerOpen}
+                disabled={this.props.disable || this.state.drawerOpen}
                 style={[
                   screenStyles.bigButton,
                   styles.bigButton,
@@ -443,7 +425,7 @@ class Group extends React.Component {
             )}
           </View>
           <TouchableHighlight
-            disabled={this.state.disabled || this.state.drawerOpen}
+            disabled={this.props.disable || this.state.drawerOpen}
             style={styles.leave}
             activeOpacity={1}
             onPress={() => {
@@ -482,6 +464,7 @@ const mapStateToProps = (state) => {
     isHost: state.isHost.isHost,
     session: state.session.session,
     username: state.username.username,
+    disable: state.disable
   }
 }
 
@@ -491,6 +474,8 @@ const mapDispatchToProps = (dispatch) =>
       showKick,
       updateSession,
       setHost,
+      setDisable,
+      hideDisable
     },
     dispatch,
   )
@@ -662,7 +647,6 @@ const styles = StyleSheet.create({
     left: 0,
   },
   footerContainer: {
-    color: 'white',
     fontFamily: font,
     height: windowHeight * 0.05,
     backgroundColor: 'white',
