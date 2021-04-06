@@ -13,6 +13,7 @@ import {
   setHostReducer,
   setMatchReducer,
   setTopReducer,
+  disableReducer
 } from './Reducer.js'
 
 const rootReducer = combineReducers({
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   isHost: setHostReducer,
   match: setMatchReducer,
   top: setTopReducer,
+  disable: disableReducer
 })
 
 const configureStore = () => {
