@@ -250,6 +250,7 @@ App.propTypes = {
   username: PropTypes.string,
   showRefresh: PropTypes.func,
   hideRefresh: PropTypes.func,
+  showKick: PropTypes.func,
 }
 
 /*

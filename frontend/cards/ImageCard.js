@@ -3,8 +3,6 @@ import {
   Dimensions,
   Image,
   StyleSheet,
-  Text,
-  TouchableHighlight,
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
@@ -60,7 +58,7 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setDisable,
-      hideDisable
+      hideDisable,
     },
     dispatch,
   )

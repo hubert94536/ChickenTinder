@@ -147,12 +147,12 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setDisable,
-      hideDisable
+      hideDisable,
     },
     dispatch,
   )
 
-  export default connect(mapStateToProps, mapDispatchToProps)(ChooseFriends)
+export default connect(mapStateToProps, mapDispatchToProps)(ChooseFriends)
 
 ChooseFriends.propTypes = {
   members: PropTypes.array,

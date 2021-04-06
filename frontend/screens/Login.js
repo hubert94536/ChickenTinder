@@ -164,7 +164,7 @@ const mapDispatchToProps = (dispatch) =>
       showError,
       hideError,
       setDisable,
-      hideDisable
+      hideDisable,
     },
     dispatch,
   )

@@ -282,7 +282,7 @@ const mapDispatchToProps = (dispatch) =>
       changeUsername,
       changeImage,
       setDisable,
-      hideDisable
+      hideDisable,
     },
     dispatch,
   )

@@ -190,7 +190,7 @@ const mapStateToProps = (state) => {
   return {
     session: state.session.session,
     username: state.username.username,
-    disable: state.disable
+    disable: state.disable,
   }
 }
 
@@ -202,7 +202,7 @@ const mapDispatchToProps = (dispatch) =>
       setMatch,
       setTop,
       setDisable,
-      hideDisable
+      hideDisable,
     },
     dispatch,
   )
