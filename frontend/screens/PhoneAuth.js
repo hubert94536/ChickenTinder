@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import {
   ImageBackground,
   SafeAreaView,
@@ -21,6 +21,12 @@ import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import UserInfo from './UserInfo.js'
+import {
+  CodeField,
+  Cursor,
+  useBlurOnFulfill,
+  useClearByFocusCell,
+} from 'react-native-confirmation-code-field';
 
 const font = 'CircularStd-Bold'
 
@@ -29,7 +35,7 @@ class PhoneAuthScreen extends Component {
     super(props)
     this.state = {
       phone: '',
-      confirmResult: null,
+      confirmResult: true,
       verificationCode: '',
       userId: '',
       errorAlert: false,
@@ -44,7 +50,7 @@ class PhoneAuthScreen extends Component {
     this.setState({ disabled: true })
     // Request to send OTP
     try {
-      const confirm = await loginService.loginWithPhone(this.state.phone)
+      const confirm = await loginService.loginWithPhone("+1" + this.state.phone)
       this.setState({ confirmResult: confirm })
     } catch (err) {
       if (err.message == 'Invalid phone number') this.setState({ invalidNumberAlert: true })
@@ -94,6 +100,23 @@ class PhoneAuthScreen extends Component {
           }}
           maxLength={6}
         />
+        {/* <CodeField
+          cellCount={6}
+          value={this.state.verificationCode}
+          onChangeText={(code) => {
+            this.setState({ verificationCode: code })
+          }}
+          renderCell={({index, symbol, isFocused}) => (
+            <Text
+              key={index}
+              style={[styles.cell, isFocused && styles.focusCell]}
+              onLayout={getCellOnLayoutHandler(index)}>
+              {symbol || (isFocused ? <Cursor /> : null)}
+            </Text>
+          )}
+          >
+
+        </CodeField> */}
         <TouchableOpacity
           disabled={this.state.disabled}
           style={[screenStyles.longButton, styles.longButton]}
@@ -201,7 +224,7 @@ class PhoneAuthScreen extends Component {
                 keyboardType="phone-pad"
                 value={this.state.phone}
                 onChangeText={(num) => {
-                  this.setState({ phone: "+1" + num })
+                  this.setState({ phone: num })
                 }}
                 maxLength={15}
                 editable={!this.state.confirmResult}
@@ -327,7 +350,7 @@ const styles = StyleSheet.create({
     marginTop: '20%', 
     marginBottom: '10%', 
     flexDirection: 'row', 
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
   }
 })
 
