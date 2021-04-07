@@ -13,7 +13,7 @@ const INITIAL_STATE = {
   isHost: false,
   match: {},
   top: [],
-  disable: false
+  disable: false,
 }
 
 export const errorReducer = (state = INITIAL_STATE.error, action) => {

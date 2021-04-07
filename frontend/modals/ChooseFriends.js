@@ -147,12 +147,12 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setDisable,
-      hideDisable
+      hideDisable,
     },
     dispatch,
   )
 
-  export default connect(mapStateToProps, mapDispatchToProps)(ChooseFriends)
+export default connect(mapStateToProps, mapDispatchToProps)(ChooseFriends)
 
 ChooseFriends.propTypes = {
   members: PropTypes.array,
@@ -160,6 +160,9 @@ ChooseFriends.propTypes = {
   visible: PropTypes.bool,
   friends: PropTypes.array,
   session: PropTypes.object,
+  setDisable: PropTypes.func,
+  hideDisable: PropTypes.func,
+  disable: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

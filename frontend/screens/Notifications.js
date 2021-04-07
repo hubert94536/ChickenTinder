@@ -13,7 +13,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from '@react-native-community/blur'
-import { newNotif, noNotif, changeFriends, showError } from '../redux/Actions.js'
+import { newNotif, noNotif, changeFriends, showError, hideRefresh } from '../redux/Actions.js'
 import Swiper from 'react-native-swiper'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
@@ -78,6 +78,7 @@ class Notif extends Component {
 
   componentDidMount() {
     this.getNotifs()
+    this.props.hideRefresh()
   }
 
   // id: notif.id,
@@ -343,6 +344,7 @@ const mapDispatchToProps = (dispatch) =>
       noNotif,
       changeFriends,
       showError,
+      hideRefresh,
     },
     dispatch,
   )
@@ -360,6 +362,7 @@ Notif.propTypes = {
   friends: PropTypes.object,
   changeFriends: PropTypes.func,
   showError: PropTypes.func,
+  hideRefresh: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

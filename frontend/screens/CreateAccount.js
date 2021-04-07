@@ -14,7 +14,14 @@ import { bindActionCreators } from 'redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
 import accountsApi from '../apis/accountsApi.js'
-import { changeImage, changeName, changeUsername, changeFriends, setDisable, hideDisable } from '../redux/Actions.js'
+import {
+  changeImage,
+  changeName,
+  changeUsername,
+  changeFriends,
+  setDisable,
+  hideDisable,
+} from '../redux/Actions.js'
 import colors from '../../styles/colors.js'
 import { foodImages } from '../assets/images/defImages.js'
 import global from '../../global.js'
@@ -289,7 +296,6 @@ class createAccount extends React.Component {
   }
 }
 
-
 const mapStateToProps = (state) => {
   const { disable } = state
   return { disable }
@@ -302,6 +308,8 @@ const mapDispatchToProps = (dispatch) =>
       changeUsername,
       changeImage,
       changeFriends,
+      setDisable,
+      hideDisable,
     },
     dispatch,
   )
@@ -314,6 +322,9 @@ createAccount.propTypes = {
   changeUsername: PropTypes.func,
   changeImage: PropTypes.func,
   changeFriends: PropTypes.func,
+  setDisable: PropTypes.func,
+  hideDisable: PropTypes.func,
+  disable: PropTypes.bool,
 }
 const styles = StyleSheet.create({
   display: {

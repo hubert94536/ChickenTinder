@@ -256,7 +256,7 @@ const mapDispatchToProps = (dispatch) =>
       hideError,
       changeFriends,
       setDisable,
-      hideDisable
+      hideDisable,
     },
     dispatch,
   )
@@ -280,6 +280,9 @@ Card.propTypes = {
   changeFriends: PropTypes.func,
   accept: PropTypes.func,
   changeAdd: PropTypes.bool,
+  setDisable: PropTypes.func,
+  hideDisable: PropTypes.func,
+  disable: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({
