@@ -16,11 +16,11 @@ export default class ButtonSwitch extends Component {
     onValueChange: () => null,
   }
 
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
-      selectedIndex: -1,
-      selectedIndexes: [],
+      selectedIndex: this.props.selectMultiple ? -1 : 0, // Default value only for single choices
+      selectedIndexes: [0],
     }
     this.updateIndex = this.updateIndex.bind(this)
   }
@@ -115,7 +115,8 @@ const styles = StyleSheet.create({
     width: 120,
   },
   containerWidth4: {
-    width: 180,
+    // width: 180,
+    width: 200,
   },
   innerBorder: {
     width: 0,
