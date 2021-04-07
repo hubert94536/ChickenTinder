@@ -8,6 +8,9 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { setDisable, hideDisable } from '../redux/Actions.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'
@@ -18,39 +21,56 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 
 const width = Dimensions.get('window').width
 
-export default class ImageCard extends React.Component {
+class ImageCard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       photo: this.props.image,
       confirmPressed: false,
       deletePressed: false,
-      disabled: false,
       selected: this.props.selected,
     }
   }
 
   handleClick() {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     this.setState({ selected: true })
     this.props.press(this.state.photo)
-    this.setState({ disabled: false })
-    
+    this.props.hideDisable()
   }
 
   render() {
     return (
-      <TouchableWithoutFeedback onPress={() => this.handleClick()} disabled={this.state.disabled}>
+      <TouchableWithoutFeedback onPress={() => this.handleClick()} disabled={this.props.disable}>
         <View style={styles.container}>
           <Image
             source={{ uri: Image.resolveAssetSource(this.props.image).uri }}
-            style={[styles.picture,  this.state.selected ? {borderColor: 'black'} : {borderColor: 'white'}]}
+            style={[
+              styles.picture,
+              this.state.selected ? { borderColor: 'black' } : { borderColor: 'white' },
+            ]}
           />
         </View>
       </TouchableWithoutFeedback>
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  const { disable } = state
+  return { disable }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      setDisable,
+      hideDisable
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(ImageCard)
 
 ImageCard.propTypes = {
   press: PropTypes.func,
@@ -67,7 +87,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: width * 0.135,
     width: width * 0.135,
-    borderWidth: 1
+    borderWidth: 1,
   },
-  
 })

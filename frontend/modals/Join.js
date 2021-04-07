@@ -8,6 +8,9 @@ import {
   View,
   TextInput,
 } from 'react-native'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { setDisable, hideDisable } from '../redux/Actions.js'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -20,7 +23,7 @@ import screenStyles from '../../styles/screenStyles.js'
 
 const width = Dimensions.get('screen').width
 
-export default class Join extends React.Component {
+class Join extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -28,17 +31,17 @@ export default class Join extends React.Component {
       code: '',
       isValid: false,
       invalid: false,
-      disabled: false,
     }
   }
 
   handleAccept() {
-    this.setState({ pressed: false, disabled: true })
+    this.props.setDisable()
+    this.setState({ pressed: false })
     const code = this.state.code
     this.setState({ code: '' })
     socket.joinRoom(code)
     this.props.cancel()
-    this.setState({ disabled: false })
+    this.props.hideDisable()
   }
 
   handleCancel() {
@@ -60,7 +63,9 @@ export default class Join extends React.Component {
               <AntDesign
                 name="closecircleo"
                 style={modalStyles.icon}
-                onPress={() => this.props.onPress()}
+                onPress={() => {
+                  this.setState({ invalid: false }, () => this.props.onPress())
+                }}
               />
             </View>
             <View style={modalStyles.modalContent}>
@@ -95,7 +100,7 @@ export default class Join extends React.Component {
               {this.state.isValid && (
                 <TouchableHighlight
                   underlayColor={screenStyles.hex.color}
-                  disabled={this.state.disabled}
+                  disabled={this.props.disable}
                   onHideUnderlay={() => this.setState({ pressed: false })}
                   onShowUnderlay={() => this.setState({ pressed: true })}
                   onPress={() => this.handleAccept()}
@@ -130,6 +135,21 @@ export default class Join extends React.Component {
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  const { disable } = state
+  return { disable }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      setDisable,
+      hideDisable
+    },
+    dispatch,
+  )
+export default connect(mapStateToProps, mapDispatchToProps)(Join)
 
 const styles = StyleSheet.create({
   modalContainer: {

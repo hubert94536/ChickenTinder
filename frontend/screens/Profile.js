@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
-import { changeImage, changeName, changeUsername, hideError, showError } from '../redux/Actions.js'
+import { changeImage, changeName, changeUsername, hideError, showError, setDisable, hideDisable } from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import { Image, ImageBackground, Keyboard, StyleSheet, Text, View } from 'react-native'
 import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
@@ -46,7 +46,6 @@ class UserProfileView extends Component {
       // friends text
       numFriends: 0,
       imageData: null,
-      disabled: false,
       // phone auth
       verificationId: null,
     }
@@ -109,8 +108,8 @@ class UserProfileView extends Component {
   // More TODOs in functions below
 
   async handleDelete() {
-    if (!this.state.disabled) {
-      this.setState({ disabled: true })
+    if (!this.props.disable) {
+      this.props.setDisable()
       // Check if phone provider - if so, validate phone num
       if (auth().currentUser.providerData[0].providerId === 'phone') {
         auth()
@@ -153,7 +152,7 @@ class UserProfileView extends Component {
             this.props.hideError()
           })
       }
-      this.setState({ disabled: false })
+      this.props.hideDisable()
     }
   }
 
@@ -203,8 +202,8 @@ class UserProfileView extends Component {
   }
 
   async handleLogout() {
-    if (!this.state.disabled) {
-      this.setState({ disabled: true })
+    if (!this.props.disable) {
+      this.props.setDisable()
       loginService
         .logout()
         .then(() => {
@@ -215,12 +214,13 @@ class UserProfileView extends Component {
         .catch(() => {
           this.props.showError()
         })
-      this.setState({ disabled: false })
+        this.props.hideDisable()
     }
   }
 
   cancelLogout() {
-    this.setState({ logoutAlert: false, disabled: false })
+    this.setState({ logoutAlert: false })
+    this.props.hideDisable()
   }
 
   makeChanges() {
@@ -372,12 +372,15 @@ class UserProfileView extends Component {
             title="Log out"
             body="Are you sure you want to log out?"
             buttonAff="Logout"
-            buttonNeg="Go back"
+            buttonNeg="Back"
             height="25%"
             twoButton
-            disabled={this.state.disabled}
+            disabled={this.props.disable}
             press={() => this.handleLogout()}
-            cancel={() => this.setState({ logoutAlert: false, visible: true, disabled: false })}
+            cancel={() => {
+              this.setState({ logoutAlert: false, visible: true })
+              this.props.hideDisable()
+            }}
           />
         )}
 
@@ -386,10 +389,10 @@ class UserProfileView extends Component {
             title="Delete account?"
             body="By deleting your account, you will lose all of your data"
             buttonAff="Delete"
-            buttonNeg="Go back"
+            buttonNeg="Back"
             twoButton
             height="25%"
-            dispatch={this.state.disabled}
+            dispatch={this.props.disable}
             press={() => this.handleDelete()}
             cancel={() => this.cancelDelete()}
           />
@@ -423,7 +426,8 @@ const mapStateToProps = (state) => {
   const { name } = state
   const { username } = state
   const { image } = state
-  return { error, name, username, image }
+  const { disable } = state
+  return { error, name, username, image, disable }
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -434,6 +438,8 @@ const mapDispatchToProps = (dispatch) =>
       changeName,
       changeUsername,
       changeImage,
+      setDisable,
+      hideDisable
     },
     dispatch,
   )

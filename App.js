@@ -10,7 +10,7 @@ import { bindActionCreators } from 'redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import auth from '@react-native-firebase/auth'
 import CreateAccount from './frontend/screens/CreateAccount.js'
-import { newNotif, setHost, updateSession, setMatch, setTop } from './frontend/redux/Actions.js'
+import { newNotif, setHost, updateSession, setMatch, setTop, showKick } from './frontend/redux/Actions.js'
 import global from './global.js'
 import Group from './frontend/screens/Group.js'
 import Home from './frontend/screens/Home.js'
@@ -66,11 +66,12 @@ class App extends React.Component {
             start = 'Home'
             AppState.addEventListener('change', this._handleAppStateChange)
             socket.getSocket().on('reconnect', (session) => {
-              console.log('reconnect: ' + session)
+              // console.log('reconnect: ' + session)
               if (session) {
                 // check if member was kicked
                 if (!session.members[this.props.username]) {
                   socket.kickLeave()
+                  this.props.showKick()
                   this.navigator &&
                     this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Home' }))
                 }
@@ -220,6 +221,7 @@ const mapDispatchToProps = (dispatch) =>
       updateSession,
       setMatch,
       setTop,
+      showKick
     },
     dispatch,
   )

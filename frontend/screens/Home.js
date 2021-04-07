@@ -9,6 +9,8 @@ import {
   hideKick,
   updateSession,
   setHost,
+  setDisable,
+  hideDisable
 } from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import {
@@ -23,7 +25,6 @@ import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
-import global from '../../global.js'
 import Join from '../modals/Join.js'
 import normalize from '../../styles/normalize.js'
 import TabBar from '../Nav.js'
@@ -34,6 +35,7 @@ import friendsApi from '../apis/friendsApi.js'
 const width = Dimensions.get('window').width
 const home = '../assets/backgrounds/Home.png'
 const homedark = '../assets/backgrounds/Home_Blur.png'
+var socketErrMsg = 'Socket error message uninitialized'
 
 class Home extends React.Component {
   constructor() {
@@ -45,24 +47,21 @@ class Home extends React.Component {
       join: false,
       inviteInfo: '',
       friends: '',
-      disabled: false,
+      socketErr: false,
     }
     socket.getSocket().on('update', (res) => {
       socket.getSocket().off()
-      this.setState({ invite: false })
       this.props.updateSession(res)
       this.props.setHost(res.members[res.host].username === this.props.username)
-      this.setState({ disabled: false })
+      this.props.hideDisable()
       this.props.navigation.replace('Group')
     })
 
     socket.getSocket().on('exception', (msg) => {
-      // handle button disables here
-      if (msg === 'create') {
-        // create alert here
-      } else if (msg === 'join') {
-        // join alert here
-      }
+      if (msg === 'create') socketErrMsg = 'Unable to create a group, please try again'
+      else if (msg === 'join') socketErrMsg = 'Unable to join a group, please try again'
+      this.setState({ socketErr: true })
+      this.props.hideDisable()
     })
 
     // //uncomment if testing friends/requests
@@ -78,7 +77,7 @@ class Home extends React.Component {
   }
 
   createGroup() {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     socket.createRoom()
   }
 
@@ -86,7 +85,9 @@ class Home extends React.Component {
     return (
       <ImageBackground
         source={
-          this.state.join || this.props.error || this.props.kick ? require(homedark) : require(home)
+          this.state.join || this.props.error || this.props.kick || this.state.socketErr
+            ? require(homedark)
+            : require(home)
         }
         style={screenStyles.screenBackground}
       >
@@ -94,7 +95,7 @@ class Home extends React.Component {
           <Text style={[screenStyles.text, styles.title]}>Let&apos;s Get Chews-ing</Text>
           <View>
             <TouchableHighlight
-              disabled={this.state.disabled}
+              disabled={this.props.disable}
               onShowUnderlay={() => this.setState({ createPressed: true })}
               onHideUnderlay={() => this.setState({ createPressed: false })}
               activeOpacity={1}
@@ -181,8 +182,18 @@ class Home extends React.Component {
               cancel={() => this.props.hideKick()}
             />
           )}
+          {this.state.socketErr && (
+            <Alert
+              title="Connection Error!"
+              body={socketErrMsg}
+              buttonAff="Close"
+              height="20%"
+              press={() => this.setState({ socketErr: false })}
+              cancel={() => this.setState({ socketErr: false })}
+            />
+          )}
         </View>
-        {(this.state.join || this.props.error || this.props.kick) && (
+        {(this.state.join || this.props.error || this.props.kick || this.state.socketErr) && (
           <BlurView
             blurType="dark"
             blurAmount={10}
@@ -200,6 +211,7 @@ const mapStateToProps = (state) => {
     username: state.username.username,
     error: state.error,
     kick: state.kick,
+    disable: state.disable
   }
 }
 
@@ -212,6 +224,8 @@ const mapDispatchToProps = (dispatch) =>
       updateSession,
       hideKick,
       setHost,
+      setDisable,
+      hideDisable
     },
     dispatch,
   )
