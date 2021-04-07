@@ -1,7 +1,16 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
-import { changeImage, changeName, changeUsername, hideError, showError, setDisable, hideDisable } from '../redux/Actions.js'
+import {
+  changeImage,
+  changeName,
+  changeUsername,
+  hideError,
+  showError,
+  setDisable,
+  hideDisable,
+  hideRefresh,
+} from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import { Image, ImageBackground, Keyboard, StyleSheet, Text, View } from 'react-native'
 import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
@@ -50,6 +59,11 @@ class UserProfileView extends Component {
       verificationId: null,
     }
   }
+
+  componentDidMount() {
+    this.props.hideRefresh()
+  }
+
   // getting current user's info
   async changeName() {
     if (this.state.nameValue !== this.props.name.name) {
@@ -214,7 +228,7 @@ class UserProfileView extends Component {
         .catch(() => {
           this.props.showError()
         })
-        this.props.hideDisable()
+      this.props.hideDisable()
     }
   }
 
@@ -439,7 +453,8 @@ const mapDispatchToProps = (dispatch) =>
       changeUsername,
       changeImage,
       setDisable,
-      hideDisable
+      hideDisable,
+      hideRefresh,
     },
     dispatch,
   )
@@ -457,6 +472,10 @@ UserProfileView.propTypes = {
   username: PropTypes.object,
   image: PropTypes.object,
   error: PropTypes.bool,
+  hideRefresh: PropTypes.func,
+  setDisable: PropTypes.func,
+  hideDisable: PropTypes.func,
+  disable: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

@@ -14,7 +14,14 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { BlurView } from '@react-native-community/blur'
 import Alert from '../modals/Alert.js'
-import { changeFriends, changeName, changeUsername, changeImage, setDisable, hideDisable } from '../redux/Actions.js'
+import {
+  changeFriends,
+  changeName,
+  changeUsername,
+  changeImage,
+  setDisable,
+  hideDisable,
+} from '../redux/Actions.js'
 import colors from '../../styles/colors.js'
 import loginService from '../apis/loginService.js'
 import modalStyles from '../../styles/modalStyles.js'
@@ -275,7 +282,7 @@ const mapDispatchToProps = (dispatch) =>
       changeUsername,
       changeImage,
       setDisable,
-      hideDisable
+      hideDisable,
     },
     dispatch,
   )
@@ -353,4 +360,7 @@ const styles = StyleSheet.create({
 
 PhoneAuthScreen.propTypes = {
   navigation: PropTypes.object,
+  setDisable: PropTypes.func,
+  hideDisable: PropTypes.func,
+  disable: PropTypes.bool,
 }

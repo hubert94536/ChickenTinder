@@ -73,7 +73,7 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setDisable,
-      hideDisable
+      hideDisable,
     },
     dispatch,
   )
@@ -88,6 +88,9 @@ GroupCard.propTypes = {
   isHost: PropTypes.bool,
   name: PropTypes.string,
   username: PropTypes.string,
+  setDisable: PropTypes.func,
+  hideDisable: PropTypes.func,
+  disable: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

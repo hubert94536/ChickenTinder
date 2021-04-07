@@ -1,14 +1,5 @@
 import React from 'react'
-import {
-  Dimensions,
-  Image,
-  Modal,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableHighlight,
-  View,
-} from 'react-native'
+import { Dimensions, Image, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { bindActionCreators } from 'redux'
 import { setDisable, hideDisable } from '../redux/Actions.js'
@@ -21,7 +12,6 @@ import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import PropTypes from 'prop-types'
 import screenStyles from '../../styles/screenStyles.js'
-import { ScrollView } from 'react-native-gesture-handler'
 
 const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
@@ -147,19 +137,19 @@ const mapStateToProps = (state) => {
   const { username } = state
   const { image } = state
   const { disable } = state
-  return { error, name, username, image,disable }
+  return { error, name, username, image, disable }
 }
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setDisable,
-      hideDisable
+      hideDisable,
     },
     dispatch,
   )
 
-  export default connect(mapStateToProps, mapDispatchToProps)(ChoosePic)
+export default connect(mapStateToProps, mapDispatchToProps)(ChoosePic)
 
 ChoosePic.propTypes = {
   dontSave: PropTypes.func,
@@ -167,6 +157,9 @@ ChoosePic.propTypes = {
   visible: PropTypes.bool,
   error: PropTypes.bool,
   image: PropTypes.object,
+  name: PropTypes.object,
+  username: PropTypes.object,
+  disable: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

@@ -88,7 +88,7 @@ class Match extends React.Component {
 const mapStateToProps = (state) => {
   return {
     match: state.match.match,
-    disable: state.disable
+    disable: state.disable,
   }
 }
 
@@ -97,7 +97,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       updateSession,
       setDisable,
-      hideDisable
+      hideDisable,
     },
     dispatch,
   )
@@ -111,6 +111,9 @@ Match.propTypes = {
   }),
   updateSession: PropTypes.func,
   match: PropTypes.object,
+  setDisable: PropTypes.func,
+  hideDisable: PropTypes.func,
+  disable: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

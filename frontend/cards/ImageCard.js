@@ -1,23 +1,9 @@
 import React from 'react'
-import {
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native'
+import { Dimensions, Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { setDisable, hideDisable } from '../redux/Actions.js'
-import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
-import colors from '../../styles/colors.js'
-import imgStyles from '../../styles/cardImage.js'
-import normalize from '../../styles/normalize.js'
-import socket from '../apis/socket.js'
-import AntDesign from 'react-native-vector-icons/AntDesign'
 
 const width = Dimensions.get('window').width
 
@@ -65,7 +51,7 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setDisable,
-      hideDisable
+      hideDisable,
     },
     dispatch,
   )
@@ -76,6 +62,9 @@ ImageCard.propTypes = {
   press: PropTypes.func,
   image: PropTypes.string,
   selected: PropTypes.bool,
+  setDisable: PropTypes.func,
+  hideDisable: PropTypes.func,
+  disable: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({
