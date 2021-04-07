@@ -20,7 +20,7 @@ export default class ButtonSwitch extends Component {
     super(props)
     this.state = {
       selectedIndex: this.props.selectMultiple ? -1 : 0, // Default value only for single choices
-      selectedIndexes: [0],
+      selectedIndexes: [],
     }
     this.updateIndex = this.updateIndex.bind(this)
   }
