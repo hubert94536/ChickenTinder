@@ -19,7 +19,7 @@ export default class Size extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedSize: '',
+      selectedSize: '10',
       invalidSize: false,
     }
   }

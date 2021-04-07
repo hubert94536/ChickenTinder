@@ -33,7 +33,7 @@ class NotifCard extends React.Component {
         this.setState({ isFriend: true })
       })
       .catch(() => this.props.showError())
-      this.props.hideDisable()
+    this.props.hideDisable()
   }
 
   // delete friend and modify view
@@ -49,7 +49,7 @@ class NotifCard extends React.Component {
         this.props.press(this.props.uid, filteredArray, true)
       })
       .catch(() => this.props.showError())
-      this.props.hideDisable()
+    this.props.hideDisable()
   }
 
   handleHold() {
@@ -150,7 +150,7 @@ const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setDisable,
-      hideDisable
+      hideDisable,
     },
     dispatch,
   )
@@ -169,6 +169,9 @@ NotifCard.propTypes = {
   image: PropTypes.string,
   showError: PropTypes.func,
   removeDelete: PropTypes.func,
+  setDisable: PropTypes.func,
+  hideDisable: PropTypes.func,
+  disable: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({
