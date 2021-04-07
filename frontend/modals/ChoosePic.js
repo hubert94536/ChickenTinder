@@ -57,6 +57,7 @@ class ChoosePic extends React.Component {
   }
 
    ItemView = ({item}) => {
+    //  console.log(item.props.image)
     return (
       // FlatList Item
       item
@@ -113,6 +114,7 @@ class ChoosePic extends React.Component {
             ItemSeparatorComponent={this.ItemSeparatorView}
             renderItem={this.ItemView}
             numColumns={4}
+            keyExtractor={item => item.props.image}
             extraData={this.state.selected}/>
           </View>
           <Image
