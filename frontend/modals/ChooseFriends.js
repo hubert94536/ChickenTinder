@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Dimensions, FlatList, Modal, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { bindActionCreators } from 'redux'
+import { setDisable, hideDisable } from '../redux/Actions.js'
 import { SearchBar } from 'react-native-elements'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -20,7 +22,6 @@ class ChooseFriends extends React.Component {
     this.state = {
       data: '',
       search: '',
-      disabled: false,
     }
   }
 
@@ -56,13 +57,14 @@ class ChooseFriends extends React.Component {
   }
 
   sendInvite(uid) {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     socket.sendInvite(uid)
     var newArr = this.state.data.filter((item) => {
       if (item.uid === uid) item.status = 'in group'
       return item
     })
-    this.setState({ data: newArr, disabled: true })
+    this.setState({ data: newArr })
+    this.props.hideDisable()
   }
 
   //  function for searching your friends
@@ -123,7 +125,7 @@ class ChooseFriends extends React.Component {
                   status={item.added}
                   key={item.uid}
                   press={() => this.sendInvite(item.uid)}
-                  disabled={this.state.disabled}
+                  disabled={this.props.disable}
                 />
               )}
               keyExtractor={(item) => item.username}
@@ -137,13 +139,20 @@ class ChooseFriends extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return {
-    session: state.session.session,
-    friends: state.friends.friends,
-  }
+  const { disable } = state
+  return { disable, session: state.session.session, friends: state.friends.friends }
 }
 
-export default connect(mapStateToProps)(ChooseFriends)
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      setDisable,
+      hideDisable,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChooseFriends)
 
 ChooseFriends.propTypes = {
   members: PropTypes.array,
@@ -151,6 +160,9 @@ ChooseFriends.propTypes = {
   visible: PropTypes.bool,
   friends: PropTypes.array,
   session: PropTypes.object,
+  setDisable: PropTypes.func,
+  hideDisable: PropTypes.func,
+  disable: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

@@ -10,14 +10,24 @@ import {
 } from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import { BlurView } from '@react-native-community/blur'
 import PropTypes from 'prop-types'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
+import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
 import normalize from '../../styles/normalize.js'
 import { ProgressBar } from 'react-native-paper'
+import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
-import { updateSession, setHost, setMatch, setTop } from '../redux/Actions.js'
+import {
+  updateSession,
+  setHost,
+  setMatch,
+  setTop,
+  setDisable,
+  hideDisable,
+} from '../redux/Actions.js'
 
 const height = Dimensions.get('window').height
 
@@ -26,7 +36,6 @@ class Loading extends React.Component {
     super(props)
     this.state = {
       leave: false,
-      disabled: false,
     }
     socket.getSocket().once('match', (data) => {
       socket.getSocket().off()
@@ -49,12 +58,11 @@ class Loading extends React.Component {
   }
 
   leave() {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     socket.getSocket().off()
     socket.leave('loading')
-    this.setState({ disabled: false })
+    this.props.hideDisable()
     this.props.navigation.replace('Home')
-    this.props.updateSession({})
   }
 
   render() {
@@ -65,8 +73,11 @@ class Loading extends React.Component {
       >
         <View style={[styles.top, { flexDirection: 'row', justifyContent: 'space-between' }]}>
           <TouchableHighlight
-            disabled={this.state.disabled}
-            onPress={() => this.leave()}
+            disabled={this.props.disable}
+            onPress={() => {
+              this.setState({ leave: true })
+              this.props.setDisable()
+            }}
             style={[styles.leaveIcon]}
             underlayColor="transparent"
           >
@@ -96,7 +107,7 @@ class Loading extends React.Component {
           </Text>
           {!this.props.isHost && (
             <TouchableHighlight
-              disabled={this.state.disabled}
+              disabled={this.props.disable}
               style={[styles.leaveButton, screenStyles.medButton]}
               underlayColor="transparent"
               onPress={() => this.leave()}
@@ -106,7 +117,7 @@ class Loading extends React.Component {
           )}
           {this.props.isHost && (
             <TouchableHighlight
-              disabled={this.state.disabled}
+              disabled={this.props.disable}
               style={[styles.leaveButton, screenStyles.medButton]}
               underlayColor="transparent"
               onPress={() => socket.toTop3()}
@@ -115,6 +126,30 @@ class Loading extends React.Component {
             </TouchableHighlight>
           )}
         </View>
+        {this.state.leave && (
+          <Alert
+            title="Leave Round"
+            body="Are you sure you want to leave?"
+            buttonAff="Leave"
+            buttonNeg="Back"
+            height="25%"
+            twoButton
+            disabled={this.props.disable}
+            press={() => this.leave()}
+            cancel={() => {
+              this.setState({ leave: false })
+              this.props.hideDisable()
+            }}
+          />
+        )}
+        {this.state.leave && (
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
       </ImageBackground>
     )
   }
@@ -125,6 +160,7 @@ const mapStateToProps = (state) => {
     session: state.session.session,
     isHost: state.isHost.isHost,
     username: state.username.username,
+    disable: state.disable,
   }
 }
 
@@ -135,6 +171,8 @@ const mapDispatchToProps = (dispatch) =>
       setHost,
       setMatch,
       setTop,
+      setDisable,
+      hideDisable,
     },
     dispatch,
   )
@@ -149,6 +187,9 @@ Loading.propTypes = {
   session: PropTypes.object,
   setMatch: PropTypes.func,
   setTop: PropTypes.func,
+  hideDisable: PropTypes.func,
+  setDisable: PropTypes.func,
+  disable: PropTypes.bool,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Loading)

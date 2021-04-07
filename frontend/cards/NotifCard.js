@@ -1,5 +1,8 @@
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { setDisable, hideDisable } from '../redux/Actions.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'
@@ -9,7 +12,7 @@ import normalize from '../../styles/normalize.js'
 import socket from '../apis/socket.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
-export default class NotifCard extends React.Component {
+class NotifCard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -18,25 +21,24 @@ export default class NotifCard extends React.Component {
       confirmPressed: false,
       deletePressed: false,
       trash: false,
-      disabled: false,
     }
   }
 
   // accept friend request and modify card
   async acceptFriend() {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     friendsApi
       .acceptFriendRequest(this.state.uid)
       .then(() => {
         this.setState({ isFriend: true })
       })
       .catch(() => this.props.showError())
-    this.setState({ disabled: false })
+    this.props.hideDisable()
   }
 
   // delete friend and modify view
   async deleteFriend() {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     friendsApi
       .removeFriendship(this.state.uid)
       .then(() => {
@@ -47,7 +49,7 @@ export default class NotifCard extends React.Component {
         this.props.press(this.props.uid, filteredArray, true)
       })
       .catch(() => this.props.showError())
-    this.setState({ disabled: true })
+    this.props.hideDisable()
   }
 
   handleHold() {
@@ -55,13 +57,13 @@ export default class NotifCard extends React.Component {
   }
 
   handleClick() {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     console.log('Pressed')
     if (this.props.type == 'invite') {
       console.log(this.props.content)
       socket.joinRoom(this.props.content)
     }
-    this.setState({ disabled: false })
+    this.props.hideDisable()
   }
 
   pressTrash() {
@@ -70,7 +72,7 @@ export default class NotifCard extends React.Component {
 
   render() {
     return (
-      <TouchableWithoutFeedback onPress={() => this.handleClick()} disabled={this.state.disabled}>
+      <TouchableWithoutFeedback onPress={() => this.handleClick()} disabled={this.props.disable}>
         <View style={styles.container}>
           <Image
             source={{ uri: Image.resolveAssetSource(this.props.image).uri }}
@@ -139,6 +141,22 @@ export default class NotifCard extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  const { disable } = state
+  return { disable }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      setDisable,
+      hideDisable,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(NotifCard)
+
 NotifCard.propTypes = {
   friends: PropTypes.bool,
   uid: PropTypes.string,
@@ -151,6 +169,9 @@ NotifCard.propTypes = {
   image: PropTypes.string,
   showError: PropTypes.func,
   removeDelete: PropTypes.func,
+  setDisable: PropTypes.func,
+  hideDisable: PropTypes.func,
+  disable: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

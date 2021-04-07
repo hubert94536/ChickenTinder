@@ -7,7 +7,7 @@ import Alert from '../modals/Alert.js'
 import { BlurView } from '@react-native-community/blur'
 import colors from '../../styles/colors.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { hideError, showError } from '../redux/Actions.js'
+import { hideError, showError, setDisable, hideDisable } from '../redux/Actions.js'
 import imgStyles from '../../styles/cardImage.js'
 import loginService from '../apis/loginService.js'
 import modalStyles from '../../styles/modalStyles.js'
@@ -21,19 +21,18 @@ class Login extends React.Component {
     this.state = {
       pressed: false,
       alert: false,
-      disabled: false,
       login: false,
     }
   }
 
   phoneLogin() {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     this.props.navigation.replace('Phone')
   }
 
   async facebookLogin() {
-    if (!this.state.disabled) {
-      this.setState({ disabled: true })
+    if (!this.props.disable) {
+      this.props.setDisable()
       loginService
         .loginWithFacebook()
         .then(async (result) => {
@@ -50,13 +49,14 @@ class Login extends React.Component {
         .catch((err) => {
           console.log(err)
           this.props.showError()
-          this.setState({ disabled: false })
+          this.props.hideDisable()
         })
     }
   }
 
   cancelClick() {
-    this.setState({ alert: false, disabled: false })
+    this.setState({ alert: false })
+    this.props.hideDisable()
   }
 
   login() {
@@ -96,7 +96,7 @@ class Login extends React.Component {
             activeOpacity={1}
             underlayColor="white"
             onPress={() => this.login()}
-            disabled={this.state.disabled}
+            disabled={this.props.disable}
             style={[screenStyles.longButton, styles.fbButton]}
           >
             <View style={[screenStyles.contentContainer]}>
@@ -131,7 +131,7 @@ class Login extends React.Component {
             body="You will be directed to the Facebook app for account verification"
             twoButton
             buttonAff="Open"
-            buttonNeg="Go Back"
+            buttonNeg="Back"
             height="25%"
             press={() => this.facebookLogin()}
             cancel={() => this.cancelClick()}
@@ -154,7 +154,8 @@ class Login extends React.Component {
 
 const mapStateToProps = (state) => {
   const { error } = state
-  return { error }
+  const { disable } = state
+  return { error, disable }
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -162,6 +163,8 @@ const mapDispatchToProps = (dispatch) =>
     {
       showError,
       hideError,
+      setDisable,
+      hideDisable,
     },
     dispatch,
   )
@@ -180,6 +183,9 @@ Login.propTypes = {
   changeUsername: PropTypes.func,
   changeImage: PropTypes.func,
   changeFriends: PropTypes.func,
+  setDisable: PropTypes.func,
+  hideDisable: PropTypes.func,
+  disable: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

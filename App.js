@@ -10,7 +10,16 @@ import { bindActionCreators } from 'redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import auth from '@react-native-firebase/auth'
 import CreateAccount from './frontend/screens/CreateAccount.js'
-import { newNotif, setHost, updateSession, setMatch, setTop } from './frontend/redux/Actions.js'
+import {
+  newNotif,
+  setHost,
+  updateSession,
+  setMatch,
+  setTop,
+  showKick,
+  showRefresh,
+  hideRefresh,
+} from './frontend/redux/Actions.js'
 import global from './global.js'
 import Group from './frontend/screens/Group.js'
 import Home from './frontend/screens/Home.js'
@@ -66,11 +75,12 @@ class App extends React.Component {
             start = 'Home'
             AppState.addEventListener('change', this._handleAppStateChange)
             socket.getSocket().on('reconnect', (session) => {
-              console.log('reconnect: ' + session)
               if (session) {
+                this.props.showRefresh()
                 // check if member was kicked
                 if (!session.members[this.props.username]) {
                   socket.kickLeave()
+                  this.props.showKick()
                   this.navigator &&
                     this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Home' }))
                 }
@@ -170,7 +180,7 @@ class App extends React.Component {
           },
         },
         {
-          initialRouteName: 'CreateAccount',
+          initialRouteName: start,
           headerMode: 'none',
           animationEnabled: 'false',
         },
@@ -178,6 +188,7 @@ class App extends React.Component {
       const AppContainer = createAppContainer(RootStack)
       this.setState({ appContainer: <AppContainer ref={(nav) => (this.navigator = nav)} /> })
     })
+    this.props.hideRefresh()
   }
 
   onNotification = (notification) => {
@@ -194,6 +205,7 @@ class App extends React.Component {
   // detect if app is coming out of background
   _handleAppStateChange = (nextAppState) => {
     if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+      this.props.showRefresh()
       if (socket.getSocket().connected) socket.reconnection()
       else socket.getSocket().connect()
     }
@@ -220,6 +232,9 @@ const mapDispatchToProps = (dispatch) =>
       updateSession,
       setMatch,
       setTop,
+      showKick,
+      showRefresh,
+      hideRefresh,
     },
     dispatch,
   )
@@ -233,6 +248,9 @@ App.propTypes = {
   setMatch: PropTypes.func,
   setTop: PropTypes.func,
   username: PropTypes.string,
+  showRefresh: PropTypes.func,
+  hideRefresh: PropTypes.func,
+  showKick: PropTypes.func,
 }
 
 /*

@@ -9,11 +9,17 @@ import {
   hideKick,
   updateSession,
   setHost,
+  setDisable,
+  hideDisable,
+  showRefresh,
+  hideRefresh,
 } from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import {
+  ActivityIndicator,
   Dimensions,
   ImageBackground,
+  Modal,
   StyleSheet,
   Text,
   TouchableHighlight,
@@ -23,7 +29,6 @@ import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
-import global from '../../global.js'
 import Join from '../modals/Join.js'
 import normalize from '../../styles/normalize.js'
 import TabBar from '../Nav.js'
@@ -31,9 +36,11 @@ import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 import accountsApi from '../apis/accountsApi.js'
 import friendsApi from '../apis/friendsApi.js'
+
 const width = Dimensions.get('window').width
 const home = '../assets/backgrounds/Home.png'
 const homedark = '../assets/backgrounds/Home_Blur.png'
+var socketErrMsg = 'Socket error message uninitialized'
 
 class Home extends React.Component {
   constructor() {
@@ -45,24 +52,22 @@ class Home extends React.Component {
       join: false,
       inviteInfo: '',
       friends: '',
-      disabled: false,
+      socketErr: false,
     }
     socket.getSocket().on('update', (res) => {
       socket.getSocket().off()
-      this.setState({ invite: false })
       this.props.updateSession(res)
       this.props.setHost(res.members[res.host].username === this.props.username)
-      this.setState({ disabled: false })
+      this.props.hideDisable()
+      this.props.hideRefresh()
       this.props.navigation.replace('Group')
     })
 
     socket.getSocket().on('exception', (msg) => {
-      // handle button disables here
-      if (msg === 'create') {
-        // create alert here
-      } else if (msg === 'join') {
-        // join alert here
-      }
+      if (msg === 'create') socketErrMsg = 'Unable to create a group, please try again'
+      else if (msg === 'join') socketErrMsg = 'Unable to join a group, please try again'
+      this.setState({ socketErr: true })
+      this.props.hideDisable()
     })
 
     // //uncomment if testing friends/requests
@@ -77,8 +82,13 @@ class Home extends React.Component {
     // friendsApi.createFriendshipTest(34, "bG0nwNsUpeSYW913nNaLdorlB8H2")
   }
 
+  componentDidMount() {
+    this.props.hideRefresh()
+  }
+
   createGroup() {
-    this.setState({ disabled: true })
+    this.props.setDisable()
+    this.props.showRefresh()
     socket.createRoom()
   }
 
@@ -86,7 +96,9 @@ class Home extends React.Component {
     return (
       <ImageBackground
         source={
-          this.state.join || this.props.error || this.props.kick ? require(homedark) : require(home)
+          this.state.join || this.props.error || this.props.kick || this.state.socketErr
+            ? require(homedark)
+            : require(home)
         }
         style={screenStyles.screenBackground}
       >
@@ -94,7 +106,7 @@ class Home extends React.Component {
           <Text style={[screenStyles.text, styles.title]}>Let&apos;s Get Chews-ing</Text>
           <View>
             <TouchableHighlight
-              disabled={this.state.disabled}
+              disabled={this.props.disable}
               onShowUnderlay={() => this.setState({ createPressed: true })}
               onHideUnderlay={() => this.setState({ createPressed: false })}
               activeOpacity={1}
@@ -108,7 +120,9 @@ class Home extends React.Component {
                 alignSelf: 'center',
                 margin: '3%',
               }}
-              onPress={() => this.createGroup()}
+              onPress={() => {
+                this.createGroup()
+              }}
             >
               <Text
                 style={[
@@ -181,8 +195,30 @@ class Home extends React.Component {
               cancel={() => this.props.hideKick()}
             />
           )}
+          {this.state.socketErr && (
+            <Alert
+              title="Connection Error!"
+              body={socketErrMsg}
+              buttonAff="Close"
+              height="20%"
+              press={() => this.setState({ socketErr: false })}
+              cancel={() => this.setState({ socketErr: false })}
+            />
+          )}
         </View>
-        {(this.state.join || this.props.error || this.props.kick) && (
+        <Modal transparent={true} animationType={'none'} visible={this.props.refresh}>
+          <ActivityIndicator
+            color="white"
+            size={50}
+            animating={this.props.refresh}
+            style={screenStyles.loading}
+          />
+        </Modal>
+        {(this.state.join ||
+          this.props.error ||
+          this.props.kick ||
+          this.state.socketErr ||
+          this.props.refresh) && (
           <BlurView
             blurType="dark"
             blurAmount={10}
@@ -200,6 +236,8 @@ const mapStateToProps = (state) => {
     username: state.username.username,
     error: state.error,
     kick: state.kick,
+    disable: state.disable,
+    refresh: state.refresh,
   }
 }
 
@@ -212,6 +250,10 @@ const mapDispatchToProps = (dispatch) =>
       updateSession,
       hideKick,
       setHost,
+      setDisable,
+      hideDisable,
+      showRefresh,
+      hideRefresh,
     },
     dispatch,
   )
@@ -229,6 +271,12 @@ Home.propTypes = {
   kick: PropTypes.bool,
   setHost: PropTypes.func,
   updateSession: PropTypes.func,
+  hideDisable: PropTypes.func,
+  setDisable: PropTypes.func,
+  showRefresh: PropTypes.func,
+  hideRefresh: PropTypes.func,
+  disable: PropTypes.bool,
+  refresh: PropTypes.bool,
 }
 const styles = StyleSheet.create({
   main: {
