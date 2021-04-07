@@ -8,13 +8,14 @@ import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Swiper from 'react-native-deck-swiper'
 import PropTypes from 'prop-types'
+import global from '../../global.js'
 import Alert from '../modals/Alert.js'
 import modalStyles from '../../styles/modalStyles.js'
 import RoundCard from '../cards/RoundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import normalize from '../../styles/normalize.js'
-import { updateSession, setHost, setMatch, setTop } from '../redux/Actions.js'
+import { updateSession, setHost, setMatch, setTop, setDisable, hideDisable } from '../redux/Actions.js'
 
 class Round extends React.Component {
   constructor(props) {
@@ -23,9 +24,9 @@ class Round extends React.Component {
       instr: true,
       index: 1,
       leave: false,
-      disabled: false,
       count: 0,
     }
+
     socket.getSocket().once('match', (data) => {
       socket.getSocket().off()
       this.props.setMatch(this.props.session.resInfo.find((x) => x.id === data))
@@ -47,12 +48,22 @@ class Round extends React.Component {
   }
 
   leave() {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     socket.getSocket().off()
     socket.leave('round')
-    this.setState({ disabled: false })
     this.props.navigation.replace('Home')
-    this.props.updateSession({})
+  }
+
+  componentDidMount() {
+    console.log(this.props.session)
+    if (this.props.session.members[global.uid] !== 'undefined') {
+      for (var i = 0; i < this.props.session.resInfo.length; i++) {
+        if (this.props.session.resInfo[i].id === this.props.session.members[global.uid].card) {
+          this.deck.jumpToCardIndex(i + 1)
+          this.setState({ index: i + 2, count: i + 1 })
+        }
+      }
+    }
   }
 
   render() {
@@ -94,7 +105,7 @@ class Round extends React.Component {
           >
             <Text style={[screenStyles.text, styles.title, styles.topMargin]}>Get chews-ing!</Text>
             <TouchableHighlight
-              disabled={this.state.disabled}
+              disabled={this.props.disable}
               onPress={() => {
                 this.setState({ leave: true })
               }}
@@ -120,7 +131,7 @@ class Round extends React.Component {
               }}
               underlayColor="transparent"
               style={styles.background}
-              disabled={this.state.count > this.props.session.resInfo.length || this.state.disabled}
+              disabled={this.state.count > this.props.session.resInfo.length || this.props.disable}
             >
               <Feather name="x" style={[screenStyles.text, styles.x]} />
             </TouchableHighlight>
@@ -133,7 +144,7 @@ class Round extends React.Component {
               }}
               underlayColor="transparent"
               style={[styles.background]}
-              disabled={this.state.count > this.props.session.resInfo.length || this.state.disabled}
+              disabled={this.state.count > this.props.session.resInfo.length || this.props.disable}
             >
               <Icon name="heart" style={[screenStyles.text, styles.heart]} />
             </TouchableHighlight>
@@ -147,9 +158,12 @@ class Round extends React.Component {
             buttonNeg="Back"
             height="25%"
             twoButton
-            disabled={this.state.disabled}
+            disabled={this.props.disable}
             press={() => this.leave()}
-            cancel={() => this.setState({ leave: false, disabled: false })}
+            cancel={() => {
+              this.setState({ leave: false })
+              this.props.hideDisable()
+            }}
           />
         )}
         {this.state.leave && (
@@ -169,6 +183,7 @@ const mapStateToProps = (state) => {
   return {
     session: state.session.session,
     username: state.username.username,
+    disable: state.disable
   }
 }
 
@@ -179,6 +194,8 @@ const mapDispatchToProps = (dispatch) =>
       setHost,
       setMatch,
       setTop,
+      setDisable,
+      hideDisable
     },
     dispatch,
   )

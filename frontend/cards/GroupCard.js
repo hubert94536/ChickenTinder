@@ -1,5 +1,8 @@
 import React from 'react'
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { setDisable, hideDisable } from '../redux/Actions.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
@@ -11,24 +14,18 @@ const width = Dimensions.get('window').width
 
 const bg = '#FCE5CD'
 
-export default class GroupCard extends React.Component {
+class GroupCard extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      uid: this.props.uid,
-      disabled: false,
-    }
   }
 
   removeUser(uid) {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     socket.kickUser(uid)
-    this.setState({ disabled: false })
+    this.props.hideDisable()
   }
 
   render() {
-    // console.log(this.props.uid)
-    // console.log(this.props.host)
     return (
       <View style={styles.card}>
         <View style={[styles.imageWrapper]}>
@@ -53,15 +50,12 @@ export default class GroupCard extends React.Component {
             right: 0,
           }}
         >
-          {/* {this.props.uid !== this.props.host && this.props.isHost ? (
-            <Text style={[imgStyles.hex, imgStyles.font, styles.remove]}>Remove</Text>
-          ) : null} */}
           {this.props.uid != this.props.host && this.props.isHost ? (
             <Icon
               name="times-circle"
               style={[imgStyles.icon, styles.removeIcon]}
               onPress={() => this.removeUser(this.props.uid)}
-              disabled={this.state.disabled}
+              disabled={this.props.disable}
             />
           ) : null}
         </View>
@@ -69,6 +63,22 @@ export default class GroupCard extends React.Component {
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  const { disable } = state
+  return { disable }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      setDisable,
+      hideDisable
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(GroupCard)
 
 GroupCard.propTypes = {
   uid: PropTypes.string,

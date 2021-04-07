@@ -109,6 +109,18 @@ const setTop = (top) => {
   }
 }
 
+const setDisable = () => {
+  return {
+    type: 'SET_DISABLE',
+  }
+}
+
+const hideDisable = () => {
+  return {
+    type: 'HIDE_DISABLE',
+  }
+}
+
 export {
   showError,
   hideError,
@@ -127,4 +139,6 @@ export {
   setHost,
   setMatch,
   setTop,
+  setDisable,
+  hideDisable
 }
