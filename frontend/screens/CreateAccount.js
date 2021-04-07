@@ -8,20 +8,21 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
-import { EMAIL, NAME, PHOTO, USERNAME, PHONE, REGISTRATION_TOKEN } from 'react-native-dotenv'
+import { EMAIL, NAME, PHOTO, USERNAME, PHONE, REGISTRATION_TOKEN, UID } from 'react-native-dotenv'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PropTypes from 'prop-types'
 import accountsApi from '../apis/accountsApi.js'
-import { changeImage, changeName, changeUsername, changeFriends } from '../redux/Actions.js'
+import { changeImage, changeName, changeUsername, changeFriends, setDisable, hideDisable } from '../redux/Actions.js'
 import colors from '../../styles/colors.js'
-import defImages from '../assets/images/defImages.js'
+import { foodImages } from '../assets/images/defImages.js'
 import global from '../../global.js'
 import notificationsApi from '../apis/notificationsApi.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
+import ChoosePic from '../modals/ChoosePic.js'
 
 class createAccount extends React.Component {
   constructor() {
@@ -32,34 +33,34 @@ class createAccount extends React.Component {
       errorAlert: false,
       name: '',
       username: '',
-      phone: global.phone,
-      email: global.email,
-      photo: defImages[Math.floor(Math.random() * defImages.length)].toString(),
+      photo: foodImages[
+        Object.keys(foodImages)[Math.floor(Math.random() * Object.keys(foodImages).length)]
+      ].img.toString(),
       validNameFormat: true,
       validUsername: true,
       validUsernameFormat: true,
-      disabled: false,
+      edit: false,
     }
   }
 
   //  checks whether or not the username can be set
   handleClick = async () => {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     try {
       if (!this.state.validUsernameFormat || !this.state.validNameFormat) {
-        this.setState({ disabled: false })
+        this.props.hideDisable()
         return
       }
       await this.checkUsernameValidity()
       if (!this.state.validUsername) {
-        this.setState({ disabled: false })
+        this.props.hideDisable()
         return
       }
       await accountsApi.createUser(
         this.state.name,
         this.state.username,
-        this.state.email,
-        this.state.phone,
+        global.email,
+        global.phone,
         this.state.photo,
       )
       let token = await AsyncStorage.getItem(REGISTRATION_TOKEN)
@@ -68,20 +69,22 @@ class createAccount extends React.Component {
       this.props.changeName(this.state.name)
       this.props.changeImage(this.state.photo)
       this.props.changeFriends([])
-      AsyncStorage.multiSet([
+      await AsyncStorage.multiSet([
         [USERNAME, this.state.username],
         [PHOTO, this.state.photo],
         [NAME, this.state.name],
+        [UID, global.uid],
       ])
-      if (this.state.phone) {
-        AsyncStorage.setItem(PHONE, this.state.phone)
+      if (global.phone) {
+        await AsyncStorage.setItem(PHONE, global.phone)
       } else {
-        AsyncStorage.setItem(EMAIL, this.state.email)
+        await AsyncStorage.setItem(EMAIL, global.email)
       }
       socket.connect()
       this.props.navigation.replace('Home')
     } catch (err) {
-      this.setState({ errorAlert: true, disabled: false })
+      this.setState({ errorAlert: true })
+      this.props.hideDisable()
       return
     }
   }
@@ -127,6 +130,20 @@ class createAccount extends React.Component {
     }
   }
 
+  editPic() {
+    this.setState({ edit: true })
+  }
+
+  dontSave() {
+    this.setState({ edit: false })
+  }
+
+  makeChanges(pic) {
+    this.props.changeImage(pic)
+    this.setState({ photo: pic })
+    this.setState({ edit: false })
+  }
+
   render() {
     return (
       <ImageBackground
@@ -144,9 +161,14 @@ class createAccount extends React.Component {
           source={{ uri: Image.resolveAssetSource(this.state.photo).uri }}
           style={styles.avatar}
         />
-        <TouchableHighlight style={styles.select} underlayColor="transparent">
+        <TouchableHighlight
+          style={styles.select}
+          underlayColor="transparent"
+          onPress={() => this.setState({ edit: true })}
+        >
           <Text style={[styles.selectText, screenStyles.textBold]}>Select a Profile Icon</Text>
         </TouchableHighlight>
+
         <Text style={[screenStyles.textBook, styles.fieldName, styles.display]}>Display Name</Text>
         <TextInput
           style={[
@@ -202,7 +224,7 @@ class createAccount extends React.Component {
             Invalid username format and username is taken
           </Text>
         )}
-        {this.state.phone !== '' && (
+        {global.phone != '' && global.phone && (
           <View>
             <Text style={[screenStyles.textBook, styles.fieldName]}>Phone Number</Text>
             <Text
@@ -214,11 +236,11 @@ class createAccount extends React.Component {
               ]}
               textAlign="left"
             >
-              {this.state.phone}
+              {global.phone}
             </Text>
           </View>
         )}
-        {this.state.email !== '' && (
+        {global.email != '' && global.email && (
           <View>
             <Text style={[screenStyles.textBook, styles.fieldName]}>Email</Text>
 
@@ -231,7 +253,7 @@ class createAccount extends React.Component {
               ]}
               textAlign="left"
             >
-              {this.state.email}
+              {global.email}
             </Text>
           </View>
         )}
@@ -242,7 +264,7 @@ class createAccount extends React.Component {
           underlayColor={'white'}
           onPress={this.handleClick}
           style={[screenStyles.longButton, styles.button]}
-          disabled={this.state.disabled}
+          disabled={this.props.disable}
         >
           <View style={[screenStyles.contentContainer]}>
             <Text
@@ -255,9 +277,22 @@ class createAccount extends React.Component {
             </Text>
           </View>
         </TouchableHighlight>
+
+        {this.state.edit && (
+          <ChoosePic
+            dontSave={() => this.dontSave()}
+            makeChanges={(pic) => this.makeChanges(pic)}
+          />
+        )}
       </ImageBackground>
     )
   }
+}
+
+
+const mapStateToProps = (state) => {
+  const { disable } = state
+  return { disable }
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -271,7 +306,7 @@ const mapDispatchToProps = (dispatch) =>
     dispatch,
   )
 
-export default connect(null, mapDispatchToProps)(createAccount)
+export default connect(mapStateToProps, mapDispatchToProps)(createAccount)
 
 createAccount.propTypes = {
   navigation: PropTypes.object,
@@ -311,7 +346,6 @@ const styles = StyleSheet.create({
   button: {
     borderColor: colors.hex,
     backgroundColor: colors.hex,
-    // width: '20%',
     marginTop: '7%',
   },
   mediumText: {

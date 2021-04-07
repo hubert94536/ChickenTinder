@@ -1,8 +1,8 @@
 import React from 'react'
-import { bindActionCreators } from 'redux'
-import { changeFriends, setCode } from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import { Dimensions, FlatList, Modal, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { bindActionCreators } from 'redux'
+import { setDisable, hideDisable } from '../redux/Actions.js'
 import { SearchBar } from 'react-native-elements'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -22,25 +22,24 @@ class ChooseFriends extends React.Component {
     this.state = {
       data: '',
       search: '',
-      disabled: false,
     }
   }
 
   //  gets your friends
   componentDidMount() {
     let pushFriends = []
-    for (var friend in this.props.friends.friends) {
-      if (this.props.friends.friends[friend].status === 'friends') {
+    for (var friend in this.props.friends) {
+      if (this.props.friends[friend].status === 'friends') {
         if (
           this.props.members.some(
-            (member) => member.username === this.props.friends.friends[friend].username,
+            (member) => member.username === this.props.friends[friend].username,
           )
         ) {
-          this.props.friends.friends[friend].added = 'in group'
-          pushFriends.push(this.props.friends.friends[friend])
+          this.props.friends[friend].added = 'in group'
+          pushFriends.push(this.props.friends[friend])
         } else {
-          this.props.friends.friends[friend].added = 'not added'
-          pushFriends.push(this.props.friends.friends[friend])
+          this.props.friends[friend].added = 'not added'
+          pushFriends.push(this.props.friends[friend])
         }
       }
     }
@@ -49,7 +48,7 @@ class ChooseFriends extends React.Component {
 
   // copies the room code
   copyToClipboard() {
-    Clipboard.setString(this.props.code.code.toString())
+    Clipboard.setString(this.props.session.code.toString())
   }
 
   //  closes the choose friends modal in filters
@@ -58,13 +57,14 @@ class ChooseFriends extends React.Component {
   }
 
   sendInvite(uid) {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     socket.sendInvite(uid)
     var newArr = this.state.data.filter((item) => {
       if (item.uid === uid) item.status = 'in group'
       return item
     })
-    this.setState({ data: newArr, disabled: true })
+    this.setState({ data: newArr })
+    this.props.hideDisable()
   }
 
   //  function for searching your friends
@@ -96,7 +96,7 @@ class ChooseFriends extends React.Component {
                 Group PIN:
               </Text>
               <Text style={[screenStyles.textBold, styles.subHeaderText]}>
-                {this.props.code.code}
+                {this.props.session.code}
               </Text>
               <TouchableOpacity onPress={() => this.copyToClipboard()}>
                 <Ionicons name="copy-outline" style={styles.icon2} />
@@ -125,7 +125,7 @@ class ChooseFriends extends React.Component {
                   status={item.added}
                   key={item.uid}
                   press={() => this.sendInvite(item.uid)}
-                  disabled={this.state.disabled}
+                  disabled={this.props.disable}
                 />
               )}
               keyExtractor={(item) => item.username}
@@ -139,32 +139,27 @@ class ChooseFriends extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const { friends } = state
-  const { code } = state
-  return { friends, code }
+  const { disable } = state
+  return { disable, session: state.session.session, friends: state.friends.friends }
 }
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      changeFriends,
-      setCode,
+      setDisable,
+      hideDisable
     },
     dispatch,
   )
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChooseFriends)
+  export default connect(mapStateToProps, mapDispatchToProps)(ChooseFriends)
 
 ChooseFriends.propTypes = {
   members: PropTypes.array,
   press: PropTypes.func,
   visible: PropTypes.bool,
-  username: PropTypes.object,
-  friends: PropTypes.object,
-  showError: PropTypes.func,
-  hideError: PropTypes.func,
-  changeFriends: PropTypes.func,
-  code: PropTypes.object,
+  friends: PropTypes.array,
+  session: PropTypes.object,
 }
 
 const styles = StyleSheet.create({

@@ -81,15 +81,43 @@ const hideKick = () => {
   }
 }
 
-const showEnd = () => {
+const updateSession = (session) => {
   return {
-    type: 'SHOW_END',
+    type: 'UPDATE_SESSION',
+    payload: session,
   }
 }
 
-const hideEnd = () => {
+const setHost = (isHost) => {
   return {
-    type: 'HIDE_END',
+    type: 'SET_HOST',
+    payload: isHost,
+  }
+}
+
+const setMatch = (match) => {
+  return {
+    type: 'SET_MATCH',
+    payload: match,
+  }
+}
+
+const setTop = (top) => {
+  return {
+    type: 'SET_TOP',
+    payload: top,
+  }
+}
+
+const setDisable = () => {
+  return {
+    type: 'SET_DISABLE',
+  }
+}
+
+const hideDisable = () => {
+  return {
+    type: 'HIDE_DISABLE',
   }
 }
 
@@ -107,6 +135,10 @@ export {
   setCode,
   showKick,
   hideKick,
-  showEnd,
-  hideEnd,
+  updateSession,
+  setHost,
+  setMatch,
+  setTop,
+  setDisable,
+  hideDisable
 }

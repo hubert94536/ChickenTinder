@@ -7,8 +7,10 @@ import {
   hideError,
   showError,
   hideKick,
-  setCode,
-  hideEnd,
+  updateSession,
+  setHost,
+  setDisable,
+  hideDisable
 } from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import {
@@ -23,16 +25,17 @@ import PropTypes from 'prop-types'
 import socket from '../apis/socket.js'
 import Alert from '../modals/Alert.js'
 import colors from '../../styles/colors.js'
-import global from '../../global.js'
 import Join from '../modals/Join.js'
 import normalize from '../../styles/normalize.js'
 import TabBar from '../Nav.js'
 import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
-
+import accountsApi from '../apis/accountsApi.js'
+import friendsApi from '../apis/friendsApi.js'
 const width = Dimensions.get('window').width
 const home = '../assets/backgrounds/Home.png'
 const homedark = '../assets/backgrounds/Home_Blur.png'
+var socketErrMsg = 'Socket error message uninitialized'
 
 class Home extends React.Component {
   constructor() {
@@ -44,42 +47,37 @@ class Home extends React.Component {
       join: false,
       inviteInfo: '',
       friends: '',
-      disabled: false,
+      socketErr: false,
     }
-
-    socket.getSocket().once('update', (res) => {
-      this.setState({ invite: false })
-      global.host = res.members[res.host].username
-      this.props.setCode(res.code)
-      global.isHost = res.members[res.host].username === this.props.username.username
-      this.setState({ disabled: false })
-      this.props.navigation.replace('Group', {
-        response: res,
-      })
+    socket.getSocket().on('update', (res) => {
+      socket.getSocket().off()
+      this.props.updateSession(res)
+      this.props.setHost(res.members[res.host].username === this.props.username)
+      this.props.hideDisable()
+      this.props.navigation.replace('Group')
     })
 
     socket.getSocket().on('exception', (msg) => {
-      // handle button disables here
-      if (msg === 'create') {
-        // create alert here
-      } else if (msg === 'join') {
-        // join alert here
-      }
+      if (msg === 'create') socketErrMsg = 'Unable to create a group, please try again'
+      else if (msg === 'join') socketErrMsg = 'Unable to join a group, please try again'
+      this.setState({ socketErr: true })
+      this.props.hideDisable()
     })
+
     // //uncomment if testing friends/requests
     // accountsApi.createFBUserTest('Hubes2', 32, 'hbc', 'hhcc@gmail.com', '50', '35434354')
     // accountsApi.createFBUserTest('Hanna2', 33, 'hannaaa', 'hannco@gmail.com', '51', '17891234')
     // accountsApi.createFBUserTest('Anna2', 34, 'annaxand', 'annaxand@yahoo.com', '52', '17891235')
     // accountsApi.createFBUserTest('Helen2', 35, 'helennn', 'helennn@gmail.com', '53', '45678903')
     // accountsApi.createFBUserTest('Kevin2', 36, 'kev', 'kevi@gmail.com', '54', '45678904')
-    // // // friendsApi.createFriendshipTest(requester, accepter)
-    // friendsApi.createFriendshipTest(32, "7eqhoZrbfVOKJwJ1UeBjQg6BZdE2")
-    // friendsApi.createFriendshipTest(33, "7eqhoZrbfVOKJwJ1UeBjQg6BZdE2")
-    // friendsApi.createFriendshipTest(34, "7eqhoZrbfVOKJwJ1UeBjQg6BZdE2")
+    // // friendsApi.createFriendshipTest(requester, accepter)
+    // friendsApi.createFriendshipTest(32, "bG0nwNsUpeSYW913nNaLdorlB8H2")
+    // friendsApi.createFriendshipTest(33, "bG0nwNsUpeSYW913nNaLdorlB8H2")
+    // friendsApi.createFriendshipTest(34, "bG0nwNsUpeSYW913nNaLdorlB8H2")
   }
 
   createGroup() {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     socket.createRoom()
   }
 
@@ -87,7 +85,7 @@ class Home extends React.Component {
     return (
       <ImageBackground
         source={
-          this.state.join || this.props.error || this.props.kick || this.props.end
+          this.state.join || this.props.error || this.props.kick || this.state.socketErr
             ? require(homedark)
             : require(home)
         }
@@ -97,7 +95,7 @@ class Home extends React.Component {
           <Text style={[screenStyles.text, styles.title]}>Let&apos;s Get Chews-ing</Text>
           <View>
             <TouchableHighlight
-              disabled={this.state.disabled}
+              disabled={this.props.disable}
               onShowUnderlay={() => this.setState({ createPressed: true })}
               onHideUnderlay={() => this.setState({ createPressed: false })}
               activeOpacity={1}
@@ -184,18 +182,18 @@ class Home extends React.Component {
               cancel={() => this.props.hideKick()}
             />
           )}
-          {this.props.end && (
+          {this.state.socketErr && (
             <Alert
-              title="Oh no!"
-              body="The host has ended the group session"
+              title="Connection Error!"
+              body={socketErrMsg}
               buttonAff="Close"
               height="20%"
-              press={() => this.props.hideEnd()}
-              cancel={() => this.props.hideEnd()}
+              press={() => this.setState({ socketErr: false })}
+              cancel={() => this.setState({ socketErr: false })}
             />
           )}
         </View>
-        {(this.state.join || this.props.error || this.props.end || this.props.kick) && (
+        {(this.state.join || this.props.error || this.props.kick || this.state.socketErr) && (
           <BlurView
             blurType="dark"
             blurAmount={10}
@@ -209,13 +207,12 @@ class Home extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const { friends } = state
-  const { error } = state
-  const { username } = state
-  const { code } = state
-  const { kick } = state
-  const { end } = state
-  return { friends, error, username, code, kick, end }
+  return {
+    username: state.username.username,
+    error: state.error,
+    kick: state.kick,
+    disable: state.disable
+  }
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -224,9 +221,11 @@ const mapDispatchToProps = (dispatch) =>
       changeFriends,
       showError,
       hideError,
-      setCode,
+      updateSession,
       hideKick,
-      hideEnd,
+      setHost,
+      setDisable,
+      hideDisable
     },
     dispatch,
   )
@@ -236,16 +235,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(Home)
 Home.propTypes = {
   navigation: PropTypes.object,
   error: PropTypes.bool,
-  friends: PropTypes.object,
-  username: PropTypes.object,
+  username: PropTypes.string,
   showError: PropTypes.func,
   hideError: PropTypes.func,
   changeFriends: PropTypes.func,
-  setCode: PropTypes.func,
   hideKick: PropTypes.func,
-  hideEnd: PropTypes.func,
   kick: PropTypes.bool,
-  end: PropTypes.bool,
+  setHost: PropTypes.func,
+  updateSession: PropTypes.func,
 }
 const styles = StyleSheet.create({
   main: {

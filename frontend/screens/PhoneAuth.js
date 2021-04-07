@@ -14,7 +14,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { BlurView } from '@react-native-community/blur'
 import Alert from '../modals/Alert.js'
-import { changeFriends, changeName, changeUsername, changeImage } from '../redux/Actions.js'
+import { changeFriends, changeName, changeUsername, changeImage, setDisable, hideDisable } from '../redux/Actions.js'
 import colors from '../../styles/colors.js'
 import loginService from '../apis/loginService.js'
 import modalStyles from '../../styles/modalStyles.js'
@@ -23,7 +23,6 @@ import screenStyles from '../../styles/screenStyles.js'
 import UserInfo from './UserInfo.js'
 
 const font = 'CircularStd-Bold'
-const fontMed = 'CirularStd-Medium'
 
 class PhoneAuthScreen extends Component {
   constructor(props) {
@@ -36,13 +35,12 @@ class PhoneAuthScreen extends Component {
       errorAlert: false,
       invalidNumberAlert: false,
       badCodeAlert: false,
-      disabled: false,
       login: false,
     }
   }
 
   handleSendCode = async () => {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     // Request to send OTP
     try {
       const confirm = await loginService.loginWithPhone(this.state.phone)
@@ -51,7 +49,7 @@ class PhoneAuthScreen extends Component {
       if (err.message == 'Invalid phone number') this.setState({ invalidNumberAlert: true })
       else this.setState({ errorAlert: true })
     }
-    this.setState({ disabled: false })
+    this.props.hideDisable()
   }
 
   changePhoneNumber = () => {
@@ -59,7 +57,7 @@ class PhoneAuthScreen extends Component {
   }
 
   handleVerifyCode = async () => {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     // Request for OTP verification
     const { confirmResult, verificationCode } = this.state
     if (verificationCode.length === 6) {
@@ -71,11 +69,13 @@ class PhoneAuthScreen extends Component {
           this.props.navigation.replace(result)
         })
       } catch (error) {
-        this.setState({ errorAlert: true, disabled: false })
+        this.setState({ errorAlert: true })
+        this.props.hideDisable()
         console.log(error)
       }
     } else {
-      this.setState({ badCodeAlert: true, disabled: false })
+      this.setState({ badCodeAlert: true })
+      this.props.hideDisable()
     }
   }
 
@@ -96,7 +96,7 @@ class PhoneAuthScreen extends Component {
           maxLength={6}
         />
         <TouchableOpacity
-          disabled={this.state.disabled}
+          disabled={this.props.disable}
           style={[screenStyles.longButton, styles.longButton]}
           onPress={() => this.handleVerifyCode()}
         >
@@ -108,7 +108,7 @@ class PhoneAuthScreen extends Component {
 
   // Navigate to login
   handleBack = async () => {
-    this.setState({ disabled: true })
+    this.props.setDisable()
     this.props.navigation.navigate('Login')
   }
 
@@ -121,7 +121,7 @@ class PhoneAuthScreen extends Component {
         <SafeAreaView style={screenStyles.screenBackground}>
           <View style={styles.page}>
             <AntDesign
-              disabled={this.state.disabled}
+              disabled={this.props.disable}
               name="arrowleft"
               style={{
                 fontSize: 30,
@@ -151,7 +151,7 @@ class PhoneAuthScreen extends Component {
                   style={{
                     textAlign: 'left',
                     flexDirection: 'row',
-                    fontFamily: fontMed,
+                    fontFamily: screenStyles.medium.fontFamily,
                     fontSize: normalize(18),
                     color: 'white',
                     marginTop: '5%',
@@ -179,7 +179,7 @@ class PhoneAuthScreen extends Component {
                   style={{
                     textAlign: 'left',
                     flexDirection: 'row',
-                    fontFamily: fontMed,
+                    fontFamily: screenStyles.medium.fontFamily,
                     fontSize: normalize(18),
                     color: 'white',
                     marginTop: '5%',
@@ -192,23 +192,26 @@ class PhoneAuthScreen extends Component {
             )}
 
             {!this.state.confirmResult && (
-              <TextInput
-                style={[styles.textInput, { marginTop: '20%', marginBottom: '10%' }]}
-                placeholder="Phone Number (+1 xxx xxx xxxx)"
-                placeholderTextColor="#6A6A6A"
-                keyboardType="phone-pad"
-                value={this.state.phone}
-                onChangeText={(num) => {
-                  this.setState({ phone: num })
-                }}
-                maxLength={15}
-                editable={!this.state.confirmResult}
-              />
+              <View style={[styles.numberContainer]}>
+                <Text style={[styles.fixedText]}>+1</Text>
+                <TextInput
+                  style={[styles.textInput]}
+                  placeholder="Phone Number"
+                  placeholderTextColor="#6A6A6A"
+                  keyboardType="phone-pad"
+                  value={this.state.phone}
+                  onChangeText={(num) => {
+                    this.setState({ phone: '+1' + num })
+                  }}
+                  maxLength={15}
+                  editable={!this.state.confirmResult}
+                />
+              </View>
             )}
 
             {!this.state.confirmResult && (
               <TouchableOpacity
-                disabled={this.state.disabled}
+                disabled={this.props.disable}
                 style={[screenStyles.longButton, styles.longButton]}
                 onPress={() => this.handleSendCode()}
               >
@@ -259,6 +262,26 @@ class PhoneAuthScreen extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  const { disable } = state
+  return { disable }
+}
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      changeFriends,
+      changeName,
+      changeUsername,
+      changeImage,
+      setDisable,
+      hideDisable
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(PhoneAuthScreen)
+
 const styles = StyleSheet.create({
   background: {
     flex: 1,
@@ -275,14 +298,24 @@ const styles = StyleSheet.create({
   textInput: {
     fontFamily: screenStyles.book.fontFamily,
     marginTop: 20,
-    width: '80%',
     borderColor: '#A5A5A5',
-    borderWidth: 0,
+    borderBottomWidth: 1.5,
+    paddingHorizontal: 10,
+    color: colors.darkGray,
+    fontSize: 20,
+  },
+  fixedText: {
+    fontFamily: screenStyles.book.fontFamily,
+    marginTop: 20,
+    width: '7%',
+    borderColor: '#A5A5A5',
     borderBottomWidth: 1.5,
     paddingLeft: 10,
     color: colors.darkGray,
     fontSize: 20,
+    height: '54%',
   },
+
   themeButton: {
     width: '90%',
     height: 50,
@@ -302,7 +335,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   themeButtonTitle: {
-    fontFamily: fontMed,
+    fontFamily: screenStyles.medium.fontFamily,
     fontSize: 24,
     color: '#FFFFFF',
   },
@@ -310,20 +343,13 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
+  numberContainer: {
+    marginTop: '20%',
+    marginBottom: '10%',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+  },
 })
-
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(
-    {
-      changeFriends,
-      changeName,
-      changeUsername,
-      changeImage,
-    },
-    dispatch,
-  )
-
-export default connect(null, mapDispatchToProps)(PhoneAuthScreen)
 
 PhoneAuthScreen.propTypes = {
   navigation: PropTypes.object,

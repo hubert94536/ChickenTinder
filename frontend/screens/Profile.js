@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import PropTypes from 'prop-types'
-import { changeImage, changeName, changeUsername, hideError, showError } from '../redux/Actions.js'
+import { changeImage, changeName, changeUsername, hideError, showError, setDisable, hideDisable } from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import { Image, ImageBackground, Keyboard, StyleSheet, Text, View } from 'react-native'
 import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
@@ -12,15 +12,17 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Alert from '../modals/Alert.js'
 import accountsApi from '../apis/accountsApi.js'
 import colors from '../../styles/colors.js'
+import Confirmation from '../modals/Confirmation.js'
+import loginService from '../apis/loginService.js'
 import EditProfile from '../modals/EditProfile.js'
 import Friends from './Friends.js'
-import loginService from '../apis/loginService.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import Settings from '../modals/ProfileSettings.js'
 import socket from '../apis/socket.js'
 import TabBar from '../Nav.js'
+import auth from '@react-native-firebase/auth'
 
 class UserProfileView extends Component {
   constructor(props) {
@@ -40,10 +42,12 @@ class UserProfileView extends Component {
       logoutAlert: false,
       deleteAlert: false,
       blur: false,
+      confirmation: false,
       // friends text
       numFriends: 0,
       imageData: null,
-      disabled: false,
+      // phone auth
+      verificationId: null,
     }
   }
   // getting current user's info
@@ -96,23 +100,96 @@ class UserProfileView extends Component {
     }
   }
 
+  ////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////PHONE AUTH///////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+
+  // TODO: Create code input modal that for 6 digit code that executes the "verifyCode" function (below) upon submitting the code
+  // More TODOs in functions below
+
   async handleDelete() {
-    if (!this.state.disabled) {
-      this.setState({ disabled: true })
-      loginService
-        .deleteUser()
-        // TODO: Disastrous phone auth code...
-        .then(() => {
-          // close settings and navigate to Login
-          this.setState({ visible: false })
-          this.props.navigation.replace('Login')
-        })
-        .catch(() => {
-          this.props.hideError()
-        })
-      this.setState({ disabled: false })
+    if (!this.props.disable) {
+      this.props.setDisable()
+      // Check if phone provider - if so, validate phone num
+      if (auth().currentUser.providerData[0].providerId === 'phone') {
+        auth()
+          .verifyPhoneNumber(auth().currentUser.phoneNumber)
+          .on('state_changed', (phoneAuthSnapshot) => {
+            console.log('State: ', phoneAuthSnapshot.state)
+            console.log(phoneAuthSnapshot)
+            switch (phoneAuthSnapshot.state) {
+              // Ask for code input
+              case auth.PhoneAuthState.CODE_SENT:
+                // Store verification id in state
+                this.setState({ verificationId: phoneAuthSnapshot.verificationId })
+                this.verifyCode('111111')
+                // TODO: Display verification code input modal (6 digits)
+                this.setState({ confirmation: true })
+                break
+              // Auto verified on android - proceed to delete account
+              case auth.PhoneAuthState.AUTO_VERIFIED:
+                this.setState({ verificationId: phoneAuthSnapshot.verificationId })
+                this.verifyCode(phoneAuthSnapshot.code)
+                break
+              // Display error alert
+              case auth.PhoneAuthState.ERROR:
+                // TODO: Code could not be sent, display an error
+                this.props.showError()
+                break
+            }
+          })
+      }
+      // Not phone provider - delete the account
+      else {
+        loginService
+          .deleteUser()
+          .then(() => {
+            // close settings and navigate to Login
+            this.setState({ visible: false })
+            this.props.navigation.replace('Login')
+          })
+          .catch(() => {
+            this.props.hideError()
+          })
+      }
+      this.props.hideDisable()
     }
   }
+
+  // IMPORTANT: Code MUST be passed in as a string
+  // NOTE: Currently only logs success. To delete, uncomment lines under log.
+  async verifyCode(code) {
+    console.log('Verifying code ', code)
+    const credential = auth.PhoneAuthProvider.credential(this.state.verificationId, code)
+    auth()
+      .currentUser.reauthenticateWithCredential(credential)
+      // If reauthentication succeeds, delete account using credential
+      .then(() => {
+        console.log('success')
+        this.setState({ confirmation: false })
+        // loginService
+        // .deleteUserWithCredential(credential)
+        // .then(() => {
+        //   // close settings and navigate to Login
+        //   this.setState({ visible: false })
+        //   this.props.navigation.replace('Login')
+        // })
+        // .catch(() => {
+        //   this.props.hideError()
+        // })
+      })
+      .catch((error) => {
+        console.log('Code verification failed')
+        console.log(error)
+        // TODO: Code could not be verified, disply an error
+        this.setState({ confirmation: false })
+        this.props.showError()
+      })
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
 
   // close alert for taken username
   closeTaken() {
@@ -125,8 +202,8 @@ class UserProfileView extends Component {
   }
 
   async handleLogout() {
-    if (!this.state.disabled) {
-      this.setState({ disabled: true })
+    if (!this.props.disable) {
+      this.props.setDisable()
       loginService
         .logout()
         .then(() => {
@@ -137,12 +214,13 @@ class UserProfileView extends Component {
         .catch(() => {
           this.props.showError()
         })
-      this.setState({ disabled: false })
+        this.props.hideDisable()
     }
   }
 
   cancelLogout() {
-    this.setState({ logoutAlert: false, disabled: false })
+    this.setState({ logoutAlert: false })
+    this.props.hideDisable()
   }
 
   makeChanges() {
@@ -255,7 +333,7 @@ class UserProfileView extends Component {
           cur="Profile"
         />
 
-        {(visible || edit || logoutAlert || deleteAlert || blur) && (
+        {(visible || edit || logoutAlert || deleteAlert || blur || this.state.confirmation) && (
           <BlurView
             blurType="dark"
             blurAmount={10}
@@ -273,6 +351,13 @@ class UserProfileView extends Component {
           deleteAlert={() => this.setState({ deleteAlert: true })}
         />
 
+        <Confirmation
+          visible={this.state.confirmation}
+          close={() => this.setState({ confirmation: false })}
+          show={() => this.setState({ confirmation: true })}
+          verify={(code) => this.verifyCode(code)}
+        />
+
         {edit && (
           <EditProfile
             dontSave={() => this.dontSave()}
@@ -287,12 +372,15 @@ class UserProfileView extends Component {
             title="Log out"
             body="Are you sure you want to log out?"
             buttonAff="Logout"
-            buttonNeg="Go back"
+            buttonNeg="Back"
             height="25%"
             twoButton
-            disabled={this.state.disabled}
+            disabled={this.props.disable}
             press={() => this.handleLogout()}
-            cancel={() => this.setState({ logoutAlert: false, visible: true, disabled: false })}
+            cancel={() => {
+              this.setState({ logoutAlert: false, visible: true })
+              this.props.hideDisable()
+            }}
           />
         )}
 
@@ -301,10 +389,10 @@ class UserProfileView extends Component {
             title="Delete account?"
             body="By deleting your account, you will lose all of your data"
             buttonAff="Delete"
-            buttonNeg="Go back"
+            buttonNeg="Back"
             twoButton
             height="25%"
-            dispatch={this.state.disabled}
+            dispatch={this.props.disable}
             press={() => this.handleDelete()}
             cancel={() => this.cancelDelete()}
           />
@@ -338,7 +426,8 @@ const mapStateToProps = (state) => {
   const { name } = state
   const { username } = state
   const { image } = state
-  return { error, name, username, image }
+  const { disable } = state
+  return { error, name, username, image, disable }
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -349,6 +438,8 @@ const mapDispatchToProps = (dispatch) =>
       changeName,
       changeUsername,
       changeImage,
+      setDisable,
+      hideDisable
     },
     dispatch,
   )

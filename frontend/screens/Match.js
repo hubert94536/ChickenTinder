@@ -6,41 +6,28 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'
-import global from '../../global.js'
 import mapStyle from '../../styles/mapStyle.json'
 import MatchCard from '../cards/MatchCard.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
-import { setCode } from '../redux/Actions.js'
+import { updateSession, setDisable, hideDisable } from '../redux/Actions.js'
 import socket from '../apis/socket.js'
 
 // the card for the restaurant match
 class Match extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      restaurant: this.props.navigation.state.params.restaurant,
-      disabled: false,
-    }
   }
 
-  endRound() {
-    this.setState({ disabled: true })
+  leave() {
+    this.props.setDisable()
     socket.getSocket().off()
-    if (global.isHost) {
-      socket.endRound()
-    } else {
-      socket.endLeave()
-    }
-    this.props.setCode(0)
-    global.host = ''
-    global.isHost = false
-    global.restaurants = []
+    socket.leave('match')
+    this.props.hideDisable()
     this.props.navigation.replace('Home')
   }
 
   render() {
-    const { restaurant } = this.state
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer} /*Header for header text and heart icon */>
@@ -48,23 +35,23 @@ class Match extends React.Component {
           <Icon name="heart" style={[styles.general, styles.heart]} />
         </View>
         <View style={styles.restaurantCardContainer} /*Restaurant card*/>
-          <MatchCard card={restaurant} />
+          <MatchCard card={this.props.match} />
           <View style={[styles.mapContainer, styles.map]}>
             <MapView
               provider={PROVIDER_GOOGLE}
               customMapStyle={mapStyle}
               style={styles.map}
               region={{
-                latitude: restaurant.latitude,
-                longitude: restaurant.longitude,
+                latitude: this.props.match.latitude,
+                longitude: this.props.match.longitude,
                 latitudeDelta: 0.015,
                 longitudeDelta: 0.015,
               }}
             >
               <Marker
                 coordinate={{
-                  latitude: restaurant.latitude,
-                  longitude: restaurant.longitude,
+                  latitude: this.props.match.latitude,
+                  longitude: this.props.match.longitude,
                 }}
               />
             </MapView>
@@ -73,23 +60,23 @@ class Match extends React.Component {
         <TouchableHighlight //Button to open restaurant on yelp
           underlayColor="white"
           style={[screenStyles.bigButton, styles.yelpButton]}
-          onPress={() => Linking.openURL(restaurant.url)}
+          onPress={() => Linking.openURL(this.props.match.url)}
         >
           <Text style={[screenStyles.bigButtonText, styles.white]}>Open on Yelp</Text>
         </TouchableHighlight>
         <TouchableHighlight
           /* Button to call phone # */
           style={[screenStyles.bigButton, styles.callButton]}
-          onPress={() => Linking.openURL(`tel:${restaurant.phone}`)}
+          onPress={() => Linking.openURL(`tel:${this.props.match.phone}`)}
         >
           <Text style={[screenStyles.bigButtonText, { color: colors.hex }]}>
-            Call: {restaurant.phone}
+            Call: {this.props.match.phone}
           </Text>
         </TouchableHighlight>
         <Text /* Link to exit round */
-          disabled={this.state.disabled}
+          disabled={this.props.disable}
           style={[screenStyles.bigButtonText, styles.exitRoundText]}
-          onPress={() => this.endRound()}
+          onPress={() => this.leave()}
         >
           Exit Round
         </Text>
@@ -99,14 +86,18 @@ class Match extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const { code } = state
-  return { code }
+  return {
+    match: state.match.match,
+    disable: state.disable
+  }
 }
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      setCode,
+      updateSession,
+      setDisable,
+      hideDisable
     },
     dispatch,
   )
@@ -117,14 +108,9 @@ Match.propTypes = {
   //navig should contain navigate fx + state, which contains params which contains the necessary restaurant arr
   navigation: PropTypes.shape({
     replace: PropTypes.func,
-    navigate: PropTypes.func,
-    state: PropTypes.shape({
-      params: PropTypes.shape({
-        restaurant: PropTypes.object,
-      }),
-    }),
   }),
-  setCode: PropTypes.func,
+  updateSession: PropTypes.func,
+  match: PropTypes.object,
 }
 
 const styles = StyleSheet.create({
