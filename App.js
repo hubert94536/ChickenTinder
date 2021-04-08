@@ -86,8 +86,8 @@ class App extends React.Component {
               }
             })
             socket.getSocket().on('reconnect', (session) => {
-              // this.props.showRefresh()
               if (session) {
+                this.props.showRefresh()
                 // check if member was kicked
                 if (!session.members[this.props.username]) {
                   socket.kickLeave()
@@ -230,6 +230,7 @@ class App extends React.Component {
   // detect if app is coming out of background
   _handleAppStateChange = (nextAppState) => {
     if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+      this.props.showRefresh()
       if (socket.getSocket().connected) socket.reconnection()
       else socket.getSocket().connect()
     }

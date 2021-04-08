@@ -2,7 +2,6 @@ import React from 'react'
 import { Dimensions, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
 import ButtonSwitch from './ButtonSwitch.js'
-import colors from '../../styles/colors.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
@@ -43,12 +42,14 @@ export default class Price extends React.Component {
             onPress={() => this.handleCancel()}
           />
           <View style={modalStyles.titleContainer}>
-            <Text style={[screenStyles.text, modalStyles.titleText]}>Price</Text>
-            <Text style={[screenStyles.text, styles.black]}>Select your ideal price range</Text>
+            <Text style={[screenStyles.text, modalStyles.titleText, styles.heading]}>Price</Text>
+            <Text style={[screenStyles.text, styles.black, styles.heading]}>
+              Select your ideal price range
+            </Text>
             <View style={modalStyles.error}>
               <View style={styles.filterGroupContainer}>
                 <View style={{ flexDirection: 'row' }}>
-                  <Text style={styles.filterSubtext}>Select all that apply</Text>
+                  <Text>Select all that apply</Text>
                 </View>
                 <ButtonSwitch
                   text1="$"
@@ -68,19 +69,6 @@ export default class Price extends React.Component {
                 />
               </View>
             </View>
-            {this.state.invalidPrice && (
-              <View style={[modalStyles.error, styles.errorMargin]}>
-                <Icon name="exclamationcircle" color={colors.hex} style={modalStyles.errorIcon} />
-                <Text style={[screenStyles.text, modalStyles.errorText]}>
-                  Invalid time. Please try again
-                </Text>
-              </View>
-            )}
-            {!this.state.invalidPrice && (
-              <View style={[modalStyles.error, styles.errorMargin]}>
-                <Text style={[screenStyles.text, modalStyles.errorText]}> </Text>
-              </View>
-            )}
             <TouchableHighlight
               style={[modalStyles.doneButton, styles.doneButtonMargin]}
               onPress={() => this.evaluate()}
@@ -112,11 +100,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
   },
-  errorMargin: {
-    marginTop: '3%',
+  heading: {
+    marginLeft: '5%',
   },
   doneButtonMargin: {
-    marginTop: '5%',
+    marginTop: '6%',
   },
 })
 
