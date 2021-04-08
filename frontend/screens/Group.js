@@ -1,7 +1,9 @@
 import React from 'react'
 import {
+  ActivityIndicator,
   FlatList,
   ImageBackground,
+  Modal,
   StyleSheet,
   Text,
   TouchableHighlight,
@@ -27,7 +29,15 @@ import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
-import { showKick, updateSession, setHost, setDisable, hideDisable } from '../redux/Actions.js'
+import {
+  showKick,
+  updateSession,
+  setHost,
+  setDisable,
+  hideDisable,
+  hideRefresh,
+  showRefresh,
+} from '../redux/Actions.js'
 
 const font = 'CircularStd-Medium'
 var memberList = []
@@ -85,6 +95,7 @@ class Group extends React.Component {
     socket.getSocket().once('start', (res) => {
       socket.getSocket().off()
       this.props.updateSession(res)
+      this.props.hideRefresh()
       this.props.navigation.replace('Round')
     })
 
@@ -123,6 +134,7 @@ class Group extends React.Component {
   start() {
     this.props.setDisable()
     this.filterRef.current.startSession(this.props.session)
+    this.props.showRefresh()
   }
 
   // update user cards in group
@@ -185,8 +197,8 @@ class Group extends React.Component {
               {this.props.isHost
                 ? 'Your Group'
                 : `${this.firstName(
-                  this.props.session.members[this.props.session.host].name,
-                )}'s Group`}
+                    this.props.session.members[this.props.session.host].name,
+                  )}'s Group`}
             </Text>
             <View style={styles.subheader}>
               <Text style={styles.pinText}>Group PIN: </Text>
@@ -230,8 +242,8 @@ class Group extends React.Component {
                   {this.countNeedFilters(this.props.session.members) == 0
                     ? 'waiting for host to start'
                     : `waiting for ${this.countNeedFilters(
-                      this.props.session.members,
-                    )} member filters`}
+                        this.props.session.members,
+                      )} member filters`}
                 </Text>
               </View>
               <FlatList
@@ -351,7 +363,9 @@ class Group extends React.Component {
                     setBlur={(res) => this.setState({ blur: res })}
                     code={this.props.session.code}
                     style={{ elevation: 31 }}
-                    buttonDisable={(able) => able ? this.props.setDisable() : this.props.hideDisable() }
+                    buttonDisable={(able) =>
+                      able ? this.props.setDisable() : this.props.hideDisable()
+                    }
                     session={this.props.session}
                   />
                 </View>
@@ -445,7 +459,15 @@ class Group extends React.Component {
             </Text>
           </TouchableHighlight>
         </View>
-        {(this.state.blur || this.state.socketErr) && (
+        <Modal transparent={true} animationType={'none'} visible={this.props.refresh}>
+          <ActivityIndicator
+            color="white"
+            size={50}
+            animating={this.props.refresh}
+            style={screenStyles.loading}
+          />
+        </Modal>
+        {(this.state.blur || this.state.socketErr || this.props.refresh) && (
           <BlurView
             pointerEvents="none"
             blurType="dark"
@@ -464,7 +486,8 @@ const mapStateToProps = (state) => {
     isHost: state.isHost.isHost,
     session: state.session.session,
     username: state.username.username,
-    disable: state.disable
+    disable: state.disable,
+    refresh: state.refresh,
   }
 }
 
@@ -475,7 +498,9 @@ const mapDispatchToProps = (dispatch) =>
       updateSession,
       setHost,
       setDisable,
-      hideDisable
+      hideDisable,
+      hideRefresh,
+      showRefresh,
     },
     dispatch,
   )
@@ -490,6 +515,12 @@ Group.propTypes = {
   isHost: PropTypes.bool,
   session: PropTypes.object,
   username: PropTypes.string,
+  setDisable: PropTypes.func,
+  hideDisable: PropTypes.func,
+  showRefresh: PropTypes.func,
+  hideRefresh: PropTypes.func,
+  disable: PropTypes.bool,
+  refresh: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

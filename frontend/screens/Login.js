@@ -164,7 +164,7 @@ const mapDispatchToProps = (dispatch) =>
       showError,
       hideError,
       setDisable,
-      hideDisable
+      hideDisable,
     },
     dispatch,
   )
@@ -183,6 +183,9 @@ Login.propTypes = {
   changeUsername: PropTypes.func,
   changeImage: PropTypes.func,
   changeFriends: PropTypes.func,
+  setDisable: PropTypes.func,
+  hideDisable: PropTypes.func,
+  disable: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

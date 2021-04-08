@@ -10,12 +10,16 @@ import {
   updateSession,
   setHost,
   setDisable,
-  hideDisable
+  hideDisable,
+  showRefresh,
+  hideRefresh,
 } from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import {
+  ActivityIndicator,
   Dimensions,
   ImageBackground,
+  Modal,
   StyleSheet,
   Text,
   TouchableHighlight,
@@ -32,6 +36,7 @@ import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 import accountsApi from '../apis/accountsApi.js'
 import friendsApi from '../apis/friendsApi.js'
+
 const width = Dimensions.get('window').width
 const home = '../assets/backgrounds/Home.png'
 const homedark = '../assets/backgrounds/Home_Blur.png'
@@ -54,6 +59,7 @@ class Home extends React.Component {
       this.props.updateSession(res)
       this.props.setHost(res.members[res.host].username === this.props.username)
       this.props.hideDisable()
+      this.props.hideRefresh()
       this.props.navigation.replace('Group')
     })
 
@@ -76,8 +82,13 @@ class Home extends React.Component {
     // friendsApi.createFriendshipTest(34, "bG0nwNsUpeSYW913nNaLdorlB8H2")
   }
 
+  componentDidMount() {
+    this.props.hideRefresh()
+  }
+
   createGroup() {
     this.props.setDisable()
+    this.props.showRefresh()
     socket.createRoom()
   }
 
@@ -109,7 +120,9 @@ class Home extends React.Component {
                 alignSelf: 'center',
                 margin: '3%',
               }}
-              onPress={() => this.createGroup()}
+              onPress={() => {
+                this.createGroup()
+              }}
             >
               <Text
                 style={[
@@ -193,7 +206,19 @@ class Home extends React.Component {
             />
           )}
         </View>
-        {(this.state.join || this.props.error || this.props.kick || this.state.socketErr) && (
+        <Modal transparent={true} animationType={'none'} visible={this.props.refresh}>
+          <ActivityIndicator
+            color="white"
+            size={50}
+            animating={this.props.refresh}
+            style={screenStyles.loading}
+          />
+        </Modal>
+        {(this.state.join ||
+          this.props.error ||
+          this.props.kick ||
+          this.state.socketErr ||
+          this.props.refresh) && (
           <BlurView
             blurType="dark"
             blurAmount={10}
@@ -211,7 +236,8 @@ const mapStateToProps = (state) => {
     username: state.username.username,
     error: state.error,
     kick: state.kick,
-    disable: state.disable
+    disable: state.disable,
+    refresh: state.refresh,
   }
 }
 
@@ -225,7 +251,9 @@ const mapDispatchToProps = (dispatch) =>
       hideKick,
       setHost,
       setDisable,
-      hideDisable
+      hideDisable,
+      showRefresh,
+      hideRefresh,
     },
     dispatch,
   )
@@ -243,6 +271,12 @@ Home.propTypes = {
   kick: PropTypes.bool,
   setHost: PropTypes.func,
   updateSession: PropTypes.func,
+  hideDisable: PropTypes.func,
+  setDisable: PropTypes.func,
+  showRefresh: PropTypes.func,
+  hideRefresh: PropTypes.func,
+  disable: PropTypes.bool,
+  refresh: PropTypes.bool,
 }
 const styles = StyleSheet.create({
   main: {

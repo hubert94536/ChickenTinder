@@ -1,14 +1,17 @@
 import React from 'react'
 import {
+  ActivityIndicator,
   Dimensions,
   Image,
   ImageBackground,
   Linking,
+  Modal,
   StyleSheet,
   Text,
   TouchableHighlight,
   View,
 } from 'react-native'
+import { BlurView } from '@react-native-community/blur'
 import FA from 'react-native-vector-icons/FontAwesome'
 import Ion from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/AntDesign'
@@ -20,8 +23,9 @@ import getCuisine from '../assets/images/foodImages.js'
 import getStarPath from '../assets/stars/star.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
+import modalStyles from '../../styles/modalStyles.js'
 import socket from '../apis/socket.js'
-import { updateSession, setHost, setMatch } from '../redux/Actions.js'
+import { updateSession, setHost, setMatch, showRefresh, hideRefresh } from '../redux/Actions.js'
 import _ from 'lodash'
 
 const height = Dimensions.get('window').height
@@ -36,6 +40,7 @@ class TopThree extends React.Component {
     socket.getSocket().once('choose', (ind) => {
       socket.getSocket().off()
       this.props.setMatch(this.props.top[ind])
+      this.props.hideRefresh()
       this.props.navigation.replace('Match')
     })
 
@@ -64,6 +69,7 @@ class TopThree extends React.Component {
   }
 
   match() {
+    this.props.showRefresh()
     socket.choose(this.state.chosen)
   }
 
@@ -261,6 +267,23 @@ class TopThree extends React.Component {
             </Text>
           </TouchableHighlight>
         )}
+        <Modal transparent={true} animationType={'none'} visible={this.props.refresh}>
+          <ActivityIndicator
+            color="white"
+            size={50}
+            animating={this.props.refresh}
+            style={screenStyles.loading}
+          />
+        </Modal>
+        {this.props.refresh && (
+          <BlurView
+            pointerEvents="none"
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
       </View>
     )
   }
@@ -272,6 +295,7 @@ const mapStateToProps = (state) => {
     session: state.session.session,
     username: state.username.username,
     top: state.top.top,
+    refresh: state.refresh,
   }
 }
 
@@ -281,6 +305,8 @@ const mapDispatchToProps = (dispatch) =>
       updateSession,
       setHost,
       setMatch,
+      showRefresh,
+      hideRefresh,
     },
     dispatch,
   )
@@ -305,6 +331,9 @@ TopThree.propTypes = {
   setMatch: PropTypes.func,
   updateSession: PropTypes.func,
   setHost: PropTypes.func,
+  hideRefresh: PropTypes.func,
+  showRefresh: PropTypes.func,
+  refresh: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({
