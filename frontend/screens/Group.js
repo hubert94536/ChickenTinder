@@ -165,6 +165,7 @@ class Group extends React.Component {
     this.props.setDisable()
     socket.getSocket().off()
     socket.leave('group')
+    this.props.hideDisable()
     this.props.navigation.replace('Home')
   }
 
@@ -180,6 +181,11 @@ class Group extends React.Component {
 
   copyToClipboard() {
     Clipboard.setString(this.props.session.code.toString())
+  }
+
+  componentDidMount() {
+    // this.props.showRefresh()
+    // this.props.hideRefresh()
   }
 
   render() {

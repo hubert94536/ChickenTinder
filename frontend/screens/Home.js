@@ -82,9 +82,9 @@ class Home extends React.Component {
     // friendsApi.createFriendshipTest(34, "bG0nwNsUpeSYW913nNaLdorlB8H2")
   }
 
-  componentDidMount() {
-    this.props.hideRefresh()
-  }
+  // componentDidMount() {
+  //   this.props.hideRefresh()
+  // }
 
   createGroup() {
     this.props.setDisable()

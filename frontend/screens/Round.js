@@ -22,6 +22,7 @@ import {
   setTop,
   setDisable,
   hideDisable,
+  hideRefresh,
 } from '../redux/Actions.js'
 
 class Round extends React.Component {
@@ -58,10 +59,12 @@ class Round extends React.Component {
     this.props.setDisable()
     socket.getSocket().off()
     socket.leave('round')
+    this.props.hideDisable()
     this.props.navigation.replace('Home')
   }
 
   componentDidMount() {
+    this.props.hideRefresh()
     console.log(this.props.session)
     if (this.props.session.members[global.uid] !== 'undefined') {
       for (var i = 0; i < this.props.session.resInfo.length; i++) {
@@ -203,6 +206,7 @@ const mapDispatchToProps = (dispatch) =>
       setTop,
       setDisable,
       hideDisable,
+      hideRefresh,
     },
     dispatch,
   )
@@ -220,6 +224,7 @@ Round.propTypes = {
   setDisable: PropTypes.func,
   hideDisable: PropTypes.func,
   disable: PropTypes.bool,
+  hideRefresh: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
