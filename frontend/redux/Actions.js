@@ -140,5 +140,5 @@ export {
   setMatch,
   setTop,
   setDisable,
-  hideDisable
+  hideDisable,
 }

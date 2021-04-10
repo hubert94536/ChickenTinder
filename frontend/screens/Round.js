@@ -15,7 +15,14 @@ import RoundCard from '../cards/RoundCard.js'
 import socket from '../apis/socket.js'
 import screenStyles from '../../styles/screenStyles.js'
 import normalize from '../../styles/normalize.js'
-import { updateSession, setHost, setMatch, setTop, setDisable, hideDisable } from '../redux/Actions.js'
+import {
+  updateSession,
+  setHost,
+  setMatch,
+  setTop,
+  setDisable,
+  hideDisable,
+} from '../redux/Actions.js'
 
 class Round extends React.Component {
   constructor(props) {
@@ -183,7 +190,7 @@ const mapStateToProps = (state) => {
   return {
     session: state.session.session,
     username: state.username.username,
-    disable: state.disable
+    disable: state.disable,
   }
 }
 
@@ -195,7 +202,7 @@ const mapDispatchToProps = (dispatch) =>
       setMatch,
       setTop,
       setDisable,
-      hideDisable
+      hideDisable,
     },
     dispatch,
   )
@@ -210,6 +217,9 @@ Round.propTypes = {
   username: PropTypes.string,
   setMatch: PropTypes.func,
   setTop: PropTypes.func,
+  setDisable: PropTypes.func,
+  hideDisable: PropTypes.func,
+  disable: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

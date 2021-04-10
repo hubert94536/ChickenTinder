@@ -20,7 +20,14 @@ import { ProgressBar } from 'react-native-paper'
 import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
-import { updateSession, setHost, setMatch, setTop, setDisable, hideDisable } from '../redux/Actions.js'
+import {
+  updateSession,
+  setHost,
+  setMatch,
+  setTop,
+  setDisable,
+  hideDisable,
+} from '../redux/Actions.js'
 
 const height = Dimensions.get('window').height
 
@@ -153,7 +160,7 @@ const mapStateToProps = (state) => {
     session: state.session.session,
     isHost: state.isHost.isHost,
     username: state.username.username,
-    disable: state.disable
+    disable: state.disable,
   }
 }
 
@@ -165,7 +172,7 @@ const mapDispatchToProps = (dispatch) =>
       setMatch,
       setTop,
       setDisable,
-      hideDisable
+      hideDisable,
     },
     dispatch,
   )
@@ -180,6 +187,9 @@ Loading.propTypes = {
   session: PropTypes.object,
   setMatch: PropTypes.func,
   setTop: PropTypes.func,
+  hideDisable: PropTypes.func,
+  setDisable: PropTypes.func,
+  disable: PropTypes.bool,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Loading)

@@ -221,7 +221,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       changeImage,
       setDisable,
-      hideDisable
+      hideDisable,
     },
     dispatch,
   )
@@ -237,6 +237,10 @@ EditProfile.propTypes = {
   name: PropTypes.object,
   username: PropTypes.object,
   image: PropTypes.object,
+  setDisable: PropTypes.func,
+  changeImage: PropTypes.func,
+  hideDisable: PropTypes.func,
+  disable: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({
