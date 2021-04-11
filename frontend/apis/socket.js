@@ -1,5 +1,4 @@
 import auth from '@react-native-firebase/auth'
-
 import crashlytics from '@react-native-firebase/crashlytics'
 import io from 'socket.io-client'
 
@@ -11,14 +10,22 @@ const connect = () => {
   socket.on('connect', async () => {
     console.log('connect')
     const token = await auth().currentUser.getIdToken()
+    await Promise.all([
+      crashlytics().log('Socket connected.'),
+      crashlytics().setAttributes({
+        token: token,
+      }),
+    ])
     socket.emit('authentication', { token: token })
   })
   socket.on('unauthorized', (reason) => {
     console.log('Unauthorized:', reason)
+    crashlytics().log(`Socket disconnected - unauthorized - ${reason}.`)
     socket.disconnect()
   })
   socket.on('disconnect', (reason) => {
     console.log('Disconnect:', reason)
+    crashlytics().log(`Socket disconnected - ${reason}.`)
     if (reason === 'transport close' || reason === 'transport error' || reason === 'ping timeout')
       socket.connect()
     else {
@@ -36,6 +43,7 @@ const createRoom = () => {
   session.filters.categories = ''
   session.match = ''
   session.open = true
+  crashlytics().log(`Try create room.`)
   socket.emit('create', {
     session: session,
   })
@@ -43,6 +51,7 @@ const createRoom = () => {
 
 // sends invite to an uid
 const sendInvite = (receiver) => {
+  crashlytics().log(`Sent invite to - ${receiver}.`)
   socket.emit('invite', {
     uid: receiver,
   })
@@ -53,6 +62,7 @@ const joinRoom = (code) => {
   let member = {}
   member.filters = false
   member.connected = true
+  crashlytics().log(`Join room code - ${code}.`)
   socket.emit('join', {
     code: code,
     member: member,
@@ -60,10 +70,12 @@ const joinRoom = (code) => {
 }
 // leaving a session
 const leave = (stage) => {
+  crashlytics().log(`Left room - ${JSON.stringify(stage)}.`)
   socket.emit('leave', { stage: stage })
 }
 
 const kickUser = (uid) => {
+  crashlytics().log(`Kicked user - ${uid}.`)
   socket.emit('kick', { uid: uid })
 }
 
@@ -98,11 +110,13 @@ const startSession = (filters, session) => {
   session.majority = filters.majority
   session.finished = [] // keep track of who's finished swiping
   session.restaurants = {} // keep track of restaurant likes
+  crashlytics().log(`Attempt start session.`)
   socket.emit('start', { session: session })
 }
 
 // submit categories array (append a ',' at end)
 const submitFilters = (categories) => {
+  crashlytics().log(`Submitted categories.`)
   socket.emit('submit', {
     categories: categories,
   })
@@ -110,34 +124,41 @@ const submitFilters = (categories) => {
 
 // pass restaurant id for a like
 const likeRestaurant = (resId) => {
+  crashlytics().log(`Liked resID ${resId}.`)
   socket.emit('like', { resId: resId })
 }
 
 const dislikeRestaurant = (resId) => {
+  crashlytics().log(`Disliked resID ${resId}.`)
   socket.emit('dislike', { resId: resId })
 }
 
 // let everyone know you are done swiping
 const finishedRound = () => {
+  crashlytics().log(`Swiping finished.`)
   socket.emit('finished')
 }
 
 // send chosen restaurant
 const choose = (index) => {
+  crashlytics().log(`Chosen index ${index}.`)
   socket.emit('choose', { index: index })
 }
 
 // update user's socket info (name, username, photo)
 const updateUser = (dataObj) => {
+  crashlytics().log(`Attempt update socket info.`)
   socket.emit('update', dataObj)
 }
 
 // host manually takes everyone to top3
 const toTop3 = () => {
+  crashlytics().log(`To Top3.`)
   socket.emit('to top 3')
 }
 // reconnect for updated session
 const reconnection = () => {
+  crashlytics().log(`Reconnection.`)
   socket.emit('reconnection')
 }
 
