@@ -142,6 +142,7 @@ class Home extends React.Component {
             >
               <Text style={[styles.buttonText, { color: 'white' }]}>Join Group</Text>
             </TouchableHighlight>
+            {/* <Button title="Test Crash" onPress={() => crashlytics().crash()} /> */}
           </View>
           <TabBar
             goHome={() => {}}

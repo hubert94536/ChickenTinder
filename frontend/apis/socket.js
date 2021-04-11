@@ -1,4 +1,6 @@
 import auth from '@react-native-firebase/auth'
+
+import crashlytics from '@react-native-firebase/crashlytics'
 import io from 'socket.io-client'
 
 var socket = null
