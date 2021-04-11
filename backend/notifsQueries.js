@@ -1,4 +1,5 @@
 const { Accounts, Notifications } = require('./models')
+const { Op } = require("sequelize")
 
 var attributes = ['username', 'photo', 'name']
 // Creates notification
@@ -11,7 +12,7 @@ const createNotif = async (req) => {
       sender_uid: req.body.sender_uid,
       include: [Accounts],
     })
-    Promise.resolve(201)
+    return Promise.resolve(201)
   } catch (error) {
     console.error(error)
     return Promise.reject(500)
@@ -66,6 +67,18 @@ const getNotifs = async (req, res) => {
         },
       ],
     })
+
+    await Notifications.update(
+      { read: true },
+      {
+        where: {
+          id: {
+              [Op.in]: notifs.map(notif => notif.id)
+          }
+        }
+      }
+    )
+
     return res.status(200).json({ notifs })
   } catch (error) {
     console.error(error)
