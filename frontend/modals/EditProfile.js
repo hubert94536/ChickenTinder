@@ -122,6 +122,7 @@ class EditProfile extends React.Component {
   render() {
     return (
       <Modal animationType="fade" transparent visible={this.props.visible}>
+        {!this.state.editPic && (
         <View style={[modalStyles.mainContainer, styles.mainContainerHeight]}>
           <AntDesign
             name="closecircleo"
@@ -179,6 +180,7 @@ class EditProfile extends React.Component {
               value={this.state.usernameValue}
               onChangeText={(text) => this.changeUser(text.split(' ').join('_'))}
             />
+            
             {!this.state.validUsernameFormat && (
               <Text style={[screenStyles.text, styles.warningText]}>
                 Only letters, numbers, or . - _ are allowed.
@@ -202,6 +204,13 @@ class EditProfile extends React.Component {
             <Text style={[screenStyles.smallButtonText, styles.saveText]}>Save Changes</Text>
           </TouchableHighlight>
         </View>
+        )}
+        {this.state.editPic && (
+              <ChoosePic
+                dontSave={() => this.dontSavePic()}
+                makeChanges={(pic) => this.changePic(pic)}
+              />
+          )}
       </Modal>
     )
   }
