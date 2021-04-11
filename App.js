@@ -182,7 +182,7 @@ class App extends React.Component {
         {
           initialRouteName: start,
           headerMode: 'none',
-          animationEnabled: false,
+          animationEnabled: 'false',
         },
       )
       const AppContainer = createAppContainer(RootStack)
