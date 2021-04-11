@@ -10,10 +10,11 @@ import {
   updateSession,
   setHost,
   setDisable,
-  hideDisable
+  hideDisable,
 } from '../redux/Actions.js'
 import { connect } from 'react-redux'
 import {
+  Button,
   Dimensions,
   ImageBackground,
   StyleSheet,
@@ -30,8 +31,10 @@ import normalize from '../../styles/normalize.js'
 import TabBar from '../Nav.js'
 import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
+import crashlytics from '@react-native-firebase/crashlytics'
 import accountsApi from '../apis/accountsApi.js'
 import friendsApi from '../apis/friendsApi.js'
+
 const width = Dimensions.get('window').width
 const home = '../assets/backgrounds/Home.png'
 const homedark = '../assets/backgrounds/Home_Blur.png'

@@ -2,6 +2,7 @@ import { USERNAME, NAME, EMAIL, PHOTO, PHONE, REGISTRATION_TOKEN, UID } from 're
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import FBSDK from 'react-native-fbsdk'
 import auth from '@react-native-firebase/auth'
+import crashlytics from '@react-native-firebase/crashlytics'
 import accountsApi from './accountsApi.js'
 import global from '../../global.js'
 import notificationsApi from './notificationsApi.js'
@@ -61,6 +62,13 @@ const fetchAccount = async () => {
     // Link user with their notification token
     const token = await AsyncStorage.getItem(REGISTRATION_TOKEN)
     await notificationsApi.linkToken(token)
+    await Promise.all([
+      crashlytics().setUserId(user.uid),
+      crashlytics().setAttributes({
+        username: user.username,
+        name: user.name,
+      }),
+    ])
   } catch (err) {
     console.log(err)
     return Promise.reject(err)

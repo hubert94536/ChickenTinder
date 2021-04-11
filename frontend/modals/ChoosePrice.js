@@ -6,6 +6,7 @@ import colors from '../../styles/colors.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
+import TagsView from '../TagsView.js'
 import Icon from 'react-native-vector-icons/AntDesign'
 import _ from 'lodash'
 
@@ -88,19 +89,6 @@ export default class Price extends React.Component {
               <Text style={[screenStyles.text, modalStyles.doneText]}>Done</Text>
             </TouchableHighlight>
           </View>
-          <View style={styles.filterGroupContainer}>
-            <TagsView
-              ACCENT_COLOR={colors.hex}
-              TEXT_COLOR={colors.hex}
-              all={tagsPrice}
-              selected={this.state.selectedPrice}
-              isExclusive={false}
-              onChange={(event) => this.setState({ selectedPrice: event })}
-            />
-          </View>
-          <TouchableHighlight style={[modalStyles.doneButton]} onPress={() => this.evaluate()}>
-            <Text style={[screenStyles.text, modalStyles.doneText]}>Done</Text>
-          </TouchableHighlight>
         </View>
       </Modal>
     )
