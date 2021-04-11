@@ -102,7 +102,12 @@ class Loading extends React.Component {
           <Image source={require('../assets/loading.gif')} style={styles.gif} />
         </View>
         <View>
-          <Text style={styles.general}>
+          {this.props.isHost && (
+            <Text style={[styles.general, styles.hostText]}>
+              Click below to continue without waiting for the rest of the group.
+            </Text>
+          )}
+          <Text style={this.props.isHost ? [styles.general, styles.hostText2] : styles.general}>
             Hang tight while others finish swiping and a match is found.
           </Text>
           {!this.props.isHost && (
@@ -227,6 +232,16 @@ const styles = StyleSheet.create({
     color: 'white',
     width: '80%',
     alignSelf: 'center',
+  },
+  hostText: {
+    marginTop: '15%',
+    marginBottom: 0,
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+  hostText2: {
+    marginTop: 0,
+    paddingTop: '5%',
   },
   leaveButton: {
     alignSelf: 'center',

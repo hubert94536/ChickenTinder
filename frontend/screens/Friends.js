@@ -65,11 +65,6 @@ class Friends extends React.Component {
 
   componentDidMount() {
     this.editFriends()
-    // for(var i = 0; i < this.props.friends.friends.length; i++)
-    // {
-    //   if(this.props.friends.friends[i].status === 'requested')
-    //     friendsApi.acceptFriendRequest(this.props.friends.friends[i].uid)
-    // }
   }
 
   //  searches the users friends by username
@@ -130,7 +125,7 @@ class Friends extends React.Component {
           <SearchBar
             containerStyle={styles.container}
             inputContainerStyle={styles.inputContainer}
-            inputStyle={(styles.text, styles.input)}
+            inputStyle={(screenStyles.text, styles.input)}
             placeholder="Search by username"
             onChangeText={(text) => this.searchFilterFunction(text)}
             value={this.state.search}

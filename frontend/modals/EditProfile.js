@@ -53,7 +53,6 @@ class EditProfile extends React.Component {
     this.props.nameChange(text)
   }
 
-  //remove whitespaces before and after name and username
   finalCheck() {
     this.props.setDisable()
     this.setState({ editPic: false })
@@ -61,9 +60,11 @@ class EditProfile extends React.Component {
       this.props.changeImage(this.state.photo)
     }
     if (!this.state.validNameFormat || !this.state.validUsernameFormat) {
+      this.props.hideDisable()
       return
     }
 
+    //remove whitespaces before and after name and username
     let trimmedName = this.state.nameValue
     trimmedName = trimmedName.trimStart().trimEnd()
 
@@ -81,10 +82,9 @@ class EditProfile extends React.Component {
   validateName() {
     /*regex expression: 
     - alphanumeric characters (lowercase or uppercase), dot (.), underscore (_), hyphen(-), space( )
-    - must not start or end with space
     - 2-15 characters
     */
-    const regex = /^[a-zA-Z0-9._-]([ ._-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._-]$/
+    const regex = /^[ a-zA-Z0-9._-]([ ._-]|[a-zA-Z0-9]){0,13}[ a-zA-Z0-9._-]$/
     if (!regex.test(this.state.nameValue)) {
       this.setState({ validNameFormat: false })
     } else {
@@ -123,94 +123,94 @@ class EditProfile extends React.Component {
     return (
       <Modal animationType="fade" transparent visible={this.props.visible}>
         {!this.state.editPic && (
-        <View style={[modalStyles.mainContainer, styles.mainContainerHeight]}>
-          <AntDesign
-            name="closecircleo"
-            style={[screenStyles.text, modalStyles.closeIcon]}
-            onPress={() => this.props.dontSave()}
-          />
-          <View style={styles.modalContent}>
-            <Text style={[screenStyles.text, styles.titleText]}>Edit Profile</Text>
-            <Image
-              source={{ uri: Image.resolveAssetSource(this.state.photo).uri }}
-              style={styles.pfp}
+          <View style={[modalStyles.mainContainer, styles.mainContainerHeight]}>
+            <AntDesign
+              name="closecircleo"
+              style={[screenStyles.text, modalStyles.closeIcon]}
+              onPress={() => this.props.dontSave()}
             />
-            <TouchableHighlight
-              style={styles.select}
-              underlayColor="transparent"
-              onPress={() => this.setState({ editPic: true })}
-            >
-              <Text style={[styles.selectText, screenStyles.textBold]}>Change Profile Icon</Text>
-            </TouchableHighlight>
-            <View style={styles.whiteSpace} />
-            <Text style={[screenStyles.text, styles.nameText]}>Display name</Text>
-            <TextInput
-              style={[
-                screenStyles.text,
-                screenStyles.input,
-                styles.input,
-                this.state.validNameFormat ? styles.inputMargin : styles.inputMarginWarning,
-              ]}
-              underlineColorAndroid="transparent"
-              spellCheck={false}
-              autoCorrect={false}
-              keyboardType="visible-password"
-              maxLength={15}
-              value={this.state.nameValue}
-              onChangeText={(text) => this.changeName(text)}
-            />
-            {!this.state.validNameFormat && (
-              <Text style={[screenStyles.text, styles.warningText]}>
-                Only letters, numbers, or . - _ are allowed.
-              </Text>
-            )}
-            <Text style={[screenStyles.text, styles.nameText]}>Username</Text>
-            <TextInput
-              style={[
-                screenStyles.text,
-                screenStyles.input,
-                styles.input,
-                this.state.validUsernameFormat ? styles.inputMargin : styles.inputMarginWarning,
-              ]}
-              underlineColorAndroid="transparent"
-              spellCheck={false}
-              autoCorrect={false}
-              maxLength={15}
-              keyboardType="visible-password"
-              value={this.state.usernameValue}
-              onChangeText={(text) => this.changeUser(text.split(' ').join('_'))}
-            />
-            
-            {!this.state.validUsernameFormat && (
-              <Text style={[screenStyles.text, styles.warningText]}>
-                Only letters, numbers, or . - _ are allowed.
-              </Text>
-            )}
-          </View>
-          {this.state.editPic && (
-            <ChoosePic
-              dontSave={() => this.dontSavePic()}
-              makeChanges={(pic) => this.changePic(pic)}
-            />
-          )}
-          <TouchableHighlight
-            disabled={this.props.disable}
-            style={[screenStyles.medButton, styles.saveButton]}
-            onPress={() => {
-              this.finalCheck()
-            }}
-            underlayColor="white"
-          >
-            <Text style={[screenStyles.smallButtonText, styles.saveText]}>Save Changes</Text>
-          </TouchableHighlight>
-        </View>
-        )}
-        {this.state.editPic && (
+            <View style={styles.modalContent}>
+              <Text style={[screenStyles.text, styles.titleText]}>Edit Profile</Text>
+              <Image
+                source={{ uri: Image.resolveAssetSource(this.state.photo).uri }}
+                style={styles.pfp}
+              />
+              <TouchableHighlight
+                style={styles.select}
+                underlayColor="transparent"
+                onPress={() => this.setState({ editPic: true })}
+              >
+                <Text style={[styles.selectText, screenStyles.textBold]}>Change Profile Icon</Text>
+              </TouchableHighlight>
+              <View style={styles.whiteSpace} />
+              <Text style={[screenStyles.text, styles.nameText]}>Display name</Text>
+              <TextInput
+                style={[
+                  screenStyles.text,
+                  screenStyles.input,
+                  styles.input,
+                  this.state.validNameFormat ? styles.inputMargin : styles.inputMarginWarning,
+                ]}
+                underlineColorAndroid="transparent"
+                spellCheck={false}
+                autoCorrect={false}
+                keyboardType="visible-password"
+                maxLength={15}
+                value={this.state.nameValue}
+                onChangeText={(text) => this.changeName(text)}
+              />
+              {!this.state.validNameFormat && (
+                <Text style={[screenStyles.text, styles.warningText]}>
+                  Only letters, numbers, or . - _ are allowed.
+                </Text>
+              )}
+              <Text style={[screenStyles.text, styles.nameText]}>Username</Text>
+              <TextInput
+                style={[
+                  screenStyles.text,
+                  screenStyles.input,
+                  styles.input,
+                  this.state.validUsernameFormat ? styles.inputMargin : styles.inputMarginWarning,
+                ]}
+                underlineColorAndroid="transparent"
+                spellCheck={false}
+                autoCorrect={false}
+                maxLength={15}
+                keyboardType="visible-password"
+                value={this.state.usernameValue}
+                onChangeText={(text) => this.changeUser(text.split(' ').join('_'))}
+              />
+
+              {!this.state.validUsernameFormat && (
+                <Text style={[screenStyles.text, styles.warningText]}>
+                  Only letters, numbers, or . - _ are allowed.
+                </Text>
+              )}
+            </View>
+            {this.state.editPic && (
               <ChoosePic
                 dontSave={() => this.dontSavePic()}
                 makeChanges={(pic) => this.changePic(pic)}
               />
-          )}
+            )}
+            <TouchableHighlight
+              disabled={this.props.disable}
+              style={[screenStyles.medButton, styles.saveButton]}
+              onPress={() => {
+                this.finalCheck()
+              }}
+              underlayColor="white"
+            >
+              <Text style={[screenStyles.smallButtonText, styles.saveText]}>Save Changes</Text>
+            </TouchableHighlight>
+          </View>
+        )}
+        {this.state.editPic && (
+          <ChoosePic
+            dontSave={() => this.dontSavePic()}
+            makeChanges={(pic) => this.changePic(pic)}
+          />
+        )}
       </Modal>
     )
   }
