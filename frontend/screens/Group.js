@@ -133,8 +133,8 @@ class Group extends React.Component {
   // pings server to fetch restaurants, start session
   start() {
     this.props.setDisable()
-    this.filterRef.current.startSession(this.props.session)
     this.props.showRefresh()
+    this.filterRef.current.startSession(this.props.session)
   }
 
   // update user cards in group
@@ -166,6 +166,7 @@ class Group extends React.Component {
     socket.getSocket().off()
     socket.leave('group')
     this.props.navigation.replace('Home')
+    this.props.hideDisable()
   }
 
   cancelAlert() {

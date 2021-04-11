@@ -30,18 +30,17 @@ class Login extends React.Component {
     this.props.navigation.replace('Phone')
   }
 
-  async facebookLogin() {
+  facebookLogin() {
     if (!this.props.disable) {
       this.props.setDisable()
+      this.setState({alert: false})
       loginService
         .loginWithFacebook()
-        .then(async (result) => {
+        .then((result) => {
           if (result === 'CreateAccount') {
-            this.setState({ alert: false }, () => {
-              this.props.navigation.replace(result)
-            })
+            this.props.navigation.replace(result)
           } else {
-            this.setState({ alert: false, login: true }, () => {
+            this.setState({ login: true }, () => {
               this.props.navigation.replace(result)
             })
           }
@@ -56,7 +55,6 @@ class Login extends React.Component {
 
   cancelClick() {
     this.setState({ alert: false })
-    this.props.hideDisable()
   }
 
   login() {
