@@ -78,11 +78,15 @@ class App extends React.Component {
             AppState.addEventListener('change', this._handleAppStateChange)
             socket.getSocket().on('disconnect', (reason) => {
               console.log('Disconnect:', reason)
-              if (reason === 'transport close' || reason === 'transport error' || reason === 'ping timeout')
+              if (
+                reason === 'transport close' ||
+                reason === 'transport error' ||
+                reason === 'ping timeout'
+              )
                 socket.connect()
               else {
                 this.navigator &&
-                    this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Disconnect' }))
+                  this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Disconnect' }))
               }
             })
             socket.getSocket().on('reconnect', (session) => {
@@ -235,6 +239,7 @@ class App extends React.Component {
       else socket.getSocket().connect()
     }
     this.setState({ appState: nextAppState })
+    this.props.hideRefresh()
   }
 
   render() {

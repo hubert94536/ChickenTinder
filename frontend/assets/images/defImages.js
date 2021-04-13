@@ -67,7 +67,7 @@ const assets = {
   Thai: require('./Thai.png'),
   Vietnamese: require('./Vietnamese.png'),
   Yogurt: require('./Yogurt.png'),
-  Zong_Zi: require('./Zong_Zi.png')
+  Zong_Zi: require('./Zong_Zi.png'),
 }
 
 const foodImages = {
