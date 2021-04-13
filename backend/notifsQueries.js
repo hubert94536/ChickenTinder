@@ -1,5 +1,5 @@
 const { Accounts, Notifications } = require('./models')
-const { Op } = require("sequelize")
+const { Op } = require('sequelize')
 
 var attributes = ['username', 'photo', 'name']
 // Creates notification
@@ -73,10 +73,10 @@ const getNotifs = async (req, res) => {
       {
         where: {
           id: {
-              [Op.in]: notifs.map(notif => notif.id)
-          }
-        }
-      }
+            [Op.in]: notifs.map((notif) => notif.id),
+          },
+        },
+      },
     )
 
     return res.status(200).json({ notifs })

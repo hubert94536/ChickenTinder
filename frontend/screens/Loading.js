@@ -27,6 +27,7 @@ import {
   setTop,
   setDisable,
   hideDisable,
+  hideRefresh,
 } from '../redux/Actions.js'
 
 const height = Dimensions.get('window').height
@@ -63,6 +64,10 @@ class Loading extends React.Component {
     socket.leave('loading')
     this.props.hideDisable()
     this.props.navigation.replace('Home')
+  }
+
+  componentDidMount() {
+    this.props.hideRefresh()
   }
 
   render() {
@@ -178,6 +183,7 @@ const mapDispatchToProps = (dispatch) =>
       setTop,
       setDisable,
       hideDisable,
+      hideRefresh,
     },
     dispatch,
   )
@@ -195,6 +201,7 @@ Loading.propTypes = {
   hideDisable: PropTypes.func,
   setDisable: PropTypes.func,
   disable: PropTypes.bool,
+  hideRefresh: PropTypes.func,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Loading)

@@ -15,14 +15,6 @@ const connect = () => {
     console.log('Unauthorized:', reason)
     socket.disconnect()
   })
-  socket.on('disconnect', (reason) => {
-    console.log('Disconnect:', reason)
-    if (reason === 'transport close' || reason === 'transport error' || reason === 'ping timeout')
-      socket.connect()
-    else {
-      // disconnected screen, please try again
-    }
-  })
 }
 
 const createRoom = () => {

@@ -9,7 +9,6 @@ import {
   View,
 } from 'react-native'
 import PropTypes from 'prop-types'
-// import { Switch } from 'react-native-switch'
 import colors from '../../styles/colors.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'

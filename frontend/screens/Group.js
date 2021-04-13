@@ -102,8 +102,9 @@ class Group extends React.Component {
     socket.getSocket().on('reselect', () => {
       // alert for host to reselect filters
       socketErrMsg = 'No restaurants were found. Please broaden your filters.'
-      this.setState({ socketErr: true })
       this.props.hideDisable()
+      this.props.hideRefresh()
+      this.setState({ socketErr: true })
     })
 
     socket.getSocket().on('exception', (msg) => {
@@ -133,8 +134,8 @@ class Group extends React.Component {
   // pings server to fetch restaurants, start session
   start() {
     this.props.setDisable()
-    this.filterRef.current.startSession(this.props.session)
     this.props.showRefresh()
+    this.filterRef.current.startSession(this.props.session)
   }
 
   // update user cards in group
@@ -165,7 +166,9 @@ class Group extends React.Component {
     this.props.setDisable()
     socket.getSocket().off()
     socket.leave('group')
+    this.props.hideDisable()
     this.props.navigation.replace('Home')
+    this.props.hideDisable()
   }
 
   cancelAlert() {
@@ -180,6 +183,11 @@ class Group extends React.Component {
 
   copyToClipboard() {
     Clipboard.setString(this.props.session.code.toString())
+  }
+
+  componentDidMount() {
+    // this.props.showRefresh()
+    // this.props.hideRefresh()
   }
 
   render() {

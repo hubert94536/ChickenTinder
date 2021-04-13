@@ -84,10 +84,8 @@ export default class Location extends Component {
     client
       .send(lookup)
       .then((res) => {
-        // console.log(JSON.stringify(res.lookups[0].result[0]))
         let result = res.lookups[0].result[0]
         if (result.valid) {
-          // console.log('valid zip: ' + this.state.zip.toString())
           let data = result.zipcodes[0]
           console.log(JSON.stringify(data))
           this.setState({
@@ -224,7 +222,6 @@ export default class Location extends Component {
                 style={styles.icon}
                 name={this.state.expanded ? 'up' : 'down'}
                 onPress={() => {
-                  console.log('chooselocation: pressed')
                   this.setState((prev) => ({
                     expanded: !prev.expanded,
                   }))

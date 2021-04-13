@@ -297,6 +297,7 @@ class createAccount extends React.Component {
           <ChoosePic
             dontSave={() => this.dontSave()}
             makeChanges={(pic) => this.makeChanges(pic)}
+            photo={this.state.photo}
           />
         )}
         {this.state.edit && (

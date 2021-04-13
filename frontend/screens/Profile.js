@@ -16,7 +16,6 @@ import { Image, ImageBackground, Keyboard, StyleSheet, Text, View } from 'react-
 import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from '@react-native-community/blur'
-import ImagePicker from 'react-native-image-crop-picker'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Alert from '../modals/Alert.js'
 import accountsApi from '../apis/accountsApi.js'
@@ -39,6 +38,7 @@ class UserProfileView extends Component {
     this.state = {
       nameValue: this.props.name.name,
       usernameValue: this.props.username.username,
+      photoValue: this.props.image.image,
       friends: true,
       visible: false,
       edit: false,
@@ -64,54 +64,67 @@ class UserProfileView extends Component {
     this.props.hideRefresh()
   }
 
-  // getting current user's info
-  async changeName() {
-    if (this.state.nameValue !== this.props.name.name) {
-      const name = this.state.nameValue
-      return accountsApi
-        .updateName(name)
-        .then(() => {
-          socket.updateUser({ name: name })
-          // update name locally
-          AsyncStorage.setItem(NAME, name)
-          this.props.changeName(name)
-          Keyboard.dismiss()
+  changeName() {
+    const name = this.state.nameValue
+    accountsApi
+      .updateName(name)
+      .then(() => {
+        socket.updateUser({ name: name })
+        // update name locally
+        AsyncStorage.setItem(NAME, name)
+        this.props.changeName(name)
+        Keyboard.dismiss()
+      })
+      .catch(() => {
+        this.props.showError()
+        this.setState({
+          nameValue: this.props.name.name,
         })
-        .catch(() => {
-          this.props.showError()
-          this.setState({
-            nameValue: this.props.name.name,
-          })
-          Keyboard.dismiss()
-        })
-    }
+        Keyboard.dismiss()
+      })
   }
 
-  async changeUsername() {
-    if (this.props.username.username !== this.state.usernameValue) {
-      const user = this.state.usernameValue
-      accountsApi
-        .checkUsername(user)
-        .then(() => {
-          // update username locally
-          return accountsApi.updateUsername(user).then(() => {
-            socket.updateUser({ username: user })
-            AsyncStorage.setItem(USERNAME, user)
-            this.props.changeUsername(user)
-            Keyboard.dismiss()
-          })
-        })
-        .catch((error) => {
-          console.log(error.status === 404)
-          if (error.status === 404) {
-            this.setState({ takenAlert: true })
-          } else {
-            this.props.hideError()
-          }
-          this.setState({ usernameValue: this.props.username.username })
+  changeUsername() {
+    const user = this.state.usernameValue
+    accountsApi
+      .checkUsername(user)
+      .then(() => {
+        // update username locally
+        accountsApi.updateUsername(user).then(() => {
+          socket.updateUser({ username: user })
+          AsyncStorage.setItem(USERNAME, user)
+          this.props.changeUsername(user)
           Keyboard.dismiss()
         })
-    }
+      })
+      .catch((error) => {
+        console.log(error.status === 404)
+        if (error.status === 404) {
+          this.setState({ takenAlert: true })
+        } else {
+          this.props.hideError()
+        }
+        this.setState({ usernameValue: this.props.username.username })
+        Keyboard.dismiss()
+      })
+  }
+
+  changePhoto() {
+    const photo = this.state.photoValue
+    accountsApi
+      .updatePhoto(photo)
+      .then(() => {
+        socket.updateUser({ photo: photo })
+        // update name locally
+        AsyncStorage.setItem(PHOTO, photo)
+        this.props.changeImage(photo)
+      })
+      .catch(() => {
+        this.props.showError()
+        this.setState({
+          photoValue: this.props.image.image,
+        })
+      })
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -201,10 +214,6 @@ class UserProfileView extends Component {
       })
   }
 
-  ////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////
-
   // close alert for taken username
   closeTaken() {
     this.setState({ takenAlert: false })
@@ -238,49 +247,17 @@ class UserProfileView extends Component {
   }
 
   makeChanges() {
-    if (this.props.name.name !== this.state.nameValue) {
-      this.changeName()
-    }
-    if (this.props.username.username !== this.state.usernameValue) {
-      if (this.state.usernameValue[0] === '@') {
-        var userTemp = this.state.usernameValue.slice(1)
-        this.setState({ usernameValue: userTemp })
-      }
-      this.changeUsername()
-    }
-    this.savePhoto()
+    if (this.props.name.name !== this.state.nameValue) this.changeName()
+    if (this.props.username.username !== this.state.usernameValue) this.changeUsername()
+    if (this.props.image.image !== this.state.photoValue) this.changePhoto()
+    this.setState({ edit: false })
   }
 
   handleFriendsCount(n) {
     this.setState({ numFriends: n })
   }
 
-  // TODO: Change from photo picker from phone gallery to our default photos
-  uploadPhoto() {
-    ImagePicker.openPicker({
-      width: 400,
-      height: 400,
-      cropping: true,
-    }).then((image) => {
-      this.setState({
-        imageData: {
-          uri: image.path,
-          type: image.mime,
-          name: 'avatar',
-        },
-        oldImage: this.props.image.image,
-        image: image.path,
-      })
-      this.props.image.image = image.path
-      AsyncStorage.setItem(PHOTO, this.props.image.image)
-    })
-  }
-
   dontSave() {
-    this.setState({ edit: false })
-  }
-
-  savePhoto() {
     this.setState({ edit: false })
   }
 
@@ -378,6 +355,7 @@ class UserProfileView extends Component {
             makeChanges={() => this.makeChanges()}
             userChange={(text) => this.setState({ usernameValue: text })}
             nameChange={(text) => this.setState({ nameValue: text })}
+            photoChange={(photo) => this.setState({ photoValue: photo })}
           />
         )}
 

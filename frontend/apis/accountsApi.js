@@ -131,14 +131,6 @@ const getUser = async () => {
     })
 }
 
-// update email and returns status
-const updateEmail = async (info) => {
-  const req = {
-    email: info,
-  }
-  return updateUser(req)
-}
-
 // update username and returns status
 const updateUsername = async (info) => {
   const req = {
@@ -155,19 +147,11 @@ const updateName = async (info) => {
   return updateUser(req)
 }
 
-// update username and returns status
-const updatePhoneNumber = async (info) => {
-  const req = {
-    phone_number: info,
-  }
-  return updateUser(req)
-}
-
-const updatePhoto = async (id, info) => {
+const updatePhoto = async (info) => {
   const req = {
     photo: info,
   }
-  return updateUser(id, req)
+  return updateUser(req)
 }
 
 // updates user and returns status
@@ -184,6 +168,25 @@ const updateUser = async (req) => {
       return Promise.reject(error.response)
     })
 }
+
+// // updates user and returns status
+// const updateUser = async (username, name, photo) => {
+//   let req = {}
+//   if (username) req['username'] = username
+//   if (name) req['name'] = name
+//   if (photo) req['photo'] = photo
+//   return accountsApi
+//     .put(`/accounts`, req)
+//     .then((res) => {
+//       if ('username' in req) auth().currentUser.updateProfile({ displayName: req.username })
+//       return {
+//         status: res.status,
+//       }
+//     })
+//     .catch((error) => {
+//       return Promise.reject(error.response)
+//     })
+// }
 
 // checks username and returns status
 const checkUsername = async (username) => {
@@ -235,10 +238,8 @@ export default {
   deleteUser,
   getAllUsers,
   getUser,
-  updateEmail,
   updateName,
   updatePhoto,
-  updatePhoneNumber,
   updateUsername,
   searchUsers,
   createFBUserTest,

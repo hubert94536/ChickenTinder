@@ -18,10 +18,9 @@ import screenStyles from '../../styles/screenStyles.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
 import ChoosePic from '../modals/ChoosePic.js'
-import { changeImage, setDisable, hideDisable } from '../redux/Actions.js'
+import { setDisable, hideDisable } from '../redux/Actions.js'
 
-const height = Dimensions.get('window').height
-
+const width = Dimensions.get('window').width
 class EditProfile extends React.Component {
   constructor(props) {
     super(props)
@@ -33,10 +32,6 @@ class EditProfile extends React.Component {
       editPic: false,
       photo: this.props.image.image,
     }
-  }
-
-  componentDidMount() {
-    this.setState({ photo: this.props.image.image })
   }
 
   changeUser(text) {
@@ -56,9 +51,6 @@ class EditProfile extends React.Component {
   finalCheck() {
     this.props.setDisable()
     this.setState({ editPic: false })
-    if (this.state.photo != this.props.image.image) {
-      this.props.changeImage(this.state.photo)
-    }
     if (!this.state.validNameFormat || !this.state.validUsernameFormat) {
       this.props.hideDisable()
       return
@@ -71,11 +63,12 @@ class EditProfile extends React.Component {
     let trimmedUser = this.state.usernameValue
 
     this.setState({ nameValue: trimmedName, usernameValue: trimmedUser }, () => {
-      this.props.makeChanges() //must use callback in setState or states won't update properly
+      this.props.makeChanges()
     })
 
     this.props.nameChange(trimmedName)
     this.props.userChange(trimmedUser)
+    this.props.photoChange(this.state.photo)
     this.props.hideDisable()
   }
 
@@ -115,8 +108,7 @@ class EditProfile extends React.Component {
   }
 
   changePic(pic) {
-    this.setState({ photo: pic })
-    this.setState({ editPic: false })
+    this.setState({ photo: pic, editPic: false })
   }
 
   render() {
@@ -187,12 +179,6 @@ class EditProfile extends React.Component {
                 </Text>
               )}
             </View>
-            {this.state.editPic && (
-              <ChoosePic
-                dontSave={() => this.dontSavePic()}
-                makeChanges={(pic) => this.changePic(pic)}
-              />
-            )}
             <TouchableHighlight
               disabled={this.props.disable}
               style={[screenStyles.medButton, styles.saveButton]}
@@ -207,6 +193,7 @@ class EditProfile extends React.Component {
         )}
         {this.state.editPic && (
           <ChoosePic
+            photo={this.state.photo}
             dontSave={() => this.dontSavePic()}
             makeChanges={(pic) => this.changePic(pic)}
           />
@@ -228,7 +215,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      changeImage,
       setDisable,
       hideDisable,
     },
@@ -240,6 +226,7 @@ EditProfile.propTypes = {
   dontSave: PropTypes.func,
   userChange: PropTypes.func,
   nameChange: PropTypes.func,
+  photoChange: PropTypes.func,
   makeChanges: PropTypes.func,
   visible: PropTypes.bool,
   error: PropTypes.bool,
@@ -254,8 +241,8 @@ EditProfile.propTypes = {
 
 const styles = StyleSheet.create({
   mainContainerHeight: {
-    height: height * 0.5,
-    marginTop: '15%',
+    height: width,
+    marginTop: '30%',
   },
   modalContent: {
     textAlign: 'center',
@@ -266,15 +253,15 @@ const styles = StyleSheet.create({
     fontSize: normalize(16.5),
   },
   pfp: {
-    height: height * 0.13,
-    width: height * 0.13,
+    height: width * 0.28,
+    width: width * 0.28,
     borderRadius: 60,
     alignSelf: 'center',
   },
   whiteSpace: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: '4%',
+    marginBottom: '2%',
   },
   nameText: {
     marginBottom: '2%',

@@ -62,9 +62,7 @@ export default class Price extends React.Component {
                   value4="$$$$"
                   selectMultiple={true}
                   onValueChange={(priceArr) => {
-                    this.setState({ selectedPrice: priceArr }, () =>
-                      console.log('price array: ' + this.state.selectedPrice),
-                    )
+                    this.setState({ selectedPrice: priceArr })
                   }}
                 />
               </View>
