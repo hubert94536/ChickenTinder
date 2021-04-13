@@ -21,6 +21,7 @@ import {
   hideRefresh,
 } from './frontend/redux/Actions.js'
 import global from './global.js'
+import Disconnect from './frontend/screens/Disconnect.js'
 import Group from './frontend/screens/Group.js'
 import Home from './frontend/screens/Home.js'
 import Loading from './frontend/screens/Loading.js'
@@ -61,6 +62,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    this.props.showRefresh()
     var start
     var unsubscribe = auth().onAuthStateChanged(async (user) => {
       unsubscribe()
@@ -74,6 +76,19 @@ class App extends React.Component {
             this.setState({ appContainer: <UserInfo /> })
             start = 'Home'
             AppState.addEventListener('change', this._handleAppStateChange)
+            socket.getSocket().on('disconnect', (reason) => {
+              console.log('Disconnect:', reason)
+              if (
+                reason === 'transport close' ||
+                reason === 'transport error' ||
+                reason === 'ping timeout'
+              )
+                socket.connect()
+              else {
+                this.navigator &&
+                  this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Disconnect' }))
+              }
+            })
             socket.getSocket().on('reconnect', (session) => {
               console.log('reconnect')
               if (session) {
@@ -81,6 +96,7 @@ class App extends React.Component {
                 if (!session.members[global.uid]) {
                   socket.kickLeave()
                   this.props.showKick()
+                  this.props.hideRefresh()
                   this.navigator &&
                     this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Home' }))
                   this.props.hideRefresh()
@@ -90,12 +106,15 @@ class App extends React.Component {
                 this.props.updateSession(session)
                 this.props.setHost(session.host === global.uid)
                 // check if session is still in a group
-                if (!session.resInfo)
+                if (!session.resInfo) {
+                  this.props.hideRefresh()
                   this.navigator &&
                     this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Group' }))
+                }
                 // check if session is in a match
                 else if (session.match) {
                   this.props.setMatch(session.resInfo.find((x) => x.id === session.match))
+                  this.props.hideRefresh()
                   this.navigator &&
                     this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Match' }))
                 }
@@ -108,23 +127,29 @@ class App extends React.Component {
                     (x) => (x.likes = session.top3.likes[session.top3.choices.indexOf(x.id)]),
                   )
                   this.props.setTop(restaurants.reverse())
+                  this.props.hideRefresh()
                   this.navigator &&
                     this.navigator.dispatch(NavigationActions.navigate({ routeName: 'TopThree' }))
                 }
                 // check if session is in round and if user is finished swiping => going to loading
-                else if (session.finished.indexOf(global.uid) !== -1)
+                else if (session.finished.indexOf(global.uid) !== -1) {
+                  this.props.hideRefresh()
                   this.navigator &&
                     this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Loading' }))
+                }
                 // check if session is in round and still swiping
-                else
+                else {
+                  this.props.hideRefresh()
                   this.navigator &&
                     this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Round' }))
+                }
               }
               // check if session already ended
-              else
+              else {
+                this.props.hideRefresh()
                 this.navigator &&
                   this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Home' }))
-              this.props.hideRefresh()
+              }
             })
           }
         } catch (error) {
@@ -181,6 +206,9 @@ class App extends React.Component {
           TopThree: {
             screen: TopThree,
           },
+          Disconnect: {
+            screen: Disconnect,
+          },
         },
         {
           initialRouteName: start,
@@ -212,6 +240,7 @@ class App extends React.Component {
       else socket.getSocket().connect()
     }
     this.setState({ appState: nextAppState })
+    this.props.hideRefresh()
   }
 
   render() {

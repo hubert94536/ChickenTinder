@@ -10,7 +10,7 @@ import mapStyle from '../../styles/mapStyle.json'
 import MatchCard from '../cards/MatchCard.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
-import { updateSession, setDisable, hideDisable } from '../redux/Actions.js'
+import { updateSession, setDisable, hideDisable, hideRefresh } from '../redux/Actions.js'
 import socket from '../apis/socket.js'
 
 // the card for the restaurant match
@@ -25,6 +25,10 @@ class Match extends React.Component {
     socket.leave('match')
     this.props.hideDisable()
     this.props.navigation.replace('Home')
+  }
+
+  componentDidMount() {
+    this.props.hideRefresh()
   }
 
   render() {
@@ -98,6 +102,7 @@ const mapDispatchToProps = (dispatch) =>
       updateSession,
       setDisable,
       hideDisable,
+      hideRefresh,
     },
     dispatch,
   )
@@ -114,6 +119,7 @@ Match.propTypes = {
   setDisable: PropTypes.func,
   hideDisable: PropTypes.func,
   disable: PropTypes.bool,
+  hideRefresh: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
