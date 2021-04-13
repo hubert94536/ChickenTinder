@@ -37,7 +37,7 @@ class Loading extends React.Component {
     super(props)
     this.state = {
       leave: false, //leave alert
-      continue: true, //continue alert
+      continue: false, //continue alert
     }
     socket.getSocket().once('match', (data) => {
       socket.getSocket().off()
@@ -108,7 +108,7 @@ class Loading extends React.Component {
           <Image source={require('../assets/loading.gif')} style={styles.gif} />
         </View>
         <View>
-          {this.props.isHost && (
+          {!this.props.isHost && (
             <View>
               <Text style={styles.general}>
                 Hang tight while others finish swiping and a match is found.
@@ -123,7 +123,7 @@ class Loading extends React.Component {
               </TouchableHighlight>
             </View>
           )}
-          {!this.props.isHost && (
+          {this.props.isHost && (
             <View>
               <Text style={styles.general}>
                 Hang tight while others finish swiping or continue for the results!
@@ -261,16 +261,6 @@ const styles = StyleSheet.create({
     color: 'white',
     width: '80%',
     alignSelf: 'center',
-  },
-  hostText: {
-    marginTop: '15%',
-    marginBottom: 0,
-    paddingTop: 0,
-    paddingBottom: 0,
-  },
-  hostText2: {
-    marginTop: 0,
-    paddingTop: '5%',
   },
   leaveButton: {
     alignSelf: 'center',
