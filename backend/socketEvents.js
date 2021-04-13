@@ -58,11 +58,12 @@ module.exports = (io) => {
   })
 
   socketAuth(io, {
+    timeout: 2000,
     authenticate: async (socket, data, callback) => {
       const { token } = data
       try {
         // verify token passed in authentication
-        const user = await auth.verifySocket(token)
+        let user = await auth.verifySocket(token)
         socket.user = user
         return callback(null, true)
       } catch (err) {
@@ -111,6 +112,7 @@ module.exports = (io) => {
 
   io.on('connection', (socket) => {
     socket.on('reconnection', () => {
+      console.log('reconnect')
       if (socket.user.room) {
         lock(socket.user.room, async function (done) {
           // check if room still exists
@@ -121,18 +123,21 @@ module.exports = (io) => {
             socket.emit('reconnect', session)
           } else {
             hdel(`users:${socket.user.uid}`, 'room').catch((err) => console.error(err))
+            delete socket.user.room
             socket.emit('reconnect')
           }
           done()
         })
+      } else {
+        socket.emit('reconnect')
       }
     })
 
     // disconnects user and removes them if in room
     socket.on('disconnect', async () => {
       try {
-        console.log('disconnected: ' + socket.user.uid)
         if (socket.user && socket.user.room) {
+          console.log('disconnected: ' + socket.user.uid)
           socket.leave(socket.user.room)
           lock(socket.user.room, async function (done) {
             let user = await hgetAll(`users:${socket.user.uid}`)
@@ -282,7 +287,7 @@ module.exports = (io) => {
     })
 
     // alert to all clients in room to start
-    socket.on('start', async (data) => {
+    socket.on('start', (data) => {
       lock(socket.user.room, async function (done) {
         try {
           let session = data.session
@@ -357,7 +362,7 @@ module.exports = (io) => {
     })
 
     // handle user leaving
-    socket.on('leave', async (data) => {
+    socket.on('leave', (data) => {
       lock(socket.user.room, async function (done) {
         try {
           socket.leave(socket.user.room)
@@ -485,8 +490,19 @@ module.exports = (io) => {
     })
 
     // alert all users to choose random pick
-    socket.on('choose', (data) => {
-      io.in(socket.user.room).emit('choose', data.index)
+    socket.on('choose', async (data) => {
+      try {
+        let session = await sendCommand('JSON.GET', [socket.user.room])
+        session = JSON.parse(session)
+        await sendCommand('JSON.SET', [
+          socket.user.room,
+          '.match',
+          JSON.stringify(session.top3.choices[data.index]),
+        ])
+        io.in(socket.user.room).emit('choose', data.index)
+      } catch (err) {
+        socket.emit('exception', 'choose')
+      }
     })
 
     // update socket user info
