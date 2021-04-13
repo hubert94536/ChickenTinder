@@ -159,7 +159,7 @@ class App extends React.Component {
       var RootStack = createStackNavigator(
         {
           Home: {
-            screen: Home,
+            screen: Loading,
             navigationOptions: {
               animationEnabled: false,
             },
