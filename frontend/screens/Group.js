@@ -102,8 +102,9 @@ class Group extends React.Component {
     socket.getSocket().on('reselect', () => {
       // alert for host to reselect filters
       socketErrMsg = 'No restaurants were found. Please broaden your filters.'
-      this.setState({ socketErr: true })
       this.props.hideDisable()
+      this.props.hideRefresh()
+      this.setState({ socketErr: true })
     })
 
     socket.getSocket().on('exception', (msg) => {

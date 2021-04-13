@@ -1,9 +1,7 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 import { Dimensions, Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-import { setDisable, hideDisable } from '../redux/Actions.js'
-import PropTypes from 'prop-types'
+import colors from '../../styles/colors.js'
 
 const width = Dimensions.get('window').width
 
@@ -19,21 +17,19 @@ class ImageCard extends React.Component {
   }
 
   handleClick() {
-    this.props.setDisable()
     this.setState({ selected: true })
     this.props.press(this.state.photo)
-    this.props.hideDisable()
   }
 
   render() {
     return (
-      <TouchableWithoutFeedback onPress={() => this.handleClick()} disabled={this.props.disable}>
+      <TouchableWithoutFeedback onPress={() => this.handleClick()} >
         <View style={styles.container}>
           <Image
             source={{ uri: Image.resolveAssetSource(this.props.image).uri }}
             style={[
               styles.picture,
-              this.state.selected ? { borderColor: 'black' } : { borderColor: 'white' },
+              this.state.selected ? { borderColor: colors.hex } : { borderColor: 'white' },
             ]}
           />
         </View>
@@ -42,29 +38,12 @@ class ImageCard extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  const { disable } = state
-  return { disable }
-}
-
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(
-    {
-      setDisable,
-      hideDisable,
-    },
-    dispatch,
-  )
-
-export default connect(mapStateToProps, mapDispatchToProps)(ImageCard)
+export default ImageCard
 
 ImageCard.propTypes = {
   press: PropTypes.func,
   image: PropTypes.string,
   selected: PropTypes.bool,
-  setDisable: PropTypes.func,
-  hideDisable: PropTypes.func,
-  disable: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({
@@ -76,6 +55,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: width * 0.135,
     width: width * 0.135,
-    borderWidth: 1,
+    borderWidth: 2,
   },
 })

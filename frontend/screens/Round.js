@@ -62,7 +62,6 @@ class Round extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props.session)
     if (this.props.session.members[global.uid] !== 'undefined') {
       for (var i = 0; i < this.props.session.resInfo.length; i++) {
         if (this.props.session.resInfo[i].id === this.props.session.members[global.uid].card) {
@@ -106,7 +105,6 @@ class Round extends React.Component {
             onSwipedLeft={(cardIndex) => {
               socket.dislikeRestaurant(this.props.session.resInfo[cardIndex].id)
             }}
-            
             stackSeparation={0}
             backgroundColor="transparent"
             animateOverlayLabelsOpacity

@@ -33,7 +33,7 @@ class Login extends React.Component {
   facebookLogin() {
     if (!this.props.disable) {
       this.props.setDisable()
-      this.setState({alert: false})
+      this.setState({ alert: false })
       loginService
         .loginWithFacebook()
         .then((result) => {
