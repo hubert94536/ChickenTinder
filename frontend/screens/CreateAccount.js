@@ -12,6 +12,7 @@ import { EMAIL, NAME, PHOTO, USERNAME, PHONE, REGISTRATION_TOKEN, UID } from 're
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { BlurView } from '@react-native-community/blur'
 import PropTypes from 'prop-types'
 import accountsApi from '../apis/accountsApi.js'
 import {
@@ -24,6 +25,7 @@ import {
 } from '../redux/Actions.js'
 import colors from '../../styles/colors.js'
 import { foodImages } from '../assets/images/defImages.js'
+import modalStyles from '../../styles/modalStyles.js'
 import global from '../../global.js'
 import notificationsApi from '../apis/notificationsApi.js'
 import normalize from '../../styles/normalize.js'
@@ -255,7 +257,7 @@ class createAccount extends React.Component {
               style={[
                 screenStyles.textBook,
                 styles.fieldText,
-                styles.fieldTextMargin,
+                styles.bottomFieldTextMargin,
                 styles.fixedText,
               ]}
               textAlign="left"
@@ -289,6 +291,15 @@ class createAccount extends React.Component {
           <ChoosePic
             dontSave={() => this.dontSave()}
             makeChanges={(pic) => this.makeChanges(pic)}
+            photo={this.state.photo}
+          />
+        )}
+        {this.state.edit && (
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
           />
         )}
       </ImageBackground>
@@ -375,13 +386,17 @@ const styles = StyleSheet.create({
     marginBottom: '7%',
     paddingVertical: '1%',
   },
+  bottomFieldTextMargin: {
+    marginHorizontal: '12%',
+    paddingVertical: '1%',
+  },
   fieldTextMarginWarning: {
     marginHorizontal: '12%',
     marginBottom: '2%',
     paddingVertical: '1%',
   },
   fixedText: {
-    paddingVertical: '2%',
+    paddingVertical: '1%',
     paddingHorizontal: '2%',
   },
   fieldName: {

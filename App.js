@@ -90,19 +90,21 @@ class App extends React.Component {
               }
             })
             socket.getSocket().on('reconnect', (session) => {
+              console.log('reconnect')
               if (session) {
-                this.props.showRefresh()
                 // check if member was kicked
-                if (!session.members[this.props.username]) {
+                if (!session.members[global.uid]) {
                   socket.kickLeave()
                   this.props.showKick()
                   this.props.hideRefresh()
                   this.navigator &&
                     this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Home' }))
+                  this.props.hideRefresh()
+                  return
                 }
                 // update host and session props
                 this.props.updateSession(session)
-                this.props.setHost(session.members[session.host].username === this.props.username)
+                this.props.setHost(session.host === global.uid)
                 // check if session is still in a group
                 if (!session.resInfo) {
                   this.props.hideRefresh()
@@ -211,13 +213,12 @@ class App extends React.Component {
         {
           initialRouteName: start,
           headerMode: 'none',
-          animationEnabled: false,
+          animationEnabled: 'false',
         },
       )
       const AppContainer = createAppContainer(RootStack)
       this.setState({ appContainer: <AppContainer ref={(nav) => (this.navigator = nav)} /> })
     })
-    this.props.hideRefresh()
   }
 
   onNotification = (notification) => {
@@ -250,7 +251,6 @@ class App extends React.Component {
 const mapStateToProps = (state) => {
   return {
     session: state.session.session,
-    username: state.username.username,
   }
 }
 
@@ -277,7 +277,6 @@ App.propTypes = {
   updateSession: PropTypes.func,
   setMatch: PropTypes.func,
   setTop: PropTypes.func,
-  username: PropTypes.string,
   showRefresh: PropTypes.func,
   hideRefresh: PropTypes.func,
   showKick: PropTypes.func,

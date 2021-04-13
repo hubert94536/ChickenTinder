@@ -90,6 +90,15 @@ class Round extends React.Component {
             stackSize={3}
             disableBottomSwipe
             disableTopSwipe
+            onSwipedAll={() => {
+              socket.getSocket().off()
+              //let backend know you're done
+              socket.finishedRound()
+              //go to the loading page
+              this.props.navigation.replace('Loading', {
+                restaurants: this.props.session.resInfo,
+              })
+            }}
             onSwiped={() => {
               if (this.state.index !== this.props.session.resInfo.length) {
                 this.setState({ index: this.state.index + 1 })
@@ -100,15 +109,6 @@ class Round extends React.Component {
             }}
             onSwipedLeft={(cardIndex) => {
               socket.dislikeRestaurant(this.props.session.resInfo[cardIndex].id)
-            }}
-            onSwipedAll={() => {
-              socket.getSocket().off()
-              //let backend know you're done
-              socket.finishedRound()
-              //go to the loading page
-              this.props.navigation.replace('Loading', {
-                restaurants: this.props.session.resInfo,
-              })
             }}
             stackSeparation={0}
             backgroundColor="transparent"

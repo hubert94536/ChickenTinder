@@ -1,10 +1,7 @@
 import React from 'react'
-import { Dimensions, Image, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Dimensions, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import { bindActionCreators } from 'redux'
-import { setDisable, hideDisable } from '../redux/Actions.js'
 import colors from '../../styles/colors.js'
-import { connect } from 'react-redux'
 import { assets as defImages } from '../assets/images/defImages.js'
 import { FlatList } from 'react-native'
 import ImageCard from '../cards/ImageCard.js'
@@ -13,20 +10,14 @@ import normalize from '../../styles/normalize.js'
 import PropTypes from 'prop-types'
 import screenStyles from '../../styles/screenStyles.js'
 
-const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
 
 class ChoosePic extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      nameValue: this.props.name.name,
-      usernameValue: this.props.username.username,
-      validNameFormat: true,
-      validUsernameFormat: true,
       images: [],
-      selected: '',
-      refresh: false,
+      selected: this.props.photo,
     }
   }
 
@@ -37,13 +28,11 @@ class ChoosePic extends React.Component {
         <ImageCard
           image={defImages[Object.keys(defImages)[i]].toString()}
           press={(pic) => this.select(pic)}
-          selected={this.props.image.image === defImages[Object.keys(defImages)[i]].toString()}
+          selected={this.state.selected === defImages[Object.keys(defImages)[i]].toString()}
         />,
       )
     }
-
     this.setState({ images: pushImages })
-    this.setState({ selected: this.props.image.image })
   }
 
   ItemView = ({ item }) => {
@@ -65,7 +54,7 @@ class ChoosePic extends React.Component {
     )
   }
 
-  async updateSelected(pic) {
+  select(pic) {
     let pushImages = []
     for (var i = 0; i < Object.keys(defImages).length; i++) {
       pushImages.push(
@@ -77,14 +66,7 @@ class ChoosePic extends React.Component {
       )
     }
     this.setState({ images: [] }, () => {
-      this.setState({ images: pushImages })
-    })
-    console.log('Selected image:' + pic)
-  }
-
-  select(pic) {
-    this.updateSelected(pic).then(() => {
-      this.setState({ selected: pic, refresh: !this.state.refresh })
+      this.setState({ images: pushImages, selected: pic })
     })
   }
 
@@ -105,18 +87,12 @@ class ChoosePic extends React.Component {
               ItemSeparatorComponent={this.ItemSeparatorView}
               renderItem={this.ItemView}
               numColumns={4}
+              keyExtractor={(item) => item.props.image}
               extraData={this.state.selected}
             />
           </View>
-          <Image
-            source={{ uri: Image.resolveAssetSource(this.props.image.image).uri }}
-            style={[
-              styles.picture,
-              this.state.selected ? { borderColor: 'black' } : { borderColor: 'white' },
-            ]}
-          />
           <TouchableHighlight
-            disabled={this.props.disable}
+            disabled={this.state.disabled}
             style={[screenStyles.medButton, styles.saveButton]}
             onPress={() => {
               this.props.makeChanges(this.state.selected)
@@ -131,55 +107,33 @@ class ChoosePic extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  const { error } = state
-  const { name } = state
-  const { username } = state
-  const { image } = state
-  const { disable } = state
-  return { error, name, username, image, disable }
-}
-
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(
-    {
-      setDisable,
-      hideDisable,
-    },
-    dispatch,
-  )
-
-export default connect(mapStateToProps, mapDispatchToProps)(ChoosePic)
+export default ChoosePic
 
 ChoosePic.propTypes = {
   dontSave: PropTypes.func,
   makeChanges: PropTypes.func,
   visible: PropTypes.bool,
-  error: PropTypes.bool,
-  image: PropTypes.object,
-  name: PropTypes.object,
-  username: PropTypes.object,
-  disable: PropTypes.bool,
+  photo: PropTypes.string,
 }
 
 const styles = StyleSheet.create({
   mainContainerHeight: {
-    height: height * 0.5,
+    height: width,
     marginTop: '30%',
   },
   modalContent: {
     textAlign: 'center',
-    marginLeft: '10%',
-    marginRight: '10%',
-    height: height * 0.365,
-    marginBottom: height * 0.01,
+    marginLeft: '9%',
+    marginRight: '8%',
+    height: width * 0.7,
+    marginBottom: '5%',
   },
   titleText: {
     fontSize: normalize(16.5),
   },
   nameText: {
-    marginBottom: '2%',
-    color: 'black',
+    marginBottom: '4%',
+    color: colors.hex,
   },
   input: {
     color: '#7d7d7d',
@@ -191,7 +145,6 @@ const styles = StyleSheet.create({
     backgroundColor: screenStyles.hex.color,
     borderColor: screenStyles.hex.color,
     margin: '5%',
-    // margin: '1.5%',
     width: '50%',
   },
   saveText: {
