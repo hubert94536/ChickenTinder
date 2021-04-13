@@ -20,7 +20,6 @@ import PropTypes from 'prop-types'
 import ChoosePic from '../modals/ChoosePic.js'
 import { setDisable, hideDisable } from '../redux/Actions.js'
 
-const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
 class EditProfile extends React.Component {
   constructor(props) {

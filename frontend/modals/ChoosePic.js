@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dimensions, Image, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Dimensions, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import colors from '../../styles/colors.js'
 import { assets as defImages } from '../assets/images/defImages.js'

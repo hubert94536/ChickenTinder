@@ -23,7 +23,7 @@ class ImageCard extends React.Component {
 
   render() {
     return (
-      <TouchableWithoutFeedback onPress={() => this.handleClick()} >
+      <TouchableWithoutFeedback onPress={() => this.handleClick()}>
         <View style={styles.container}>
           <Image
             source={{ uri: Image.resolveAssetSource(this.props.image).uri }}

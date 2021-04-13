@@ -107,7 +107,7 @@ module.exports = (io) => {
           done()
         })
       }
-    }
+    },
   })
 
   io.on('connection', (socket) => {
@@ -494,7 +494,11 @@ module.exports = (io) => {
       try {
         let session = await sendCommand('JSON.GET', [socket.user.room])
         session = JSON.parse(session)
-        await sendCommand('JSON.SET', [socket.user.room, '.match', JSON.stringify(session.top3.choices[data.index])])
+        await sendCommand('JSON.SET', [
+          socket.user.room,
+          '.match',
+          JSON.stringify(session.top3.choices[data.index]),
+        ])
         io.in(socket.user.room).emit('choose', data.index)
       } catch (err) {
         socket.emit('exception', 'choose')
