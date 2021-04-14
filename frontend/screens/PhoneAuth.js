@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component, useState } from 'react'
+import ReactCodeInput from 'react-verification-code-input';
 import {
   ImageBackground,
   SafeAreaView,
@@ -108,6 +109,7 @@ class PhoneAuthScreen extends Component {
           }}
           maxLength={6}
         />
+        
         {/* <CodeField
           cellCount={6}
           value={this.state.verificationCode}
