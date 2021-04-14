@@ -294,14 +294,6 @@ class createAccount extends React.Component {
         </TouchableHighlight>
 
         {this.state.edit && (
-<<<<<<< HEAD
-              <ChoosePic
-                dontSave={() => this.dontSave()}
-                makeChanges={(pic) => this.makeChanges(pic)}
-              />
-          )}
-          {(this.state.edit) && (
-=======
           <ChoosePic
             dontSave={() => this.dontSave()}
             makeChanges={(pic) => this.makeChanges(pic)}
@@ -309,7 +301,6 @@ class createAccount extends React.Component {
           />
         )}
         {this.state.edit && (
->>>>>>> e0ad07eb467f40012ec067f0b891fcce96e6d677
           <BlurView
             blurType="dark"
             blurAmount={10}

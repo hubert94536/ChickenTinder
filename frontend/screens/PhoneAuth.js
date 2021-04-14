@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component, useState } from 'react'
+import CodeInput from 'react-native-confirmation-code-input';
 import {
   ImageBackground,
   SafeAreaView,
@@ -28,12 +29,6 @@ import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import UserInfo from './UserInfo.js'
-import {
-  CodeField,
-  Cursor,
-  useBlurOnFulfill,
-  useClearByFocusCell,
-} from 'react-native-confirmation-code-field'
 
 const font = 'CircularStd-Bold'
 
@@ -92,46 +87,42 @@ class PhoneAuthScreen extends Component {
     }
   }
 
+  _onFulfill(code) {
+    this.setState({ verificationCode: code}, () => { 
+      console.log(this.state.verificationCode);
+    });
+  }
+
   renderConfirmationCodeView() {
     return (
       <View style={styles.verificationView}>
         {/* get user's info upon logging in */}
         {this.state.login && <UserInfo></UserInfo>}
-        <TextInput
-          style={[styles.textInput, { marginTop: '20%', marginBottom: '30%' }]}
-          placeholder="Verification code"
-          placeholderTextColor="#6A6A6A"
-          value={this.state.verificationCode}
-          keyboardType="numeric"
-          onChangeText={(code) => {
-            this.setState({ verificationCode: code })
-          }}
-          maxLength={6}
-        />
-        {/* <CodeField
-          cellCount={6}
-          value={this.state.verificationCode}
-          onChangeText={(code) => {
-            this.setState({ verificationCode: code })
-          }}
-          renderCell={({index, symbol, isFocused}) => (
-            <Text
-              key={index}
-              style={[styles.cell, isFocused && styles.focusCell]}
-              onLayout={getCellOnLayoutHandler(index)}>
-              {symbol || (isFocused ? <Cursor /> : null)}
-            </Text>
-          )}
-          >
+<View style = {{height: '1%', marginBottom: '40%'}}>
+<CodeInput
+              ref="codeInputRef2"
+              className={'border-b'}
+              codeLength={6}
+              size={40}
+              containerStyle={{ marginTop: 10 }}
+              codeInputStyle={styles.textInput}
+              onFulfill={(code) => this._onFulfill(code)}
+              onCodeChange={(code) => { this.setState({ verificationCode: code})  }}
+            />
+  </View>
 
-        </CodeField> */}
         <TouchableOpacity
           disabled={this.props.disable}
           style={[screenStyles.longButton, styles.longButton]}
           onPress={() => this.handleVerifyCode()}
+          // style = {{marginTop: '1%'}}
         >
           <Text style={[screenStyles.longButtonText, styles.longButtonText]}>Verify Code</Text>
         </TouchableOpacity>
+
+
+
+        
       </View>
     )
   }
