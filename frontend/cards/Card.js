@@ -30,7 +30,8 @@ class Card extends React.Component {
         .removeFriendship(this.props.uid)
         .then(() => {
           var filteredArray = this.props.friends.friends.filter((item) => {
-            return item.username !== this.props.username
+            let isFriend = item.username !== this.props.username && item.status == 'friends'
+            return isFriend
           })
           this.props.changeFriends(filteredArray)
           this.props.press(filteredArray)
