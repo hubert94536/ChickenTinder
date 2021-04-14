@@ -119,6 +119,8 @@ class Friends extends React.Component {
         )
       }
     }
+    // console.log(this.props.friends.friends)
+    // console.log('friends length: ' + this.props.friends.friends.length)
     return (
       <View>
         <View>
@@ -158,7 +160,7 @@ class Friends extends React.Component {
             )}
           </View>
         )}
-        {this.props.friends.friends.length === 0 &&
+        {this.state.data.length === 0 &&
           this.state.friendsApiCalled && ( //Show no friends view if there aren't any friends
             <ScrollView
               refreshControl={
