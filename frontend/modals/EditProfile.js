@@ -48,14 +48,15 @@ class EditProfile extends React.Component {
     this.props.nameChange(text)
   }
 
-  //remove whitespaces before and after name and username
   finalCheck() {
     this.props.setDisable()
     this.setState({ editPic: false })
     if (!this.state.validNameFormat || !this.state.validUsernameFormat) {
+      this.props.hideDisable()
       return
     }
 
+    //remove whitespaces before and after name and username
     let trimmedName = this.state.nameValue
     trimmedName = trimmedName.trimStart().trimEnd()
 
@@ -74,10 +75,9 @@ class EditProfile extends React.Component {
   validateName() {
     /*regex expression: 
     - alphanumeric characters (lowercase or uppercase), dot (.), underscore (_), hyphen(-), space( )
-    - must not start or end with space
     - 2-15 characters
     */
-    const regex = /^[a-zA-Z0-9._-]([ ._-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._-]$/
+    const regex = /^[ a-zA-Z0-9._-]([ ._-]|[a-zA-Z0-9]){0,13}[ a-zA-Z0-9._-]$/
     if (!regex.test(this.state.nameValue)) {
       this.setState({ validNameFormat: false })
     } else {
