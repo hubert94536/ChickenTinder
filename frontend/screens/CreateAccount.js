@@ -111,13 +111,18 @@ class createAccount extends React.Component {
     }
   }
 
+  trimName() {
+    let trimmedName = this.state.name
+    trimmedName = trimmedName.trimStart().trimEnd()
+    this.setState({ name: trimmedName })
+  }
+
   checkNameSyntax() {
     /*regex expression: 
     - alphanumeric characters (lowercase or uppercase), dot (.), underscore (_), hyphen(-), space( )
-    - must not start or end with space
     - 2-15 characters
     */
-    const regex = /^[a-zA-Z0-9._-]([ ._-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._-]$/
+    const regex = /^[ a-zA-Z0-9._-]([ ._-]|[a-zA-Z0-9]){0,13}[ a-zA-Z0-9._-]$/
     if (!regex.test(this.state.name)) {
       this.setState({ validNameFormat: false })
     } else {
@@ -215,6 +220,7 @@ class createAccount extends React.Component {
             })
           }}
           onSubmitEditing={this.handleClick}
+          onEndEditing={() => this.trimName()}
           value={this.state.username}
           underlineColorAndroid="transparent"
           spellCheck={false}
