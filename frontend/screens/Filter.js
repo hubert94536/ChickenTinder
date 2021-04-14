@@ -305,7 +305,6 @@ class FilterSelector extends React.Component {
               <FilterButton
                 active={this.state.s_majority != null}
                 onPress={() => {
-                  console.log('curr majority: ' + this.state.s_majority)
                   this.setState({ chooseMajority: true })
                   this.props.setBlur(true)
                 }}
@@ -316,7 +315,6 @@ class FilterSelector extends React.Component {
               <FilterButton
                 active={this.state.s_size != null}
                 onPress={() => {
-                  console.log('curr round size: ' + this.state.s_size)
                   this.setState({ chooseSize: true })
                   this.props.setBlur(true)
                 }}
@@ -327,7 +325,6 @@ class FilterSelector extends React.Component {
               <FilterButton
                 active={this.state.s_location != null}
                 onPress={() => {
-                  console.log('curr location: ' + this.state.s_location)
                   this.setState({ chooseLocation: true })
                   this.props.setBlur(true)
                 }}
@@ -338,7 +335,6 @@ class FilterSelector extends React.Component {
               <FilterButton
                 active={this.state.s_time != null}
                 onPress={() => {
-                  console.log('curr time: ' + this.state.s_time)
                   this.setState({ chooseTime: true })
                   this.props.setBlur(true)
                 }}
@@ -349,7 +345,6 @@ class FilterSelector extends React.Component {
               <FilterButton
                 active={this.state.s_price != null}
                 onPress={() => {
-                  console.log('prices: ' + this.state.s_price)
                   this.setState({ choosePrice: true })
                   this.props.setBlur(true)
                 }}
@@ -441,7 +436,6 @@ class FilterSelector extends React.Component {
             if (clear) this.setState({ s_majority: null })
           }}
           press={(value) => {
-            console.log(this.state.s_majority)
             this.setState({ s_majority: value, chooseMajority: false })
             this.props.setBlur(false)
           }}

@@ -65,11 +65,6 @@ class Friends extends React.Component {
 
   componentDidMount() {
     this.editFriends()
-    // for(var i = 0; i < this.props.friends.friends.length; i++)
-    // {
-    //   if(this.props.friends.friends[i].status === 'requested')
-    //     friendsApi.acceptFriendRequest(this.props.friends.friends[i].uid)
-    // }
   }
 
   //  searches the users friends by username
@@ -124,13 +119,15 @@ class Friends extends React.Component {
         )
       }
     }
+    // console.log(this.props.friends.friends)
+    // console.log('friends length: ' + this.props.friends.friends.length)
     return (
       <View>
         <View>
           <SearchBar
             containerStyle={styles.container}
             inputContainerStyle={styles.inputContainer}
-            inputStyle={(styles.text, styles.input)}
+            inputStyle={(screenStyles.text, styles.input)}
             placeholder="Search by username"
             onChangeText={(text) => this.searchFilterFunction(text)}
             value={this.state.search}
@@ -163,7 +160,7 @@ class Friends extends React.Component {
             )}
           </View>
         )}
-        {this.props.friends.friends.length === 0 &&
+        {this.state.data.length === 0 &&
           this.state.friendsApiCalled && ( //Show no friends view if there aren't any friends
             <ScrollView
               refreshControl={

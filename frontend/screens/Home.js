@@ -64,10 +64,11 @@ class Home extends React.Component {
     })
 
     socket.getSocket().on('exception', (msg) => {
+      this.props.hideDisable()
+      this.props.hideRefresh()
       if (msg === 'create') socketErrMsg = 'Unable to create a group, please try again'
       else if (msg === 'join') socketErrMsg = 'Unable to join a group, please try again'
       this.setState({ socketErr: true })
-      this.props.hideDisable()
     })
 
     // //uncomment if testing friends/requests
@@ -77,14 +78,14 @@ class Home extends React.Component {
     // accountsApi.createFBUserTest('Helen2', 35, 'helennn', 'helennn@gmail.com', '53', '45678903')
     // accountsApi.createFBUserTest('Kevin2', 36, 'kev', 'kevi@gmail.com', '54', '45678904')
     // // friendsApi.createFriendshipTest(requester, accepter)
-    // friendsApi.createFriendshipTest(32, "bG0nwNsUpeSYW913nNaLdorlB8H2")
-    // friendsApi.createFriendshipTest(33, "bG0nwNsUpeSYW913nNaLdorlB8H2")
-    // friendsApi.createFriendshipTest(34, "bG0nwNsUpeSYW913nNaLdorlB8H2")
+    // friendsApi.createFriendshipTest(32, "T5wVvNZZqygPVR9Nfecm0neUUQ93")
+    // friendsApi.createFriendshipTest(33, "T5wVvNZZqygPVR9Nfecm0neUUQ93")
+    // friendsApi.createFriendshipTest(34, "T5wVvNZZqygPVR9Nfecm0neUUQ93")
   }
 
-  componentDidMount() {
-    this.props.hideRefresh()
-  }
+  // componentDidMount() {
+  //   this.props.hideRefresh()
+  // }
 
   createGroup() {
     this.props.setDisable()

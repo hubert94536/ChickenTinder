@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types'
 import React, { Component, useState } from 'react'
-import ReactCodeInput from 'react-verification-code-input';
 import {
   ImageBackground,
   SafeAreaView,
@@ -34,7 +33,7 @@ import {
   Cursor,
   useBlurOnFulfill,
   useClearByFocusCell,
-} from 'react-native-confirmation-code-field';
+} from 'react-native-confirmation-code-field'
 
 const font = 'CircularStd-Bold'
 
@@ -57,7 +56,7 @@ class PhoneAuthScreen extends Component {
     this.props.setDisable()
     // Request to send OTP
     try {
-      const confirm = await loginService.loginWithPhone("+1" + this.state.phone)
+      const confirm = await loginService.loginWithPhone('+1' + this.state.phone)
       this.setState({ confirmResult: confirm })
     } catch (err) {
       if (err.message == 'Invalid phone number') this.setState({ invalidNumberAlert: true })
@@ -109,7 +108,6 @@ class PhoneAuthScreen extends Component {
           }}
           maxLength={6}
         />
-        
         {/* <CodeField
           cellCount={6}
           value={this.state.verificationCode}

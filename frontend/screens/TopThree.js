@@ -75,6 +75,10 @@ class TopThree extends React.Component {
 
   goMatch = _.debounce(this.match.bind(this), 500)
 
+  componentDidMount() {
+    this.props.hideRefresh()
+  }
+
   render() {
     let restaurants = this.props.top
     return (
