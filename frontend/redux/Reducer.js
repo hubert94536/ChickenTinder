@@ -14,6 +14,7 @@ const INITIAL_STATE = {
   match: {},
   top: [],
   disable: false,
+  hold: false,
 }
 
 export const errorReducer = (state = INITIAL_STATE.error, action) => {
@@ -173,6 +174,17 @@ export const disableReducer = (state = INITIAL_STATE.disable, action) => {
     case 'SET_DISABLE':
       return true
     case 'HIDE_DISABLE':
+      return false
+    default:
+      return state
+  }
+}
+
+export const holdReducer = (state = INITIAL_STATE.hold, action) => {
+  switch (action.type) {
+    case 'SET_HOLD':
+      return true
+    case 'HIDE_HOLD':
       return false
     default:
       return state

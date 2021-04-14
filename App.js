@@ -62,7 +62,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.props.showRefresh()
+    // this.props.showRefresh()
     var start
     var unsubscribe = auth().onAuthStateChanged(async (user) => {
       unsubscribe()

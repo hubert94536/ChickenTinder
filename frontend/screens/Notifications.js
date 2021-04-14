@@ -13,12 +13,20 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from '@react-native-community/blur'
-import { newNotif, noNotif, changeFriends, showError, hideRefresh } from '../redux/Actions.js'
+import {
+  newNotif,
+  noNotif,
+  changeFriends,
+  showError,
+  hideRefresh,
+  hideHold,
+} from '../redux/Actions.js'
 import Swiper from 'react-native-swiper'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
 import notificationsApi from '../apis/notificationsApi.js'
 import colors from '../../styles/colors.js'
+import friendsApi from '../apis/friendsApi.js'
 import screenStyles from '../../styles/screenStyles.js'
 import modalStyles from '../../styles/modalStyles.js'
 import NotifCard from '../cards/NotifCard.js'
@@ -49,6 +57,7 @@ class Notif extends Component {
       notifs: [],
       activityNotifs: [],
       requestNotifs: [],
+      modNotifs: [],
       activity: true,
       visible: false,
       changeName: false,
@@ -77,8 +86,22 @@ class Notif extends Component {
   }
 
   componentDidMount() {
-    this.getNotifs()
+    // this.getNotifs()
     this.props.hideRefresh()
+  }
+
+  deleteNotifications() {
+    this.props.hideHold()
+    var tempNotifs = []
+    for (var i = 0; i < this.state.notifs.length; i++) {
+      console.log(this.state.modNotifs.includes(i))
+      if (!this.state.modNotifs.includes(i)) {
+        tempNotifs.push(this.state.notifs[i])
+      } else if (this.state.notifs[i].type === 'pending') {
+        friendsApi.removeFriendship(this.state.notifs[i].sender)
+      }
+    }
+    this.setState({ notifs: tempNotifs, modNotifs: [] })
   }
 
   // id: notif.id,
@@ -97,21 +120,21 @@ class Notif extends Component {
         name: 'Hanna Co',
         username: 'hco',
         uid: '3',
-        image: '150',
+        photo: '150',
         type: 'invited',
       },
       {
         name: 'Francis Feng',
         username: 'francis',
         uid: '8',
-        image: '167',
+        photo: '167',
         type: 'invited',
       },
       {
         name: 'Hubert Chen',
         username: 'hubesc',
         uid: '5',
-        image: '165',
+        photo: '165',
         type: 'requested',
       },
     ]
@@ -129,6 +152,23 @@ class Notif extends Component {
       .catch(() => {
         this.props.showError()
       })
+  }
+
+  toDelete(add, ind) {
+    var tempNotifs = []
+    if (add) {
+      // we've unselected a previously selected notif
+      for (var i = 0; i < this.state.modNotifs.length; i++) {
+        if (ind !== this.state.modNotifs[i]) {
+          tempNotifs.push(this.state.modNotifs[i])
+        }
+      }
+    } else {
+      // we're trying to delete a notif
+      tempNotifs = this.state.modNotifs
+      tempNotifs.push(ind)
+    }
+    this.setState({ modNotifs: tempNotifs })
   }
 
   render() {
@@ -155,6 +195,7 @@ class Notif extends Component {
               content={notifList[i].content}
               key={i}
               index={i}
+              deleteNotif={(add, ind) => this.toDelete(add, ind)}
               press={(uid, newArr, status) => this.removeRequest(uid, newArr, status)}
               showError={() => this.setState({ errorAlert: true })}
               removeError={() => this.setState({ errorAlert: false })}
@@ -204,6 +245,7 @@ class Notif extends Component {
               content={notifList[i].content}
               key={i}
               index={i}
+              deleteNotif={(add, ind) => this.toDelete(add, ind)}
               press={(uid, newArr, status) => this.removeRequest(uid, newArr, status)}
               showError={() => this.setState({ errorAlert: true })}
               removeError={() => this.setState({ errorAlert: false })}
@@ -268,12 +310,13 @@ class Notif extends Component {
             </TouchableHighlight>
           </View>
         </View>
-        <View style={{ height: '70%', marginTop: '5%' }}>
+        <View style={{ height: '63%', marginTop: '5%' }}>
           <Swiper
             ref="swiper"
             loop={false}
             showsPagination={false}
             onIndexChanged={() => this.setState({ activity: !this.state.activity })}
+            scrollEnabled={!this.props.hold}
           >
             {/* <Friends isFriends /> */}
             {/* <View /> */}
@@ -287,6 +330,21 @@ class Notif extends Component {
           </Swiper>
         </View>
         {/* <View style={styles.bar}/> */}
+        {!this.props.hold && (
+          <Text style={[screenStyles.text, styles.deleteText]}>Hold to delete notifications</Text>
+        )}
+
+        {this.props.hold && (
+          <TouchableHighlight
+            onPress={() => this.deleteNotifications()}
+            style={[screenStyles.medButton, styles.deleteButton, { backgroundColor: colors.hex }]}
+            underlayColor="white"
+          >
+            <Text style={[screenStyles.text, styles.deleteButtonText, { color: 'white' }]}>
+              Delete Notifications
+            </Text>
+          </TouchableHighlight>
+        )}
 
         {(this.state.visible || this.state.errorAlert || this.state.deleteFriend) && (
           <BlurView
@@ -332,7 +390,8 @@ const mapStateToProps = (state) => {
   const { notif } = state
   const { error } = state
   const { username } = state
-  return { notif, error, username }
+  const { hold } = state
+  return { notif, error, username, hold }
 }
 //  access the state as this.props.notif
 //  if that's giving you errors, use this.props.notif.notif
@@ -345,6 +404,7 @@ const mapDispatchToProps = (dispatch) =>
       changeFriends,
       showError,
       hideRefresh,
+      hideHold,
     },
     dispatch,
   )
@@ -360,9 +420,11 @@ Notif.propTypes = {
   }).isRequired,
   username: PropTypes.object,
   friends: PropTypes.object,
+  hold: PropTypes.bool,
   changeFriends: PropTypes.func,
   showError: PropTypes.func,
   hideRefresh: PropTypes.func,
+  hideHold: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
@@ -378,6 +440,16 @@ const styles = StyleSheet.create({
     borderRadius: 63,
     borderWidth: 4,
     margin: '5%',
+  },
+  deleteText: {
+    textAlign: 'center',
+  },
+  deleteButton: {
+    borderColor: colors.hex,
+  },
+  deleteButtonText: {
+    marginHorizontal: '7%',
+    marginVertical: '1%',
   },
   userInfo: { flexDirection: 'row', alignItems: 'center' },
   modal: {
