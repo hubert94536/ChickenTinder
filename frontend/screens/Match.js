@@ -13,6 +13,8 @@ import screenStyles from '../../styles/screenStyles.js'
 import { updateSession, setDisable, hideDisable, hideRefresh } from '../redux/Actions.js'
 import socket from '../apis/socket.js'
 
+const width = Dimensions.get('window').width
+
 // the card for the restaurant match
 class Match extends React.Component {
   constructor(props) {
@@ -160,8 +162,8 @@ const styles = StyleSheet.create({
   map: {
     alignSelf: 'center',
     justifyContent: 'flex-end',
-    height: Dimensions.get('window').height * 0.4,
-    width: Dimensions.get('window').width * 0.82,
+    height: width * 0.7733,
+    width: width * 0.82,
   },
   //Styling for Google map for restaurant
   /* For "Open on Yelp" button */

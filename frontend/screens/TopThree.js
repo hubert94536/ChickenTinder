@@ -28,7 +28,6 @@ import socket from '../apis/socket.js'
 import { updateSession, setHost, setMatch, showRefresh, hideRefresh } from '../redux/Actions.js'
 import _ from 'lodash'
 
-const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
 
 class TopThree extends React.Component {
@@ -421,14 +420,14 @@ const styles = StyleSheet.create({
     paddingRight: '10%',
   },
   image: {
-    height: height * 0.18,
+    height: width * 0.348,
     width: width * 0.38,
     position: 'absolute',
     overflow: 'hidden',
     marginTop: '2%',
   },
   cardDefault: {
-    height: height * 0.3,
+    height: width * 0.58,
     width: width * 0.43,
     position: 'absolute',
     elevation: 1,

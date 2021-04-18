@@ -17,7 +17,7 @@ import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 
-const height = Dimensions.get('window').height
+const width = Dimensions.get('window').width
 
 class Confirmation extends React.Component {
   constructor(props) {
@@ -87,7 +87,7 @@ class Confirmation extends React.Component {
 const styles = StyleSheet.create({
   main: { position: 'absolute' },
   modal: {
-    height: height * 0.25,
+    height: width * 0.4833,
   },
   titleContainer: {
     flexDirection: 'row',

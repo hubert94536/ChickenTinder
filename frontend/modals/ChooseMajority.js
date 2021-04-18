@@ -15,6 +15,8 @@ import screenStyles from '../../styles/screenStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
 import _ from 'lodash'
 
+const width = Dimensions.get('window').width
+
 export default class Majority extends React.Component {
   constructor(props) {
     super(props)
@@ -153,7 +155,7 @@ export default class Majority extends React.Component {
 
 const styles = StyleSheet.create({
   mainContainerHeight: {
-    height: Dimensions.get('window').height * 0.25,
+    height: width * 0.4833,
   },
   inputContainer: {
     marginLeft: '0%',

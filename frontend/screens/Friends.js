@@ -17,7 +17,6 @@ const sleep = (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds))
 }
 
-const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
 
 class Friends extends React.Component {
@@ -119,8 +118,6 @@ class Friends extends React.Component {
         )
       }
     }
-    // console.log(this.props.friends.friends)
-    // console.log('friends length: ' + this.props.friends.friends.length)
     return (
       <View>
         <View>
@@ -260,10 +257,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: normalize(16),
     color: 'grey',
-  },
-  gif: {
-    alignSelf: 'center',
-    width: height * 0.3,
-    height: height * 0.4,
   },
 })

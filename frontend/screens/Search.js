@@ -14,6 +14,8 @@ import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 import TabBar from '../Nav.js'
 
+const width = Dimensions.get('window').width
+
 // Used to make refreshing indicator appear/disappear
 const sleep = (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds))
@@ -259,12 +261,12 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
     borderTopColor: 'transparent',
     width: '95%',
-    height: Dimensions.get('window').height * 0.08,
+    height: width * 0.1546,
     alignSelf: 'center',
     marginTop: '13%',
   },
   inputContainer: {
-    height: Dimensions.get('window').height * 0.05,
+    height: width * 0.0966,
     width: '90%',
     alignSelf: 'center',
     backgroundColor: '#e7e7e7',

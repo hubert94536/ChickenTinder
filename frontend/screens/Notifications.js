@@ -34,7 +34,7 @@ AsyncStorage.multiGet([NAME, PHOTO, USERNAME]).then((res) => {
   img = res[1][1]
   username = res[2][1]
 })
-const height = Dimensions.get('window').height
+const width = Dimensions.get('window').width
 
 class Notif extends Component {
   constructor(props) {
@@ -381,7 +381,7 @@ const styles = StyleSheet.create({
   },
   userInfo: { flexDirection: 'row', alignItems: 'center' },
   modal: {
-    height: Dimensions.get('window').height * 0.45,
+    height: width * 0.87,
     width: '75%',
     margin: '3%',
     backgroundColor: 'white',
@@ -406,7 +406,7 @@ const styles = StyleSheet.create({
   bar: {
     marginBottom: '2%',
     alignSelf: 'center',
-    height: height * 0.07,
+    height: width * 0.1353,
     borderRadius: 10,
     borderWidth: 0,
     position: 'absolute',

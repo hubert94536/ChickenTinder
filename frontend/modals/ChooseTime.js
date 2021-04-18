@@ -17,6 +17,8 @@ import Icon from 'react-native-vector-icons/AntDesign'
 import ButtonSwitch from './ButtonSwitch.js'
 import _ from 'lodash'
 
+const width = Dimensions.get('window').width
+
 export default class Time extends React.Component {
   constructor(props) {
     super(props)
@@ -137,7 +139,7 @@ export default class Time extends React.Component {
 
 const styles = StyleSheet.create({
   mainContainerHeight: {
-    height: Dimensions.get('window').height * 0.3,
+    height: width * 0.58,
   },
   black: {
     color: 'black',
