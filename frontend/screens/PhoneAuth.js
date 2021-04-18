@@ -37,7 +37,7 @@ class PhoneAuthScreen extends Component {
     super(props)
     this.state = {
       phone: '',
-      confirmResult: true,
+      confirmResult: false,
       verificationCode: '',
       userId: '',
       errorAlert: false,
