@@ -111,7 +111,7 @@ module.exports = (io) => {
       } catch (err) {
         console.error(err)
       }
-    }
+    },
   })
 
   io.on('connection', (socket) => {
