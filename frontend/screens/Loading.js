@@ -63,8 +63,8 @@ class Loading extends React.Component {
     this.props.setDisable()
     socket.getSocket().off()
     socket.leave('loading')
-    this.props.hideDisable()
     this.props.navigation.replace('Home')
+    this.props.hideDisable()
   }
 
   componentDidMount() {

@@ -166,7 +166,6 @@ class Group extends React.Component {
     this.props.setDisable()
     socket.getSocket().off()
     socket.leave('group')
-    this.props.hideDisable()
     this.props.navigation.replace('Home')
     this.props.hideDisable()
   }
@@ -329,13 +328,11 @@ class Group extends React.Component {
                   press={() =>
                     this.setState({
                       socketErr: false,
-                      // , disabled: false
                     })
                   }
                   cancel={() =>
                     this.setState({
                       socketErr: false,
-                      // , disabled: false
                     })
                   }
                 />

@@ -33,8 +33,10 @@ import Round from './frontend/screens/Round.js'
 import Search from './frontend/screens/Search.js'
 import socket from './frontend/apis/socket.js'
 import TopThree from './frontend/screens/TopThree.js'
-import UserProfileView from './frontend/screens/Profile.js'
 import UserInfo from './frontend/screens/UserInfo.js'
+import UserProfileView from './frontend/screens/Profile.js'
+
+let validate = false
 
 class App extends React.Component {
   constructor() {
@@ -46,14 +48,12 @@ class App extends React.Component {
     }
     PushNotification.configure({
       onRegister: function (token) {
-        console.log('Token generated')
-        console.log(token)
+        console.log('Token: ' + JSON.stringify(token))
         AsyncStorage.setItem(REGISTRATION_TOKEN, token.token)
-        // if (firebase.auth().currentUser) notificationsApi.linkToken(token.token)
       },
       onNotification: this.onNotification,
       onAction: function (notification) {
-        console.log(notification)
+        console.log('Notification: ' + JSON.stringify(notification))
         if (notification.action === 'open') PushNotification.invokeApp(notification) // figure this out later
       },
       popInitialNotification: true,
@@ -62,101 +62,15 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.props.showRefresh()
-    var start
-    var unsubscribe = auth().onAuthStateChanged(async (user) => {
+    let start = 'Login'
+    const unsubscribe = auth().onAuthStateChanged((user) => {
       unsubscribe()
-      if (user === null) {
-        start = 'Login'
-      } else {
-        try {
-          if (!user.displayName) {
-            start = 'Login'
-          } else {
-            this.setState({ appContainer: <UserInfo /> })
-            start = 'Home'
-            AppState.addEventListener('change', this._handleAppStateChange)
-            socket.getSocket().on('disconnect', (reason) => {
-              console.log('Disconnect:', reason)
-              if (
-                reason === 'transport close' ||
-                reason === 'transport error' ||
-                reason === 'ping timeout'
-              )
-                socket.connect()
-              else {
-                this.navigator &&
-                  this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Disconnect' }))
-              }
-            })
-            socket.getSocket().on('reconnect', (session) => {
-              console.log('reconnect')
-              if (session) {
-                // check if member was kicked
-                if (!session.members[global.uid]) {
-                  socket.kickLeave()
-                  this.props.showKick()
-                  this.props.hideRefresh()
-                  this.navigator &&
-                    this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Home' }))
-                  this.props.hideRefresh()
-                  return
-                }
-                // update host and session props
-                this.props.updateSession(session)
-                this.props.setHost(session.host === global.uid)
-                // check if session is still in a group
-                if (!session.resInfo) {
-                  this.props.hideRefresh()
-                  this.navigator &&
-                    this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Group' }))
-                }
-                // check if session is in a match
-                else if (session.match) {
-                  this.props.setMatch(session.resInfo.find((x) => x.id === session.match))
-                  this.props.hideRefresh()
-                  this.navigator &&
-                    this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Match' }))
-                }
-                // check if session is in top 3
-                else if (session.top3) {
-                  let restaurants = session.resInfo.filter((x) =>
-                    session.top3.choices.includes(x.id),
-                  )
-                  restaurants.forEach(
-                    (x) => (x.likes = session.top3.likes[session.top3.choices.indexOf(x.id)]),
-                  )
-                  this.props.setTop(restaurants.reverse())
-                  this.props.hideRefresh()
-                  this.navigator &&
-                    this.navigator.dispatch(NavigationActions.navigate({ routeName: 'TopThree' }))
-                }
-                // check if session is in round and if user is finished swiping => going to loading
-                else if (session.finished.indexOf(global.uid) !== -1) {
-                  this.props.hideRefresh()
-                  this.navigator &&
-                    this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Loading' }))
-                }
-                // check if session is in round and still swiping
-                else {
-                  this.props.hideRefresh()
-                  this.navigator &&
-                    this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Round' }))
-                }
-              }
-              // check if session already ended
-              else {
-                this.props.hideRefresh()
-                this.navigator &&
-                  this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Home' }))
-              }
-            })
-          }
-        } catch (error) {
-          console.log(error)
-        }
+      if (user && user.displayName) {
+        this.setState({ appContainer: <UserInfo /> })
+        start = 'Home'
+        AppState.addEventListener('change', this._handleAppStateChange)
       }
-      var RootStack = createStackNavigator(
+      const RootStack = createStackNavigator(
         {
           Home: {
             screen: Home,
@@ -218,13 +132,94 @@ class App extends React.Component {
       )
       const AppContainer = createAppContainer(RootStack)
       this.setState({ appContainer: <AppContainer ref={(nav) => (this.navigator = nav)} /> })
+      validate = true
     })
   }
 
+  componentDidUpdate() {
+    if (validate) {
+      socket
+        .getSocket()
+        .off('disconnect')
+        .on('disconnect', (reason) => {
+          console.log('Disconnect: ' + reason)
+          if (
+            reason === 'transport close' ||
+            reason === 'transport error' ||
+            reason === 'ping timeout'
+          ) {
+            this.props.showRefresh()
+            socket.connect()
+          } else if (auth().currentUser) {
+            this.props.hideRefresh()
+            this.navigator &&
+              this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Disconnect' }))
+          }
+        })
+      socket
+        .getSocket()
+        .off('reconnect')
+        .on('reconnect', (session) => {
+          console.log('reconnect')
+          if (session) {
+            // check if member was kicked
+            if (!session.members[global.uid]) {
+              socket.kickLeave()
+              this.props.showKick()
+              this.navigator &&
+                this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Home' }))
+              this.props.hideRefresh()
+              return
+            }
+            // update host and session props
+            this.props.updateSession(session)
+            this.props.setHost(session.host === global.uid)
+            // check if session is still in a group
+            if (!session.resInfo) {
+              this.navigator &&
+                this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Group' }))
+            }
+            // check if session is in a match
+            else if (session.match) {
+              this.props.setMatch(session.resInfo.find((x) => x.id === session.match))
+              this.navigator &&
+                this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Match' }))
+            }
+            // check if session is in top 3
+            else if (session.top3) {
+              let restaurants = session.resInfo.filter((x) => session.top3.choices.includes(x.id))
+              restaurants.forEach(
+                (x) => (x.likes = session.top3.likes[session.top3.choices.indexOf(x.id)]),
+              )
+              this.props.setTop(restaurants.reverse())
+              this.navigator &&
+                this.navigator.dispatch(NavigationActions.navigate({ routeName: 'TopThree' }))
+            }
+            // check if session is in round and if user is finished swiping => going to loading
+            else if (session.finished.indexOf(global.uid) !== -1) {
+              this.navigator &&
+                this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Loading' }))
+            }
+            // check if session is in round and still swiping
+            else {
+              this.navigator &&
+                this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Round' }))
+            }
+            this.props.hideRefresh()
+          }
+          // check if session already ended
+          else {
+            this.props.hideRefresh()
+            this.navigator &&
+              this.navigator.dispatch(NavigationActions.navigate({ routeName: 'Home' }))
+          }
+        })
+    }
+  }
+
   onNotification = (notification) => {
-    console.log('Notification received')
     this.props.newNotif()
-    console.log(notification)
+    console.log('Notification: ' + notification)
     if (!notification.userInteraction) {
       //construct using data
       const config = JSON.parse(notification.data.config)
@@ -234,13 +229,16 @@ class App extends React.Component {
 
   // detect if app is coming out of background
   _handleAppStateChange = (nextAppState) => {
-    if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+    if (
+      this.state.appState.match(/inactive|background/) &&
+      nextAppState === 'active' &&
+      auth().currentUser
+    ) {
       this.props.showRefresh()
       if (socket.getSocket().connected) socket.reconnection()
       else socket.getSocket().connect()
     }
     this.setState({ appState: nextAppState })
-    this.props.hideRefresh()
   }
 
   render() {

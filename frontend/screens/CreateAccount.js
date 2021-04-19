@@ -91,6 +91,7 @@ class createAccount extends React.Component {
       }
       socket.connect()
       this.props.navigation.replace('Home')
+      this.props.hideDisable()
     } catch (err) {
       this.setState({ errorAlert: true })
       this.props.hideDisable()
@@ -258,7 +259,6 @@ class createAccount extends React.Component {
         {global.email != '' && global.email && (
           <View>
             <Text style={[screenStyles.textBook, styles.fieldName]}>Email</Text>
-
             <Text
               style={[
                 screenStyles.textBook,
