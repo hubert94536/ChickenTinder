@@ -36,7 +36,8 @@ class Loading extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      leave: false,
+      leave: false, //leave alert
+      continue: false, //continue alert
     }
     socket.getSocket().once('match', (data) => {
       socket.getSocket().off()
@@ -68,8 +69,7 @@ class Loading extends React.Component {
 
   componentDidMount() {
     this.props.hideRefresh()
-    console.log(this.props.session.members.length)
-    console.log(this.props.session.finished.length)
+    console.log(this.props.session)
   }
 
   render() {
@@ -95,10 +95,10 @@ class Loading extends React.Component {
           </TouchableHighlight>
           <View>
             <Text style={[screenStyles.text, styles.black, { alignSelf: 'flex-end' }]}>
-              5/6 members finished
+              {this.props.session.finished.length}/{Object.keys(this.props.session.members).length} members finished
             </Text>
             <ProgressBar
-              progress={0.5}
+              progress={(this.props.session.finished.length/Object.keys(this.props.session.members).length)}
               color={colors.hex}
               style={{ width: '100%', backgroundColor: '#E0E0E0', alignSelf: 'center' }}
             />
@@ -109,28 +109,38 @@ class Loading extends React.Component {
           <Image source={require('../assets/loading.gif')} style={styles.gif} />
         </View>
         <View>
-          <Text style={styles.general}>
-            Hang tight while others finish swiping and a match is found.
-          </Text>
           {!this.props.isHost && (
-            <TouchableHighlight
-              disabled={this.props.disable}
-              style={[styles.leaveButton, screenStyles.medButton]}
-              underlayColor="transparent"
-              onPress={() => this.leave()}
-            >
-              <Text style={styles.leaveText}>Waiting...</Text>
-            </TouchableHighlight>
+            <View>
+              <Text style={styles.general}>
+                Hang tight while others finish swiping and a match is found.
+              </Text>
+              <TouchableHighlight
+                disabled={this.props.disable}
+                style={[styles.leaveButton, screenStyles.medButton]}
+                underlayColor="transparent"
+                onPress={() => this.leave()}
+              >
+                <Text style={styles.leaveText}>Waiting...</Text>
+              </TouchableHighlight>
+            </View>
           )}
           {this.props.isHost && (
-            <TouchableHighlight
-              disabled={this.props.disable}
-              style={[styles.leaveButton, screenStyles.medButton]}
-              underlayColor="transparent"
-              onPress={() => socket.toTop3()}
-            >
-              <Text style={styles.leaveText}>Continue</Text>
-            </TouchableHighlight>
+            <View>
+              <Text style={styles.general}>
+                Hang tight while others finish swiping or continue for the results!
+              </Text>
+              <TouchableHighlight
+                disabled={this.props.disable}
+                style={[styles.leaveButton, screenStyles.medButton]}
+                underlayColor="transparent"
+                onPress={() => {
+                  this.setState({ continue: true })
+                  this.props.setDisable()
+                }}
+              >
+                <Text style={styles.leaveText}>Continue</Text>
+              </TouchableHighlight>
+            </View>
           )}
         </View>
         {this.state.leave && (
@@ -149,7 +159,23 @@ class Loading extends React.Component {
             }}
           />
         )}
-        {this.state.leave && (
+        {this.state.continue && (
+          <Alert
+            title="Continue Round"
+            body="Continue to the top results without waiting for the others? (This will end swiping for everyone)"
+            buttonAff="Continue"
+            buttonNeg="Back"
+            height="28%"
+            twoButton
+            disabled={this.props.disable}
+            press={() => socket.toTop3()}
+            cancel={() => {
+              this.setState({ continue: false })
+              this.props.hideDisable()
+            }}
+          />
+        )}
+        {(this.state.leave || this.state.continue) && (
           <BlurView
             blurType="dark"
             blurAmount={10}
