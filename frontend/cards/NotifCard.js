@@ -3,7 +3,6 @@ import { CheckBox, Image, StyleSheet, Text, TouchableWithoutFeedback, View } fro
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { setDisable, hideDisable, setHold } from '../redux/Actions.js'
-// import { CheckBox } from '@react-native-community/checkbox'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'
@@ -17,7 +16,7 @@ class NotifCard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      isFriend: this.props.friends,
+      // isFriend: this.props.friends,
       uid: this.props.uid,
       confirmPressed: false,
       deletePressed: false,
@@ -32,10 +31,13 @@ class NotifCard extends React.Component {
     friendsApi
       .acceptFriendRequest(this.state.uid)
       .then(() => {
-        this.setState({ isFriend: true })
+        // this.setState({ isFriend: true })
+        this.props.hideDisable()
       })
-      .catch(() => this.props.showError())
-    this.props.hideDisable()
+      .catch(() => {
+        this.props.showError()
+        this.props.hideDisable()
+      })
   }
 
   // delete friend and modify view
@@ -49,9 +51,12 @@ class NotifCard extends React.Component {
           return item.username !== this.props.username
         })
         this.props.press(this.props.uid, filteredArray, true)
+        this.props.hideDisable()
       })
-      .catch(() => this.props.showError())
-    this.props.hideDisable()
+      .catch(() => {
+        this.props.showError()
+        this.props.hideDisable()
+      })
   }
 
   handleDelete() {
@@ -59,10 +64,8 @@ class NotifCard extends React.Component {
   }
 
   handleClick() {
-    // this.props.setDisable()
-    // console.log('Pressed')
+    this.props.setDisable()
     if (this.props.type == 'invite') {
-      console.log(this.props.content)
       socket.joinRoom(this.props.content)
     }
     this.props.hideDisable()

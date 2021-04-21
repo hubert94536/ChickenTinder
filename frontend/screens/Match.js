@@ -23,8 +23,8 @@ class Match extends React.Component {
     this.props.setDisable()
     socket.getSocket().off()
     socket.leave('match')
-    this.props.hideDisable()
     this.props.navigation.replace('Home')
+    this.props.hideDisable()
   }
 
   componentDidMount() {
