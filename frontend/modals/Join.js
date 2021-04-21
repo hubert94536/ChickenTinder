@@ -8,15 +8,15 @@ import {
   View,
   TextInput,
 } from 'react-native'
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { setDisable, hideDisable, showRefresh, hideRefresh } from '../redux/Actions.js'
-import PropTypes from 'prop-types'
-import socket from '../apis/socket.js'
-import AntDesign from 'react-native-vector-icons/AntDesign'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
+import socket from '../apis/socket.js'
 
 //  props are name, image url, and functions for cancel and go
 // invite alert
