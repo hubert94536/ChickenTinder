@@ -250,6 +250,8 @@ module.exports = (io) => {
               socket.user.room = data.code
               socket.join(data.code)
               io.in(data.code).emit('update', session)
+            } else {
+              socket.emit('exception', 'cannot join')
             }
           } catch (err) {
             socket.emit('exception', 'join')
