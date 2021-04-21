@@ -31,9 +31,12 @@ class NotifCard extends React.Component {
       .acceptFriendRequest(this.state.uid)
       .then(() => {
         this.setState({ isFriend: true })
+        this.props.hideDisable()
       })
-      .catch(() => this.props.showError())
-    this.props.hideDisable()
+      .catch(() => {
+        this.props.showError()
+        this.props.hideDisable()
+      })
   }
 
   // delete friend and modify view
@@ -47,9 +50,12 @@ class NotifCard extends React.Component {
           return item.username !== this.props.username
         })
         this.props.press(this.props.uid, filteredArray, true)
+        this.props.hideDisable()
       })
-      .catch(() => this.props.showError())
-    this.props.hideDisable()
+      .catch(() => {
+        this.props.showError()
+        this.props.hideDisable()
+      })
   }
 
   handleHold() {
@@ -58,9 +64,7 @@ class NotifCard extends React.Component {
 
   handleClick() {
     this.props.setDisable()
-    console.log('Pressed')
     if (this.props.type == 'invite') {
-      console.log(this.props.content)
       socket.joinRoom(this.props.content)
     }
     this.props.hideDisable()

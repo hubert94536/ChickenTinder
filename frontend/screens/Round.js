@@ -64,11 +64,7 @@ class Round extends React.Component {
   }
 
   componentDidMount() {
-    console.log(
-      this.props.session.members[this.props.session.host].username === this.props.username,
-    )
     this.props.hideRefresh()
-    console.log(this.props.session)
     if (this.props.session.members[global.uid] !== 'undefined') {
       for (var i = 0; i < this.props.session.resInfo.length; i++) {
         if (this.props.session.resInfo[i].id === this.props.session.members[global.uid].card) {
