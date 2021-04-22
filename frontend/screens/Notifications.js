@@ -17,9 +17,10 @@ import {
   newNotif,
   noNotif,
   changeFriends,
-  showError,
   hideRefresh,
   hideHold,
+  showError,
+  hideError
 } from '../redux/Actions.js'
 import Swiper from 'react-native-swiper'
 import PropTypes from 'prop-types'
@@ -68,26 +69,15 @@ class Notif extends Component {
       // show alert
       logoutAlert: false,
       deleteAlert: false,
-      errorAlert: false,
       deleteFriend: false,
       // disabling buttons
       disabled: false,
     }
-
-    socket.getSocket().once('update', (res) => {
-      console.log('Update')
-      global.host = res.members[res.host].username
-      global.code = res.code
-      global.isHost = res.members[res.host].username === this.props.username.username
-      this.props.navigation.replace('Group', {
-        response: res,
-      })
-    })
   }
 
   componentDidMount() {
-    // this.getNotifs()
     this.props.hideRefresh()
+    this.getNotifs()
   }
 
   deleteNotifications() {
@@ -143,11 +133,91 @@ class Notif extends Component {
       .getNotifs()
       .then((res) => {
         notifList = res.notifs
-        console.log(notifList)
+        // console.log(notifList)
         for (var notif in notifList) {
           pushNotifs.push(notifList[notif])
         }
+        console.log(pushNotifs)
         this.setState({ notifs: pushNotifs })
+        requested = []
+        active = []
+        this.state.notifs.sort((x, y) => new Date(x.updatedAt).valueOf() < new Date(y.updatedAt).valueOf())
+        if (Array.isArray(this.state.notifs) && this.state.notifs.length) {
+          for (var i = 0; i < this.state.notifs.length; i++) {
+            if (
+              this.state.notifs[i].type == 'pending' ||
+              this.state.notifs[i].type == 'friends' ||
+              this.state.notifs[i].type == 'accepted'
+            ) {
+              requested.push(
+                <NotifCard
+                  total={this.state.notifs}
+                  name={this.state.notifs[i].senderName}
+                  username={this.state.notifs[i].senderUsername}
+                  uid={this.state.notifs[i].sender}
+                  image={this.state.notifs[i].senderPhoto}
+                  type={this.state.notifs[i].type}
+                  content={this.state.notifs[i].content}
+                  key={i}
+                  index={i}
+                  deleteNotif={(add, ind) => this.toDelete(add, ind)}
+                  press={(uid, newArr, status) => this.removeRequest(uid, newArr, status)}
+                  showDelete={() => this.setState({ deleteFriend: true })}
+                  removeDelete={() => this.setState({ deleteFriend: false })}
+                />,
+              )
+              if (this.state.notifs[i].type == 'friends') {
+                //someone sent you a request
+                var newArr = []
+                for (var j = 0; i < this.props.friends.friends.length; i++) {
+                  var person = {
+                    name: this.props.friends.friends[j].name,
+                    username: this.props.friends.friends[j].username,
+                    photo: this.props.friends.friends[j].photo,
+                    uid: this.props.friends.friends[j].uid,
+                    status: this.props.friends.friends[j].status,
+                  }
+                  newArr.push(person)
+                }
+                var addPerson = {
+                  name: this.state.notifs[i].senderName,
+                  username: this.state.notifs[i].senderUsername,
+                  photo: this.state.notifs[i].senderPhoto,
+                  uid: this.state.notifs[i].sender,
+                  status: 'pending',
+                }
+                newArr.push(addPerson)
+                this.props.changeFriends(newArr)
+              } else {
+                //you accepted someones request
+                var arr = this.props.friends.friends.filter((item) => {
+                  if (item.username === this.state.notifs[i].senderUsername) item.status = 'friends'
+                  return item
+                })
+                this.props.changeFriends(arr)
+              }
+            } else {
+              active.push(
+                <NotifCard
+                  total={this.state.notifs}
+                  name={this.state.notifs[i].senderName}
+                  username={this.state.notifs[i].senderUsername}
+                  uid={this.state.notifs[i].sender}
+                  image={this.state.notifs[i].senderPhoto}
+                  type={this.state.notifs[i].type}
+                  content={this.state.notifs[i].content}
+                  key={i}
+                  index={i}
+                  deleteNotif={(add, ind) => this.toDelete(add, ind)}
+                  press={(uid, newArr, status) => this.removeRequest(uid, newArr, status)}
+                  showDelete={() => this.setState({ deleteFriend: true })}
+                  removeDelete={() => this.setState({ deleteFriend: false })}
+                />,
+              )
+            }
+          }
+          this.setState({requestNotifs: requested, activityNotifs: active})
+        }
       })
       .catch(() => {
         this.props.showError()
@@ -172,90 +242,86 @@ class Notif extends Component {
   }
 
   render() {
-    var activityNotifs = []
-    var requestNotifs = []
-    var notifList = this.state.notifs
-    notifList.sort((x, y) => new Date(x.updatedAt).valueOf() < new Date(y.updatedAt).valueOf())
+    // var activityNotifs = []
+    // var requestNotifs = []
+    // var notifList = []
+    // this.state.notifs.sort((x, y) => new Date(x.updatedAt).valueOf() < new Date(y.updatedAt).valueOf())
     // Create all friend/request cards
-    if (Array.isArray(notifList) && notifList.length) {
-      for (var i = 0; i < notifList.length; i++) {
-        if (
-          notifList[i].type == 'pending' ||
-          notifList[i].type == 'friends' ||
-          notifList[i].type == 'accepted'
-        ) {
-          requestNotifs.push(
-            <NotifCard
-              total={this.state.notifs}
-              name={notifList[i].senderName}
-              username={notifList[i].senderUsername}
-              uid={notifList[i].sender}
-              image={notifList[i].senderPhoto}
-              type={notifList[i].type}
-              content={notifList[i].content}
-              key={i}
-              index={i}
-              deleteNotif={(add, ind) => this.toDelete(add, ind)}
-              press={(uid, newArr, status) => this.removeRequest(uid, newArr, status)}
-              showError={() => this.setState({ errorAlert: true })}
-              removeError={() => this.setState({ errorAlert: false })}
-              showDelete={() => this.setState({ deleteFriend: true })}
-              removeDelete={() => this.setState({ deleteFriend: false })}
-            />,
-          )
-          if (notifList[i].type == 'friends') {
-            //someone sent you a request
-            var newArr = []
-            for (var j = 0; i < this.props.friends.friends.length; i++) {
-              var person = {
-                name: this.props.friends.friends[j].name,
-                username: this.props.friends.friends[j].username,
-                photo: this.props.friends.friends[j].photo,
-                uid: this.props.friends.friends[j].uid,
-                status: this.props.friends.friends[j].status,
-              }
-              newArr.push(person)
-            }
-            var addPerson = {
-              name: notifList[i].senderName,
-              username: notifList[i].senderUsername,
-              photo: notifList[i].senderPhoto,
-              uid: notifList[i].sender,
-              status: 'pending',
-            }
-            newArr.push(addPerson)
-            this.props.changeFriends(newArr)
-          } else {
-            //you accepted someones request
-            var arr = this.props.friends.friends.filter((item) => {
-              if (item.username === notifList[i].senderUsername) item.status = 'friends'
-              return item
-            })
-            this.props.changeFriends(arr)
-          }
-        } else {
-          activityNotifs.push(
-            <NotifCard
-              total={this.state.notifs}
-              name={notifList[i].senderName}
-              username={notifList[i].senderUsername}
-              uid={notifList[i].sender}
-              image={notifList[i].senderPhoto}
-              type={notifList[i].type}
-              content={notifList[i].content}
-              key={i}
-              index={i}
-              deleteNotif={(add, ind) => this.toDelete(add, ind)}
-              press={(uid, newArr, status) => this.removeRequest(uid, newArr, status)}
-              showError={() => this.setState({ errorAlert: true })}
-              removeError={() => this.setState({ errorAlert: false })}
-              showDelete={() => this.setState({ deleteFriend: true })}
-              removeDelete={() => this.setState({ deleteFriend: false })}
-            />,
-          )
-        }
-      }
-    }
+    // if (Array.isArray(this.state.notifs) && this.state.notifs.length) {
+    //   for (var i = 0; i < this.state.notifs.length; i++) {
+    //     if (
+    //       this.state.notifs[i].type == 'pending' ||
+    //       this.state.notifs[i].type == 'friends' ||
+    //       this.state.notifs[i].type == 'accepted'
+    //     ) {
+    //       requestNotifs.push(
+    //         <NotifCard
+    //           total={this.state.notifs}
+    //           name={this.state.notifs[i].senderName}
+    //           username={this.state.notifs[i].senderUsername}
+    //           uid={this.state.notifs[i].sender}
+    //           image={this.state.notifs[i].senderPhoto}
+    //           type={this.state.notifs[i].type}
+    //           content={this.state.notifs[i].content}
+    //           key={i}
+    //           index={i}
+    //           deleteNotif={(add, ind) => this.toDelete(add, ind)}
+    //           press={(uid, newArr, status) => this.removeRequest(uid, newArr, status)}
+    //           showDelete={() => this.setState({ deleteFriend: true })}
+    //           removeDelete={() => this.setState({ deleteFriend: false })}
+    //         />,
+    //       )
+    //       if (this.state.notifs[i].type == 'friends') {
+    //         //someone sent you a request
+    //         var newArr = []
+    //         for (var j = 0; i < this.props.friends.friends.length; i++) {
+    //           var person = {
+    //             name: this.props.friends.friends[j].name,
+    //             username: this.props.friends.friends[j].username,
+    //             photo: this.props.friends.friends[j].photo,
+    //             uid: this.props.friends.friends[j].uid,
+    //             status: this.props.friends.friends[j].status,
+    //           }
+    //           newArr.push(person)
+    //         }
+    //         var addPerson = {
+    //           name: this.state.notifs[i].senderName,
+    //           username: this.state.notifs[i].senderUsername,
+    //           photo: this.state.notifs[i].senderPhoto,
+    //           uid: this.state.notifs[i].sender,
+    //           status: 'pending',
+    //         }
+    //         newArr.push(addPerson)
+    //         this.props.changeFriends(newArr)
+    //       } else {
+    //         //you accepted someones request
+    //         var arr = this.props.friends.friends.filter((item) => {
+    //           if (item.username === this.state.notifs[i].senderUsername) item.status = 'friends'
+    //           return item
+    //         })
+    //         this.props.changeFriends(arr)
+    //       }
+    //     } else {
+    //       activityNotifs.push(
+    //         <NotifCard
+    //           total={this.state.notifs}
+    //           name={this.state.notifs[i].senderName}
+    //           username={this.state.notifs[i].senderUsername}
+    //           uid={this.state.notifs[i].sender}
+    //           image={this.state.notifs[i].senderPhoto}
+    //           type={this.state.notifs[i].type}
+    //           content={this.state.notifs[i].content}
+    //           key={i}
+    //           index={i}
+    //           deleteNotif={(add, ind) => this.toDelete(add, ind)}
+    //           press={(uid, newArr, status) => this.removeRequest(uid, newArr, status)}
+    //           showDelete={() => this.setState({ deleteFriend: true })}
+    //           removeDelete={() => this.setState({ deleteFriend: false })}
+    //         />,
+    //       )
+    //     }
+    //   }
+    // }
     return (
       <ImageBackground
         source={require('../assets/backgrounds/Search.png')}
@@ -321,10 +387,10 @@ class Notif extends Component {
             {/* <Friends isFriends /> */}
             {/* <View /> */}
             <ScrollView style={{ flexDirection: 'column' }} nestedScrollEnabled={true}>
-              {activityNotifs}
+              {this.state.activityNotifs}
             </ScrollView>
             <ScrollView style={{ flexDirection: 'column' }} nestedScrollEnabled={true}>
-              {requestNotifs}
+              {this.state.requestNotifs}
             </ScrollView>
             {/* <Friends isFriends={false} /> */}
           </Swiper>
@@ -346,7 +412,7 @@ class Notif extends Component {
           </TouchableHighlight>
         )}
 
-        {(this.state.visible || this.state.errorAlert || this.state.deleteFriend) && (
+        {(this.state.visible || this.props.error || this.state.deleteFriend) && (
           <BlurView
             blurType="dark"
             blurAmount={10}
@@ -365,13 +431,13 @@ class Notif extends Component {
             cancel={() => this.setState({ deleteFriend: false })}
           />
         )}
-        {this.state.errorAlert && (
+        {this.props.error && (
           <Alert
             title="Error, please try again"
             buttonAff="Close"
             height="20%"
-            press={() => this.setState({ errorAlert: false })}
-            cancel={() => this.setState({ errorAlert: false })}
+            press={() => this.props.showError()}
+            cancel={() => this.props.hideError()}
           />
         )}
         <TabBar
@@ -391,7 +457,8 @@ const mapStateToProps = (state) => {
   const { error } = state
   const { username } = state
   const { hold } = state
-  return { notif, error, username, hold }
+  const { friends } = state
+  return { notif, error, username, hold, friends }
 }
 //  access the state as this.props.notif
 //  if that's giving you errors, use this.props.notif.notif
@@ -405,6 +472,7 @@ const mapDispatchToProps = (dispatch) =>
       showError,
       hideRefresh,
       hideHold,
+      hideError
     },
     dispatch,
   )
@@ -425,6 +493,7 @@ Notif.propTypes = {
   showError: PropTypes.func,
   hideRefresh: PropTypes.func,
   hideHold: PropTypes.func,
+  hideError: PropTypes.func
 }
 
 const styles = StyleSheet.create({
