@@ -44,7 +44,7 @@ class NotifCard extends React.Component {
   async deleteFriend() {
     this.props.setDisable()
     friendsApi
-      .removeFriendship(this.state.uid)
+      .removeFriendship(this.props.uid)
       .then(() => {
         this.props.removeDelete()
         var filteredArray = this.props.total.filter((item) => {

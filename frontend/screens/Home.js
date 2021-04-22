@@ -64,10 +64,13 @@ class Home extends React.Component {
     })
 
     socket.getSocket().on('exception', (msg) => {
+      console.log(msg)
       this.props.hideDisable()
       this.props.hideRefresh()
       if (msg === 'create') socketErrMsg = 'Unable to create a group, please try again'
-      else if (msg === 'join') socketErrMsg = 'Unable to join a group, please try again'
+      else if (msg === 'join') socketErrMsg = 'Unable to join the group, please try again'
+      else if (msg === 'cannot join')
+        socketErrMsg = 'The group does not exist or has already started a round'
       this.setState({ socketErr: true })
     })
 
