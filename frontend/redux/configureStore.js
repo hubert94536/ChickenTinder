@@ -14,6 +14,7 @@ import {
   setMatchReducer,
   setTopReducer,
   disableReducer,
+  holdReducer,
 } from './Reducer.js'
 
 const rootReducer = combineReducers({
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
   match: setMatchReducer,
   top: setTopReducer,
   disable: disableReducer,
+  hold: holdReducer,
 })
 
 const configureStore = () => {
