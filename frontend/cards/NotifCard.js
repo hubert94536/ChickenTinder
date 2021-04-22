@@ -186,7 +186,7 @@ NotifCard.propTypes = {
   hold: PropTypes.bool,
   setHold: PropTypes.func,
   deleteNotif: PropTypes.func,
-  index: PropTypes.number
+  index: PropTypes.number,
 }
 
 const styles = StyleSheet.create({

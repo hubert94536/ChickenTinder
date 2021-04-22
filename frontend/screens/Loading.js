@@ -95,10 +95,13 @@ class Loading extends React.Component {
           </TouchableHighlight>
           <View>
             <Text style={[screenStyles.text, styles.black, { alignSelf: 'flex-end' }]}>
-              {this.props.session.finished.length}/{Object.keys(this.props.session.members).length} members finished
+              {this.props.session.finished.length}/{Object.keys(this.props.session.members).length}{' '}
+              members finished
             </Text>
             <ProgressBar
-              progress={(this.props.session.finished.length/Object.keys(this.props.session.members).length)}
+              progress={
+                this.props.session.finished.length / Object.keys(this.props.session.members).length
+              }
               color={colors.hex}
               style={{ width: '100%', backgroundColor: '#E0E0E0', alignSelf: 'center' }}
             />

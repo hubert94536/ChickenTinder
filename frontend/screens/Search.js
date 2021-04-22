@@ -1,4 +1,4 @@
-import React, { Component, View } from 'react'
+import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { changeFriends, hideError, hideRefresh, showError, showRefresh } from '../redux/Actions.js'
 import { connect } from 'react-redux'
@@ -159,7 +159,7 @@ class Search extends Component {
       >
         <Text style={[screenStyles.icons, styles.title]}>Find friends</Text>
         <FlatList
-        style={styles.screen}
+          style={styles.screen}
           data={this.state.data}
           extraData={this.state.data}
           renderItem={({ item }) => (
@@ -257,8 +257,8 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   screen: {
-    marginBottom:'17%',
-    marginTop:'13%'
+    marginBottom: '17%',
+    marginTop: '13%',
   },
   container: {
     backgroundColor: 'white',

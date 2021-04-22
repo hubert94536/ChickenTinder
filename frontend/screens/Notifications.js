@@ -20,7 +20,7 @@ import {
   hideRefresh,
   hideHold,
   showError,
-  hideError
+  hideError,
 } from '../redux/Actions.js'
 import Swiper from 'react-native-swiper'
 import PropTypes from 'prop-types'
@@ -128,6 +128,8 @@ class Notif extends Component {
         type: 'requested',
       },
     ]
+    requested = []
+    active = []
 
     notificationsApi
       .getNotifs()
@@ -139,9 +141,9 @@ class Notif extends Component {
         }
         console.log(pushNotifs)
         this.setState({ notifs: pushNotifs })
-        requested = []
-        active = []
-        this.state.notifs.sort((x, y) => new Date(x.updatedAt).valueOf() < new Date(y.updatedAt).valueOf())
+        this.state.notifs.sort(
+          (x, y) => new Date(x.updatedAt).valueOf() < new Date(y.updatedAt).valueOf(),
+        )
         if (Array.isArray(this.state.notifs) && this.state.notifs.length) {
           for (var i = 0; i < this.state.notifs.length; i++) {
             if (
@@ -216,7 +218,7 @@ class Notif extends Component {
               )
             }
           }
-          this.setState({requestNotifs: requested, activityNotifs: active})
+          this.setState({ requestNotifs: requested, activityNotifs: active })
         }
       })
       .catch(() => {
@@ -472,7 +474,7 @@ const mapDispatchToProps = (dispatch) =>
       showError,
       hideRefresh,
       hideHold,
-      hideError
+      hideError,
     },
     dispatch,
   )
@@ -493,7 +495,7 @@ Notif.propTypes = {
   showError: PropTypes.func,
   hideRefresh: PropTypes.func,
   hideHold: PropTypes.func,
-  hideError: PropTypes.func
+  hideError: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
