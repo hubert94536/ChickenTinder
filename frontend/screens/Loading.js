@@ -69,7 +69,6 @@ class Loading extends React.Component {
 
   componentDidMount() {
     this.props.hideRefresh()
-    console.log(this.props.session)
   }
 
   render() {

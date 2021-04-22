@@ -81,6 +81,7 @@
     "util": "^0.12.3"
   },
   "devDependencies": {
+    "@react-native-community/checkbox": "^0.5.7",
     "@testing-library/react-native": "^7.1.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.14.0",
