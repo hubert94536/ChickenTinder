@@ -30,7 +30,7 @@ export default StyleSheet.create({
     borderRadius: 63,
     height: width * 0.12,
     width: width * 0.12,
-    margin: '1%',
+    margin: '2%',
   },
   text: {
     fontFamily: 'CircularStd-Medium',
