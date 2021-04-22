@@ -121,6 +121,18 @@ const hideDisable = () => {
   }
 }
 
+const setHold = () => {
+  return {
+    type: 'SET_HOLD',
+  }
+}
+
+const hideHold = () => {
+  return {
+    type: 'HIDE_HOLD',
+  }
+}
+
 export {
   showError,
   hideError,
@@ -141,4 +153,6 @@ export {
   setTop,
   setDisable,
   hideDisable,
+  setHold,
+  hideHold,
 }

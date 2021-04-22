@@ -1,16 +1,15 @@
 import React from 'react'
 import { Dimensions, ImageBackground, StyleSheet, Text, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import PropTypes from 'prop-types'
-import imgStyles from '../../styles/cardImage.js'
-import normalize from '../../styles/normalize.js'
-import getCuisine from '../assets/images/foodImages.js'
-import colors from '../../styles/colors.js'
-import screenStyles from '../../styles/screenStyles.js'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import PropTypes from 'prop-types'
+import colors from '../../styles/colors.js'
+import imgStyles from '../../styles/cardImage.js'
+import getCuisine from '../assets/images/foodImages.js'
+import normalize from '../../styles/normalize.js'
+import screenStyles from '../../styles/screenStyles.js'
 
 const width = Dimensions.get('window').width
-
 const bg = '#FCE5CD'
 
 const cuisine_imgs = {
@@ -30,7 +29,6 @@ export default class CategoryCard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      uid: this.props.uid,
       selected: false,
     }
   }
@@ -76,7 +74,6 @@ export default class CategoryCard extends React.Component {
 }
 
 CategoryCard.propTypes = {
-  uid: PropTypes.number,
   category: PropTypes.string,
   onPress: PropTypes.func,
 }
