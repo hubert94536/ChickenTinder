@@ -1,8 +1,8 @@
 import React from 'react'
-import { Image, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { CheckBox, Image, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { setDisable, hideDisable } from '../redux/Actions.js'
+import { setDisable, hideDisable, setHold } from '../redux/Actions.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'
@@ -16,10 +16,10 @@ class NotifCard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      isFriend: this.props.friends,
       confirmPressed: false,
       deletePressed: false,
-      trash: false,
+      hold: true,
+      selected: false,
     }
   }
 
@@ -27,9 +27,9 @@ class NotifCard extends React.Component {
   async acceptFriend() {
     this.props.setDisable()
     friendsApi
-      .acceptFriendRequest(this.state.uid)
+      .acceptFriendRequest(this.props.uid)
       .then(() => {
-        this.setState({ isFriend: true })
+        // this.setState({ isFriend: true })
         this.props.hideDisable()
       })
       .catch(() => {
@@ -57,8 +57,8 @@ class NotifCard extends React.Component {
       })
   }
 
-  handleHold() {
-    this.setState({ trash: true })
+  handleDelete() {
+    this.props.setHold()
   }
 
   handleClick() {
@@ -69,84 +69,89 @@ class NotifCard extends React.Component {
     this.props.hideDisable()
   }
 
-  pressTrash() {
-    this.setState({ trash: false })
+  modifyList() {
+    this.setState({ selected: this.state.selected ? false : true })
+    this.props.deleteNotif(this.state.selected, this.props.index)
   }
 
   render() {
     return (
-      <TouchableWithoutFeedback onPress={() => this.handleClick()} disabled={this.props.disable}>
-        <View style={styles.container}>
-          <Image
-            source={{ uri: Image.resolveAssetSource(this.props.image).uri }}
-            style={imgStyles.button}
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        {this.props.hold && (
+          <CheckBox
+            onChange={() => this.modifyList()}
+            value={this.state.selected}
+            tintColors={{ true: colors.hex }}
           />
-          <View style={styles.notif}>
-            {this.props.type == 'invite' && (
-              <Text style={[imgStyles.bookFont, styles.text]}>
-                {this.props.name} has invited you to a group!
-              </Text>
-            )}
-            {this.props.type == 'accepted' && (
-              <Text style={[imgStyles.bookFont, styles.text]}>
-                {this.props.name} accepted your friend request!
-              </Text>
-            )}
+        )}
+        <TouchableWithoutFeedback
+          onPress={() => this.handleClick()}
+          disabled={this.props.disable}
+          onLongPress={() => this.handleDelete()}
+        >
+          <View style={styles.container}>
+            <Image
+              source={{ uri: Image.resolveAssetSource(this.props.image).uri }}
+              style={imgStyles.button}
+            />
+            <View style={styles.notif}>
+              {this.props.type == 'invite' && (
+                <Text style={[imgStyles.bookFont, styles.text]}>
+                  {this.props.name} has invited you to a group!
+                </Text>
+              )}
+              {this.props.type == 'accepted' && !this.state.hold && (
+                <Text style={[imgStyles.bookFont, styles.text]}>
+                  {this.props.name} accepted your friend request!
+                </Text>
+              )}
 
-            {this.props.type == 'friends' && (
-              <Text style={[imgStyles.bookFont, styles.text]}>
-                {this.props.name} is friends with you!
-              </Text>
+              {this.props.type == 'friends' && !this.state.hold && (
+                <Text style={[imgStyles.bookFont, styles.text]}>
+                  {this.props.name} is friends with you!
+                </Text>
+              )}
+
+              {this.props.type == 'pending' && !this.state.hold && (
+                <Text style={[imgStyles.bookFont, styles.text]}>
+                  {this.props.name} sent you a friend request!
+                </Text>
+              )}
+
+              <Text style={[imgStyles.bookFont, styles.username]}>@{this.props.username}</Text>
+            </View>
+
+            {this.props.type == 'invite' && (
+              <View style={styles.invited}>
+                <Icon style={[imgStyles.icon, styles.icon]} name="chevron-right" />
+              </View>
             )}
 
             {this.props.type == 'pending' && (
-              <Text style={[imgStyles.bookFont, styles.text]}>
-                {this.props.name} sent you a friend request!
-              </Text>
+              <View style={styles.request}>
+                <Icon
+                  style={[imgStyles.icon, styles.pend]}
+                  name="check-circle"
+                  onPress={() => this.acceptFriend()}
+                />
+                <AntDesign
+                  style={[imgStyles.icon, styles.pend, styles.black]}
+                  name="closecircleo"
+                  onPress={() => this.rejectFriend()}
+                />
+              </View>
             )}
-
-            <Text style={[imgStyles.bookFont, styles.username]}>@{this.props.username}</Text>
           </View>
-
-          {this.props.type == 'invite' && !this.state.trash && (
-            <View style={styles.invited}>
-              <Icon style={[imgStyles.icon, styles.icon]} name="chevron-right" />
-            </View>
-          )}
-
-          {this.props.type == 'invite' && this.state.trash && (
-            <View style={styles.trashInvite}>
-              <Icon
-                style={[imgStyles.icon, styles.trashWhite]}
-                name="trash"
-                onPress={() => this.pressTrash()}
-              />
-            </View>
-          )}
-
-          {this.props.type == 'pending' && (
-            <View style={styles.request}>
-              <Icon
-                style={[imgStyles.icon, styles.pend]}
-                name="check-circle"
-                onPress={() => this.acceptFriend()}
-              />
-              <AntDesign
-                style={[imgStyles.icon, styles.pend, styles.black]}
-                name="closecircleo"
-                onPress={() => this.rejectFriend()}
-              />
-            </View>
-          )}
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      </View>
     )
   }
 }
 
 const mapStateToProps = (state) => {
   const { disable } = state
-  return { disable }
+  const { hold } = state
+  return { disable, hold }
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -154,6 +159,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       setDisable,
       hideDisable,
+      setHold,
     },
     dispatch,
   )
@@ -175,6 +181,10 @@ NotifCard.propTypes = {
   setDisable: PropTypes.func,
   hideDisable: PropTypes.func,
   disable: PropTypes.bool,
+  hold: PropTypes.bool,
+  setHold: PropTypes.func,
+  deleteNotif: PropTypes.func,
+  index: PropTypes.number,
 }
 
 const styles = StyleSheet.create({
@@ -196,15 +206,7 @@ const styles = StyleSheet.create({
   username: { color: colors.hex },
   invited: { flexDirection: 'row', marginLeft: '3%' },
   icon: { fontSize: normalize(20) },
-  trashInvite: {
-    flexDirection: 'row',
-    marginLeft: '3%',
-    backgroundColor: '#C82020',
-    width: '15%',
-    justifyContent: 'center',
-    borderRadius: 10,
-  },
-  trashWhite: { fontSize: normalize(20), color: 'white' },
+  delete: { flexDirection: 'row', alignItems: 'center' },
   general: { flex: 1, flexDirection: 'row' },
   requested: {
     borderColor: colors.hex,
@@ -227,16 +229,19 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     fontSize: normalize(12),
   },
+  hexButton: {
+    backgroundColor: colors.hex,
+  },
   blackButton: {
     borderColor: 'black',
     borderRadius: 30,
     borderWidth: 2,
     height: '40%',
-    width: '50%',
+    // width: '50%',
     marginLeft: '5%',
-    marginRight: '5%',
+    // marginRight: '5%',
     alignSelf: 'center',
-    flex: 0.5,
+    // flex: 0.5,
   },
   deleteText: {
     color: 'black',
