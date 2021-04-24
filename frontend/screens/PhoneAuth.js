@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types'
-import React, { Component, useState } from 'react'
-import CodeInput from 'react-native-confirmation-code-input';
+import React, { Component } from 'react'
 import {
   ImageBackground,
   SafeAreaView,
@@ -128,8 +127,7 @@ class PhoneAuthScreen extends Component {
   }
 
   // Navigate to login
-  handleBack = async () => {
-    this.props.setDisable()
+  handleBack = () => {
     this.props.navigation.navigate('Login')
   }
 

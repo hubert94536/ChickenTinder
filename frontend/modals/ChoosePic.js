@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 import { Dimensions, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -7,7 +8,6 @@ import { FlatList} from 'react-native'
 import ImageCard from '../cards/ImageCard.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
-import PropTypes from 'prop-types'
 import screenStyles from '../../styles/screenStyles.js'
 import { ScrollView } from 'react-native-gesture-handler'
 

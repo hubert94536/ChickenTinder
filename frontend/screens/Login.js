@@ -26,14 +26,12 @@ class Login extends React.Component {
   }
 
   phoneLogin() {
-    this.props.setDisable()
     this.props.navigation.replace('Phone')
   }
 
   facebookLogin() {
     if (!this.props.disable) {
       this.props.setDisable()
-      this.setState({ alert: false })
       loginService
         .loginWithFacebook()
         .then((result) => {
@@ -44,6 +42,7 @@ class Login extends React.Component {
               this.props.navigation.replace(result)
             })
           }
+          this.props.hideDisable()
         })
         .catch((err) => {
           console.log(err)
@@ -72,6 +71,7 @@ class Login extends React.Component {
             onShowUnderlay={() => this.setState({ phonePressed: true })}
             onHideUnderlay={() => this.setState({ phonePressed: false })}
             activeOpacity={1}
+            disabled={this.props.disable}
             underlayColor={'white'}
             onPress={() => this.phoneLogin()}
             style={[screenStyles.longButton, styles.phoneButton]}

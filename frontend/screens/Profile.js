@@ -164,6 +164,7 @@ class UserProfileView extends Component {
                 this.props.showError()
                 break
             }
+            this.props.hideDisable()
           })
       }
       // Not phone provider - delete the account
@@ -174,12 +175,13 @@ class UserProfileView extends Component {
             // close settings and navigate to Login
             this.setState({ visible: false })
             this.props.navigation.replace('Login')
+            this.props.hideDisable()
           })
           .catch(() => {
             this.props.hideError()
+            this.props.hideDisable()
           })
       }
-      this.props.hideDisable()
     }
   }
 
@@ -233,17 +235,17 @@ class UserProfileView extends Component {
           // close settings and navigate to Login
           this.setState({ visible: false })
           this.props.navigation.replace('Login')
+          this.props.hideDisable()
         })
         .catch(() => {
           this.props.showError()
+          this.props.hideDisable()
         })
-      this.props.hideDisable()
     }
   }
 
   cancelLogout() {
     this.setState({ logoutAlert: false })
-    this.props.hideDisable()
   }
 
   makeChanges() {
@@ -371,7 +373,6 @@ class UserProfileView extends Component {
             press={() => this.handleLogout()}
             cancel={() => {
               this.setState({ logoutAlert: false, visible: true })
-              this.props.hideDisable()
             }}
           />
         )}

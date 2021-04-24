@@ -63,8 +63,8 @@ class Loading extends React.Component {
     this.props.setDisable()
     socket.getSocket().off()
     socket.leave('loading')
-    this.props.hideDisable()
     this.props.navigation.replace('Home')
+    this.props.hideDisable()
   }
 
   componentDidMount() {
@@ -94,10 +94,13 @@ class Loading extends React.Component {
           </TouchableHighlight>
           <View>
             <Text style={[screenStyles.text, styles.black, { alignSelf: 'flex-end' }]}>
-              5/6 members finished
+              {this.props.session.finished.length}/{Object.keys(this.props.session.members).length}{' '}
+              members finished
             </Text>
             <ProgressBar
-              progress={0.5}
+              progress={
+                this.props.session.finished.length / Object.keys(this.props.session.members).length
+              }
               color={colors.hex}
               style={{ width: '100%', backgroundColor: '#E0E0E0', alignSelf: 'center' }}
             />

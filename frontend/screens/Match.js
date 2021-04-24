@@ -23,8 +23,8 @@ class Match extends React.Component {
     this.props.setDisable()
     socket.getSocket().off()
     socket.leave('match')
-    this.props.hideDisable()
     this.props.navigation.replace('Home')
+    this.props.hideDisable()
   }
 
   componentDidMount() {
@@ -68,7 +68,7 @@ class Match extends React.Component {
         >
           <Text style={[screenStyles.bigButtonText, styles.white]}>Open on Yelp</Text>
         </TouchableHighlight>
-        <TouchableHighlight
+        {this.props.match.phone !== '' && <TouchableHighlight
           /* Button to call phone # */
           style={[screenStyles.bigButton, styles.callButton]}
           onPress={() => Linking.openURL(`tel:${this.props.match.phone}`)}
@@ -76,7 +76,7 @@ class Match extends React.Component {
           <Text style={[screenStyles.bigButtonText, { color: colors.hex }]}>
             Call: {this.props.match.phone}
           </Text>
-        </TouchableHighlight>
+        </TouchableHighlight>}
         <Text /* Link to exit round */
           disabled={this.props.disable}
           style={[screenStyles.bigButtonText, styles.exitRoundText]}
