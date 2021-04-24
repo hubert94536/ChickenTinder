@@ -60,6 +60,7 @@ class NotifCard extends React.Component {
   }
 
   handleDelete() {
+    console.log('hold')
     this.props.setHold()
   }
 
@@ -139,7 +140,7 @@ class NotifCard extends React.Component {
                 <AntDesign
                   style={[imgStyles.icon, styles.pend, styles.black]}
                   name="closecircleo"
-                  onPress={() => this.rejectFriend()}
+                  onPress={() => this.deleteFriend()}
                 />
               </View>
             )}
