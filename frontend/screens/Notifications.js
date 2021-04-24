@@ -21,6 +21,9 @@ import {
   hideHold,
   showError,
   hideError,
+  updateSession,
+  setHost,
+  hideDisable,
 } from '../redux/Actions.js'
 import Swiper from 'react-native-swiper'
 import PropTypes from 'prop-types'
@@ -37,6 +40,7 @@ import TabBar from '../Nav.js'
 var img = ''
 var name = ''
 var username = ''
+var socketErrMsg = 'Socket error message uninitialized'
 
 AsyncStorage.multiGet([NAME, PHOTO, USERNAME]).then((res) => {
   name = res[0][1]
@@ -72,7 +76,25 @@ class Notif extends Component {
       deleteFriend: false,
       // disabling buttons
       disabled: false,
+      socketErr: false,
     }
+    socket.getSocket().on('update', (res) => {
+      socket.getSocket().off()
+      this.props.updateSession(res)
+      this.props.setHost(res.members[res.host].username === this.props.username)
+      this.props.hideDisable()
+      this.props.hideRefresh()
+      this.props.navigation.replace('Group')
+    })
+    socket.getSocket().on('exception', (msg) => {
+      console.log(msg)
+      this.props.hideDisable()
+      this.props.hideRefresh()
+      if (msg === 'join') socketErrMsg = 'Unable to join the group, please try again'
+      else if (msg === 'cannot join')
+        socketErrMsg = 'The group does not exist or has already started a round'
+      this.setState({ socketErr: true })
+    })
   }
 
   componentDidMount() {
@@ -128,8 +150,8 @@ class Notif extends Component {
         type: 'requested',
       },
     ]
-    requested = []
-    active = []
+    let requested = []
+    let active = []
 
     notificationsApi
       .getNotifs()
@@ -336,7 +358,6 @@ class Notif extends Component {
             <TouchableHighlight
               underlayColor="#fff"
               style={[
-                // screenStyles.smallButton,
                 this.state.activity
                   ? { borderBottomColor: colors.hex }
                   : { borderBottomColor: 'white' },
@@ -348,7 +369,6 @@ class Notif extends Component {
                 style={[
                   screenStyles.smallButtonText,
                   styles.selectedText,
-                  // this.state.activity ? { color: 'white' } : { color: hex },
                   { fontFamily: 'CircularStd-Bold' },
                 ]}
               >
@@ -386,18 +406,14 @@ class Notif extends Component {
             onIndexChanged={() => this.setState({ activity: !this.state.activity })}
             scrollEnabled={!this.props.hold}
           >
-            {/* <Friends isFriends /> */}
-            {/* <View /> */}
             <ScrollView style={{ flexDirection: 'column' }} nestedScrollEnabled={true}>
               {this.state.activityNotifs}
             </ScrollView>
             <ScrollView style={{ flexDirection: 'column' }} nestedScrollEnabled={true}>
               {this.state.requestNotifs}
             </ScrollView>
-            {/* <Friends isFriends={false} /> */}
           </Swiper>
         </View>
-        {/* <View style={styles.bar}/> */}
         {!this.props.hold && (
           <Text style={[screenStyles.text, styles.deleteText]}>Hold to delete notifications</Text>
         )}
@@ -442,6 +458,16 @@ class Notif extends Component {
             cancel={() => this.props.hideError()}
           />
         )}
+        {this.state.socketErr && (
+          <Alert
+            title="Connection Error!"
+            body={socketErrMsg}
+            buttonAff="Close"
+            height="20%"
+            press={() => this.setState({ socketErr: false })}
+            cancel={() => this.setState({ socketErr: false })}
+          />
+        )}
         <TabBar
           goHome={() => this.props.navigation.replace('Home')}
           goSearch={() => this.props.navigation.replace('Search')}
@@ -449,6 +475,14 @@ class Notif extends Component {
           goProfile={() => this.props.navigation.replace('Profile')}
           cur="Notifs"
         />
+        {(this.state.socketErr || this.props.refresh) && (
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
       </ImageBackground>
     )
   }
@@ -475,6 +509,9 @@ const mapDispatchToProps = (dispatch) =>
       hideRefresh,
       hideHold,
       hideError,
+      hideDisable,
+      setHost,
+      updateSession,
     },
     dispatch,
   )
