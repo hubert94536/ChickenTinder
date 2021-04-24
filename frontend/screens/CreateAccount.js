@@ -121,9 +121,9 @@ class createAccount extends React.Component {
   checkNameSyntax() {
     /*regex expression: 
     - alphanumeric characters (lowercase or uppercase), dot (.), underscore (_), hyphen(-), space( )
-    - 2-15 characters
+    - 1-15 characters
     */
-    const regex = /^[ a-zA-Z0-9._-]([ ._-]|[a-zA-Z0-9]){0,13}[ a-zA-Z0-9._-]$/
+    const regex = /^([ ._-]|[a-zA-Z0-9]){0,14}[ a-zA-Z0-9._-]$/
     if (!regex.test(this.state.name)) {
       this.setState({ validNameFormat: false })
     } else {
@@ -135,9 +135,9 @@ class createAccount extends React.Component {
     /*regex expression: 
     - alphanumeric characters (lowercase or uppercase), dot (.), underscore (_), hyphen(-)
     - no spaces
-    - 2-15 characters
+    - 1-15 characters
     */
-    const regex = /^[a-zA-Z0-9._-]([._-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._-]$/
+    const regex = /^([._-]|[a-zA-Z0-9]){0,14}[a-zA-Z0-9._-]$/
     if (!regex.test(this.state.username)) {
       this.setState({ validUsernameFormat: false })
     } else {
@@ -374,7 +374,7 @@ const styles = StyleSheet.create({
   button: {
     borderColor: colors.hex,
     backgroundColor: colors.hex,
-    marginTop: '7%',
+    marginTop: '10%',
   },
   mediumText: {
     alignSelf: 'center',
@@ -410,6 +410,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     color: 'black',
     marginLeft: '10%',
+    marginTop: '3%'
   },
   warningText: {
     color: colors.hex,
