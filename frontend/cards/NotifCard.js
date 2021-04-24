@@ -82,8 +82,8 @@ class NotifCard extends React.Component {
           <CheckBox
             onChange={() => this.modifyList()}
             value={this.state.selected}
-            tintColors={{true: colors.hex, false: colors.gray}}
-            style={{marginLeft: '5%', marginRight: '-2%'}}
+            tintColors={{ true: colors.hex, false: colors.gray }}
+            style={{ marginLeft: '5%', marginRight: '-2%' }}
           />
         )}
         <TouchableWithoutFeedback
@@ -163,7 +163,7 @@ const mapDispatchToProps = (dispatch) =>
       hideDisable,
       setHold,
       showError,
-      showRefresh
+      showRefresh,
     },
     dispatch,
   )
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F1F1F1',
     borderRadius: 5,
     paddingVertical: '1%',
-    paddingLeft: '2%'
+    paddingLeft: '2%',
   },
   notif: {
     alignSelf: 'center',

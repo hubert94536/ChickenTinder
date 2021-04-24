@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     color: 'black',
     marginLeft: '10%',
-    marginTop: '3%'
+    marginTop: '3%',
   },
   warningText: {
     color: colors.hex,

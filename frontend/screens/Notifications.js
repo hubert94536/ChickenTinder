@@ -76,7 +76,7 @@ class Notif extends Component {
       deleteFriend: false,
       // disabling buttons
       disabled: false,
-      socketErr: false
+      socketErr: false,
     }
     socket.getSocket().on('update', (res) => {
       socket.getSocket().off()
@@ -150,8 +150,8 @@ class Notif extends Component {
         type: 'requested',
       },
     ]
-    requested = []
-    active = []
+    let requested = []
+    let active = []
 
     notificationsApi
       .getNotifs()
@@ -459,15 +459,15 @@ class Notif extends Component {
           />
         )}
         {this.state.socketErr && (
-            <Alert
-              title="Connection Error!"
-              body={socketErrMsg}
-              buttonAff="Close"
-              height="20%"
-              press={() => this.setState({ socketErr: false })}
-              cancel={() => this.setState({ socketErr: false })}
-            />
-          )}
+          <Alert
+            title="Connection Error!"
+            body={socketErrMsg}
+            buttonAff="Close"
+            height="20%"
+            press={() => this.setState({ socketErr: false })}
+            cancel={() => this.setState({ socketErr: false })}
+          />
+        )}
         <TabBar
           goHome={() => this.props.navigation.replace('Home')}
           goSearch={() => this.props.navigation.replace('Search')}
@@ -475,8 +475,7 @@ class Notif extends Component {
           goProfile={() => this.props.navigation.replace('Profile')}
           cur="Notifs"
         />
-        {(this.state.socketErr ||
-          this.props.refresh) && (
+        {(this.state.socketErr || this.props.refresh) && (
           <BlurView
             blurType="dark"
             blurAmount={10}
@@ -511,9 +510,8 @@ const mapDispatchToProps = (dispatch) =>
       hideHold,
       hideError,
       hideDisable,
-      hideRefresh,
       setHost,
-      updateSession
+      updateSession,
     },
     dispatch,
   )
