@@ -38,7 +38,6 @@ class ChoosePic extends React.Component {
   }
 
    ItemView = ({item}) => {
-    //  console.log(item.props.image)
     return (
       // FlatList Item
       item
@@ -83,7 +82,6 @@ class ChoosePic extends React.Component {
             onPress={() => this.props.dontSave()}
           />
           <View style={styles.modalContent}>
-            
             <Text style={[screenStyles.text, styles.nameText]}>Select a Profile Icon</Text>
             <FlatList
               style={[styles.flatlist]}
@@ -103,7 +101,6 @@ class ChoosePic extends React.Component {
             }}
             underlayColor="white"
           >
-            
             <Text style={[screenStyles.smallButtonText, styles.saveText]}> Done</Text>
           </TouchableHighlight>
         </View>

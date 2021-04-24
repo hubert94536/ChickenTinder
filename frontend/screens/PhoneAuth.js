@@ -97,8 +97,8 @@ class PhoneAuthScreen extends Component {
       <View style={styles.verificationView}>
         {/* get user's info upon logging in */}
         {this.state.login && <UserInfo></UserInfo>}
-<View style = {{height: '1%', marginBottom: '40%'}}>
-<CodeInput
+          <View style = {styles.codeContainer}>
+            <CodeInput
               ref="codeInputRef2"
               className={'border-b'}
               codeLength={6}
@@ -108,20 +108,14 @@ class PhoneAuthScreen extends Component {
               onFulfill={(code) => this._onFulfill(code)}
               onCodeChange={(code) => { this.setState({ verificationCode: code})  }}
             />
-  </View>
-
-        <TouchableOpacity
-          disabled={this.props.disable}
-          style={[screenStyles.longButton, styles.longButton]}
-          onPress={() => this.handleVerifyCode()}
-          // style = {{marginTop: '1%'}}
-        >
+          </View>
+          <TouchableOpacity
+            disabled={this.props.disable}
+            style={[screenStyles.longButton, styles.longButton]}
+            onPress={() => this.handleVerifyCode()}
+          >
           <Text style={[screenStyles.longButtonText, styles.longButtonText]}>Verify Code</Text>
-        </TouchableOpacity>
-
-
-
-        
+          </TouchableOpacity>
       </View>
     )
   }
@@ -368,6 +362,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
   },
+
+  codeContainer: {
+    height: '1%', 
+    marginBottom: '40%'
+  }
 })
 
 PhoneAuthScreen.propTypes = {
