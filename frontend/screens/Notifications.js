@@ -438,7 +438,7 @@ class Notif extends Component {
             title="Error, please try again"
             buttonAff="Close"
             height="20%"
-            press={() => this.props.showError()}
+            press={() => this.props.hideError()}
             cancel={() => this.props.hideError()}
           />
         )}
