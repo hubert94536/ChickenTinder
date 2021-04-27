@@ -2,7 +2,16 @@ import React from 'react'
 import { bindActionCreators } from 'redux'
 import { BlurView } from '@react-native-community/blur'
 import { connect } from 'react-redux'
-import { ActivityIndicator, Dimensions, Linking, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Dimensions,
+  Linking,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
+} from 'react-native'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
@@ -12,7 +21,13 @@ import MatchCard from '../cards/MatchCard.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
-import { updateSession, setDisable, showRefresh, hideDisable, hideRefresh } from '../redux/Actions.js'
+import {
+  updateSession,
+  setDisable,
+  showRefresh,
+  hideDisable,
+  hideRefresh,
+} from '../redux/Actions.js'
 import socket from '../apis/socket.js'
 
 // the card for the restaurant match
@@ -88,22 +103,22 @@ class Match extends React.Component {
         >
           Exit Round
         </Text>
-          <Modal transparent={true} animationType={'none'} visible={this.props.refresh}>
-            <ActivityIndicator
-              color="white"
-              size={50}
-              animating={this.props.refresh}
-              style={screenStyles.loading}
-            />
+        <Modal transparent={true} animationType={'none'} visible={this.props.refresh}>
+          <ActivityIndicator
+            color="white"
+            size={50}
+            animating={this.props.refresh}
+            style={screenStyles.loading}
+          />
         </Modal>
-          {(this.props.refresh) && (
-            <BlurView
-              blurType="dark"
-              blurAmount={10}
-              reducedTransparencyFallbackColor="white"
-              style={modalStyles.blur}
-            />
-          )}
+        {this.props.refresh && (
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
       </View>
     )
   }
@@ -113,7 +128,7 @@ const mapStateToProps = (state) => {
   return {
     match: state.match.match,
     disable: state.disable,
-    refresh: state.refresh
+    refresh: state.refresh,
   }
 }
 
@@ -143,7 +158,7 @@ Match.propTypes = {
   disable: PropTypes.bool,
   hideRefresh: PropTypes.func,
   showRefresh: PropTypes.func,
-  refresh: PropTypes.bool
+  refresh: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({

@@ -87,9 +87,9 @@ class PhoneAuthScreen extends Component {
   }
 
   _onFulfill(code) {
-    this.setState({ verificationCode: code}, () => { 
-      console.log(this.state.verificationCode);
-    });
+    this.setState({ verificationCode: code }, () => {
+      console.log(this.state.verificationCode)
+    })
   }
 
   renderConfirmationCodeView() {
@@ -97,25 +97,27 @@ class PhoneAuthScreen extends Component {
       <View style={styles.verificationView}>
         {/* get user's info upon logging in */}
         {this.state.login && <UserInfo></UserInfo>}
-          <View style = {styles.codeContainer}>
-            <CodeInput
-              ref="codeInputRef2"
-              className={'border-b'}
-              codeLength={6}
-              size={40}
-              containerStyle={{ marginTop: 10 }}
-              codeInputStyle={styles.textInput}
-              onFulfill={(code) => this._onFulfill(code)}
-              onCodeChange={(code) => { this.setState({ verificationCode: code})  }}
-            />
-          </View>
-          <TouchableOpacity
-            disabled={this.props.disable}
-            style={[screenStyles.longButton, styles.longButton]}
-            onPress={() => this.handleVerifyCode()}
-          >
+        <View style={styles.codeContainer}>
+          <CodeInput
+            ref="codeInputRef2"
+            className={'border-b'}
+            codeLength={6}
+            size={40}
+            containerStyle={{ marginTop: 10 }}
+            codeInputStyle={styles.textInput}
+            onFulfill={(code) => this._onFulfill(code)}
+            onCodeChange={(code) => {
+              this.setState({ verificationCode: code })
+            }}
+          />
+        </View>
+        <TouchableOpacity
+          disabled={this.props.disable}
+          style={[screenStyles.longButton, styles.longButton]}
+          onPress={() => this.handleVerifyCode()}
+        >
           <Text style={[screenStyles.longButtonText, styles.longButtonText]}>Verify Code</Text>
-          </TouchableOpacity>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -364,9 +366,9 @@ const styles = StyleSheet.create({
   },
 
   codeContainer: {
-    height: '1%', 
-    marginBottom: '40%'
-  }
+    height: '1%',
+    marginBottom: '40%',
+  },
 })
 
 PhoneAuthScreen.propTypes = {

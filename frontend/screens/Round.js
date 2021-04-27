@@ -186,14 +186,15 @@ class Round extends React.Component {
             style={screenStyles.loading}
           />
         </Modal>
-        {this.state.leave || this.props.refresh && (
-          <BlurView
-            blurType="dark"
-            blurAmount={10}
-            reducedTransparencyFallbackColor="white"
-            style={modalStyles.blur}
-          />
-        )}
+        {this.state.leave ||
+          (this.props.refresh && (
+            <BlurView
+              blurType="dark"
+              blurAmount={10}
+              reducedTransparencyFallbackColor="white"
+              style={modalStyles.blur}
+            />
+          ))}
       </View>
     )
   }
@@ -204,7 +205,7 @@ const mapStateToProps = (state) => {
     session: state.session.session,
     username: state.username.username,
     disable: state.disable,
-    refresh: state.refresh
+    refresh: state.refresh,
   }
 }
 
@@ -238,7 +239,7 @@ Round.propTypes = {
   disable: PropTypes.bool,
   hideRefresh: PropTypes.func,
   showRefresh: PropTypes.func,
-  refresh: PropTypes.bool
+  refresh: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({
