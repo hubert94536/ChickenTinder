@@ -1,8 +1,9 @@
 import React from 'react'
-import { CheckBox, Image, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import CheckBox from '@react-native-community/checkbox'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { setDisable, hideDisable, setHold } from '../redux/Actions.js'
+import { setDisable, hideDisable, setHold, showError } from '../redux/Actions.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'
@@ -16,11 +17,9 @@ class NotifCard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      // isFriend: this.props.friends,
-      uid: this.props.uid,
       confirmPressed: false,
       deletePressed: false,
-      hold: true,
+      hold: false,
       selected: false,
     }
   }
@@ -29,7 +28,7 @@ class NotifCard extends React.Component {
   async acceptFriend() {
     this.props.setDisable()
     friendsApi
-      .acceptFriendRequest(this.state.uid)
+      .acceptFriendRequest(this.props.uid)
       .then(() => {
         // this.setState({ isFriend: true })
         this.props.hideDisable()
@@ -60,7 +59,6 @@ class NotifCard extends React.Component {
   }
 
   handleDelete() {
-    console.log('hold')
     this.props.setHold()
   }
 
@@ -84,7 +82,8 @@ class NotifCard extends React.Component {
           <CheckBox
             onChange={() => this.modifyList()}
             value={this.state.selected}
-            tintColors={{ true: colors.hex }}
+            tintColors={{true: colors.hex, false: colors.gray}}
+            style={{marginLeft: '5%', marginRight: '-2%'}}
           />
         )}
         <TouchableWithoutFeedback
@@ -100,24 +99,24 @@ class NotifCard extends React.Component {
             <View style={styles.notif}>
               {this.props.type == 'invite' && (
                 <Text style={[imgStyles.bookFont, styles.text]}>
-                  {this.props.name} has invited you to a group!
+                  {this.props.name} invites you to a group!
                 </Text>
               )}
-              {this.props.type == 'accepted' && !this.state.hold && (
+              {this.props.type == 'accepted' && (
                 <Text style={[imgStyles.bookFont, styles.text]}>
-                  {this.props.name} accepted your friend request!
+                  {this.props.name} accepted your request!
                 </Text>
               )}
 
-              {this.props.type == 'friends' && !this.state.hold && (
+              {this.props.type == 'friends' && (
                 <Text style={[imgStyles.bookFont, styles.text]}>
                   {this.props.name} is friends with you!
                 </Text>
               )}
 
-              {this.props.type == 'pending' && !this.state.hold && (
+              {this.props.type == 'pending' && (
                 <Text style={[imgStyles.bookFont, styles.text]}>
-                  {this.props.name} sent you a friend request!
+                  {this.props.name} requested you!
                 </Text>
               )}
 
@@ -130,7 +129,7 @@ class NotifCard extends React.Component {
               </View>
             )}
 
-            {this.props.type == 'pending' && (
+            {this.props.type == 'pending' && !this.props.hold && (
               <View style={styles.request}>
                 <Icon
                   style={[imgStyles.icon, styles.pend]}
@@ -163,6 +162,7 @@ const mapDispatchToProps = (dispatch) =>
       setDisable,
       hideDisable,
       setHold,
+      showError
     },
     dispatch,
   )
@@ -198,7 +198,8 @@ const styles = StyleSheet.create({
     marginHorizontal: '5%',
     backgroundColor: '#F1F1F1',
     borderRadius: 5,
-    paddingVertical: '1.5%',
+    paddingVertical: '1%',
+    paddingLeft: '2%'
   },
   notif: {
     alignSelf: 'center',
@@ -240,11 +241,8 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderWidth: 2,
     height: '40%',
-    // width: '50%',
     marginLeft: '5%',
-    // marginRight: '5%',
     alignSelf: 'center',
-    // flex: 0.5,
   },
   deleteText: {
     color: 'black',
@@ -257,10 +255,9 @@ const styles = StyleSheet.create({
     fontSize: normalize(12),
   },
   black: { color: 'black' },
-  pend: { fontSize: normalize(25), marginHorizontal: '3%' },
+  pend: { fontSize: normalize(25), marginHorizontal: '5%' },
   request: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    // borderColor: 'black', borderWidth: 2
   },
 })
