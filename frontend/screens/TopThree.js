@@ -38,9 +38,9 @@ class TopThree extends React.Component {
       chosen: this.props.top.length - 1,
     }
     socket.getSocket().once('choose', (ind) => {
+      this.props.hideRefresh()
       socket.getSocket().off()
       this.props.setMatch(this.props.top[ind])
-      this.props.hideRefresh()
       this.props.navigation.replace('Match')
     })
 

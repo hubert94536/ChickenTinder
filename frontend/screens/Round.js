@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { ActivityIndicator, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { BlurView } from '@react-native-community/blur'
@@ -21,6 +21,7 @@ import {
   setMatch,
   setTop,
   setDisable,
+  showRefresh,
   hideDisable,
   hideRefresh,
 } from '../redux/Actions.js'
@@ -36,6 +37,7 @@ class Round extends React.Component {
     }
 
     socket.getSocket().once('match', (data) => {
+      this.props.showRefresh()
       socket.getSocket().off()
       this.props.setMatch(this.props.session.resInfo.find((x) => x.id === data))
       this.props.navigation.replace('Match')
@@ -47,6 +49,7 @@ class Round extends React.Component {
     })
 
     socket.getSocket().once('top 3', (res) => {
+      this.props.showRefresh()
       socket.getSocket().off()
       let restaurants = this.props.session.resInfo.filter((x) => res.choices.includes(x.id))
       restaurants.forEach((x) => (x.likes = res.likes[res.choices.indexOf(x.id)]))
@@ -175,7 +178,15 @@ class Round extends React.Component {
             }}
           />
         )}
-        {this.state.leave && (
+        <Modal transparent={true} animationType={'none'} visible={this.props.refresh}>
+          <ActivityIndicator
+            color="white"
+            size={50}
+            animating={this.props.refresh}
+            style={screenStyles.loading}
+          />
+        </Modal>
+        {this.state.leave || this.props.refresh && (
           <BlurView
             blurType="dark"
             blurAmount={10}
@@ -193,6 +204,7 @@ const mapStateToProps = (state) => {
     session: state.session.session,
     username: state.username.username,
     disable: state.disable,
+    refresh: state.refresh
   }
 }
 
@@ -204,6 +216,7 @@ const mapDispatchToProps = (dispatch) =>
       setMatch,
       setTop,
       setDisable,
+      showRefresh,
       hideDisable,
       hideRefresh,
     },
@@ -224,6 +237,8 @@ Round.propTypes = {
   hideDisable: PropTypes.func,
   disable: PropTypes.bool,
   hideRefresh: PropTypes.func,
+  showRefresh: PropTypes.func,
+  refresh: PropTypes.bool
 }
 
 const styles = StyleSheet.create({
