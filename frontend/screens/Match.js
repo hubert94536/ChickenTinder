@@ -68,15 +68,17 @@ class Match extends React.Component {
         >
           <Text style={[screenStyles.bigButtonText, styles.white]}>Open on Yelp</Text>
         </TouchableHighlight>
-        {this.props.match.phone !== '' && <TouchableHighlight
-          /* Button to call phone # */
-          style={[screenStyles.bigButton, styles.callButton]}
-          onPress={() => Linking.openURL(`tel:${this.props.match.phone}`)}
-        >
-          <Text style={[screenStyles.bigButtonText, { color: colors.hex }]}>
-            Call: {this.props.match.phone}
-          </Text>
-        </TouchableHighlight>}
+        {this.props.match.phone !== '' && (
+          <TouchableHighlight
+            /* Button to call phone # */
+            style={[screenStyles.bigButton, styles.callButton]}
+            onPress={() => Linking.openURL(`tel:${this.props.match.phone}`)}
+          >
+            <Text style={[screenStyles.bigButtonText, { color: colors.hex }]}>
+              Call: {this.props.match.phone}
+            </Text>
+          </TouchableHighlight>
+        )}
         <Text /* Link to exit round */
           disabled={this.props.disable}
           style={[screenStyles.bigButtonText, styles.exitRoundText]}

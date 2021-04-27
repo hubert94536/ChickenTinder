@@ -532,4 +532,4 @@ const foodImages = {
     val: 1,
   },
 }
-export { foodImages }
+export { foodImages, assets }

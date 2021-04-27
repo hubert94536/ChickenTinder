@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-n
 import CheckBox from '@react-native-community/checkbox'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { setDisable, hideDisable, setHold, showError } from '../redux/Actions.js'
+import { setDisable, hideDisable, setHold, showError, showRefresh } from '../redux/Actions.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'
@@ -64,10 +64,10 @@ class NotifCard extends React.Component {
 
   handleClick() {
     this.props.setDisable()
+    this.props.showRefresh()
     if (this.props.type == 'invite') {
       socket.joinRoom(this.props.content)
     }
-    this.props.hideDisable()
   }
 
   modifyList() {
@@ -82,8 +82,8 @@ class NotifCard extends React.Component {
           <CheckBox
             onChange={() => this.modifyList()}
             value={this.state.selected}
-            tintColors={{true: colors.hex, false: colors.gray}}
-            style={{marginLeft: '5%', marginRight: '-2%'}}
+            tintColors={{ true: colors.hex, false: colors.gray }}
+            style={{ marginLeft: '5%', marginRight: '-2%' }}
           />
         )}
         <TouchableWithoutFeedback
@@ -162,7 +162,8 @@ const mapDispatchToProps = (dispatch) =>
       setDisable,
       hideDisable,
       setHold,
-      showError
+      showError,
+      showRefresh,
     },
     dispatch,
   )
@@ -199,7 +200,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F1F1F1',
     borderRadius: 5,
     paddingVertical: '1%',
-    paddingLeft: '2%'
+    paddingLeft: '2%',
   },
   notif: {
     alignSelf: 'center',
