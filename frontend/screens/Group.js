@@ -185,11 +185,6 @@ class Group extends React.Component {
     Clipboard.setString(this.props.session.code.toString())
   }
 
-  componentDidMount() {
-    // this.props.showRefresh()
-    // this.props.hideRefresh()
-  }
-
   render() {
     this.updateMemberList()
     return (
@@ -429,6 +424,9 @@ class Group extends React.Component {
             {!this.props.isHost && (
               <TouchableHighlight
                 disabled={this.props.disable || this.state.drawerOpen}
+                underlayColor="white"
+                onShowUnderlay={() => this.setState({ pressedStart: true })}
+                onHideUnderlay={() => this.setState({ pressedStart: false })}
                 style={[
                   screenStyles.bigButton,
                   styles.bigButton,
@@ -441,7 +439,7 @@ class Group extends React.Component {
                     this.filterRef.current.submitUserFilters()
                 }}
               >
-                <Text style={styles.buttonText}>
+                <Text style={[styles.buttonText, this.state.pressedStart ? screenStyles.hex : styles.white]}>
                   {!this.state.userSubmitted ? 'Submit Filters' : 'Waiting...'}
                 </Text>
               </TouchableHighlight>
