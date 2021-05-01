@@ -122,7 +122,7 @@ class Home extends React.Component {
                 height: 45,
                 justifyContent: 'center',
                 alignSelf: 'center',
-                margin: '3%',
+                margin: '5%',
               }}
               onPress={() => {
                 this.createGroup()
@@ -141,7 +141,7 @@ class Home extends React.Component {
               onShowUnderlay={() => this.setState({ joinPressed: true })}
               onHideUnderlay={() => this.setState({ joinPressed: false })}
               activeOpacity={1}
-              underlayColor={'white'}
+              underlayColor="white"
               style={{
                 backgroundColor: 'transparent',
                 borderRadius: 40,
@@ -154,11 +154,11 @@ class Home extends React.Component {
               }}
               onPress={() => this.setState({ join: true })}
             >
-              <Text style={[styles.buttonText, { color: 'white' }]}>Join Group</Text>
+              <Text style={[styles.buttonText, this.state.joinPressed ? screenStyles.hex : styles.white]}>Join Group</Text>
             </TouchableHighlight>
           </View>
           <TabBar
-            goHome={() => {}}
+            goHome={() => { }}
             goSearch={() => {
               socket.getSocket().off()
               this.props.navigation.replace('Search')
@@ -223,13 +223,13 @@ class Home extends React.Component {
           this.props.kick ||
           this.state.socketErr ||
           this.props.refresh) && (
-          <BlurView
-            blurType="dark"
-            blurAmount={10}
-            reducedTransparencyFallbackColor="white"
-            style={modalStyles.blur}
-          />
-        )}
+            <BlurView
+              blurType="dark"
+              blurAmount={10}
+              reducedTransparencyFallbackColor="white"
+              style={modalStyles.blur}
+            />
+          )}
       </ImageBackground>
     )
   }
@@ -307,4 +307,7 @@ const styles = StyleSheet.create({
     fontFamily: 'CircularStd-Bold',
     fontSize: normalize(18),
   },
+  white: {
+    color: 'white'
+  }
 })
