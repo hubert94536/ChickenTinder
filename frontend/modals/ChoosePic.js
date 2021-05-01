@@ -19,6 +19,7 @@ class ChoosePic extends React.Component {
     this.state = {
       images: [],
       selected: this.props.photo,
+      done: false,
     }
   }
 
@@ -99,8 +100,10 @@ class ChoosePic extends React.Component {
               this.props.makeChanges(this.state.selected)
             }}
             underlayColor="white"
+            onShowUnderlay={() => this.setState({ done: true })}
+            onHideUnderlay={() => this.setState({ done: false })}
           >
-            <Text style={[screenStyles.smallButtonText, styles.saveText]}> Done</Text>
+            <Text style={[screenStyles.smallButtonText, styles.saveText, this.state.done ? screenStyles.hex : styles.white]}> Done</Text>
           </TouchableHighlight>
         </View>
       </Modal>
@@ -119,15 +122,15 @@ ChoosePic.propTypes = {
 
 const styles = StyleSheet.create({
   mainContainerHeight: {
-    height: width,
+    height: width * 1.05,
     marginTop: '30%',
   },
   modalContent: {
     textAlign: 'center',
     marginLeft: '9%',
     marginRight: '8%',
-    height: width * 0.7,
-    marginBottom: '5%',
+    height: width * 0.75,
+    marginBottom: '3%',
   },
   titleText: {
     fontSize: normalize(16.5),
@@ -135,6 +138,7 @@ const styles = StyleSheet.create({
   nameText: {
     marginBottom: '4%',
     color: colors.hex,
+    fontSize: normalize(18)
   },
   input: {
     color: '#7d7d7d',
@@ -146,11 +150,13 @@ const styles = StyleSheet.create({
     backgroundColor: screenStyles.hex.color,
     borderColor: screenStyles.hex.color,
     margin: '5%',
-    width: '50%',
+    width: '40%',
   },
   saveText: {
-    padding: '10%',
+    paddingTop: '5%',
+    paddingBottom: '5%',
     color: 'white',
+    fontSize: normalize(18)
   },
   warningText: {
     color: colors.hex,
