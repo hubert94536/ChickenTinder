@@ -126,8 +126,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(TabBar)
 
 const styles = StyleSheet.create({
   bar: {
-    width: '95%',
-    marginBottom: '2%',
+    width: '90%',
+    marginBottom: '4%',
     alignSelf: 'center',
     height: height * 0.07,
     backgroundColor: '#fff2f2',
