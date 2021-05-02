@@ -6,19 +6,9 @@ import colors from '../../styles/colors.js'
 const width = Dimensions.get('window').width
 
 class ImageCard extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      photo: this.props.image,
-      confirmPressed: false,
-      deletePressed: false,
-      selected: this.props.selected,
-    }
-  }
-
   handleClick() {
     this.setState({ selected: true })
-    this.props.press(this.state.photo)
+    this.props.press(this.props.image)
   }
 
   render() {
@@ -29,7 +19,7 @@ class ImageCard extends React.Component {
             source={{ uri: Image.resolveAssetSource(this.props.image).uri }}
             style={[
               styles.picture,
-              this.state.selected ? { borderColor: colors.hex } : { borderColor: 'white' },
+              this.props.selected ? { borderColor: colors.hex } : { borderColor: 'white' },
             ]}
           />
         </View>

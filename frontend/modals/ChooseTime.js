@@ -8,14 +8,14 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native'
+import Icon from 'react-native-vector-icons/AntDesign'
 import PropTypes from 'prop-types'
+import _ from 'lodash'
+import ButtonSwitch from './ButtonSwitch.js'
 import colors from '../../styles/colors.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
-import Icon from 'react-native-vector-icons/AntDesign'
-import ButtonSwitch from './ButtonSwitch.js'
-import _ from 'lodash'
 
 const width = Dimensions.get('window').width
 

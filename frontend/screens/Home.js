@@ -64,28 +64,31 @@ class Home extends React.Component {
     })
 
     socket.getSocket().on('exception', (msg) => {
+      console.log(msg)
       this.props.hideDisable()
       this.props.hideRefresh()
       if (msg === 'create') socketErrMsg = 'Unable to create a group, please try again'
-      else if (msg === 'join') socketErrMsg = 'Unable to join a group, please try again'
+      else if (msg === 'join') socketErrMsg = 'Unable to join the group, please try again'
+      else if (msg === 'cannot join')
+        socketErrMsg = 'The group does not exist or has already started a round'
       this.setState({ socketErr: true })
     })
 
-    // //uncomment if testing friends/requests
+    //uncomment if testing friends/requests
     // accountsApi.createFBUserTest('Hubes2', 32, 'hbc', 'hhcc@gmail.com', '50', '35434354')
     // accountsApi.createFBUserTest('Hanna2', 33, 'hannaaa', 'hannco@gmail.com', '51', '17891234')
     // accountsApi.createFBUserTest('Anna2', 34, 'annaxand', 'annaxand@yahoo.com', '52', '17891235')
     // accountsApi.createFBUserTest('Helen2', 35, 'helennn', 'helennn@gmail.com', '53', '45678903')
     // accountsApi.createFBUserTest('Kevin2', 36, 'kev', 'kevi@gmail.com', '54', '45678904')
     // // friendsApi.createFriendshipTest(requester, accepter)
-    // friendsApi.createFriendshipTest(32, "T5wVvNZZqygPVR9Nfecm0neUUQ93")
-    // friendsApi.createFriendshipTest(33, "T5wVvNZZqygPVR9Nfecm0neUUQ93")
-    // friendsApi.createFriendshipTest(34, "T5wVvNZZqygPVR9Nfecm0neUUQ93")
+    // friendsApi.createFriendshipTest(32, "qShmVlrrjpY0sj8ES2lWFUmBJCh1")
+    // friendsApi.createFriendshipTest(33, "qShmVlrrjpY0sj8ES2lWFUmBJCh1")
+    // friendsApi.createFriendshipTest(34, "qShmVlrrjpY0sj8ES2lWFUmBJCh1")
   }
 
-  // componentDidMount() {
-  //   this.props.hideRefresh()
-  // }
+  componentDidMount() {
+    // this.props.hideRefresh()
+  }
 
   createGroup() {
     this.props.setDisable()
@@ -119,7 +122,7 @@ class Home extends React.Component {
                 height: 45,
                 justifyContent: 'center',
                 alignSelf: 'center',
-                margin: '3%',
+                margin: '5%',
               }}
               onPress={() => {
                 this.createGroup()
@@ -138,7 +141,7 @@ class Home extends React.Component {
               onShowUnderlay={() => this.setState({ joinPressed: true })}
               onHideUnderlay={() => this.setState({ joinPressed: false })}
               activeOpacity={1}
-              underlayColor={'white'}
+              underlayColor="white"
               style={{
                 backgroundColor: 'transparent',
                 borderRadius: 40,
@@ -151,11 +154,11 @@ class Home extends React.Component {
               }}
               onPress={() => this.setState({ join: true })}
             >
-              <Text style={[styles.buttonText, { color: 'white' }]}>Join Group</Text>
+              <Text style={[styles.buttonText, this.state.joinPressed ? screenStyles.hex : styles.white]}>Join Group</Text>
             </TouchableHighlight>
           </View>
           <TabBar
-            goHome={() => {}}
+            goHome={() => { }}
             goSearch={() => {
               socket.getSocket().off()
               this.props.navigation.replace('Search')
@@ -220,13 +223,13 @@ class Home extends React.Component {
           this.props.kick ||
           this.state.socketErr ||
           this.props.refresh) && (
-          <BlurView
-            blurType="dark"
-            blurAmount={10}
-            reducedTransparencyFallbackColor="white"
-            style={modalStyles.blur}
-          />
-        )}
+            <BlurView
+              blurType="dark"
+              blurAmount={10}
+              reducedTransparencyFallbackColor="white"
+              style={modalStyles.blur}
+            />
+          )}
       </ImageBackground>
     )
   }
@@ -304,4 +307,7 @@ const styles = StyleSheet.create({
     fontFamily: 'CircularStd-Bold',
     fontSize: normalize(18),
   },
+  white: {
+    color: 'white'
+  }
 })

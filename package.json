@@ -42,8 +42,9 @@
     "prop-types": "^15.7.2",
     "react": "16.13.1",
     "react-lodash": "^0.1.2",
-    "react-native": "^0.63.2",
+    "react-native": "^0.64.0",
     "react-native-confirmation-code-field": "^7.0.1",
+    "react-native-confirmation-code-input": "^1.0.4",
     "react-native-deck-swiper": "^2.0.5",
     "react-native-dotenv": "^0.2.0",
     "react-native-elements": "^2.3.2",
@@ -67,13 +68,14 @@
     "react-navigation": "^4.4.1",
     "react-navigation-stack": "^2.8.3",
     "react-redux": "^7.2.2",
+    "react-verification-code-input": "^1.2.9",
     "redis": "^3.0.2",
     "redis-lock": "^0.1.4",
     "redis-mock": "^0.56.3",
     "redux": "^4.0.5",
     "sequelize": "^6.3.5",
     "smartystreets-javascript-sdk": "^1.6.0",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.4.1",
     "socket.io-client": "^2.3.0",
     "socketio-auth": "^0.1.1",
     "switch-button-react-native": "^1.0.3",
@@ -81,6 +83,7 @@
     "util": "^0.12.3"
   },
   "devDependencies": {
+    "@react-native-community/checkbox": "^0.5.7",
     "@testing-library/react-native": "^7.1.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.14.0",
@@ -91,7 +94,8 @@
     "jest-cli": "^26.6.1",
     "patch-package": "^6.2.2",
     "prettier": "^2.1.2",
-    "react-test-renderer": "^17.0.1"
+    "react-test-renderer": "^17.0.1",
+    "symbol-observable": "^4.0.0"
   },
   "jest": {
     "preset": "react-native",

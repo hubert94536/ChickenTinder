@@ -17,7 +17,7 @@ class GroupCard extends React.Component {
   constructor(props) {
     super(props)
   }
-
+  /* TODO: use lodash */
   removeUser(uid) {
     this.props.setDisable()
     socket.kickUser(uid)

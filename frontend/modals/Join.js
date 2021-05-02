@@ -8,15 +8,15 @@ import {
   View,
   TextInput,
 } from 'react-native'
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { setDisable, hideDisable, showRefresh, hideRefresh } from '../redux/Actions.js'
-import PropTypes from 'prop-types'
-import socket from '../apis/socket.js'
-import AntDesign from 'react-native-vector-icons/AntDesign'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
+import socket from '../apis/socket.js'
 
 //  props are name, image url, and functions for cancel and go
 // invite alert
@@ -98,37 +98,28 @@ class Join extends React.Component {
                   Invalid PIN. Please try again.
                 </Text>
               </View>
-              {this.state.isValid && (
-                <TouchableHighlight
-                  underlayColor={screenStyles.hex.color}
-                  disabled={this.props.disable}
-                  onHideUnderlay={() => this.setState({ pressed: false })}
-                  onShowUnderlay={() => this.setState({ pressed: true })}
-                  onPress={() => this.handleAccept()}
-                  style={[modalStyles.button, styles.button]}
+              <TouchableHighlight
+                disabled={this.props.disable}
+                underlayColor="white"
+                onShowUnderlay={() => this.setState({ pressed: true })}
+                onHideUnderlay={() => this.setState({ pressed: false })}
+                onPress={() => {
+                  if (this.state.isValid) this.handleAccept()
+                  else this.setState({ invalid: true })
+                }}
+                style={[modalStyles.button, styles.button]}
+              >
+                <Text
+                  style={[
+                    modalStyles.text,
+                    screenStyles.book,
+                    styles.buttonText,
+                    this.state.pressed ? screenStyles.hex : {color: "white"},
+                  ]}
                 >
-                  <Text
-                    style={[
-                      modalStyles.text,
-                      screenStyles.book,
-                      styles.buttonText,
-                      { color: this.state.pressed ? 'white' : screenStyles.hex.color },
-                    ]}
-                  >
-                    Join Group
-                  </Text>
-                </TouchableHighlight>
-              )}
-              {!this.state.isValid && (
-                <TouchableHighlight
-                  onPress={() => this.setState({ invalid: true })}
-                  style={[modalStyles.button, styles.bgHex]}
-                >
-                  <Text style={[modalStyles.text, styles.white, screenStyles.book]}>
-                    Join Group
-                  </Text>
-                </TouchableHighlight>
-              )}
+                  Join Group
+                </Text>
+              </TouchableHighlight>
             </View>
           </View>
         </Modal>
@@ -196,17 +187,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  bgHex: {
+  button: {
     backgroundColor: screenStyles.hex.color,
     width: '45%',
   },
-  button: {
-    width: '45%',
-  },
   buttonText: {
-    fontSize: normalize(17),
-    paddingTop: '8%',
-    paddingBottom: '8%',
+    fontSize: normalize(19),
+    paddingTop: '5%',
+    paddingBottom: '5%',
   },
   white: {
     color: 'white',

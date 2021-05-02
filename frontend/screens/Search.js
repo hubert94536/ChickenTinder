@@ -157,10 +157,11 @@ class Search extends Component {
     return (
       <ImageBackground
         source={require('../assets/backgrounds/Search.png')}
-        style={screenStyles.screenBackground}
+        style={[screenStyles.screenBackground]}
       >
         <Text style={[screenStyles.icons, styles.title]}>Find friends</Text>
         <FlatList
+          style={styles.screen}
           data={this.state.data}
           extraData={this.state.data}
           renderItem={({ item }) => (
@@ -184,6 +185,7 @@ class Search extends Component {
           ListHeaderComponent={this.renderHeader}
           onRefresh={() => this.onRefresh()}
           refreshing={this.state.refresh}
+          stickyHeaderIndices={[0]}
         />
         {(this.state.errorAlert || this.state.deleteFriend) && (
           <BlurView
@@ -256,6 +258,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
   },
+  screen: {
+    marginBottom: '17%',
+    marginTop: '13%',
+  },
   container: {
     backgroundColor: 'white',
     borderBottomColor: 'transparent',
@@ -263,7 +269,6 @@ const styles = StyleSheet.create({
     width: '95%',
     height: width * 0.1546,
     alignSelf: 'center',
-    marginTop: '13%',
   },
   inputContainer: {
     height: width * 0.0966,

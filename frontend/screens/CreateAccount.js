@@ -49,6 +49,7 @@ class createAccount extends React.Component {
       validUsername: true,
       validUsernameFormat: true,
       edit: false,
+      finishPressed: false
     }
   }
 
@@ -91,6 +92,7 @@ class createAccount extends React.Component {
       }
       socket.connect()
       this.props.navigation.replace('Home')
+      this.props.hideDisable()
     } catch (err) {
       this.setState({ errorAlert: true })
       this.props.hideDisable()
@@ -120,9 +122,9 @@ class createAccount extends React.Component {
   checkNameSyntax() {
     /*regex expression: 
     - alphanumeric characters (lowercase or uppercase), dot (.), underscore (_), hyphen(-), space( )
-    - 2-15 characters
+    - 1-15 characters
     */
-    const regex = /^[ a-zA-Z0-9._-]([ ._-]|[a-zA-Z0-9]){0,13}[ a-zA-Z0-9._-]$/
+    const regex = /^([ ._-]|[a-zA-Z0-9]){0,14}[ a-zA-Z0-9._-]$/
     if (!regex.test(this.state.name)) {
       this.setState({ validNameFormat: false })
     } else {
@@ -134,9 +136,9 @@ class createAccount extends React.Component {
     /*regex expression: 
     - alphanumeric characters (lowercase or uppercase), dot (.), underscore (_), hyphen(-)
     - no spaces
-    - 2-15 characters
+    - 1-15 characters
     */
-    const regex = /^[a-zA-Z0-9._-]([._-]|[a-zA-Z0-9]){0,13}[a-zA-Z0-9._-]$/
+    const regex = /^([._-]|[a-zA-Z0-9]){0,14}[a-zA-Z0-9._-]$/
     if (!regex.test(this.state.username)) {
       this.setState({ validUsernameFormat: false })
     } else {
@@ -258,7 +260,6 @@ class createAccount extends React.Component {
         {global.email != '' && global.email && (
           <View>
             <Text style={[screenStyles.textBook, styles.fieldName]}>Email</Text>
-
             <Text
               style={[
                 screenStyles.textBook,
@@ -285,7 +286,7 @@ class createAccount extends React.Component {
             <Text
               style={[
                 screenStyles.longButtonText,
-                this.state.phonePressed ? { color: colors.hex } : { color: 'white' },
+                this.state.finishPressed ? screenStyles.hex : styles.white
               ]}
             >
               Finish
@@ -350,6 +351,7 @@ const styles = StyleSheet.create({
   instr: {
     marginBottom: '5%',
   },
+  white: { color: 'white' },
   title: {
     fontSize: normalize(25),
     color: 'white',
@@ -374,7 +376,7 @@ const styles = StyleSheet.create({
   button: {
     borderColor: colors.hex,
     backgroundColor: colors.hex,
-    marginTop: '7%',
+    marginTop: '10%',
   },
   mediumText: {
     alignSelf: 'center',
@@ -410,6 +412,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     color: 'black',
     marginLeft: '10%',
+    marginTop: '3%',
   },
   warningText: {
     color: colors.hex,

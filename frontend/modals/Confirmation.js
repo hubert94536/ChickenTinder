@@ -24,7 +24,7 @@ class Confirmation extends React.Component {
     super(props)
     this.state = {
       code: '',
-      confirmResult: null,
+      pressed: false,
     }
   }
 

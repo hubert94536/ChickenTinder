@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React, { Component, useState } from 'react'
+import React, { Component } from 'react'
 import {
   ImageBackground,
   SafeAreaView,
@@ -28,12 +28,6 @@ import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import UserInfo from './UserInfo.js'
-import {
-  CodeField,
-  Cursor,
-  useBlurOnFulfill,
-  useClearByFocusCell,
-} from 'react-native-confirmation-code-field'
 
 const font = 'CircularStd-Bold'
 
@@ -42,7 +36,7 @@ class PhoneAuthScreen extends Component {
     super(props)
     this.state = {
       phone: '',
-      confirmResult: true,
+      confirmResult: false,
       verificationCode: '',
       userId: '',
       errorAlert: false,
@@ -92,39 +86,31 @@ class PhoneAuthScreen extends Component {
     }
   }
 
+  _onFulfill(code) {
+    this.setState({ verificationCode: code }, () => {
+      console.log(this.state.verificationCode)
+    })
+  }
+
   renderConfirmationCodeView() {
     return (
       <View style={styles.verificationView}>
         {/* get user's info upon logging in */}
         {this.state.login && <UserInfo></UserInfo>}
-        <TextInput
-          style={[styles.textInput, { marginTop: '20%', marginBottom: '30%' }]}
-          placeholder="Verification code"
-          placeholderTextColor="#6A6A6A"
-          value={this.state.verificationCode}
-          keyboardType="numeric"
-          onChangeText={(code) => {
-            this.setState({ verificationCode: code })
-          }}
-          maxLength={6}
-        />
-        {/* <CodeField
-          cellCount={6}
-          value={this.state.verificationCode}
-          onChangeText={(code) => {
-            this.setState({ verificationCode: code })
-          }}
-          renderCell={({index, symbol, isFocused}) => (
-            <Text
-              key={index}
-              style={[styles.cell, isFocused && styles.focusCell]}
-              onLayout={getCellOnLayoutHandler(index)}>
-              {symbol || (isFocused ? <Cursor /> : null)}
-            </Text>
-          )}
-          >
-
-        </CodeField> */}
+        <View style={styles.codeContainer}>
+          <CodeInput
+            ref="codeInputRef2"
+            className={'border-b'}
+            codeLength={6}
+            size={40}
+            containerStyle={{ marginTop: 10 }}
+            codeInputStyle={styles.textInput}
+            onFulfill={(code) => this._onFulfill(code)}
+            onCodeChange={(code) => {
+              this.setState({ verificationCode: code })
+            }}
+          />
+        </View>
         <TouchableOpacity
           disabled={this.props.disable}
           style={[screenStyles.longButton, styles.longButton]}
@@ -137,8 +123,7 @@ class PhoneAuthScreen extends Component {
   }
 
   // Navigate to login
-  handleBack = async () => {
-    this.props.setDisable()
+  handleBack = () => {
     this.props.navigation.navigate('Login')
   }
 
@@ -378,6 +363,11 @@ const styles = StyleSheet.create({
     marginBottom: '10%',
     flexDirection: 'row',
     alignItems: 'flex-end',
+  },
+
+  codeContainer: {
+    height: '1%',
+    marginBottom: '40%',
   },
 })
 

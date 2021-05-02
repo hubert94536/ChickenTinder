@@ -31,6 +31,7 @@ class EditProfile extends React.Component {
       validUsernameFormat: true,
       editPic: false,
       photo: this.props.image.image,
+      save: false
     }
   }
 
@@ -55,7 +56,7 @@ class EditProfile extends React.Component {
       this.props.hideDisable()
       return
     }
-
+ 
     //remove whitespaces before and after name and username
     let trimmedName = this.state.nameValue
     trimmedName = trimmedName.trimStart().trimEnd()
@@ -186,8 +187,10 @@ class EditProfile extends React.Component {
                 this.finalCheck()
               }}
               underlayColor="white"
+              onShowUnderlay={() => this.setState({ save: true })}
+              onHideUnderlay={() => this.setState({ save: false })}
             >
-              <Text style={[screenStyles.smallButtonText, styles.saveText]}>Save Changes</Text>
+              <Text style={[screenStyles.smallButtonText, styles.saveText, this.state.save ? screenStyles.hex : styles.white]}>Save Changes</Text>
             </TouchableHighlight>
           </View>
         )}
@@ -241,7 +244,7 @@ EditProfile.propTypes = {
 
 const styles = StyleSheet.create({
   mainContainerHeight: {
-    height: width,
+    height: width * 1.05,
     marginTop: '30%',
   },
   modalContent: {
@@ -250,7 +253,8 @@ const styles = StyleSheet.create({
     marginRight: '10%',
   },
   titleText: {
-    fontSize: normalize(16.5),
+    fontSize: normalize(18),
+    marginBottom: '2%'
   },
   pfp: {
     height: width * 0.28,
@@ -264,24 +268,27 @@ const styles = StyleSheet.create({
     marginBottom: '2%',
   },
   nameText: {
-    marginBottom: '2%',
+    marginBottom: '3%',
     color: 'black',
+    fontSize: normalize(17)
   },
   input: {
     color: '#7d7d7d',
-    fontSize: normalize(15.5),
+    fontSize: normalize(17),
     borderBottomWidth: 1,
     borderColor: '#7d7d7d',
   },
   saveButton: {
     backgroundColor: screenStyles.hex.color,
     borderColor: screenStyles.hex.color,
-    margin: '5%',
-    width: '50%',
+    width: '55%',
   },
   saveText: {
-    padding: '10%',
-    color: 'white',
+    paddingTop: '3%',
+    paddingBottom: '3%',
+    marginTop: '1%',
+    fontSize: normalize(19),
+    color: 'white'
   },
   warningText: {
     color: colors.hex,
@@ -299,5 +306,7 @@ const styles = StyleSheet.create({
   },
   selectText: {
     color: colors.hex,
+    marginTop: '3%',
+    fontSize: normalize(16)
   },
 })
