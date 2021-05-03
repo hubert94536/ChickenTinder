@@ -114,7 +114,7 @@ class Join extends React.Component {
                     modalStyles.text,
                     screenStyles.book,
                     styles.buttonText,
-                    this.state.pressed ? screenStyles.hex : {color: "white"},
+                    this.state.pressed ? screenStyles.hex : { color: 'white' },
                   ]}
                 >
                   Join Group

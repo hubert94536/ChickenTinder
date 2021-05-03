@@ -18,7 +18,6 @@ import screenStyles from '../../styles/screenStyles.js'
 import colors from '../../styles/colors.js'
 import mapStyle from '../../styles/mapStyle.json'
 import Slider from '@react-native-community/slider'
-import AntDesign from 'react-native-vector-icons/AntDesign'
 import { ZIP_ID, ZIP_TOKEN } from 'react-native-dotenv'
 import _ from 'lodash'
 
@@ -73,6 +72,8 @@ export default class Location extends Component {
       zip: '',
       zipValid: true,
       expanded: true,
+      pressed: false,
+      pressedCurrent: false,
     }
   }
 
@@ -217,8 +218,7 @@ export default class Location extends Component {
               <Text style={[styles.title, screenStyles.textBook, screenStyles.hex]}>
                 {this.state.city + this.state.state}
               </Text>
-
-              <AntDesign
+              {/* <AntDesign
                 style={styles.icon}
                 name={this.state.expanded ? 'up' : 'down'}
                 onPress={() => {
@@ -226,7 +226,7 @@ export default class Location extends Component {
                     expanded: !prev.expanded,
                   }))
                 }}
-              />
+              /> */}
             </View>
             {/* Horizontal Line */}
             <View
@@ -258,10 +258,17 @@ export default class Location extends Component {
               />
               <TouchableHighlight
                 underlayColor="white"
+                onShowUnderlay={() => this.setState({ pressedCurrent: true })}
+                onHideUnderlay={() => this.setState({ pressedCurrent: false })}
                 onPress={() => this.getLocation()}
                 style={[modalStyles.button, styles.buttonColor, styles.locationButton]}
               >
-                <Text style={[modalStyles.text, styles.white, styles.locationText]}>
+                <Text
+                  style={[
+                    styles.locationText,
+                    this.state.pressedCurrent ? screenStyles.hex : screenStyles.white,
+                  ]}
+                >
                   Get Current Location
                 </Text>
               </TouchableHighlight>
@@ -308,11 +315,21 @@ export default class Location extends Component {
           </View>
 
           <TouchableHighlight
+            onShowUnderlay={() => this.setState({ pressed: true })}
+            onHideUnderlay={() => this.setState({ pressed: false })}
             underlayColor="white"
             onPress={() => this.handlePress()}
-            style={[modalStyles.button, styles.buttonColor, styles.doneButton]}
+            style={[modalStyles.doneButton, styles.doneButton]}
           >
-            <Text style={[modalStyles.text, styles.white]}>Done</Text>
+            <Text
+              style={[
+                modalStyles.text,
+                styles.white,
+                this.state.pressed ? screenStyles.hex : screenStyles.white,
+              ]}
+            >
+              Done
+            </Text>
           </TouchableHighlight>
         </View>
       </Modal>
@@ -347,7 +364,6 @@ const styles = StyleSheet.create({
   },
   sliderStyle: {
     width: '85%',
-    height: 30,
     alignSelf: 'center',
   },
   title: {
@@ -371,7 +387,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignSelf: 'center',
     bottom: 15,
-    height: normalize(25),
   },
   locationButton: {
     borderRadius: 5,
@@ -386,6 +401,7 @@ const styles = StyleSheet.create({
   locationText: {
     fontSize: normalize(14),
     fontWeight: '300',
+    textAlign: 'center',
   },
   icon: {
     position: 'absolute',

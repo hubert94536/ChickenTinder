@@ -186,14 +186,14 @@ class Round extends React.Component {
             style={screenStyles.loading}
           />
         </Modal>
-        {((this.props.refresh || this.state.leave) && (
-            <BlurView
-              blurType="dark"
-              blurAmount={10}
-              reducedTransparencyFallbackColor="white"
-              style={modalStyles.blur}
-            />
-          ))}
+        {(this.props.refresh || this.state.leave) && (
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
       </View>
     )
   }
@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
   left: { fontSize: normalize(12) },
   leftArrow: { fontSize: normalize(15), marginRight: '1%' },
   background: { backgroundColor: 'transparent' },
-  x: { color: '#6A6A6A', fontSize: normalize(45), marginTop:'-3%' },
+  x: { color: '#6A6A6A', fontSize: normalize(45), marginTop: '-3%' },
   rightArrow: { fontSize: normalize(15), marginLeft: '1%' },
   heart: { fontSize: normalize(35) },
 })

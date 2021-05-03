@@ -31,7 +31,7 @@ class EditProfile extends React.Component {
       validUsernameFormat: true,
       editPic: false,
       photo: this.props.image.image,
-      save: false
+      save: false,
     }
   }
 
@@ -56,7 +56,7 @@ class EditProfile extends React.Component {
       this.props.hideDisable()
       return
     }
- 
+
     //remove whitespaces before and after name and username
     let trimmedName = this.state.nameValue
     trimmedName = trimmedName.trimStart().trimEnd()
@@ -190,7 +190,15 @@ class EditProfile extends React.Component {
               onShowUnderlay={() => this.setState({ save: true })}
               onHideUnderlay={() => this.setState({ save: false })}
             >
-              <Text style={[screenStyles.smallButtonText, styles.saveText, this.state.save ? screenStyles.hex : styles.white]}>Save Changes</Text>
+              <Text
+                style={[
+                  screenStyles.smallButtonText,
+                  styles.saveText,
+                  this.state.save ? screenStyles.hex : styles.white,
+                ]}
+              >
+                Save Changes
+              </Text>
             </TouchableHighlight>
           </View>
         )}
@@ -254,7 +262,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: normalize(18),
-    marginBottom: '2%'
+    marginBottom: '2%',
   },
   pfp: {
     height: width * 0.28,
@@ -270,7 +278,7 @@ const styles = StyleSheet.create({
   nameText: {
     marginBottom: '3%',
     color: 'black',
-    fontSize: normalize(17)
+    fontSize: normalize(17),
   },
   input: {
     color: '#7d7d7d',
@@ -288,7 +296,7 @@ const styles = StyleSheet.create({
     paddingBottom: '3%',
     marginTop: '1%',
     fontSize: normalize(19),
-    color: 'white'
+    color: 'white',
   },
   warningText: {
     color: colors.hex,
@@ -307,6 +315,6 @@ const styles = StyleSheet.create({
   selectText: {
     color: colors.hex,
     marginTop: '3%',
-    fontSize: normalize(16)
+    fontSize: normalize(16),
   },
 })

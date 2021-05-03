@@ -49,7 +49,7 @@ class createAccount extends React.Component {
       validUsername: true,
       validUsernameFormat: true,
       edit: false,
-      finishPressed: false
+      finishPressed: false,
     }
   }
 
@@ -286,7 +286,7 @@ class createAccount extends React.Component {
             <Text
               style={[
                 screenStyles.longButtonText,
-                this.state.finishPressed ? screenStyles.hex : styles.white
+                this.state.finishPressed ? screenStyles.hex : styles.white,
               ]}
             >
               Finish

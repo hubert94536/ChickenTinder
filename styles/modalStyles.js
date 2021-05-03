@@ -93,6 +93,8 @@ export default StyleSheet.create({
     fontSize: normalize(12),
   },
   doneButton: {
+    borderColor: colors.hex,
+    borderWidth: 1.5,
     backgroundColor: colors.hex,
     borderRadius: 30,
     alignSelf: 'center',
