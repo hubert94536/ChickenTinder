@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableHighlight, View, Dimensions } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -10,6 +10,8 @@ import Alert from '../modals/Alert.js'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
 import normalize from '../../styles/normalize.js'
+
+const width = Dimensions.get('window').width
 
 class Card extends React.Component {
   constructor(props) {
@@ -214,10 +216,10 @@ class Card extends React.Component {
         {this.state.deleteFriend && (
           <Alert
             title={'Unfriend ' + this.props.name}
-            body="If you change your mind, you'll have to send a friends request again."
+            body="If you change your mind, you'll have to request again."
             buttonAff="Unfriend"
             buttonNeg="Cancel"
-            height="28%"
+            height="25%"
             twoButton
             press={() => {
               this.deleteFriend()
@@ -228,16 +230,6 @@ class Card extends React.Component {
             }}
           />
         )}
-        {/* {this.props.error && (
-          <Alert
-            title="Error, please try again"
-            buttonAff="Close"
-            height="20%"
-            blur
-            press={() => this.props.hideError()}
-            cancel={() => this.props.hideError()}
-          />
-        )} */}
       </View>
     )
   }
@@ -287,7 +279,7 @@ Card.propTypes = {
 }
 
 const styles = StyleSheet.create({
-  container: { flexDirection: 'row', flex: 1, width: '85%', alignSelf: 'center' },
+  container: { flexDirection: 'row', flex: 1, width: '90%', alignSelf: 'center' },
   info: {
     alignSelf: 'center',
     marginLeft: '1%',

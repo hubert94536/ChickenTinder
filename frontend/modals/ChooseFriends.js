@@ -6,7 +6,6 @@ import { setDisable, hideDisable } from '../redux/Actions.js'
 import { SearchBar } from 'react-native-elements'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Clipboard from '@react-native-community/clipboard'
 import PropTypes from 'prop-types'
 import Card from '../cards/Card.js'
@@ -130,7 +129,6 @@ class ChooseFriends extends React.Component {
               )}
               keyExtractor={(item) => item.username}
             />
-            <MaterialIcons name="keyboard-arrow-down" style={[styles.icon3, screenStyles.hex]} />
           </View>
         </View>
       </Modal>
@@ -197,11 +195,6 @@ const styles = StyleSheet.create({
   icon2: {
     fontSize: normalize(20),
     marginLeft: '7%',
-  },
-  icon3: {
-    fontSize: normalize(35),
-    marginBottom: '5%',
-    alignSelf: 'center',
   },
   headertext: {
     margin: '4%',

@@ -13,6 +13,7 @@ export default class Price extends React.Component {
     super(props)
     this.state = {
       selectedPrice: [],
+      pressed: false,
     }
   }
 
@@ -22,7 +23,7 @@ export default class Price extends React.Component {
       .map((item) => item.length)
       .sort()
       .toString()
-    this.props.press(prices)
+    if (prices !== '') this.props.press(prices)
   }
 
   //  function called when 'x' is pressed
@@ -49,7 +50,7 @@ export default class Price extends React.Component {
             <View style={modalStyles.error}>
               <View style={styles.filterGroupContainer}>
                 <View style={{ flexDirection: 'row' }}>
-                  <Text>Select all that apply</Text>
+                  <Text style={styles.selectMargin}>Select all that apply</Text>
                 </View>
                 <ButtonSwitch
                   text1="$"
@@ -68,10 +69,21 @@ export default class Price extends React.Component {
               </View>
             </View>
             <TouchableHighlight
+              onShowUnderlay={() => this.setState({ pressed: true })}
+              onHideUnderlay={() => this.setState({ pressed: false })}
+              underlayColor="white"
               style={[modalStyles.doneButton, styles.doneButtonMargin]}
               onPress={() => this.evaluate()}
             >
-              <Text style={[screenStyles.text, modalStyles.doneText]}>Done</Text>
+              <Text
+                style={[
+                  screenStyles.text,
+                  modalStyles.doneText,
+                  this.state.pressed ? screenStyles.hex : screenStyles.white,
+                ]}
+              >
+                Done
+              </Text>
             </TouchableHighlight>
           </View>
         </View>
@@ -103,6 +115,9 @@ const styles = StyleSheet.create({
   },
   doneButtonMargin: {
     marginTop: '6%',
+  },
+  selectMargin: {
+    marginBottom: '4%',
   },
 })
 

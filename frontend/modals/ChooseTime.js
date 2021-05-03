@@ -26,6 +26,7 @@ export default class Time extends React.Component {
       invalidTime: false,
       timeMode: 'AM',
       switch: true,
+      pressed: false,
     }
   }
 
@@ -80,7 +81,9 @@ export default class Time extends React.Component {
           />
           <View style={modalStyles.titleContainer}>
             <Text style={[screenStyles.text, modalStyles.titleText]}>Time</Text>
-            <Text style={[screenStyles.text, styles.black]}>Set a time for your group to eat</Text>
+            <Text style={[screenStyles.text, styles.black, styles.setMargin]}>
+              Set a time for your group to eat
+            </Text>
             <View style={modalStyles.error}>
               <TextInput
                 style={[modalStyles.textInput, styles.black]}
@@ -123,10 +126,21 @@ export default class Time extends React.Component {
               </View>
             )}
             <TouchableHighlight
+              onShowUnderlay={() => this.setState({ pressed: true })}
+              onHideUnderlay={() => this.setState({ pressed: false })}
+              underlayColor="white"
               style={[modalStyles.doneButton, styles.doneButtonMargin]}
               onPress={() => this.evaluate()}
             >
-              <Text style={[screenStyles.text, modalStyles.doneText]}>Done</Text>
+              <Text
+                style={[
+                  screenStyles.text,
+                  modalStyles.doneText,
+                  this.state.pressed ? screenStyles.hex : screenStyles.white,
+                ]}
+              >
+                Done
+              </Text>
             </TouchableHighlight>
           </View>
         </View>
@@ -137,7 +151,7 @@ export default class Time extends React.Component {
 
 const styles = StyleSheet.create({
   mainContainerHeight: {
-    height: Dimensions.get('window').height * 0.3,
+    height: Dimensions.get('window').height * 0.28,
   },
   black: {
     color: 'black',
@@ -163,10 +177,13 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   errorMargin: {
-    marginTop: '3%',
+    marginTop: '2%',
   },
   doneButtonMargin: {
-    marginTop: '5%',
+    marginTop: '2%',
+  },
+  setMargin: {
+    marginBottom: '2%',
   },
 })
 

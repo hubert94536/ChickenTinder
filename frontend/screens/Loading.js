@@ -144,7 +144,11 @@ class Loading extends React.Component {
                   this.props.setDisable()
                 }}
               >
-                <Text style={[styles.leaveText, this.state.pressed ? screenStyles.hex : styles.white]}>Continue</Text>
+                <Text
+                  style={[styles.leaveText, this.state.pressed ? screenStyles.hex : styles.white]}
+                >
+                  Continue
+                </Text>
               </TouchableHighlight>
             </View>
           )}
@@ -171,7 +175,7 @@ class Loading extends React.Component {
             body="Continue to the top results without waiting for the others? (This will end swiping for everyone)"
             buttonAff="Continue"
             buttonNeg="Back"
-            height="28%"
+            height="29%"
             twoButton
             disabled={this.props.disable}
             press={() => socket.toTop3()}
