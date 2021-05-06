@@ -36,6 +36,7 @@ class TopThree extends React.Component {
     super(props)
     this.state = {
       chosen: this.props.top.length - 1,
+      pressed: false,
     }
     socket.getSocket().once('choose', (ind) => {
       this.props.hideRefresh()
@@ -249,13 +250,20 @@ class TopThree extends React.Component {
         {this.props.isHost && (
           <TouchableHighlight
             underlayColor="white"
+            onShowUnderlay={() => this.setState({ pressed: true })}
+            onHideUnderlay={() => this.setState({ pressed: false })}
             onPress={() => this.goMatch()}
-            style={[
-              screenStyles.bigButton,
-              { borderColor: colors.hex, backgroundColor: colors.hex },
-            ]}
+            style={[screenStyles.bigButton, styles.submitButton]}
           >
-            <Text style={[screenStyles.medButtonText, styles.submit, styles.white]}>Submit</Text>
+            <Text
+              style={[
+                screenStyles.medButtonText,
+                styles.submit,
+                this.state.pressed ? screenStyles.hex : styles.white,
+              ]}
+            >
+              Submit
+            </Text>
           </TouchableHighlight>
         )}
         {!this.props.isHost && (
@@ -345,7 +353,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: normalize(33),
     textAlign: 'center',
-    marginBottom: '3%',
+    marginBottom: '5%',
     fontWeight: 'bold',
   },
   subtitle: {
@@ -354,6 +362,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginLeft: '5%',
     marginRight: '5%',
+    marginBottom: '3%',
   },
   height: { height: '50%' },
   center: { alignSelf: 'center' },
@@ -398,12 +407,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: '15%',
+    marginBottom: '10%',
   },
   randomText: { fontSize: normalize(23), fontWeight: 'bold' },
   submit: {
     fontFamily: screenStyles.book.fontFamily,
-    padding: '2%',
+    padding: '5%',
+    fontSize: normalize(19),
+  },
+  submitButton: {
+    width: '45%',
+    borderColor: colors.hex,
+    backgroundColor: colors.hex,
   },
   waiting: {
     borderColor: colors.hex,

@@ -137,9 +137,10 @@ class Login extends React.Component {
         )}
         {this.props.error && (
           <Alert
-            title="Error, please try again"
+            title="Uh oh!"
+            body="Something went wrong. Please try again!"
             buttonAff="Close"
-            height="20%"
+            height="25%"
             disabled={false}
             press={() => this.props.hideError()}
             cancel={() => this.props.hideError()}

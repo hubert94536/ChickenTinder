@@ -393,9 +393,10 @@ class UserProfileView extends Component {
 
         {this.props.error && (
           <Alert
-            title="Error, please try again"
+            title="Uh oh!"
+            body="Something went wrong. Please try again!"
             buttonAff="Close"
-            height="20%"
+            height="25%"
             press={() => this.props.hideError()}
             cancel={() => this.props.hideError()}
           />
@@ -403,8 +404,9 @@ class UserProfileView extends Component {
         {takenAlert && (
           <Alert
             title="Username taken!"
+            body="Please choose another username."
             buttonAff="Close"
-            height="20%"
+            height="25%"
             press={() => this.closeTaken()}
             cancel={() => this.closeTaken()}
           />

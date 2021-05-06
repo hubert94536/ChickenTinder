@@ -34,6 +34,10 @@ import socket from '../apis/socket.js'
 class Match extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      pressedYelp: false,
+      pressedPhone: false,
+    }
   }
 
   leave() {
@@ -80,18 +84,37 @@ class Match extends React.Component {
         </View>
         <TouchableHighlight //Button to open restaurant on yelp
           underlayColor="white"
+          onShowUnderlay={() => this.setState({ pressedYelp: true })}
+          onHideUnderlay={() => this.setState({ pressedYelp: false })}
           style={[screenStyles.bigButton, styles.yelpButton]}
           onPress={() => Linking.openURL(this.props.match.url)}
         >
-          <Text style={[screenStyles.bigButtonText, styles.white]}>Open on Yelp</Text>
+          <Text
+            style={[
+              screenStyles.bigButtonText,
+              this.state.pressedYelp ? screenStyles.hex : styles.white,
+              styles.buttonText,
+            ]}
+          >
+            Open on Yelp
+          </Text>
         </TouchableHighlight>
         {this.props.match.phone !== '' && (
           <TouchableHighlight
             /* Button to call phone # */
+            underlayColor={colors.hex}
+            onShowUnderlay={() => this.setState({ pressedPhone: true })}
+            onHideUnderlay={() => this.setState({ pressedPhone: false })}
             style={[screenStyles.bigButton, styles.callButton]}
             onPress={() => Linking.openURL(`tel:${this.props.match.phone}`)}
           >
-            <Text style={[screenStyles.bigButtonText, { color: colors.hex }]}>
+            <Text
+              style={[
+                screenStyles.bigButtonText,
+                this.state.pressedPhone ? styles.white : screenStyles.hex,
+                styles.buttonText,
+              ]}
+            >
               Call: {this.props.match.phone}
             </Text>
           </TouchableHighlight>
@@ -206,19 +229,21 @@ const styles = StyleSheet.create({
   /* For "Open on Yelp" button */
   yelpButton: {
     backgroundColor: colors.hex,
-    height: '4%',
+    height: '5%',
     justifyContent: 'center',
     alignSelf: 'center',
     borderColor: colors.hex,
     marginTop: '8%',
+    marginBottom: '2%',
   },
   /* For "Call number" button */
   callButton: {
     backgroundColor: 'white',
-    height: '4%',
+    height: '5%',
     justifyContent: 'center',
     alignSelf: 'center',
     borderColor: colors.hex,
+    marginBottom: '3%',
   },
   /* Text for exit round link */
   exitRoundText: {
@@ -230,4 +255,8 @@ const styles = StyleSheet.create({
     marginBottom: '4%',
   },
   white: { color: 'white' },
+  buttonText: {
+    paddingTop: '3%',
+    paddingBottom: '3%',
+  },
 })

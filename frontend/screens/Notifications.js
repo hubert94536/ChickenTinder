@@ -445,9 +445,10 @@ class Notif extends Component {
         )}
         {this.props.error && (
           <Alert
-            title="Error, please try again"
+            title="Uh oh!"
+            body="Something went wrong. Please try again!"
             buttonAff="Close"
-            height="20%"
+            height="25%"
             press={() => this.props.hideError()}
             cancel={() => this.props.hideError()}
           />
@@ -457,7 +458,7 @@ class Notif extends Component {
             title="Connection Error!"
             body={socketErrMsg}
             buttonAff="Close"
-            height="20%"
+            height="25%"
             press={() => this.setState({ socketErr: false })}
             cancel={() => this.setState({ socketErr: false })}
           />

@@ -98,37 +98,28 @@ class Join extends React.Component {
                   Invalid PIN. Please try again.
                 </Text>
               </View>
-              {this.state.isValid && (
-                <TouchableHighlight
-                  underlayColor={screenStyles.hex.color}
-                  disabled={this.props.disable}
-                  onHideUnderlay={() => this.setState({ pressed: false })}
-                  onShowUnderlay={() => this.setState({ pressed: true })}
-                  onPress={() => this.handleAccept()}
-                  style={[modalStyles.button, styles.button]}
+              <TouchableHighlight
+                disabled={this.props.disable}
+                underlayColor="white"
+                onShowUnderlay={() => this.setState({ pressed: true })}
+                onHideUnderlay={() => this.setState({ pressed: false })}
+                onPress={() => {
+                  if (this.state.isValid) this.handleAccept()
+                  else this.setState({ invalid: true })
+                }}
+                style={[modalStyles.button, styles.button]}
+              >
+                <Text
+                  style={[
+                    modalStyles.text,
+                    screenStyles.book,
+                    styles.buttonText,
+                    this.state.pressed ? screenStyles.hex : { color: 'white' },
+                  ]}
                 >
-                  <Text
-                    style={[
-                      modalStyles.text,
-                      screenStyles.book,
-                      styles.buttonText,
-                      { color: this.state.pressed ? 'white' : screenStyles.hex.color },
-                    ]}
-                  >
-                    Join Group
-                  </Text>
-                </TouchableHighlight>
-              )}
-              {!this.state.isValid && (
-                <TouchableHighlight
-                  onPress={() => this.setState({ invalid: true })}
-                  style={[modalStyles.button, styles.bgHex]}
-                >
-                  <Text style={[modalStyles.text, styles.white, screenStyles.book]}>
-                    Join Group
-                  </Text>
-                </TouchableHighlight>
-              )}
+                  Join Group
+                </Text>
+              </TouchableHighlight>
             </View>
           </View>
         </Modal>
@@ -196,17 +187,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  bgHex: {
+  button: {
     backgroundColor: screenStyles.hex.color,
     width: '45%',
   },
-  button: {
-    width: '45%',
-  },
   buttonText: {
-    fontSize: normalize(17),
-    paddingTop: '8%',
-    paddingBottom: '8%',
+    fontSize: normalize(19),
+    paddingTop: '5%',
+    paddingBottom: '5%',
   },
   white: {
     color: 'white',

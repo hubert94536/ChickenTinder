@@ -122,7 +122,7 @@ class Home extends React.Component {
                 height: 45,
                 justifyContent: 'center',
                 alignSelf: 'center',
-                margin: '3%',
+                margin: '5%',
               }}
               onPress={() => {
                 this.createGroup()
@@ -131,7 +131,7 @@ class Home extends React.Component {
               <Text
                 style={[
                   styles.buttonText,
-                  this.state.createPressed ? { color: colors.hex } : { color: 'white' },
+                  this.state.createPressed ? screenStyles.hex : styles.white,
                 ]}
               >
                 Create Group
@@ -141,7 +141,7 @@ class Home extends React.Component {
               onShowUnderlay={() => this.setState({ joinPressed: true })}
               onHideUnderlay={() => this.setState({ joinPressed: false })}
               activeOpacity={1}
-              underlayColor={'white'}
+              underlayColor="white"
               style={{
                 backgroundColor: 'transparent',
                 borderRadius: 40,
@@ -154,7 +154,14 @@ class Home extends React.Component {
               }}
               onPress={() => this.setState({ join: true })}
             >
-              <Text style={[styles.buttonText, { color: 'white' }]}>Join Group</Text>
+              <Text
+                style={[
+                  styles.buttonText,
+                  this.state.joinPressed ? screenStyles.hex : styles.white,
+                ]}
+              >
+                Join Group
+              </Text>
             </TouchableHighlight>
           </View>
           <TabBar
@@ -182,9 +189,10 @@ class Home extends React.Component {
           />
           {this.props.error && (
             <Alert
-              title="Error, please try again"
+              title="Uh oh!"
+              body="Something went wrong. Please try again!"
               buttonAff="Close"
-              height="20%"
+              height="25%"
               press={() => this.props.hideError()}
               cancel={() => this.props.hideError()}
             />
@@ -194,7 +202,7 @@ class Home extends React.Component {
               title="Oh no!"
               body="You were kicked from the group!"
               buttonAff="Close"
-              height="20%"
+              height="25%"
               press={() => this.props.hideKick()}
               cancel={() => this.props.hideKick()}
             />
@@ -204,7 +212,7 @@ class Home extends React.Component {
               title="Connection Error!"
               body={socketErrMsg}
               buttonAff="Close"
-              height="20%"
+              height="25%"
               press={() => this.setState({ socketErr: false })}
               cancel={() => this.setState({ socketErr: false })}
             />
@@ -306,5 +314,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'CircularStd-Bold',
     fontSize: normalize(18),
+  },
+  white: {
+    color: 'white',
   },
 })

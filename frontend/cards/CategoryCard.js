@@ -82,25 +82,28 @@ const styles = StyleSheet.create({
   image: {
     width: width * 0.15,
     height: width * 0.15,
-    borderRadius: 10,
+    borderRadius: 8,
     overflow: 'hidden',
   },
   card: {
     width: width * 0.15,
+    height: width * 0.25,
     alignSelf: 'center',
-    margin: '1.5%',
+    marginLeft: '1.5%',
+    marginRight: '1.5%',
+    marginTop: '2%',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
   },
   checkIcon: {
     position: 'absolute',
-    top: 0 - 1,
+    top: 0 - 2,
     right: 0,
     fontSize: normalize(15),
   },
   textWrapper: {
-    height: '15%',
+    height: '25%',
   },
   text: {
     color: 'black',
