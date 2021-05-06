@@ -26,36 +26,15 @@ class NotifCard extends React.Component {
 
   // accept friend request and modify card
   async acceptFriend() {
-    this.props.setDisable()
-    friendsApi
-      .acceptFriendRequest(this.props.uid)
-      .then(() => {
-        // this.setState({ isFriend: true })
-        this.props.hideDisable()
-      })
-      .catch(() => {
-        this.props.showError()
-        this.props.hideDisable()
-      })
+    this.props.modifyList(this.props.uid, this.props.id)
   }
 
   // delete friend and modify view
   async deleteFriend() {
-    this.props.setDisable()
-    friendsApi
-      .removeFriendship(this.props.uid)
-      .then(() => {
-        this.props.removeDelete()
-        var filteredArray = this.props.total.filter((item) => {
-          return item.username !== this.props.username
-        })
-        this.props.press(this.props.uid, filteredArray, true)
-        this.props.hideDisable()
-      })
-      .catch(() => {
-        this.props.showError()
-        this.props.hideDisable()
-      })
+    var filteredArray = this.props.total.filter((item) => {
+      return item.id !== this.props.id
+    })
+    this.props.press(this.props.uid, filteredArray, this.props.id)
   }
 
   handleDelete() {
@@ -181,7 +160,6 @@ NotifCard.propTypes = {
   name: PropTypes.string,
   image: PropTypes.string,
   showError: PropTypes.func,
-  removeDelete: PropTypes.func,
   setDisable: PropTypes.func,
   hideDisable: PropTypes.func,
   disable: PropTypes.bool,
