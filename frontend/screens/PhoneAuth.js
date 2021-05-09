@@ -87,9 +87,9 @@ class PhoneAuthScreen extends Component {
   }
 
   _onFulfill(code) {
-    this.setState({ verificationCode: code}, () => { 
-      console.log(this.state.verificationCode);
-    });
+    this.setState({ verificationCode: code }, () => {
+      console.log(this.state.verificationCode)
+    })
   }
 
   renderConfirmationCodeView() {
@@ -97,23 +97,25 @@ class PhoneAuthScreen extends Component {
       <View style={styles.verificationView}>
         {/* get user's info upon logging in */}
         {this.state.login && <UserInfo></UserInfo>}
-          <View style = {styles.codeContainer}>
-            <CodeInput
-              ref="codeInputRef2"
-              className={'border-b'}
-              codeLength={6}
-              size={40}
-              containerStyle={{ marginTop: 10 }}
-              codeInputStyle={styles.textInput}
-              onFulfill={(code) => this._onFulfill(code)}
-              onCodeChange={(code) => { this.setState({ verificationCode: code})  }}
-            />
-          </View>
-          <TouchableOpacity
-            disabled={this.props.disable}
-            style={[screenStyles.longButton, styles.longButton]}
-            onPress={() => this.handleVerifyCode()}
-          >
+        <View style={styles.codeContainer}>
+          <CodeInput
+            ref="codeInputRef2"
+            className={'border-b'}
+            codeLength={6}
+            size={40}
+            containerStyle={{ marginTop: 10 }}
+            codeInputStyle={styles.textInput}
+            onFulfill={(code) => this._onFulfill(code)}
+            onCodeChange={(code) => {
+              this.setState({ verificationCode: code })
+            }}
+          />
+        </View>
+        <TouchableOpacity
+          disabled={this.props.disable}
+          style={[screenStyles.longButton, styles.longButton]}
+          onPress={() => this.handleVerifyCode()}
+        >
           <Text style={[screenStyles.longButtonText, styles.longButtonText]}>Verify Code</Text>
           </TouchableOpacity>
       </View>
@@ -244,9 +246,10 @@ class PhoneAuthScreen extends Component {
           )}
           {this.state.errorAlert && (
             <Alert
-              title="Error, please try again"
+              title="Uh oh!"
+              body="Something went wrong. Please try again!"
               buttonAff="Close"
-              height="20%"
+              height="25%"
               press={() => this.setState({ errorAlert: false })}
               cancel={() => this.setState({ errorAlert: false })}
             />
@@ -254,17 +257,19 @@ class PhoneAuthScreen extends Component {
           {this.state.invalidNumberAlert && (
             <Alert
               title="Invalid Phone Number"
+              body="Please enter only digits!"
               buttonAff="Close"
-              height="20%"
+              height="25%"
               press={() => this.setState({ invalidNumberAlert: false })}
               cancel={() => this.setState({ invalidNumberAlert: false })}
             />
           )}
           {this.state.badCodeAlert && (
             <Alert
-              title="Please enter a 6 digit OTP code."
+              title="Invalid Code"
+              body="Please enter your 6 digit code."
               buttonAff="Close"
-              height="20%"
+              height="25%"
               press={() => this.setState({ badCodeAlert: false })}
               cancel={() => this.setState({ badCodeAlert: false })}
             />
@@ -364,9 +369,9 @@ const styles = StyleSheet.create({
   },
 
   codeContainer: {
-    height: '1%', 
-    marginBottom: '40%'
-  }
+    height: '1%',
+    marginBottom: '40%',
+  },
 })
 
 PhoneAuthScreen.propTypes = {

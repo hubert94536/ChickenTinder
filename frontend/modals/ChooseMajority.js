@@ -19,8 +19,9 @@ export default class Majority extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedValue: Math.ceil(this.props.max * 0.5).toString(), // Default majority is half
+      selectedValue: this.props.select, // Default majority is half
       invalidValue: false,
+      pressed: false,
     }
   }
 
@@ -60,6 +61,12 @@ export default class Majority extends React.Component {
     let size = this.props.max
     let half = Math.ceil(size * 0.5).toString()
     let twoThirds = Math.ceil(size * 0.67).toString()
+    let selected = 0
+    if (size > 2 && this.state.selectedValue.toString() === twoThirds) selected = 1
+    else if (this.state.selectedValue === size) {
+      if (size === 2) selected = 1
+      else if (size > 2) selected = 2
+    }
     return (
       <Modal animationType="fade" transparent visible={this.props.visible}>
         <View style={[modalStyles.mainContainer, styles.mainContainerHeight]}>
@@ -73,11 +80,13 @@ export default class Majority extends React.Component {
             <Text style={[styles.black, screenStyles.book]}>
               How many members needed for a match
             </Text>
-
             <View style={[modalStyles.inputContainer, styles.inputContainer]}>
               {
+                // TODO: more than 3 need to remember last result
+              }
+              {
                 // Three buttons if group size is larger than 3
-                size > 3 && (
+                size > 2 && (
                   <ButtonSwitch
                     text1={half}
                     text2={twoThirds}
@@ -85,26 +94,38 @@ export default class Majority extends React.Component {
                     value1={half}
                     value2={twoThirds}
                     value3={this.props.max.toString()}
+                    select={selected}
                     onValueChange={(majority) => this.setState({ selectedValue: majority })}
                   />
                 )
               }
               {
                 // Two buttons if group size is less than or equal to 3
-                size <= 3 && (
+                size == 2 && (
                   <ButtonSwitch
                     text1={half}
                     text2="All"
                     value1={half}
                     value2={this.props.max.toString()}
+                    select={selected}
                     onValueChange={(majority) => this.setState({ selectedValue: majority })}
                   />
                 )
               }
-
+              {
+                // Two buttons if group size is less than or equal to 3
+                size == 1 && (
+                  <ButtonSwitch
+                    text1="All"
+                    value1={this.props.max.toString()}
+                    select={selected}
+                    onValueChange={(majority) => this.setState({ selectedValue: majority })}
+                  />
+                )
+              }
               <TextInput
                 style={modalStyles.textInput}
-                value={this.state.selectedValue}
+                value={this.state.selectedValue.toString()}
                 onChangeText={(text) => this.setState({ selectedValue: text, invalidValue: false })}
                 keyboardType="numeric"
                 defaultValue={this.props.max.toString()}
@@ -130,8 +151,22 @@ export default class Majority extends React.Component {
                 <Text style={[screenStyles.text, modalStyles.errorText]}> </Text>
               </View>
             )}
-            <TouchableHighlight style={modalStyles.doneButton} onPress={() => this.evaluate()}>
-              <Text style={[screenStyles.text, modalStyles.doneText]}>Done</Text>
+            <TouchableHighlight
+              style={modalStyles.doneButton}
+              onPress={() => this.evaluate()}
+              onShowUnderlay={() => this.setState({ pressed: true })}
+              onHideUnderlay={() => this.setState({ pressed: false })}
+              underlayColor="white"
+            >
+              <Text
+                style={[
+                  screenStyles.text,
+                  modalStyles.doneText,
+                  this.state.pressed ? screenStyles.hex : screenStyles.white,
+                ]}
+              >
+                Done
+              </Text>
             </TouchableHighlight>
           </View>
         </View>
@@ -142,21 +177,26 @@ export default class Majority extends React.Component {
 
 const styles = StyleSheet.create({
   mainContainerHeight: {
-    height: Dimensions.get('window').height * 0.25,
+    height: Dimensions.get('window').height * 0.28,
   },
   inputContainer: {
     marginLeft: '0%',
   },
   input: {
     alignSelf: 'center',
-    marginTop: '3%',
+    marginTop: '5%',
     marginLeft: '2%',
   },
   errorMargin: {
-    marginBottom: '1%',
+    marginTop: '2%',
+    marginBottom: '4%',
+    marginLeft: '3%',
   },
   black: {
     color: 'black',
+  },
+  white: {
+    color: 'white',
   },
 })
 

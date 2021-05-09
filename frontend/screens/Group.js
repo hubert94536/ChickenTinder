@@ -59,6 +59,7 @@ class Group extends React.Component {
       canStart: false,
       userSubmitted: false,
       blur: false,
+      pressedStart: false,
 
       // Modal visibility vars
       leaveAlert: false,
@@ -184,11 +185,6 @@ class Group extends React.Component {
     Clipboard.setString(this.props.session.code.toString())
   }
 
-  componentDidMount() {
-    // this.props.showRefresh()
-    // this.props.hideRefresh()
-  }
-
   render() {
     this.updateMemberList()
     return (
@@ -268,6 +264,7 @@ class Group extends React.Component {
                   if (item.f) {
                     return (
                       <TouchableHighlight
+                        underlayColor={colors.gray}
                         onPress={() => this.setState({ chooseFriends: true, blur: true })}
                         style={{
                           backgroundColor: '#ECECEC',
@@ -314,7 +311,7 @@ class Group extends React.Component {
                   title="Leave?"
                   body="You will will not be able to return without an invite"
                   buttonAff="Yes"
-                  height="20%"
+                  height="25%"
                   press={() => this.leave()}
                   cancel={() => this.cancelAlert()}
                 />
@@ -324,7 +321,7 @@ class Group extends React.Component {
                   title="Error Encountered!"
                   body={socketErrMsg}
                   buttonAff="Close"
-                  height="20%"
+                  height="25%"
                   press={() =>
                     this.setState({
                       socketErr: false,
@@ -386,8 +383,9 @@ class Group extends React.Component {
                     style={{
                       color: colors.hex,
                       fontFamily: font,
-                      fontSize: normalize(11),
+                      fontSize: normalize(15),
                       elevation: 32,
+                      padding: '4%',
                     }}
                   >
                     {this.props.isHost ? 'Pull down for host menu' : 'Pull down to set filters'}
@@ -404,7 +402,9 @@ class Group extends React.Component {
           <View>
             {this.props.isHost && (
               <TouchableHighlight
-                underlayColor={colors.hex}
+                underlayColor="white"
+                onShowUnderlay={() => this.setState({ pressedStart: true })}
+                onHideUnderlay={() => this.setState({ pressedStart: false })}
                 activeOpacity={1}
                 onPress={() => {
                   if (!this.state.drawerOpen) this.start()
@@ -419,12 +419,22 @@ class Group extends React.Component {
                 ]}
               >
                 {/* TODO: Change text if required options have not been set */}
-                <Text style={styles.buttonText}>Start Round</Text>
+                <Text
+                  style={[
+                    styles.buttonText,
+                    this.state.pressedStart ? screenStyles.hex : styles.white,
+                  ]}
+                >
+                  Start Round
+                </Text>
               </TouchableHighlight>
             )}
             {!this.props.isHost && (
               <TouchableHighlight
                 disabled={this.props.disable || this.state.drawerOpen}
+                underlayColor="white"
+                onShowUnderlay={() => this.setState({ pressedStart: true })}
+                onHideUnderlay={() => this.setState({ pressedStart: false })}
                 style={[
                   screenStyles.bigButton,
                   styles.bigButton,
@@ -437,7 +447,12 @@ class Group extends React.Component {
                     this.filterRef.current.submitUserFilters()
                 }}
               >
-                <Text style={styles.buttonText}>
+                <Text
+                  style={[
+                    styles.buttonText,
+                    this.state.pressedStart ? screenStyles.hex : styles.white,
+                  ]}
+                >
                   {!this.state.userSubmitted ? 'Submit Filters' : 'Waiting...'}
                 </Text>
               </TouchableHighlight>
@@ -610,7 +625,6 @@ const styles = StyleSheet.create({
     marginTop: '3%',
   },
   buttonText: {
-    color: '#fff',
     alignSelf: 'center',
     fontSize: normalize(20),
     fontWeight: 'bold',
@@ -629,6 +643,7 @@ const styles = StyleSheet.create({
     width: '50%',
     marginTop: '3%',
     backgroundColor: colors.hex,
+    borderColor: colors.hex,
   },
   center: {
     margin: '3%',
@@ -684,15 +699,17 @@ const styles = StyleSheet.create({
   },
   footerContainer: {
     fontFamily: font,
-    height: windowHeight * 0.05,
+    height: windowHeight * 0.06,
     backgroundColor: 'white',
-    padding: 15,
-    paddingTop: 25,
+    marginTop: '-1%',
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
     flexDirection: 'column',
     justifyContent: 'flex-end',
     zIndex: 30,
     elevation: 30,
+  },
+  white: {
+    color: 'white',
   },
 })

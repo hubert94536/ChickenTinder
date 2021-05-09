@@ -195,9 +195,10 @@ class Search extends Component {
         )}
         {this.state.errorAlert && (
           <Alert
-            title="Error, please try again"
+            title="Uh oh!"
+            body="Something went wrong. Please try again!"
             buttonAff="Close"
-            height="20%"
+            height="25%"
             blur
             press={() => this.setState({ errorAlert: false })}
             cancel={() => this.setState({ errorAlert: false })}

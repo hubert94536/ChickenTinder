@@ -49,6 +49,7 @@ class createAccount extends React.Component {
       validUsername: true,
       validUsernameFormat: true,
       edit: false,
+      finishPressed: false,
     }
   }
 
@@ -285,7 +286,7 @@ class createAccount extends React.Component {
             <Text
               style={[
                 screenStyles.longButtonText,
-                this.state.phonePressed ? { color: colors.hex } : { color: 'white' },
+                this.state.finishPressed ? screenStyles.hex : styles.white,
               ]}
             >
               Finish
@@ -350,6 +351,7 @@ const styles = StyleSheet.create({
   instr: {
     marginBottom: '5%',
   },
+  white: { color: 'white' },
   title: {
     fontSize: normalize(25),
     color: 'white',

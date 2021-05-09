@@ -1,11 +1,10 @@
 import React from 'react'
 import { PermissionsAndroid, StyleSheet, Text, View } from 'react-native'
-// import { BlurView } from '@react-native-community/blur'
 import Geolocation from 'react-native-geolocation-service'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
 import ChooseFriends from '../modals/ChooseFriends.js'
-import Socket from '../apis/socket.js'
+import socket from '../apis/socket.js'
 import FilterButton from '../FilterButton.js'
 import colors from '../../styles/colors.js'
 import Location from '../modals/ChooseLocation.js'
@@ -16,6 +15,7 @@ import Majority from '../modals/ChooseMajority.js'
 import screenStyles from '../../styles/screenStyles.js'
 import { FlatList } from 'react-native-gesture-handler'
 import CategoryCard from '../cards/CategoryCard.js'
+import normalize from '../../styles/normalize.js'
 
 const font = 'CircularStd-Medium'
 
@@ -66,13 +66,13 @@ class FilterSelector extends React.Component {
     super(props)
     this.state = {
       // Set filters
-      s_majority: null,
-      s_size: null,
-      s_radius: null,
+      s_majority: Math.ceil(this.props.members.length * 0.5),
+      s_size: 10,
+      s_radius: 5.5 * 1600,
       s_location: null,
-      s_time: null,
-      s_price: null,
-
+      s_time: Math.floor(Date.now() / 1000),
+      s_price: '',
+      // Default filter settings
       selectedCuisine: [],
       selectedPrice: [],
       selectedRestriction: [],
@@ -226,31 +226,19 @@ class FilterSelector extends React.Component {
   evaluateFilters(session) {
     const filters = {}
     filters.groupSize = this.props.members.length
-
-    // Default filter settings
-    let d_majority = Math.ceil(this.props.members.length * 0.75)
-    let d_size = 10
-    let d_radius = 5.5 * 1600
-    let d_time = Math.floor(Date.now() / 1000)
-    let d_price = ''
-
-    filters.majority = this.state.s_majority ? this.state.s_majority : d_majority
-
-    filters.limit = this.state.s_size ? this.state.s_size : d_size
-
+    filters.majority = this.state.s_majority
+    filters.limit = this.state.s_size
     if (this.state.s_location != null) {
       filters.radius = this.state.s_radius * 1600
       filters.latitude = this.state.s_location.latitude
       filters.longitude = this.state.s_location.longitude
     } else {
-      filters.radius = d_radius
+      filters.radius = this.state.s_radius
       filters.latitude = this.state.d_location.latitude
       filters.longitude = this.state.d_location.longitude
     }
-
-    filters.open_at = this.state.s_time ? this.state.s_time : d_time
-
-    filters.price = this.state.s_price ? this.state.s_price : d_price
+    filters.open_at = this.state.s_time
+    filters.price = this.state.s_price
 
     // CATEGORIES
     const selections = []
@@ -261,7 +249,7 @@ class FilterSelector extends React.Component {
     filters.categories = this.categorize(selections)
 
     if (this.props.isHost) {
-      Socket.startSession(filters, session)
+      socket.startSession(filters, session)
     }
     this.props.buttonDisable(false)
   }
@@ -278,7 +266,7 @@ class FilterSelector extends React.Component {
     for (const [key, value] of Object.entries(s_categories)) if (value) selections.push(key)
     filters.categories = this.categorize(selections)
     console.log('userfilters: ' + JSON.stringify(filters.categories))
-    Socket.submitFilters(filters.categories)
+    socket.submitFilters(filters.categories)
     this.props.handleUpdate()
     this.props.buttonDisable(false)
   }
@@ -352,7 +340,7 @@ class FilterSelector extends React.Component {
               />
             </View>
           )}
-          <View style={{ paddingTop: '5%' }}>
+          <View style={{ paddingTop: '3%' }}>
             <View style={{ flexDirection: 'row' }}>
               <Text style={[screenStyles.text, styles.filterTitleText]}>Cuisines</Text>
               <Text style={styles.filterSubtext}>Select all that apply</Text>
@@ -385,7 +373,7 @@ class FilterSelector extends React.Component {
             title="Location Required"
             body="Your location is required to find nearby restuarants"
             buttonAff="Close"
-            height="23%"
+            height="25%"
             press={() => {
               this.setState({ locationAlert: false })
               this.props.setBlur(false)
@@ -397,24 +385,6 @@ class FilterSelector extends React.Component {
             visible={this.state.locationAlert}
           />
         )}
-        {/* {this.props.error && (
-          <Alert
-            title="Error, please try again"
-            buttonAff="Close"
-            height="20%"
-            blur
-            press={() => {
-              this.props.hideError()
-              this.props.setBlur(false)
-            }}
-            cancel={() => {
-              this.props.hideError()
-              this.props.setBlur(false)
-            }}
-            visible={this.props.error} 
-          />
-        )}*/}
-
         {/* ------------------------------------------MODALS------------------------------------------ */}
         <ChooseFriends
           visible={this.state.chooseFriends}
@@ -430,6 +400,7 @@ class FilterSelector extends React.Component {
           title={'Majority'}
           filterSubtext={'Choose the number of members needed to get a match'}
           visible={this.state.chooseMajority}
+          select={this.state.s_majority}
           cancel={(clear) => {
             this.setState({ chooseMajority: false })
             this.props.setBlur(false)
@@ -443,14 +414,13 @@ class FilterSelector extends React.Component {
 
         <Size
           max={50}
-          title={'Round Size'}
-          filterSubtext={'Choose the max number of restaurants to swipe through'}
           visible={this.state.chooseSize}
           cancel={(clear) => {
             this.setState({ chooseSize: false })
             this.props.setBlur(false)
             if (clear) this.setState({ s_size: null })
           }}
+          select={this.state.s_size}
           press={(value) => {
             this.setState({ s_size: value, chooseSize: false })
             this.props.setBlur(false)
@@ -528,55 +498,19 @@ const styles = StyleSheet.create({
     backgroundColor: BACKGROUND_COLOR,
     justifyContent: 'space-between',
   },
-  titles: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginLeft: '5%',
-    marginRight: '5%',
-  },
-  titleContainer: {
-    marginTop: '3%',
-    marginBottom: '1%',
-  },
-  swiperContainer: {
-    height: '100%',
-    backgroundColor: BACKGROUND_COLOR,
-    justifyContent: 'flex-start',
-  },
-  filterGroupContainer: {
-    marginLeft: '5%',
-    marginRight: '5%',
-    flex: 1,
-    justifyContent: 'flex-start',
-  },
-  bigFilterGroupContainer: {
-    marginLeft: '5%',
-    marginRight: '5%',
-    flex: 1,
-    flexGrow: 2,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-  },
   filterTitleText: {
-    fontSize: 20,
+    fontSize: normalize(20),
     color: TEXT_COLOR,
     textAlign: 'center',
   },
   filterSubtext: {
     color: TEXT_COLOR,
-    fontSize: 12,
+    fontSize: normalize(12),
     fontFamily: font,
     fontWeight: '100',
     alignSelf: 'center',
     marginLeft: '4%',
     marginTop: '1%',
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingVertical: 5,
   },
 })
 
