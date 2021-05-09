@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import CodeInput from 'react-native-confirmation-code-input';
 import {
   ImageBackground,
   SafeAreaView,
@@ -216,7 +217,7 @@ class PhoneAuthScreen extends Component {
                   keyboardType="phone-pad"
                   value={this.state.phone}
                   onChangeText={(num) => {
-                    this.setState({ phone: '+1' + num })
+                    this.setState({ phone: num })
                   }}
                   maxLength={15}
                   editable={!this.state.confirmResult}
