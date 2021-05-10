@@ -4,6 +4,7 @@ const auth = require('./auth')
 const { hdel, hgetAll, hmset, sendCommand, lock } = require('./config.js')
 const notifs = require('./notifsQueries.js')
 const yelp = require('./yelpQuery.js')
+import crashlytics from '@react-native-firebase/crashlytics'
 
 // gets top 3 liked restaurants for a session
 const getTop3 = (restaurants) => {
@@ -67,6 +68,7 @@ module.exports = (io) => {
         socket.user = user
         return callback(null, true)
       } catch (err) {
+        crashlytics().recordError(err)
         return callback({ message: 'UNAUTHORIZED' })
       }
     },
@@ -109,6 +111,7 @@ module.exports = (io) => {
           })
         }
       } catch (err) {
+        crashlytics().recordError(err)
         console.error(err)
       }
     },
@@ -166,6 +169,7 @@ module.exports = (io) => {
           })
         }
       } catch (err) {
+        crashlytics().recordError(err)
         console.error(err)
       }
     })
@@ -205,6 +209,7 @@ module.exports = (io) => {
           socket.emit('update', data.session)
         }
       } catch (err) {
+        crashlytics().recordError(err)
         socket.emit('exception', 'create')
         console.error(err)
       }
@@ -254,6 +259,7 @@ module.exports = (io) => {
               socket.emit('exception', 'cannot join')
             }
           } catch (err) {
+            crashlytics().recordError(err)
             socket.emit('exception', 'join')
             console.error(err)
           }
@@ -287,6 +293,7 @@ module.exports = (io) => {
         session = JSON.parse(session)
         io.in(socket.user.room).emit('update', session)
       } catch (err) {
+        crashlytics().recordError(err)
         socket.emit('exception', 'submit')
         console.error(err)
       }
@@ -320,6 +327,7 @@ module.exports = (io) => {
               }
             }
           } catch (err) {
+            crashlytics().recordError(err)
             socket.emit('exception', 'start')
             console.error(err)
           }
@@ -356,6 +364,7 @@ module.exports = (io) => {
           }
         }
       } catch (err) {
+        crashlytics().recordError(err)
         console.error(err)
       }
     })
@@ -424,6 +433,7 @@ module.exports = (io) => {
             }
             delete socket.user.room
           } catch (err) {
+            crashlytics().recordError(err)
             console.error(err)
           }
           done()

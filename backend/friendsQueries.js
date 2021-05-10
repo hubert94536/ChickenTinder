@@ -2,6 +2,7 @@ const { Op } = require('sequelize')
 const { Accounts, Friends, Notifications } = require('./models')
 
 var attributes = ['username', 'photo', 'name']
+import crashlytics from '@react-native-firebase/crashlytics'
 
 // Accept a friend request
 const acceptRequest = async (req, res) => {
@@ -41,6 +42,7 @@ const acceptRequest = async (req, res) => {
     }
     return res.status(404).send('Friendship not found')
   } catch (error) {
+    crashlytics().recordError(error)
     console.error(error)
     return res.status(500).send(error.message)
   }
@@ -65,6 +67,7 @@ const createFriends = async (req, res) => {
     })
     return res.status(201).send('Friend requested')
   } catch (error) {
+    crashlytics().recordError(error)
     console.error(error)
     return res.status(500).json({ error: error.message })
   }
@@ -89,6 +92,7 @@ const deleteFriendship = async (req, res) => {
     }
     return res.status(404).send('Friendship not found')
   } catch (error) {
+    crashlytics().recordError(error)
     console.error(error)
     return res.status(500).send(error.message)
   }
@@ -108,6 +112,7 @@ const getFriends = async (req, res) => {
     })
     return res.status(200).json({ friends })
   } catch (error) {
+    crashlytics().recordError(error)
     return res.status(500).send(error.message)
   }
 }
@@ -131,6 +136,7 @@ const createTestFriends = async (req, res) => {
     })
     return res.status(201).send('Friend requested')
   } catch (error) {
+    crashlytics().recordError(error)
     console.error(error)
     return res.status(500).json({ error: error.message })
   }
@@ -173,6 +179,7 @@ const acceptTestRequest = async (req, res) => {
     }
     return res.status(404).send('Friendship not found')
   } catch (error) {
+    crashlytics().recordError(error)
     console.error(error)
     return res.status(500).send(error.message)
   }
@@ -190,6 +197,7 @@ const getAllFriends = async (req, res) => {
     })
     return res.status(200).json({ friends })
   } catch (error) {
+    crashlytics().recordError(error)
     return res.status(500).send(error.message)
   }
 }

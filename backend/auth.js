@@ -1,5 +1,6 @@
 const { firebase } = require('./config.js')
 const { Accounts } = require('./models.js')
+import crashlytics from '@react-native-firebase/crashlytics'
 
 // decode token by splicing Bearer and token
 const decodeToken = (req, res, next) => {
@@ -20,6 +21,7 @@ const authenticate = (req, res, next) => {
       req.authId = userInfo.uid
       return next()
     } catch (error) {
+      crashlytics().recordError(error)
       return res.status(401).send('Unauthorized Request')
     }
   })
