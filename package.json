@@ -40,7 +40,7 @@
     "mock-async-storage": "^2.2.0",
     "pg": "^8.5.1",
     "prop-types": "^15.7.2",
-    "react": "16.13.1",
+    "react": "17.0.1",
     "react-lodash": "^0.1.2",
     "react-native": "^0.64.0",
     "react-native-confirmation-code-field": "^7.0.1",
