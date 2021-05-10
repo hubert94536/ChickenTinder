@@ -1,5 +1,6 @@
 import Axios from 'axios'
 import auth from '@react-native-firebase/auth'
+import crashlytics from '@react-native-firebase/crashlytics'
 
 const accountsApi = Axios.create({
   baseURL: 'https://wechews.herokuapp.com',
@@ -28,6 +29,7 @@ const createFBUserTest = async (name, uid, username, email, photo, phone) => {
       return res.status
     })
     .catch((error) => {
+      crashlytics().recordError(error)
       return Promise.reject(error.response)
     })
 }
@@ -48,6 +50,7 @@ const createUser = async (name, username, email, phone, photo) => {
       return res.status
     })
     .catch((error) => {
+      crashlytics().recordError(error)
       return Promise.reject(error.response)
     })
 }
@@ -71,6 +74,7 @@ const getAllUsers = async () => {
       }
     })
     .catch((error) => {
+      crashlytics().recordError(error)
       return Promise.reject(error.response)
     })
 }
@@ -96,6 +100,7 @@ const searchUsers = async (text) => {
       }
     })
     .catch((error) => {
+      crashlytics().recordError(error)
       return Promise.reject(error.response)
     })
 }
@@ -108,6 +113,7 @@ const deleteUser = async () => {
       return res.status
     })
     .catch((error) => {
+      crashlytics().recordError(error)
       return Promise.reject(error.response)
     })
 }
@@ -127,6 +133,7 @@ const getUser = async () => {
       }
     })
     .catch((error) => {
+      crashlytics().recordError(error)
       return Promise.reject(error.response)
     })
 }
@@ -165,6 +172,7 @@ const updateUser = async (req) => {
       }
     })
     .catch((error) => {
+      crashlytics().recordError(error)
       return Promise.reject(error.response)
     })
 }
@@ -198,6 +206,7 @@ const checkUsername = async (username) => {
       return res.status
     })
     .catch((error) => {
+      crashlytics().recordError(error)
       return Promise.reject(error.response)
     })
 }
@@ -212,6 +221,7 @@ const checkPhoneNumber = async (phoneNumber) => {
       return res.status
     })
     .catch((error) => {
+      crashlytics().recordError(error)
       return Promise.reject(error.response)
     })
 }
@@ -226,6 +236,7 @@ const checkEmail = async (email) => {
       return res.status
     })
     .catch((error) => {
+      crashlytics().recordError(error)
       return Promise.reject(error.response)
     })
 }

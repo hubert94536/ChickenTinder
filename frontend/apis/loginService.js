@@ -2,6 +2,7 @@ import { USERNAME, NAME, EMAIL, PHOTO, PHONE, REGISTRATION_TOKEN, UID } from 're
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import FBSDK from 'react-native-fbsdk'
 import auth from '@react-native-firebase/auth'
+import crashlytics from '@react-native-firebase/crashlytics'
 import accountsApi from './accountsApi.js'
 import global from '../../global.js'
 import notificationsApi from './notificationsApi.js'
@@ -39,6 +40,7 @@ const loginWithCredential = async (userCredential) => {
     global.uid = userCredential.user.uid
     return 'CreateAccount'
   } catch (err) {
+    crashlytics().recordError(err)
     console.log(err)
     return Promise.reject(err)
   }
@@ -62,6 +64,7 @@ const fetchAccount = async () => {
     const token = await AsyncStorage.getItem(REGISTRATION_TOKEN)
     await notificationsApi.linkToken(token)
   } catch (err) {
+    crashlytics().recordError(err)
     console.log(err)
     return Promise.reject(err)
   }
@@ -80,6 +83,7 @@ const loginWithFacebook = async () => {
     const userCredential = await auth().signInWithCredential(credential)
     return loginWithCredential(userCredential)
   } catch (err) {
+    crashlytics().recordError(err)
     console.log(err)
     return Promise.reject(err)
   }
@@ -102,6 +106,7 @@ const loginWithPhone = async (number) => {
     const confirm = await auth().signInWithPhoneNumber(formatPhoneNumber(number))
     return confirm
   } catch (err) {
+    crashlytics().recordError(err)
     return Promise.reject(err)
   }
 }
@@ -117,6 +122,7 @@ const logout = async () => {
     await auth().signOut()
     await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
   } catch (err) {
+    crashlytics().recordError(err)
     console.log(err)
     return Promise.reject(err)
   }
@@ -136,6 +142,7 @@ const deleteUserWithCredential = async (credential) => {
     await auth().currentUser.delete()
     await AsyncStorage.multiRemove([NAME, USERNAME, EMAIL, PHOTO, PHONE, UID])
   } catch (err) {
+    crashlytics().recordError(err)
     console.log('------ERROR DELETING USER')
     return Promise.reject(err)
   }
@@ -166,6 +173,7 @@ const deleteUser = async () => {
     }
     deleteUserWithCredential(credential)
   } catch (err) {
+    crashlytics().recordError(err)
     console.log(err)
     return Promise.reject(err)
   }
