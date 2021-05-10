@@ -2,8 +2,6 @@ const { Op } = require('sequelize')
 const { hdel } = require('./config.js')
 const { Accounts, Friends, Notifications } = require('./models.js')
 
-import crashlytics from '@react-native-firebase/crashlytics'
-
 // Check if email exists
 const checkEmail = async (req, res) => {
   try {
@@ -16,7 +14,6 @@ const checkEmail = async (req, res) => {
     }
     return res.status(200).send('Email available')
   } catch (error) {
-    crashlytics().recordError(error)
     console.error(error)
     return res.status(500).send(error.message)
   }
@@ -34,7 +31,6 @@ const checkPhoneNumber = async (req, res) => {
     }
     return res.status(200).send('Phone number available')
   } catch (error) {
-    crashlytics().recordError(error)
     console.error(error)
     return res.status(500).send(error.message)
   }
@@ -50,7 +46,6 @@ const checkUsername = async (req, res) => {
     }
     return res.status(200).send('Username available')
   } catch (error) {
-    crashlytics().recordError(error)
     console.error(error)
     return res.status(500).send(error.message)
   }
@@ -69,7 +64,6 @@ const createAccount = async (req, res) => {
     })
     return res.status(201).send('Account created')
   } catch (error) {
-    crashlytics().recordError(error)
     console.error(error)
     return res.status(500).json({ error: error.message })
   }
@@ -87,7 +81,6 @@ const createTestAccount = async (req, res) => {
     })
     return res.status(201).send('Account created')
   } catch (error) {
-    crashlytics().recordError(error)
     console.error(error)
     return res.status(500).json({ error: error.message })
   }
@@ -129,7 +122,6 @@ const deleteTestAccount = async (req, res) => {
     }
     return res.status(404).send('User with the specified UID does not exists')
   } catch (error) {
-    crashlytics().recordError(error)
     console.error(error)
     return res.status(500).send(error.message)
   }
@@ -172,7 +164,6 @@ const deleteAccount = async (req, res) => {
     }
     return res.status(404).send('User with the specified UID does not exists')
   } catch (error) {
-    crashlytics().recordError(error)
     console.error(error)
     return res.status(500).send(error.message)
   }
@@ -188,7 +179,6 @@ const getAccountByUID = async (req, res) => {
     }
     return res.status(404).send('User with the specified UID does not exists')
   } catch (error) {
-    crashlytics().recordError(error)
     console.error(error)
     return res.status(500).send(error.message)
   }
@@ -200,7 +190,6 @@ const getAllAccounts = async (req, res) => {
     const users = await Accounts.findAll()
     return res.status(200).json({ users })
   } catch (error) {
-    crashlytics().recordError(error)
     return res.status(500).send(error.message)
   }
 }
@@ -217,7 +206,6 @@ const updateAccount = async (req, res) => {
     }
     return res.status(404).send('User with the specified UID does not exists')
   } catch (error) {
-    crashlytics().recordError(error)
     console.error(error)
     return res.status(500).send(error.message)
   }
@@ -243,7 +231,6 @@ const searchAccounts = async (req, res) => {
     })
     return res.status(200).json({ users })
   } catch (error) {
-    crashlytics().recordError(error)
     console.error(error)
     return res.status(500).send(error.message)
   }
