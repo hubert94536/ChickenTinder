@@ -119,8 +119,6 @@ class Friends extends React.Component {
         )
       }
     }
-    // console.log(this.props.friends.friends)
-    // console.log('friends length: ' + this.props.friends.friends.length)
     return (
       <View>
         <View>
@@ -151,9 +149,10 @@ class Friends extends React.Component {
             </ScrollView>
             {this.props.error && (
               <Alert
-                title="Error, please try again"
+                title="Uh oh!"
+                body="Something went wrong. Please try again!"
                 buttonAff="Close"
-                height="20%"
+                height="25%"
                 press={() => this.props.hideError()}
                 cancel={() => this.props.hideError()}
               />

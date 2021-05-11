@@ -19,7 +19,7 @@ export default class ButtonSwitch extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedIndex: this.props.selectMultiple ? -1 : 0, // Default value only for single choices
+      selectedIndex: this.props.select, // Default value only for single choices
       selectedIndexes: [],
     }
     this.updateIndex = this.updateIndex.bind(this)
@@ -30,7 +30,7 @@ export default class ButtonSwitch extends Component {
     if (this.props.selectMultiple) {
       this.setState({ selectedIndexes: selectedIndex }, () => {
         //  Turn array of indexes into array of desired values passed in as props
-        const priceArr = []
+        let priceArr = []
         const tempSelectedIndexes = this.state.selectedIndexes
         tempSelectedIndexes.forEach((index) => {
           switch (index) {
@@ -62,25 +62,20 @@ export default class ButtonSwitch extends Component {
       this.props.onValueChange(this.props.value3)
     } else if (selectedIndex == 3) {
       this.props.onValueChange(this.props.value4)
+    } else if (selectedIndex == 4) {
+      this.props.onValueChange(this.props.value5)
     }
   }
 
   render() {
-    const buttons = [this.props.text1, this.props.text2]
-    if (this.props.text3) {
-      buttons.push(this.props.text3)
-    }
-    if (this.props.text4) {
-      buttons.push(this.props.text4)
-    }
-
-    if (this.props.text4) {
-      groupWidth = styles.containerWidth4
-    } else if (this.props.text3) {
-      groupWidth = styles.containerWidth3
-    } else {
-      groupWidth = styles.containerWidth2
-    }
+    const buttons = [this.props.text1]
+    if (this.props.text2) buttons.push(this.props.text2)
+    if (this.props.text3) buttons.push(this.props.text3)
+    if (this.props.text4) buttons.push(this.props.text4)
+    if (this.props.text5) buttons.push(this.props.text5)
+    if (this.props.text4 || this.props.text5) groupWidth = styles.containerWidth4
+    else if (this.props.text3) groupWidth = styles.containerWidth3
+    else groupWidth = styles.containerWidth2
     return (
       <ButtonGroup
         onPress={this.updateIndex}
@@ -115,7 +110,6 @@ const styles = StyleSheet.create({
     width: 120,
   },
   containerWidth4: {
-    // width: 180,
     width: 200,
   },
   innerBorder: {

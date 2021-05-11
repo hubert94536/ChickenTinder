@@ -131,7 +131,7 @@ class Home extends React.Component {
               <Text
                 style={[
                   styles.buttonText,
-                  this.state.createPressed ? { color: colors.hex } : { color: 'white' },
+                  this.state.createPressed ? screenStyles.hex : styles.white,
                 ]}
               >
                 Create Group
@@ -154,11 +154,18 @@ class Home extends React.Component {
               }}
               onPress={() => this.setState({ join: true })}
             >
-              <Text style={[styles.buttonText, this.state.joinPressed ? screenStyles.hex : styles.white]}>Join Group</Text>
+              <Text
+                style={[
+                  styles.buttonText,
+                  this.state.joinPressed ? screenStyles.hex : styles.white,
+                ]}
+              >
+                Join Group
+              </Text>
             </TouchableHighlight>
           </View>
           <TabBar
-            goHome={() => { }}
+            goHome={() => {}}
             goSearch={() => {
               socket.getSocket().off()
               this.props.navigation.replace('Search')
@@ -182,9 +189,10 @@ class Home extends React.Component {
           />
           {this.props.error && (
             <Alert
-              title="Error, please try again"
+              title="Uh oh!"
+              body="Something went wrong. Please try again!"
               buttonAff="Close"
-              height="20%"
+              height="25%"
               press={() => this.props.hideError()}
               cancel={() => this.props.hideError()}
             />
@@ -194,7 +202,7 @@ class Home extends React.Component {
               title="Oh no!"
               body="You were kicked from the group!"
               buttonAff="Close"
-              height="20%"
+              height="25%"
               press={() => this.props.hideKick()}
               cancel={() => this.props.hideKick()}
             />
@@ -204,7 +212,7 @@ class Home extends React.Component {
               title="Connection Error!"
               body={socketErrMsg}
               buttonAff="Close"
-              height="20%"
+              height="25%"
               press={() => this.setState({ socketErr: false })}
               cancel={() => this.setState({ socketErr: false })}
             />
@@ -223,13 +231,13 @@ class Home extends React.Component {
           this.props.kick ||
           this.state.socketErr ||
           this.props.refresh) && (
-            <BlurView
-              blurType="dark"
-              blurAmount={10}
-              reducedTransparencyFallbackColor="white"
-              style={modalStyles.blur}
-            />
-          )}
+          <BlurView
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="white"
+            style={modalStyles.blur}
+          />
+        )}
       </ImageBackground>
     )
   }
@@ -308,6 +316,6 @@ const styles = StyleSheet.create({
     fontSize: normalize(18),
   },
   white: {
-    color: 'white'
-  }
+    color: 'white',
+  },
 })

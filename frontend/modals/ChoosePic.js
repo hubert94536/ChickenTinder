@@ -4,12 +4,13 @@ import { Dimensions, Modal, StyleSheet, Text, TouchableHighlight, View } from 'r
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import colors from '../../styles/colors.js'
 import { assets as defImages } from '../assets/images/defImages.js'
-import { FlatList } from 'react-native'
+import { FlatList} from 'react-native'
 import ImageCard from '../cards/ImageCard.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import { ScrollView } from 'react-native-gesture-handler'
+
 
 const width = Dimensions.get('window').width
 
@@ -24,7 +25,7 @@ class ChoosePic extends React.Component {
   }
 
   componentDidMount() {
-    let pushImages = []
+    let pushImages= []
     for (var i = 0; i < Object.keys(defImages).length; i++) {
       pushImages.push(
         <ImageCard
@@ -37,24 +38,24 @@ class ChoosePic extends React.Component {
     this.setState({ images: pushImages })
   }
 
-  ItemView = ({ item }) => {
+   ItemView = ({item}) => {
     return (
       // FlatList Item
       item
-    )
-  }
+    );
+  };
 
-  ItemSeparatorView = () => {
+   ItemSeparatorView = () => {
     return (
       // FlatList Item Separator
       <View
-        style={{
-          height: width * 0.03,
-          width: '100%',
-        }}
+          style={{
+              height: width*0.03,
+              width: '100%',
+          }}
       />
-    )
-  }
+    );
+  };
 
   select(pic) {
     let pushImages = []
@@ -103,7 +104,16 @@ class ChoosePic extends React.Component {
             onShowUnderlay={() => this.setState({ done: true })}
             onHideUnderlay={() => this.setState({ done: false })}
           >
-            <Text style={[screenStyles.smallButtonText, styles.saveText, this.state.done ? screenStyles.hex : styles.white]}> Done</Text>
+            <Text
+              style={[
+                screenStyles.smallButtonText,
+                styles.saveText,
+                this.state.done ? screenStyles.hex : styles.white,
+              ]}
+            >
+              {' '}
+              Done
+            </Text>
           </TouchableHighlight>
         </View>
       </Modal>
@@ -138,7 +148,7 @@ const styles = StyleSheet.create({
   nameText: {
     marginBottom: '4%',
     color: colors.hex,
-    fontSize: normalize(18)
+    fontSize: normalize(18),
   },
   input: {
     color: '#7d7d7d',
@@ -156,7 +166,7 @@ const styles = StyleSheet.create({
     paddingTop: '5%',
     paddingBottom: '5%',
     color: 'white',
-    fontSize: normalize(18)
+    fontSize: normalize(18),
   },
   warningText: {
     color: colors.hex,
@@ -168,7 +178,7 @@ const styles = StyleSheet.create({
   inputMarginWarning: {
     marginBottom: '1%',
   },
-  flatlist: {
-    flexDirection: 'column',
-  },
+  flatlist: { 
+    flexDirection: 'column' 
+  }
 })

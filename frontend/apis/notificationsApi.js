@@ -1,5 +1,6 @@
 import Axios from 'axios'
 import auth from '@react-native-firebase/auth'
+import crashlytics from '@react-native-firebase/crashlytics'
 
 const notificationsApi = Axios.create({
   baseURL: 'https://wechews.herokuapp.com',
@@ -37,6 +38,7 @@ const getNotifs = async () => {
       }
     })
     .catch((error) => {
+      crashlytics().recordError(error)
       return Promise.reject(error.response)
     })
 }
@@ -49,6 +51,7 @@ const removeNotif = async (id) => {
       return res.status
     })
     .catch((error) => {
+      crashlytics().recordError(error)
       return Promise.reject(error.response)
     })
 }
@@ -62,6 +65,7 @@ const linkToken = async (token) => {
       return res.status
     })
     .catch((error) => {
+      crashlytics().recordError(error)
       console.log('-----ERROR linking token')
       return Promise.reject(error.response)
     })
@@ -76,6 +80,7 @@ const unlinkToken = async () => {
       return res.status
     })
     .catch((error) => {
+      crashlytics().recordError(error)
       console.log('-----ERROR unlinking token')
       return Promise.reject(error.response)
     })

@@ -23,23 +23,23 @@ export default class FilterButton extends React.Component {
   makeStyles(background, text) {
     return StyleSheet.create({
       view: {
-        borderRadius: 14,
+        borderRadius: normalize(15),
         borderColor: colors.hex,
         borderWidth: 1,
         backgroundColor: background,
-        height: 28,
+        height: normalize(28),
         alignItems: 'center',
         justifyContent: 'center',
-        marginLeft: '2%',
-        marginRight: '2%',
+        marginLeft: '1.5%',
+        marginRight: '1.5%',
       },
       text: {
         paddingLeft: '2%',
         paddingRight: '2%',
         textAlign: 'center',
         color: text,
-        fontSize: normalize(12),
-        fontFamily: 'CircularStd-Bold',
+        fontSize: normalize(13),
+        fontFamily: 'CircularStd-Medium',
       },
     })
   }
@@ -49,7 +49,4 @@ FilterButton.propTypes = {
   active: PropTypes.bool,
   onPress: PropTypes.func,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  //   textColor: PropTypes.string,
-  //   borderColor: PropTypes.string,
-  //   backgroundColor: PropTypes.string,
 }

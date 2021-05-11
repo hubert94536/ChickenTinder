@@ -36,7 +36,7 @@ class TopThree extends React.Component {
     super(props)
     this.state = {
       chosen: this.props.top.length - 1,
-      pressed: false
+      pressed: false,
     }
     socket.getSocket().once('choose', (ind) => {
       this.props.hideRefresh()
@@ -253,12 +253,17 @@ class TopThree extends React.Component {
             onShowUnderlay={() => this.setState({ pressed: true })}
             onHideUnderlay={() => this.setState({ pressed: false })}
             onPress={() => this.goMatch()}
-            style={[
-              screenStyles.bigButton,
-              styles.submitButton
-            ]}
+            style={[screenStyles.bigButton, styles.submitButton]}
           >
-            <Text style={[screenStyles.medButtonText, styles.submit, this.state.pressed ? screenStyles.hex : styles.white]}>Submit</Text>
+            <Text
+              style={[
+                screenStyles.medButtonText,
+                styles.submit,
+                this.state.pressed ? screenStyles.hex : styles.white,
+              ]}
+            >
+              Submit
+            </Text>
           </TouchableHighlight>
         )}
         {!this.props.isHost && (
@@ -357,7 +362,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginLeft: '5%',
     marginRight: '5%',
-    marginBottom: '3%'
+    marginBottom: '3%',
   },
   height: { height: '50%' },
   center: { alignSelf: 'center' },
@@ -408,7 +413,7 @@ const styles = StyleSheet.create({
   submit: {
     fontFamily: screenStyles.book.fontFamily,
     padding: '5%',
-    fontSize: normalize(19)
+    fontSize: normalize(19),
   },
   submitButton: {
     width: '45%',

@@ -146,7 +146,7 @@ module.exports = (io) => {
           lock(socket.user.room, async function (done) {
             let user = await hgetAll(`users:${socket.user.uid}`)
             // check if they already reconnected before disconnect event was fired
-            if (user.client != socket.id) {
+            if (user.client === socket.id) {
               // retrieve session information
               let session = await sendCommand('JSON.GET', [socket.user.room])
               session = JSON.parse(session)
