@@ -43,6 +43,7 @@ var name = ''
 var username = ''
 var socketErrMsg = 'Socket error message uninitialized'
 
+
 AsyncStorage.multiGet([NAME, PHOTO, USERNAME]).then((res) => {
   name = res[0][1]
   img = res[1][1]
