@@ -530,7 +530,11 @@ Notif.propTypes = {
   hideRefresh: PropTypes.func,
   hideHold: PropTypes.func,
   hideError: PropTypes.func,
-  setDisable: PropTypes.func
+  updateSession: PropTypes.func,
+  setHost: PropTypes.func,
+  hideDisable: PropTypes.func,
+  error: PropTypes.bool,
+  refresh: PropTypes.bool,
 }
 
 const styles = StyleSheet.create({
