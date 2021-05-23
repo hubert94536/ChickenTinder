@@ -11,7 +11,7 @@ export default class Size extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedSize: 10,
+      selectedSize: this.props.select,
       invalidSize: false,
       pressed: false,
     }
@@ -24,11 +24,12 @@ export default class Size extends React.Component {
 
   //  function called when 'x' is pressed
   handleCancel() {
+    let invalid = this.state.invalidSize
     this.setState({
-      selectedSize: 10,
+      selectedSize: '',
       invalidSize: false,
     })
-    this.props.cancel()
+    this.props.cancel(invalid)
   }
 
   evaluate() {
@@ -60,8 +61,16 @@ export default class Size extends React.Component {
             </Text>
             <View style={modalStyles.inputContainer}>
               <ButtonSwitch
-                texts={['10', '20', '30', '40', '50']}
-                values={['10', '20', '30', '40', '50']}
+                text1="10"
+                text2="20"
+                text3="30"
+                text4="40"
+                text5="50"
+                value1="10"
+                value2="20"
+                value3="30"
+                value4="40"
+                value5="50"
                 select={this.state.selectedSize / 10 - 1}
                 onValueChange={(size) => {
                   this.setState({ selectedSize: size })

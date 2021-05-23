@@ -71,7 +71,7 @@ class FilterSelector extends React.Component {
       s_radius: 5.5 * 1600,
       s_location: null,
       s_time: Math.floor(Date.now() / 1000),
-      s_price: [],
+      s_price: '',
       // Default filter settings
       selectedCuisine: [],
       selectedPrice: [],
@@ -85,13 +85,6 @@ class FilterSelector extends React.Component {
       chooseTime: false,
       choosePrice: false,
 
-      // BUTTONS
-      majorityButton: false,
-      sizeButton: false,
-      locationButton: false,
-      timeButton: false,
-      priceButton: false,
-
       // ALERTS
       locationAlert: false,
 
@@ -100,6 +93,24 @@ class FilterSelector extends React.Component {
     }
 
     cuisines.forEach((item) => (s_categories[item] = false))
+    if (requestLocationPermission()) {
+      Geolocation.getCurrentPosition(
+        (position) => {
+          this.setState({
+            defaultLocation: {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            },
+          })
+        },
+        (error) => {
+          console.log(error.code, error.message)
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+      )
+    } else {
+      console.log('filter.js: Failed to get location')
+    }
   }
 
   // asks user for permission and get location as the component mounts
@@ -228,9 +239,6 @@ class FilterSelector extends React.Component {
     }
     filters.open_at = this.state.s_time
     filters.price = this.state.s_price
-      .map((idx) => idx + 1)
-      .sort()
-      .toString()
 
     // CATEGORIES
     const selections = []
@@ -239,6 +247,7 @@ class FilterSelector extends React.Component {
     }
 
     filters.categories = this.categorize(selections)
+
     if (this.props.isHost) {
       socket.startSession(filters, session)
     }
@@ -282,7 +291,7 @@ class FilterSelector extends React.Component {
             >
               {/* Majority Button */}
               <FilterButton
-                active={this.state.majorityButton}
+                active={this.state.s_majority != null}
                 onPress={() => {
                   this.setState({ chooseMajority: true })
                   this.props.setBlur(true)
@@ -292,7 +301,7 @@ class FilterSelector extends React.Component {
 
               {/* Round Size Button */}
               <FilterButton
-                active={this.state.sizeButton}
+                active={this.state.s_size != null}
                 onPress={() => {
                   this.setState({ chooseSize: true })
                   this.props.setBlur(true)
@@ -302,7 +311,7 @@ class FilterSelector extends React.Component {
 
               {/* Location Button */}
               <FilterButton
-                active={this.state.locationButton}
+                active={this.state.s_location != null}
                 onPress={() => {
                   this.setState({ chooseLocation: true })
                   this.props.setBlur(true)
@@ -312,7 +321,7 @@ class FilterSelector extends React.Component {
 
               {/* Time */}
               <FilterButton
-                active={this.state.timeButton}
+                active={this.state.s_time != null}
                 onPress={() => {
                   this.setState({ chooseTime: true })
                   this.props.setBlur(true)
@@ -322,7 +331,7 @@ class FilterSelector extends React.Component {
 
               {/* Price */}
               <FilterButton
-                active={this.state.priceButton}
+                active={this.state.s_price != null}
                 onPress={() => {
                   this.setState({ choosePrice: true })
                   this.props.setBlur(true)
@@ -385,46 +394,45 @@ class FilterSelector extends React.Component {
             this.props.setBlur(false)
           }}
         />
+
         <Majority
           max={this.props.members.length}
           title={'Majority'}
           filterSubtext={'Choose the number of members needed to get a match'}
           visible={this.state.chooseMajority}
-          cancel={() => {
-            this.setState({
-              chooseMajority: false,
-              majorityButton: false,
-              s_majority: Math.ceil(this.props.members.length * 0.5),
-            })
+          select={this.state.s_majority}
+          cancel={(clear) => {
+            this.setState({ chooseMajority: false })
             this.props.setBlur(false)
+            if (clear) this.setState({ s_majority: null })
           }}
           press={(value) => {
-            this.setState({ s_majority: value, chooseMajority: false, majorityButton: true })
+            this.setState({ s_majority: value, chooseMajority: false })
             this.props.setBlur(false)
           }}
         />
+
         <Size
           max={50}
           visible={this.state.chooseSize}
-          cancel={() => {
-            this.setState({ s_size: 10, chooseSize: false, sizeButton: false })
+          cancel={(clear) => {
+            this.setState({ chooseSize: false })
             this.props.setBlur(false)
+            if (clear) this.setState({ s_size: null })
           }}
+          select={this.state.s_size}
           press={(value) => {
-            this.setState({ s_size: value, chooseSize: false, sizeButton: true })
+            this.setState({ s_size: value, chooseSize: false })
             this.props.setBlur(false)
           }}
         />
 
         <Time
           visible={this.state.chooseTime}
-          cancel={() => {
-            this.setState({
-              chooseTime: false,
-              timeButton: false,
-              s_time: Math.floor(Date.now() / 1000),
-            })
+          cancel={(clear) => {
+            this.setState({ chooseTime: false })
             this.props.setBlur(false)
+            if (clear) this.setState({ s_time: null })
           }}
           press={(hr, min) => {
             // TODO: Add checking for dates/times in the past
@@ -433,38 +441,36 @@ class FilterSelector extends React.Component {
             let yy = date.getFullYear()
             let tz = date.getTimezoneOffset()
             let time = Date.UTC(yy, mm, dd, hr, min + tz) / 1000
-            this.setState({ s_time: time, chooseTime: false, timeButton: true })
+            this.setState({ s_time: time, chooseTime: false })
             this.props.setBlur(false)
           }}
         />
 
         <Price
           visible={this.state.choosePrice}
-          cancel={() => {
-            this.setState({ s_price: [], choosePrice: false, priceButton: false })
+          cancel={(clear) => {
+            this.setState({ choosePrice: false })
             this.props.setBlur(false)
+            if (clear) this.setState({ s_price: null })
           }}
           press={(prices) => {
-            this.setState({ s_price: prices, choosePrice: false, priceButton: true })
+            this.setState({ s_price: prices, choosePrice: false })
             this.props.setBlur(false)
           }}
         />
 
         <Location
           visible={this.state.chooseLocation}
-          defaultLocation={this.state.d_location}
-          key={this.state.d_location}
           update={(dist, loc) => {
             this.setState({
               chooseLocation: false,
               s_radius: dist,
               s_location: loc,
-              locationButton: true,
             })
             this.props.setBlur(false)
           }}
           cancel={() => {
-            this.setState({ chooseLocation: false, locationButton: false, s_location: null })
+            this.setState({ chooseLocation: false })
             this.props.setBlur(false)
           }}
         />

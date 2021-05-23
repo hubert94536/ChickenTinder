@@ -184,7 +184,6 @@ NotifCard.propTypes = {
   removeDelete: PropTypes.func,
   setDisable: PropTypes.func,
   hideDisable: PropTypes.func,
-  showRefresh: PropTypes.func,
   disable: PropTypes.bool,
   hold: PropTypes.bool,
   setHold: PropTypes.func,
