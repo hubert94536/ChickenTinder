@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableHighlight, View, Dimensions } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -10,6 +10,8 @@ import Alert from '../modals/Alert.js'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
 import normalize from '../../styles/normalize.js'
+
+const width = Dimensions.get('window').width
 
 class Card extends React.Component {
   constructor(props) {

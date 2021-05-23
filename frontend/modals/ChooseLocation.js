@@ -35,7 +35,6 @@ let client = clientBuilder.buildUsZipcodeClient()
 
 const iconSize = 30
 
-//  requests the users permission
 const requestLocationPermission = async () => {
   PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
     title: 'Location Permission',
@@ -63,12 +62,10 @@ export default class Location extends Component {
     this.mapView = React.createRef()
     this.circle = React.createRef()
     this.state = {
-      location: this.props.defaultLocation
-        ? this.props.defaultLocation
-        : {
-            latitude: 34.06892,
-            longitude: -118.445183,
-          },
+      location: {
+        latitude: 34.06892,
+        longitude: -118.445183,
+      },
       city: 'Choose a location',
       state: '',
       distance: 5.5,
@@ -121,7 +118,6 @@ export default class Location extends Component {
 
   // function called when main button is pressed w/ valid ZIP
   handlePress() {
-    this.setState({ pressed: false })
     this.props.update(this.state.distance, this.state.location)
   }
 
@@ -157,7 +153,6 @@ export default class Location extends Component {
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
       )
     } else {
-      // TODO: need alert saying permission was not given
       console.log('Filter.js: Failed to get location')
     }
   }
@@ -328,8 +323,8 @@ export default class Location extends Component {
           >
             <Text
               style={[
-                screenStyles.text,
-                modalStyles.doneText,
+                modalStyles.text,
+                styles.white,
                 this.state.pressed ? screenStyles.hex : screenStyles.white,
               ]}
             >
@@ -423,5 +418,4 @@ Location.propTypes = {
   update: PropTypes.func,
   cancel: PropTypes.func,
   visible: PropTypes.bool,
-  defaultLocation: PropTypes.object,
 }

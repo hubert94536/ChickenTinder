@@ -19,18 +19,25 @@ export default class Majority extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedValue: Math.ceil(this.props.max * 0.5),
+      selectedValue: this.props.select, // Default majority is half
       invalidValue: false,
       pressed: false,
-      selected: this.setSelected(Math.ceil(this.props.max * 0.5)),
     }
+  }
+
+  // function called when main button is pressed
+  handlePress(size) {
+    this.props.press(size)
   }
 
   //  function called when 'x' is pressed
   handleCancel() {
-    let half = Math.ceil(this.props.max * 0.5)
-    this.setState({ selectedValue: half, selected: this.setSelected(half) })
-    this.props.cancel()
+    let invalid = this.state.invalidValue
+    this.setState({
+      selectedValue: '',
+      invalidValue: false,
+    })
+    this.props.cancel(invalid)
   }
 
   evaluateSize() {
@@ -43,19 +50,9 @@ export default class Majority extends React.Component {
       if (s < 1 || s > this.props.max || isNaN(s)) {
         this.setState({ invalidValue: true })
       } else {
-        this.props.press(s)
+        this.handlePress(s)
       }
     }
-  }
-
-  setSelected(majority) {
-    let size = this.props.max
-    let half = Math.ceil(size * 0.5).toString()
-    let twoThirds = Math.ceil(size * 0.67).toString()
-    if (majority == half) return 0
-    else if (majority == twoThirds) return 1
-    else if (majority == size) return 2
-    return -1
   }
 
   evaluate = _.debounce(this.evaluateSize.bind(this), 100)
@@ -64,6 +61,12 @@ export default class Majority extends React.Component {
     let size = this.props.max
     let half = Math.ceil(size * 0.5).toString()
     let twoThirds = Math.ceil(size * 0.67).toString()
+    let selected = 0
+    if (size > 2 && this.state.selectedValue.toString() === twoThirds) selected = 1
+    else if (this.state.selectedValue === size) {
+      if (size === 2) selected = 1
+      else if (size > 2) selected = 2
+    }
     return (
       <Modal animationType="fade" transparent visible={this.props.visible}>
         <View style={[modalStyles.mainContainer, styles.mainContainerHeight]}>
@@ -79,34 +82,33 @@ export default class Majority extends React.Component {
             </Text>
             <View style={[modalStyles.inputContainer, styles.inputContainer]}>
               {
+                // TODO: more than 3 need to remember last result
+              }
+              {
                 // Three buttons if group size is larger than 3
-                size > 3 && (
+                size > 2 && (
                   <ButtonSwitch
-                    texts={[half, twoThirds, 'All']}
-                    values={[half, twoThirds, this.props.max.toString()]}
-                    select={this.state.selected}
-                    onValueChange={(majority) =>
-                      this.setState({
-                        selectedValue: majority,
-                        selected: this.setSelected(majority),
-                      })
-                    }
+                    text1={half}
+                    text2={twoThirds}
+                    text3="All"
+                    value1={half}
+                    value2={twoThirds}
+                    value3={this.props.max.toString()}
+                    select={selected}
+                    onValueChange={(majority) => this.setState({ selectedValue: majority })}
                   />
                 )
               }
               {
                 // Two buttons if group size is less than or equal to 3
-                (size == 2 || size == 3) && (
+                size == 2 && (
                   <ButtonSwitch
-                    select={this.state.selected}
-                    texts={[half, 'All']}
-                    values={[half, this.props.max.toString()]}
-                    onValueChange={(majority) =>
-                      this.setState({
-                        selectedValue: majority,
-                        selected: this.setSelected(majority),
-                      })
-                    }
+                    text1={half}
+                    text2="All"
+                    value1={half}
+                    value2={this.props.max.toString()}
+                    select={selected}
+                    onValueChange={(majority) => this.setState({ selectedValue: majority })}
                   />
                 )
               }
@@ -114,28 +116,17 @@ export default class Majority extends React.Component {
                 // Two buttons if group size is less than or equal to 3
                 size == 1 && (
                   <ButtonSwitch
-                    texts={['All']}
-                    values={[this.props.max.toString()]}
-                    select={this.state.selected}
-                    onValueChange={(majority) =>
-                      this.setState({
-                        selectedValue: majority,
-                        selected: this.setSelected(majority),
-                      })
-                    }
+                    text1="All"
+                    value1={this.props.max.toString()}
+                    select={selected}
+                    onValueChange={(majority) => this.setState({ selectedValue: majority })}
                   />
                 )
               }
               <TextInput
                 style={modalStyles.textInput}
                 value={this.state.selectedValue.toString()}
-                onChangeText={(text) =>
-                  this.setState({
-                    selectedValue: text,
-                    invalidValue: false,
-                    selected: this.setSelected(text),
-                  })
-                }
+                onChangeText={(text) => this.setState({ selectedValue: text, invalidValue: false })}
                 keyboardType="numeric"
                 defaultValue={this.props.max.toString()}
               />
