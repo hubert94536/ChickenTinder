@@ -207,7 +207,7 @@ class App extends React.Component {
             }
             this.props.hideRefresh()
           }
-          // check if session already ended
+          // no session
           else {
             this.props.hideRefresh()
             this.navigator &&
