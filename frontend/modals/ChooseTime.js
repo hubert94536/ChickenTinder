@@ -21,10 +21,10 @@ export default class Time extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedHour: null,
-      selectedMinute: null,
+      selectedHour: '',
+      selectedMinute: '',
       invalidTime: false,
-      timeMode: null,
+      timeMode: 'AM',
       switch: true,
       pressed: false,
     }
@@ -39,20 +39,19 @@ export default class Time extends React.Component {
   handleCancel() {
     let invalid = this.state.invalidTime
     this.setState({
-      selectedHour: null,
-      selectedMinute: null,
-      timeMode: null,
+      selectedHour: '',
+      selectedMinute: '',
       invalidTime: false,
     })
     this.props.cancel(invalid)
   }
 
   evaluateTime() {
-    if (!this.state.selectedMinute || !this.state.selectedHour) {
+    if (this.state.selectedMinute === '' || this.state.selectedHour === '') {
       this.setState({ invalidTime: true })
     }
-    let hour = parseInt(this.state.selectedHour)
-    let min = parseInt(this.state.selectedMinute)
+    var hour = parseInt(this.state.selectedHour)
+    var min = parseInt(this.state.selectedMinute)
     if (hour < 0 || hour > 12 || min < 0 || min > 59 || isNaN(hour) || isNaN(min)) {
       this.setState({ invalidTime: true })
     } else {
@@ -67,12 +66,6 @@ export default class Time extends React.Component {
       }
       this.handlePress(hour, min)
     }
-  }
-
-  setPeriod() {
-    if (this.state.timeMode === 'AM') return 0
-    else if (this.state.timeMode === 'PM') return 1
-    else return -1
   }
 
   evaluate = _.debounce(this.evaluateTime.bind(this), 200)
@@ -111,9 +104,10 @@ export default class Time extends React.Component {
               />
               <View style={styles.switchButton}>
                 <ButtonSwitch
-                  texts={['AM', 'PM']}
-                  values={['AM', 'PM']}
-                  select={this.setPeriod()}
+                  text1="AM"
+                  text2="PM"
+                  value1="AM"
+                  value2="PM"
                   onValueChange={(val) => this.setState({ timeMode: val })}
                 />
               </View>

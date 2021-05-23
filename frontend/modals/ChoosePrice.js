@@ -19,13 +19,16 @@ export default class Price extends React.Component {
 
   // function called when main button is pressed
   handlePress() {
-    this.props.press(this.state.selectedPrice)
+    let prices = this.state.selectedPrice
+      .map((item) => item.length)
+      .sort()
+      .toString()
+    if (prices !== '') this.props.press(prices)
   }
 
   //  function called when 'x' is pressed
   handleCancel() {
-    this.setState({ selectedPrice: [] })
-    this.props.cancel()
+    this.props.cancel(true)
   }
 
   evaluate = _.debounce(this.handlePress.bind(this), 200)
@@ -50,10 +53,15 @@ export default class Price extends React.Component {
                   <Text style={styles.selectMargin}>Select all that apply</Text>
                 </View>
                 <ButtonSwitch
-                  texts={['$', '$$', '$$$', '$$$$']}
-                  values={['$', '$$', '$$$', '$$$$']}
+                  text1="$"
+                  text2="$$"
+                  text3="$$$"
+                  text4="$$$$"
+                  value1="$"
+                  value2="$$"
+                  value3="$$$"
+                  value4="$$$$"
                   selectMultiple={true}
-                  multiSelect={this.state.selectedPrice}
                   onValueChange={(priceArr) => {
                     this.setState({ selectedPrice: priceArr })
                   }}

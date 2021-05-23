@@ -19,7 +19,8 @@ export default class ButtonSwitch extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedIndexes: this.props.multiSelect,
+      selectedIndex: this.props.select, // Default value only for single choices
+      selectedIndexes: [],
     }
     this.updateIndex = this.updateIndex.bind(this)
   }
@@ -28,22 +29,57 @@ export default class ButtonSwitch extends Component {
     // If allow users to select multiple buttons (ie. price)
     if (this.props.selectMultiple) {
       this.setState({ selectedIndexes: selectedIndex }, () => {
-        this.props.onValueChange(this.state.selectedIndexes)
+        //  Turn array of indexes into array of desired values passed in as props
+        let priceArr = []
+        const tempSelectedIndexes = this.state.selectedIndexes
+        tempSelectedIndexes.forEach((index) => {
+          switch (index) {
+            case 0:
+              priceArr.push(this.props.value1)
+              break
+            case 1:
+              priceArr.push(this.props.value2)
+              break
+            case 2:
+              priceArr.push(this.props.value3)
+              break
+            case 3:
+              priceArr.push(this.props.value4)
+              break
+          }
+        })
+        this.props.onValueChange(priceArr)
       })
+      return
     } else {
-      this.props.onValueChange(this.props.values[selectedIndex])
+      this.setState({ selectedIndex: selectedIndex })
+    }
+    if (selectedIndex == 0) {
+      this.props.onValueChange(this.props.value1)
+    } else if (selectedIndex == 1) {
+      this.props.onValueChange(this.props.value2)
+    } else if (selectedIndex == 2) {
+      this.props.onValueChange(this.props.value3)
+    } else if (selectedIndex == 3) {
+      this.props.onValueChange(this.props.value4)
+    } else if (selectedIndex == 4) {
+      this.props.onValueChange(this.props.value5)
     }
   }
 
   render() {
-    const buttons = this.props.texts
-    if (buttons.length > 3) groupWidth = styles.containerWidth4
-    else if (buttons.length == 3) groupWidth = styles.containerWidth3
+    const buttons = [this.props.text1]
+    if (this.props.text2) buttons.push(this.props.text2)
+    if (this.props.text3) buttons.push(this.props.text3)
+    if (this.props.text4) buttons.push(this.props.text4)
+    if (this.props.text5) buttons.push(this.props.text5)
+    if (this.props.text4 || this.props.text5) groupWidth = styles.containerWidth4
+    else if (this.props.text3) groupWidth = styles.containerWidth3
     else groupWidth = styles.containerWidth2
     return (
       <ButtonGroup
         onPress={this.updateIndex}
-        selectedIndex={this.props.select}
+        selectedIndex={this.state.selectedIndex}
         selectedIndexes={this.state.selectedIndexes}
         buttons={buttons}
         //Styling
@@ -62,19 +98,19 @@ export default class ButtonSwitch extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    height: normalize(42),
+    height: 40,
     borderRadius: 10,
     borderWidth: 2,
     borderColor: colors.hex,
   },
   containerWidth2: {
-    width: normalize(80),
+    width: 80,
   },
   containerWidth3: {
-    width: normalize(120),
+    width: 120,
   },
   containerWidth4: {
-    width: normalize(200),
+    width: 200,
   },
   innerBorder: {
     width: 0,
@@ -96,8 +132,14 @@ const styles = StyleSheet.create({
 ButtonSwitch.propTypes = {
   disabled: PropTypes.bool,
   onValueChange: PropTypes.func,
-  texts: PropTypes.array,
-  values: PropTypes.array,
+  value1: PropTypes.string,
+  value2: PropTypes.string,
+  value3: PropTypes.string,
+  value4: PropTypes.string,
+  text1: PropTypes.string,
+  text2: PropTypes.string,
+  text3: PropTypes.string,
+  text4: PropTypes.string,
   switchWidth: PropTypes.number,
   switchHeight: PropTypes.number,
   switchdirection: PropTypes.string,
@@ -110,6 +152,4 @@ ButtonSwitch.propTypes = {
   fontColor: PropTypes.string,
   activeFontColor: PropTypes.string,
   selectMultiple: PropTypes.bool,
-  multiSelect: PropTypes.array,
-  select: PropTypes.number,
 }
