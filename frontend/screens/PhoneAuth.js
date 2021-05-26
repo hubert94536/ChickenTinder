@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import CodeInput from 'react-native-confirmation-code-input'
+import CodeInput from 'react-native-confirmation-code-input';
 import {
   ImageBackground,
   SafeAreaView,
@@ -29,7 +29,6 @@ import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import UserInfo from './UserInfo.js'
-import crashlytics from '@react-native-firebase/crashlytics'
 
 const font = 'CircularStd-Bold'
 
@@ -55,7 +54,6 @@ class PhoneAuthScreen extends Component {
       const confirm = await loginService.loginWithPhone('+1' + this.state.phone)
       this.setState({ confirmResult: confirm })
     } catch (err) {
-      crashlytics().recordError(err)
       if (err.message == 'Invalid phone number') this.setState({ invalidNumberAlert: true })
       else this.setState({ errorAlert: true })
     }
@@ -79,7 +77,6 @@ class PhoneAuthScreen extends Component {
           this.props.navigation.replace(result)
         })
       } catch (error) {
-        crashlytics().recordError(error)
         this.setState({ errorAlert: true })
         this.props.hideDisable()
         console.log(error)
