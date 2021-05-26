@@ -1,5 +1,6 @@
 import Axios from 'axios'
 import auth from '@react-native-firebase/auth'
+import crashlytics from '@react-native-firebase/crashlytics'
 
 const friendsApi = Axios.create({
   baseURL: 'https://wechews.herokuapp.com',
@@ -23,6 +24,7 @@ const createFriendshipTest = async (main, friend) => {
       return res.status
     })
     .catch((error) => {
+      crashlytics().recordError(error)
       return Promise.reject(error.response)
     })
 }
@@ -34,6 +36,7 @@ const createFriendship = async (friend) => {
       return res.status
     })
     .catch((error) => {
+      crashlytics().recordError(error)
       return Promise.reject(error.response)
     })
 }
@@ -58,6 +61,7 @@ const getFriends = async () => {
       }
     })
     .catch((error) => {
+      crashlytics().recordError(error)
       return Promise.reject(error.response)
     })
 }
@@ -70,6 +74,7 @@ const acceptFriendRequest = async (friend) => {
       return res.status
     })
     .catch((error) => {
+      crashlytics().recordError(error)
       return Promise.reject(error.response)
     })
 }
@@ -82,6 +87,7 @@ const removeFriendship = async (friend) => {
       return res.status
     })
     .catch((error) => {
+      crashlytics().recordError(error)
       return Promise.reject(error.response)
     })
 }
