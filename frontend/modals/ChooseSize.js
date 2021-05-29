@@ -1,13 +1,5 @@
 import React from 'react'
-import {
-  Dimensions,
-  Modal,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableHighlight,
-  View,
-} from 'react-native'
+import { Dimensions, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import PropTypes from 'prop-types'
 import ButtonSwitch from './ButtonSwitch.js'
 import modalStyles from '../../styles/modalStyles.js'
@@ -21,8 +13,9 @@ export default class Size extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedSize: '10',
+      selectedSize: 10,
       invalidSize: false,
+      pressed: false,
     }
   }
 
@@ -33,12 +26,11 @@ export default class Size extends React.Component {
 
   //  function called when 'x' is pressed
   handleCancel() {
-    let invalid = this.state.invalidSize
     this.setState({
-      selectedSize: '',
+      selectedSize: 10,
       invalidSize: false,
     })
-    this.props.cancel(invalid)
+    this.props.cancel()
   }
 
   evaluate() {
@@ -64,25 +56,18 @@ export default class Size extends React.Component {
             onPress={() => this.handleCancel()}
           />
           <View style={modalStyles.titleContainer}>
-            <Text style={[screenStyles.text, modalStyles.titleText]}>{this.props.title}</Text>
-            <Text style={[screenStyles.text, styles.black]}>{this.props.filterSubtext}</Text>
+            <Text style={[screenStyles.text, modalStyles.titleText]}>Round Size</Text>
+            <Text style={[screenStyles.text, styles.black, screenStyles.book]}>
+              Choose the max number of restaurants to swipe through
+            </Text>
             <View style={modalStyles.inputContainer}>
               <ButtonSwitch
-                text1="10"
-                text2="20"
-                text3="30"
-                value1="10"
-                value2="20"
-                value3="30"
+                texts={['10', '20', '30', '40', '50']}
+                values={['10', '20', '30', '40', '50']}
+                select={this.state.selectedSize / 10 - 1}
                 onValueChange={(size) => {
                   this.setState({ selectedSize: size })
                 }}
-              />
-              <TextInput
-                style={modalStyles.textInput}
-                value={this.state.selectedSize}
-                onChangeText={(text) => this.setState({ selectedSize: text, invalidSize: false })}
-                keyboardType="numeric"
               />
             </View>
             {this.state.invalidSize && (
@@ -93,7 +78,7 @@ export default class Size extends React.Component {
                   style={modalStyles.errorIcon}
                 />
                 <Text style={[screenStyles.text, modalStyles.errorText]}>
-                  Invalid {this.props.title.toLowerCase()}. Please try again
+                  Round size must be between 0-50.
                 </Text>
               </View>
             )}
@@ -103,10 +88,22 @@ export default class Size extends React.Component {
               </View>
             )}
             <TouchableHighlight
-              style={[modalStyles.doneButton, styles.doneButtonMargin]}
+              onPress={() => this.evaluate()}
+              onShowUnderlay={() => this.setState({ pressed: true })}
+              onHideUnderlay={() => this.setState({ pressed: false })}
+              underlayColor="white"
+              style={modalStyles.doneButton}
               onPress={() => this.evaluateSize()}
             >
-              <Text style={[screenStyles.text, modalStyles.doneText]}>Done</Text>
+              <Text
+                style={[
+                  screenStyles.text,
+                  modalStyles.doneText,
+                  this.state.pressed ? screenStyles.hex : screenStyles.white,
+                ]}
+              >
+                Done
+              </Text>
             </TouchableHighlight>
           </View>
         </View>
@@ -120,18 +117,15 @@ const styles = StyleSheet.create({
     height: width * 0.58,
   },
   errorMargin: {
-    marginTop: '3%',
-  },
-  doneButtonMargin: {
-    marginTop: '5%',
+    marginTop: '2%',
+    marginBottom: '4%',
+    marginLeft: '3%',
   },
   black: {
     color: 'black',
   },
 })
 Size.propTypes = {
-  title: PropTypes.string,
-  filterSubtext: PropTypes.string,
   press: PropTypes.func,
   cancel: PropTypes.func,
   visible: PropTypes.bool,

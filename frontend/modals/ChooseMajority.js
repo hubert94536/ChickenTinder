@@ -21,24 +21,18 @@ export default class Majority extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedValue: Math.ceil(this.props.max * 0.5).toString(), // Default majority is half
+      selectedValue: Math.ceil(this.props.max * 0.5),
       invalidValue: false,
+      pressed: false,
+      selected: this.setSelected(Math.ceil(this.props.max * 0.5)),
     }
-  }
-
-  // function called when main button is pressed
-  handlePress(size) {
-    this.props.press(size)
   }
 
   //  function called when 'x' is pressed
   handleCancel() {
-    let invalid = this.state.invalidValue
-    this.setState({
-      selectedValue: '',
-      invalidValue: false,
-    })
-    this.props.cancel(invalid)
+    let half = Math.ceil(this.props.max * 0.5)
+    this.setState({ selectedValue: half, selected: this.setSelected(half) })
+    this.props.cancel()
   }
 
   evaluateSize() {
@@ -51,9 +45,19 @@ export default class Majority extends React.Component {
       if (s < 1 || s > this.props.max || isNaN(s)) {
         this.setState({ invalidValue: true })
       } else {
-        this.handlePress(s)
+        this.props.press(s)
       }
     }
+  }
+
+  setSelected(majority) {
+    let size = this.props.max
+    let half = Math.ceil(size * 0.5).toString()
+    let twoThirds = Math.ceil(size * 0.67).toString()
+    if (majority == half) return 0
+    else if (majority == twoThirds) return 1
+    else if (majority == size) return 2
+    return -1
   }
 
   evaluate = _.debounce(this.evaluateSize.bind(this), 100)
@@ -75,39 +79,65 @@ export default class Majority extends React.Component {
             <Text style={[styles.black, screenStyles.book]}>
               How many members needed for a match
             </Text>
-
             <View style={[modalStyles.inputContainer, styles.inputContainer]}>
               {
                 // Three buttons if group size is larger than 3
                 size > 3 && (
                   <ButtonSwitch
-                    text1={half}
-                    text2={twoThirds}
-                    text3="All"
-                    value1={half}
-                    value2={twoThirds}
-                    value3={this.props.max.toString()}
-                    onValueChange={(majority) => this.setState({ selectedValue: majority })}
+                    texts={[half, twoThirds, 'All']}
+                    values={[half, twoThirds, this.props.max.toString()]}
+                    select={this.state.selected}
+                    onValueChange={(majority) =>
+                      this.setState({
+                        selectedValue: majority,
+                        selected: this.setSelected(majority),
+                      })
+                    }
                   />
                 )
               }
               {
                 // Two buttons if group size is less than or equal to 3
-                size <= 3 && (
+                (size == 2 || size == 3) && (
                   <ButtonSwitch
-                    text1={half}
-                    text2="All"
-                    value1={half}
-                    value2={this.props.max.toString()}
-                    onValueChange={(majority) => this.setState({ selectedValue: majority })}
+                    select={this.state.selected}
+                    texts={[half, 'All']}
+                    values={[half, this.props.max.toString()]}
+                    onValueChange={(majority) =>
+                      this.setState({
+                        selectedValue: majority,
+                        selected: this.setSelected(majority),
+                      })
+                    }
                   />
                 )
               }
-
+              {
+                // Two buttons if group size is less than or equal to 3
+                size == 1 && (
+                  <ButtonSwitch
+                    texts={['All']}
+                    values={[this.props.max.toString()]}
+                    select={this.state.selected}
+                    onValueChange={(majority) =>
+                      this.setState({
+                        selectedValue: majority,
+                        selected: this.setSelected(majority),
+                      })
+                    }
+                  />
+                )
+              }
               <TextInput
                 style={modalStyles.textInput}
-                value={this.state.selectedValue}
-                onChangeText={(text) => this.setState({ selectedValue: text, invalidValue: false })}
+                value={this.state.selectedValue.toString()}
+                onChangeText={(text) =>
+                  this.setState({
+                    selectedValue: text,
+                    invalidValue: false,
+                    selected: this.setSelected(text),
+                  })
+                }
                 keyboardType="numeric"
                 defaultValue={this.props.max.toString()}
               />
@@ -132,8 +162,22 @@ export default class Majority extends React.Component {
                 <Text style={[screenStyles.text, modalStyles.errorText]}> </Text>
               </View>
             )}
-            <TouchableHighlight style={modalStyles.doneButton} onPress={() => this.evaluate()}>
-              <Text style={[screenStyles.text, modalStyles.doneText]}>Done</Text>
+            <TouchableHighlight
+              style={modalStyles.doneButton}
+              onPress={() => this.evaluate()}
+              onShowUnderlay={() => this.setState({ pressed: true })}
+              onHideUnderlay={() => this.setState({ pressed: false })}
+              underlayColor="white"
+            >
+              <Text
+                style={[
+                  screenStyles.text,
+                  modalStyles.doneText,
+                  this.state.pressed ? screenStyles.hex : screenStyles.white,
+                ]}
+              >
+                Done
+              </Text>
             </TouchableHighlight>
           </View>
         </View>
@@ -151,14 +195,19 @@ const styles = StyleSheet.create({
   },
   input: {
     alignSelf: 'center',
-    marginTop: '3%',
+    marginTop: '5%',
     marginLeft: '2%',
   },
   errorMargin: {
-    marginBottom: '1%',
+    marginTop: '2%',
+    marginBottom: '4%',
+    marginLeft: '3%',
   },
   black: {
     color: 'black',
+  },
+  white: {
+    color: 'white',
   },
 })
 

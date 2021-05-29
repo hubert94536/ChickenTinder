@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import CodeInput from 'react-native-confirmation-code-input';
 import {
   ImageBackground,
   SafeAreaView,
@@ -117,7 +118,7 @@ class PhoneAuthScreen extends Component {
           onPress={() => this.handleVerifyCode()}
         >
           <Text style={[screenStyles.longButtonText, styles.longButtonText]}>Verify Code</Text>
-        </TouchableOpacity>
+          </TouchableOpacity>
       </View>
     )
   }
@@ -216,7 +217,7 @@ class PhoneAuthScreen extends Component {
                   keyboardType="phone-pad"
                   value={this.state.phone}
                   onChangeText={(num) => {
-                    this.setState({ phone: '+1' + num })
+                    this.setState({ phone: num })
                   }}
                   maxLength={15}
                   editable={!this.state.confirmResult}
@@ -246,9 +247,10 @@ class PhoneAuthScreen extends Component {
           )}
           {this.state.errorAlert && (
             <Alert
-              title="Error, please try again"
+              title="Uh oh!"
+              body="Something went wrong. Please try again!"
               buttonAff="Close"
-              height="20%"
+              height="25%"
               press={() => this.setState({ errorAlert: false })}
               cancel={() => this.setState({ errorAlert: false })}
             />
@@ -256,17 +258,19 @@ class PhoneAuthScreen extends Component {
           {this.state.invalidNumberAlert && (
             <Alert
               title="Invalid Phone Number"
+              body="Please enter only digits!"
               buttonAff="Close"
-              height="20%"
+              height="25%"
               press={() => this.setState({ invalidNumberAlert: false })}
               cancel={() => this.setState({ invalidNumberAlert: false })}
             />
           )}
           {this.state.badCodeAlert && (
             <Alert
-              title="Please enter a 6 digit OTP code."
+              title="Invalid Code"
+              body="Please enter your 6 digit code."
               buttonAff="Close"
-              height="20%"
+              height="25%"
               press={() => this.setState({ badCodeAlert: false })}
               cancel={() => this.setState({ badCodeAlert: false })}
             />

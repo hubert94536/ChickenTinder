@@ -39,7 +39,7 @@ class Match extends React.Component {
     super(props)
     this.state = {
       pressedYelp: false,
-      pressedPhone: false
+      pressedPhone: false,
     }
   }
 
@@ -92,10 +92,15 @@ class Match extends React.Component {
           style={[screenStyles.bigButton, styles.yelpButton]}
           onPress={() => Linking.openURL(this.props.match.url)}
         >
-          <Text style={[screenStyles.bigButtonText, 
-                        this.state.pressedYelp ? screenStyles.hex : styles.white, 
-                        styles.buttonText]}>
-          Open on Yelp</Text>
+          <Text
+            style={[
+              screenStyles.bigButtonText,
+              this.state.pressedYelp ? screenStyles.hex : styles.white,
+              styles.buttonText,
+            ]}
+          >
+            Open on Yelp
+          </Text>
         </TouchableHighlight>
         {this.props.match.phone !== '' && (
           <TouchableHighlight
@@ -106,9 +111,13 @@ class Match extends React.Component {
             style={[screenStyles.bigButton, styles.callButton]}
             onPress={() => Linking.openURL(`tel:${this.props.match.phone}`)}
           >
-            <Text style={[screenStyles.bigButtonText, 
-                          this.state.pressedPhone ? styles.white : screenStyles.hex, 
-                          styles.buttonText]}>
+            <Text
+              style={[
+                screenStyles.bigButtonText,
+                this.state.pressedPhone ? styles.white : screenStyles.hex,
+                styles.buttonText,
+              ]}
+            >
               Call: {this.props.match.phone}
             </Text>
           </TouchableHighlight>
@@ -237,7 +246,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     borderColor: colors.hex,
-    marginBottom: '3%'
+    marginBottom: '3%',
   },
   /* Text for exit round link */
   exitRoundText: {

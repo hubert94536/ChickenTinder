@@ -96,6 +96,9 @@ export default StyleSheet.create({
   hex: {
     color: colors.hex,
   },
+  white: {
+    color: 'white',
+  },
   book: {
     fontFamily: 'CircularStd-Book',
   },

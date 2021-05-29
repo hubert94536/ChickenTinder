@@ -23,11 +23,12 @@ export default class Time extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedHour: '',
-      selectedMinute: '',
+      selectedHour: null,
+      selectedMinute: null,
       invalidTime: false,
-      timeMode: 'AM',
+      timeMode: null,
       switch: true,
+      pressed: false,
     }
   }
 
@@ -40,19 +41,20 @@ export default class Time extends React.Component {
   handleCancel() {
     let invalid = this.state.invalidTime
     this.setState({
-      selectedHour: '',
-      selectedMinute: '',
+      selectedHour: null,
+      selectedMinute: null,
+      timeMode: null,
       invalidTime: false,
     })
     this.props.cancel(invalid)
   }
 
   evaluateTime() {
-    if (this.state.selectedMinute === '' || this.state.selectedHour === '') {
+    if (!this.state.selectedMinute || !this.state.selectedHour) {
       this.setState({ invalidTime: true })
     }
-    var hour = parseInt(this.state.selectedHour)
-    var min = parseInt(this.state.selectedMinute)
+    let hour = parseInt(this.state.selectedHour)
+    let min = parseInt(this.state.selectedMinute)
     if (hour < 0 || hour > 12 || min < 0 || min > 59 || isNaN(hour) || isNaN(min)) {
       this.setState({ invalidTime: true })
     } else {
@@ -69,6 +71,12 @@ export default class Time extends React.Component {
     }
   }
 
+  setPeriod() {
+    if (this.state.timeMode === 'AM') return 0
+    else if (this.state.timeMode === 'PM') return 1
+    else return -1
+  }
+
   evaluate = _.debounce(this.evaluateTime.bind(this), 200)
 
   render() {
@@ -82,7 +90,9 @@ export default class Time extends React.Component {
           />
           <View style={modalStyles.titleContainer}>
             <Text style={[screenStyles.text, modalStyles.titleText]}>Time</Text>
-            <Text style={[screenStyles.text, styles.black]}>Set a time for your group to eat</Text>
+            <Text style={[screenStyles.text, styles.black, styles.setMargin]}>
+              Set a time for your group to eat
+            </Text>
             <View style={modalStyles.error}>
               <TextInput
                 style={[modalStyles.textInput, styles.black]}
@@ -103,10 +113,9 @@ export default class Time extends React.Component {
               />
               <View style={styles.switchButton}>
                 <ButtonSwitch
-                  text1="AM"
-                  text2="PM"
-                  value1="AM"
-                  value2="PM"
+                  texts={['AM', 'PM']}
+                  values={['AM', 'PM']}
+                  select={this.setPeriod()}
                   onValueChange={(val) => this.setState({ timeMode: val })}
                 />
               </View>
@@ -125,10 +134,21 @@ export default class Time extends React.Component {
               </View>
             )}
             <TouchableHighlight
+              onShowUnderlay={() => this.setState({ pressed: true })}
+              onHideUnderlay={() => this.setState({ pressed: false })}
+              underlayColor="white"
               style={[modalStyles.doneButton, styles.doneButtonMargin]}
               onPress={() => this.evaluate()}
             >
-              <Text style={[screenStyles.text, modalStyles.doneText]}>Done</Text>
+              <Text
+                style={[
+                  screenStyles.text,
+                  modalStyles.doneText,
+                  this.state.pressed ? screenStyles.hex : screenStyles.white,
+                ]}
+              >
+                Done
+              </Text>
             </TouchableHighlight>
           </View>
         </View>
@@ -165,10 +185,13 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   errorMargin: {
-    marginTop: '3%',
+    marginTop: '2%',
   },
   doneButtonMargin: {
-    marginTop: '5%',
+    marginTop: '2%',
+  },
+  setMargin: {
+    marginBottom: '2%',
   },
 })
 

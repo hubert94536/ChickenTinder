@@ -18,7 +18,6 @@ import screenStyles from '../../styles/screenStyles.js'
 import colors from '../../styles/colors.js'
 import mapStyle from '../../styles/mapStyle.json'
 import Slider from '@react-native-community/slider'
-import AntDesign from 'react-native-vector-icons/AntDesign'
 import { ZIP_ID, ZIP_TOKEN } from 'react-native-dotenv'
 import _ from 'lodash'
 
@@ -36,6 +35,7 @@ let client = clientBuilder.buildUsZipcodeClient()
 
 const iconSize = 30
 
+//  requests the users permission
 const requestLocationPermission = async () => {
   PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
     title: 'Location Permission',
@@ -63,16 +63,20 @@ export default class Location extends Component {
     this.mapView = React.createRef()
     this.circle = React.createRef()
     this.state = {
-      location: {
-        latitude: 34.06892,
-        longitude: -118.445183,
-      },
+      location: this.props.defaultLocation
+        ? this.props.defaultLocation
+        : {
+            latitude: 34.06892,
+            longitude: -118.445183,
+          },
       city: 'Choose a location',
       state: '',
       distance: 5.5,
       zip: '',
       zipValid: true,
       expanded: true,
+      pressed: false,
+      pressedCurrent: false,
     }
   }
 
@@ -117,6 +121,7 @@ export default class Location extends Component {
 
   // function called when main button is pressed w/ valid ZIP
   handlePress() {
+    this.setState({ pressed: false })
     this.props.update(this.state.distance, this.state.location)
   }
 
@@ -152,6 +157,7 @@ export default class Location extends Component {
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
       )
     } else {
+      // TODO: need alert saying permission was not given
       console.log('Filter.js: Failed to get location')
     }
   }
@@ -217,8 +223,7 @@ export default class Location extends Component {
               <Text style={[styles.title, screenStyles.textBook, screenStyles.hex]}>
                 {this.state.city + this.state.state}
               </Text>
-
-              <AntDesign
+              {/* <AntDesign
                 style={styles.icon}
                 name={this.state.expanded ? 'up' : 'down'}
                 onPress={() => {
@@ -226,7 +231,7 @@ export default class Location extends Component {
                     expanded: !prev.expanded,
                   }))
                 }}
-              />
+              /> */}
             </View>
             {/* Horizontal Line */}
             <View
@@ -258,10 +263,17 @@ export default class Location extends Component {
               />
               <TouchableHighlight
                 underlayColor="white"
+                onShowUnderlay={() => this.setState({ pressedCurrent: true })}
+                onHideUnderlay={() => this.setState({ pressedCurrent: false })}
                 onPress={() => this.getLocation()}
                 style={[modalStyles.button, styles.buttonColor, styles.locationButton]}
               >
-                <Text style={[modalStyles.text, styles.white, styles.locationText]}>
+                <Text
+                  style={[
+                    styles.locationText,
+                    this.state.pressedCurrent ? screenStyles.hex : screenStyles.white,
+                  ]}
+                >
                   Get Current Location
                 </Text>
               </TouchableHighlight>
@@ -308,11 +320,21 @@ export default class Location extends Component {
           </View>
 
           <TouchableHighlight
+            onShowUnderlay={() => this.setState({ pressed: true })}
+            onHideUnderlay={() => this.setState({ pressed: false })}
             underlayColor="white"
             onPress={() => this.handlePress()}
-            style={[modalStyles.button, styles.buttonColor, styles.doneButton]}
+            style={[modalStyles.doneButton, styles.doneButton]}
           >
-            <Text style={[modalStyles.text, styles.white]}>Done</Text>
+            <Text
+              style={[
+                screenStyles.text,
+                modalStyles.doneText,
+                this.state.pressed ? screenStyles.hex : screenStyles.white,
+              ]}
+            >
+              Done
+            </Text>
           </TouchableHighlight>
         </View>
       </Modal>
@@ -348,7 +370,6 @@ const styles = StyleSheet.create({
   },
   sliderStyle: {
     width: '85%',
-    height: 30,
     alignSelf: 'center',
   },
   title: {
@@ -372,7 +393,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignSelf: 'center',
     bottom: 15,
-    height: normalize(25),
   },
   locationButton: {
     borderRadius: 5,
@@ -387,6 +407,7 @@ const styles = StyleSheet.create({
   locationText: {
     fontSize: normalize(14),
     fontWeight: '300',
+    textAlign: 'center',
   },
   icon: {
     position: 'absolute',
@@ -403,4 +424,5 @@ Location.propTypes = {
   update: PropTypes.func,
   cancel: PropTypes.func,
   visible: PropTypes.bool,
+  defaultLocation: PropTypes.object,
 }

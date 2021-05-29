@@ -19,8 +19,7 @@ export default class ButtonSwitch extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedIndex: this.props.selectMultiple ? -1 : 0, // Default value only for single choices
-      selectedIndexes: [],
+      selectedIndexes: this.props.multiSelect,
     }
     this.updateIndex = this.updateIndex.bind(this)
   }
@@ -29,62 +28,22 @@ export default class ButtonSwitch extends Component {
     // If allow users to select multiple buttons (ie. price)
     if (this.props.selectMultiple) {
       this.setState({ selectedIndexes: selectedIndex }, () => {
-        //  Turn array of indexes into array of desired values passed in as props
-        const priceArr = []
-        const tempSelectedIndexes = this.state.selectedIndexes
-        tempSelectedIndexes.forEach((index) => {
-          switch (index) {
-            case 0:
-              priceArr.push(this.props.value1)
-              break
-            case 1:
-              priceArr.push(this.props.value2)
-              break
-            case 2:
-              priceArr.push(this.props.value3)
-              break
-            case 3:
-              priceArr.push(this.props.value4)
-              break
-          }
-        })
-        this.props.onValueChange(priceArr)
+        this.props.onValueChange(this.state.selectedIndexes)
       })
-      return
     } else {
-      this.setState({ selectedIndex: selectedIndex })
-    }
-    if (selectedIndex == 0) {
-      this.props.onValueChange(this.props.value1)
-    } else if (selectedIndex == 1) {
-      this.props.onValueChange(this.props.value2)
-    } else if (selectedIndex == 2) {
-      this.props.onValueChange(this.props.value3)
-    } else if (selectedIndex == 3) {
-      this.props.onValueChange(this.props.value4)
+      this.props.onValueChange(this.props.values[selectedIndex])
     }
   }
 
   render() {
-    const buttons = [this.props.text1, this.props.text2]
-    if (this.props.text3) {
-      buttons.push(this.props.text3)
-    }
-    if (this.props.text4) {
-      buttons.push(this.props.text4)
-    }
-
-    if (this.props.text4) {
-      groupWidth = styles.containerWidth4
-    } else if (this.props.text3) {
-      groupWidth = styles.containerWidth3
-    } else {
-      groupWidth = styles.containerWidth2
-    }
+    const buttons = this.props.texts
+    if (buttons.length > 3) groupWidth = styles.containerWidth4
+    else if (buttons.length == 3) groupWidth = styles.containerWidth3
+    else groupWidth = styles.containerWidth2
     return (
       <ButtonGroup
         onPress={this.updateIndex}
-        selectedIndex={this.state.selectedIndex}
+        selectedIndex={this.props.select}
         selectedIndexes={this.state.selectedIndexes}
         buttons={buttons}
         //Styling
@@ -103,20 +62,19 @@ export default class ButtonSwitch extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    height: 40,
+    height: normalize(42),
     borderRadius: 10,
     borderWidth: 2,
     borderColor: colors.hex,
   },
   containerWidth2: {
-    width: 80,
+    width: normalize(80),
   },
   containerWidth3: {
-    width: 120,
+    width: normalize(120),
   },
   containerWidth4: {
-    // width: 180,
-    width: 200,
+    width: normalize(200),
   },
   innerBorder: {
     width: 0,
@@ -138,14 +96,8 @@ const styles = StyleSheet.create({
 ButtonSwitch.propTypes = {
   disabled: PropTypes.bool,
   onValueChange: PropTypes.func,
-  value1: PropTypes.string,
-  value2: PropTypes.string,
-  value3: PropTypes.string,
-  value4: PropTypes.string,
-  text1: PropTypes.string,
-  text2: PropTypes.string,
-  text3: PropTypes.string,
-  text4: PropTypes.string,
+  texts: PropTypes.array,
+  values: PropTypes.array,
   switchWidth: PropTypes.number,
   switchHeight: PropTypes.number,
   switchdirection: PropTypes.string,
@@ -158,4 +110,6 @@ ButtonSwitch.propTypes = {
   fontColor: PropTypes.string,
   activeFontColor: PropTypes.string,
   selectMultiple: PropTypes.bool,
+  multiSelect: PropTypes.array,
+  select: PropTypes.number,
 }

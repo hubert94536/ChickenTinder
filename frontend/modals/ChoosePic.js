@@ -9,7 +9,6 @@ import ImageCard from '../cards/ImageCard.js'
 import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
-import { ScrollView } from 'react-native-gesture-handler'
 
 const width = Dimensions.get('window').width
 
@@ -103,7 +102,16 @@ class ChoosePic extends React.Component {
             onShowUnderlay={() => this.setState({ done: true })}
             onHideUnderlay={() => this.setState({ done: false })}
           >
-            <Text style={[screenStyles.smallButtonText, styles.saveText, this.state.done ? screenStyles.hex : styles.white]}> Done</Text>
+            <Text
+              style={[
+                screenStyles.smallButtonText,
+                styles.saveText,
+                this.state.done ? screenStyles.hex : styles.white,
+              ]}
+            >
+              {' '}
+              Done
+            </Text>
           </TouchableHighlight>
         </View>
       </Modal>
@@ -138,7 +146,7 @@ const styles = StyleSheet.create({
   nameText: {
     marginBottom: '4%',
     color: colors.hex,
-    fontSize: normalize(18)
+    fontSize: normalize(18),
   },
   input: {
     color: '#7d7d7d',
@@ -156,7 +164,7 @@ const styles = StyleSheet.create({
     paddingTop: '5%',
     paddingBottom: '5%',
     color: 'white',
-    fontSize: normalize(18)
+    fontSize: normalize(18),
   },
   warningText: {
     color: colors.hex,

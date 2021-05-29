@@ -1,11 +1,10 @@
 import React from 'react'
 import { PermissionsAndroid, StyleSheet, Text, View } from 'react-native'
-// import { BlurView } from '@react-native-community/blur'
 import Geolocation from 'react-native-geolocation-service'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
 import ChooseFriends from '../modals/ChooseFriends.js'
-import Socket from '../apis/socket.js'
+import socket from '../apis/socket.js'
 import FilterButton from '../FilterButton.js'
 import colors from '../../styles/colors.js'
 import Location from '../modals/ChooseLocation.js'
@@ -16,6 +15,7 @@ import Majority from '../modals/ChooseMajority.js'
 import screenStyles from '../../styles/screenStyles.js'
 import { FlatList } from 'react-native-gesture-handler'
 import CategoryCard from '../cards/CategoryCard.js'
+import normalize from '../../styles/normalize.js'
 
 const font = 'CircularStd-Medium'
 
@@ -66,13 +66,13 @@ class FilterSelector extends React.Component {
     super(props)
     this.state = {
       // Set filters
-      s_majority: null,
-      s_size: null,
-      s_radius: null,
+      s_majority: Math.ceil(this.props.members.length * 0.5),
+      s_size: 10,
+      s_radius: 5.5 * 1600,
       s_location: null,
-      s_time: null,
-      s_price: null,
-
+      s_time: Math.floor(Date.now() / 1000),
+      s_price: [],
+      // Default filter settings
       selectedCuisine: [],
       selectedPrice: [],
       selectedRestriction: [],
@@ -85,6 +85,13 @@ class FilterSelector extends React.Component {
       chooseTime: false,
       choosePrice: false,
 
+      // BUTTONS
+      majorityButton: false,
+      sizeButton: false,
+      locationButton: false,
+      timeButton: false,
+      priceButton: false,
+
       // ALERTS
       locationAlert: false,
 
@@ -93,24 +100,6 @@ class FilterSelector extends React.Component {
     }
 
     cuisines.forEach((item) => (s_categories[item] = false))
-    if (requestLocationPermission()) {
-      Geolocation.getCurrentPosition(
-        (position) => {
-          this.setState({
-            defaultLocation: {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-            },
-          })
-        },
-        (error) => {
-          console.log(error.code, error.message)
-        },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-      )
-    } else {
-      console.log('filter.js: Failed to get location')
-    }
   }
 
   // asks user for permission and get location as the component mounts
@@ -226,31 +215,22 @@ class FilterSelector extends React.Component {
   evaluateFilters(session) {
     const filters = {}
     filters.groupSize = this.props.members.length
-
-    // Default filter settings
-    let d_majority = Math.ceil(this.props.members.length * 0.75)
-    let d_size = 10
-    let d_radius = 5.5 * 1600
-    let d_time = Math.floor(Date.now() / 1000)
-    let d_price = ''
-
-    filters.majority = this.state.s_majority ? this.state.s_majority : d_majority
-
-    filters.limit = this.state.s_size ? this.state.s_size : d_size
-
+    filters.majority = this.state.s_majority
+    filters.limit = this.state.s_size
     if (this.state.s_location != null) {
       filters.radius = this.state.s_radius * 1600
       filters.latitude = this.state.s_location.latitude
       filters.longitude = this.state.s_location.longitude
     } else {
-      filters.radius = d_radius
+      filters.radius = this.state.s_radius
       filters.latitude = this.state.d_location.latitude
       filters.longitude = this.state.d_location.longitude
     }
-
-    filters.open_at = this.state.s_time ? this.state.s_time : d_time
-
-    filters.price = this.state.s_price ? this.state.s_price : d_price
+    filters.open_at = this.state.s_time
+    filters.price = this.state.s_price
+      .map((idx) => idx + 1)
+      .sort()
+      .toString()
 
     // CATEGORIES
     const selections = []
@@ -259,9 +239,8 @@ class FilterSelector extends React.Component {
     }
 
     filters.categories = this.categorize(selections)
-
     if (this.props.isHost) {
-      Socket.startSession(filters, session)
+      socket.startSession(filters, session)
     }
     this.props.buttonDisable(false)
   }
@@ -278,7 +257,7 @@ class FilterSelector extends React.Component {
     for (const [key, value] of Object.entries(s_categories)) if (value) selections.push(key)
     filters.categories = this.categorize(selections)
     console.log('userfilters: ' + JSON.stringify(filters.categories))
-    Socket.submitFilters(filters.categories)
+    socket.submitFilters(filters.categories)
     this.props.handleUpdate()
     this.props.buttonDisable(false)
   }
@@ -303,7 +282,7 @@ class FilterSelector extends React.Component {
             >
               {/* Majority Button */}
               <FilterButton
-                active={this.state.s_majority != null}
+                active={this.state.majorityButton}
                 onPress={() => {
                   this.setState({ chooseMajority: true })
                   this.props.setBlur(true)
@@ -313,7 +292,7 @@ class FilterSelector extends React.Component {
 
               {/* Round Size Button */}
               <FilterButton
-                active={this.state.s_size != null}
+                active={this.state.sizeButton}
                 onPress={() => {
                   this.setState({ chooseSize: true })
                   this.props.setBlur(true)
@@ -323,7 +302,7 @@ class FilterSelector extends React.Component {
 
               {/* Location Button */}
               <FilterButton
-                active={this.state.s_location != null}
+                active={this.state.locationButton}
                 onPress={() => {
                   this.setState({ chooseLocation: true })
                   this.props.setBlur(true)
@@ -333,7 +312,7 @@ class FilterSelector extends React.Component {
 
               {/* Time */}
               <FilterButton
-                active={this.state.s_time != null}
+                active={this.state.timeButton}
                 onPress={() => {
                   this.setState({ chooseTime: true })
                   this.props.setBlur(true)
@@ -343,7 +322,7 @@ class FilterSelector extends React.Component {
 
               {/* Price */}
               <FilterButton
-                active={this.state.s_price != null}
+                active={this.state.priceButton}
                 onPress={() => {
                   this.setState({ choosePrice: true })
                   this.props.setBlur(true)
@@ -352,7 +331,7 @@ class FilterSelector extends React.Component {
               />
             </View>
           )}
-          <View style={{ paddingTop: '5%' }}>
+          <View style={{ paddingTop: '3%' }}>
             <View style={{ flexDirection: 'row' }}>
               <Text style={[screenStyles.text, styles.filterTitleText]}>Cuisines</Text>
               <Text style={styles.filterSubtext}>Select all that apply</Text>
@@ -385,7 +364,7 @@ class FilterSelector extends React.Component {
             title="Location Required"
             body="Your location is required to find nearby restuarants"
             buttonAff="Close"
-            height="23%"
+            height="25%"
             press={() => {
               this.setState({ locationAlert: false })
               this.props.setBlur(false)
@@ -397,24 +376,6 @@ class FilterSelector extends React.Component {
             visible={this.state.locationAlert}
           />
         )}
-        {/* {this.props.error && (
-          <Alert
-            title="Error, please try again"
-            buttonAff="Close"
-            height="20%"
-            blur
-            press={() => {
-              this.props.hideError()
-              this.props.setBlur(false)
-            }}
-            cancel={() => {
-              this.props.hideError()
-              this.props.setBlur(false)
-            }}
-            visible={this.props.error} 
-          />
-        )}*/}
-
         {/* ------------------------------------------MODALS------------------------------------------ */}
         <ChooseFriends
           visible={this.state.chooseFriends}
@@ -424,45 +385,46 @@ class FilterSelector extends React.Component {
             this.props.setBlur(false)
           }}
         />
-
         <Majority
           max={this.props.members.length}
           title={'Majority'}
           filterSubtext={'Choose the number of members needed to get a match'}
           visible={this.state.chooseMajority}
-          cancel={(clear) => {
-            this.setState({ chooseMajority: false })
+          cancel={() => {
+            this.setState({
+              chooseMajority: false,
+              majorityButton: false,
+              s_majority: Math.ceil(this.props.members.length * 0.5),
+            })
             this.props.setBlur(false)
-            if (clear) this.setState({ s_majority: null })
           }}
           press={(value) => {
-            this.setState({ s_majority: value, chooseMajority: false })
+            this.setState({ s_majority: value, chooseMajority: false, majorityButton: true })
             this.props.setBlur(false)
           }}
         />
-
         <Size
           max={50}
-          title={'Round Size'}
-          filterSubtext={'Choose the max number of restaurants to swipe through'}
           visible={this.state.chooseSize}
-          cancel={(clear) => {
-            this.setState({ chooseSize: false })
+          cancel={() => {
+            this.setState({ s_size: 10, chooseSize: false, sizeButton: false })
             this.props.setBlur(false)
-            if (clear) this.setState({ s_size: null })
           }}
           press={(value) => {
-            this.setState({ s_size: value, chooseSize: false })
+            this.setState({ s_size: value, chooseSize: false, sizeButton: true })
             this.props.setBlur(false)
           }}
         />
 
         <Time
           visible={this.state.chooseTime}
-          cancel={(clear) => {
-            this.setState({ chooseTime: false })
+          cancel={() => {
+            this.setState({
+              chooseTime: false,
+              timeButton: false,
+              s_time: Math.floor(Date.now() / 1000),
+            })
             this.props.setBlur(false)
-            if (clear) this.setState({ s_time: null })
           }}
           press={(hr, min) => {
             // TODO: Add checking for dates/times in the past
@@ -471,36 +433,38 @@ class FilterSelector extends React.Component {
             let yy = date.getFullYear()
             let tz = date.getTimezoneOffset()
             let time = Date.UTC(yy, mm, dd, hr, min + tz) / 1000
-            this.setState({ s_time: time, chooseTime: false })
+            this.setState({ s_time: time, chooseTime: false, timeButton: true })
             this.props.setBlur(false)
           }}
         />
 
         <Price
           visible={this.state.choosePrice}
-          cancel={(clear) => {
-            this.setState({ choosePrice: false })
+          cancel={() => {
+            this.setState({ s_price: [], choosePrice: false, priceButton: false })
             this.props.setBlur(false)
-            if (clear) this.setState({ s_price: null })
           }}
           press={(prices) => {
-            this.setState({ s_price: prices, choosePrice: false })
+            this.setState({ s_price: prices, choosePrice: false, priceButton: true })
             this.props.setBlur(false)
           }}
         />
 
         <Location
           visible={this.state.chooseLocation}
+          defaultLocation={this.state.d_location}
+          key={this.state.d_location}
           update={(dist, loc) => {
             this.setState({
               chooseLocation: false,
               s_radius: dist,
               s_location: loc,
+              locationButton: true,
             })
             this.props.setBlur(false)
           }}
           cancel={() => {
-            this.setState({ chooseLocation: false })
+            this.setState({ chooseLocation: false, locationButton: false, s_location: null })
             this.props.setBlur(false)
           }}
         />
@@ -528,55 +492,19 @@ const styles = StyleSheet.create({
     backgroundColor: BACKGROUND_COLOR,
     justifyContent: 'space-between',
   },
-  titles: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginLeft: '5%',
-    marginRight: '5%',
-  },
-  titleContainer: {
-    marginTop: '3%',
-    marginBottom: '1%',
-  },
-  swiperContainer: {
-    height: '100%',
-    backgroundColor: BACKGROUND_COLOR,
-    justifyContent: 'flex-start',
-  },
-  filterGroupContainer: {
-    marginLeft: '5%',
-    marginRight: '5%',
-    flex: 1,
-    justifyContent: 'flex-start',
-  },
-  bigFilterGroupContainer: {
-    marginLeft: '5%',
-    marginRight: '5%',
-    flex: 1,
-    flexGrow: 2,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-  },
   filterTitleText: {
-    fontSize: 20,
+    fontSize: normalize(20),
     color: TEXT_COLOR,
     textAlign: 'center',
   },
   filterSubtext: {
     color: TEXT_COLOR,
-    fontSize: 12,
+    fontSize: normalize(12),
     fontFamily: font,
     fontWeight: '100',
     alignSelf: 'center',
     marginLeft: '4%',
     marginTop: '1%',
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingVertical: 5,
   },
 })
 

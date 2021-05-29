@@ -214,10 +214,10 @@ class Card extends React.Component {
         {this.state.deleteFriend && (
           <Alert
             title={'Unfriend ' + this.props.name}
-            body="If you change your mind, you'll have to send a friends request again."
+            body="If you change your mind, you'll have to request again."
             buttonAff="Unfriend"
             buttonNeg="Cancel"
-            height="28%"
+            height="25%"
             twoButton
             press={() => {
               this.deleteFriend()
@@ -228,16 +228,6 @@ class Card extends React.Component {
             }}
           />
         )}
-        {/* {this.props.error && (
-          <Alert
-            title="Error, please try again"
-            buttonAff="Close"
-            height="20%"
-            blur
-            press={() => this.props.hideError()}
-            cancel={() => this.props.hideError()}
-          />
-        )} */}
       </View>
     )
   }
@@ -287,7 +277,7 @@ Card.propTypes = {
 }
 
 const styles = StyleSheet.create({
-  container: { flexDirection: 'row', flex: 1, width: '85%', alignSelf: 'center' },
+  container: { flexDirection: 'row', flex: 1, width: '90%', alignSelf: 'center' },
   info: {
     alignSelf: 'center',
     marginLeft: '1%',

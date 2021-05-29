@@ -55,7 +55,7 @@
     "react-native-keyboard-aware-scroll-view": "^0.9.3",
     "react-native-maps": "^0.27.1",
     "react-native-paper": "^4.7.2",
-    "react-native-push-notification": "^7.0.0",
+    "react-native-push-notification": "^7.3.0",
     "react-native-safe-area-context": "^3.1.8",
     "react-native-screens": "^2.11.0",
     "react-native-svg": "^12.1.0",
@@ -69,7 +69,7 @@
     "react-navigation-stack": "^2.8.3",
     "react-redux": "^7.2.2",
     "react-verification-code-input": "^1.2.9",
-    "redis": "^3.0.2",
+    "redis": "^3.1.2",
     "redis-lock": "^0.1.4",
     "redis-mock": "^0.56.3",
     "redux": "^4.0.5",
@@ -79,13 +79,15 @@
     "socket.io-client": "^2.3.0",
     "socketio-auth": "^0.1.1",
     "switch-button-react-native": "^1.0.3",
-    "underscore": "^1.12.0",
-    "util": "^0.12.3"
+    "underscore": "^1.13.1",
+    "util": "^0.12.3",
+    "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
     "@react-native-community/checkbox": "^0.5.7",
     "@testing-library/react-native": "^7.1.0",
     "babel-eslint": "^10.1.0",
+    "engine.io-client": "^5.1.0",
     "eslint": "^7.14.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-prettier": "^3.1.4",
@@ -95,7 +97,8 @@
     "patch-package": "^6.2.2",
     "prettier": "^2.1.2",
     "react-test-renderer": "^17.0.1",
-    "symbol-observable": "^4.0.0"
+    "symbol-observable": "^4.0.0",
+    "xmlhttprequest-ssl": "^1.6.2"
   },
   "jest": {
     "preset": "react-native",

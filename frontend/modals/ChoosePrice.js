@@ -15,21 +15,19 @@ export default class Price extends React.Component {
     super(props)
     this.state = {
       selectedPrice: [],
+      pressed: false,
     }
   }
 
   // function called when main button is pressed
   handlePress() {
-    let prices = this.state.selectedPrice
-      .map((item) => item.length)
-      .sort()
-      .toString()
-    this.props.press(prices)
+    this.props.press(this.state.selectedPrice)
   }
 
   //  function called when 'x' is pressed
   handleCancel() {
-    this.props.cancel(true)
+    this.setState({ selectedPrice: [] })
+    this.props.cancel()
   }
 
   evaluate = _.debounce(this.handlePress.bind(this), 200)
@@ -51,18 +49,13 @@ export default class Price extends React.Component {
             <View style={modalStyles.error}>
               <View style={styles.filterGroupContainer}>
                 <View style={{ flexDirection: 'row' }}>
-                  <Text>Select all that apply</Text>
+                  <Text style={styles.selectMargin}>Select all that apply</Text>
                 </View>
                 <ButtonSwitch
-                  text1="$"
-                  text2="$$"
-                  text3="$$$"
-                  text4="$$$$"
-                  value1="$"
-                  value2="$$"
-                  value3="$$$"
-                  value4="$$$$"
+                  texts={['$', '$$', '$$$', '$$$$']}
+                  values={['$', '$$', '$$$', '$$$$']}
                   selectMultiple={true}
+                  multiSelect={this.state.selectedPrice}
                   onValueChange={(priceArr) => {
                     this.setState({ selectedPrice: priceArr })
                   }}
@@ -70,10 +63,21 @@ export default class Price extends React.Component {
               </View>
             </View>
             <TouchableHighlight
+              onShowUnderlay={() => this.setState({ pressed: true })}
+              onHideUnderlay={() => this.setState({ pressed: false })}
+              underlayColor="white"
               style={[modalStyles.doneButton, styles.doneButtonMargin]}
               onPress={() => this.evaluate()}
             >
-              <Text style={[screenStyles.text, modalStyles.doneText]}>Done</Text>
+              <Text
+                style={[
+                  screenStyles.text,
+                  modalStyles.doneText,
+                  this.state.pressed ? screenStyles.hex : screenStyles.white,
+                ]}
+              >
+                Done
+              </Text>
             </TouchableHighlight>
           </View>
         </View>
@@ -105,6 +109,9 @@ const styles = StyleSheet.create({
   },
   doneButtonMargin: {
     marginTop: '6%',
+  },
+  selectMargin: {
+    marginBottom: '4%',
   },
 })
 
