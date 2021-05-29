@@ -22,6 +22,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import { ZIP_ID, ZIP_TOKEN } from 'react-native-dotenv'
 import _ from 'lodash'
 
+const fullHeight = Dimensions.get('window').height
 const fullWidth = Dimensions.get('window').width
 
 const SmartyStreetsSDK = require('smartystreets-javascript-sdk')
@@ -328,13 +329,14 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 14,
     overflow: 'hidden',
-    marginTop: fullWidth * 0.2126,
-    marginBottom: fullWidth * 0.2126,
-    height: fullWidth * 1.508,
+    marginTop: fullHeight * 0.11,
+    marginBottom: fullHeight * 0.11,
+    height: fullHeight* 0.78,
     width: fullWidth * 0.8,
   },
   map: {
-    height: fullWidth * 1.8947,
+    // height: fullWidth * 1.8947,
+    height: fullHeight * 0.98,
     width: fullWidth * 0.8,
   },
   buttonColor: {

@@ -277,6 +277,7 @@ class UserProfileView extends Component {
     return (
       <ImageBackground
         style={screenStyles.screenBackground}
+        imageStyle={{resizeMode:'stretch'}}
         source={require('../assets/backgrounds/Profile.png')}
       >
         <View>

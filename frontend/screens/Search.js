@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { changeFriends, hideError, hideRefresh, showError, showRefresh } from '../redux/Actions.js'
 import { connect } from 'react-redux'
-import { Dimensions, FlatList, ImageBackground, StyleSheet, Text } from 'react-native'
+import { Dimensions, FlatList, ImageBackground, StyleSheet, Text} from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import { SearchBar } from 'react-native-elements'
 import PropTypes from 'prop-types'
@@ -157,7 +157,8 @@ class Search extends Component {
     return (
       <ImageBackground
         source={require('../assets/backgrounds/Search.png')}
-        style={[screenStyles.screenBackground]}
+        imageStyle={{resizeMode:'stretch'}}
+        style={screenStyles.screenBackground}
       >
         <Text style={[screenStyles.icons, styles.title]}>Find friends</Text>
         <FlatList
@@ -205,13 +206,13 @@ class Search extends Component {
             cancel={() => this.setState({ errorAlert: false })}
           />
         )}
-        <TabBar
-          goHome={() => this.props.navigation.replace('Home')}
-          goSearch={() => {}}
-          goNotifs={() => this.props.navigation.replace('Notifications')}
-          goProfile={() => this.props.navigation.replace('Profile')}
-          cur="Search"
-        />
+          <TabBar
+            goHome={() => this.props.navigation.replace('Home')}
+            goSearch={() => {}}
+            goNotifs={() => this.props.navigation.replace('Notifications')}
+            goProfile={() => this.props.navigation.replace('Profile')}
+            cur="Search"
+          />
       </ImageBackground>
     )
   }

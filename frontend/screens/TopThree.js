@@ -29,6 +29,7 @@ import { updateSession, setHost, setMatch, showRefresh, hideRefresh } from '../r
 import _ from 'lodash'
 
 const width = Dimensions.get('window').width
+const height = Dimensions.get('window').height
 
 class TopThree extends React.Component {
   constructor(props) {
@@ -257,7 +258,10 @@ class TopThree extends React.Component {
               styles.submitButton
             ]}
           >
-            <Text style={[screenStyles.medButtonText, styles.submit, this.state.pressed ? screenStyles.hex : styles.white]}>Submit</Text>
+            <Text style={[screenStyles.medButtonText, 
+                          styles.submit, 
+                          this.state.pressed ? screenStyles.hex : styles.white]}>
+            Submit</Text>
           </TouchableHighlight>
         )}
         {!this.props.isHost && (
@@ -267,7 +271,10 @@ class TopThree extends React.Component {
             style={[screenStyles.bigButton, styles.waiting]}
           >
             <Text
-              style={[screenStyles.medButtonText, styles.waitingText, styles.white, styles.submit]}
+              style={[screenStyles.medButtonText, 
+                      styles.waitingText, 
+                      styles.white, 
+                      styles.submit]}
             >
               Waiting for Host...
             </Text>
@@ -401,7 +408,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: '10%',
+    marginBottom: height * 0.05,
   },
   randomText: { fontSize: normalize(23), fontWeight: 'bold' },
   submit: {
@@ -413,6 +420,7 @@ const styles = StyleSheet.create({
     width: '45%',
     borderColor: colors.hex,
     backgroundColor: colors.hex,
+    marginBottom:'-15%'
   },
   waiting: {
     borderColor: colors.hex,

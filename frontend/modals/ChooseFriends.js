@@ -14,6 +14,7 @@ import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
 
+const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
 
 //  little pop up modal that is showed when you click choose friends in filters
@@ -169,25 +170,27 @@ ChooseFriends.propTypes = {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    height: width * 1.9333,
+    // height: width * 1.9333,
+    height: height,
     alignSelf: 'center',
     width: '90%',
   },
   main: {
     flex: 1,
-    height: width * 1.5467,
+    // height: width * 1.5467,
+    height: height * 0.8,
     backgroundColor: 'white',
     alignSelf: 'center',
     borderRadius: 10,
     elevation: 20,
   },
   header: {
-    height: '9%',
+    height: width * 0.14,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   header2: {
-    height: '4.5%',
+    height: height * 0.035,
     flexDirection: 'row',
     justifyContent: 'flex-start',
   },

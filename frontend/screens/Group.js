@@ -686,7 +686,7 @@ const styles = StyleSheet.create({
   },
   footerContainer: {
     fontFamily: font,
-    height: windowHeight * 0.06,
+    height: windowWidth * 0.116,
     backgroundColor: 'white',
     marginTop: '-1%',
     borderBottomLeftRadius: 15,

@@ -31,6 +31,7 @@ import {
 import socket from '../apis/socket.js'
 
 const width = Dimensions.get('window').width
+const height = Dimensions.get('window').height
 
 // the card for the restaurant match
 class Match extends React.Component {
@@ -91,7 +92,10 @@ class Match extends React.Component {
           style={[screenStyles.bigButton, styles.yelpButton]}
           onPress={() => Linking.openURL(this.props.match.url)}
         >
-          <Text style={[screenStyles.bigButtonText, this.state.pressedYelp ? screenStyles.hex : styles.white, styles.buttonText]}>Open on Yelp</Text>
+          <Text style={[screenStyles.bigButtonText, 
+                        this.state.pressedYelp ? screenStyles.hex : styles.white, 
+                        styles.buttonText]}>
+          Open on Yelp</Text>
         </TouchableHighlight>
         {this.props.match.phone !== '' && (
           <TouchableHighlight
@@ -102,7 +106,9 @@ class Match extends React.Component {
             style={[screenStyles.bigButton, styles.callButton]}
             onPress={() => Linking.openURL(`tel:${this.props.match.phone}`)}
           >
-            <Text style={[screenStyles.bigButtonText, this.state.pressedPhone ? styles.white : screenStyles.hex, styles.buttonText]}>
+            <Text style={[screenStyles.bigButtonText, 
+                          this.state.pressedPhone ? styles.white : screenStyles.hex, 
+                          styles.buttonText]}>
               Call: {this.props.match.phone}
             </Text>
           </TouchableHighlight>
@@ -210,18 +216,18 @@ const styles = StyleSheet.create({
   map: {
     alignSelf: 'center',
     justifyContent: 'flex-end',
-    height: width * 0.7733,
+    height: height * 0.4,
     width: width * 0.82,
   },
   //Styling for Google map for restaurant
   /* For "Open on Yelp" button */
   yelpButton: {
     backgroundColor: colors.hex,
-    height: '5%',
+    height: height * 0.05,
     justifyContent: 'center',
     alignSelf: 'center',
     borderColor: colors.hex,
-    marginTop: '8%',
+    marginTop: height * 0.07,
     marginBottom: '2%'
   },
   /* For "Call number" button */
@@ -245,6 +251,6 @@ const styles = StyleSheet.create({
   white: { color: 'white' },
   buttonText: {
     paddingTop: '3%',
-    paddingBottom: '3%'
+    paddingBottom: '2%'
   }
 })

@@ -1,5 +1,5 @@
 import React from 'react'
-import { ActivityIndicator, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { ActivityIndicator, Dimensions, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { BlurView } from '@react-native-community/blur'
@@ -25,6 +25,8 @@ import {
   hideDisable,
   hideRefresh,
 } from '../redux/Actions.js'
+
+const height = Dimensions.get('window').height
 
 class Round extends React.Component {
   constructor(props) {
@@ -251,7 +253,8 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   card: { justifyContent: 'center' },
-  topMargin: { marginTop: '7%' },
+  // topMargin: { marginTop: '7%' },
+  topMargin: { marginTop: height * 0.035 },
   title: {
     fontSize: normalize(20),
     fontWeight: 'bold',
@@ -276,7 +279,8 @@ const styles = StyleSheet.create({
   left: { fontSize: normalize(12) },
   leftArrow: { fontSize: normalize(15), marginRight: '1%' },
   background: { backgroundColor: 'transparent' },
-  x: { color: '#6A6A6A', fontSize: normalize(45), marginTop:'-3%' },
+  // x: { color: '#6A6A6A', fontSize: normalize(45), marginTop:'-3%' },
+  x: { color: '#6A6A6A', fontSize: normalize(45), marginTop:'-6%' },
   rightArrow: { fontSize: normalize(15), marginLeft: '1%' },
-  heart: { fontSize: normalize(35) },
+  heart: { fontSize: normalize(35), marginTop:'-3%' },
 })
