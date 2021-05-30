@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import colors from '../styles/colors.js'
 
-const height = Dimensions.get('window').height
+const width = Dimensions.get('window').width
 
 class TabBar extends React.Component {
   componentDidMount() {
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     width: '90%',
     marginBottom: '4%',
     alignSelf: 'center',
-    height: height * 0.07,
+    height: width * 0.1353,
     backgroundColor: '#fff2f2',
     alignItems: 'center',
     borderRadius: 10,
