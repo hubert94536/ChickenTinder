@@ -107,7 +107,7 @@ class Notif extends Component {
 
   // function to add NotifCards to this.state.requestNotifs and activityNotifs
   addNotifs() {
-    console.log(this.state.notifs)
+    console.log(this.state.notifs.length)
     let requested = []
     let active = []
     this.state.notifs.sort(
@@ -139,9 +139,13 @@ class Notif extends Component {
             />,
           )
           if (this.state.notifs[i].type === 'friends') {
-            //someone sent you a request
-            var newArr = []
+            var present = false
+            var new_friends = []
+            // checking if we already had this friend in the array
             for (var j = 0; i < this.props.friends.friends.length; i++) {
+              if (this.props.friends.friends[j].uid === this.state.notifs[i].sender) {
+                present = true
+              }
               var person = {
                 name: this.props.friends.friends[j].name,
                 username: this.props.friends.friends[j].username,
@@ -149,25 +153,51 @@ class Notif extends Component {
                 uid: this.props.friends.friends[j].uid,
                 status: this.props.friends.friends[j].status,
               }
-              newArr.push(person)
+              new_friends.push(person)
             }
-            var addPerson = {
-              name: this.state.notifs[i].senderName,
-              username: this.state.notifs[i].senderUsername,
-              photo: this.state.notifs[i].senderPhoto,
-              uid: this.state.notifs[i].sender,
-              status: 'pending',
+            // if this is a new friend, add to friends
+            if(!present) {
+              var friend = {
+                name: this.state.notifs[i].senderName,
+                username: this.state.notifs[i].senderUsername,
+                photo: this.state.notifs[i].senderPhoto,
+                uid: this.state.notifs[i].sender,
+                status: 'friends',
+              }
+              new_friends.push(friend)
+              this.props.changeFriends(new_friends)
             }
-            newArr.push(addPerson)
-            this.props.changeFriends(newArr)
-          } else {
-            //you accepted someones request
-            var arr = this.props.friends.friends.filter((item) => {
-              if (item.username === this.state.notifs[i].senderUsername) item.status = 'friends'
-              return item
-            })
-            this.props.changeFriends(arr)
           }
+          // if (this.state.notifs[i].type === 'friends') {
+          //   //someone sent you a request
+          //   var newArr = []
+          //   for (var j = 0; i < this.props.friends.friends.length; i++) {
+          //     var person = {
+          //       name: this.props.friends.friends[j].name,
+          //       username: this.props.friends.friends[j].username,
+          //       photo: this.props.friends.friends[j].photo,
+          //       uid: this.props.friends.friends[j].uid,
+          //       status: this.props.friends.friends[j].status,
+          //     }
+          //     newArr.push(person)
+          //   }
+          //   var addPerson = {
+          //     name: this.state.notifs[i].senderName,
+          //     username: this.state.notifs[i].senderUsername,
+          //     photo: this.state.notifs[i].senderPhoto,
+          //     uid: this.state.notifs[i].sender,
+          //     status: 'pending',
+          //   }
+          //   newArr.push(addPerson)
+          //   this.props.changeFriends(newArr)
+          // } else {
+          //   //you accepted someones request
+          //   var arr = this.props.friends.friends.filter((item) => {
+          //     if (item.username === this.state.notifs[i].senderUsername) item.status = 'friends'
+          //     return item
+          //   })
+          //   this.props.changeFriends(arr)
+          // }
         } else {
           active.push(
             <NotifCard
@@ -194,7 +224,6 @@ class Notif extends Component {
 
   // when you accept a friend request it changes the notification
   modifyList(uid, id) {
-    console.log('accept' + uid)
     this.props.setDisable()
     friendsApi
       .acceptFriendRequest(uid)
@@ -206,7 +235,6 @@ class Notif extends Component {
             filteredArray[i].type = 'friends'
           }
         }
-        console.log(filteredArray)
         this.setState({notifs: filteredArray}, this.addNotifs)
         this.props.hideDisable()
       })
