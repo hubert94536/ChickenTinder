@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { changeFriends, hideError, hideRefresh, showError, showRefresh } from '../redux/Actions.js'
 import { connect } from 'react-redux'
-import { Dimensions, FlatList, ImageBackground, StyleSheet, Text } from 'react-native'
+import { Dimensions, FlatList, ImageBackground, StyleSheet, Text} from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import { SearchBar } from 'react-native-elements'
 import PropTypes from 'prop-types'
@@ -13,6 +13,8 @@ import friendsApi from '../apis/friendsApi.js'
 import modalStyles from '../../styles/modalStyles.js'
 import screenStyles from '../../styles/screenStyles.js'
 import TabBar from '../Nav.js'
+
+const width = Dimensions.get('window').width
 
 // Used to make refreshing indicator appear/disappear
 const sleep = (milliseconds) => {
@@ -155,7 +157,8 @@ class Search extends Component {
     return (
       <ImageBackground
         source={require('../assets/backgrounds/Search.png')}
-        style={[screenStyles.screenBackground]}
+        imageStyle={{resizeMode:'stretch'}}
+        style={screenStyles.screenBackground}
       >
         <Text style={[screenStyles.icons, styles.title]}>Find friends</Text>
         <FlatList
@@ -204,13 +207,13 @@ class Search extends Component {
             cancel={() => this.setState({ errorAlert: false })}
           />
         )}
-        <TabBar
-          goHome={() => this.props.navigation.replace('Home')}
-          goSearch={() => {}}
-          goNotifs={() => this.props.navigation.replace('Notifications')}
-          goProfile={() => this.props.navigation.replace('Profile')}
-          cur="Search"
-        />
+          <TabBar
+            goHome={() => this.props.navigation.replace('Home')}
+            goSearch={() => {}}
+            goNotifs={() => this.props.navigation.replace('Notifications')}
+            goProfile={() => this.props.navigation.replace('Profile')}
+            cur="Search"
+          />
       </ImageBackground>
     )
   }
@@ -266,11 +269,11 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
     borderTopColor: 'transparent',
     width: '95%',
-    height: Dimensions.get('window').height * 0.08,
+    height: width * 0.1546,
     alignSelf: 'center',
   },
   inputContainer: {
-    height: Dimensions.get('window').height * 0.05,
+    height: width * 0.0966,
     width: '90%',
     alignSelf: 'center',
     backgroundColor: '#e7e7e7',

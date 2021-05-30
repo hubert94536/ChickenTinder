@@ -18,6 +18,9 @@ import imgStyles from '../../styles/cardImage.js'
 import getCuisine from '../assets/cards/foodImages.js'
 import normalize from '../../styles/normalize.js'
 
+const height = Dimensions.get('window').height
+const width = Dimensions.get('window').width
+
 export default class RoundCard extends React.Component {
   constructor(props) {
     super(props)
@@ -113,7 +116,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderWidth: 0,
     borderColor: '#000',
-    aspectRatio: 5 / 7.5,
+    // aspectRatio: 5 / 7.5,
+    aspectRatio: width * 1.29 / height,
     elevation: 10,
     overflow: 'hidden',
   },

@@ -8,6 +8,9 @@ import getCuisine from '../assets/matchcard/foodImages.js'
 import imgStyles from '../../styles/cardImage.js'
 import normalize from '../../styles/normalize.js'
 
+const height = Dimensions.get('window').height
+const width = Dimensions.get('window').width
+
 export default class MatchCard extends React.Component {
   constructor(props) {
     super(props)

@@ -30,7 +30,7 @@ import {
   hideRefresh,
 } from '../redux/Actions.js'
 
-const height = Dimensions.get('window').height
+const width = Dimensions.get('window').width
 
 class Loading extends React.Component {
   constructor(props) {
@@ -260,8 +260,8 @@ const styles = StyleSheet.create({
   },
   gif: {
     alignSelf: 'center',
-    width: height * 0.28,
-    height: height * 0.35,
+    width: width * 0.5413,
+    height: width * 0.6767,
     marginBottom: '15%',
   },
   general: {
