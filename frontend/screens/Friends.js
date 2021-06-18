@@ -238,6 +238,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flexDirection: 'column',
+    height: width * 0.75,
   },
   sadFace: {
     fontSize: normalize(72),
