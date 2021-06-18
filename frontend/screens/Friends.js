@@ -17,7 +17,6 @@ const sleep = (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds))
 }
 
-const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
 
 class Friends extends React.Component {
@@ -239,6 +238,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flexDirection: 'column',
+    height: width * 0.75,
   },
   sadFace: {
     fontSize: normalize(72),
@@ -259,10 +259,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: normalize(16),
     color: 'grey',
-  },
-  gif: {
-    alignSelf: 'center',
-    width: height * 0.3,
-    height: height * 0.4,
   },
 })

@@ -7,11 +7,13 @@ import screenStyles from '../../styles/screenStyles.js'
 import Icon from 'react-native-vector-icons/AntDesign'
 import _ from 'lodash'
 
+const width = Dimensions.get('window').width
+
 export default class Size extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedSize: this.props.select,
+      selectedSize: 10,
       invalidSize: false,
       pressed: false,
     }
@@ -24,12 +26,11 @@ export default class Size extends React.Component {
 
   //  function called when 'x' is pressed
   handleCancel() {
-    let invalid = this.state.invalidSize
     this.setState({
-      selectedSize: '',
+      selectedSize: 10,
       invalidSize: false,
     })
-    this.props.cancel(invalid)
+    this.props.cancel()
   }
 
   evaluate() {
@@ -61,16 +62,8 @@ export default class Size extends React.Component {
             </Text>
             <View style={modalStyles.inputContainer}>
               <ButtonSwitch
-                text1="10"
-                text2="20"
-                text3="30"
-                text4="40"
-                text5="50"
-                value1="10"
-                value2="20"
-                value3="30"
-                value4="40"
-                value5="50"
+                texts={['10', '20', '30', '40', '50']}
+                values={['10', '20', '30', '40', '50']}
                 select={this.state.selectedSize / 10 - 1}
                 onValueChange={(size) => {
                   this.setState({ selectedSize: size })
@@ -121,7 +114,7 @@ export default class Size extends React.Component {
 
 const styles = StyleSheet.create({
   mainContainerHeight: {
-    height: Dimensions.get('window').height * 0.3,
+    height: width * 0.58,
   },
   errorMargin: {
     marginTop: '2%',

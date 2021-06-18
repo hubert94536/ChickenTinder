@@ -107,7 +107,7 @@ module.exports = (io) => {
             }
             done()
           })
-        }
+        } else socket.emit('reconnect')
       } catch (err) {
         console.error(err)
       }

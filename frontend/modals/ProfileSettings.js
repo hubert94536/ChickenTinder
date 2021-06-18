@@ -16,7 +16,7 @@ import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 
-const height = Dimensions.get('window').height
+const width = Dimensions.get('window').width
 
 export default class Settings extends React.Component {
   constructor(props) {
@@ -130,7 +130,7 @@ export default class Settings extends React.Component {
 
 const styles = StyleSheet.create({
   modal: {
-    height: height * 0.45,
+    height: width * 0.87,
     width: '85%',
     marginTop: '15%',
     borderRadius: 15,

@@ -17,14 +17,16 @@ import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 
+const width = Dimensions.get('window').width
+
 export default class Time extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedHour: '',
-      selectedMinute: '',
+      selectedHour: null,
+      selectedMinute: null,
       invalidTime: false,
-      timeMode: 'AM',
+      timeMode: null,
       switch: true,
       pressed: false,
     }
@@ -39,19 +41,20 @@ export default class Time extends React.Component {
   handleCancel() {
     let invalid = this.state.invalidTime
     this.setState({
-      selectedHour: '',
-      selectedMinute: '',
+      selectedHour: null,
+      selectedMinute: null,
+      timeMode: null,
       invalidTime: false,
     })
     this.props.cancel(invalid)
   }
 
   evaluateTime() {
-    if (this.state.selectedMinute === '' || this.state.selectedHour === '') {
+    if (!this.state.selectedMinute || !this.state.selectedHour) {
       this.setState({ invalidTime: true })
     }
-    var hour = parseInt(this.state.selectedHour)
-    var min = parseInt(this.state.selectedMinute)
+    let hour = parseInt(this.state.selectedHour)
+    let min = parseInt(this.state.selectedMinute)
     if (hour < 0 || hour > 12 || min < 0 || min > 59 || isNaN(hour) || isNaN(min)) {
       this.setState({ invalidTime: true })
     } else {
@@ -66,6 +69,12 @@ export default class Time extends React.Component {
       }
       this.handlePress(hour, min)
     }
+  }
+
+  setPeriod() {
+    if (this.state.timeMode === 'AM') return 0
+    else if (this.state.timeMode === 'PM') return 1
+    else return -1
   }
 
   evaluate = _.debounce(this.evaluateTime.bind(this), 200)
@@ -104,10 +113,9 @@ export default class Time extends React.Component {
               />
               <View style={styles.switchButton}>
                 <ButtonSwitch
-                  text1="AM"
-                  text2="PM"
-                  value1="AM"
-                  value2="PM"
+                  texts={['AM', 'PM']}
+                  values={['AM', 'PM']}
+                  select={this.setPeriod()}
                   onValueChange={(val) => this.setState({ timeMode: val })}
                 />
               </View>
@@ -151,7 +159,7 @@ export default class Time extends React.Component {
 
 const styles = StyleSheet.create({
   mainContainerHeight: {
-    height: Dimensions.get('window').height * 0.28,
+    height: width * 0.58,
   },
   black: {
     color: 'black',

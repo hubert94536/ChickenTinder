@@ -21,8 +21,8 @@ import Slider from '@react-native-community/slider'
 import { ZIP_ID, ZIP_TOKEN } from 'react-native-dotenv'
 import _ from 'lodash'
 
-const fullWidth = Dimensions.get('window').width
 const fullHeight = Dimensions.get('window').height
+const fullWidth = Dimensions.get('window').width
 
 const SmartyStreetsSDK = require('smartystreets-javascript-sdk')
 const SmartyStreetsCore = SmartyStreetsSDK.core
@@ -35,6 +35,7 @@ let client = clientBuilder.buildUsZipcodeClient()
 
 const iconSize = 30
 
+//  requests the users permission
 const requestLocationPermission = async () => {
   PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
     title: 'Location Permission',
@@ -62,10 +63,12 @@ export default class Location extends Component {
     this.mapView = React.createRef()
     this.circle = React.createRef()
     this.state = {
-      location: {
-        latitude: 34.06892,
-        longitude: -118.445183,
-      },
+      location: this.props.defaultLocation
+        ? this.props.defaultLocation
+        : {
+            latitude: 34.06892,
+            longitude: -118.445183,
+          },
       city: 'Choose a location',
       state: '',
       distance: 5.5,
@@ -118,6 +121,7 @@ export default class Location extends Component {
 
   // function called when main button is pressed w/ valid ZIP
   handlePress() {
+    this.setState({ pressed: false })
     this.props.update(this.state.distance, this.state.location)
   }
 
@@ -153,6 +157,7 @@ export default class Location extends Component {
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
       )
     } else {
+      // TODO: need alert saying permission was not given
       console.log('Filter.js: Failed to get location')
     }
   }
@@ -323,8 +328,8 @@ export default class Location extends Component {
           >
             <Text
               style={[
-                modalStyles.text,
-                styles.white,
+                screenStyles.text,
+                modalStyles.doneText,
                 this.state.pressed ? screenStyles.hex : screenStyles.white,
               ]}
             >
@@ -348,10 +353,11 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginTop: fullHeight * 0.11,
     marginBottom: fullHeight * 0.11,
-    height: fullHeight * 0.78,
+    height: fullHeight* 0.78,
     width: fullWidth * 0.8,
   },
   map: {
+    // height: fullWidth * 1.8947,
     height: fullHeight * 0.98,
     width: fullWidth * 0.8,
   },
@@ -418,4 +424,5 @@ Location.propTypes = {
   update: PropTypes.func,
   cancel: PropTypes.func,
   visible: PropTypes.bool,
+  defaultLocation: PropTypes.object,
 }

@@ -9,7 +9,6 @@ import socket from '../apis/socket.js'
 import imgStyles from '../../styles/cardImage.js'
 import normalize from '../../styles/normalize.js'
 
-const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
 
 const bg = '#FCE5CD'
@@ -105,26 +104,23 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     alignSelf: 'center',
     width: width * 0.4,
-    height: height * 0.16,
+    height: width * 0.3093,
     margin: '1.5%',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
   },
   image: {
-    borderRadius: height * 0.1,
+    borderRadius: width * 0.1933,
     height: '99%',
     width: '99%',
-    borderWidth: height * 0.004,
+    borderWidth: width * 0.0077,
   },
   imageWrapper: {
-    height: height * 0.1,
-    width: height * 0.1,
+    height: width * 0.1933,
+    width: width * 0.1933,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  topText: {
-    color: '#000',
   },
   icon: {
     fontSize: normalize(20),
@@ -139,7 +135,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: height * 0.004,
+    paddingBottom: width * 0.0077,
   },
   name: {
     color: 'black',
