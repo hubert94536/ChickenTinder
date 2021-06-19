@@ -28,8 +28,8 @@ import socket from '../apis/socket.js'
 import { updateSession, setHost, setMatch, showRefresh, hideRefresh } from '../redux/Actions.js'
 import _ from 'lodash'
 
-const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
+const height = Dimensions.get('window').height
 
 class TopThree extends React.Component {
   constructor(props) {
@@ -273,7 +273,10 @@ class TopThree extends React.Component {
             style={[screenStyles.bigButton, styles.waiting]}
           >
             <Text
-              style={[screenStyles.medButtonText, styles.waitingText, styles.white, styles.submit]}
+              style={[screenStyles.medButtonText, 
+                      styles.waitingText, 
+                      styles.white, 
+                      styles.submit]}
             >
               Waiting for Host...
             </Text>
@@ -407,7 +410,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: '10%',
+    marginBottom: height * 0.05,
   },
   randomText: { fontSize: normalize(23), fontWeight: 'bold' },
   submit: {
@@ -419,6 +422,7 @@ const styles = StyleSheet.create({
     width: '45%',
     borderColor: colors.hex,
     backgroundColor: colors.hex,
+    marginBottom:'-15%'
   },
   waiting: {
     borderColor: colors.hex,
@@ -436,14 +440,14 @@ const styles = StyleSheet.create({
     paddingRight: '10%',
   },
   image: {
-    height: height * 0.18,
+    height: width * 0.348,
     width: width * 0.38,
     position: 'absolute',
     overflow: 'hidden',
     marginTop: '2%',
   },
   cardDefault: {
-    height: height * 0.3,
+    height: width * 0.58,
     width: width * 0.43,
     position: 'absolute',
     elevation: 1,
