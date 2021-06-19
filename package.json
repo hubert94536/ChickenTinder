@@ -45,7 +45,7 @@
     "react-native": "^0.64.0",
     "react-native-confirmation-code-field": "^7.0.1",
     "react-native-confirmation-code-input": "^1.0.4",
-    "react-native-deck-swiper": "^2.0.5",
+    "react-native-deck-swiper": "^1.1.7",
     "react-native-dotenv": "^0.2.0",
     "react-native-elements": "^2.3.2",
     "react-native-fbsdk": "^2.0.0",
@@ -84,6 +84,12 @@
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
+    "@babel/helper-builder-binary-assignment-operator-visitor": "^7.12.13",
+    "@babel/helper-compilation-targets": "^7.13.16",
+    "@babel/helper-create-class-features-plugin": "^7.14.3",
+    "@babel/helper-create-regexp-features-plugin": "^7.14.3",
+    "@babel/helper-define-polyfill-provider": "^0.2.3",
+    "@babel/helper-skip-transparent-expression-wrappers": "^7.12.1",
     "@react-native-community/checkbox": "^0.5.7",
     "@testing-library/react-native": "^7.1.0",
     "babel-eslint": "^10.1.0",
