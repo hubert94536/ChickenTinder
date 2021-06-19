@@ -10,6 +10,8 @@ import Swiper from 'react-native-deck-swiper'
 import PropTypes from 'prop-types'
 import global from '../../global.js'
 import Alert from '../modals/Alert.js'
+import colors from '../../styles/colors.js'
+import { ProgressBar } from 'react-native-paper'
 import modalStyles from '../../styles/modalStyles.js'
 import RoundCard from '../cards/RoundCard.js'
 import socket from '../apis/socket.js'
@@ -131,9 +133,22 @@ class Round extends React.Component {
                 <Text style={([screenStyles.text], styles.black)}>Leave</Text>
               </View>
             </TouchableHighlight>
-            <Text style={[screenStyles.text, styles.topMargin, styles.restaurant]}>
-              Restaurant {this.state.index}/{this.props.session.resInfo.length}
-            </Text>
+            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={[screenStyles.text, styles.topMargin, styles.restaurant]}>
+                Restaurant {this.state.index}/{this.props.session.resInfo.length}
+              </Text>
+              <Text style={[screenStyles.text, styles.black, styles.topMargin, styles.progress]}>
+                {this.props.session.finished.length}/{Object.keys(this.props.session.members).length}{' '}
+                members finished
+              </Text>
+              </View>
+              <ProgressBar
+                progress={
+                  this.props.session.finished.length / Object.keys(this.props.session.members).length
+                }
+                color={colors.hex}
+                style={{ width: '50%', backgroundColor: '#E0E0E0', alignSelf: 'flex-end', marginRight: '7%', marginTop: '1%'}}
+              />
           </Swiper>
         </View>
         <View style={styles.bottom}>
@@ -264,7 +279,8 @@ const styles = StyleSheet.create({
   centerAlign: { alignItems: 'center' },
   door: { color: 'black', fontSize: normalize(20) },
   black: { color: 'black' },
-  restaurant: { textAlign: 'right', fontSize: normalize(15), marginRight: '7%' },
+  restaurant: { textAlign: 'left', fontSize: normalize(15), marginLeft: '7%' },
+  progress: { textAlign: 'right', fontSize: normalize(15), marginRight: '7%' },
   bottom: {
     flex: 0.05,
     flexDirection: 'row',

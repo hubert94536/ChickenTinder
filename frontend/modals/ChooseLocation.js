@@ -9,6 +9,7 @@ import {
   Modal,
   TextInput,
 } from 'react-native'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import Geolocation from 'react-native-geolocation-service'
 import PropTypes from 'prop-types'
 import MapView, { Circle, PROVIDER_GOOGLE } from 'react-native-maps'
@@ -33,7 +34,7 @@ let clientBuilder = new SmartyStreetsCore.ClientBuilder(
 )
 let client = clientBuilder.buildUsZipcodeClient()
 
-const iconSize = 30
+const iconSize = 25
 
 //  requests the users permission
 const requestLocationPermission = async () => {
@@ -202,7 +203,8 @@ export default class Location extends Component {
               left: '7%',
               right: '7%',
               alignSelf: 'center',
-              height: '25%',
+              // height: '25%',
+              height: '30%',
               borderRadius: 7,
               backgroundColor: 'white',
 
@@ -223,6 +225,11 @@ export default class Location extends Component {
               <Text style={[styles.title, screenStyles.textBook, screenStyles.hex]}>
                 {this.state.city + this.state.state}
               </Text>
+              <AntDesign
+                style={styles.icon}
+                name={'close'}
+                onPress={()=> this.handleCancel()}
+              />
               {/* <AntDesign
                 style={styles.icon}
                 name={this.state.expanded ? 'up' : 'down'}
@@ -290,12 +297,15 @@ export default class Location extends Component {
             {/* Bottom - slider & info text */}
             <View
               style={{
-                flex: 0.25,
+                flex: 0.5,
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
               }}
             >
+              <Text style={[styles.locationText, {color: colors.hex}]}>
+                Current Radius: <Text style={{color: 'black'}}>{this.state.distance} miles</Text>
+              </Text>
               <Slider
                 style={styles.sliderStyle}
                 minimumValue={5}
@@ -319,23 +329,24 @@ export default class Location extends Component {
             </View>
           </View>
 
-          <TouchableHighlight
-            onShowUnderlay={() => this.setState({ pressed: true })}
-            onHideUnderlay={() => this.setState({ pressed: false })}
-            underlayColor="white"
-            onPress={() => this.handlePress()}
-            style={[modalStyles.doneButton, styles.doneButton]}
-          >
-            <Text
-              style={[
-                screenStyles.text,
-                modalStyles.doneText,
-                this.state.pressed ? screenStyles.hex : screenStyles.white,
-              ]}
+            <TouchableHighlight
+              onShowUnderlay={() => this.setState({ pressed: true })}
+              onHideUnderlay={() => this.setState({ pressed: false })}
+              underlayColor="white"
+              onPress={() => this.handlePress()}
+              style={[modalStyles.doneButton, styles.doneButton]}
             >
-              Done
-            </Text>
-          </TouchableHighlight>
+              <Text
+                style={[
+                  screenStyles.text,
+                  modalStyles.doneText,
+                  this.state.pressed ? screenStyles.hex : screenStyles.white,
+                ]}
+              >
+                Done
+              </Text>
+            </TouchableHighlight>
+
         </View>
       </Modal>
     )
@@ -411,7 +422,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     position: 'absolute',
-    right: '2%',
+    right: '5%',
     height: normalize(iconSize),
     width: normalize(iconSize),
     fontFamily: 'CircularStd-Medium',
