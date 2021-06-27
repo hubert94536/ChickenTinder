@@ -336,6 +336,7 @@ class FilterSelector extends React.Component {
               <Text style={[screenStyles.text, styles.filterTitleText]}>Cuisines</Text>
               <Text style={styles.filterSubtext}>Select all that apply</Text>
             </View>
+            
             <FlatList
               data={cuisines}
               columnWrapperStyle={{
@@ -355,6 +356,7 @@ class FilterSelector extends React.Component {
               }}
               keyExtractor={(item, index) => index}
             />
+            
           </View>
         </View>
         {/* ------------------------------------------ALERTS------------------------------------------ */}
@@ -505,6 +507,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginLeft: '4%',
     marginTop: '1%',
+  },
+  disclaimer: {
+    color: TEXT_COLOR,
+    fontSize: normalize(12),
+    fontFamily: font,
+    fontWeight: '100',
   },
 })
 
