@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import colors from '../styles/colors.js'
 
-const height = Dimensions.get('window').height
+const width = Dimensions.get('window').width
 
 class TabBar extends React.Component {
   componentDidMount() {
@@ -76,7 +76,7 @@ class TabBar extends React.Component {
               style={{ color: this.props.cur === 'Notifs' ? colors.hex : '#8d8d8d', fontSize: 26 }}
             />
 
-            {this.props.notif && (
+            {this.props.gotNotif && (
               // <Text style={{ color: 'red', fontSize: 26, position: 'absolute', textAlign: 'left', alignSelf: 'flex-end'}}>*</Text>
 
               <Icon
@@ -108,10 +108,10 @@ class TabBar extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const { notif } = state
-  return { notif }
+  const { gotNotif } = state
+  return { gotNotif }
 }
-//  access this as this.props.notif
+//  access this as this.props.gotNotif
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     width: '90%',
     marginBottom: '4%',
     alignSelf: 'center',
-    height: height * 0.07,
+    height: width * 0.1353,
     backgroundColor: '#fff2f2',
     alignItems: 'center',
     borderRadius: 10,

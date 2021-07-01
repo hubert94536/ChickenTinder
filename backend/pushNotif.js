@@ -29,6 +29,7 @@ const sendNotification = async (notif) => {
         name: notif.name,
         username: notif.username,
         photo: notif.photo,
+        uid: notif.sender_uid
       }
       const message = {
         data: { config: JSON.stringify(data) },

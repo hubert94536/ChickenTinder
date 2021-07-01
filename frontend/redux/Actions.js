@@ -88,6 +88,48 @@ const updateSession = (session) => {
   }
 }
 
+const removeNotif = (id) => {
+  return {
+    type: 'REMOVE_NOTIFICATION',
+    payload: id
+  }
+}
+
+const addNotif = (id) => {
+  return {
+    type: 'ADD_NOTIFICATION',
+    payload: id
+  }
+}
+
+const removeFriend = (uid) => {
+  return {
+    type: 'REMOVE_FRIEND',
+    payload: uid
+  }
+}
+
+const requestFriend = (info) => {
+  return {
+    type: 'REQUEST_FRIEND',
+    payload: info
+  }
+}
+
+const pendingFriend = (info) => {
+  return {
+    type: 'PENDING_FRIEND',
+    payload: info
+  }
+}
+
+const acceptFriend = (uid) => {
+  return {
+    type: 'ACCEPT_FRIEND',
+    payload: uid
+  }
+}
+
 const setHost = (isHost) => {
   return {
     type: 'SET_HOST',
@@ -140,10 +182,16 @@ export {
   changeUsername,
   changeImage,
   changeFriends,
+  acceptFriend,
+  pendingFriend,
+  requestFriend,
+  removeFriend,
   showRefresh,
   hideRefresh,
   newNotif,
   noNotif,
+  addNotif,
+  removeNotif,
   setCode,
   showKick,
   hideKick,

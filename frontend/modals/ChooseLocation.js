@@ -21,8 +21,8 @@ import Slider from '@react-native-community/slider'
 import { ZIP_ID, ZIP_TOKEN } from 'react-native-dotenv'
 import _ from 'lodash'
 
-const fullWidth = Dimensions.get('window').width
 const fullHeight = Dimensions.get('window').height
+const fullWidth = Dimensions.get('window').width
 
 const SmartyStreetsSDK = require('smartystreets-javascript-sdk')
 const SmartyStreetsCore = SmartyStreetsSDK.core
@@ -353,10 +353,11 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginTop: fullHeight * 0.11,
     marginBottom: fullHeight * 0.11,
-    height: fullHeight * 0.78,
+    height: fullHeight* 0.78,
     width: fullWidth * 0.8,
   },
   map: {
+    // height: fullWidth * 1.8947,
     height: fullHeight * 0.98,
     width: fullWidth * 0.8,
   },

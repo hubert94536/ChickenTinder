@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { changeFriends, hideError, showError, setDisable, hideDisable } from '../redux/Actions.js'
+import { hideError, showError, setDisable, hideDisable, acceptFriend, requestFriend, removeFriend } from '../redux/Actions.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
@@ -29,13 +29,8 @@ class Card extends React.Component {
       friendsApi
         .removeFriendship(this.props.uid)
         .then(() => {
-          var filteredArray = this.props.friends.friends.filter((item) => {
-            let isFriend = item.username !== this.props.username && item.status == 'friends'
-            return isFriend
-          })
-          this.props.changeFriends(filteredArray)
-          this.props.press(filteredArray)
-          if (this.props.changeAdd) this.setState({ status: 'add' })
+          this.props.removeFriend(this.props.uid)
+          this.setState({ status: 'add' })
           this.props.hideDisable()
         })
         .catch(() => {
@@ -50,11 +45,7 @@ class Card extends React.Component {
     friendsApi
       .removeFriendship(this.props.uid)
       .then(() => {
-        var filteredArray = this.props.friends.friends.filter((item) => {
-          return item.username !== this.props.username
-        })
-        this.props.changeFriends(filteredArray)
-        this.props.press(filteredArray)
+        this.props.removeFriend(this.props.uid)
         this.setState({ status: 'add' })
         this.props.hideDisable()
       })
@@ -69,12 +60,7 @@ class Card extends React.Component {
     friendsApi
       .acceptFriendRequest(this.props.uid)
       .then(() => {
-        var newArr = this.props.friends.friends.filter((item) => {
-          if (item.username === this.props.username) item.status = 'friends'
-          return item
-        })
-        this.props.changeFriends(newArr)
-        this.props.accept(newArr)
+        this.props.acceptFriend(this.props.uid)
         this.setState({ status: 'friends' })
         this.props.hideDisable()
       })
@@ -89,30 +75,10 @@ class Card extends React.Component {
     friendsApi
       .createFriendship(this.props.uid)
       .then(() => {
-        var newArr = []
-        var addElem = this.props.total.filter((item) => {
+        let addElem = this.props.total.filter((item) => {
           return item.username === this.props.username
         })
-        for (var i = 0; i < this.props.friends.friends.length; i++) {
-          var person = {
-            name: this.props.friends.friends[i].name,
-            username: this.props.friends.friends[i].username,
-            photo: this.props.friends.friends[i].photo,
-            uid: this.props.friends.friends[i].uid,
-            status: this.props.friends.friends[i].status,
-          }
-          newArr.push(person)
-        }
-        var addPerson = {
-          name: addElem[0].name,
-          username: addElem[0].username,
-          photo: addElem[0].photo,
-          uid: addElem[0].uid,
-          status: 'requested',
-        }
-        newArr.push(addPerson)
-        this.props.changeFriends(newArr)
-        this.props.accept(newArr)
+        this.props.requestFriend(addElem[0])
         this.setState({ status: 'requested' })
         this.props.hideDisable()
       })
@@ -234,10 +200,10 @@ class Card extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const { error } = state
-  const { friends } = state
-  const { disable } = state
-  return { error, friends, disable }
+  return {
+    error: state.error,
+    disable: state.disable
+  }
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -245,9 +211,11 @@ const mapDispatchToProps = (dispatch) =>
     {
       showError,
       hideError,
-      changeFriends,
       setDisable,
       hideDisable,
+      acceptFriend,
+      removeFriend,
+      requestFriend
     },
     dispatch,
   )
@@ -267,13 +235,13 @@ Card.propTypes = {
   hideError: PropTypes.func,
   unfriendAlert: PropTypes.func,
   error: PropTypes.bool,
-  friends: PropTypes.object,
-  changeFriends: PropTypes.func,
-  accept: PropTypes.func,
   changeAdd: PropTypes.bool,
   setDisable: PropTypes.func,
   hideDisable: PropTypes.func,
   disable: PropTypes.bool,
+  acceptFriend: PropTypes.func,
+  rejectFriend: PropTypes.func,
+  requestFriend: PropTypes.func
 }
 
 const styles = StyleSheet.create({

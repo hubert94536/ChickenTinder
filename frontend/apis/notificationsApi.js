@@ -25,7 +25,7 @@ const getNotifs = async () => {
           return {
             id: notif.id,
             type: notif.type,
-            updatedAt: notif.updatedAt,
+            createdAt: notif.createdAt,
             sender: notif.sender_uid,
             senderUsername: notif.account.username,
             senderPhoto: notif.account.photo,

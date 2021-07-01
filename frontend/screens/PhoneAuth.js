@@ -16,10 +16,6 @@ import { bindActionCreators } from 'redux'
 import { BlurView } from '@react-native-community/blur'
 import Alert from '../modals/Alert.js'
 import {
-  changeFriends,
-  changeName,
-  changeUsername,
-  changeImage,
   setDisable,
   hideDisable,
 } from '../redux/Actions.js'
@@ -289,10 +285,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      changeFriends,
-      changeName,
-      changeUsername,
-      changeImage,
       setDisable,
       hideDisable,
     },

@@ -30,6 +30,9 @@ import {
 } from '../redux/Actions.js'
 import socket from '../apis/socket.js'
 
+const width = Dimensions.get('window').width
+const height = Dimensions.get('window').height
+
 // the card for the restaurant match
 class Match extends React.Component {
   constructor(props) {
@@ -222,19 +225,19 @@ const styles = StyleSheet.create({
   map: {
     alignSelf: 'center',
     justifyContent: 'flex-end',
-    height: Dimensions.get('window').height * 0.4,
-    width: Dimensions.get('window').width * 0.82,
+    height: height * 0.4,
+    width: width * 0.82,
   },
   //Styling for Google map for restaurant
   /* For "Open on Yelp" button */
   yelpButton: {
     backgroundColor: colors.hex,
-    height: '5%',
+    height: height * 0.05,
     justifyContent: 'center',
     alignSelf: 'center',
     borderColor: colors.hex,
-    marginTop: '8%',
-    marginBottom: '2%',
+    marginTop: height * 0.07,
+    marginBottom: '2%'
   },
   /* For "Call number" button */
   callButton: {
@@ -257,6 +260,6 @@ const styles = StyleSheet.create({
   white: { color: 'white' },
   buttonText: {
     paddingTop: '3%',
-    paddingBottom: '3%',
-  },
+    paddingBottom: '2%'
+  }
 })

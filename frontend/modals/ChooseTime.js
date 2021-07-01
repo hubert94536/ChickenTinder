@@ -17,6 +17,8 @@ import modalStyles from '../../styles/modalStyles.js'
 import normalize from '../../styles/normalize.js'
 import screenStyles from '../../styles/screenStyles.js'
 
+const width = Dimensions.get('window').width
+
 export default class Time extends React.Component {
   constructor(props) {
     super(props)
@@ -157,7 +159,7 @@ export default class Time extends React.Component {
 
 const styles = StyleSheet.create({
   mainContainerHeight: {
-    height: Dimensions.get('window').height * 0.28,
+    height: width * 0.58,
   },
   black: {
     color: 'black',

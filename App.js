@@ -19,6 +19,8 @@ import {
   showKick,
   showRefresh,
   hideRefresh,
+  pendingFriend,
+  acceptFriend
 } from './frontend/redux/Actions.js'
 import global from './global.js'
 import Disconnect from './frontend/screens/Disconnect.js'
@@ -160,8 +162,8 @@ class App extends React.Component {
         .getSocket()
         .off('reconnect')
         .on('reconnect', (session) => {
-          console.log('reconnect')
-          if (session) {
+          console.log('reconnect: ' + JSON.stringify(session))
+          if (session && session !== undefined) {
             // check if member was kicked
             if (!session.members[global.uid]) {
               socket.kickLeave()
@@ -219,10 +221,22 @@ class App extends React.Component {
 
   onNotification = (notification) => {
     this.props.newNotif()
-    console.log('Notification: ' + notification)
+    console.log('Notification: ' + JSON.stringify(notification))
+    const config = JSON.parse(notification.data.config)
+    if (config.type === 'pending') {
+      let person = {
+        name: config.name,
+        username: config.username,
+        photo: config.photo,
+        status: "pending"
+        // TODO:need uid
+      }
+      this.props.pendingFriend(person)
+    }
+    else if (config.type === 'accepted')
+      this.props.acceptFriend(config.uid)
     if (!notification.userInteraction) {
       //construct using data
-      const config = JSON.parse(notification.data.config)
       buildNotification(config)
     }
   }
@@ -249,6 +263,7 @@ class App extends React.Component {
 const mapStateToProps = (state) => {
   return {
     session: state.session.session,
+    friends: state.friends.friends
   }
 }
 
@@ -263,6 +278,8 @@ const mapDispatchToProps = (dispatch) =>
       showKick,
       showRefresh,
       hideRefresh,
+      acceptFriend,
+      pendingFriend
     },
     dispatch,
   )
@@ -291,7 +308,7 @@ data:
     }" : string
 */
 const buildNotification = (config) => {
-  var message = { title: 'Wechews Notification', message: 'Default Message' }
+  let message = { title: 'Wechews Notification', message: 'Default Message' }
   if (config.type == 'pending') {
     message = {
       title: 'New Friend Request',

@@ -167,8 +167,8 @@ class Group extends React.Component {
     this.props.setDisable()
     socket.getSocket().off()
     socket.leave('group')
-    this.props.navigation.replace('Home')
     this.props.hideDisable()
+    this.props.navigation.replace('Home')
   }
 
   cancelAlert() {
@@ -272,7 +272,7 @@ class Group extends React.Component {
                           alignItems: 'center',
                           justifyContent: 'center',
                           width: windowWidth * 0.4,
-                          height: windowHeight * 0.06,
+                          height: windowWidth * 0.116,
                           margin: '1.5%',
                         }}
                       >
@@ -550,7 +550,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   main: {
-    marginTop: windowHeight * 0.05,
+    marginTop: windowWidth * 0.0966,
     flexDirection: 'column',
     height: '100%',
     flex: 1,
@@ -699,7 +699,7 @@ const styles = StyleSheet.create({
   },
   footerContainer: {
     fontFamily: font,
-    height: windowHeight * 0.06,
+    height: windowWidth * 0.116,
     backgroundColor: 'white',
     marginTop: '-1%',
     borderBottomLeftRadius: 15,
