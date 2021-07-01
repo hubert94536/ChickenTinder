@@ -135,7 +135,23 @@ export const friendsReducer = (state = INITIAL_STATE, action) => {
 export const notifReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'ADD_NOTIFICATION':
-
+      return {
+        ...state,
+        notifications: [
+          ...state.notifications,
+          {
+            id: action.payload.id,
+            type: action.payload.type,
+            createdAt: action.payload.createdAt,
+            sender: action.payload.uid,
+            senderUsername: action.payload.username,
+            senderPhoto: action.payload.photo,
+            senderName: action.payload.name,
+            content: action.payload.content,
+            read: false
+          }
+        ]
+      }
     case 'REMOVE_NOTIFICATION':
 
     default:

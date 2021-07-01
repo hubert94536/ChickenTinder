@@ -20,7 +20,8 @@ import {
   showRefresh,
   hideRefresh,
   pendingFriend,
-  acceptFriend
+  acceptFriend,
+  addNotif
 } from './frontend/redux/Actions.js'
 import global from './global.js'
 import Disconnect from './frontend/screens/Disconnect.js'
@@ -225,11 +226,11 @@ class App extends React.Component {
     const config = JSON.parse(notification.data.config)
     if (config.type === 'pending') {
       let person = {
+        uid: config.uid,
         name: config.name,
         username: config.username,
         photo: config.photo,
-        status: "pending"
-        // TODO:need uid
+        status: "pending",
       }
       this.props.pendingFriend(person)
     }
@@ -239,7 +240,29 @@ class App extends React.Component {
       //construct using data
       buildNotification(config)
     }
+    let notif = {
+      id: config.id,
+      type: config.type,
+      createdAt: config.createdAt,
+      sender: config.uid,
+      senderUsername: config.username,
+      senderPhoto: config.photo,
+      senderName: config.name,
+      content: config.content,
+      read: false
+    }
+    this.props.addNotif(notif)
   }
+  /*
+data: 
+  config: "{
+      type: type,
+      content: content, 
+      name: name,
+      username: username, 
+      photo: photo
+    }" : string
+*/
 
   // detect if app is coming out of background
   _handleAppStateChange = (nextAppState) => {
@@ -279,7 +302,8 @@ const mapDispatchToProps = (dispatch) =>
       showRefresh,
       hideRefresh,
       acceptFriend,
-      pendingFriend
+      pendingFriend,
+      addNotif
     },
     dispatch,
   )
@@ -295,6 +319,9 @@ App.propTypes = {
   showRefresh: PropTypes.func,
   hideRefresh: PropTypes.func,
   showKick: PropTypes.func,
+  acceptFriend: PropTypes.func,
+  pendingFriend: PropTypes.func,
+  addNotif: PropTypes.func,
 }
 
 /*
@@ -305,6 +332,7 @@ data:
       name: name,
       username: username, 
       photo: photo
+      uid: uid
     }" : string
 */
 const buildNotification = (config) => {

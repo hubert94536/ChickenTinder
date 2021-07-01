@@ -95,10 +95,10 @@ const removeNotif = (id) => {
   }
 }
 
-const addNotif = (id) => {
+const addNotif = (info) => {
   return {
     type: 'ADD_NOTIFICATION',
-    payload: id
+    payload: info
   }
 }
 

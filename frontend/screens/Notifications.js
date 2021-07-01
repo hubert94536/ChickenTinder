@@ -10,8 +10,6 @@ import {
   View,
 } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
-import { NAME, PHOTO, USERNAME } from 'react-native-dotenv'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from '@react-native-community/blur'
 import {
   newNotif,
@@ -22,8 +20,6 @@ import {
   hideError,
   updateSession,
   setHost,
-  setDisable,
-  hideDisable,
   removeFriend,
   acceptFriend
 } from '../redux/Actions.js'
@@ -39,29 +35,13 @@ import NotifCard from '../cards/NotifCard.js'
 import socket from '../apis/socket.js'
 import TabBar from '../Nav.js'
 
-var img = ''
-var name = ''
-var username = ''
-var socketErrMsg = 'Socket error message uninitialized'
 //TODO: USE REDUX
-
-AsyncStorage.multiGet([NAME, PHOTO, USERNAME]).then((res) => {
-  name = res[0][1]
-  img = res[1][1]
-  username = res[2][1]
-})
 const width = Dimensions.get('window').width
 
 class Notif extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      name: name,
-      nameValue: name,
-      username: username,
-      usernameValue: username,
-      image: img,
-      friends: true,
       notifs: [],
       activityNotifs: [],
       requestNotifs: [],
@@ -69,18 +49,9 @@ class Notif extends Component {
       modNotifs: [],
       activity: true,
       visible: false,
-      changeName: false,
-      changeUser: false,
-      // button appearance
-      logout: false,
-      delete: false,
       // show alert
-      logoutAlert: false,
-      deleteAlert: false,
       deleteFriend: false,
-      // disabling buttons
-      disabled: false,
-      socketErr: false,
+      socketErr: null,
     }
     this.props.hideRefresh()
     this.getNotifs()
@@ -96,10 +67,11 @@ class Notif extends Component {
       console.log(msg)
       this.props.hideDisable()
       this.props.hideRefresh()
+      let socketErrMsg = ''
       if (msg === 'join') socketErrMsg = 'Unable to join the group, please try again'
       else if (msg === 'cannot join')
         socketErrMsg = 'The group does not exist or has already started a round'
-      this.setState({ socketErr: true })
+      this.setState({ socketErr: socketErrMsg })
     })
   }
 
@@ -149,7 +121,7 @@ class Notif extends Component {
               key={i}
               index={i}
               deleteNotif={(add, ind) => this.toDelete(add, ind)}
-              press={(newArr, id) => this.removeRequest(newArr, this.state.notifs[i].id)}
+              press={(newArr, _) => this.removeRequest(newArr, this.state.notifs[i].id)}
               showDelete={() => this.setState({ deleteFriend: true })}
               modifyList={(uid, id) => this.modifyList(uid, id)}
             />,
@@ -410,11 +382,11 @@ class Notif extends Component {
         {this.state.socketErr && (
           <Alert
             title="Connection Error!"
-            body={socketErrMsg}
+            body={this.state.socketErr}
             buttonAff="Close"
             height="25%"
-            press={() => this.setState({ socketErr: false })}
-            cancel={() => this.setState({ socketErr: false })}
+            press={() => this.setState({ socketErr: null })}
+            cancel={() => this.setState({ socketErr: null })}
           />
         )}
         <TabBar
@@ -457,8 +429,6 @@ const mapDispatchToProps = (dispatch) =>
       hideRefresh,
       hideHold,
       hideError,
-      hideDisable,
-      setDisable,
       setHost,
       updateSession,
       removeFriend,

@@ -33,7 +33,6 @@ class Search extends Component {
       value: '',
       refresh: false,
     }
-    console.log(this.props.friends)
   }
 
   componentDidMount() {
