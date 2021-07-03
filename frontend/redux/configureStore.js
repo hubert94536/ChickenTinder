@@ -26,7 +26,7 @@ const rootReducer = combineReducers({
   refresh: refreshReducer,
   friends: friendsReducer,
   gotNotif: gotNotifReducer,
-  notif: notifReducer,
+  notifs: notifReducer,
   code: codeReducer,
   kick: kickReducer,
   session: sessionReducer,

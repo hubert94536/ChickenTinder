@@ -88,10 +88,17 @@ const updateSession = (session) => {
   }
 }
 
-const removeNotif = (id) => {
+const changeNotifs = (notifs) => {
+  return {
+    type: 'CHANGE_NOTIFICATIONS',
+    payload: notifs
+  }
+}
+
+const removeNotif = (ids) => {
   return {
     type: 'REMOVE_NOTIFICATION',
-    payload: id
+    payload: ids
   }
 }
 
@@ -99,6 +106,16 @@ const addNotif = (info) => {
   return {
     type: 'ADD_NOTIFICATION',
     payload: info
+  }
+}
+
+const updateNotif = (id, type) => {
+  return {
+    type: 'UPDATE_NOTIFICATION',
+    payload: {
+      id: id,
+      type: type
+    }
   }
 }
 
@@ -191,6 +208,7 @@ export {
   newNotif,
   noNotif,
   addNotif,
+  updateNotif,
   removeNotif,
   setCode,
   showKick,
@@ -203,4 +221,5 @@ export {
   hideDisable,
   setHold,
   hideHold,
+  changeNotifs
 }

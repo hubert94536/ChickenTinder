@@ -224,6 +224,7 @@ class App extends React.Component {
     this.props.newNotif()
     console.log('Notification: ' + JSON.stringify(notification))
     const config = JSON.parse(notification.data.config)
+    // if new notification is a pending friend request, add pending to friends
     if (config.type === 'pending') {
       let person = {
         uid: config.uid,
@@ -234,12 +235,14 @@ class App extends React.Component {
       }
       this.props.pendingFriend(person)
     }
+    // if new notification is an accepted friend request, add to friends
     else if (config.type === 'accepted')
       this.props.acceptFriend(config.uid)
     if (!notification.userInteraction) {
       //construct using data
       buildNotification(config)
     }
+    // add new notification to global notifications
     let notif = {
       id: config.id,
       type: config.type,
@@ -249,7 +252,6 @@ class App extends React.Component {
       senderPhoto: config.photo,
       senderName: config.name,
       content: config.content,
-      read: false
     }
     this.props.addNotif(notif)
   }
@@ -264,7 +266,7 @@ data:
     }" : string
 */
 
-  // detect if app is coming out of background
+  // detect if app is coming out of background and reconnect to server
   _handleAppStateChange = (nextAppState) => {
     if (
       this.state.appState.match(/inactive|background/) &&
@@ -283,11 +285,8 @@ data:
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    session: state.session.session,
-    friends: state.friends.friends
-  }
+const mapStateToProps = () => {
+  return {}
 }
 
 const mapDispatchToProps = (dispatch) =>

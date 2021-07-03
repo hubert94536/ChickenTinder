@@ -77,10 +77,12 @@ class Search extends Component {
       this.timeout = setTimeout(
         () => {
           if (this.state.value) {
+            // search for users
             accountsApi
               .searchUsers(this.state.value)
               .then((res) => {
                 let resultUsers = []
+                // match searched users with friendlist
                 for (let user in res.userList) {
                   let status = 'add'
                   if (res.userList[user].uid in this.state.friends) {

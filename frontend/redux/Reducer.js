@@ -15,7 +15,7 @@ const INITIAL_STATE = {
   top: [],
   disable: false,
   hold: false,
-  notifications: []
+  notifs: []
 }
 
 export const errorReducer = (state = INITIAL_STATE.error, action) => {
@@ -133,19 +133,25 @@ export const friendsReducer = (state = INITIAL_STATE, action) => {
 }
 
 export const notifReducer = (state = INITIAL_STATE, action) => {
+  let notifs = [...state.notifs]
   switch (action.type) {
+    case 'CHANGE_NOTIFICATIONS':
+      return {
+        ...state,
+        notifs: [...action.payload]
+      }
     case 'ADD_NOTIFICATION':
       return {
         ...state,
-        notifications: [
-          ...state.notifications,
+        notifs: [
+          ...state.notifs,
           {
             id: action.payload.id,
             type: action.payload.type,
             createdAt: action.payload.createdAt,
-            sender: action.payload.uid,
-            senderUsername: action.payload.username,
-            senderPhoto: action.payload.photo,
+            sender: action.payload.senderName,
+            senderUsername: action.payload.senderUsername,
+            senderPhoto: action.payload.senderPhoto,
             senderName: action.payload.name,
             content: action.payload.content,
             read: false
@@ -153,7 +159,22 @@ export const notifReducer = (state = INITIAL_STATE, action) => {
         ]
       }
     case 'REMOVE_NOTIFICATION':
-
+      let afterRemove = notifs.filter(function (item) {
+        if (!(action.payload.includes(item.id))) return item
+      })
+      console.log(afterRemove)
+      return {
+        ...state,
+        notifs: [...afterRemove]
+      }
+    case 'UPDATE_NOTIFICATION':
+      notifs.forEach(function(item) {
+        if (item.id === action.payload.id) item.type = action.payload.type
+      })
+      return {
+        ...state,
+        notifs: [...notifs]
+      }
     default:
       return state
   }

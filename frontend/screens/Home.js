@@ -80,9 +80,9 @@ class Home extends React.Component {
     // accountsApi.createFBUserTest('Helen2', 35, 'helennn', 'helennn@gmail.com', '53', '45678903')
     // accountsApi.createFBUserTest('Kevin2', 36, 'kev', 'kevi@gmail.com', '54', '45678904')
     // // friendsApi.createFriendshipTest(requester, accepter)
-    // friendsApi.createFriendshipTest(32, "JTii4rEuvpRh8AoaHUGDv2q9pOX2")
-    // friendsApi.createFriendshipTest(33, "JTii4rEuvpRh8AoaHUGDv2q9pOX2")
-    // friendsApi.createFriendshipTest(34, "JTii4rEuvpRh8AoaHUGDv2q9pOX2")
+    // friendsApi.createFriendshipTest(32, "paPkBM2Klog0e63OrAClDmOGiki2")
+    // friendsApi.createFriendshipTest(33, "paPkBM2Klog0e63OrAClDmOGiki2")
+    // friendsApi.createFriendshipTest(34, "paPkBM2Klog0e63OrAClDmOGiki2")
   }
 
   componentDidMount() {
