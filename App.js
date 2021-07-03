@@ -21,7 +21,7 @@ import {
   hideRefresh,
   pendingFriend,
   acceptFriend,
-  addNotif
+  addNotif,
 } from './frontend/redux/Actions.js'
 import global from './global.js'
 import Disconnect from './frontend/screens/Disconnect.js'
@@ -231,13 +231,12 @@ class App extends React.Component {
         name: config.name,
         username: config.username,
         photo: config.photo,
-        status: "pending",
+        status: 'pending',
       }
       this.props.pendingFriend(person)
     }
     // if new notification is an accepted friend request, add to friends
-    else if (config.type === 'accepted')
-      this.props.acceptFriend(config.uid)
+    else if (config.type === 'accepted') this.props.acceptFriend(config.uid)
     if (!notification.userInteraction) {
       //construct using data
       buildNotification(config)
@@ -302,7 +301,7 @@ const mapDispatchToProps = (dispatch) =>
       hideRefresh,
       acceptFriend,
       pendingFriend,
-      addNotif
+      addNotif,
     },
     dispatch,
   )

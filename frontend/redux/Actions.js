@@ -91,21 +91,21 @@ const updateSession = (session) => {
 const changeNotifs = (notifs) => {
   return {
     type: 'CHANGE_NOTIFICATIONS',
-    payload: notifs
+    payload: notifs,
   }
 }
 
 const removeNotif = (ids) => {
   return {
     type: 'REMOVE_NOTIFICATION',
-    payload: ids
+    payload: ids,
   }
 }
 
 const addNotif = (info) => {
   return {
     type: 'ADD_NOTIFICATION',
-    payload: info
+    payload: info,
   }
 }
 
@@ -114,36 +114,36 @@ const updateNotif = (id, type) => {
     type: 'UPDATE_NOTIFICATION',
     payload: {
       id: id,
-      type: type
-    }
+      type: type,
+    },
   }
 }
 
 const removeFriend = (uid) => {
   return {
     type: 'REMOVE_FRIEND',
-    payload: uid
+    payload: uid,
   }
 }
 
 const requestFriend = (info) => {
   return {
     type: 'REQUEST_FRIEND',
-    payload: info
+    payload: info,
   }
 }
 
 const pendingFriend = (info) => {
   return {
     type: 'PENDING_FRIEND',
-    payload: info
+    payload: info,
   }
 }
 
 const acceptFriend = (uid) => {
   return {
     type: 'ACCEPT_FRIEND',
-    payload: uid
+    payload: uid,
   }
 }
 
@@ -221,5 +221,5 @@ export {
   hideDisable,
   setHold,
   hideHold,
-  changeNotifs
+  changeNotifs,
 }

@@ -186,7 +186,7 @@ const mapStateToProps = (state) => {
   return {
     error: state.error,
     refresh: state.refresh,
-    friends: state.friends.friends
+    friends: state.friends.friends,
   }
 }
 

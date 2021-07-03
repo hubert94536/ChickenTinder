@@ -3,7 +3,15 @@ import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { hideError, showError, setDisable, hideDisable, acceptFriend, requestFriend, removeFriend } from '../redux/Actions.js'
+import {
+  hideError,
+  showError,
+  setDisable,
+  hideDisable,
+  acceptFriend,
+  requestFriend,
+  removeFriend,
+} from '../redux/Actions.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import Alert from '../modals/Alert.js'
@@ -202,7 +210,7 @@ class Card extends React.Component {
 const mapStateToProps = (state) => {
   return {
     error: state.error,
-    disable: state.disable
+    disable: state.disable,
   }
 }
 
@@ -215,7 +223,7 @@ const mapDispatchToProps = (dispatch) =>
       hideDisable,
       acceptFriend,
       removeFriend,
-      requestFriend
+      requestFriend,
     },
     dispatch,
   )
@@ -235,13 +243,13 @@ Card.propTypes = {
   hideError: PropTypes.func,
   unfriendAlert: PropTypes.func,
   error: PropTypes.bool,
-  changeAdd: PropTypes.bool,
   setDisable: PropTypes.func,
   hideDisable: PropTypes.func,
   disable: PropTypes.bool,
   acceptFriend: PropTypes.func,
   rejectFriend: PropTypes.func,
-  requestFriend: PropTypes.func
+  requestFriend: PropTypes.func,
+  removeFriend: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

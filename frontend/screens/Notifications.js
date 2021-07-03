@@ -23,7 +23,7 @@ import {
   updateSession,
   setHost,
   changeNotifs,
-  removeFriend
+  removeFriend,
 } from '../redux/Actions.js'
 import Swiper from 'react-native-swiper'
 import PropTypes from 'prop-types'
@@ -83,9 +83,10 @@ class Notif extends Component {
       if (!this.state.modNotifs.includes(notif.id)) return notif
       else {
         if (notif.type === 'pending') {
-          friendsApi.removeFriendship(notif.sender)
-          .then(() => this.props.removeFriend(notif.sender))
-          .catch(() => this.props.showError())
+          friendsApi
+            .removeFriendship(notif.sender)
+            .then(() => this.props.removeFriend(notif.sender))
+            .catch(() => this.props.showError())
         }
         notificationsApi.removeNotif(notif.id).catch(() => this.props.showError())
       }
@@ -161,28 +162,25 @@ class Notif extends Component {
     if (notifs !== prevNotifs) {
       requestNotifs = []
       activityNotifs = []
-      notifs.sort(
-        (x, y) => new Date(x.createdAt).valueOf() <= new Date(y.createdAt).valueOf(),
-      )
+      notifs.sort((x, y) => new Date(x.createdAt).valueOf() <= new Date(y.createdAt).valueOf())
       prevNotifs = notifs
       notifs.forEach((notif) => {
-        let notifCard = <NotifCard
-          total={this.state.notifs}
-          name={notif.senderName}
-          username={notif.senderUsername}
-          id={notif.id}
-          uid={notif.sender}
-          image={notif.senderPhoto}
-          type={notif.type}
-          content={notif.content}
-          key={notif.id}
-          deleteNotif={(add, id) => this.toDelete(add, id)}
-        />
-        if (
-          notif.type == 'pending' ||
-          notif.type == 'friends' ||
-          notif.type == 'accepted'
-        ) requestNotifs.push(notifCard)
+        let notifCard = (
+          <NotifCard
+            total={this.state.notifs}
+            name={notif.senderName}
+            username={notif.senderUsername}
+            id={notif.id}
+            uid={notif.sender}
+            image={notif.senderPhoto}
+            type={notif.type}
+            content={notif.content}
+            key={notif.id}
+            deleteNotif={(add, id) => this.toDelete(add, id)}
+          />
+        )
+        if (notif.type == 'pending' || notif.type == 'friends' || notif.type == 'accepted')
+          requestNotifs.push(notifCard)
         else activityNotifs.push(notifCard)
       })
     }
@@ -312,7 +310,7 @@ class Notif extends Component {
         <TabBar
           goHome={() => this.props.navigation.replace('Home')}
           goSearch={() => this.props.navigation.replace('Search')}
-          goNotifs={() => { }}
+          goNotifs={() => {}}
           goProfile={() => this.props.navigation.replace('Profile')}
           cur="Notifs"
         />
@@ -335,7 +333,7 @@ const mapStateToProps = (state) => {
     error: state.error,
     username: state.username,
     hold: state.hold,
-    friends: state.friends.friends
+    friends: state.friends.friends,
   }
 }
 //  access the state as this.props.notif
@@ -351,12 +349,11 @@ const mapDispatchToProps = (dispatch) =>
       hideRefresh,
       hideHold,
       hideError,
-      setDisable,
       hideDisable,
       setHost,
       updateSession,
       changeNotifs,
-      removeFriend
+      removeFriend,
     },
     dispatch,
   )
@@ -381,6 +378,8 @@ Notif.propTypes = {
   updateSession: PropTypes.func,
   setHost: PropTypes.func,
   hideDisable: PropTypes.func,
+  setDisable: PropTypes.func,
+  disable: PropTypes.bool,
   error: PropTypes.bool,
   refresh: PropTypes.bool,
   changeNotifs: PropTypes.func,
@@ -403,7 +402,7 @@ const styles = StyleSheet.create({
   },
   deleteText: {
     textAlign: 'center',
-    marginTop: '5%'
+    marginTop: '5%',
   },
   deleteButton: {
     borderColor: colors.hex,
@@ -411,12 +410,12 @@ const styles = StyleSheet.create({
     marginHorizontal: '4%',
     paddingTop: '1%',
     paddingBottom: '1%',
-    width: '40%'
+    width: '40%',
   },
   deleteButtonText: {
     marginHorizontal: '7%',
     marginVertical: '1%',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   userInfo: { flexDirection: 'row', alignItems: 'center' },
   modal: {

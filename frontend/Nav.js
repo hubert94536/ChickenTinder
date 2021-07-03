@@ -150,4 +150,5 @@ TabBar.propTypes = {
   cur: PropTypes.string,
   noNotif: PropTypes.func,
   notif: PropTypes.bool,
+  gotNotif: PropTypes.bool,
 }

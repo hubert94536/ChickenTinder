@@ -3,7 +3,17 @@ import { Image, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-n
 import CheckBox from '@react-native-community/checkbox'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { setDisable, hideDisable, setHold, showError, showRefresh, removeFriend, removeNotif, acceptFriend, updateNotif } from '../redux/Actions.js'
+import {
+  setDisable,
+  hideDisable,
+  setHold,
+  showError,
+  showRefresh,
+  removeFriend,
+  removeNotif,
+  acceptFriend,
+  updateNotif,
+} from '../redux/Actions.js'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
@@ -26,23 +36,23 @@ class NotifCard extends React.Component {
 
   // accept friend request and modify card
   async acceptFriend() {
-    this.setState({disable: true})
+    this.setState({ disable: true })
     friendsApi
       .acceptFriendRequest(this.props.uid)
       .then(() => {
         this.props.acceptFriend(this.props.uid)
         this.props.updateNotif(this.props.id, 'friends')
-        this.setState({disable: false})
+        this.setState({ disable: false })
       })
       .catch(() => {
         this.props.showError()
-        this.setState({disable: false})
+        this.setState({ disable: false })
       })
   }
 
   // delete friend and modify view
   async deleteFriend() {
-    this.setState({disable: true})
+    this.setState({ disable: true })
     friendsApi
       .removeFriendship(this.props.uid)
       .then(() => {
@@ -51,11 +61,11 @@ class NotifCard extends React.Component {
         })
         this.props.removeFriend(this.props.uid)
         this.props.removeNotif([this.props.id])
-        this.setState({disable: false})
+        this.setState({ disable: false })
       })
       .catch(() => {
         this.props.showError()
-        this.setState({disable: false})
+        this.setState({ disable: false })
       })
   }
 
@@ -83,7 +93,7 @@ class NotifCard extends React.Component {
 
   // deselect when hold to delete is cancelled
   componentDidUpdate() {
-    if (!this.props.hold && this.state.selected) this.setState({selected: false})
+    if (!this.props.hold && this.state.selected) this.setState({ selected: false })
   }
 
   render() {
@@ -178,7 +188,7 @@ const mapDispatchToProps = (dispatch) =>
       removeFriend,
       removeNotif,
       acceptFriend,
-      updateNotif
+      updateNotif,
     },
     dispatch,
   )
@@ -187,6 +197,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(NotifCard)
 
 NotifCard.propTypes = {
   uid: PropTypes.string,
+  id: PropTypes.string,
   total: PropTypes.array,
   type: PropTypes.string,
   content: PropTypes.string,
@@ -204,7 +215,7 @@ NotifCard.propTypes = {
   removeFriend: PropTypes.func,
   removeNotif: PropTypes.func,
   acceptFriend: PropTypes.func,
-  updateNotif: PropTypes.func
+  updateNotif: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

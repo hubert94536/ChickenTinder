@@ -273,10 +273,7 @@ class TopThree extends React.Component {
             style={[screenStyles.bigButton, styles.waiting]}
           >
             <Text
-              style={[screenStyles.medButtonText, 
-                      styles.waitingText, 
-                      styles.white, 
-                      styles.submit]}
+              style={[screenStyles.medButtonText, styles.waitingText, styles.white, styles.submit]}
             >
               Waiting for Host...
             </Text>
@@ -422,7 +419,7 @@ const styles = StyleSheet.create({
     width: '45%',
     borderColor: colors.hex,
     backgroundColor: colors.hex,
-    marginBottom:'-15%'
+    marginBottom: '-15%',
   },
   waiting: {
     borderColor: colors.hex,

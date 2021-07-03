@@ -17,6 +17,7 @@ import Clipboard from '@react-native-community/clipboard'
 import { connect } from 'react-redux'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import PropTypes from 'prop-types'
 import Drawer from './Drawer.js'
 import Alert from '../modals/Alert.js'
@@ -206,15 +207,7 @@ class Group extends React.Component {
             <View style={styles.subheader}>
               <Text style={styles.pinText}>Group PIN: </Text>
               <Text style={styles.codeText}>{this.props.session.code + ' '}</Text>
-              <TouchableOpacity
-                style={{
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  width: 15,
-                  height: 15,
-                }}
-                onPress={() => this.copyToClipboard()}
-              >
+              <TouchableOpacity style={styles.copyButton} onPress={() => this.copyToClipboard()}>
                 <Ionicons name="copy-outline" style={styles.copyIcon} />
               </TouchableOpacity>
             </View>
@@ -230,24 +223,41 @@ class Group extends React.Component {
           renderContainerView={
             <View style={styles.main}>
               <View style={styles.center}>
-                <Icon name="user" style={[styles.icon, { color: colors.hex }]} />
-                <Text
-                  style={{
-                    color: colors.hex,
-                    fontWeight: 'bold',
-                    fontFamily: font,
-                  }}
-                >
-                  {memberList.length}
-                </Text>
-                <Text style={styles.divider}>|</Text>
-                <Text style={styles.waiting}>
-                  {this.countNeedFilters(this.props.session.members) == 0
-                    ? 'waiting for host to start'
-                    : `waiting for ${this.countNeedFilters(
-                        this.props.session.members,
-                      )} member filters`}
-                </Text>
+                <View style={styles.members}>
+                  <Icon5 name="door-open" style={[styles.icon, { color: 'dimgray' }]} />
+                  <TouchableHighlight
+                    disabled={this.props.disable || this.state.drawerOpen}
+                    style={styles.leave}
+                    activeOpacity={1}
+                    onPress={() => {
+                      if (!this.state.drawerOpen) {
+                        this.setState({ blur: true, leaveAlert: true })
+                      }
+                    }}
+                    underlayColor="white"
+                  >
+                    <Text
+                      style={[
+                        styles.leaveText,
+                        this.state.leave ? { color: colors.hex } : { color: '#6A6A6A' },
+                      ]}
+                    >
+                      Leave
+                    </Text>
+                  </TouchableHighlight>
+                </View>
+                <View style={styles.members}>
+                  <Icon name="user" style={[styles.icon, { color: colors.hex }]} />
+                  <Text style={styles.numMembers}>{memberList.length}</Text>
+                  <Text style={styles.divider}>|</Text>
+                  <Text style={styles.waiting}>
+                    {this.countNeedFilters(this.props.session.members) == 0
+                      ? 'waiting for host to start'
+                      : `waiting for ${this.countNeedFilters(
+                          this.props.session.members,
+                        )} member filters`}
+                  </Text>
+                </View>
               </View>
               <FlatList
                 style={styles.memberContainer}
@@ -266,25 +276,9 @@ class Group extends React.Component {
                       <TouchableHighlight
                         underlayColor={colors.gray}
                         onPress={() => this.setState({ chooseFriends: true, blur: true })}
-                        style={{
-                          backgroundColor: '#ECECEC',
-                          borderRadius: 7,
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: windowWidth * 0.4,
-                          height: windowWidth * 0.116,
-                          margin: '1.5%',
-                        }}
+                        style={styles.addButton}
                       >
-                        <Text
-                          style={{
-                            color: 'dimgray',
-                            textAlign: 'center',
-                            width: '100%',
-                          }}
-                        >
-                          + Add Friends
-                        </Text>
+                        <Text style={styles.add}>+ Add Friends</Text>
                       </TouchableHighlight>
                     )
                   } else {
@@ -372,22 +366,9 @@ class Group extends React.Component {
                   />
                 </View>
               </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                }}
-              >
+              <View style={styles.container}>
                 <View style={styles.footerContainer}>
-                  <Text
-                    style={{
-                      color: colors.hex,
-                      fontFamily: font,
-                      fontSize: normalize(15),
-                      elevation: 32,
-                      padding: '4%',
-                    }}
-                  >
+                  <Text style={styles.pullDown}>
                     {this.props.isHost ? 'Pull down for host menu' : 'Pull down to set filters'}
                   </Text>
                 </View>
@@ -458,26 +439,6 @@ class Group extends React.Component {
               </TouchableHighlight>
             )}
           </View>
-          <TouchableHighlight
-            disabled={this.props.disable || this.state.drawerOpen}
-            style={styles.leave}
-            activeOpacity={1}
-            onPress={() => {
-              if (!this.state.drawerOpen) {
-                this.setState({ blur: true, leaveAlert: true })
-              }
-            }}
-            underlayColor="white"
-          >
-            <Text
-              style={[
-                styles.leaveText,
-                this.state.leave ? { color: colors.hex } : { color: '#6A6A6A' },
-              ]}
-            >
-              Leave Group
-            </Text>
-          </TouchableHighlight>
         </View>
         <Modal transparent={true} animationType={'none'} visible={this.props.refresh}>
           <ActivityIndicator
@@ -548,6 +509,7 @@ const styles = StyleSheet.create({
   all: {
     height: '100%',
     width: '100%',
+    backgroundColor: 'white',
   },
   main: {
     marginTop: windowWidth * 0.0966,
@@ -583,22 +545,18 @@ const styles = StyleSheet.create({
   },
   leave: {
     alignSelf: 'center',
-    marginTop: '1%',
-    borderRadius: 25,
-    width: '55%',
+    marginLeft: '3%',
   },
   leaveText: {
+    marginLeft: '3%',
+    alignSelf: 'center',
     fontFamily: font,
-    textAlign: 'center',
-    fontSize: normalize(16),
-    paddingTop: '2%',
-    paddingBottom: '2%',
   },
   icon: {
     color: '#aaa',
     marginLeft: '5%',
     marginTop: '2%',
-    fontSize: normalize(30),
+    fontSize: normalize(27),
   },
   divider: {
     color: colors.hex,
@@ -630,7 +588,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   bottomText: {
-    color: '#aaa',
+    color: colors.hex,
     width: '70%',
     alignSelf: 'center',
     fontWeight: 'bold',
@@ -646,10 +604,12 @@ const styles = StyleSheet.create({
     borderColor: colors.hex,
   },
   center: {
-    margin: '3%',
+    marginTop: '3%',
     marginLeft: '5%',
     marginRight: '5%',
+    marginBottom: '1%',
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   bottom: {
     position: 'absolute',
@@ -692,6 +652,12 @@ const styles = StyleSheet.create({
     fontSize: normalize(15),
     marginLeft: '7%',
   },
+  copyButton: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    width: 15,
+    height: 15,
+  },
   drawer: {
     position: 'absolute',
     top: 0,
@@ -711,5 +677,38 @@ const styles = StyleSheet.create({
   },
   white: {
     color: 'white',
+  },
+  members: {
+    flexDirection: 'row',
+  },
+  numMembers: {
+    color: colors.hex,
+    fontWeight: 'bold',
+    fontFamily: font,
+  },
+  pullDown: {
+    color: colors.hex,
+    fontFamily: font,
+    fontSize: normalize(15),
+    elevation: 32,
+    padding: '4%',
+  },
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  add: {
+    color: 'dimgray',
+    textAlign: 'center',
+    width: '100%',
+  },
+  addButton: {
+    backgroundColor: '#ECECEC',
+    borderRadius: 7,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: windowWidth * 0.4,
+    height: windowWidth * 0.116,
+    margin: '1.5%',
   },
 })

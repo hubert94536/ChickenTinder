@@ -15,7 +15,7 @@ const INITIAL_STATE = {
   top: [],
   disable: false,
   hold: false,
-  notifs: []
+  notifs: [],
 }
 
 export const errorReducer = (state = INITIAL_STATE.error, action) => {
@@ -90,7 +90,7 @@ export const friendsReducer = (state = INITIAL_STATE, action) => {
       })
       return {
         ...state,
-        friends: friends
+        friends: friends,
       }
     case 'PENDING_FRIEND':
       return {
@@ -103,8 +103,8 @@ export const friendsReducer = (state = INITIAL_STATE, action) => {
             photo: action.payload.photo,
             uid: action.payload.uid,
             status: 'pending',
-          }
-        ]
+          },
+        ],
       }
     case 'REQUEST_FRIEND':
       return {
@@ -117,15 +117,15 @@ export const friendsReducer = (state = INITIAL_STATE, action) => {
             photo: action.payload.photo,
             uid: action.payload.uid,
             status: 'requested',
-          }
-        ]
+          },
+        ],
       }
     case 'REMOVE_FRIEND':
       return {
         ...state,
         friends: friends.filter((item) => {
           if (item.uid !== action.payload) return item
-        })
+        }),
       }
     default:
       return state
@@ -138,7 +138,7 @@ export const notifReducer = (state = INITIAL_STATE, action) => {
     case 'CHANGE_NOTIFICATIONS':
       return {
         ...state,
-        notifs: [...action.payload]
+        notifs: [...action.payload],
       }
     case 'ADD_NOTIFICATION':
       return {
@@ -154,26 +154,26 @@ export const notifReducer = (state = INITIAL_STATE, action) => {
             senderPhoto: action.payload.senderPhoto,
             senderName: action.payload.name,
             content: action.payload.content,
-            read: false
-          }
-        ]
+            read: false,
+          },
+        ],
       }
     case 'REMOVE_NOTIFICATION':
       let afterRemove = notifs.filter(function (item) {
-        if (!(action.payload.includes(item.id))) return item
+        if (!action.payload.includes(item.id)) return item
       })
       console.log(afterRemove)
       return {
         ...state,
-        notifs: [...afterRemove]
+        notifs: [...afterRemove],
       }
     case 'UPDATE_NOTIFICATION':
-      notifs.forEach(function(item) {
+      notifs.forEach(function (item) {
         if (item.id === action.payload.id) item.type = action.payload.type
       })
       return {
         ...state,
-        notifs: [...notifs]
+        notifs: [...notifs],
       }
     default:
       return state

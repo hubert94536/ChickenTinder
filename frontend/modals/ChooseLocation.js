@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginTop: fullHeight * 0.11,
     marginBottom: fullHeight * 0.11,
-    height: fullHeight* 0.78,
+    height: fullHeight * 0.78,
     width: fullWidth * 0.8,
   },
   map: {

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import CodeInput from 'react-native-confirmation-code-input';
+import CodeInput from 'react-native-confirmation-code-input'
 import {
   ImageBackground,
   SafeAreaView,
@@ -15,10 +15,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { BlurView } from '@react-native-community/blur'
 import Alert from '../modals/Alert.js'
-import {
-  setDisable,
-  hideDisable,
-} from '../redux/Actions.js'
+import { setDisable, hideDisable } from '../redux/Actions.js'
 import colors from '../../styles/colors.js'
 import loginService from '../apis/loginService.js'
 import modalStyles from '../../styles/modalStyles.js'
@@ -114,7 +111,7 @@ class PhoneAuthScreen extends Component {
           onPress={() => this.handleVerifyCode()}
         >
           <Text style={[screenStyles.longButtonText, styles.longButtonText]}>Verify Code</Text>
-          </TouchableOpacity>
+        </TouchableOpacity>
       </View>
     )
   }

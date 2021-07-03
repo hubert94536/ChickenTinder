@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderColor: colors.hex,
     marginTop: height * 0.07,
-    marginBottom: '2%'
+    marginBottom: '2%',
   },
   /* For "Call number" button */
   callButton: {
@@ -260,6 +260,6 @@ const styles = StyleSheet.create({
   white: { color: 'white' },
   buttonText: {
     paddingTop: '3%',
-    paddingBottom: '2%'
-  }
+    paddingBottom: '2%',
+  },
 })
