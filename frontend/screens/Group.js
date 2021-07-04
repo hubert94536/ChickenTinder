@@ -164,14 +164,10 @@ class Group extends React.Component {
     memberRenderList.push(footer)
   }
 
-  componentWillUnmount() {
-    console.log('hi')
-  }
-
   leave() {
     this.props.setDisable()
     socket.getSocket().off()
-    socket.leave('group')
+    socket.leave()
     this.props.hideDisable()
     this.props.navigation.replace('Home')
   }
@@ -230,11 +226,7 @@ class Group extends React.Component {
                     disabled={this.props.disable || this.state.drawerOpen}
                     style={styles.leave}
                     activeOpacity={1}
-                    onPress={() => {
-                      if (!this.state.drawerOpen) {
-                        this.setState({ blur: true, leaveAlert: true })
-                      }
-                    }}
+                    onPress={() => { this.setState({ blur: true, leaveAlert: true }) }}
                     underlayColor="white"
                   >
                     <Icon5 name="door-open" style={[styles.icon, { color: 'dimgray' }]} />

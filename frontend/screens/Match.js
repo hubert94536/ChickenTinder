@@ -46,7 +46,7 @@ class Match extends React.Component {
   leave() {
     this.props.setDisable()
     socket.getSocket().off()
-    socket.leave('match')
+    socket.leave()
     this.props.navigation.replace('Home')
     this.props.hideDisable()
   }

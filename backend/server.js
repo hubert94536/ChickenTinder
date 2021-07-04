@@ -76,6 +76,10 @@ app
   .get(auth.authenticate, notifications.getNotifs)
   .delete(schema.checkNotif, auth.authenticate, notifications.deleteNotif)
 
+app
+  .route('/delete_many_notifications')
+  .delete(schema.checkManyNotifs, auth.authenticate, notifications.deleteManyNotifs)
+  
 // TODO: validate params
 app
   .route('/notifications/token')

@@ -372,7 +372,7 @@ module.exports = (io) => {
     })
 
     // handle user leaving
-    socket.on('leave', (data) => {
+    socket.on('leave', () => {
       if (socket.user.room) {
         lock(socket.user.room, async function (done) {
           try {
@@ -385,7 +385,8 @@ module.exports = (io) => {
             // delete room if there are no more members
             if (Object.keys(session.members).length === 0) {
               sendCommand('JSON.DEL', [socket.user.room]).catch((err) => console.error(err))
-            } else {
+            }
+            else {
               // if the host is leaving, reassign the host
               if (session.host === socket.user.uid) {
                 await sendCommand('JSON.SET', [
@@ -397,15 +398,16 @@ module.exports = (io) => {
               }
               // if the removed user was last person to finish in a round, get top 3 restaurants and emit
               if (
-                data.restaurants &&
-                !data.top3 &&
+                session.restaurants &&
+                !session.top3 &&
                 session.finished.length === Object.keys(session.members).length
               ) {
                 let top3 = getTop3(session.restaurants)
                 if (top3.choices.length > 1) {
                   await sendCommand('JSON.SET', [socket.user.room, '.top3', JSON.stringify(top3)])
                   io.in(socket.user.room).emit('top 3', top3)
-                } else {
+                }
+                else {
                   // return match if top3 is only 1 restaurant
                   await sendCommand('JSON.SET', [
                     socket.user.room,
@@ -414,11 +416,10 @@ module.exports = (io) => {
                   ])
                   io.in(socket.user.room).emit('match', top3.choices[0])
                 }
-              } else if (data.restaurants && !data.top3) {
+              }
+              else if (session.restaurants && !session.top3) {
                 // decrease the majority by 1
-                sendCommand('JSON.NUMINCRBY', [socket.user.room, '.majority', -1]).catch((err) =>
-                  console.error(err),
-                )
+                await sendCommand('JSON.NUMINCRBY', [socket.user.room, '.majority', -1])
               }
               io.in(socket.user.room).emit('update', session)
             }

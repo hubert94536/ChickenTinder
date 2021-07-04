@@ -71,6 +71,13 @@ function checkFriendship(req, res, next) {
   validateRequest(req, next, friendshipSchema)
 }
 
+function checkManyNotifs(req, res, next) {
+  const manyNotifSchema = joi.object().keys({
+    ids: joi.array().items(joi.number()).required(),
+  })
+  validateRequest(req, next, manyNotifSchema)
+}
+
 // Check notification id is passed in
 function checkNotif(req, res, next) {
   const notifSchema = joi.object().keys({
@@ -101,6 +108,7 @@ module.exports = {
   checkCreateAccounts,
   checkEmail,
   checkFriendship,
+  checkManyNotifs,
   checkNotif,
   checkPhoneNumber,
   checkSearch,

@@ -79,20 +79,22 @@ class Notif extends Component {
   deleteNotifications() {
     this.props.setDisable()
     this.props.hideHold()
-    let newNotifs = this.props.notifs.filter((notif) => {
-      if (!this.state.modNotifs.includes(notif.id)) return notif
-      else {
-        if (notif.type === 'pending') {
-          friendsApi
-            .removeFriendship(notif.sender)
-            .then(() => this.props.removeFriend(notif.sender))
-            .catch(() => this.props.showError())
+    if (this.state.modNotifs.length() > 0) {
+      let newNotifs = this.props.notifs.filter((notif) => {
+        if (!this.state.modNotifs.includes(notif.id)) return notif
+        else {
+          if (notif.type === 'pending') {
+            friendsApi
+              .removeFriendship(notif.sender)
+              .then(() => this.props.removeFriend(notif.sender))
+              .catch(() => this.props.showError())
+          }
         }
-        notificationsApi.removeNotif(notif.id).catch(() => this.props.showError())
-      }
-    })
-    this.props.changeNotifs(newNotifs)
-    this.setState({ modNotifs: [] })
+      })
+      notificationsApi.removeManyNotifs(this.state.modNotifs).catch(() => this.props.showError())
+      this.props.changeNotifs(newNotifs)
+      this.setState({ modNotifs: [] })
+    }
     this.props.hideDisable()
   }
   //TODO: uncomment after updating backend
@@ -310,7 +312,7 @@ class Notif extends Component {
         <TabBar
           goHome={() => this.props.navigation.replace('Home')}
           goSearch={() => this.props.navigation.replace('Search')}
-          goNotifs={() => {}}
+          goNotifs={() => { }}
           goProfile={() => this.props.navigation.replace('Profile')}
           cur="Notifs"
         />

@@ -71,7 +71,7 @@ class Round extends React.Component {
   leave() {
     this.props.setDisable()
     socket.getSocket().off()
-    socket.leave('round')
+    socket.leave()
     this.props.hideDisable()
     this.props.navigation.replace('Home')
   }

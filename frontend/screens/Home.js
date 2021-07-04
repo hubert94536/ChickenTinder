@@ -54,6 +54,7 @@ class Home extends React.Component {
       socketErr: false,
     }
     socket.getSocket().on('update', (res) => {
+      console.log(res)
       socket.getSocket().off()
       this.props.updateSession(res)
       this.props.setHost(res.members[res.host].username === this.props.username)

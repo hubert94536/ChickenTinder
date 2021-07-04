@@ -53,6 +53,18 @@ const removeNotif = async (id) => {
     })
 }
 
+// remove a list of notifications
+const removeManyNotifs = async (ids) => {
+  return notificationsApi
+    .delete(`/delete_many_notifications`, { data: { id: ids } })
+    .then((res) => {
+      return res.status
+    })
+    .catch((error) => {
+      return Promise.reject(error.response)
+    })
+}
+
 // link a user to a notification token
 const linkToken = async (token) => {
   return notificationsApi
@@ -83,6 +95,7 @@ const unlinkToken = async () => {
 
 export default {
   getNotifs,
+  removeManyNotifs,
   removeNotif,
   linkToken,
   unlinkToken,
