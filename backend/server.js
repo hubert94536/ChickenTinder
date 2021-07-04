@@ -79,7 +79,7 @@ app
 app
   .route('/delete_many_notifications')
   .delete(schema.checkManyNotifs, auth.authenticate, notifications.deleteManyNotifs)
-  
+
 // TODO: validate params
 app
   .route('/notifications/token')

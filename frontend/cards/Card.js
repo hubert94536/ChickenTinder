@@ -272,7 +272,7 @@ Card.propTypes = {
   rejectFriend: PropTypes.func,
   requestFriend: PropTypes.func,
   removeFriend: PropTypes.func,
-  notif: PropTypes.array,
+  notifs: PropTypes.array,
   removeNotif: PropTypes.func,
 }
 

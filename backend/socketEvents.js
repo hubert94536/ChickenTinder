@@ -385,8 +385,7 @@ module.exports = (io) => {
             // delete room if there are no more members
             if (Object.keys(session.members).length === 0) {
               sendCommand('JSON.DEL', [socket.user.room]).catch((err) => console.error(err))
-            }
-            else {
+            } else {
               // if the host is leaving, reassign the host
               if (session.host === socket.user.uid) {
                 await sendCommand('JSON.SET', [
@@ -406,8 +405,7 @@ module.exports = (io) => {
                 if (top3.choices.length > 1) {
                   await sendCommand('JSON.SET', [socket.user.room, '.top3', JSON.stringify(top3)])
                   io.in(socket.user.room).emit('top 3', top3)
-                }
-                else {
+                } else {
                   // return match if top3 is only 1 restaurant
                   await sendCommand('JSON.SET', [
                     socket.user.room,
@@ -416,8 +414,7 @@ module.exports = (io) => {
                   ])
                   io.in(socket.user.room).emit('match', top3.choices[0])
                 }
-              }
-              else if (session.restaurants && !session.top3) {
+              } else if (session.restaurants && !session.top3) {
                 // decrease the majority by 1
                 await sendCommand('JSON.NUMINCRBY', [socket.user.room, '.majority', -1])
               }

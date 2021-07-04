@@ -56,7 +56,7 @@ const removeNotif = async (id) => {
 // remove a list of notifications
 const removeManyNotifs = async (ids) => {
   return notificationsApi
-    .delete(`/delete_many_notifications`, { data: { id: ids } })
+    .delete(`/delete_many_notifications`, { data: { ids: ids } })
     .then((res) => {
       return res.status
     })

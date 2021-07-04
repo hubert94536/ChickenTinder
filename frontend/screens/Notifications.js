@@ -79,7 +79,7 @@ class Notif extends Component {
   deleteNotifications() {
     this.props.setDisable()
     this.props.hideHold()
-    if (this.state.modNotifs.length() > 0) {
+    if (this.state.modNotifs.length > 0) {
       let newNotifs = this.props.notifs.filter((notif) => {
         if (!this.state.modNotifs.includes(notif.id)) return notif
         else {
@@ -312,7 +312,7 @@ class Notif extends Component {
         <TabBar
           goHome={() => this.props.navigation.replace('Home')}
           goSearch={() => this.props.navigation.replace('Search')}
-          goNotifs={() => { }}
+          goNotifs={() => {}}
           goProfile={() => this.props.navigation.replace('Profile')}
           cur="Notifs"
         />

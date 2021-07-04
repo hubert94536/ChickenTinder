@@ -200,8 +200,8 @@ class Group extends React.Component {
               {this.props.isHost
                 ? 'Your Group'
                 : `${this.firstName(
-                  this.props.session.members[this.props.session.host].name,
-                )}'s Group`}
+                    this.props.session.members[this.props.session.host].name,
+                  )}'s Group`}
             </Text>
             <View style={styles.subheader}>
               <Text style={styles.pinText}>Group PIN: </Text>
@@ -226,7 +226,9 @@ class Group extends React.Component {
                     disabled={this.props.disable || this.state.drawerOpen}
                     style={styles.leave}
                     activeOpacity={1}
-                    onPress={() => { this.setState({ blur: true, leaveAlert: true }) }}
+                    onPress={() => {
+                      this.setState({ blur: true, leaveAlert: true })
+                    }}
                     underlayColor="white"
                   >
                     <Icon5 name="door-open" style={[styles.icon, { color: 'dimgray' }]} />
@@ -248,8 +250,8 @@ class Group extends React.Component {
                     {this.countNeedFilters(this.props.session.members) == 0
                       ? 'waiting for host to start'
                       : `waiting for ${this.countNeedFilters(
-                        this.props.session.members,
-                      )} member filters`}
+                          this.props.session.members,
+                        )} member filters`}
                   </Text>
                 </View>
               </View>

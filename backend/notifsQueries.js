@@ -20,15 +20,15 @@ const createNotif = async (req) => {
 }
 
 // Delete an array of notifications
-const deleteManyNotifs = async(req, res) => {
+const deleteManyNotifs = async (req, res) => {
   try {
     const ids = req.body.ids
     const destroyed = await Notifications.destroy({
       where: {
-        id: {
+        ids: {
           [Op.in]: ids,
-        }
-      }
+        },
+      },
     })
     if (destroyed) {
       return res.status(204).send('Notification deleted')
