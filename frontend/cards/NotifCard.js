@@ -40,9 +40,9 @@ class NotifCard extends React.Component {
     friendsApi
       .acceptFriendRequest(this.props.uid)
       .then(() => {
+        this.setState({ disable: false })
         this.props.acceptFriend(this.props.uid)
         this.props.updateNotif(this.props.id, 'friends')
-        this.setState({ disable: false })
       })
       .catch(() => {
         this.props.showError()
@@ -59,9 +59,9 @@ class NotifCard extends React.Component {
         notificationsApi.removeNotif(this.props.id).catch(() => {
           this.props.showError()
         })
+        this.setState({ disable: false })
         this.props.removeFriend(this.props.uid)
         this.props.removeNotif([this.props.id])
-        this.setState({ disable: false })
       })
       .catch(() => {
         this.props.showError()

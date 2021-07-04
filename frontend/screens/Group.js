@@ -41,9 +41,9 @@ import {
 } from '../redux/Actions.js'
 
 const font = 'CircularStd-Medium'
-var memberList = []
-var memberRenderList = []
-var socketErrMsg = 'Error, please try again'
+let memberList = []
+let memberRenderList = []
+let socketErrMsg = 'Error, please try again'
 
 const windowWidth = Dimensions.get('window').width
 const windowHeight = Dimensions.get('window').height
@@ -164,6 +164,10 @@ class Group extends React.Component {
     memberRenderList.push(footer)
   }
 
+  componentWillUnmount() {
+    console.log('hi')
+  }
+
   leave() {
     this.props.setDisable()
     socket.getSocket().off()
@@ -191,7 +195,6 @@ class Group extends React.Component {
     return (
       <View style={styles.all}>
         <View style={styles.header}>
-          {/* <View style={styles.headerFill}> */}
           <ImageBackground
             pointerEvents="box-none"
             source={require('../assets/backgrounds/Gradient.png')}
@@ -201,8 +204,8 @@ class Group extends React.Component {
               {this.props.isHost
                 ? 'Your Group'
                 : `${this.firstName(
-                    this.props.session.members[this.props.session.host].name,
-                  )}'s Group`}
+                  this.props.session.members[this.props.session.host].name,
+                )}'s Group`}
             </Text>
             <View style={styles.subheader}>
               <Text style={styles.pinText}>Group PIN: </Text>
@@ -212,7 +215,6 @@ class Group extends React.Component {
               </TouchableOpacity>
             </View>
           </ImageBackground>
-          {/* </View> */}
         </View>
         <Drawer
           style={styles.drawer}
@@ -224,7 +226,6 @@ class Group extends React.Component {
             <View style={styles.main}>
               <View style={styles.center}>
                 <View style={styles.members}>
-                  <Icon5 name="door-open" style={[styles.icon, { color: 'dimgray' }]} />
                   <TouchableHighlight
                     disabled={this.props.disable || this.state.drawerOpen}
                     style={styles.leave}
@@ -236,15 +237,16 @@ class Group extends React.Component {
                     }}
                     underlayColor="white"
                   >
-                    <Text
-                      style={[
-                        styles.leaveText,
-                        this.state.leave ? { color: colors.hex } : { color: '#6A6A6A' },
-                      ]}
-                    >
-                      Leave
-                    </Text>
+                    <Icon5 name="door-open" style={[styles.icon, { color: 'dimgray' }]} />
                   </TouchableHighlight>
+                  <Text
+                    style={[
+                      styles.leaveText,
+                      this.state.leave ? { color: colors.hex } : { color: '#6A6A6A' },
+                    ]}
+                  >
+                    Leave
+                  </Text>
                 </View>
                 <View style={styles.members}>
                   <Icon name="user" style={[styles.icon, { color: colors.hex }]} />
@@ -254,8 +256,8 @@ class Group extends React.Component {
                     {this.countNeedFilters(this.props.session.members) == 0
                       ? 'waiting for host to start'
                       : `waiting for ${this.countNeedFilters(
-                          this.props.session.members,
-                        )} member filters`}
+                        this.props.session.members,
+                      )} member filters`}
                   </Text>
                 </View>
               </View>
@@ -296,7 +298,7 @@ class Group extends React.Component {
                     )
                   }
                 }}
-                keyExtractor={(item, index) => index}
+                keyExtractor={(_, index) => index}
               />
 
               {/* =====================================BOTTOM===================================== */}
@@ -604,10 +606,10 @@ const styles = StyleSheet.create({
     borderColor: colors.hex,
   },
   center: {
-    marginTop: '3%',
-    marginLeft: '5%',
+    marginTop: '5%',
+    marginLeft: '8%',
     marginRight: '5%',
-    marginBottom: '1%',
+    marginBottom: '0%',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },

@@ -146,7 +146,7 @@ export const notifReducer = (state = INITIAL_STATE, action) => {
         notifs: [
           ...state.notifs,
           {
-            id: action.payload.id,
+            id: action.payload.id.toString(),
             type: action.payload.type,
             createdAt: action.payload.createdAt,
             sender: action.payload.senderName,
@@ -162,7 +162,6 @@ export const notifReducer = (state = INITIAL_STATE, action) => {
       let afterRemove = notifs.filter(function (item) {
         if (!action.payload.includes(item.id)) return item
       })
-      console.log(afterRemove)
       return {
         ...state,
         notifs: [...afterRemove],

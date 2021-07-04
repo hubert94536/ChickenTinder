@@ -23,7 +23,7 @@ const getNotifs = async () => {
         notifs: res.data.notifs.map(function (notif) {
           // returns individual user info
           return {
-            id: notif.id,
+            id: notif.id.toString(),
             type: notif.type,
             createdAt: notif.createdAt,
             sender: notif.sender_uid,

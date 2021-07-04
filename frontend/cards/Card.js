@@ -11,6 +11,7 @@ import {
   acceptFriend,
   requestFriend,
   removeFriend,
+  removeNotif,
 } from '../redux/Actions.js'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
@@ -18,6 +19,7 @@ import Alert from '../modals/Alert.js'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
 import normalize from '../../styles/normalize.js'
+import notificationsApi from '../apis/notificationsApi.js'
 
 class Card extends React.Component {
   constructor(props) {
@@ -39,6 +41,15 @@ class Card extends React.Component {
         .then(() => {
           this.props.removeFriend(this.props.uid)
           this.setState({ status: 'add' })
+          // remove notification for friends
+          this.props.notifs.forEach((notif) => {
+            if (notif.sender === this.props.uid && notif.type === 'friends') {
+              notificationsApi.removeNotif(notif.id).catch(() => {
+                this.props.showError()
+              })
+              this.props.removeNotif(notif.id)
+            }
+          })
           this.props.hideDisable()
         })
         .catch(() => {
@@ -55,6 +66,15 @@ class Card extends React.Component {
       .then(() => {
         this.props.removeFriend(this.props.uid)
         this.setState({ status: 'add' })
+        // remove notification if the friend sent a pending request
+        this.props.notifs.forEach((notif) => {
+          if (notif.sender === this.props.uid && notif.type === 'pending') {
+            notificationsApi.removeNotif(notif.id).catch(() => {
+              this.props.showError()
+            })
+            this.props.removeNotif(notif.id)
+          }
+        })
         this.props.hideDisable()
       })
       .catch(() => {
@@ -211,6 +231,7 @@ const mapStateToProps = (state) => {
   return {
     error: state.error,
     disable: state.disable,
+    notifs: state.notifs.notifs,
   }
 }
 
@@ -224,6 +245,7 @@ const mapDispatchToProps = (dispatch) =>
       acceptFriend,
       removeFriend,
       requestFriend,
+      removeNotif,
     },
     dispatch,
   )
@@ -250,6 +272,8 @@ Card.propTypes = {
   rejectFriend: PropTypes.func,
   requestFriend: PropTypes.func,
   removeFriend: PropTypes.func,
+  notif: PropTypes.array,
+  removeNotif: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
