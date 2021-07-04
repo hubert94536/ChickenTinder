@@ -25,7 +25,7 @@ const deleteManyNotifs = async (req, res) => {
     const ids = req.body.ids
     const destroyed = await Notifications.destroy({
       where: {
-        ids: {
+        id: {
           [Op.in]: ids,
         },
       },
