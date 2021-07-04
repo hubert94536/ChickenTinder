@@ -87,7 +87,7 @@ module.exports = (io) => {
             // check if room still exists
             let session = await sendCommand('JSON.GET', [user.room])
             session = JSON.parse(session)
-            if (session) {
+            if (session && typeof session === 'object') {
               // check if the member has been marked as disconnected, need to set to connected if true
               if (!session.members[socket.user.uid].connected) {
                 await sendCommand('JSON.SET', [

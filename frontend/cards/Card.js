@@ -41,15 +41,6 @@ class Card extends React.Component {
         .then(() => {
           this.props.removeFriend(this.props.uid)
           this.setState({ status: 'add' })
-          // remove notification for friends
-          this.props.notifs.forEach((notif) => {
-            if (notif.sender === this.props.uid && notif.type === 'friends') {
-              notificationsApi.removeNotif(notif.id).catch(() => {
-                this.props.showError()
-              })
-              this.props.removeNotif(notif.id)
-            }
-          })
           this.props.hideDisable()
         })
         .catch(() => {
