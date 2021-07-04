@@ -4,8 +4,8 @@ const INITIAL_STATE = {
   username: {},
   image: {},
   refresh: false,
-  friends: {},
-  notif: false,
+  friends: [],
+  gotNotif: false,
   code: 0,
   kick: false,
   hostEnd: false,
@@ -15,6 +15,7 @@ const INITIAL_STATE = {
   top: [],
   disable: false,
   hold: false,
+  notifs: [],
 }
 
 export const errorReducer = (state = INITIAL_STATE.error, action) => {
@@ -75,19 +76,110 @@ export const refreshReducer = (state = INITIAL_STATE.refresh, action) => {
   }
 }
 
-export const friendsReducer = (state = INITIAL_STATE.friends, action) => {
+export const friendsReducer = (state = INITIAL_STATE, action) => {
+  let friends = [...state.friends]
   switch (action.type) {
     case 'CHANGE_FRIENDS':
       return {
         ...state,
         friends: action.payload,
       }
+    case 'ACCEPT_FRIEND':
+      friends.forEach((item) => {
+        if (item.uid === action.payload) item.status = 'friends'
+      })
+      return {
+        ...state,
+        friends: friends,
+      }
+    case 'PENDING_FRIEND':
+      return {
+        ...state,
+        friends: [
+          ...state.friends,
+          {
+            name: action.payload.name,
+            username: action.payload.username,
+            photo: action.payload.photo,
+            uid: action.payload.uid,
+            status: 'pending',
+          },
+        ],
+      }
+    case 'REQUEST_FRIEND':
+      return {
+        ...state,
+        friends: [
+          ...state.friends,
+          {
+            name: action.payload.name,
+            username: action.payload.username,
+            photo: action.payload.photo,
+            uid: action.payload.uid,
+            status: 'requested',
+          },
+        ],
+      }
+    case 'REMOVE_FRIEND':
+      return {
+        ...state,
+        friends: friends.filter((item) => {
+          if (item.uid !== action.payload) return item
+        }),
+      }
     default:
       return state
   }
 }
 
-export const notifReducer = (state = INITIAL_STATE.notif, action) => {
+export const notifReducer = (state = INITIAL_STATE, action) => {
+  let notifs = [...state.notifs]
+  switch (action.type) {
+    case 'CHANGE_NOTIFICATIONS':
+      return {
+        ...state,
+        notifs: [...action.payload],
+      }
+    case 'ADD_NOTIFICATION':
+      return {
+        ...state,
+        notifs: [
+          ...state.notifs,
+          {
+            id: action.payload.id.toString(),
+            type: action.payload.type,
+            createdAt: action.payload.createdAt,
+            sender: action.payload.senderName,
+            senderUsername: action.payload.senderUsername,
+            senderPhoto: action.payload.senderPhoto,
+            senderName: action.payload.name,
+            content: action.payload.content,
+            read: false,
+          },
+        ],
+      }
+    case 'REMOVE_NOTIFICATION':
+      let afterRemove = notifs.filter(function (item) {
+        if (!action.payload.includes(item.id)) return item
+      })
+      return {
+        ...state,
+        notifs: [...afterRemove],
+      }
+    case 'UPDATE_NOTIFICATION':
+      notifs.forEach(function (item) {
+        if (item.id === action.payload.id) item.type = action.payload.type
+      })
+      return {
+        ...state,
+        notifs: [...notifs],
+      }
+    default:
+      return state
+  }
+}
+
+export const gotNotifReducer = (state = INITIAL_STATE.gotNotif, action) => {
   switch (action.type) {
     case 'NEW_NOTIF':
       return true

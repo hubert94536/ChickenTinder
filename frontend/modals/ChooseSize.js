@@ -88,7 +88,6 @@ export default class Size extends React.Component {
               </View>
             )}
             <TouchableHighlight
-              onPress={() => this.evaluate()}
               onShowUnderlay={() => this.setState({ pressed: true })}
               onHideUnderlay={() => this.setState({ pressed: false })}
               underlayColor="white"

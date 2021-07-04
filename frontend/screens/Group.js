@@ -41,9 +41,9 @@ import {
 } from '../redux/Actions.js'
 
 const font = 'CircularStd-Medium'
-var memberList = []
-var memberRenderList = []
-var socketErrMsg = 'Error, please try again'
+let memberList = []
+let memberRenderList = []
+let socketErrMsg = 'Error, please try again'
 
 const windowWidth = Dimensions.get('window').width
 const windowHeight = Dimensions.get('window').height
@@ -167,9 +167,9 @@ class Group extends React.Component {
   leave() {
     this.props.setDisable()
     socket.getSocket().off()
-    socket.leave('group')
-    this.props.navigation.replace('Home')
+    socket.leave()
     this.props.hideDisable()
+    this.props.navigation.replace('Home')
   }
 
   cancelAlert() {
@@ -191,7 +191,6 @@ class Group extends React.Component {
     return (
       <View style={styles.all}>
         <View style={styles.header}>
-          {/* <View style={styles.headerFill}> */}
           <ImageBackground
             pointerEvents="box-none"
             source={require('../assets/backgrounds/Gradient.png')}
@@ -207,15 +206,11 @@ class Group extends React.Component {
             <View style={styles.subheader}>
               <Text style={styles.pinText}>Group PIN: </Text>
               <Text style={styles.codeText}>{this.props.session.code + ' '}</Text>
-              <TouchableOpacity
-                style={styles.copyButton} 
-                onPress={() => this.copyToClipboard()}
-              >
+              <TouchableOpacity style={styles.copyButton} onPress={() => this.copyToClipboard()}>
                 <Ionicons name="copy-outline" style={styles.copyIcon} />
               </TouchableOpacity>
             </View>
           </ImageBackground>
-          {/* </View> */}
         </View>
         <Drawer
           style={styles.drawer}
@@ -226,19 +221,18 @@ class Group extends React.Component {
           renderContainerView={
             <View style={styles.main}>
               <View style={styles.center}>
-              <View style ={styles.members}>
-                <Icon5 name="door-open" style={[styles.icon, { color: 'dimgray'}]} />
-                <TouchableHighlight
-                  disabled={this.props.disable || this.state.drawerOpen}
-                  style={styles.leave}
-                  activeOpacity={1}
-                  onPress={() => {
-                    if (!this.state.drawerOpen) {
+                <View style={styles.members}>
+                  <TouchableHighlight
+                    disabled={this.props.disable || this.state.drawerOpen}
+                    style={styles.leave}
+                    activeOpacity={1}
+                    onPress={() => {
                       this.setState({ blur: true, leaveAlert: true })
-                    }
-                  }}
-                  underlayColor="white"
-                >
+                    }}
+                    underlayColor="white"
+                  >
+                    <Icon5 name="door-open" style={[styles.icon, { color: 'dimgray' }]} />
+                  </TouchableHighlight>
                   <Text
                     style={[
                       styles.leaveText,
@@ -247,15 +241,10 @@ class Group extends React.Component {
                   >
                     Leave
                   </Text>
-                </TouchableHighlight>
-              </View>
-                <View style ={styles.members}>
+                </View>
+                <View style={styles.members}>
                   <Icon name="user" style={[styles.icon, { color: colors.hex }]} />
-                  <Text
-                    style={styles.numMembers}
-                  >
-                    {memberList.length}
-                  </Text>
+                  <Text style={styles.numMembers}>{memberList.length}</Text>
                   <Text style={styles.divider}>|</Text>
                   <Text style={styles.waiting}>
                     {this.countNeedFilters(this.props.session.members) == 0
@@ -285,11 +274,7 @@ class Group extends React.Component {
                         onPress={() => this.setState({ chooseFriends: true, blur: true })}
                         style={styles.addButton}
                       >
-                        <Text
-                          style={styles.add}
-                        >
-                          + Add Friends
-                        </Text>
+                        <Text style={styles.add}>+ Add Friends</Text>
                       </TouchableHighlight>
                     )
                   } else {
@@ -307,7 +292,7 @@ class Group extends React.Component {
                     )
                   }
                 }}
-                keyExtractor={(item, index) => index}
+                keyExtractor={(_, index) => index}
               />
 
               {/* =====================================BOTTOM===================================== */}
@@ -377,13 +362,9 @@ class Group extends React.Component {
                   />
                 </View>
               </View>
-              <View
-                style={styles.container}
-              >
+              <View style={styles.container}>
                 <View style={styles.footerContainer}>
-                  <Text
-                    style={styles.pullDown}
-                  >
+                  <Text style={styles.pullDown}>
                     {this.props.isHost ? 'Pull down for host menu' : 'Pull down to set filters'}
                   </Text>
                 </View>
@@ -454,7 +435,6 @@ class Group extends React.Component {
               </TouchableHighlight>
             )}
           </View>
-          
         </View>
         <Modal transparent={true} animationType={'none'} visible={this.props.refresh}>
           <ActivityIndicator
@@ -525,7 +505,7 @@ const styles = StyleSheet.create({
   all: {
     height: '100%',
     width: '100%',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   main: {
     marginTop: windowWidth * 0.0966,
@@ -564,7 +544,6 @@ const styles = StyleSheet.create({
     marginLeft: '3%',
   },
   leaveText: {
-
     marginLeft: '3%',
     alignSelf: 'center',
     fontFamily: font,
@@ -621,13 +600,12 @@ const styles = StyleSheet.create({
     borderColor: colors.hex,
   },
   center: {
-    marginTop: '3%',
-    marginLeft: '5%',
+    marginTop: '5%',
+    marginLeft: '8%',
     marginRight: '5%',
-    marginBottom: '1%',
+    marginBottom: '0%',
     flexDirection: 'row',
-    justifyContent: 'space-between'
-
+    justifyContent: 'space-between',
   },
   bottom: {
     position: 'absolute',
@@ -697,14 +675,14 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   members: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   numMembers: {
     color: colors.hex,
     fontWeight: 'bold',
     fontFamily: font,
   },
-  pullDown:{
+  pullDown: {
     color: colors.hex,
     fontFamily: font,
     fontSize: normalize(15),
@@ -728,5 +706,5 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.4,
     height: windowWidth * 0.116,
     margin: '1.5%',
-  }
+  },
 })

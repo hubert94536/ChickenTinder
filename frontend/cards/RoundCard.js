@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderColor: '#000',
     // aspectRatio: 5 / 7.5,
-    aspectRatio: width * 1.29 / height,
+    aspectRatio: (width * 1.29) / height,
     elevation: 10,
     overflow: 'hidden',
   },

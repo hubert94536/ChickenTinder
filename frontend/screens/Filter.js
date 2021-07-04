@@ -336,7 +336,7 @@ class FilterSelector extends React.Component {
               <Text style={[screenStyles.text, styles.filterTitleText]}>Cuisines</Text>
               <Text style={styles.filterSubtext}>Select all that apply</Text>
             </View>
-            
+
             <FlatList
               data={cuisines}
               columnWrapperStyle={{
@@ -356,7 +356,6 @@ class FilterSelector extends React.Component {
               }}
               keyExtractor={(item, index) => index}
             />
-            
           </View>
         </View>
         {/* ------------------------------------------ALERTS------------------------------------------ */}

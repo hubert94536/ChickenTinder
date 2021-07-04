@@ -19,6 +19,27 @@ const createNotif = async (req) => {
   }
 }
 
+// Delete an array of notifications
+const deleteManyNotifs = async (req, res) => {
+  try {
+    const ids = req.body.ids
+    const destroyed = await Notifications.destroy({
+      where: {
+        id: {
+          [Op.in]: ids,
+        },
+      },
+    })
+    if (destroyed) {
+      return res.status(204).send('Notification deleted')
+    }
+    return res.status(404).send('Notification not found')
+  } catch (error) {
+    console.error(error)
+    return res.status(500).send(error.message)
+  }
+}
+
 // Delete a notification
 const deleteNotif = async (req, res) => {
   try {
@@ -107,6 +128,7 @@ const updateNotif = async (id, type) => {
 
 module.exports = {
   createNotif,
+  deleteManyNotifs,
   deleteNotif,
   getAllNotifs,
   getNotifs,

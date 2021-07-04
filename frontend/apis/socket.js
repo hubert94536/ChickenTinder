@@ -49,8 +49,8 @@ const joinRoom = (code) => {
   })
 }
 // leaving a session
-const leave = (stage) => {
-  socket.emit('leave', { stage: stage })
+const leave = () => {
+  socket.emit('leave')
 }
 
 const kickUser = (uid) => {

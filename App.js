@@ -19,6 +19,9 @@ import {
   showKick,
   showRefresh,
   hideRefresh,
+  pendingFriend,
+  acceptFriend,
+  addNotif,
 } from './frontend/redux/Actions.js'
 import global from './global.js'
 import Disconnect from './frontend/screens/Disconnect.js'
@@ -160,8 +163,8 @@ class App extends React.Component {
         .getSocket()
         .off('reconnect')
         .on('reconnect', (session) => {
-          console.log('reconnect')
-          if (session) {
+          console.log('reconnect: ' + JSON.stringify(session))
+          if (session && session !== undefined) {
             // check if member was kicked
             if (!session.members[global.uid]) {
               socket.kickLeave()
@@ -219,15 +222,50 @@ class App extends React.Component {
 
   onNotification = (notification) => {
     this.props.newNotif()
-    console.log('Notification: ' + notification)
+    console.log('Notification: ' + JSON.stringify(notification))
+    const config = JSON.parse(notification.data.config)
+    // if new notification is a pending friend request, add pending to friends
+    if (config.type === 'pending') {
+      let person = {
+        uid: config.uid,
+        name: config.name,
+        username: config.username,
+        photo: config.photo,
+        status: 'pending',
+      }
+      this.props.pendingFriend(person)
+    }
+    // if new notification is an accepted friend request, add to friends
+    else if (config.type === 'accepted') this.props.acceptFriend(config.uid)
     if (!notification.userInteraction) {
       //construct using data
-      const config = JSON.parse(notification.data.config)
       buildNotification(config)
     }
+    // add new notification to global notifications
+    let notif = {
+      id: config.id,
+      type: config.type,
+      createdAt: config.createdAt,
+      sender: config.uid,
+      senderUsername: config.username,
+      senderPhoto: config.photo,
+      senderName: config.name,
+      content: config.content,
+    }
+    this.props.addNotif(notif)
   }
+  /*
+data: 
+  config: "{
+      type: type,
+      content: content, 
+      name: name,
+      username: username, 
+      photo: photo
+    }" : string
+*/
 
-  // detect if app is coming out of background
+  // detect if app is coming out of background and reconnect to server
   _handleAppStateChange = (nextAppState) => {
     if (
       this.state.appState.match(/inactive|background/) &&
@@ -246,10 +284,8 @@ class App extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    session: state.session.session,
-  }
+const mapStateToProps = () => {
+  return {}
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -263,6 +299,9 @@ const mapDispatchToProps = (dispatch) =>
       showKick,
       showRefresh,
       hideRefresh,
+      acceptFriend,
+      pendingFriend,
+      addNotif,
     },
     dispatch,
   )
@@ -278,6 +317,9 @@ App.propTypes = {
   showRefresh: PropTypes.func,
   hideRefresh: PropTypes.func,
   showKick: PropTypes.func,
+  acceptFriend: PropTypes.func,
+  pendingFriend: PropTypes.func,
+  addNotif: PropTypes.func,
 }
 
 /*
@@ -288,10 +330,11 @@ data:
       name: name,
       username: username, 
       photo: photo
+      uid: uid
     }" : string
 */
 const buildNotification = (config) => {
-  var message = { title: 'Wechews Notification', message: 'Default Message' }
+  let message = { title: 'Wechews Notification', message: 'Default Message' }
   if (config.type == 'pending') {
     message = {
       title: 'New Friend Request',

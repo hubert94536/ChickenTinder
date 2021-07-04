@@ -23,9 +23,9 @@ const getNotifs = async () => {
         notifs: res.data.notifs.map(function (notif) {
           // returns individual user info
           return {
-            id: notif.id,
+            id: notif.id.toString(),
             type: notif.type,
-            updatedAt: notif.updatedAt,
+            createdAt: notif.createdAt,
             sender: notif.sender_uid,
             senderUsername: notif.account.username,
             senderPhoto: notif.account.photo,
@@ -45,6 +45,18 @@ const getNotifs = async () => {
 const removeNotif = async (id) => {
   return notificationsApi
     .delete(`/notifications`, { data: { id: id } })
+    .then((res) => {
+      return res.status
+    })
+    .catch((error) => {
+      return Promise.reject(error.response)
+    })
+}
+
+// remove a list of notifications
+const removeManyNotifs = async (ids) => {
+  return notificationsApi
+    .delete(`/delete_many_notifications`, { data: { ids: ids } })
     .then((res) => {
       return res.status
     })
@@ -83,6 +95,7 @@ const unlinkToken = async () => {
 
 export default {
   getNotifs,
+  removeManyNotifs,
   removeNotif,
   linkToken,
   unlinkToken,

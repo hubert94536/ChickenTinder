@@ -3,55 +3,97 @@ import { Image, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-n
 import CheckBox from '@react-native-community/checkbox'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { setDisable, hideDisable, setHold, showError, showRefresh } from '../redux/Actions.js'
+import {
+  setDisable,
+  hideDisable,
+  setHold,
+  showError,
+  showRefresh,
+  removeFriend,
+  removeNotif,
+  acceptFriend,
+  updateNotif,
+} from '../redux/Actions.js'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import PropTypes from 'prop-types'
 import colors from '../../styles/colors.js'
 import friendsApi from '../apis/friendsApi.js'
 import imgStyles from '../../styles/cardImage.js'
 import normalize from '../../styles/normalize.js'
+import notificationsApi from '../apis/notificationsApi.js'
 import socket from '../apis/socket.js'
-import AntDesign from 'react-native-vector-icons/AntDesign'
 
 class NotifCard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      confirmPressed: false,
-      deletePressed: false,
       hold: false,
       selected: false,
+      disable: false,
     }
   }
 
   // accept friend request and modify card
   async acceptFriend() {
-    this.props.modifyList(this.props.uid, this.props.id)
+    this.setState({ disable: true })
+    friendsApi
+      .acceptFriendRequest(this.props.uid)
+      .then(() => {
+        this.setState({ disable: false })
+        this.props.acceptFriend(this.props.uid)
+        this.props.updateNotif(this.props.id, 'friends')
+      })
+      .catch(() => {
+        this.props.showError()
+        this.setState({ disable: false })
+      })
   }
 
   // delete friend and modify view
   async deleteFriend() {
-    var filteredArray = this.props.total.filter((item) => {
-      return item.id !== this.props.id
-    })
-    this.props.press(this.props.uid, filteredArray, this.props.id)
+    this.setState({ disable: true })
+    friendsApi
+      .removeFriendship(this.props.uid)
+      .then(() => {
+        notificationsApi.removeNotif(this.props.id).catch(() => {
+          this.props.showError()
+        })
+        this.setState({ disable: false })
+        this.props.removeFriend(this.props.uid)
+        this.props.removeNotif([this.props.id])
+      })
+      .catch(() => {
+        this.props.showError()
+        this.setState({ disable: false })
+      })
   }
 
+  // toggle delete view
   handleDelete() {
     this.props.setHold()
   }
 
   handleClick() {
-    this.props.setDisable()
-    this.props.showRefresh()
-    if (this.props.type == 'invite') {
+    if (this.props.type === 'invite') {
+      this.props.setDisable()
+      this.props.showRefresh()
       socket.joinRoom(this.props.content)
+      notificationsApi.removeNotif(this.props.id).catch(() => {
+        this.props.showError()
+      })
+      this.props.removeNotif([this.props.id])
     }
   }
 
   modifyList() {
     this.setState({ selected: this.state.selected ? false : true })
-    this.props.deleteNotif(this.state.selected, this.props.index)
+    this.props.deleteNotif(this.state.selected, this.props.id)
+  }
+
+  // deselect when hold to delete is cancelled
+  componentDidUpdate() {
+    if (!this.props.hold && this.state.selected) this.setState({ selected: false })
   }
 
   render() {
@@ -67,7 +109,7 @@ class NotifCard extends React.Component {
         )}
         <TouchableWithoutFeedback
           onPress={() => this.handleClick()}
-          disabled={this.props.disable}
+          disabled={this.props.disable && this.state.disable}
           onLongPress={() => this.handleDelete()}
         >
           <View style={styles.container}>
@@ -143,6 +185,10 @@ const mapDispatchToProps = (dispatch) =>
       setHold,
       showError,
       showRefresh,
+      removeFriend,
+      removeNotif,
+      acceptFriend,
+      updateNotif,
     },
     dispatch,
   )
@@ -150,13 +196,12 @@ const mapDispatchToProps = (dispatch) =>
 export default connect(mapStateToProps, mapDispatchToProps)(NotifCard)
 
 NotifCard.propTypes = {
-  friends: PropTypes.bool,
   uid: PropTypes.string,
+  id: PropTypes.string,
   total: PropTypes.array,
   type: PropTypes.string,
   content: PropTypes.string,
   username: PropTypes.string,
-  press: PropTypes.func,
   name: PropTypes.string,
   image: PropTypes.string,
   showError: PropTypes.func,
@@ -167,7 +212,10 @@ NotifCard.propTypes = {
   hold: PropTypes.bool,
   setHold: PropTypes.func,
   deleteNotif: PropTypes.func,
-  index: PropTypes.number,
+  removeFriend: PropTypes.func,
+  removeNotif: PropTypes.func,
+  acceptFriend: PropTypes.func,
+  updateNotif: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

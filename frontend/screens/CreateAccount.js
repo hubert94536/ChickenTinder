@@ -19,7 +19,6 @@ import {
   changeImage,
   changeName,
   changeUsername,
-  changeFriends,
   setDisable,
   hideDisable,
 } from '../redux/Actions.js'
@@ -78,7 +77,6 @@ class createAccount extends React.Component {
       this.props.changeUsername(this.state.username)
       this.props.changeName(this.state.name)
       this.props.changeImage(this.state.photo)
-      this.props.changeFriends([])
       await AsyncStorage.multiSet([
         [USERNAME, this.state.username],
         [PHOTO, this.state.photo],
@@ -325,7 +323,6 @@ const mapDispatchToProps = (dispatch) =>
       changeName,
       changeUsername,
       changeImage,
-      changeFriends,
       setDisable,
       hideDisable,
     },
@@ -339,7 +336,6 @@ createAccount.propTypes = {
   changeName: PropTypes.func,
   changeUsername: PropTypes.func,
   changeImage: PropTypes.func,
-  changeFriends: PropTypes.func,
   setDisable: PropTypes.func,
   hideDisable: PropTypes.func,
   disable: PropTypes.bool,

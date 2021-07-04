@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { changeFriends, hideError, hideRefresh, showError, showRefresh } from '../redux/Actions.js'
 import { connect } from 'react-redux'
-import { Dimensions, FlatList, ImageBackground, StyleSheet, Text} from 'react-native'
+import { Dimensions, FlatList, ImageBackground, StyleSheet, Text } from 'react-native'
 import { BlurView } from '@react-native-community/blur'
 import { SearchBar } from 'react-native-elements'
 import PropTypes from 'prop-types'
@@ -36,25 +36,22 @@ class Search extends Component {
   }
 
   componentDidMount() {
-    var friendsMap = new Object()
-    for (var friend in this.props.friends.friends) {
-      friendsMap[this.props.friends.friends[friend].uid] = this.props.friends.friends[friend].status
+    // creates a mapping of each friend's uid to status
+    let friendsMap = new Object()
+    for (let friend in this.props.friends) {
+      friendsMap[this.props.friends[friend].uid] = this.props.friends[friend].status
     }
     this.setState({ friends: friendsMap })
-
-    for (var i = 0; i < this.props.friends.friends.length; i++) {
-      if (this.props.friends.friends[i].status === 'requested')
-        friendsApi.acceptFriendRequest(this.props.friends.friends[i].uid)
-    }
   }
 
+  // fetches friends list from server and updates mapping of uid to status
   async getFriends() {
     friendsApi
       .getFriends()
       .then((res) => {
         this.props.changeFriends(res.friendList)
-        var friendsMap = new Object()
-        for (var friend in res.friendList) {
+        let friendsMap = new Object()
+        for (let friend in res.friendList) {
           friendsMap[res.friendList[friend].uid] = res.friendList[friend].status
         }
         this.setState({ friends: friendsMap })
@@ -70,35 +67,33 @@ class Search extends Component {
     })
   }
 
+  // filters uses in search after a give timeout
   searchFilterFunction = async () => {
     this.setState({ data: [] })
     clearTimeout(this.timeout) // clears the old timer
     if (!this.state.value) {
-      var emptyArray = []
-      this.setState({ data: emptyArray })
+      this.setState({ data: [] })
     } else {
       this.timeout = setTimeout(
         () => {
           if (this.state.value) {
+            // search for users
             accountsApi
               .searchUsers(this.state.value)
               .then((res) => {
-                var resultUsers = []
-                for (var user in res.userList) {
-                  var status = 'add'
+                let resultUsers = []
+                // match searched users with friendlist
+                for (let user in res.userList) {
+                  let status = 'add'
                   if (res.userList[user].uid in this.state.friends) {
                     status = this.state.friends[res.userList[user].uid]
                   }
-                  var person = {
+                  let person = {
                     name: res.userList[user].name,
                     username: res.userList[user].username,
                     image: res.userList[user].photo,
                     uid: res.userList[user].uid,
                     status: status,
-                  }
-                  if (person === undefined) {
-                    this.setState({ errorAlert: true })
-                    return
                   }
                   resultUsers.push(person)
                 }
@@ -112,15 +107,7 @@ class Search extends Component {
     }
   }
 
-  async removeRequest(newArr) {
-    this.setState({ friends: newArr })
-  }
-
-  async acceptFriend(newArr) {
-    this.setState({ friends: newArr })
-  }
-
-  async addFriend(newArr) {
+  updateFriends(newArr) {
     this.setState({ friends: newArr })
   }
 
@@ -157,7 +144,7 @@ class Search extends Component {
     return (
       <ImageBackground
         source={require('../assets/backgrounds/Search.png')}
-        imageStyle={{resizeMode:'stretch'}}
+        imageStyle={{ resizeMode: 'stretch' }}
         style={screenStyles.screenBackground}
       >
         <Text style={[screenStyles.icons, styles.title]}>Find friends</Text>
@@ -171,14 +158,12 @@ class Search extends Component {
               image={item.image}
               uid={item.uid}
               username={item.username}
-              currentUser={this.props.username.username}
+              currentUser={this.props.username}
               total={this.state.data}
               status={item.status}
               key={item.uid}
-              press={(newArr) => this.removeRequest(newArr)}
+              press={(newArr) => this.updateFriends(newArr)}
               unfriendAlert={(bool) => this.setState({ deleteFriend: bool })}
-              accept={(newArr) => this.acceptFriend(newArr)}
-              add={(newArr) => this.addFriend(newArr)}
               changeAdd={true}
             />
           )}
@@ -207,24 +192,25 @@ class Search extends Component {
             cancel={() => this.setState({ errorAlert: false })}
           />
         )}
-          <TabBar
-            goHome={() => this.props.navigation.replace('Home')}
-            goSearch={() => {}}
-            goNotifs={() => this.props.navigation.replace('Notifications')}
-            goProfile={() => this.props.navigation.replace('Profile')}
-            cur="Search"
-          />
+        <TabBar
+          goHome={() => this.props.navigation.replace('Home')}
+          goSearch={() => {}}
+          goNotifs={() => this.props.navigation.replace('Notifications')}
+          goProfile={() => this.props.navigation.replace('Profile')}
+          cur="Search"
+        />
       </ImageBackground>
     )
   }
 }
 
 const mapStateToProps = (state) => {
-  const { error } = state
-  const { refresh } = state
-  const { friends } = state
-  const { username } = state
-  return { error, refresh, friends, username }
+  return {
+    error: state.error.error,
+    refresh: state.refresh.refresh,
+    friends: state.friends.friends,
+    username: state.username.username,
+  }
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -245,8 +231,8 @@ Search.propTypes = {
   navigation: PropTypes.object,
   error: PropTypes.bool,
   refresh: PropTypes.bool,
-  friends: PropTypes.object,
-  username: PropTypes.object,
+  friends: PropTypes.array,
+  username: PropTypes.string,
   showError: PropTypes.func,
   showRefresh: PropTypes.func,
   hideError: PropTypes.func,

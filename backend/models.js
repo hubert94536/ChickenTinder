@@ -88,7 +88,7 @@ Friends.belongsTo(Accounts, { foreignKey: 'friend_uid', foreignKeyConstraint: tr
 //       ' DECLARE ' +
 //       ' rec RECORD;' +
 //       ' BEGIN' +
-//       ' SELECT INTO rec NEW.id, NEW.receiver_uid, NEW.type, NEW.content,' +
+//       ' SELECT INTO rec NEW.id, NEW.receiver_uid, NEW.type, NEW.content, NEW.createdAt' +
 //       ' NEW.sender_uid, accounts.name, accounts.username, accounts.photo' +
 //       ' FROM accounts' +
 //       ' WHERE NEW.sender_uid = accounts.uid;' +

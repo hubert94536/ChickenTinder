@@ -181,7 +181,6 @@ Login.propTypes = {
   changeName: PropTypes.func,
   changeUsername: PropTypes.func,
   changeImage: PropTypes.func,
-  changeFriends: PropTypes.func,
   setDisable: PropTypes.func,
   hideDisable: PropTypes.func,
   disable: PropTypes.bool,

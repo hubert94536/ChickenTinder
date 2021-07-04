@@ -1,5 +1,13 @@
 import React from 'react'
-import { ActivityIndicator, Dimensions, Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Dimensions,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
+} from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { BlurView } from '@react-native-community/blur'
@@ -63,7 +71,7 @@ class Round extends React.Component {
   leave() {
     this.props.setDisable()
     socket.getSocket().off()
-    socket.leave('round')
+    socket.leave()
     this.props.hideDisable()
     this.props.navigation.replace('Home')
   }
@@ -279,7 +287,7 @@ const styles = StyleSheet.create({
   left: { fontSize: normalize(12) },
   leftArrow: { fontSize: normalize(15), marginRight: '1%' },
   background: { backgroundColor: 'transparent' },
-  x: { color: '#6A6A6A', fontSize: normalize(45), marginTop:'-6%' },
+  x: { color: '#6A6A6A', fontSize: normalize(45), marginTop: '-6%' },
   rightArrow: { fontSize: normalize(15), marginLeft: '1%' },
-  heart: { fontSize: normalize(35), marginTop:'-3%' },
+  heart: { fontSize: normalize(35), marginTop: '-3%' },
 })

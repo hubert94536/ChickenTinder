@@ -3,7 +3,6 @@ import React from 'react'
 import { bindActionCreators } from 'redux'
 import { BlurView } from '@react-native-community/blur'
 import {
-  changeFriends,
   hideError,
   showError,
   hideKick,
@@ -55,6 +54,7 @@ class Home extends React.Component {
       socketErr: false,
     }
     socket.getSocket().on('update', (res) => {
+      console.log(res)
       socket.getSocket().off()
       this.props.updateSession(res)
       this.props.setHost(res.members[res.host].username === this.props.username)
@@ -81,9 +81,9 @@ class Home extends React.Component {
     // accountsApi.createFBUserTest('Helen2', 35, 'helennn', 'helennn@gmail.com', '53', '45678903')
     // accountsApi.createFBUserTest('Kevin2', 36, 'kev', 'kevi@gmail.com', '54', '45678904')
     // // friendsApi.createFriendshipTest(requester, accepter)
-    // friendsApi.createFriendshipTest(32, "LqeYe8NfR5hkiCBPFkqxlNVE5Fg1")
-    // friendsApi.createFriendshipTest(33, "LqeYe8NfR5hkiCBPFkqxlNVE5Fg1")
-    // friendsApi.createFriendshipTest(34, "LqeYe8NfR5hkiCBPFkqxlNVE5Fg1")
+    // friendsApi.createFriendshipTest(32, "paPkBM2Klog0e63OrAClDmOGiki2")
+    // friendsApi.createFriendshipTest(33, "paPkBM2Klog0e63OrAClDmOGiki2")
+    // friendsApi.createFriendshipTest(34, "paPkBM2Klog0e63OrAClDmOGiki2")
   }
 
   componentDidMount() {
@@ -256,7 +256,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      changeFriends,
       showError,
       hideError,
       updateSession,
@@ -278,7 +277,6 @@ Home.propTypes = {
   username: PropTypes.string,
   showError: PropTypes.func,
   hideError: PropTypes.func,
-  changeFriends: PropTypes.func,
   hideKick: PropTypes.func,
   kick: PropTypes.bool,
   setHost: PropTypes.func,

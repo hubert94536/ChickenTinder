@@ -24,7 +24,7 @@ class Friends extends React.Component {
     super(props)
     this.state = {
       search: '',
-      data: [], // array for friends
+      data: [], // array for only friends
       friends: [], // array of Profile components
       friendsApiCalled: false, //render loading gif when fetching friends
     }
@@ -47,19 +47,19 @@ class Friends extends React.Component {
   }
 
   editFriends() {
-    var pushFriends = []
-    for (var friend in this.props.friends.friends) {
-      if (this.props.friends.friends[friend].status === 'friends') {
-        pushFriends.push(this.props.friends.friends[friend])
+    let onlyFriends = []
+    for (let idx in this.props.friends) {
+      if (this.props.friends[idx].status === 'friends') {
+        onlyFriends.push(this.props.friends[idx])
       }
     }
     //  need two so when you search it doesn't get rid of all the friends
     this.setState({
-      friends: pushFriends,
-      data: pushFriends,
+      friends: onlyFriends,
+      data: onlyFriends,
       friendsApiCalled: true,
     })
-    this.props.onFriendsChange(pushFriends.length)
+    this.props.onFriendsChange(onlyFriends.length)
   }
 
   componentDidMount() {
@@ -83,7 +83,6 @@ class Friends extends React.Component {
     this.props.changeFriends(newArr)
     this.setState({ friends: newArr, data: newArr })
     this.props.onFriendsChange(newArr.length)
-    console.log(newArr)
   }
 
   // Called on friends-list pulldown refresh
@@ -93,12 +92,12 @@ class Friends extends React.Component {
   }
 
   render() {
-    var friends = []
-    var friendList = this.state.friends
+    let friends = []
+    let friendList = this.state.friends
     // Create all friend/request cards
     if (Array.isArray(friendList) && friendList.length) {
-      for (var i = 0; i < friendList.length; i++) {
-        var status = ''
+      for (let i = 0; i < friendList.length; i++) {
+        let status = ''
         if (this.props.isFriends) status = 'friends'
         else status = 'Not Friends'
         friends.push(
@@ -184,10 +183,11 @@ class Friends extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const { error } = state
-  const { refresh } = state
-  const { friends } = state
-  return { error, refresh, friends }
+  return {
+    error: state.error,
+    refresh: state.refresh,
+    friends: state.friends.friends,
+  }
 }
 
 const mapDispatchToProps = (dispatch) =>
@@ -208,7 +208,7 @@ Friends.propTypes = {
   isFriends: PropTypes.bool,
   onFriendsChange: PropTypes.func,
   error: PropTypes.bool,
-  friends: PropTypes.object,
+  friends: PropTypes.array,
   refresh: PropTypes.bool,
   showError: PropTypes.func,
   hideError: PropTypes.func,

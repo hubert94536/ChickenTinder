@@ -76,7 +76,7 @@ class TabBar extends React.Component {
               style={{ color: this.props.cur === 'Notifs' ? colors.hex : '#8d8d8d', fontSize: 26 }}
             />
 
-            {this.props.notif && (
+            {this.props.gotNotif && (
               // <Text style={{ color: 'red', fontSize: 26, position: 'absolute', textAlign: 'left', alignSelf: 'flex-end'}}>*</Text>
 
               <Icon
@@ -108,10 +108,10 @@ class TabBar extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const { notif } = state
-  return { notif }
+  const { gotNotif } = state
+  return { gotNotif }
 }
-//  access this as this.props.notif
+//  access this as this.props.gotNotif
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
@@ -150,4 +150,5 @@ TabBar.propTypes = {
   cur: PropTypes.string,
   noNotif: PropTypes.func,
   notif: PropTypes.bool,
+  gotNotif: PropTypes.bool,
 }

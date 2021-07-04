@@ -87,7 +87,7 @@ module.exports = (io) => {
             // check if room still exists
             let session = await sendCommand('JSON.GET', [user.room])
             session = JSON.parse(session)
-            if (session) {
+            if (session && typeof session === 'object') {
               // check if the member has been marked as disconnected, need to set to connected if true
               if (!session.members[socket.user.uid].connected) {
                 await sendCommand('JSON.SET', [
@@ -372,7 +372,7 @@ module.exports = (io) => {
     })
 
     // handle user leaving
-    socket.on('leave', (data) => {
+    socket.on('leave', () => {
       if (socket.user.room) {
         lock(socket.user.room, async function (done) {
           try {
@@ -397,8 +397,8 @@ module.exports = (io) => {
               }
               // if the removed user was last person to finish in a round, get top 3 restaurants and emit
               if (
-                data.restaurants &&
-                !data.top3 &&
+                session.restaurants &&
+                !session.top3 &&
                 session.finished.length === Object.keys(session.members).length
               ) {
                 let top3 = getTop3(session.restaurants)
@@ -414,11 +414,9 @@ module.exports = (io) => {
                   ])
                   io.in(socket.user.room).emit('match', top3.choices[0])
                 }
-              } else if (data.restaurants && !data.top3) {
+              } else if (session.restaurants && !session.top3) {
                 // decrease the majority by 1
-                sendCommand('JSON.NUMINCRBY', [socket.user.room, '.majority', -1]).catch((err) =>
-                  console.error(err),
-                )
+                await sendCommand('JSON.NUMINCRBY', [socket.user.room, '.majority', -1])
               }
               io.in(socket.user.room).emit('update', session)
             }

@@ -88,6 +88,65 @@ const updateSession = (session) => {
   }
 }
 
+const changeNotifs = (notifs) => {
+  return {
+    type: 'CHANGE_NOTIFICATIONS',
+    payload: notifs,
+  }
+}
+
+const removeNotif = (ids) => {
+  return {
+    type: 'REMOVE_NOTIFICATION',
+    payload: ids,
+  }
+}
+
+const addNotif = (info) => {
+  return {
+    type: 'ADD_NOTIFICATION',
+    payload: info,
+  }
+}
+
+const updateNotif = (id, type) => {
+  return {
+    type: 'UPDATE_NOTIFICATION',
+    payload: {
+      id: id,
+      type: type,
+    },
+  }
+}
+
+const removeFriend = (uid) => {
+  return {
+    type: 'REMOVE_FRIEND',
+    payload: uid,
+  }
+}
+
+const requestFriend = (info) => {
+  return {
+    type: 'REQUEST_FRIEND',
+    payload: info,
+  }
+}
+
+const pendingFriend = (info) => {
+  return {
+    type: 'PENDING_FRIEND',
+    payload: info,
+  }
+}
+
+const acceptFriend = (uid) => {
+  return {
+    type: 'ACCEPT_FRIEND',
+    payload: uid,
+  }
+}
+
 const setHost = (isHost) => {
   return {
     type: 'SET_HOST',
@@ -140,10 +199,17 @@ export {
   changeUsername,
   changeImage,
   changeFriends,
+  acceptFriend,
+  pendingFriend,
+  requestFriend,
+  removeFriend,
   showRefresh,
   hideRefresh,
   newNotif,
   noNotif,
+  addNotif,
+  updateNotif,
+  removeNotif,
   setCode,
   showKick,
   hideKick,
@@ -155,4 +221,5 @@ export {
   hideDisable,
   setHold,
   hideHold,
+  changeNotifs,
 }

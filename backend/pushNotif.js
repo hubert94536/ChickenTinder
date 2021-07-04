@@ -24,11 +24,14 @@ const sendNotification = async (notif) => {
     if (user && user.regtoken) {
       console.log('send notification')
       const data = {
+        id: notif.id,
         type: notif.type,
         content: notif.content,
         name: notif.name,
         username: notif.username,
         photo: notif.photo,
+        uid: notif.sender_uid,
+        createdAt: notif.createdAt,
       }
       const message = {
         data: { config: JSON.stringify(data) },

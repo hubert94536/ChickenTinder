@@ -3,7 +3,6 @@ import { Dimensions, StyleSheet, View, Animated, PanResponder } from 'react-nati
 import PropTypes from 'prop-types'
 
 const windowHeight = Dimensions.get('window').height
-const windowWidth = Dimensions.get('window').width
 
 class Drawer extends Component {
   constructor(props) {
@@ -176,7 +175,6 @@ const styles = StyleSheet.create({
   drawer: {
     zIndex: 1,
     elevation: 1,
-    // display: 'none',
   },
   container: {
     width: '100%',
