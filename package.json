@@ -2,8 +2,8 @@
   "name": "chicken_tinder",
   "version": "0.0.1",
   "engines": {
-    "node": "12.x",
-    "npm": "6.x"
+    "node": "17.x",
+    "npm": "8.x"
   },
   "private": true,
   "heroku-postbuild": "npm install && cd client && npm install --only-dev && npm install && npm run build",
@@ -102,7 +102,7 @@
     "jest-cli": "^26.6.1",
     "patch-package": "^6.2.2",
     "prettier": "^2.1.2",
-    "react-test-renderer": "^17.0.1",
+    "react-native-view-overflow": "^0.0.5",
     "symbol-observable": "^4.0.0",
     "xmlhttprequest-ssl": "^1.6.2"
   },

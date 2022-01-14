@@ -12,7 +12,7 @@ const connect = () => {
     socket.emit('authentication', { token: token })
   })
   socket.on('unauthorized', (reason) => {
-    console.log('Unauthorized:', reason)
+    console.log('Socket Unauthorized:', reason)
     socket.disconnect()
   })
 }
