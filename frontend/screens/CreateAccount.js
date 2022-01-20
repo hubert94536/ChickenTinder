@@ -32,7 +32,7 @@ import screenStyles from '../../styles/screenStyles.js'
 import socket from '../apis/socket.js'
 import ChoosePic from '../modals/ChoosePic.js'
 
-class createAccount extends React.Component {
+class CreateAccount extends React.Component {
   constructor() {
     super()
     this.state = {
@@ -191,8 +191,8 @@ class createAccount extends React.Component {
             this.state.validNameFormat ? styles.fieldTextMargin : styles.fieldTextMarginWarning,
           ]}
           textAlign="left"
-          onChangeText={(name) => {
-            this.setState({ name }, () => this.checkNameSyntax())
+          onChangeText={(displayName) => {
+            this.setState({ name: displayName }, () => this.checkNameSyntax())
           }}
           value={this.state.name}
           underlineColorAndroid="transparent"
@@ -219,7 +219,7 @@ class createAccount extends React.Component {
               this.checkUsernameSyntax()
             })
           }}
-          onSubmitEditing={this.handleClick}
+          // onSubmitEditing={this.handleClick}
           onEndEditing={() => this.trimName()}
           value={this.state.username}
           underlineColorAndroid="transparent"
@@ -246,7 +246,7 @@ class createAccount extends React.Component {
               style={[
                 screenStyles.textBook,
                 styles.fieldText,
-                styles.fieldTextMargin,
+                styles.bottomFieldTextMargin,
                 styles.fixedText,
               ]}
               textAlign="left"
@@ -329,9 +329,9 @@ const mapDispatchToProps = (dispatch) =>
     dispatch,
   )
 
-export default connect(mapStateToProps, mapDispatchToProps)(createAccount)
+export default connect(mapStateToProps, mapDispatchToProps)(CreateAccount)
 
-createAccount.propTypes = {
+CreateAccount.propTypes = {
   navigation: PropTypes.object,
   changeName: PropTypes.func,
   changeUsername: PropTypes.func,

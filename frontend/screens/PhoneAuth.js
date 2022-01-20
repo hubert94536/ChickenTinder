@@ -66,9 +66,15 @@ class PhoneAuthScreen extends Component {
         // get user's information and set
         let userCredential = await confirmResult.confirm(verificationCode)
         let result = await loginService.loginWithCredential(userCredential)
-        this.setState({ login: true }, () => {
+        if (result === "CreateAccount") {
           this.props.navigation.replace(result)
-        })
+        }
+        else {
+            this.setState({ login: true }, () => {
+            this.props.navigation.replace(result)
+          })
+        }
+        this.props.hideDisable()
       } catch (error) {
         this.setState({ errorAlert: true })
         this.props.hideDisable()
@@ -95,9 +101,10 @@ class PhoneAuthScreen extends Component {
           <CodeInput
             ref="codeInputRef2"
             className={'border-b'}
+            keyboardType="phone-pad"
             codeLength={6}
             size={40}
-            containerStyle={{ marginTop: 10 }}
+            containerStyle={{ marginTop: '5%' }}
             codeInputStyle={styles.textInput}
             onFulfill={(code) => this._onFulfill(code)}
             onCodeChange={(code) => {
@@ -199,12 +206,11 @@ class PhoneAuthScreen extends Component {
                 </Text>
               </View>
             )}
-
             {!this.state.confirmResult && (
               <View style={[styles.numberContainer]}>
                 <Text style={[styles.fixedText]}>+1</Text>
                 <TextInput
-                  style={[styles.textInput]}
+                  style={[styles.textInput, styles.phoneNumberInput]}
                   placeholder="Phone Number"
                   placeholderTextColor="#6A6A6A"
                   keyboardType="phone-pad"
@@ -212,6 +218,7 @@ class PhoneAuthScreen extends Component {
                   onChangeText={(num) => {
                     this.setState({ phone: num })
                   }}
+                  onSubmitEditing={this.handleSendCode}
                   maxLength={15}
                   editable={!this.state.confirmResult}
                 />
@@ -222,7 +229,7 @@ class PhoneAuthScreen extends Component {
               <TouchableOpacity
                 disabled={this.props.disable}
                 style={[screenStyles.longButton, styles.longButton]}
-                onPress={() => this.handleSendCode()}
+                onPress={this.handleSendCode}
               >
                 <Text style={[screenStyles.longButtonText, styles.longButtonText]}>Submit</Text>
               </TouchableOpacity>
@@ -312,10 +319,13 @@ const styles = StyleSheet.create({
     color: colors.darkGray,
     fontSize: 20,
   },
+  phoneNumberInput: {
+    width: '50%'
+  },
   fixedText: {
     fontFamily: screenStyles.book.fontFamily,
     marginTop: 20,
-    width: '7%',
+    width: '10%',
     borderColor: '#A5A5A5',
     borderBottomWidth: 1.5,
     paddingLeft: 10,
@@ -337,7 +347,7 @@ const styles = StyleSheet.create({
   longButton: {
     borderColor: colors.hex,
     backgroundColor: colors.hex,
-    marginBottom: '5%',
+    marginBottom: '15%',
   },
   longButtonText: {
     color: '#FFFFFF',
@@ -352,7 +362,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   numberContainer: {
-    marginTop: '20%',
+    marginTop: '8%',
     marginBottom: '10%',
     flexDirection: 'row',
     alignItems: 'flex-end',
@@ -360,7 +370,7 @@ const styles = StyleSheet.create({
 
   codeContainer: {
     height: '1%',
-    marginBottom: '40%',
+    marginBottom: '50%',
   },
 })
 

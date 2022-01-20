@@ -148,10 +148,7 @@ class UserProfileView extends Component {
               // Ask for code input
               case auth.PhoneAuthState.CODE_SENT:
                 // Store verification id in state
-                this.setState({ verificationId: phoneAuthSnapshot.verificationId })
-                this.verifyCode('111111')
-                // TODO: Display verification code input modal (6 digits)
-                this.setState({ confirmation: true })
+                this.setState({ verificationId: phoneAuthSnapshot.verificationId, confirmation: true })
                 break
               // Auto verified on android - proceed to delete account
               case auth.PhoneAuthState.AUTO_VERIFIED:
@@ -160,7 +157,6 @@ class UserProfileView extends Component {
                 break
               // Display error alert
               case auth.PhoneAuthState.ERROR:
-                // TODO: Code could not be sent, display an error
                 this.props.showError()
                 break
             }

@@ -72,7 +72,7 @@ const loginWithFacebook = async () => {
     // Attempt a login using the Facebook login dialog asking for default permissions.
     const login = await LoginManager.logInWithPermissions(['public_profile', 'email'])
     if (login.isCancelled) {
-      return
+      return Promise.reject("Cancelled Login")
     }
     const token = await AccessToken.getCurrentAccessToken()
     const credential = await auth.FacebookAuthProvider.credential(token.accessToken)
