@@ -34,7 +34,7 @@
     "express": "^4.17.1",
     "express-joi-validation": "^5.0.0",
     "fbjs": "^3.0.0",
-    "firebase-admin": "^9.4.2",
+    "firebase-admin": "^11.4.1",
     "http": "0.0.1-security",
     "joi": "^17.3.0",
     "mock-async-storage": "^2.2.0",
